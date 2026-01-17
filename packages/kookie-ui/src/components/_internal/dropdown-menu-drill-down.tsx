@@ -113,19 +113,31 @@ function resolveResponsiveValue<T>(
 
 type AnimationDirection = 'forward' | 'backward' | null;
 
-interface DrillDownContextValue {
-  /** Current submenu behavior mode */
-  behavior: SubmenuBehavior;
-  /** Whether the breakpoint has been resolved (client-side only) */
-  ready: boolean;
-  /** Stack of active submenu IDs. Empty means root menu is shown. */
-  stack: string[];
+/**
+ * Stable actions context - callbacks that don't change identity.
+ * Separated from state to prevent unnecessary re-renders of components
+ * that only need to call push/pop/reset.
+ */
+interface DrillDownActionsContextValue {
   /** Navigate into a submenu */
   push: (id: string) => void;
   /** Navigate back to parent menu */
   pop: () => void;
   /** Reset to root menu */
   reset: () => void;
+}
+
+/**
+ * Mutable state context - values that change when navigation occurs.
+ * Subscribers to this context will re-render on stack changes.
+ */
+interface DrillDownStateContextValue {
+  /** Current submenu behavior mode */
+  behavior: SubmenuBehavior;
+  /** Whether the breakpoint has been resolved (client-side only) */
+  ready: boolean;
+  /** Stack of active submenu IDs. Empty means root menu is shown. */
+  stack: string[];
   /** Check if a specific submenu is the currently active one */
   isActive: (id: string) => boolean;
   /** Check if we're at root level (no submenus open) */
@@ -136,6 +148,13 @@ interface DrillDownContextValue {
   animationDirection: AnimationDirection;
 }
 
+/** Combined context value for backwards compatibility */
+interface DrillDownContextValue extends DrillDownActionsContextValue, DrillDownStateContextValue {}
+
+const DrillDownActionsContext = React.createContext<DrillDownActionsContextValue | null>(null);
+const DrillDownStateContext = React.createContext<DrillDownStateContextValue | null>(null);
+
+// Legacy combined context for backwards compatibility
 const DrillDownContext = React.createContext<DrillDownContextValue | null>(null);
 
 interface DrillDownProviderProps {
@@ -164,6 +183,7 @@ function DrillDownProvider({ children, submenuBehavior }: DrillDownProviderProps
     prevBehaviorRef.current = behavior;
   }, [behavior]);
 
+  // Stable action callbacks - these never change identity
   const push = React.useCallback((id: string) => {
     setAnimationDirection('forward');
     setStack((prev) => [...prev, id]);
@@ -179,6 +199,13 @@ function DrillDownProvider({ children, submenuBehavior }: DrillDownProviderProps
     setAnimationDirection(null);
   }, []);
 
+  // Memoize actions context value - completely stable, never changes
+  const actionsValue = React.useMemo(
+    (): DrillDownActionsContextValue => ({ push, pop, reset }),
+    [push, pop, reset]
+  );
+
+  // isActive depends on stack - this is expected to change
   const isActive = React.useCallback(
     (id: string) => {
       if (stack.length === 0) return false;
@@ -187,23 +214,35 @@ function DrillDownProvider({ children, submenuBehavior }: DrillDownProviderProps
     [stack]
   );
 
-  const value = React.useMemo(
-    (): DrillDownContextValue => ({
+  // Memoize state context value - changes when stack/behavior changes
+  const stateValue = React.useMemo(
+    (): DrillDownStateContextValue => ({
       behavior,
       ready,
       stack,
-      push,
-      pop,
-      reset,
       isActive,
       isRoot: stack.length === 0,
       currentId: stack.length > 0 ? stack[stack.length - 1] : null,
       animationDirection,
     }),
-    [behavior, ready, stack, push, pop, reset, isActive, animationDirection]
+    [behavior, ready, stack, isActive, animationDirection]
   );
 
-  return <DrillDownContext.Provider value={value}>{children}</DrillDownContext.Provider>;
+  // Combined value for legacy context
+  const combinedValue = React.useMemo(
+    (): DrillDownContextValue => ({ ...actionsValue, ...stateValue }),
+    [actionsValue, stateValue]
+  );
+
+  return (
+    <DrillDownActionsContext.Provider value={actionsValue}>
+      <DrillDownStateContext.Provider value={stateValue}>
+        <DrillDownContext.Provider value={combinedValue}>
+          {children}
+        </DrillDownContext.Provider>
+      </DrillDownStateContext.Provider>
+    </DrillDownActionsContext.Provider>
+  );
 }
 
 function useDrillDown() {
@@ -219,6 +258,45 @@ function useDrillDown() {
  */
 function useDrillDownOptional() {
   return React.useContext(DrillDownContext);
+}
+
+/**
+ * Hook to access only the stable action callbacks (push, pop, reset).
+ * Use this in components that only need to trigger navigation,
+ * not react to state changes. Prevents unnecessary re-renders.
+ */
+function useDrillDownActions() {
+  const ctx = React.useContext(DrillDownActionsContext);
+  if (!ctx) {
+    throw new Error('useDrillDownActions must be used within a DropdownMenu.Content');
+  }
+  return ctx;
+}
+
+/**
+ * Hook to access drill-down state (behavior, stack, isActive, etc.).
+ * Components using this will re-render when navigation state changes.
+ */
+function useDrillDownState() {
+  const ctx = React.useContext(DrillDownStateContext);
+  if (!ctx) {
+    throw new Error('useDrillDownState must be used within a DropdownMenu.Content');
+  }
+  return ctx;
+}
+
+/**
+ * Optional version of useDrillDownActions for components that may be outside Content.
+ */
+function useDrillDownActionsOptional() {
+  return React.useContext(DrillDownActionsContext);
+}
+
+/**
+ * Optional version of useDrillDownState for components that may be outside Content.
+ */
+function useDrillDownStateOptional() {
+  return React.useContext(DrillDownStateContext);
 }
 
 // ============================================================================
@@ -241,12 +319,25 @@ function useSubContext() {
 export {
   DrillDownProvider,
   DrillDownContext,
+  DrillDownActionsContext,
+  DrillDownStateContext,
   SubContext,
   useDrillDown,
   useDrillDownOptional,
+  useDrillDownActions,
+  useDrillDownActionsOptional,
+  useDrillDownState,
+  useDrillDownStateOptional,
   useSubContext,
   useBreakpoint,
   resolveResponsiveValue,
 };
 
-export type { SubmenuBehavior, DrillDownContextValue, SubContextValue, AnimationDirection };
+export type {
+  SubmenuBehavior,
+  DrillDownContextValue,
+  DrillDownActionsContextValue,
+  DrillDownStateContextValue,
+  SubContextValue,
+  AnimationDirection,
+};
