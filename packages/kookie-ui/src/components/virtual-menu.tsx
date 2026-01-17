@@ -298,7 +298,7 @@ function VirtualMenuRoot<T>({
         break;
       }
       case 'Escape': {
-        e.currentTarget.blur();
+        (e.currentTarget as HTMLElement).blur();
         break;
       }
     }
@@ -397,6 +397,10 @@ VirtualMenuRoot.displayName = 'VirtualMenu';
 
 interface VirtualMenuItemProps extends React.ComponentPropsWithoutRef<'div'> {
   children: React.ReactNode;
+  /** Data attribute for highlight styling */
+  'data-highlighted'?: true | undefined;
+  /** Data attribute for event delegation */
+  'data-index'?: number;
 }
 
 const VirtualMenuItemInner = React.forwardRef<HTMLDivElement, VirtualMenuItemProps>(
