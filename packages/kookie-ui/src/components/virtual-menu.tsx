@@ -52,8 +52,6 @@ interface VirtualMenuItemRenderProps {
   onMouseLeave: () => void;
   /** Click handler for selection */
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
-  /** Keyboard handler */
-  onKeyDown: (e: React.KeyboardEvent) => void;
 }
 
 interface VirtualMenuProps<T> {
@@ -153,14 +151,21 @@ function VirtualMenuRoot<T>({
     }
   }, []);
 
-  // Handle keyboard navigation
+  // Store highlightedIndex in ref for stable keyboard handler
+  const highlightedIndexRef = React.useRef(safeHighlightedIndex);
+  highlightedIndexRef.current = safeHighlightedIndex;
+
+  // Handle keyboard navigation - uses refs for stable reference
   const handleKeyDown = React.useCallback(
     (e: React.KeyboardEvent) => {
+      const currentItems = itemsRef.current;
+      const currentHighlightedIndex = highlightedIndexRef.current;
+
       switch (e.key) {
         case 'ArrowDown': {
           e.preventDefault();
           const nextIndex =
-            safeHighlightedIndex < items.length - 1 ? safeHighlightedIndex + 1 : 0;
+            currentHighlightedIndex < currentItems.length - 1 ? currentHighlightedIndex + 1 : 0;
           setHighlightedIndex(nextIndex);
           virtualizer.scrollToIndex(nextIndex, { align: 'auto' });
           break;
@@ -168,7 +173,7 @@ function VirtualMenuRoot<T>({
         case 'ArrowUp': {
           e.preventDefault();
           const prevIndex =
-            safeHighlightedIndex > 0 ? safeHighlightedIndex - 1 : items.length - 1;
+            currentHighlightedIndex > 0 ? currentHighlightedIndex - 1 : currentItems.length - 1;
           setHighlightedIndex(prevIndex);
           virtualizer.scrollToIndex(prevIndex, { align: 'auto' });
           break;
@@ -181,7 +186,7 @@ function VirtualMenuRoot<T>({
         }
         case 'End': {
           e.preventDefault();
-          const lastIndex = items.length - 1;
+          const lastIndex = currentItems.length - 1;
           setHighlightedIndex(lastIndex);
           virtualizer.scrollToIndex(lastIndex, { align: 'end' });
           break;
@@ -189,14 +194,14 @@ function VirtualMenuRoot<T>({
         case 'Enter':
         case ' ': {
           e.preventDefault();
-          if (safeHighlightedIndex >= 0 && safeHighlightedIndex < items.length) {
-            onSelect?.(items[safeHighlightedIndex], safeHighlightedIndex);
+          if (currentHighlightedIndex >= 0 && currentHighlightedIndex < currentItems.length) {
+            onSelectRef.current?.(currentItems[currentHighlightedIndex], currentHighlightedIndex);
           }
           break;
         }
       }
     },
-    [safeHighlightedIndex, items, onSelect, virtualizer],
+    [virtualizer],
   );
 
   // Create item props generator - uses stable handlers with data-index for event delegation
@@ -220,9 +225,8 @@ function VirtualMenuRoot<T>({
       onMouseEnter: handleItemMouseEnter,
       onMouseLeave: noop,
       onClick: handleItemClick,
-      onKeyDown: handleKeyDown,
     }),
-    [safeHighlightedIndex, items.length, handleItemMouseEnter, handleItemClick, handleKeyDown],
+    [safeHighlightedIndex, items.length, handleItemMouseEnter, handleItemClick],
   );
 
   // Memoize root styles to prevent object recreation on each render
