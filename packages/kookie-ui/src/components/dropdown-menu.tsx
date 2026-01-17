@@ -22,6 +22,7 @@ import {
   useDrillDownOptional,
   useSubContext,
 } from './_internal/dropdown-menu-drill-down.js';
+import { MenuProvider } from './_internal/menu-context.js';
 import type { SubmenuBehavior } from './_internal/dropdown-menu-drill-down.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
 import { Kbd } from './kbd.js';
@@ -160,16 +161,18 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
       [color, memoizedThemeContext.accentColor],
     );
     const contentBody = (
-      <DropdownMenuContentContext.Provider
-        value={React.useMemo(
-          () => ({ size, variant, color: resolvedColor, highContrast, material }),
-          [size, variant, resolvedColor, highContrast, material],
-        )}
-      >
-        <DrillDownProvider submenuBehavior={submenuBehavior}>
-          <DrillDownRoot>{children}</DrillDownRoot>
-        </DrillDownProvider>
-      </DropdownMenuContentContext.Provider>
+      <MenuProvider>
+        <DropdownMenuContentContext.Provider
+          value={React.useMemo(
+            () => ({ size, variant, color: resolvedColor, highContrast, material }),
+            [size, variant, resolvedColor, highContrast, material],
+          )}
+        >
+          <DrillDownProvider submenuBehavior={submenuBehavior}>
+            <DrillDownRoot>{children}</DrillDownRoot>
+          </DrillDownProvider>
+        </DropdownMenuContentContext.Provider>
+      </MenuProvider>
     );
 
     return (

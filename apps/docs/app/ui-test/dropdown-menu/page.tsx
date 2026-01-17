@@ -1,7 +1,39 @@
 'use client';
 
 import * as React from 'react';
-import { DropdownMenu, Button, Flex, Box, Text, Heading, Slider, VirtualMenu } from '@kushagradhawan/kookie-ui';
+import { DropdownMenu, Button, Flex, Box, Text, Heading, Slider, VirtualMenu, type VirtualMenuRenderItemProps } from '@kushagradhawan/kookie-ui';
+
+// Custom item component for variable height example
+type VariableHeightItem = { id: string; type: 'header' | 'item'; label: string };
+
+const VariableHeightMenuItem = React.memo(function VariableHeightMenuItem({
+  item,
+  style,
+  ...props
+}: VirtualMenuRenderItemProps<VariableHeightItem>) {
+  const isHeader = item.type === 'header';
+  return (
+    <VirtualMenu.Item
+      {...props}
+      style={{
+        ...style,
+        height: isHeader ? 48 : 36,
+      }}
+    >
+      <span
+        style={{
+          fontWeight: isHeader ? 600 : 400,
+          fontSize: isHeader ? 11 : 14,
+          color: isHeader ? 'var(--gray-11)' : undefined,
+          textTransform: isHeader ? 'uppercase' : undefined,
+          letterSpacing: isHeader ? '0.05em' : undefined,
+        }}
+      >
+        {item.label}
+      </span>
+    </VirtualMenu.Item>
+  );
+});
 
 export default function DropdownMenuTest() {
   const [collisionPadding, setCollisionPadding] = React.useState(10);
@@ -78,19 +110,14 @@ export default function DropdownMenuTest() {
           </DropdownMenu.Trigger>
           <DropdownMenu.Content virtualized style={{ minWidth: 220, padding: 0 }}>
             <VirtualMenu
-              items={Array.from({ length: 1000 }, (_, i) => ({ 
-                id: String(i), 
-                label: `Item ${i + 1}` 
+              items={Array.from({ length: 1000 }, (_, i) => ({
+                id: String(i),
+                label: `Item ${i + 1}`
               }))}
+              itemLabel={(item) => item.label}
               onSelect={(item) => console.log('Selected:', item)}
               style={{ height: 300 }}
-            >
-              {(item, { isHighlighted, ...props }) => (
-                <VirtualMenu.Item {...props}>
-                  {item.label}
-                </VirtualMenu.Item>
-              )}
-            </VirtualMenu>
+            />
           </DropdownMenu.Content>
         </DropdownMenu.Root>
         <Text as="p" size="1" color="gray" mt="2">
@@ -110,32 +137,16 @@ export default function DropdownMenuTest() {
           </DropdownMenu.Trigger>
           <DropdownMenu.Content virtualized style={{ minWidth: 250, padding: 0 }}>
             <VirtualMenu
-              items={Array.from({ length: 100 }, (_, i) => ({ 
-                id: String(i), 
-                type: i % 10 === 0 ? 'header' : 'item',
+              items={Array.from({ length: 100 }, (_, i) => ({
+                id: String(i),
+                type: (i % 10 === 0 ? 'header' : 'item') as 'header' | 'item',
                 label: i % 10 === 0 ? `Section ${Math.floor(i / 10) + 1}` : `Item ${i + 1}`
               }))}
+              renderItem={VariableHeightMenuItem}
               estimatedItemSize={(index) => index % 10 === 0 ? 48 : 36}
               onSelect={(item) => console.log('Selected:', item)}
               style={{ height: 300 }}
-            >
-              {(item, { isHighlighted, ...props }) => (
-                <VirtualMenu.Item 
-                  {...props}
-                  style={{
-                    ...props.style,
-                    height: item.type === 'header' ? 48 : 36,
-                    fontWeight: item.type === 'header' ? 600 : 400,
-                    fontSize: item.type === 'header' ? 11 : 14,
-                    color: item.type === 'header' ? 'var(--gray-11)' : undefined,
-                    textTransform: item.type === 'header' ? 'uppercase' : undefined,
-                    letterSpacing: item.type === 'header' ? '0.05em' : undefined,
-                  }}
-                >
-                  {item.label}
-                </VirtualMenu.Item>
-              )}
-            </VirtualMenu>
+            />
           </DropdownMenu.Content>
         </DropdownMenu.Root>
         <Text as="p" size="1" color="gray" mt="2">

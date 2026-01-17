@@ -3,56 +3,61 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { useVirtualizer } from '@tanstack/react-virtual';
+import { useMenuContext } from './_internal/menu-context.js';
 
 /**
  * VirtualMenu - A virtualized menu component for rendering large lists efficiently.
- * 
+ *
  * Uses TanStack Virtual to render only visible items.
- * Works inside any container (DropdownMenu.Content, Sidebar.Content, Popover.Content, etc.)
- * 
+ * Works inside any container (DropdownMenu.Content, Popover.Content, etc.)
+ *
  * @example
- * <VirtualMenu items={items} onSelect={handleSelect}>
- *   {(item, { isHighlighted, ...props }) => (
- *     <VirtualMenu.Item {...props}>{item.label}</VirtualMenu.Item>
- *   )}
- * </VirtualMenu>
+ * // Simple usage with itemLabel
+ * <VirtualMenu
+ *   items={items}
+ *   itemLabel={(item) => item.name}
+ *   onSelect={handleSelect}
+ * />
+ *
+ * @example
+ * // Custom rendering with renderItem
+ * const UserItem = React.memo(({ item, ...props }) => (
+ *   <VirtualMenu.Item {...props}>
+ *     <Avatar src={item.avatar} />
+ *     {item.name}
+ *   </VirtualMenu.Item>
+ * ));
+ *
+ * <VirtualMenu items={users} renderItem={UserItem} onSelect={handleSelect} />
  */
-
-// ============================================================================
-// Constants
-// ============================================================================
-
-/** Stable no-op function to avoid creating new references */
-const noop = () => {};
 
 // ============================================================================
 // Types
 // ============================================================================
 
-interface VirtualMenuItemRenderProps {
-  /** Unique ID for accessibility (aria-activedescendant) */
-  id: string;
-  /** Whether this item is currently highlighted (keyboard/hover) */
+/** Props passed to custom renderItem components */
+interface VirtualMenuRenderItemProps<T> {
+  /** The item data */
+  item: T;
+  /** Index in the items array */
+  index: number;
+  /** Whether this item is currently highlighted */
   isHighlighted: boolean;
-  /** Positioning styles - must be applied for virtualization to work */
+  /** Unique ID for accessibility */
+  id: string;
+  /** Positioning styles - must be applied */
   style: React.CSSProperties;
-  /** Menu item role */
-  role: 'menuitem';
   /** Tab index for focus management */
   tabIndex: number;
-  /** Position in set for accessibility */
-  'aria-posinset': number;
-  /** Total set size for accessibility */
-  'aria-setsize': number;
   /** Data attribute for CSS styling */
   'data-highlighted': true | undefined;
-  /** Data attribute for event delegation - used internally */
+  /** Data attribute for event delegation */
   'data-index': number;
-  /** Mouse enter handler for hover highlighting */
+  /** Mouse enter handler */
   onMouseEnter: (e: React.MouseEvent<HTMLElement>) => void;
   /** Mouse leave handler */
   onMouseLeave: () => void;
-  /** Click handler for selection */
+  /** Click handler */
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
@@ -60,29 +65,100 @@ interface VirtualMenuProps<T> {
   /** Array of items to render */
   items: T[];
   /**
+   * Simple label accessor for basic text items.
+   * Can be a property key or a function.
+   * @example
+   * itemLabel="name"
+   * itemLabel={(item) => item.name}
+   */
+  itemLabel?: keyof T | ((item: T) => React.ReactNode);
+  /**
+   * Custom component for rendering items.
+   * Must be memoized (React.memo) for optimal performance.
+   * @example
+   * const MyItem = React.memo(({ item, ...props }) => (
+   *   <VirtualMenu.Item {...props}>{item.name}</VirtualMenu.Item>
+   * ));
+   * <VirtualMenu items={items} renderItem={MyItem} />
+   */
+  renderItem?: React.ComponentType<VirtualMenuRenderItemProps<T>>;
+  /**
    * Estimated height of each item in pixels.
    * Can be a number (same for all) or a function (per-item).
    * @default 36
-   * @example
-   * // Fixed height
-   * estimatedItemSize={36}
-   * // Variable heights
-   * estimatedItemSize={(index) => items[index].type === 'header' ? 48 : 36}
    */
   estimatedItemSize?: number | ((index: number) => number);
-  /** Number of items to render outside visible area (default: 5) */
+  /** Number of items to render outside visible area */
   overscan?: number;
   /** Callback when an item is selected */
   onSelect?: (item: T, index: number) => void;
-  /** Render function for each item */
-  children: (item: T, props: VirtualMenuItemRenderProps) => React.ReactNode;
-  /** Additional class name for the root element */
+  /** Additional class name */
   className?: string;
-  /** Additional styles for the root element */
+  /** Additional styles */
   style?: React.CSSProperties;
   /** Accessible label for the menu */
   'aria-label'?: string;
 }
+
+// ============================================================================
+// Internal Memoized Item Component
+// ============================================================================
+
+interface SimpleItemProps {
+  label: React.ReactNode;
+  isHighlighted: boolean;
+  id: string;
+  style: React.CSSProperties;
+  tabIndex: number;
+  'data-highlighted': true | undefined;
+  'data-index': number;
+  onMouseEnter: (e: React.MouseEvent<HTMLElement>) => void;
+  onMouseLeave: () => void;
+  onClick: (e: React.MouseEvent<HTMLElement>) => void;
+}
+
+const SimpleItem = React.memo(
+  function SimpleItem({
+    label,
+    isHighlighted: _isHighlighted,
+    id,
+    style,
+    tabIndex,
+    'data-highlighted': dataHighlighted,
+    'data-index': dataIndex,
+    onMouseEnter,
+    onMouseLeave,
+    onClick,
+  }: SimpleItemProps) {
+    return (
+      <div
+        id={id}
+        role="menuitem"
+        className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-VirtualMenuItem')}
+        style={style}
+        tabIndex={tabIndex}
+        data-highlighted={dataHighlighted}
+        data-index={dataIndex}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+      >
+        {label}
+      </div>
+    );
+  },
+  (prev, next) => {
+    // Custom comparison - only re-render if these change
+    if (prev.label !== next.label) return false;
+    if (prev['data-highlighted'] !== next['data-highlighted']) return false;
+    if (prev.style.height !== next.style.height) return false;
+    if (prev.style.transform !== next.style.transform) return false;
+    if (prev.tabIndex !== next.tabIndex) return false;
+    if (prev.id !== next.id) return false;
+    // Event handlers are stable, skip comparison
+    return true;
+  },
+);
 
 // ============================================================================
 // VirtualMenu Component
@@ -90,10 +166,11 @@ interface VirtualMenuProps<T> {
 
 function VirtualMenuRoot<T>({
   items,
+  itemLabel,
+  renderItem: RenderItem,
   estimatedItemSize = 36,
   overscan = 5,
   onSelect,
-  children,
   className,
   style,
   'aria-label': ariaLabel,
@@ -101,16 +178,28 @@ function VirtualMenuRoot<T>({
   const menuId = React.useId();
   const parentRef = React.useRef<HTMLDivElement>(null);
   const [highlightedIndex, setHighlightedIndex] = React.useState<number>(-1);
+  const { isInsideMenu } = useMenuContext();
 
-  // Derive safe highlighted index - clamp to valid range when items change
-  // This avoids useEffect and keeps highlight stable when possible
+  // Validate props
+  if (!itemLabel && !RenderItem) {
+    throw new Error('VirtualMenu requires either itemLabel or renderItem prop');
+  }
+
+  // Normalize itemLabel to a function
+  const getLabel = React.useMemo(() => {
+    if (!itemLabel) return null;
+    if (typeof itemLabel === 'function') return itemLabel;
+    return (item: T) => item[itemLabel] as React.ReactNode;
+  }, [itemLabel]);
+
+  // Derive safe highlighted index
   const safeHighlightedIndex = React.useMemo(() => {
     if (items.length === 0) return -1;
     if (highlightedIndex < 0) return -1;
     return Math.min(highlightedIndex, items.length - 1);
   }, [highlightedIndex, items.length]);
 
-  // Normalize estimatedItemSize to always be a function
+  // Normalize estimatedItemSize to a function
   const getItemSize = React.useMemo(
     () =>
       typeof estimatedItemSize === 'function'
@@ -128,17 +217,19 @@ function VirtualMenuRoot<T>({
 
   const virtualItems = virtualizer.getVirtualItems();
 
-  // Store items and onSelect in refs for stable handler references
+  // Refs for stable handler references
   const itemsRef = React.useRef(items);
   const onSelectRef = React.useRef(onSelect);
   itemsRef.current = items;
   onSelectRef.current = onSelect;
 
-  // Store scrollToIndex in ref for stable keyboard handler
   const scrollToIndexRef = React.useRef(virtualizer.scrollToIndex);
   scrollToIndexRef.current = virtualizer.scrollToIndex;
 
-  // Stable handler for mouse enter - reads index from data attribute
+  const highlightedIndexRef = React.useRef(safeHighlightedIndex);
+  highlightedIndexRef.current = safeHighlightedIndex;
+
+  // Stable event handlers
   const handleItemMouseEnter = React.useCallback((e: React.MouseEvent<HTMLElement>) => {
     const index = e.currentTarget.dataset.index;
     if (index != null) {
@@ -146,7 +237,6 @@ function VirtualMenuRoot<T>({
     }
   }, []);
 
-  // Stable handler for click - reads index from data attribute
   const handleItemClick = React.useCallback((e: React.MouseEvent<HTMLElement>) => {
     const index = e.currentTarget.dataset.index;
     if (index != null) {
@@ -158,11 +248,9 @@ function VirtualMenuRoot<T>({
     }
   }, []);
 
-  // Store highlightedIndex in ref for stable keyboard handler
-  const highlightedIndexRef = React.useRef(safeHighlightedIndex);
-  highlightedIndexRef.current = safeHighlightedIndex;
+  const noop = React.useCallback(() => {}, []);
 
-  // Handle keyboard navigation - uses refs for stable reference
+  // Keyboard navigation
   const handleKeyDown = React.useCallback((e: React.KeyboardEvent) => {
     const currentItems = itemsRef.current;
     const currentHighlightedIndex = highlightedIndexRef.current;
@@ -206,48 +294,23 @@ function VirtualMenuRoot<T>({
         break;
       }
       case 'Tab': {
-        // Prevent Tab from moving focus out of the menu
         e.preventDefault();
         break;
       }
       case 'Escape': {
-        // Blur the menu to allow parent (e.g., DropdownMenu) to handle close
         e.currentTarget.blur();
         break;
       }
     }
   }, []);
 
-  // Helper to generate item IDs for aria-activedescendant
+  // Item ID generator
   const getItemId = React.useCallback(
     (index: number) => `${menuId}-item-${index}`,
     [menuId],
   );
 
-  // Create item props generator - uses stable handlers with data-index for event delegation
-  // Static positioning styles (position, top, left, width) are in CSS for performance
-  const getItemProps = React.useCallback(
-    (index: number, virtualRow: { start: number; size: number }): VirtualMenuItemRenderProps => ({
-      id: getItemId(index),
-      isHighlighted: safeHighlightedIndex === index,
-      style: {
-        height: virtualRow.size,
-        transform: `translateY(${virtualRow.start}px)`,
-      },
-      role: 'menuitem',
-      tabIndex: safeHighlightedIndex === index ? 0 : -1,
-      'aria-posinset': index + 1,
-      'aria-setsize': items.length,
-      'data-highlighted': safeHighlightedIndex === index ? true : undefined,
-      'data-index': index,
-      onMouseEnter: handleItemMouseEnter,
-      onMouseLeave: noop,
-      onClick: handleItemClick,
-    }),
-    [getItemId, safeHighlightedIndex, items.length, handleItemMouseEnter, handleItemClick],
-  );
-
-  // Memoize root styles to prevent object recreation on each render
+  // Memoize styles
   const rootStyle = React.useMemo(
     () => ({
       overflow: 'auto' as const,
@@ -257,7 +320,6 @@ function VirtualMenuRoot<T>({
     [style],
   );
 
-  // Memoize viewport styles - only height changes based on total size
   const totalSize = virtualizer.getTotalSize();
   const viewportStyle = React.useMemo(
     () => ({
@@ -271,7 +333,7 @@ function VirtualMenuRoot<T>({
   return (
     <div
       ref={parentRef}
-      role="menu"
+      role={isInsideMenu ? undefined : 'menu'}
       aria-label={ariaLabel}
       aria-activedescendant={safeHighlightedIndex >= 0 ? getItemId(safeHighlightedIndex) : undefined}
       tabIndex={0}
@@ -282,11 +344,44 @@ function VirtualMenuRoot<T>({
       <div className="rt-VirtualMenuViewport" style={viewportStyle}>
         {virtualItems.map((virtualRow) => {
           const item = items[virtualRow.index];
-          const props = getItemProps(virtualRow.index, virtualRow);
+          const index = virtualRow.index;
+          const isHighlighted = safeHighlightedIndex === index;
+
+          const itemStyle: React.CSSProperties = {
+            height: virtualRow.size,
+            transform: `translateY(${virtualRow.start}px)`,
+          };
+
+          const commonProps = {
+            id: getItemId(index),
+            isHighlighted,
+            style: itemStyle,
+            tabIndex: isHighlighted ? 0 : -1,
+            'data-highlighted': isHighlighted ? true as const : undefined,
+            'data-index': index,
+            onMouseEnter: handleItemMouseEnter,
+            onMouseLeave: noop,
+            onClick: handleItemClick,
+          };
+
+          // Use renderItem if provided, otherwise use SimpleItem with itemLabel
+          if (RenderItem) {
+            return (
+              <RenderItem
+                key={virtualRow.key}
+                item={item}
+                index={index}
+                {...commonProps}
+              />
+            );
+          }
+
           return (
-            <React.Fragment key={virtualRow.key}>
-              {children(item, props)}
-            </React.Fragment>
+            <SimpleItem
+              key={virtualRow.key}
+              label={getLabel!(item)}
+              {...commonProps}
+            />
           );
         })}
       </div>
@@ -297,7 +392,7 @@ function VirtualMenuRoot<T>({
 VirtualMenuRoot.displayName = 'VirtualMenu';
 
 // ============================================================================
-// VirtualMenu.Item Component
+// VirtualMenu.Item Component (for custom renderItem usage)
 // ============================================================================
 
 interface VirtualMenuItemProps extends React.ComponentPropsWithoutRef<'div'> {
@@ -309,6 +404,7 @@ const VirtualMenuItemInner = React.forwardRef<HTMLDivElement, VirtualMenuItemPro
     return (
       <div
         ref={forwardedRef}
+        role="menuitem"
         className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-VirtualMenuItem', className)}
         {...props}
       >
@@ -320,28 +416,17 @@ const VirtualMenuItemInner = React.forwardRef<HTMLDivElement, VirtualMenuItemPro
 
 VirtualMenuItemInner.displayName = 'VirtualMenu.Item';
 
-// Memoized version with custom comparison for virtualized rendering
-// Compares only the values that affect rendering, not object references
+// Memoized with custom comparison
 const VirtualMenuItem = React.memo(VirtualMenuItemInner, (prevProps, nextProps) => {
-  // Compare style values (height, transform) instead of object reference
   const prevStyle = prevProps.style as React.CSSProperties | undefined;
   const nextStyle = nextProps.style as React.CSSProperties | undefined;
   if (prevStyle?.height !== nextStyle?.height) return false;
   if (prevStyle?.transform !== nextStyle?.transform) return false;
-
-  // Compare highlight state
   if (prevProps['data-highlighted'] !== nextProps['data-highlighted']) return false;
-
-  // Compare accessibility props
-  if (prevProps['aria-posinset'] !== nextProps['aria-posinset']) return false;
   if (prevProps.tabIndex !== nextProps.tabIndex) return false;
   if (prevProps.id !== nextProps.id) return false;
-
-  // Compare className and children
   if (prevProps.className !== nextProps.className) return false;
   if (prevProps.children !== nextProps.children) return false;
-
-  // Event handlers are stable (from useCallback with []), so we skip comparing them
   return true;
 });
 
@@ -354,4 +439,4 @@ const VirtualMenu = Object.assign(VirtualMenuRoot, {
 });
 
 export { VirtualMenu };
-export type { VirtualMenuProps, VirtualMenuItemProps, VirtualMenuItemRenderProps };
+export type { VirtualMenuProps, VirtualMenuItemProps, VirtualMenuRenderItemProps };
