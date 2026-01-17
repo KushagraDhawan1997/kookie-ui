@@ -440,6 +440,10 @@ Use `TriggerIcon` to add a dropdown indicator to custom triggers.
 
 For menus with many items (hundreds or thousands), use the `virtualized` prop with `VirtualMenu` to render only visible items. This dramatically improves performance by keeping the DOM small.
 
+### Simple Usage
+
+Use `itemLabel` for basic text items:
+
 ```tsx
 import { DropdownMenu, VirtualMenu, Button } from '@kushagradhawan/kookie-ui';
 
@@ -454,18 +458,13 @@ function VirtualizedExample() {
       <DropdownMenu.Trigger>
         <Button variant="soft">Open Menu</Button>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content virtualized>
+      <DropdownMenu.Content virtualized style={{ minWidth: 220, padding: 0 }}>
         <VirtualMenu
           items={items}
+          itemLabel={(item) => item.label}
           onSelect={(item) => console.log('Selected:', item)}
           style={{ height: 300 }}
-        >
-          {(item, props) => (
-            <VirtualMenu.Item {...props}>
-              {item.label}
-            </VirtualMenu.Item>
-          )}
-        </VirtualMenu>
+        />
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   );
@@ -475,104 +474,120 @@ function VirtualizedExample() {
 ### How It Works
 
 1. Set `virtualized` on `Content` to skip the built-in ScrollArea
-2. Use `VirtualMenu` with your items array and a render function
-3. Set a fixed `height` on VirtualMenu (required for virtualization)
-4. Spread the provided `props` onto `VirtualMenu.Item`
+2. Use `VirtualMenu` with your items array
+3. Provide `itemLabel` (for simple text) or `renderItem` (for custom rendering)
+4. Set a fixed `height` on VirtualMenu (required for virtualization)
 
 ### VirtualMenu Props
 
 | Prop                | Type                                      | Default | Description                                      |
 | ------------------- | ----------------------------------------- | ------- | ------------------------------------------------ |
 | `items`             | `T[]`                                     | —       | Array of items to render (required)              |
-| `children`          | `(item: T, props: ItemProps) => ReactNode`| —       | Render function for each item (required)         |
+| `itemLabel`         | `keyof T \| (item: T) => ReactNode`       | —       | Label accessor for simple text items             |
+| `renderItem`        | `React.ComponentType<RenderItemProps<T>>` | —       | Custom component for rendering items             |
 | `onSelect`          | `(item: T, index: number) => void`        | —       | Callback when an item is selected                |
-| `estimatedItemSize` | `number \| (index: number) => number`     | `36`    | Estimated height per item. Use a function for variable heights. |
+| `estimatedItemSize` | `number \| (index: number) => number`     | `36`    | Estimated height per item                        |
 | `overscan`          | `number`                                  | `5`     | Extra items to render above/below visible area   |
 | `style`             | `CSSProperties`                           | —       | Must include `height` for virtualization         |
 
-### Render Function Props
+You must provide either `itemLabel` or `renderItem`.
 
-The render function receives each item and props that **must be spread** onto your item element:
+### Custom Rendering with `renderItem`
+
+For custom item layouts, pass a memoized component to `renderItem`:
 
 ```tsx
-{(item, props) => (
-  <VirtualMenu.Item {...props}>{item.label}</VirtualMenu.Item>
-)}
+import { VirtualMenu, type VirtualMenuRenderItemProps } from '@kushagradhawan/kookie-ui';
+
+type User = { id: string; name: string; email: string; avatar: string };
+
+const UserItem = React.memo(function UserItem({
+  item,
+  style,
+  ...props
+}: VirtualMenuRenderItemProps<User>) {
+  return (
+    <VirtualMenu.Item {...props} style={style}>
+      <Avatar size="1" src={item.avatar} />
+      <span>{item.name}</span>
+      <span style={{ color: 'var(--gray-9)' }}>{item.email}</span>
+    </VirtualMenu.Item>
+  );
+});
+
+<VirtualMenu
+  items={users}
+  renderItem={UserItem}
+  onSelect={(user) => selectUser(user)}
+  style={{ height: 400 }}
+/>
 ```
 
-**Why spreading is required:**
+**Important:** The `renderItem` component must:
+- Be wrapped in `React.memo` for optimal performance
+- Spread `style` and other props onto `VirtualMenu.Item`
 
-- **`style`** — Contains `position: absolute` and `transform: translateY(...)` that positions each item at its virtual scroll position. Without it, all items stack at the top.
-- **Event handlers** — `onClick`, `onMouseEnter`, `onKeyDown` enable selection, hover highlighting, and keyboard navigation.
-- **ARIA attributes** — `aria-posinset` and `aria-setsize` tell screen readers "Item 5 of 1000" even though only ~20 items exist in the DOM.
+### RenderItem Props
+
+Props passed to your `renderItem` component:
 
 | Prop              | Type              | Description                                        |
 | ----------------- | ----------------- | -------------------------------------------------- |
+| `item`            | `T`               | The item data                                      |
+| `index`           | `number`          | Index in the items array                           |
 | `isHighlighted`   | `boolean`         | Whether the item is currently highlighted          |
 | `style`           | `CSSProperties`   | Positioning styles (required for virtualization)   |
-| `role`            | `'menuitem'`      | ARIA role                                          |
+| `id`              | `string`          | Unique ID for accessibility                        |
 | `tabIndex`        | `number`          | Focus management                                   |
-| `aria-posinset`   | `number`          | Position in set for screen readers                 |
-| `aria-setsize`    | `number`          | Total items for screen readers                     |
 | `data-highlighted`| `boolean`         | CSS styling hook                                   |
+| `data-index`      | `number`          | Index for event delegation                         |
 | `onMouseEnter`    | `() => void`      | Hover handler                                      |
 | `onClick`         | `() => void`      | Selection handler                                  |
-| `onKeyDown`       | `(e) => void`     | Keyboard navigation                                |
-
-You can destructure `isHighlighted` for custom styling while spreading the rest:
-
-```tsx
-{(item, { isHighlighted, ...props }) => (
-  <VirtualMenu.Item {...props} data-active={isHighlighted}>
-    {item.label}
-  </VirtualMenu.Item>
-)}
-```
+| `onKeyDown`       | `(e) => void`     | Keyboard handler                                   |
 
 ### Variable Height Items
 
 Use a function for `estimatedItemSize` when items have different heights:
 
 ```tsx
-const items = [
-  { type: 'header', label: 'Section A' },
-  { type: 'item', label: 'Item 1' },
-  { type: 'item', label: 'Item 2' },
-  { type: 'header', label: 'Section B' },
+type Item = { id: string; type: 'header' | 'item'; label: string };
+
+const SectionItem = React.memo(function SectionItem({
+  item,
+  style,
+  ...props
+}: VirtualMenuRenderItemProps<Item>) {
+  const isHeader = item.type === 'header';
+  return (
+    <VirtualMenu.Item
+      {...props}
+      style={{ ...style, height: isHeader ? 48 : 36 }}
+    >
+      <span style={{
+        fontWeight: isHeader ? 600 : 400,
+        fontSize: isHeader ? 11 : 14,
+        textTransform: isHeader ? 'uppercase' : undefined,
+      }}>
+        {item.label}
+      </span>
+    </VirtualMenu.Item>
+  );
+});
+
+const items: Item[] = [
+  { id: '0', type: 'header', label: 'Section A' },
+  { id: '1', type: 'item', label: 'Item 1' },
+  { id: '2', type: 'item', label: 'Item 2' },
+  { id: '3', type: 'header', label: 'Section B' },
   // ...
 ];
 
 <VirtualMenu
   items={items}
+  renderItem={SectionItem}
   estimatedItemSize={(index) => items[index].type === 'header' ? 48 : 36}
   style={{ height: 300 }}
->
-  {(item, props) => (
-    <VirtualMenu.Item {...props}>
-      {item.type === 'header' ? <strong>{item.label}</strong> : item.label}
-    </VirtualMenu.Item>
-  )}
-</VirtualMenu>
-```
-
-### Custom Item Rendering
-
-You can render custom content inside `VirtualMenu.Item`:
-
-```tsx
-<VirtualMenu
-  items={users}
-  onSelect={(user) => selectUser(user)}
-  style={{ height: 400 }}
->
-  {(user, props) => (
-    <VirtualMenu.Item {...props}>
-      <Avatar size="1" src={user.avatar} fallback={user.initials} />
-      <span>{user.name}</span>
-      <span style={{ color: 'var(--gray-9)' }}>{user.email}</span>
-    </VirtualMenu.Item>
-  )}
-</VirtualMenu>
+/>
 ```
 
 ### Keyboard Navigation
@@ -586,6 +601,7 @@ VirtualMenu supports full keyboard navigation:
 | `Home`           | Jump to first item                  |
 | `End`            | Jump to last item                   |
 | `Enter` / `Space`| Select highlighted item             |
+| `Escape`         | Close menu                          |
 
 ## Controlled
 
