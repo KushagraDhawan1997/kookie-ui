@@ -18,8 +18,8 @@ import { extractProps } from '../helpers/extract-props.js';
 import {
   DrillDownProvider,
   SubContext,
-  useDrillDown,
-  useDrillDownOptional,
+  useDrillDownActionsOptional,
+  useDrillDownStateOptional,
   useSubContext,
 } from './_internal/dropdown-menu-drill-down.js';
 import { MenuProvider } from './_internal/menu-context.js';
@@ -53,12 +53,13 @@ DropdownMenuTrigger.displayName = 'DropdownMenu.Trigger';
 /**
  * Internal component that wraps root menu items and handles visibility in drill-down mode.
  * In drill-down mode, this hides when a submenu is active.
+ * Uses state-only hook to subscribe only to state changes, not action changes.
  */
 function DrillDownRoot({ children }: { children: React.ReactNode }) {
-  const drillDown = useDrillDownOptional();
+  const drillDownState = useDrillDownStateOptional();
 
   // In cascade mode or when no drill-down context, always show
-  if (!drillDown || drillDown.behavior === 'cascade') {
+  if (!drillDownState || drillDownState.behavior === 'cascade') {
     return <>{children}</>;
   }
 
@@ -66,8 +67,8 @@ function DrillDownRoot({ children }: { children: React.ReactNode }) {
   return (
     <div
       className="rt-DropdownMenuDrillDownRoot"
-      data-drill-down-active={drillDown.isRoot ? undefined : true}
-      data-animation-direction={drillDown.animationDirection ?? undefined}
+      data-drill-down-active={drillDownState.isRoot ? undefined : true}
+      data-animation-direction={drillDownState.animationDirection ?? undefined}
     >
       {children}
     </div>
@@ -389,7 +390,8 @@ interface DropdownMenuSubProps
   label?: React.ReactNode;
 }
 const DropdownMenuSub: React.FC<DropdownMenuSubProps> = ({ label = 'Back', ...props }) => {
-  const drillDown = useDrillDownOptional();
+  // Use state-only hook since we only need behavior check
+  const drillDownState = useDrillDownStateOptional();
   const subId = useSubId();
 
   // Create context value for SubContent and SubTrigger
@@ -400,7 +402,7 @@ const DropdownMenuSub: React.FC<DropdownMenuSubProps> = ({ label = 'Back', ...pr
 
   // In drill-down mode, we don't use Radix's Sub component
   // We just provide the SubContext and render children
-  if (drillDown?.behavior === 'drill-down') {
+  if (drillDownState?.behavior === 'drill-down') {
     return (
       <SubContext.Provider value={subContextValue}>
         {props.children}
@@ -425,29 +427,43 @@ const DropdownMenuSubTrigger = React.forwardRef<
   DropdownMenuSubTriggerProps
 >((props, forwardedRef) => {
   const { className, children, onClick, ...subTriggerProps } = props;
-  const drillDown = useDrillDownOptional();
+  // Use split hooks: actions for stable push callback, state only for behavior check
+  const drillDownActions = useDrillDownActionsOptional();
+  const drillDownState = useDrillDownStateOptional();
   const subContext = useSubContext();
 
-  // In drill-down mode, render a button that navigates to the submenu
-  if (drillDown?.behavior === 'drill-down' && subContext) {
-    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      drillDown.push(subContext.id);
-      (onClick as React.MouseEventHandler<HTMLDivElement> | undefined)?.(e);
-    };
+  // Store onClick in ref to avoid recreating handlers when onClick changes
+  const onClickRef = React.useRef(onClick);
+  onClickRef.current = onClick;
 
+  // Stable click handler - only depends on stable refs
+  const handleClick = React.useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (subContext && drillDownActions) {
+      drillDownActions.push(subContext.id);
+    }
+    (onClickRef.current as React.MouseEventHandler<HTMLDivElement> | undefined)?.(e);
+  }, [subContext, drillDownActions]);
+
+  // Stable keydown handler
+  const handleKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (subContext && drillDownActions) {
+        drillDownActions.push(subContext.id);
+      }
+    }
+  }, [subContext, drillDownActions]);
+
+  // In drill-down mode, render a button that navigates to the submenu
+  if (drillDownState?.behavior === 'drill-down' && subContext) {
     return (
       <div
         role="menuitem"
         tabIndex={0}
         ref={forwardedRef as React.Ref<HTMLDivElement>}
         onClick={handleClick}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            drillDown.push(subContext.id);
-          }
-        }}
+        onKeyDown={handleKeyDown}
         className={classNames(
           'rt-reset',
           'rt-BaseMenuItem',
@@ -509,24 +525,33 @@ DropdownMenuSeparator.displayName = 'DropdownMenu.Separator';
 
 /**
  * Internal component for the drill-down back button.
+ * Uses actions-only hook since it only needs to call pop(), never reads state.
+ * This prevents re-renders when drill-down state changes.
  */
 function DrillDownBackItem({ label }: { label: React.ReactNode }) {
-  const drillDown = useDrillDown();
+  // Use actions-only hook for stable pop callback - prevents re-renders on stack changes
+  const { pop } = useDrillDownActionsOptional() ?? {};
+
+  // Stable click handler
+  const handleClick = React.useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    pop?.();
+  }, [pop]);
+
+  // Stable keydown handler
+  const handleKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      pop?.();
+    }
+  }, [pop]);
 
   return (
     <div
       role="menuitem"
       tabIndex={0}
-      onClick={(e) => {
-        e.preventDefault();
-        drillDown.pop();
-      }}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          drillDown.pop();
-        }
-      }}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
       className={classNames(
         'rt-reset',
         'rt-BaseMenuItem',
@@ -550,13 +575,12 @@ const DropdownMenuSubContent = React.forwardRef<
   DropdownMenuSubContentElement,
   DropdownMenuSubContentProps
 >((props, forwardedRef) => {
-  // Memoize context consumption to prevent unnecessary re-renders
-  const contextValue = React.useContext(DropdownMenuContentContext);
-  const { size, variant, color, highContrast, material } = React.useMemo(
-    () => contextValue,
-    [contextValue],
+  // Get context values directly - memoization at provider level handles stability
+  const { size, variant, color, highContrast, material } = React.useContext(
+    DropdownMenuContentContext,
   );
-  const drillDown = useDrillDownOptional();
+  // Use state-only hook since we only need behavior and isActive (no actions)
+  const drillDownState = useDrillDownStateOptional();
   const subContext = useSubContext();
 
   const {
@@ -573,8 +597,8 @@ const DropdownMenuSubContent = React.forwardRef<
   );
 
   // In drill-down mode, render inline instead of in a portal
-  if (drillDown?.behavior === 'drill-down' && subContext) {
-    const isActive = drillDown.isActive(subContext.id);
+  if (drillDownState?.behavior === 'drill-down' && subContext) {
+    const isActive = drillDownState.isActive(subContext.id);
 
     return (
       <div
@@ -582,7 +606,7 @@ const DropdownMenuSubContent = React.forwardRef<
         role="menu"
         aria-label={typeof subContext.label === 'string' ? subContext.label : undefined}
         data-drill-down-active={isActive ? true : undefined}
-        data-animation-direction={drillDown.animationDirection ?? undefined}
+        data-animation-direction={drillDownState.animationDirection ?? undefined}
         className={classNames(
           'rt-DropdownMenuDrillDownPanel',
           className,
