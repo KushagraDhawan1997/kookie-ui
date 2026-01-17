@@ -44,12 +44,14 @@ interface VirtualMenuItemRenderProps {
   'aria-setsize': number;
   /** Data attribute for CSS styling */
   'data-highlighted': true | undefined;
+  /** Data attribute for event delegation - used internally */
+  'data-index': number;
   /** Mouse enter handler for hover highlighting */
-  onMouseEnter: () => void;
+  onMouseEnter: (e: React.MouseEvent<HTMLElement>) => void;
   /** Mouse leave handler */
   onMouseLeave: () => void;
   /** Click handler for selection */
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<HTMLElement>) => void;
   /** Keyboard handler */
   onKeyDown: (e: React.KeyboardEvent) => void;
 }
@@ -125,6 +127,32 @@ function VirtualMenuRoot<T>({
 
   const virtualItems = virtualizer.getVirtualItems();
 
+  // Store items and onSelect in refs for stable handler references
+  const itemsRef = React.useRef(items);
+  const onSelectRef = React.useRef(onSelect);
+  itemsRef.current = items;
+  onSelectRef.current = onSelect;
+
+  // Stable handler for mouse enter - reads index from data attribute
+  const handleItemMouseEnter = React.useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const index = e.currentTarget.dataset.index;
+    if (index != null) {
+      setHighlightedIndex(Number(index));
+    }
+  }, []);
+
+  // Stable handler for click - reads index from data attribute
+  const handleItemClick = React.useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const index = e.currentTarget.dataset.index;
+    if (index != null) {
+      const idx = Number(index);
+      const currentItems = itemsRef.current;
+      if (idx >= 0 && idx < currentItems.length) {
+        onSelectRef.current?.(currentItems[idx], idx);
+      }
+    }
+  }, []);
+
   // Handle keyboard navigation
   const handleKeyDown = React.useCallback(
     (e: React.KeyboardEvent) => {
@@ -171,7 +199,7 @@ function VirtualMenuRoot<T>({
     [safeHighlightedIndex, items, onSelect, virtualizer],
   );
 
-  // Create item props generator
+  // Create item props generator - uses stable handlers with data-index for event delegation
   const getItemProps = React.useCallback(
     (index: number, virtualRow: { start: number; size: number }): VirtualMenuItemRenderProps => ({
       isHighlighted: safeHighlightedIndex === index,
@@ -188,12 +216,13 @@ function VirtualMenuRoot<T>({
       'aria-posinset': index + 1,
       'aria-setsize': items.length,
       'data-highlighted': safeHighlightedIndex === index ? true : undefined,
-      onMouseEnter: () => setHighlightedIndex(index),
+      'data-index': index,
+      onMouseEnter: handleItemMouseEnter,
       onMouseLeave: noop,
-      onClick: () => onSelect?.(items[index], index),
+      onClick: handleItemClick,
       onKeyDown: handleKeyDown,
     }),
-    [safeHighlightedIndex, items, onSelect, handleKeyDown],
+    [safeHighlightedIndex, items.length, handleItemMouseEnter, handleItemClick, handleKeyDown],
   );
 
   // Memoize root styles to prevent object recreation on each render
@@ -206,6 +235,17 @@ function VirtualMenuRoot<T>({
     [style],
   );
 
+  // Memoize viewport styles - only height changes based on total size
+  const totalSize = virtualizer.getTotalSize();
+  const viewportStyle = React.useMemo(
+    () => ({
+      height: `${totalSize}px`,
+      width: '100%' as const,
+      position: 'relative' as const,
+    }),
+    [totalSize],
+  );
+
   return (
     <div
       ref={parentRef}
@@ -216,14 +256,7 @@ function VirtualMenuRoot<T>({
       className={classNames('rt-VirtualMenuRoot', className)}
       style={rootStyle}
     >
-      <div
-        className="rt-VirtualMenuViewport"
-        style={{
-          height: `${virtualizer.getTotalSize()}px`,
-          width: '100%',
-          position: 'relative',
-        }}
-      >
+      <div className="rt-VirtualMenuViewport" style={viewportStyle}>
         {virtualItems.map((virtualRow) => {
           const item = items[virtualRow.index];
           const props = getItemProps(virtualRow.index, virtualRow);
