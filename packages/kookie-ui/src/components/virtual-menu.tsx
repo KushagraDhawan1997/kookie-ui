@@ -59,6 +59,8 @@ interface VirtualMenuRenderItemProps<T> {
   onMouseLeave: () => void;
   /** Click handler */
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
+  /** Keyboard handler for Enter/Space activation */
+  onKeyDown: (e: React.KeyboardEvent<HTMLElement>) => void;
 }
 
 interface VirtualMenuProps<T> {
@@ -115,6 +117,7 @@ interface SimpleItemProps {
   onMouseEnter: (e: React.MouseEvent<HTMLElement>) => void;
   onMouseLeave: () => void;
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
+  onKeyDown: (e: React.KeyboardEvent<HTMLElement>) => void;
 }
 
 const SimpleItem = React.memo(
@@ -129,6 +132,7 @@ const SimpleItem = React.memo(
     onMouseEnter,
     onMouseLeave,
     onClick,
+    onKeyDown,
   }: SimpleItemProps) {
     return (
       <div
@@ -142,6 +146,7 @@ const SimpleItem = React.memo(
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onClick={onClick}
+        onKeyDown={onKeyDown}
       >
         {label}
       </div>
@@ -249,6 +254,21 @@ function VirtualMenuRoot<T>({
   }, []);
 
   const noop = React.useCallback(() => {}, []);
+
+  // Item-level keyboard handler for Enter/Space activation (satisfies a11y lint rule)
+  const handleItemKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      const index = e.currentTarget.dataset.index;
+      if (index != null) {
+        const idx = Number(index);
+        const currentItems = itemsRef.current;
+        if (idx >= 0 && idx < currentItems.length) {
+          onSelectRef.current?.(currentItems[idx], idx);
+        }
+      }
+    }
+  }, []);
 
   // Keyboard navigation
   const handleKeyDown = React.useCallback((e: React.KeyboardEvent) => {
@@ -362,6 +382,7 @@ function VirtualMenuRoot<T>({
             onMouseEnter: handleItemMouseEnter,
             onMouseLeave: noop,
             onClick: handleItemClick,
+            onKeyDown: handleItemKeyDown,
           };
 
           // Use renderItem if provided, otherwise use SimpleItem with itemLabel
