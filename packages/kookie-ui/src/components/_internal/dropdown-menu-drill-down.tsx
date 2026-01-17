@@ -148,14 +148,8 @@ interface DrillDownStateContextValue {
   animationDirection: AnimationDirection;
 }
 
-/** Combined context value for backwards compatibility */
-interface DrillDownContextValue extends DrillDownActionsContextValue, DrillDownStateContextValue {}
-
 const DrillDownActionsContext = React.createContext<DrillDownActionsContextValue | null>(null);
 const DrillDownStateContext = React.createContext<DrillDownStateContextValue | null>(null);
-
-// Legacy combined context for backwards compatibility
-const DrillDownContext = React.createContext<DrillDownContextValue | null>(null);
 
 interface DrillDownProviderProps {
   children: React.ReactNode;
@@ -228,36 +222,13 @@ function DrillDownProvider({ children, submenuBehavior }: DrillDownProviderProps
     [behavior, ready, stack, isActive, animationDirection]
   );
 
-  // Combined value for legacy context
-  const combinedValue = React.useMemo(
-    (): DrillDownContextValue => ({ ...actionsValue, ...stateValue }),
-    [actionsValue, stateValue]
-  );
-
   return (
     <DrillDownActionsContext.Provider value={actionsValue}>
       <DrillDownStateContext.Provider value={stateValue}>
-        <DrillDownContext.Provider value={combinedValue}>
-          {children}
-        </DrillDownContext.Provider>
+        {children}
       </DrillDownStateContext.Provider>
     </DrillDownActionsContext.Provider>
   );
-}
-
-function useDrillDown() {
-  const ctx = React.useContext(DrillDownContext);
-  if (!ctx) {
-    throw new Error('useDrillDown must be used within a DropdownMenu.Content');
-  }
-  return ctx;
-}
-
-/**
- * Hook to check if drill-down context is available (i.e., we're inside Content)
- */
-function useDrillDownOptional() {
-  return React.useContext(DrillDownContext);
 }
 
 /**
@@ -318,12 +289,9 @@ function useSubContext() {
 
 export {
   DrillDownProvider,
-  DrillDownContext,
   DrillDownActionsContext,
   DrillDownStateContext,
   SubContext,
-  useDrillDown,
-  useDrillDownOptional,
   useDrillDownActions,
   useDrillDownActionsOptional,
   useDrillDownState,
@@ -335,7 +303,6 @@ export {
 
 export type {
   SubmenuBehavior,
-  DrillDownContextValue,
   DrillDownActionsContextValue,
   DrillDownStateContextValue,
   SubContextValue,
