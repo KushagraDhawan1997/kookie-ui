@@ -30,6 +30,8 @@ const noop = () => {};
 // ============================================================================
 
 interface VirtualMenuItemRenderProps {
+  /** Unique ID for accessibility (aria-activedescendant) */
+  id: string;
   /** Whether this item is currently highlighted (keyboard/hover) */
   isHighlighted: boolean;
   /** Positioning styles - must be applied for virtualization to work */
@@ -96,6 +98,7 @@ function VirtualMenuRoot<T>({
   style,
   'aria-label': ariaLabel,
 }: VirtualMenuProps<T>) {
+  const menuId = React.useId();
   const parentRef = React.useRef<HTMLDivElement>(null);
   const [highlightedIndex, setHighlightedIndex] = React.useState<number>(-1);
 
@@ -131,6 +134,10 @@ function VirtualMenuRoot<T>({
   itemsRef.current = items;
   onSelectRef.current = onSelect;
 
+  // Store scrollToIndex in ref for stable keyboard handler
+  const scrollToIndexRef = React.useRef(virtualizer.scrollToIndex);
+  scrollToIndexRef.current = virtualizer.scrollToIndex;
+
   // Stable handler for mouse enter - reads index from data attribute
   const handleItemMouseEnter = React.useCallback((e: React.MouseEvent<HTMLElement>) => {
     const index = e.currentTarget.dataset.index;
@@ -156,64 +163,75 @@ function VirtualMenuRoot<T>({
   highlightedIndexRef.current = safeHighlightedIndex;
 
   // Handle keyboard navigation - uses refs for stable reference
-  const handleKeyDown = React.useCallback(
-    (e: React.KeyboardEvent) => {
-      const currentItems = itemsRef.current;
-      const currentHighlightedIndex = highlightedIndexRef.current;
+  const handleKeyDown = React.useCallback((e: React.KeyboardEvent) => {
+    const currentItems = itemsRef.current;
+    const currentHighlightedIndex = highlightedIndexRef.current;
 
-      switch (e.key) {
-        case 'ArrowDown': {
-          e.preventDefault();
-          const nextIndex =
-            currentHighlightedIndex < currentItems.length - 1 ? currentHighlightedIndex + 1 : 0;
-          setHighlightedIndex(nextIndex);
-          virtualizer.scrollToIndex(nextIndex, { align: 'auto' });
-          break;
-        }
-        case 'ArrowUp': {
-          e.preventDefault();
-          const prevIndex =
-            currentHighlightedIndex > 0 ? currentHighlightedIndex - 1 : currentItems.length - 1;
-          setHighlightedIndex(prevIndex);
-          virtualizer.scrollToIndex(prevIndex, { align: 'auto' });
-          break;
-        }
-        case 'Home': {
-          e.preventDefault();
-          setHighlightedIndex(0);
-          virtualizer.scrollToIndex(0, { align: 'start' });
-          break;
-        }
-        case 'End': {
-          e.preventDefault();
-          const lastIndex = currentItems.length - 1;
-          setHighlightedIndex(lastIndex);
-          virtualizer.scrollToIndex(lastIndex, { align: 'end' });
-          break;
-        }
-        case 'Enter':
-        case ' ': {
-          e.preventDefault();
-          if (currentHighlightedIndex >= 0 && currentHighlightedIndex < currentItems.length) {
-            onSelectRef.current?.(currentItems[currentHighlightedIndex], currentHighlightedIndex);
-          }
-          break;
-        }
+    switch (e.key) {
+      case 'ArrowDown': {
+        e.preventDefault();
+        const nextIndex =
+          currentHighlightedIndex < currentItems.length - 1 ? currentHighlightedIndex + 1 : 0;
+        setHighlightedIndex(nextIndex);
+        scrollToIndexRef.current(nextIndex, { align: 'auto' });
+        break;
       }
-    },
-    [virtualizer],
+      case 'ArrowUp': {
+        e.preventDefault();
+        const prevIndex =
+          currentHighlightedIndex > 0 ? currentHighlightedIndex - 1 : currentItems.length - 1;
+        setHighlightedIndex(prevIndex);
+        scrollToIndexRef.current(prevIndex, { align: 'auto' });
+        break;
+      }
+      case 'Home': {
+        e.preventDefault();
+        setHighlightedIndex(0);
+        scrollToIndexRef.current(0, { align: 'start' });
+        break;
+      }
+      case 'End': {
+        e.preventDefault();
+        const lastIndex = currentItems.length - 1;
+        setHighlightedIndex(lastIndex);
+        scrollToIndexRef.current(lastIndex, { align: 'end' });
+        break;
+      }
+      case 'Enter':
+      case ' ': {
+        e.preventDefault();
+        if (currentHighlightedIndex >= 0 && currentHighlightedIndex < currentItems.length) {
+          onSelectRef.current?.(currentItems[currentHighlightedIndex], currentHighlightedIndex);
+        }
+        break;
+      }
+      case 'Tab': {
+        // Prevent Tab from moving focus out of the menu
+        e.preventDefault();
+        break;
+      }
+      case 'Escape': {
+        // Blur the menu to allow parent (e.g., DropdownMenu) to handle close
+        e.currentTarget.blur();
+        break;
+      }
+    }
+  }, []);
+
+  // Helper to generate item IDs for aria-activedescendant
+  const getItemId = React.useCallback(
+    (index: number) => `${menuId}-item-${index}`,
+    [menuId],
   );
 
   // Create item props generator - uses stable handlers with data-index for event delegation
+  // Static positioning styles (position, top, left, width) are in CSS for performance
   const getItemProps = React.useCallback(
     (index: number, virtualRow: { start: number; size: number }): VirtualMenuItemRenderProps => ({
+      id: getItemId(index),
       isHighlighted: safeHighlightedIndex === index,
       style: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: `${virtualRow.size}px`,
+        height: virtualRow.size,
         transform: `translateY(${virtualRow.start}px)`,
       },
       role: 'menuitem',
@@ -226,7 +244,7 @@ function VirtualMenuRoot<T>({
       onMouseLeave: noop,
       onClick: handleItemClick,
     }),
-    [safeHighlightedIndex, items.length, handleItemMouseEnter, handleItemClick],
+    [getItemId, safeHighlightedIndex, items.length, handleItemMouseEnter, handleItemClick],
   );
 
   // Memoize root styles to prevent object recreation on each render
@@ -255,6 +273,7 @@ function VirtualMenuRoot<T>({
       ref={parentRef}
       role="menu"
       aria-label={ariaLabel}
+      aria-activedescendant={safeHighlightedIndex >= 0 ? getItemId(safeHighlightedIndex) : undefined}
       tabIndex={0}
       onKeyDown={handleKeyDown}
       className={classNames('rt-VirtualMenuRoot', className)}
@@ -285,7 +304,7 @@ interface VirtualMenuItemProps extends React.ComponentPropsWithoutRef<'div'> {
   children: React.ReactNode;
 }
 
-const VirtualMenuItem = React.forwardRef<HTMLDivElement, VirtualMenuItemProps>(
+const VirtualMenuItemInner = React.forwardRef<HTMLDivElement, VirtualMenuItemProps>(
   ({ className, children, ...props }, forwardedRef) => {
     return (
       <div
@@ -299,7 +318,32 @@ const VirtualMenuItem = React.forwardRef<HTMLDivElement, VirtualMenuItemProps>(
   },
 );
 
-VirtualMenuItem.displayName = 'VirtualMenu.Item';
+VirtualMenuItemInner.displayName = 'VirtualMenu.Item';
+
+// Memoized version with custom comparison for virtualized rendering
+// Compares only the values that affect rendering, not object references
+const VirtualMenuItem = React.memo(VirtualMenuItemInner, (prevProps, nextProps) => {
+  // Compare style values (height, transform) instead of object reference
+  const prevStyle = prevProps.style as React.CSSProperties | undefined;
+  const nextStyle = nextProps.style as React.CSSProperties | undefined;
+  if (prevStyle?.height !== nextStyle?.height) return false;
+  if (prevStyle?.transform !== nextStyle?.transform) return false;
+
+  // Compare highlight state
+  if (prevProps['data-highlighted'] !== nextProps['data-highlighted']) return false;
+
+  // Compare accessibility props
+  if (prevProps['aria-posinset'] !== nextProps['aria-posinset']) return false;
+  if (prevProps.tabIndex !== nextProps.tabIndex) return false;
+  if (prevProps.id !== nextProps.id) return false;
+
+  // Compare className and children
+  if (prevProps.className !== nextProps.className) return false;
+  if (prevProps.children !== nextProps.children) return false;
+
+  // Event handlers are stable (from useCallback with []), so we skip comparing them
+  return true;
+});
 
 // ============================================================================
 // Exports
