@@ -31,7 +31,13 @@
 }
 
 .rt-VirtualMenuItem {
-  /* Ensure proper box model for absolute positioning */
+  /* Absolute positioning for virtualization */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  /* Ensure proper box model */
   box-sizing: border-box;
 
   /* Inherit from rt-BaseMenuItem for consistent styling */
