@@ -1,6 +1,13 @@
 import esbuild from 'esbuild';
+import pkg from '../package.json' with { type: 'json' };
 
 const dir = 'dist/cjs';
+
+// Mark all dependencies and peer dependencies as external to prevent bundling
+const external = [
+  ...Object.keys(pkg.dependencies || {}),
+  ...Object.keys(pkg.peerDependencies || {}),
+];
 
 /** @type {import('esbuild').BuildOptions} */
 const options = {
@@ -10,6 +17,7 @@ const options = {
   target: 'es2020',
   sourcemap: true,
   minify: true,
+  external,
 };
 
 // Check if "watch=true" flag is passed

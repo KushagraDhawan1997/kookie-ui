@@ -1,5 +1,4 @@
 import * as React from 'react';
-import classNames from 'classnames';
 import { Slot } from 'radix-ui';
 
 import { extractProps } from '../helpers/extract-props.js';
@@ -19,26 +18,48 @@ type TextLabelProps = { as: 'label' } & ComponentPropsWithout<'label', RemovedPr
 type TextPProps = { as: 'p' } & ComponentPropsWithout<'p', RemovedProps>;
 type TextProps = CommonTextProps & (TextSpanProps | TextDivProps | TextLabelProps | TextPProps);
 
-const Text = React.forwardRef<TextElement, TextProps>((props, forwardedRef) => {
-  const {
-    children,
-    className,
-    asChild,
-    as: Tag = 'span',
-    color,
-    ...textProps
-  } = extractProps(props, textPropDefs, marginPropDefs);
-  return (
-    <Slot.Root
-      data-accent-color={color}
-      {...textProps}
-      ref={forwardedRef}
-      className={classNames('rt-Text', className)}
-    >
-      {asChild ? children : <Tag>{children}</Tag>}
-    </Slot.Root>
-  );
-});
+// Pre-merge prop definitions at module level to avoid per-render allocation
+const mergedPropDefs = { ...textPropDefs, ...marginPropDefs };
+
+const Text = React.memo(
+  React.forwardRef<TextElement, TextProps>((props, forwardedRef) => {
+    const {
+      children,
+      className,
+      asChild,
+      as: Tag = 'span',
+      color,
+      ...textProps
+    } = extractProps(props, mergedPropDefs);
+
+    const combinedClassName = className ? `rt-Text ${className}` : 'rt-Text';
+
+    if (asChild) {
+      return (
+        <Slot.Root
+          data-accent-color={color}
+          {...textProps}
+          ref={forwardedRef}
+          className={combinedClassName}
+        >
+          {children}
+        </Slot.Root>
+      );
+    }
+
+    return (
+      <Tag
+        data-accent-color={color}
+        {...(textProps as React.HTMLAttributes<HTMLElement>)}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ref={forwardedRef as any}
+        className={combinedClassName}
+      >
+        {children}
+      </Tag>
+    );
+  })
+);
 Text.displayName = 'Text';
 
 export { Text };
