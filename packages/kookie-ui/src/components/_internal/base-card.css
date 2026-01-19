@@ -1,15 +1,17 @@
 /**
  * Base Card Component Styles
- * 
+ *
  * This file contains the foundational styling for the Card component in the
  * Kookie User Interface design system.
- * 
- * ARCHITECTURE (same pattern as base-button.css):
- * - Base styles: Layout, material system
- * - Sizes: Responsive padding and border-radius
- * - Variant palettes: Each variant defines its color scale as CSS variables
- * - Shared state logic: Single set of hover/active/open selectors
- * - Special variants: classic, ghost (unique behavior, kept separate)
+ *
+ * ARCHITECTURE (matching base-button.css):
+ * 1. Base styles: Layout, material system, pseudo-element setup
+ * 2. Sizes: Responsive padding and border-radius
+ * 3. Variant palettes: Each variant defines its color variables
+ * 4. Shared state logic: Single set of hover/active/open selectors (outline, soft, surface)
+ * 5. Border variants: Outline & surface border handling
+ * 6. Ghost variant: Separate - applies styles to element, not ::before
+ * 7. Classic variant: Separate - uses elevation and surface colors
  */
 
 /* stylelint-disable selector-max-type */
@@ -21,10 +23,10 @@
  ***************************************************************************************************/
 
 .rt-BaseCard {
-  /*
-   * Component-level material override
-   * Card uses 40% alpha blend (vs button's 100%) to match original behavior
-   */
+  /* Material system - defaults to solid behavior */
+  --material-blend: 100%;
+  --material-alpha: 0;
+
   &:where([data-material='solid'], [data-panel-background='solid']) {
     --material-blend: 100%;
     --material-alpha: 0;
@@ -35,24 +37,26 @@
     --material-alpha: 1;
   }
 
+  /* Layout */
   display: block;
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
   border-radius: var(--base-card-border-radius);
   transition: var(--transition-card);
-
-  /* Typography reset */
-  font-family: var(--default-font-family);
-  font-weight: var(--font-weight-normal);
-  font-style: normal;
-  text-align: start;
+  contain: paint;
 
   /* Padding */
   padding-top: var(--base-card-padding-top);
   padding-right: var(--base-card-padding-right);
   padding-bottom: var(--base-card-padding-bottom);
   padding-left: var(--base-card-padding-left);
+
+  /* Typography reset */
+  font-family: var(--default-font-family);
+  font-weight: var(--font-weight-normal);
+  font-style: normal;
+  text-align: start;
 
   /* Inset calculations */
   --inset-border-width: var(--base-card-border-width);
@@ -62,12 +66,8 @@
   --inset-padding-bottom: calc(var(--base-card-padding-bottom) - var(--base-card-border-width));
   --inset-padding-left: calc(var(--base-card-padding-left) - var(--base-card-border-width));
 
-  /* Backdrop-filter flag */
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    --has-backdrop-filter: true;
-  }
-
   /*
+   * Pseudo-element setup
    * ::before = background color (z-index: -1)
    * ::after = border on top of children
    */
@@ -83,28 +83,24 @@
 
   &::before {
     z-index: -1;
-
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      backdrop-filter: var(--backdrop-filter-panel);
-      --backdrop-filter-panel: blur(var(--backdrop-blur-panel));
-    }
   }
 
-  &:where([data-panel-background='solid'], [data-material='solid'])::before {
-    backdrop-filter: none;
-    --backdrop-filter-panel: none;
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent'])::before {
+  /* Backdrop-filter for ::before - applies to outline, soft, surface */
+  :where([data-panel-background='translucent'], [data-material='translucent']) &::before {
     backdrop-filter: var(--backdrop-filter-panel);
     --backdrop-filter-panel: blur(var(--backdrop-blur-panel));
   }
 
-  & {
-    contain: paint;
+  &:where([data-material='solid'], [data-panel-background='solid'])::before {
+    backdrop-filter: none;
   }
 
-  /* Scale animations for interactive cards (subtler than buttons due to larger size) */
+  &:where([data-material='translucent'], [data-panel-background='translucent'])::before {
+    backdrop-filter: var(--backdrop-filter-panel);
+    --backdrop-filter-panel: blur(var(--backdrop-blur-panel));
+  }
+
+  /* Interactive scale - applies to all interactive cards */
   &:where(:any-link, button, label) {
     cursor: pointer;
 
@@ -193,9 +189,10 @@
  *                                                                                                 *
  * VARIANT PALETTES                                                                                *
  *                                                                                                 *
+ * Each variant defines its color variables. State logic is shared for outline, soft, surface.     *
+ *                                                                                                 *
  ***************************************************************************************************/
 
-/* Outline variant palette */
 .rt-BaseCard:where(.rt-variant-outline) {
   --card-border-width: 1px;
   --v-bg: transparent;
@@ -214,7 +211,6 @@
   --v-focus-offset: -1px;
 }
 
-/* Soft variant palette */
 .rt-BaseCard:where(.rt-variant-soft) {
   --card-border-width: 0px;
   --v-bg: var(--gray-2);
@@ -227,7 +223,6 @@
   --v-focus-offset: -1px;
 }
 
-/* Surface variant palette */
 .rt-BaseCard:where(.rt-variant-surface) {
   --card-border-width: 1px;
   --v-bg: var(--gray-1);
@@ -248,10 +243,10 @@
 
 /***************************************************************************************************
  *                                                                                                 *
- * SHARED STATE LOGIC: OUTLINE, SOFT, SURFACE                                                     *
+ * SHARED STATE LOGIC: OUTLINE, SOFT, SURFACE                                                      *
  *                                                                                                 *
- * Uses 40% alpha blend to match original card behavior:                                           *
- * color-mix(in srgb, alpha 40%, solid 60%) for translucent                                        *
+ * Single set of state selectors using palette variables.                                          *
+ * Ghost is separate because it applies styles to element, not ::before.                           *
  *                                                                                                 *
  ***************************************************************************************************/
 
@@ -308,6 +303,7 @@
     }
   }
 
+  /* Tap highlight */
   @media (pointer: coarse) {
     &:where(:any-link, button, label):where(:active:not([data-state='open']))::before {
       background-image: linear-gradient(var(--gray-a4), var(--gray-a4));
@@ -357,20 +353,6 @@
         var(--v-border-hover-a) calc(var(--material-alpha) * 40%),
         var(--v-border-hover) var(--material-blend)
       );
-
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
-        backdrop-filter: var(--backdrop-filter-panel);
-      }
-
-      &:where([data-panel-background='solid'], [data-material='solid']) {
-        backdrop-filter: none;
-        --backdrop-filter-panel: none;
-      }
-
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
-        backdrop-filter: var(--backdrop-filter-panel);
-        --backdrop-filter-panel: blur(var(--backdrop-blur-panel));
-      }
     }
 
     &:where(:active:not([data-state='open'])) {
@@ -379,27 +361,13 @@
         var(--v-border-active-a) calc(var(--material-alpha) * 40%),
         var(--v-border-active) var(--material-blend)
       );
-
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
-        backdrop-filter: var(--backdrop-filter-panel);
-      }
-
-      &:where([data-panel-background='solid'], [data-material='solid']) {
-        backdrop-filter: none;
-        --backdrop-filter-panel: none;
-      }
-
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
-        backdrop-filter: var(--backdrop-filter-panel);
-        --backdrop-filter-panel: blur(var(--backdrop-blur-panel));
-      }
     }
   }
 }
 
 /* Surface uses ::after for border ON TOP of children */
 .rt-BaseCard:where(.rt-variant-surface)::after {
-  box-shadow: inset 0 0 0 var(--card-border-width) color-mix(
+  box-shadow: inset 0 0 0 var(--base-card-border-width) color-mix(
     in srgb,
     var(--v-border-a) calc(var(--material-alpha) * 40%),
     var(--v-border) var(--material-blend)
@@ -409,7 +377,7 @@
 .rt-BaseCard:where(.rt-variant-surface):where(:any-link, button, label) {
   @media (hover: hover) {
     &:where(:hover)::after {
-      box-shadow: inset 0 0 0 var(--card-border-width) color-mix(
+      box-shadow: inset 0 0 0 var(--base-card-border-width) color-mix(
         in srgb,
         var(--v-border-hover-a) calc(var(--material-alpha) * 40%),
         var(--v-border-hover) var(--material-blend)
@@ -419,7 +387,7 @@
 
   &:where([data-state='open'])::after,
   &:where(:active:not([data-state='open']))::after {
-    box-shadow: inset 0 0 0 var(--card-border-width) color-mix(
+    box-shadow: inset 0 0 0 var(--base-card-border-width) color-mix(
       in srgb,
       var(--v-border-active-a) calc(var(--material-alpha) * 40%),
       var(--v-border-active) var(--material-blend)
@@ -429,7 +397,10 @@
 
 /***************************************************************************************************
  *                                                                                                 *
- * GHOST VARIANT (separate - has backdrop-filter stacking prevention)                              *
+ * GHOST VARIANT                                                                                   *
+ *                                                                                                 *
+ * Ghost applies styles directly to the element (not ::before) for different visual behavior.      *
+ * Backdrop-filter is on the element itself, not the pseudo-element.                               *
  *                                                                                                 *
  ***************************************************************************************************/
 
@@ -442,6 +413,7 @@
   --v-focus-color: var(--focus-8);
   --v-focus-offset: -1px;
 
+  /* Flush mode */
   &:where([data-flush='true']) {
     --margin-top: 0px;
     --margin-right: 0px;
@@ -465,11 +437,28 @@
     }
   }
 
+  /* Focus */
   &:where(:focus-visible) {
     outline: 2px solid var(--v-focus-color);
     outline-offset: var(--v-focus-offset);
   }
 
+  /* Backdrop-filter handling for ghost - on element, not ::before */
+  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+    backdrop-filter: var(--backdrop-filter-panel);
+    --backdrop-filter-panel: blur(var(--backdrop-blur-panel));
+  }
+
+  &:where([data-panel-background='solid'], [data-material='solid']) {
+    backdrop-filter: none;
+  }
+
+  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+    backdrop-filter: var(--backdrop-filter-panel);
+    --backdrop-filter-panel: blur(var(--backdrop-blur-panel));
+  }
+
+  /* Interactive states - background on element, not ::before */
   &:where(:any-link, button, label) {
     @media (hover: hover) {
       &:where(:hover) {
@@ -478,36 +467,6 @@
           var(--v-bg-hover-a) calc(var(--material-alpha) * 40%),
           var(--v-bg-hover) var(--material-blend)
         );
-
-        :where([data-panel-background='translucent'], [data-material='translucent']) & {
-          backdrop-filter: var(--backdrop-filter-panel);
-        }
-
-        &:where([data-panel-background='solid'], [data-material='solid']) {
-          backdrop-filter: none;
-          --backdrop-filter-panel: none;
-        }
-
-        &:where([data-panel-background='translucent'], [data-material='translucent']) {
-          backdrop-filter: var(--backdrop-filter-panel);
-          --backdrop-filter-panel: blur(var(--backdrop-blur-panel));
-        }
-
-        /* Disable backdrop-filter inside elements that already have it */
-        :where(
-            .rt-PopoverContent,
-            .rt-BaseDialogContent,
-            .rt-BaseMenuContent,
-            .rt-DropdownMenuContent,
-            .rt-ContextMenuContent,
-            .rt-AlertDialogContent,
-            .rt-HoverCardContent,
-            .rt-TooltipContent,
-            .rt-Card
-          )
-          & {
-          backdrop-filter: none !important;
-        }
 
         &:where(:focus-visible) {
           background-color: var(--focus-a2);
@@ -522,35 +481,6 @@
         var(--v-bg-hover) var(--material-blend)
       );
 
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
-        backdrop-filter: var(--backdrop-filter-panel);
-      }
-
-      &:where([data-panel-background='solid'], [data-material='solid']) {
-        backdrop-filter: none;
-        --backdrop-filter-panel: none;
-      }
-
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
-        backdrop-filter: var(--backdrop-filter-panel);
-        --backdrop-filter-panel: blur(var(--backdrop-blur-panel));
-      }
-
-      :where(
-          .rt-PopoverContent,
-          .rt-BaseDialogContent,
-          .rt-BaseMenuContent,
-          .rt-DropdownMenuContent,
-          .rt-ContextMenuContent,
-          .rt-AlertDialogContent,
-          .rt-HoverCardContent,
-          .rt-TooltipContent,
-          .rt-Card
-        )
-        & {
-        backdrop-filter: none !important;
-      }
-
       &:where(:focus-visible) {
         background-color: var(--focus-a2);
       }
@@ -563,59 +493,48 @@
         var(--v-bg-active) var(--material-blend)
       );
 
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
-        backdrop-filter: var(--backdrop-filter-panel);
-      }
-
-      &:where([data-panel-background='solid'], [data-material='solid']) {
-        backdrop-filter: none;
-        --backdrop-filter-panel: none;
-      }
-
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
-        backdrop-filter: var(--backdrop-filter-panel);
-        --backdrop-filter-panel: blur(var(--backdrop-blur-panel));
-      }
-
-      :where(
-          .rt-PopoverContent,
-          .rt-BaseDialogContent,
-          .rt-BaseMenuContent,
-          .rt-DropdownMenuContent,
-          .rt-ContextMenuContent,
-          .rt-AlertDialogContent,
-          .rt-HoverCardContent,
-          .rt-TooltipContent,
-          .rt-Card
-        )
-        & {
-        backdrop-filter: none !important;
-      }
-
       &:where(:focus-visible) {
         background-color: var(--focus-a2);
       }
     }
   }
 
+  /* Tap highlight */
   @media (pointer: coarse) {
     &:where(:any-link, button, label):where(:active:not([data-state='open']))::before {
       background-image: linear-gradient(var(--gray-a4), var(--gray-a4));
     }
   }
+
+  /* Prevent backdrop-filter stacking inside overlay components */
+  :where(
+    .rt-PopoverContent,
+    .rt-BaseDialogContent,
+    .rt-BaseMenuContent,
+    .rt-DropdownMenuContent,
+    .rt-ContextMenuContent,
+    .rt-AlertDialogContent,
+    .rt-HoverCardContent,
+    .rt-TooltipContent,
+    .rt-Card
+  ) & {
+    backdrop-filter: none !important;
+  }
 }
 
 /***************************************************************************************************
  *                                                                                                 *
- * CLASSIC VARIANT (separate - uses elevation, surface colors)                                     *
+ * CLASSIC VARIANT                                                                                 *
+ *                                                                                                 *
+ * Uses elevation and surface colors - separate due to unique behavior                             *
  *                                                                                                 *
  ***************************************************************************************************/
 
 .rt-BaseCard:where(.rt-variant-classic) {
-  position: relative;
-  top: var(--classic-elevation-offset);
   --card-border-width: 1px;
   --card-background-color: var(--color-surface-solid);
+  position: relative;
+  top: var(--classic-elevation-offset);
   box-shadow: var(--shadow-2);
 
   :where([data-panel-background='translucent'], [data-material='translucent']) & {
