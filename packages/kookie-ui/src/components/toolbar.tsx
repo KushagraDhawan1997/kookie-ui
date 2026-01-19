@@ -191,7 +191,7 @@ ToolbarRight.displayName = 'Toolbar.Right';
 // ============================================================================
 
 type ToolbarTitleElement = React.ElementRef<typeof Heading>;
-interface ToolbarTitleProps extends React.ComponentPropsWithoutRef<typeof Heading> {}
+type ToolbarTitleProps = React.ComponentPropsWithoutRef<typeof Heading>;
 
 const ToolbarTitle = React.forwardRef<ToolbarTitleElement, ToolbarTitleProps>(
   ({ className, size = '2', weight = 'medium', truncate = true, children, ...props }, forwardedRef) => (

@@ -262,7 +262,7 @@ Content.displayName = 'Sheet.Content';
 
 // Title - renders as Heading with sensible defaults
 type SheetTitleElement = React.ElementRef<typeof Heading>;
-interface SheetTitleProps extends HeadingProps {}
+type SheetTitleProps = HeadingProps;
 /** Accessible title for the Sheet. Renders as Heading with sensible defaults. */
 const Title = React.forwardRef<SheetTitleElement, SheetTitleProps>(
   ({ size = '4', weight = 'medium', ...props }, ref) => (
