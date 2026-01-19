@@ -19,6 +19,7 @@ const options = {
   target: 'es2020',
   sourcemap: true,
   minify: true,
+  bundle: true,
   external,
 };
 
