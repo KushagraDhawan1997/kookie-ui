@@ -37,8 +37,8 @@ import { Sidebar } from './_internal/shell-sidebar.js';
 import { Bottom } from './_internal/shell-bottom.js';
 import { Inspector } from './_internal/shell-inspector.js';
 import type { PresentationValue, ResponsivePresentation, PaneMode, SidebarMode, PaneSizePersistence, Breakpoint, PaneTarget, Responsive, PaneBaseProps, CSSPropertiesWithVars } from './shell.types.js';
-import { _BREAKPOINTS } from './shell.types.js';
 import { normalizeToPx } from '../helpers/normalize-to-px.js';
+import { useBreakpoint } from '../hooks/use-breakpoint.js';
 import {
   ShellProvider,
   useShell,
@@ -72,55 +72,7 @@ import {
 // Hook to resolve responsive mode defaults
 // Removed: defaultMode responsiveness
 
-// Hook to get current breakpoint
-function useBreakpoint(): { bp: Breakpoint; ready: boolean } {
-  const [currentBp, setCurrentBp] = React.useState<Breakpoint>('initial');
-  const [ready, setReady] = React.useState(false);
-
-  React.useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const queries = Object.entries(_BREAKPOINTS) as [keyof typeof _BREAKPOINTS, string][];
-    const mqls = queries.map(([k, q]) => [k, window.matchMedia(q)] as const);
-
-    // Accept optional event param to satisfy MediaQueryList listener signature
-    const compute = (_e?: MediaQueryListEvent) => {
-      // Highest matched wins
-      const matched = mqls.filter(([, m]) => m.matches).map(([k]) => k);
-      const next = (matched[matched.length - 1] as Breakpoint | undefined) ?? 'initial';
-      setCurrentBp(next);
-      setReady(true);
-    };
-
-    compute();
-    const cleanups: Array<() => void> = [];
-    mqls.forEach(([, m]) => {
-      const mm = m as MediaQueryList & {
-        addEventListener?: (type: 'change', listener: (e: MediaQueryListEvent) => void) => void;
-        removeEventListener?: (type: 'change', listener: (e: MediaQueryListEvent) => void) => void;
-        addListener?: (listener: (e: MediaQueryListEvent) => void) => void;
-        removeListener?: (listener: (e: MediaQueryListEvent) => void) => void;
-      };
-      if (typeof mm.addEventListener === 'function' && typeof mm.removeEventListener === 'function') {
-        mm.addEventListener('change', compute);
-        cleanups.push(() => mm.removeEventListener?.('change', compute));
-      } else if (typeof mm.addListener === 'function' && typeof mm.removeListener === 'function') {
-        mm.addListener(compute);
-        cleanups.push(() => mm.removeListener?.(compute));
-      }
-    });
-
-    return () => {
-      cleanups.forEach((fn) => {
-        try {
-          fn();
-        } catch {}
-      });
-    };
-  }, []);
-
-  return { bp: currentBp, ready };
-}
+// useBreakpoint hook moved to ../hooks/use-breakpoint.ts
 
 // Reducer-based pane state management to simplify cascading rules
 type PaneState = {
@@ -155,6 +107,13 @@ function isShellComponent(element: React.ReactElement, component: any): boolean 
   const targetSlot = (component as any)?.[SHELL_SLOT];
   return Boolean(type?.[SHELL_SLOT] && targetSlot && type[SHELL_SLOT] === targetSlot);
 }
+
+/**
+ * Check if an element matches a component by type or displayName.
+ * Uses displayName comparison to handle minification scenarios.
+ */
+const isShellComponentType = (el: React.ReactElement, comp: React.ComponentType & { displayName?: string }): boolean =>
+  React.isValidElement(el) && (el.type === comp || (el as any).type?.displayName === comp.displayName);
 
 // Tag imported slot components so isType remains stable after minification
 assignShellSlot(Sidebar as any, 'Shell.Sidebar');
@@ -259,93 +218,113 @@ interface ShellRootProps extends React.ComponentPropsWithoutRef<'div'> {
 }
 
 const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, children, height = 'full', ...props }, ref) => {
-  const { bp: currentBreakpoint, ready: currentBreakpointReady } = useBreakpoint();
+  const { breakpoint: currentBreakpoint, ready: currentBreakpointReady } = useBreakpoint();
 
-  // Compute initial defaults from immediate children (one-time, uncontrolled defaults)
-  const initialChildren = React.Children.toArray(children) as React.ReactElement[];
-  const hasPanelDefaultOpen = initialChildren.some((el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Panel' && Boolean((el as any).props?.defaultOpen));
-  // Rail defaults to open (true) unless explicitly set to false
-  // Supports responsive objects: { initial: false, md: true }
-  const railEl = initialChildren.find((el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Rail');
-  const railDefaultOpen = railEl ? (railEl as any).props?.defaultOpen : undefined;
-  const hasRailDefaultOpen = (() => {
-    if (!railEl) return false;
-    if (railDefaultOpen === undefined) return true; // Default to open
-    if (typeof railDefaultOpen === 'boolean') return railDefaultOpen;
-    // Responsive object - use 'initial' value, or first defined value, or default true
-    if (typeof railDefaultOpen === 'object') {
-      return railDefaultOpen.initial ?? Object.values(railDefaultOpen)[0] ?? true;
-    }
-    return true;
-  })();
-  const hasInspectorDefaultOpen = initialChildren.some((el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Inspector' && Boolean((el as any).props?.defaultOpen));
-  const hasInspectorOpenControlled = initialChildren.some(
-    (el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Inspector' && typeof (el as any).props?.open !== 'undefined' && Boolean((el as any).props?.open),
-  );
-  // Detect Panel controlled open state for initial reducer state
-  const hasPanelOpenControlled = initialChildren.some((el) => {
-    if (!React.isValidElement(el) || (el as any).type?.displayName !== 'Shell.Panel') return false;
-    const openProp = (el as any).props?.open;
-    if (typeof openProp === 'undefined') return false;
-    if (typeof openProp === 'boolean') return openProp;
-    // Responsive object - check 'initial' or first truthy value
-    if (typeof openProp === 'object' && openProp !== null) {
-      return openProp.initial ?? Object.values(openProp)[0] ?? false;
-    }
-    return false;
-  });
+  // Store hasPanelDefaultOpen for use in passthrough props (computed once during lazy init)
+  const hasPanelDefaultOpenRef = React.useRef<boolean>(false);
 
-  // Detect Sidebar initial state from props
-  const getSidebarInitialState = (): SidebarMode => {
-    const sidebarEl = initialChildren.find((el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Sidebar');
-    if (!sidebarEl) return 'expanded';
-    const props = (sidebarEl as any).props;
-    // Check controlled state first
-    if (typeof props?.state !== 'undefined') {
-      if (typeof props.state === 'string') return props.state as SidebarMode;
-      // Responsive object - use 'initial' breakpoint or first defined value
-      if (typeof props.state === 'object') {
-        return (props.state.initial ?? Object.values(props.state)[0] ?? 'expanded') as SidebarMode;
+  // Pane state management via reducer with lazy initialization
+  // This computation only runs once on mount, not on every render
+  const [paneState, dispatchPane] = React.useReducer(paneReducer, children, (initialChildren) => {
+    const childArray = React.Children.toArray(initialChildren) as React.ReactElement[];
+
+    // Compute initial defaults from immediate children (one-time, uncontrolled defaults)
+    const hasPanelDefaultOpen = childArray.some(
+      (el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Panel' && Boolean((el as any).props?.defaultOpen),
+    );
+    // Store for use in passthrough props
+    hasPanelDefaultOpenRef.current = hasPanelDefaultOpen;
+
+    // Rail defaults to open (true) unless explicitly set to false
+    // Supports responsive objects: { initial: false, md: true }
+    const railEl = childArray.find((el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Rail');
+    const railDefaultOpen = railEl ? (railEl as any).props?.defaultOpen : undefined;
+    const hasRailDefaultOpen = (() => {
+      if (!railEl) return false;
+      if (railDefaultOpen === undefined) return true; // Default to open
+      if (typeof railDefaultOpen === 'boolean') return railDefaultOpen;
+      // Responsive object - use 'initial' value, or first defined value, or default true
+      if (typeof railDefaultOpen === 'object') {
+        return railDefaultOpen.initial ?? Object.values(railDefaultOpen)[0] ?? true;
       }
-    }
-    // Check defaultState
-    if (typeof props?.defaultState !== 'undefined') {
-      if (typeof props.defaultState === 'string') return props.defaultState as SidebarMode;
-      if (typeof props.defaultState === 'object') {
-        return (props.defaultState.initial ?? Object.values(props.defaultState)[0] ?? 'expanded') as SidebarMode;
-      }
-    }
-    return 'expanded';
-  };
+      return true;
+    })();
 
-  // Detect Bottom initial state from props
-  const getBottomInitialState = (): PaneMode => {
-    const bottomEl = initialChildren.find((el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Bottom');
-    if (!bottomEl) return 'collapsed';
-    const props = (bottomEl as any).props;
-    // Check controlled open first
-    if (typeof props?.open !== 'undefined') {
-      if (typeof props.open === 'boolean') return props.open ? 'expanded' : 'collapsed';
-      // Responsive object - use 'initial' breakpoint or first defined value
-      if (typeof props.open === 'object') {
-        const val = props.open.initial ?? Object.values(props.open)[0];
-        return val ? 'expanded' : 'collapsed';
-      }
-    }
-    // Check defaultOpen
-    if (typeof props?.defaultOpen !== 'undefined') {
-      return props.defaultOpen ? 'expanded' : 'collapsed';
-    }
-    return 'collapsed';
-  };
+    const hasInspectorDefaultOpen = childArray.some(
+      (el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Inspector' && Boolean((el as any).props?.defaultOpen),
+    );
+    const hasInspectorOpenControlled = childArray.some(
+      (el) =>
+        React.isValidElement(el) &&
+        (el as any).type?.displayName === 'Shell.Inspector' &&
+        typeof (el as any).props?.open !== 'undefined' &&
+        Boolean((el as any).props?.open),
+    );
 
-  // Pane state management via reducer
-  const [paneState, dispatchPane] = React.useReducer(paneReducer, {
-    leftMode: hasPanelDefaultOpen || hasPanelOpenControlled || hasRailDefaultOpen ? 'expanded' : 'collapsed',
-    panelMode: hasPanelDefaultOpen || hasPanelOpenControlled ? 'expanded' : 'collapsed',
-    sidebarMode: getSidebarInitialState(),
-    inspectorMode: hasInspectorDefaultOpen || hasInspectorOpenControlled ? 'expanded' : 'collapsed',
-    bottomMode: getBottomInitialState(),
+    // Detect Panel controlled open state for initial reducer state
+    const hasPanelOpenControlled = childArray.some((el) => {
+      if (!React.isValidElement(el) || (el as any).type?.displayName !== 'Shell.Panel') return false;
+      const openProp = (el as any).props?.open;
+      if (typeof openProp === 'undefined') return false;
+      if (typeof openProp === 'boolean') return openProp;
+      // Responsive object - check 'initial' or first truthy value
+      if (typeof openProp === 'object' && openProp !== null) {
+        return openProp.initial ?? Object.values(openProp)[0] ?? false;
+      }
+      return false;
+    });
+
+    // Detect Sidebar initial state from props
+    const getSidebarInitialState = (): SidebarMode => {
+      const sidebarEl = childArray.find((el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Sidebar');
+      if (!sidebarEl) return 'expanded';
+      const sidebarProps = (sidebarEl as any).props;
+      // Check controlled state first
+      if (typeof sidebarProps?.state !== 'undefined') {
+        if (typeof sidebarProps.state === 'string') return sidebarProps.state as SidebarMode;
+        // Responsive object - use 'initial' breakpoint or first defined value
+        if (typeof sidebarProps.state === 'object') {
+          return (sidebarProps.state.initial ?? Object.values(sidebarProps.state)[0] ?? 'expanded') as SidebarMode;
+        }
+      }
+      // Check defaultState
+      if (typeof sidebarProps?.defaultState !== 'undefined') {
+        if (typeof sidebarProps.defaultState === 'string') return sidebarProps.defaultState as SidebarMode;
+        if (typeof sidebarProps.defaultState === 'object') {
+          return (sidebarProps.defaultState.initial ?? Object.values(sidebarProps.defaultState)[0] ?? 'expanded') as SidebarMode;
+        }
+      }
+      return 'expanded';
+    };
+
+    // Detect Bottom initial state from props
+    const getBottomInitialState = (): PaneMode => {
+      const bottomEl = childArray.find((el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Bottom');
+      if (!bottomEl) return 'collapsed';
+      const bottomProps = (bottomEl as any).props;
+      // Check controlled open first
+      if (typeof bottomProps?.open !== 'undefined') {
+        if (typeof bottomProps.open === 'boolean') return bottomProps.open ? 'expanded' : 'collapsed';
+        // Responsive object - use 'initial' breakpoint or first defined value
+        if (typeof bottomProps.open === 'object') {
+          const val = bottomProps.open.initial ?? Object.values(bottomProps.open)[0];
+          return val ? 'expanded' : 'collapsed';
+        }
+      }
+      // Check defaultOpen
+      if (typeof bottomProps?.defaultOpen !== 'undefined') {
+        return bottomProps.defaultOpen ? 'expanded' : 'collapsed';
+      }
+      return 'collapsed';
+    };
+
+    return {
+      leftMode: hasPanelDefaultOpen || hasPanelOpenControlled || hasRailDefaultOpen ? 'expanded' : ('collapsed' as PaneMode),
+      panelMode: hasPanelDefaultOpen || hasPanelOpenControlled ? 'expanded' : ('collapsed' as PaneMode),
+      sidebarMode: getSidebarInitialState(),
+      inspectorMode: hasInspectorDefaultOpen || hasInspectorOpenControlled ? 'expanded' : ('collapsed' as PaneMode),
+      bottomMode: getBottomInitialState(),
+    };
   });
   const setLeftMode = React.useCallback((mode: PaneMode) => dispatchPane({ type: 'SET_LEFT_MODE', mode }), []);
   const setPanelMode = React.useCallback((mode: PaneMode) => dispatchPane({ type: 'SET_PANEL_MODE', mode }), []);
@@ -389,14 +368,12 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
   // Determine children presence for left composition
   const hasLeftChildren = React.useMemo(() => {
     const childArray = React.Children.toArray(children) as React.ReactElement[];
-    const isType = (el: React.ReactElement, comp: any) => React.isValidElement(el) && (el.type === comp || (el as any).type?.displayName === comp.displayName);
-    return childArray.some((el) => isType(el, Rail) || isType(el, Panel));
+    return childArray.some((el) => isShellComponentType(el, Rail) || isShellComponentType(el, Panel));
   }, [children]);
 
   const hasSidebarChildren = React.useMemo(() => {
     const childArray = React.Children.toArray(children) as React.ReactElement[];
-    const isType = (el: React.ReactElement, comp: any) => React.isValidElement(el) && (el.type === comp || (el as any).type?.displayName === comp.displayName);
-    return childArray.some((el) => isType(el, Sidebar));
+    return childArray.some((el) => isShellComponentType(el, Sidebar));
   }, [children]);
 
   const togglePane = React.useCallback(
@@ -482,15 +459,14 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
 
   // Organize children by type
   const childArray = React.Children.toArray(children) as React.ReactElement[];
-  const isType = (el: React.ReactElement, comp: any) => React.isValidElement(el) && (el.type === comp || (el as any).type?.displayName === comp.displayName);
 
-  const headerEls = childArray.filter((el) => isType(el, Header));
-  const railEls = childArray.filter((el) => isType(el, Rail));
-  const panelEls = childArray.filter((el) => isType(el, Panel));
-  const sidebarEls = childArray.filter((el) => isType(el, Sidebar));
-  const contentEls = childArray.filter((el) => isType(el, Content));
-  const inspectorEls = childArray.filter((el) => isType(el, Inspector));
-  const bottomEls = childArray.filter((el) => isType(el, Bottom));
+  const headerEls = childArray.filter((el) => isShellComponentType(el, Header));
+  const railEls = childArray.filter((el) => isShellComponentType(el, Rail));
+  const panelEls = childArray.filter((el) => isShellComponentType(el, Panel));
+  const sidebarEls = childArray.filter((el) => isShellComponentType(el, Sidebar));
+  const contentEls = childArray.filter((el) => isShellComponentType(el, Content));
+  const inspectorEls = childArray.filter((el) => isShellComponentType(el, Inspector));
+  const bottomEls = childArray.filter((el) => isShellComponentType(el, Bottom));
 
   // Controlled sync in Root: mirror first Rail.open if provided
   const firstRailOpen = (railEls[0] as any)?.props?.open;
@@ -560,6 +536,33 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
     [baseContextValue, peekTarget, setPeekTarget, peekPane, clearPeek],
   );
 
+  // Memoize the Left content to avoid recreating the IIFE on every render
+  const leftContent = React.useMemo(() => {
+    if (!hasLeftChildren || hasSidebarChildren) return null;
+    const firstRail = railEls[0] as any;
+    const firstPanel = panelEls[0] as any;
+    const leftInset = Boolean(firstRail?.props?.inset) || Boolean(firstPanel?.props?.inset);
+    const passthroughProps = firstRail
+      ? {
+          // Notification passthrough used by Left; not spread to DOM in Left
+          onOpenChange: firstRail.props?.onOpenChange,
+          open: firstRail.props?.open,
+          defaultOpen: firstRail.props?.defaultOpen,
+          presentation: firstRail.props?.presentation,
+          collapsible: firstRail.props?.collapsible,
+          onExpand: firstRail.props?.onExpand,
+          onCollapse: firstRail.props?.onCollapse,
+          inset: leftInset,
+        }
+      : { defaultOpen: hasPanelDefaultOpenRef.current ? true : undefined, inset: leftInset };
+    return (
+      <Left {...(passthroughProps as any)}>
+        {railEls}
+        {panelEls}
+      </Left>
+    );
+  }, [hasLeftChildren, hasSidebarChildren, railEls, panelEls]);
+
   return (
     <div {...props} ref={ref} className={classNames('rt-ShellRoot', className)} style={{ ...heightStyle, ...props.style }}>
       <ShellProvider value={shellContextValue}>
@@ -586,32 +589,7 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
                                   : undefined
                               }
                             >
-                              {hasLeftChildren && !hasSidebarChildren
-                                ? (() => {
-                                    const firstRail = railEls[0] as any;
-                                    const firstPanel = panelEls[0] as any;
-                                    const leftInset = Boolean(firstRail?.props?.inset) || Boolean(firstPanel?.props?.inset);
-                                    const passthroughProps = firstRail
-                                      ? {
-                                          // Notification passthrough used by Left; not spread to DOM in Left
-                                          onOpenChange: firstRail.props?.onOpenChange,
-                                          open: firstRail.props?.open,
-                                          defaultOpen: firstRail.props?.defaultOpen,
-                                          presentation: firstRail.props?.presentation,
-                                          collapsible: firstRail.props?.collapsible,
-                                          onExpand: firstRail.props?.onExpand,
-                                          onCollapse: firstRail.props?.onCollapse,
-                                          inset: leftInset,
-                                        }
-                                      : { defaultOpen: hasPanelDefaultOpen ? true : undefined, inset: leftInset };
-                                    return (
-                                      <Left {...(passthroughProps as any)}>
-                                        {railEls}
-                                        {panelEls}
-                                      </Left>
-                                    );
-                                  })()
-                                : sidebarEls}
+                              {leftContent ?? sidebarEls}
                               {contentEls}
                               {inspectorEls}
                             </div>
@@ -770,9 +748,8 @@ const Left = React.forwardRef<HTMLDivElement, LeftProps>((initialProps, ref) => 
     const open = shell.leftMode === 'expanded';
     // Compute overlay width from child Rail/Panel expanded sizes
     const childArray = React.Children.toArray(children) as React.ReactElement[];
-    const isType = (el: React.ReactElement, comp: any) => React.isValidElement(el) && el.type === comp;
-    const railEl = childArray.find((el) => isType(el, Rail));
-    const panelEl = childArray.find((el) => isType(el, Panel));
+    const railEl = childArray.find((el) => isShellComponentType(el, Rail));
+    const panelEl = childArray.find((el) => isShellComponentType(el, Panel));
     const railSize = typeof (railEl as any)?.props?.expandedSize === 'number' ? (railEl as any).props.expandedSize : 64;
     const panelSize = typeof (panelEl as any)?.props?.expandedSize === 'number' ? (panelEl as any).props.expandedSize : 288;
     const hasRail = Boolean(railEl);
@@ -800,9 +777,8 @@ const Left = React.forwardRef<HTMLDivElement, LeftProps>((initialProps, ref) => 
     const open = shell.leftMode === 'expanded';
     // Compute floating width from child Rail/Panel expanded sizes (like overlay)
     const childArray = React.Children.toArray(children) as React.ReactElement[];
-    const isType = (el: React.ReactElement, comp: any) => React.isValidElement(el) && el.type === comp;
-    const railEl = childArray.find((el) => isType(el, Rail));
-    const panelEl = childArray.find((el) => isType(el, Panel));
+    const railEl = childArray.find((el) => isShellComponentType(el, Rail));
+    const panelEl = childArray.find((el) => isShellComponentType(el, Panel));
     const _railSize = typeof (railEl as any)?.props?.expandedSize === 'number' ? (railEl as any).props.expandedSize : 64;
     const _panelSize = typeof (panelEl as any)?.props?.expandedSize === 'number' ? (panelEl as any).props.expandedSize : 288;
     const _hasRail = Boolean(railEl);
@@ -1108,12 +1084,25 @@ const Panel = assignShellSlot(
       const adapter: PaneSizePersistence = {
         load: () => {
           if (typeof window === 'undefined') return undefined;
-          const v = window.localStorage.getItem(key);
-          return v ? Number(v) : undefined;
+          try {
+            const v = window.localStorage.getItem(key);
+            return v ? Number(v) : undefined;
+          } catch (err) {
+            if (process.env.NODE_ENV !== 'production') {
+              console.warn('Shell.Panel: failed to load persisted size', err);
+            }
+            return undefined;
+          }
         },
         save: (size: number) => {
           if (typeof window === 'undefined') return;
-          window.localStorage.setItem(key, String(size));
+          try {
+            window.localStorage.setItem(key, String(size));
+          } catch (err) {
+            if (process.env.NODE_ENV !== 'production') {
+              console.warn('Shell.Panel: failed to save persisted size', err);
+            }
+          }
         },
       };
       return adapter;
@@ -1157,6 +1146,8 @@ const Panel = assignShellSlot(
           emitSizeChange(clamped, { reason: 'init' });
         }
       }
+      // Intentionally run only on mount - defaultSize is an uncontrolled initial value
+      // that should not trigger re-application when props change
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -1181,7 +1172,12 @@ const Panel = assignShellSlot(
         const leftEl = (localRef.current.parentElement as HTMLElement) || null;
         try {
           leftEl?.style.removeProperty('width');
-        } catch {}
+        } catch (e) {
+          // Style manipulation can fail in edge cases (e.g., detached elements)
+          if (process.env.NODE_ENV !== 'production') {
+            console.warn('[Shell.Panel] Style cleanup warning:', e);
+          }
+        }
       }
     }, [shell.leftResolvedPresentation, shell.leftMode, shell.panelMode]);
 
@@ -1227,7 +1223,12 @@ const Panel = assignShellSlot(
               const leftEl = panelEl?.parentElement as HTMLElement | null;
               try {
                 leftEl?.style.removeProperty('width');
-              } catch {}
+              } catch (e) {
+                // Style manipulation can fail in edge cases
+                if (process.env.NODE_ENV !== 'production') {
+                  console.warn('[Shell.Panel] Resize start style cleanup warning:', e);
+                }
+              }
               onResizeStart?.(size);
             },
             onResizeEnd: (size) => {

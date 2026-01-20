@@ -415,6 +415,26 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
     }
   }, [controlledSize, minSize, maxSize, normalizeSizeToPx, emitSizeChange]);
 
+  // Memoize peek styles to avoid IIFE recreation on every render
+  const peekStyles = React.useMemo((): CSSPropertiesWithVars | undefined => {
+    if (!(shell.peekTarget === 'sidebar' && shell.sidebarMode === 'collapsed' && !isOverlay)) {
+      return undefined;
+    }
+    const strategy: 'both' | 'single' = toggleModes ?? 'both';
+    const current = shell.sidebarMode as SidebarMode;
+    let next: SidebarMode;
+    if (strategy === 'both') {
+      next = current === 'collapsed' ? 'thin' : current === 'thin' ? 'expanded' : 'collapsed';
+    } else {
+      const target = resolveDefaultSidebarMode();
+      next = current === 'collapsed' ? target : 'collapsed';
+    }
+    if (next === 'thin') {
+      return { '--peek-sidebar-width': `${thinSize}px` } as CSSPropertiesWithVars;
+    }
+    return { '--peek-sidebar-width': `var(--sidebar-size, ${expandedSize}px)` } as CSSPropertiesWithVars;
+  }, [shell.peekTarget, shell.sidebarMode, isOverlay, toggleModes, resolveDefaultSidebarMode, thinSize, expandedSize]);
+
   if (isOverlay) {
     const open = shell.sidebarMode !== 'collapsed';
     return (
@@ -450,27 +470,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
         '--sidebar-thin-size': `${thinSize}px`,
         '--sidebar-min-size': `${minSize}px`,
         '--sidebar-max-size': `${maxSize}px`,
-        ...(shell.peekTarget === 'sidebar' && shell.sidebarMode === 'collapsed' && !isOverlay
-          ? (() => {
-              const strategy: 'both' | 'single' = toggleModes ?? 'both';
-              const current = shell.sidebarMode as SidebarMode;
-              let next: SidebarMode;
-              if (strategy === 'both') {
-                next = current === 'collapsed' ? 'thin' : current === 'thin' ? 'expanded' : 'collapsed';
-              } else {
-                const target = resolveDefaultSidebarMode();
-                next = current === 'collapsed' ? target : 'collapsed';
-              }
-              if (next === 'thin') {
-                return {
-                  '--peek-sidebar-width': `${thinSize}px`,
-                } as CSSPropertiesWithVars;
-              }
-              return {
-                '--peek-sidebar-width': `var(--sidebar-size, ${expandedSize}px)`,
-              } as CSSPropertiesWithVars;
-            })()
-          : {}),
+        ...peekStyles,
       } as CSSPropertiesWithVars}
     >
       <div className="rt-ShellSidebarContent" data-visible={isContentVisible || undefined}>

@@ -3,70 +3,9 @@
 import * as React from 'react';
 import type { Breakpoint, Responsive } from '../../props/prop-def.js';
 import type { submenuBehaviors } from './base-menu.props.js';
-import { _BREAKPOINTS } from '../shell.types.js';
+import { useBreakpoint } from '../../hooks/use-breakpoint.js';
 
 type SubmenuBehavior = (typeof submenuBehaviors)[number];
-
-/**
- * Hook to get the current breakpoint based on window width.
- * Returns 'initial' on the server and during initial hydration.
- * Uses shared breakpoint values from shell.types.js.
- */
-function useBreakpoint(): { breakpoint: Breakpoint; ready: boolean } {
-  const [currentBp, setCurrentBp] = React.useState<Breakpoint>('initial');
-  const [ready, setReady] = React.useState(false);
-
-  React.useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    // Use shared breakpoint media queries from shell.types
-    const queries = Object.entries(_BREAKPOINTS) as [keyof typeof _BREAKPOINTS, string][];
-    const mqls = queries.map(([k, q]) => [k, window.matchMedia(q)] as const);
-
-    const compute = () => {
-      // Highest matched breakpoint wins
-      const matched = mqls.filter(([, m]) => m.matches).map(([k]) => k);
-      const next = (matched[matched.length - 1] as Breakpoint | undefined) ?? 'initial';
-      setCurrentBp(next);
-      setReady(true);
-    };
-
-    compute();
-
-    const cleanups: Array<() => void> = [];
-    mqls.forEach(([, m]) => {
-      const mm = m as MediaQueryList & {
-        addEventListener?: (type: 'change', listener: () => void) => void;
-        removeEventListener?: (type: 'change', listener: () => void) => void;
-        addListener?: (listener: () => void) => void;
-        removeListener?: (listener: () => void) => void;
-      };
-      if (typeof mm.addEventListener === 'function') {
-        mm.addEventListener('change', compute);
-        cleanups.push(() => mm.removeEventListener?.('change', compute));
-      } else if (typeof mm.addListener === 'function') {
-        mm.addListener(compute);
-        cleanups.push(() => mm.removeListener?.(compute));
-      }
-    });
-
-    return () => {
-      cleanups.forEach((fn) => {
-        try {
-          fn();
-        } catch (e) {
-          // MediaQueryList cleanup can fail in edge cases (e.g., already removed)
-          // Log in development to aid debugging
-          if (process.env.NODE_ENV !== 'production') {
-            console.warn('[DropdownMenu] MediaQueryList cleanup warning:', e);
-          }
-        }
-      });
-    };
-  }, []);
-
-  return { breakpoint: currentBp, ready };
-}
 
 /**
  * Resolves a responsive value to its current value based on the breakpoint.
