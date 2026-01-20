@@ -7,6 +7,8 @@
   display: block;
   position: relative;
   opacity: var(--spinner-opacity);
+  /* Single GPU-composited rotation instead of 8 opacity animations */
+  animation: rt-spinner-rotate var(--spinner-animation-duration) steps(8, end) infinite;
 }
 
 .rt-SpinnerLeaf {
@@ -15,7 +17,7 @@
   left: calc(50% - 12.5% / 2);
   width: 12.5%;
   height: 100%;
-  animation: rt-spinner-leaf-fade var(--spinner-animation-duration) linear infinite;
+  /* Static opacity - no animation, values decrease around the circle */
 
   &::before {
     content: '';
@@ -26,46 +28,44 @@
     background-color: currentColor;
   }
 
+  /* Each leaf has static transform and opacity - no runtime animation */
   &:where(:nth-child(1)) {
     transform: rotate(0deg);
-    animation-delay: calc(-8 / 8 * var(--spinner-animation-duration));
+    opacity: 1;
   }
   &:where(:nth-child(2)) {
     transform: rotate(45deg);
-    animation-delay: calc(-7 / 8 * var(--spinner-animation-duration));
+    opacity: 0.9;
   }
   &:where(:nth-child(3)) {
     transform: rotate(90deg);
-    animation-delay: calc(-6 / 8 * var(--spinner-animation-duration));
+    opacity: 0.8;
   }
   &:where(:nth-child(4)) {
     transform: rotate(135deg);
-    animation-delay: calc(-5 / 8 * var(--spinner-animation-duration));
+    opacity: 0.7;
   }
   &:where(:nth-child(5)) {
     transform: rotate(180deg);
-    animation-delay: calc(-4 / 8 * var(--spinner-animation-duration));
+    opacity: 0.55;
   }
   &:where(:nth-child(6)) {
     transform: rotate(225deg);
-    animation-delay: calc(-3 / 8 * var(--spinner-animation-duration));
+    opacity: 0.4;
   }
   &:where(:nth-child(7)) {
     transform: rotate(270deg);
-    animation-delay: calc(-2 / 8 * var(--spinner-animation-duration));
+    opacity: 0.3;
   }
   &:where(:nth-child(8)) {
     transform: rotate(315deg);
-    animation-delay: calc(-1 / 8 * var(--spinner-animation-duration));
+    opacity: 0.2;
   }
 }
 
-@keyframes rt-spinner-leaf-fade {
-  from {
-    opacity: 1;
-  }
+@keyframes rt-spinner-rotate {
   to {
-    opacity: 0.25;
+    transform: rotate(360deg);
   }
 }
 
@@ -73,11 +73,6 @@
 @media (prefers-reduced-motion: reduce) {
   .rt-Spinner {
     animation: none;
-  }
-  
-  .rt-SpinnerLeaf {
-    animation: none;
-    opacity: 0.5;
   }
 }
 
