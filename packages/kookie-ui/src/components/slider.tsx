@@ -106,8 +106,9 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((props, forwardedRef
     }));
   }, [ticks, min, max]);
 
-  // Live region state for accessibility announcements
-  const [announceValue, setAnnounceValue] = React.useState<string>('');
+  // Live region ref for accessibility announcements (no state = no re-renders)
+  const announceRef = React.useRef<HTMLDivElement>(null);
+  const announceTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { onValueChange } = sliderProps;
   // Handle value changes with snapping
@@ -116,27 +117,41 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((props, forwardedRef
       const finalValue =
         snapToTicks && ticks ? newValue.map((v) => snapToNearestTick(v)) : newValue;
 
-      // Update live region for screen readers
-      const valueText = formatValueText(finalValue);
-      setAnnounceValue(valueText);
+      // Update live region for screen readers (direct DOM update, no React state)
+      if (announceRef.current) {
+        const valueText = formatValueText(finalValue);
+        announceRef.current.textContent = valueText;
+
+        // Clear after delay to prevent spam
+        if (announceTimeoutRef.current) {
+          clearTimeout(announceTimeoutRef.current);
+        }
+        announceTimeoutRef.current = setTimeout(() => {
+          if (announceRef.current) {
+            announceRef.current.textContent = '';
+          }
+        }, 1000);
+      }
 
       onValueChange?.(finalValue);
     },
     [snapToTicks, ticks, snapToNearestTick, formatValueText, onValueChange],
   );
 
-  // Clear announcement after a delay to prevent spam
+  // Cleanup timeout on unmount
   React.useEffect(() => {
-    if (announceValue) {
-      const timer = setTimeout(() => setAnnounceValue(''), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [announceValue]);
+    return () => {
+      if (announceTimeoutRef.current) {
+        clearTimeout(announceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="rt-SliderContainer">
       {/* Live region for screen reader announcements */}
       <div
+        ref={announceRef}
         aria-live="polite"
         aria-atomic="true"
         className="sr-only"
@@ -147,9 +162,7 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((props, forwardedRef
           height: '1px',
           overflow: 'hidden',
         }}
-      >
-        {announceValue}
-      </div>
+      />
 
       <SliderPrimitive.Root
         data-accent-color={color}
