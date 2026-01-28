@@ -125,6 +125,30 @@ export default function DropdownMenuTest() {
         </Text>
       </Box>
 
+      {/* Non-Virtualized Menu (for comparison) */}
+      <Box mb="6" p="4" style={{ background: 'var(--amber-3)', borderRadius: 'var(--radius-3)', border: '2px solid var(--amber-6)' }}>
+        <Heading size="4" mb="2" color="amber">🐌 Non-Virtualized Menu (200 items)</Heading>
+        <Text as="p" size="2" color="gray" mb="4">
+          Standard DropdownMenu.Item elements without virtualization. Compare styling with the virtualized version above.
+          All 200 DOM nodes are rendered immediately.
+        </Text>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger>
+            <Button variant="soft" color="amber">Open Standard Menu</Button>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content style={{ minWidth: 220, maxHeight: 300, overflowY: 'auto' }}>
+            {Array.from({ length: 200 }, (_, i) => (
+              <DropdownMenu.Item key={i} onSelect={() => console.log('Selected:', i + 1)}>
+                Item {i + 1}
+              </DropdownMenu.Item>
+            ))}
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
+        <Text as="p" size="1" color="gray" mt="2">
+          Open DevTools → Elements → search for &quot;rt-DropdownMenuItem&quot; → all 200 elements rendered.
+        </Text>
+      </Box>
+
       {/* Virtualized Menu with Variable Heights */}
       <Box mb="6" p="4" style={{ background: 'var(--teal-3)', borderRadius: 'var(--radius-3)', border: '2px solid var(--teal-6)' }}>
         <Heading size="4" mb="2" color="teal">⚡ Variable Height Items</Heading>

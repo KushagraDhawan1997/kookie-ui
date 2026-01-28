@@ -162,7 +162,7 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
       [color, memoizedThemeContext.accentColor],
     );
     const contentBody = (
-      <MenuProvider>
+      <MenuProvider size={size}>
         <DropdownMenuContentContext.Provider
           value={React.useMemo(
             () => ({ size, variant, color: resolvedColor, highContrast, material }),
@@ -197,7 +197,7 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
             )}
           >
             {virtualized ? (
-              <div className={classNames('rt-BaseMenuViewport', 'rt-DropdownMenuViewport')}>
+              <div className={classNames('rt-BaseMenuViewport', 'rt-DropdownMenuViewport', 'rt-virtualized')}>
                 {contentBody}
               </div>
             ) : (

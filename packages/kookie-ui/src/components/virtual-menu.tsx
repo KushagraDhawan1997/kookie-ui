@@ -3,7 +3,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { useMenuContext } from './_internal/menu-context.js';
+import { useMenuContext, menuSizeToItemHeight } from './_internal/menu-context.js';
 
 /**
  * VirtualMenu - A virtualized menu component for rendering large lists efficiently.
@@ -85,9 +85,17 @@ interface VirtualMenuProps<T> {
    */
   renderItem?: React.ComponentType<VirtualMenuRenderItemProps<T>>;
   /**
+   * Menu size - controls item height.
+   * Automatically inherited from parent DropdownMenu.Content/ContextMenu.Content.
+   * Only set manually when using VirtualMenu outside of a menu context.
+   * @default '2' (or inherited from context)
+   */
+  size?: '1' | '2';
+  /**
    * Estimated height of each item in pixels.
    * Can be a number (same for all) or a function (per-item).
-   * @default 36
+   * Usually not needed - height is automatically derived from size prop/context.
+   * Use this only for custom item heights (e.g., variable height items).
    */
   estimatedItemSize?: number | ((index: number) => number);
   /** Number of items to render outside visible area */
@@ -173,7 +181,8 @@ function VirtualMenuRoot<T>({
   items,
   itemLabel,
   renderItem: RenderItem,
-  estimatedItemSize = 36,
+  size: sizeProp,
+  estimatedItemSize: estimatedItemSizeProp,
   overscan = 5,
   onSelect,
   className,
@@ -183,7 +192,13 @@ function VirtualMenuRoot<T>({
   const menuId = React.useId();
   const parentRef = React.useRef<HTMLDivElement>(null);
   const [highlightedIndex, setHighlightedIndex] = React.useState<number>(-1);
-  const { isInsideMenu } = useMenuContext();
+  const { isInsideMenu, size: contextSize } = useMenuContext();
+
+  // Resolve size: prop > context > default '2'
+  const resolvedSize = sizeProp ?? contextSize ?? '2';
+  
+  // Resolve item height: explicit prop > derived from size
+  const estimatedItemSize = estimatedItemSizeProp ?? menuSizeToItemHeight[resolvedSize];
 
   // Validate props
   if (!itemLabel && !RenderItem) {

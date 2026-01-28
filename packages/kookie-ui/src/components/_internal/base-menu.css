@@ -54,6 +54,11 @@
   :where(.rt-BaseMenuContent:has(.rt-ScrollAreaScrollbar[data-orientation='vertical'])) & {
     padding-inline-end: var(--space-3);
   }
+
+  /* Remove right padding when virtualized so scrollbar sits at the edge */
+  &:where(.rt-virtualized) {
+    padding-inline-end: 0;
+  }
 }
 
 .rt-BaseMenuItem {
