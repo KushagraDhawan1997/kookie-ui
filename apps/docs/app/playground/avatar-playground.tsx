@@ -39,7 +39,17 @@ const radiusOptions = ['none', 'small', 'medium', 'large', 'full'] as const;
 const materials = ['solid', 'translucent'] as const;
 const fitOptions = ['cover', 'contain', 'fill', 'scale-down', 'none'] as const;
 
-export default function AvatarPlayground() {
+type AvatarPlaygroundProps = {
+  showControls?: boolean;
+  showToolbar?: boolean;
+  height?: string;
+};
+
+export default function AvatarPlayground({
+  showControls = true,
+  showToolbar = true,
+  height,
+}: AvatarPlaygroundProps = {}) {
   const [variant, setVariant] = React.useState<string>('soft');
   const [color, setColor] = React.useState<string>('theme');
   const [radius, setRadius] = React.useState<string>('theme');
@@ -157,6 +167,9 @@ export default function AvatarPlayground() {
       items={items}
       showBackground={material === 'translucent'}
       hint={material === 'translucent' ? 'Translucent material is best observed with soft or surface variants.' : undefined}
+      showControls={showControls}
+      showToolbar={showToolbar}
+      height={height}
     />
   );
 }

@@ -50,9 +50,33 @@ interface PlaygroundProps {
    * Optional hint message to display below the preview
    */
   hint?: string;
+
+  /**
+   * Show property controls panel (default: true)
+   */
+  showControls?: boolean;
+
+  /**
+   * Show toolbar with copy button and theme toggle (default: true)
+   */
+  showToolbar?: boolean;
+
+  /**
+   * Custom height for the preview area (default: 480px)
+   */
+  height?: string;
 }
 
-export default function Playground({ component, code, items, showBackground = false, hint }: PlaygroundProps) {
+export default function Playground({
+  component,
+  code,
+  items,
+  showBackground = false,
+  hint,
+  showControls = true,
+  showToolbar = true,
+  height = '480px',
+}: PlaygroundProps) {
   const [copied, setCopied] = useState(false);
   const [appearance, setAppearance] = useState<'light' | 'dark'>('light');
 
@@ -67,11 +91,11 @@ export default function Playground({ component, code, items, showBackground = fa
   };
 
   return (
-    <Flex direction={{ initial: 'column', md: 'row' }} gap="2" my="3" align="center">
+    <Flex direction={{ initial: 'column', md: showControls ? 'row' : 'column' }} gap="2" my="3" align="center">
       {/* Left side - Preview area */}
       <Flex direction="column" gap="2" width="100%" className="playground-container">
         <Theme asChild appearance={appearance} hasBackground={false}>
-          <Box position="relative" style={{ width: '100%', height: '480px' }}>
+          <Box position="relative" style={{ width: '100%', height }}>
             <Card size="1" variant="soft" style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
               {/* Background Image */}
               {showBackground && (
@@ -85,21 +109,25 @@ export default function Playground({ component, code, items, showBackground = fa
               )}
 
               {/* Toolbar - Copy button (left) and theme toggle (right) */}
-              <Flex position="absolute" top="2" left="2" style={{ zIndex: 2 }}>
-                <Button size="2" variant="ghost" color="gray" onClick={handleCopy} tooltip={copied ? 'Copied!' : 'Copy'} aria-label={copied ? 'Copied!' : 'Copy code'}>
-                  <HugeiconsIcon icon={Copy01Icon} /> Copy
-                </Button>
-              </Flex>
-              <Flex position="absolute" top="2" right="2" style={{ zIndex: 2 }}>
-                <SegmentedControl.Root size="2" value={appearance} onValueChange={(value) => setAppearance(value as 'light' | 'dark')}>
-                  <SegmentedControl.Item value="light" iconOnly>
-                    <HugeiconsIcon icon={Sun01Icon} />
-                  </SegmentedControl.Item>
-                  <SegmentedControl.Item value="dark" iconOnly>
-                    <HugeiconsIcon icon={Moon02Icon} />
-                  </SegmentedControl.Item>
-                </SegmentedControl.Root>
-              </Flex>
+              {showToolbar && (
+                <>
+                  <Flex position="absolute" top="2" left="2" style={{ zIndex: 2 }}>
+                    <Button size="2" variant="ghost" color="gray" onClick={handleCopy} tooltip={copied ? 'Copied!' : 'Copy'} aria-label={copied ? 'Copied!' : 'Copy code'}>
+                      <HugeiconsIcon icon={Copy01Icon} /> Copy
+                    </Button>
+                  </Flex>
+                  <Flex position="absolute" top="2" right="2" style={{ zIndex: 2 }}>
+                    <SegmentedControl.Root size="2" value={appearance} onValueChange={(value) => setAppearance(value as 'light' | 'dark')}>
+                      <SegmentedControl.Item value="light" iconOnly>
+                        <HugeiconsIcon icon={Sun01Icon} />
+                      </SegmentedControl.Item>
+                      <SegmentedControl.Item value="dark" iconOnly>
+                        <HugeiconsIcon icon={Moon02Icon} />
+                      </SegmentedControl.Item>
+                    </SegmentedControl.Root>
+                  </Flex>
+                </>
+              )}
 
               {/* Preview area */}
               <Flex direction="column" align="center" justify="center" height="100%" p="4" style={{ position: 'relative', zIndex: 1 }}>
@@ -118,9 +146,11 @@ export default function Playground({ component, code, items, showBackground = fa
       </Flex>
 
       {/* Right side - Property controls */}
-      <Box width={{ initial: '100%', md: '256px' }} flexShrink="0">
-        <PropertyControl.Group width="100%" items={items} />
-      </Box>
+      {showControls && (
+        <Box width={{ initial: '100%', md: '256px' }} flexShrink="0">
+          <PropertyControl.Group width="100%" items={items} />
+        </Box>
+      )}
     </Flex>
   );
 }

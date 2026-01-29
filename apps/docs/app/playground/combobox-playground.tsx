@@ -59,7 +59,17 @@ const allCountries = countriesByContinent.flatMap((g) => g.countries);
  */
 const getCountryLabel = (value: string | null) => allCountries.find((c) => c.value === value)?.label;
 
-export default function ComboBoxPlayground() {
+type ComboBoxPlaygroundProps = {
+  showControls?: boolean;
+  showToolbar?: boolean;
+  height?: string;
+};
+
+export default function ComboBoxPlayground({
+  showControls = true,
+  showToolbar = true,
+  height,
+}: ComboBoxPlaygroundProps = {}) {
   const [size, setSize] = React.useState<(typeof sizes)[number]>('2');
   const [variant, setVariant] = React.useState<(typeof variants)[number]>('soft');
   const [contentVariant, setContentVariant] = React.useState<(typeof contentVariants)[number]>('soft');
@@ -286,5 +296,14 @@ ${listMarkup}
     },
   ];
 
-  return <Playground component={component} code={generateCode()} items={items} />;
+  return (
+    <Playground
+      component={component}
+      code={generateCode()}
+      items={items}
+      showControls={showControls}
+      showToolbar={showToolbar}
+      height={height}
+    />
+  );
 }

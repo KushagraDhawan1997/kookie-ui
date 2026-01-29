@@ -1,11 +1,14 @@
 'use client';
 
-import { Button, Container, Section, Link as KUILink, Avatar, Callout, Flex, Separator, Text, Box } from '@kushagradhawan/kookie-ui';
+import { Button, Container, Section, Link as KUILink, Avatar, Callout, Flex, Grid, Separator, Text, Box } from '@kushagradhawan/kookie-ui';
 import { Hero, Footer } from '@kushagradhawan/kookie-blocks';
 import Link from 'next/link';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ArrowUpRight01Icon } from '@hugeicons/core-free-icons';
 import { Testimonial } from '@/components/testimonial';
+import AvatarPlayground from './playground/avatar-playground';
+import ButtonPlayground from './playground/button-playground';
+import ComboboxPlayground from './playground/combobox-playground';
 
 export default function HeroSection() {
   const currentYear = new Date().getFullYear();
@@ -52,6 +55,18 @@ export default function HeroSection() {
               </Link>
             </Flex>
           </Hero.Root>
+        </Container>
+      </Section>
+
+      <Separator size="4" light />
+
+      <Section size="2">
+        <Container size="4" px={{ initial: '4', sm: '6' }}>
+          <Grid columns={{ initial: '1', lg: '3' }} gap="6">
+            <AvatarPlayground showControls={false} height="320px" />
+            <ButtonPlayground showControls={false} height="320px" />
+            <ComboboxPlayground showControls={false} height="320px" />
+          </Grid>
         </Container>
       </Section>
 
