@@ -48,7 +48,7 @@ type ButtonPlaygroundProps = {
 };
 
 export default function ButtonPlayground({
-  showControls = true,
+  showControls = false,
   showToolbar = true,
   height,
 }: ButtonPlaygroundProps = {}) {

@@ -38,7 +38,17 @@ const sizes = ['1', '2', '3', '4'] as const;
 const radiusOptions = ['none', 'small', 'medium', 'large', 'full'] as const;
 const materials = ['solid', 'translucent'] as const;
 
-export default function ToggleButtonPlayground() {
+type ToggleButtonPlaygroundProps = {
+  showControls?: boolean;
+  showToolbar?: boolean;
+  height?: string;
+};
+
+export default function ToggleButtonPlayground({
+  showControls = false,
+  showToolbar = true,
+  height,
+}: ToggleButtonPlaygroundProps = {}) {
   const [variant, setVariant] = React.useState<string>('soft');
   const [color, setColor] = React.useState<string>('theme');
   const [radius, setRadius] = React.useState<string>('theme');
@@ -146,6 +156,9 @@ export default function ToggleButtonPlayground() {
       items={items}
       showBackground={material === 'translucent'}
       hint={material === 'translucent' ? 'Translucent material is best observed with soft or surface variants.' : undefined}
+      showControls={showControls}
+      showToolbar={showToolbar}
+      height={height}
     />
   );
 }

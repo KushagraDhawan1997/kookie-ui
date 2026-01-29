@@ -10,7 +10,17 @@ const materials = ['solid', 'translucent'] as const;
 const widths = ['280px', '320px', '400px', '50%'] as const;
 const heights = ['200px', '300px', '400px', '50%'] as const;
 
-export default function SheetPlayground() {
+type SheetPlaygroundProps = {
+  showControls?: boolean;
+  showToolbar?: boolean;
+  height?: string;
+};
+
+export default function SheetPlayground({
+  showControls = false,
+  showToolbar = true,
+  height: playgroundHeight,
+}: SheetPlaygroundProps = {}) {
   const [side, setSide] = React.useState<string>('end');
   const [size, setSize] = React.useState<string>('3');
   const [material, setMaterial] = React.useState<string>('theme');
@@ -84,7 +94,7 @@ export default function SheetPlayground() {
 
     return `<Sheet.Root>
   <Sheet.Trigger>
-    <Button>Open Sheet</Button>
+    <Button variant="soft" highContrast>Open Sheet</Button>
   </Sheet.Trigger>
   <Sheet.Content${contentPropsString}>
     <Sheet.Title>Sheet Title</Sheet.Title>
@@ -92,7 +102,7 @@ export default function SheetPlayground() {
       Sheet content goes here.
     </Sheet.Description>
     <Sheet.Close>
-      <Button variant="soft">Close</Button>
+      <Button variant="soft" highContrast>Close</Button>
     </Sheet.Close>
   </Sheet.Content>
 </Sheet.Root>`;
@@ -103,7 +113,7 @@ export default function SheetPlayground() {
       component={
         <Sheet.Root open={open} onOpenChange={setOpen}>
           <Sheet.Trigger>
-            <Button>Open Sheet</Button>
+            <Button variant="soft" highContrast>Open Sheet</Button>
           </Sheet.Trigger>
           <Sheet.Content
             side={side as any}
@@ -136,12 +146,12 @@ export default function SheetPlayground() {
               </Flex>
               <Flex gap="2" justify="end">
                 <Sheet.Close>
-                  <Button variant="soft" color="gray">
+                  <Button variant="soft" color="gray" highContrast>
                     Cancel
                   </Button>
                 </Sheet.Close>
                 <Sheet.Close>
-                  <Button>Confirm</Button>
+                  <Button variant="soft" highContrast>Confirm</Button>
                 </Sheet.Close>
               </Flex>
             </Flex>
@@ -152,6 +162,9 @@ export default function SheetPlayground() {
       items={items}
       showBackground={material === 'translucent'}
       hint={material === 'translucent' ? 'Translucent material creates a frosted glass effect over backgrounds.' : undefined}
+      showControls={showControls}
+      showToolbar={showToolbar}
+      height={playgroundHeight}
     />
   );
 }

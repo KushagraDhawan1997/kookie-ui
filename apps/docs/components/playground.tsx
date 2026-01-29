@@ -52,7 +52,7 @@ interface PlaygroundProps {
   hint?: string;
 
   /**
-   * Show property controls panel (default: true)
+   * Show property controls panel (default: false)
    */
   showControls?: boolean;
 
@@ -73,7 +73,7 @@ export default function Playground({
   items,
   showBackground = false,
   hint,
-  showControls = true,
+  showControls = false,
   showToolbar = true,
   height = '480px',
 }: PlaygroundProps) {
@@ -132,7 +132,7 @@ export default function Playground({
                             <HugeiconsIcon icon={SlidersHorizontalIcon} strokeWidth={1.75} />
                           </IconButton>
                         </Popover.Trigger>
-                        <Popover.Content size="1" side="bottom" align="end" width="280px">
+                        <Popover.Content size="1" side="right" align="start" width="280px">
                           <PropertyControl.Group width="100%" items={items} />
                         </Popover.Content>
                       </Popover.Root>

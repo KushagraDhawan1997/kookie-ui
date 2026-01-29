@@ -45,7 +45,7 @@ type BadgePlaygroundProps = {
 };
 
 export default function BadgePlayground({
-  showControls = true,
+  showControls = false,
   showToolbar = true,
   height,
 }: BadgePlaygroundProps = {}) {

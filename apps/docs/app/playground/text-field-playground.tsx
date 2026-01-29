@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { TextField, Text } from '@kushagradhawan/kookie-ui';
-import { Search } from 'lucide-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Search01Icon } from '@hugeicons/core-free-icons';
 import Playground from '@/components/playground';
 
 const variants = ['classic', 'surface', 'soft', 'outline'] as const;
@@ -10,8 +11,18 @@ const sizes = ['1', '2', '3'] as const;
 const radiusOptions = ['none', 'small', 'medium', 'large', 'full'] as const;
 const materials = ['solid', 'translucent'] as const;
 
-export default function TextFieldPlayground() {
-  const [variant, setVariant] = React.useState<string>('surface');
+type TextFieldPlaygroundProps = {
+  showControls?: boolean;
+  showToolbar?: boolean;
+  height?: string;
+};
+
+export default function TextFieldPlayground({
+  showControls = false,
+  showToolbar = true,
+  height,
+}: TextFieldPlaygroundProps = {}) {
+  const [variant, setVariant] = React.useState<string>('soft');
   const [size, setSize] = React.useState<string>('2');
   const [radius, setRadius] = React.useState<string>('theme');
   const [material, setMaterial] = React.useState<string>('theme');
@@ -124,7 +135,7 @@ export default function TextFieldPlayground() {
     if (showIcon) {
       return `<TextField.Root${propsString}>
   <TextField.Slot>
-    <Search />
+    <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
   </TextField.Slot>
 </TextField.Root>`;
     }
@@ -169,7 +180,7 @@ export default function TextFieldPlayground() {
           )}
           {showIcon && !scrub && (
             <TextField.Slot>
-              <Search size={16} />
+              <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
             </TextField.Slot>
           )}
         </TextField.Root>
@@ -184,6 +195,9 @@ export default function TextFieldPlayground() {
             ? 'Translucent material adds backdrop blur for depth over complex backgrounds.'
             : undefined
       }
+      showControls={showControls}
+      showToolbar={showToolbar}
+      height={height}
     />
   );
 }

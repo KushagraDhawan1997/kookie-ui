@@ -10,8 +10,18 @@ const radiusOptions = ['none', 'small', 'medium', 'large', 'full'] as const;
 const materials = ['solid', 'translucent'] as const;
 const resizeOptions = ['none', 'vertical', 'horizontal', 'both'] as const;
 
-export default function TextAreaPlayground() {
-  const [variant, setVariant] = React.useState<string>('surface');
+type TextAreaPlaygroundProps = {
+  showControls?: boolean;
+  showToolbar?: boolean;
+  height?: string;
+};
+
+export default function TextAreaPlayground({
+  showControls = false,
+  showToolbar = true,
+  height,
+}: TextAreaPlaygroundProps = {}) {
+  const [variant, setVariant] = React.useState<string>('soft');
   const [size, setSize] = React.useState<string>('2');
   const [radius, setRadius] = React.useState<string>('theme');
   const [material, setMaterial] = React.useState<string>('theme');
@@ -125,6 +135,9 @@ export default function TextAreaPlayground() {
             ? 'Drag the bottom-right corner to resize the textarea.'
             : undefined
       }
+      showControls={showControls}
+      showToolbar={showToolbar}
+      height={height}
     />
   );
 }

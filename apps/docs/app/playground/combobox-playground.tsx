@@ -2,8 +2,22 @@
 
 import React from 'react';
 import { Combobox, Flex } from '@kushagradhawan/kookie-ui';
-import { MapPin, Landmark, Mountain, Palmtree, Building2, Coffee, Cherry, Soup, Pizza, Beer, Flag, Trees, Pyramid, TreePalm, Ship, TentTree } from 'lucide-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import {
+  Location01Icon,
+  Building01Icon,
+  Flag01Icon,
+  Tree01Icon,
+} from '@hugeicons/core-free-icons';
 import Playground from '@/components/playground';
+
+// Map icon components to their string names for code generation
+const iconNameMap = new Map([
+  [Location01Icon, 'Location01Icon'],
+  [Building01Icon, 'Building01Icon'],
+  [Flag01Icon, 'Flag01Icon'],
+  [Tree01Icon, 'Tree01Icon'],
+]);
 
 const variants = ['classic', 'surface', 'soft', 'outline', 'ghost'] as const;
 const contentVariants = ['solid', 'soft'] as const;
@@ -16,36 +30,36 @@ const countriesByContinent = [
   {
     continent: 'Europe',
     countries: [
-      { value: 'france', label: 'France', icon: Coffee },
-      { value: 'germany', label: 'Germany', icon: Beer },
-      { value: 'italy', label: 'Italy', icon: Pizza },
-      { value: 'spain', label: 'Spain', icon: Palmtree },
-      { value: 'uk', label: 'United Kingdom', icon: Landmark },
+      { value: 'france', label: 'France', icon: Location01Icon },
+      { value: 'germany', label: 'Germany', icon: Location01Icon },
+      { value: 'italy', label: 'Italy', icon: Location01Icon },
+      { value: 'spain', label: 'Spain', icon: Tree01Icon },
+      { value: 'uk', label: 'United Kingdom', icon: Building01Icon },
     ],
   },
   {
     continent: 'North America',
     countries: [
-      { value: 'usa', label: 'United States', icon: Flag },
-      { value: 'canada', label: 'Canada', icon: Trees },
-      { value: 'mexico', label: 'Mexico', icon: Pyramid },
+      { value: 'usa', label: 'United States', icon: Flag01Icon },
+      { value: 'canada', label: 'Canada', icon: Tree01Icon },
+      { value: 'mexico', label: 'Mexico', icon: Location01Icon },
     ],
   },
   {
     continent: 'Asia',
     countries: [
-      { value: 'japan', label: 'Japan', icon: Cherry },
-      { value: 'china', label: 'China', icon: Building2 },
-      { value: 'india', label: 'India', icon: Soup },
-      { value: 'south-korea', label: 'South Korea', icon: Mountain },
+      { value: 'japan', label: 'Japan', icon: Location01Icon },
+      { value: 'china', label: 'China', icon: Building01Icon },
+      { value: 'india', label: 'India', icon: Location01Icon },
+      { value: 'south-korea', label: 'South Korea', icon: Location01Icon },
     ],
   },
   {
     continent: 'South America',
     countries: [
-      { value: 'brazil', label: 'Brazil', icon: TreePalm },
-      { value: 'argentina', label: 'Argentina', icon: Ship },
-      { value: 'chile', label: 'Chile', icon: TentTree },
+      { value: 'brazil', label: 'Brazil', icon: Tree01Icon },
+      { value: 'argentina', label: 'Argentina', icon: Location01Icon },
+      { value: 'chile', label: 'Chile', icon: Tree01Icon },
     ],
   },
 ];
@@ -66,7 +80,7 @@ type ComboBoxPlaygroundProps = {
 };
 
 export default function ComboBoxPlayground({
-  showControls = true,
+  showControls = false,
   showToolbar = true,
   height,
 }: ComboBoxPlaygroundProps = {}) {
@@ -97,12 +111,15 @@ export default function ComboBoxPlayground({
           <Combobox.Label>${group.continent}</Combobox.Label>
 ${group.countries
   .map(
-    (country) => `          <Combobox.Item value="${country.value}">
+    (country) => {
+      const iconName = iconNameMap.get(country.icon) || 'Location01Icon';
+      return `          <Combobox.Item value="${country.value}">
             <Flex gap="2" align="center">
-              <${country.icon.name} size={16} />
+              <HugeiconsIcon icon={${iconName}} size={16} strokeWidth={1.75} />
               ${country.label}
             </Flex>
-          </Combobox.Item>`,
+          </Combobox.Item>`;
+    },
   )
   .join('\n')}
         </Combobox.Group>`,
@@ -110,46 +127,47 @@ ${group.countries
       .join('\n');
 
     // Get all unique icons
-    const allIcons = countriesByContinent.flatMap((g) => g.countries.map((c) => c.icon.name));
+    const allIcons = countriesByContinent.flatMap((g) => g.countries.map((c) => iconNameMap.get(c.icon) || 'Location01Icon'));
     const uniqueIcons = [...new Set(allIcons)];
 
     return `import { Combobox, Flex } from '@kushagradhawan/kookie-ui';
-import { ${uniqueIcons.join(', ')} } from 'lucide-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { ${uniqueIcons.join(', ')} } from '@hugeicons/core-free-icons';
 
 const countriesByContinent = [
   {
     continent: 'Europe',
     countries: [
-      { value: 'france', label: 'France', icon: Coffee },
-      { value: 'germany', label: 'Germany', icon: Beer },
-      { value: 'italy', label: 'Italy', icon: Pizza },
-      { value: 'spain', label: 'Spain', icon: Palmtree },
-      { value: 'uk', label: 'United Kingdom', icon: Landmark },
+      { value: 'france', label: 'France', icon: Location01Icon },
+      { value: 'germany', label: 'Germany', icon: Location01Icon },
+      { value: 'italy', label: 'Italy', icon: Location01Icon },
+      { value: 'spain', label: 'Spain', icon: Tree01Icon },
+      { value: 'uk', label: 'United Kingdom', icon: Building01Icon },
     ],
   },
   {
     continent: 'North America',
     countries: [
-      { value: 'usa', label: 'United States', icon: Flag },
-      { value: 'canada', label: 'Canada', icon: Trees },
-      { value: 'mexico', label: 'Mexico', icon: Pyramid },
+      { value: 'usa', label: 'United States', icon: Flag01Icon },
+      { value: 'canada', label: 'Canada', icon: Tree01Icon },
+      { value: 'mexico', label: 'Mexico', icon: Location01Icon },
     ],
   },
   {
     continent: 'Asia',
     countries: [
-      { value: 'japan', label: 'Japan', icon: Cherry },
-      { value: 'china', label: 'China', icon: Building2 },
-      { value: 'india', label: 'India', icon: Soup },
-      { value: 'south-korea', label: 'South Korea', icon: Mountain },
+      { value: 'japan', label: 'Japan', icon: Location01Icon },
+      { value: 'china', label: 'China', icon: Building01Icon },
+      { value: 'india', label: 'India', icon: Location01Icon },
+      { value: 'south-korea', label: 'South Korea', icon: Location01Icon },
     ],
   },
   {
     continent: 'South America',
     countries: [
-      { value: 'brazil', label: 'Brazil', icon: TreePalm },
-      { value: 'argentina', label: 'Argentina', icon: Ship },
-      { value: 'chile', label: 'Chile', icon: TentTree },
+      { value: 'brazil', label: 'Brazil', icon: Tree01Icon },
+      { value: 'argentina', label: 'Argentina', icon: Location01Icon },
+      { value: 'chile', label: 'Chile', icon: Tree01Icon },
     ],
   },
 ];
@@ -203,7 +221,7 @@ ${listMarkup}
                 return (
                   <Combobox.Item key={country.value} value={country.value}>
                     <Flex gap="2" align="center">
-                      <Icon size={16} />
+                      <HugeiconsIcon icon={Icon} size={16} strokeWidth={1.75} />
                       {country.label}
                     </Flex>
                   </Combobox.Item>

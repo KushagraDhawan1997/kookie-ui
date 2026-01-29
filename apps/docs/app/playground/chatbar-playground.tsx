@@ -13,8 +13,18 @@ const materials = ['solid', 'translucent'] as const;
 const expandOnOptions = ['none', 'focus', 'overflow', 'both'] as const;
 const sendModeOptions = ['always', 'whenDirty', 'never'] as const;
 
-export default function ChatbarPlayground() {
-  const [variant, setVariant] = React.useState<string>('surface');
+type ChatbarPlaygroundProps = {
+  showControls?: boolean;
+  showToolbar?: boolean;
+  height?: string;
+};
+
+export default function ChatbarPlayground({
+  showControls = false,
+  showToolbar = true,
+  height,
+}: ChatbarPlaygroundProps = {}) {
+  const [variant, setVariant] = React.useState<string>('soft');
   const [size, setSize] = React.useState<string>('2');
   const [radius, setRadius] = React.useState<string>('theme');
   const [material, setMaterial] = React.useState<string>('theme');
@@ -144,7 +154,7 @@ export default function ChatbarPlayground() {
           value={textValue}
           onValueChange={setTextValue}
           width={400}
-          minLines={4}
+          minLines={3}
         >
           {showAttach && <Chatbar.AttachmentsRow />}
           <Chatbar.Textarea aria-label="Message" placeholder="Type a message..." />
@@ -179,6 +189,9 @@ export default function ChatbarPlayground() {
               ? 'Type multiple lines to expand the chatbar automatically.'
               : 'Control expansion manually via the open prop.'
       }
+      showControls={showControls}
+      showToolbar={showToolbar}
+      height={height}
     />
   );
 }

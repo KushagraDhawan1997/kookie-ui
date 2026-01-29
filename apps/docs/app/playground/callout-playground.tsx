@@ -46,7 +46,7 @@ type CalloutPlaygroundProps = {
 };
 
 export default function CalloutPlayground({
-  showControls = true,
+  showControls = false,
   showToolbar = true,
   height,
 }: CalloutPlaygroundProps = {}) {

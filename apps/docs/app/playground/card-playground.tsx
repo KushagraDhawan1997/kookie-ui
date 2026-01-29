@@ -15,7 +15,7 @@ type CardPlaygroundProps = {
 };
 
 export default function CardPlayground({
-  showControls = true,
+  showControls = false,
   showToolbar = true,
   height,
 }: CardPlaygroundProps = {}) {

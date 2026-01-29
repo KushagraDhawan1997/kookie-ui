@@ -46,7 +46,7 @@ type AvatarPlaygroundProps = {
 };
 
 export default function AvatarPlayground({
-  showControls = true,
+  showControls = false,
   showToolbar = true,
   height,
 }: AvatarPlaygroundProps = {}) {

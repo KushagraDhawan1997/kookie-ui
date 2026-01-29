@@ -11,7 +11,36 @@ import BadgePlayground from './playground/badge-playground';
 import ButtonPlayground from './playground/button-playground';
 import CalloutPlayground from './playground/callout-playground';
 import CardPlayground from './playground/card-playground';
+import ChatbarPlayground from './playground/chatbar-playground';
 import ComboboxPlayground from './playground/combobox-playground';
+import HeadingPlayground from './playground/heading-playground';
+import IconButtonPlayground from './playground/icon-button-playground';
+import SegmentedControlPlayground from './playground/segmented-control-playground';
+import SheetPlayground from './playground/sheet-playground';
+import TextPlayground from './playground/text-playground';
+import TextAreaPlayground from './playground/text-area-playground';
+import TextFieldPlayground from './playground/text-field-playground';
+import ToggleButtonPlayground from './playground/toggle-button-playground';
+import ToggleIconButtonPlayground from './playground/toggle-icon-button-playground';
+
+const playgrounds = [
+  { name: 'Avatar', slug: 'avatar', Component: AvatarPlayground },
+  { name: 'Badge', slug: 'badge', Component: BadgePlayground },
+  { name: 'Button', slug: 'button', Component: ButtonPlayground },
+  { name: 'Callout', slug: 'callout', Component: CalloutPlayground },
+  { name: 'Card', slug: 'card', Component: CardPlayground },
+  { name: 'Chatbar', slug: 'chatbar', Component: ChatbarPlayground },
+  { name: 'Combobox', slug: 'combobox', Component: ComboboxPlayground },
+  { name: 'Heading', slug: 'heading', Component: HeadingPlayground },
+  { name: 'Icon Button', slug: 'icon-button', Component: IconButtonPlayground },
+  { name: 'Segmented Control', slug: 'segmented-control', Component: SegmentedControlPlayground },
+  { name: 'Sheet', slug: 'sheet', Component: SheetPlayground },
+  { name: 'Text', slug: 'text', Component: TextPlayground },
+  { name: 'Text Area', slug: 'text-area', Component: TextAreaPlayground },
+  { name: 'Text Field', slug: 'text-field', Component: TextFieldPlayground },
+  { name: 'Toggle Button', slug: 'toggle-button', Component: ToggleButtonPlayground },
+  { name: 'Toggle Icon Button', slug: 'toggle-icon-button', Component: ToggleIconButtonPlayground },
+];
 
 export default function HeroSection() {
   const currentYear = new Date().getFullYear();
@@ -65,13 +94,17 @@ export default function HeroSection() {
 
       <Section size="2">
         <Container size="4" px={{ initial: '4', sm: '6' }}>
-          <Grid columns={{ initial: '1', sm: '2', lg: '3' }} gap="4">
-            <AvatarPlayground showControls={false} height="320px" />
-            <BadgePlayground showControls={false} height="320px" />
-            <ButtonPlayground showControls={false} height="320px" />
-            <CalloutPlayground showControls={false} height="320px" />
-            <CardPlayground showControls={false} height="320px" />
-            <ComboboxPlayground showControls={false} height="320px" />
+          <Grid columns={{ initial: '1', sm: '2', lg: '2' }} gap="4">
+            {playgrounds.map(({ name, slug, Component }) => (
+              <Flex key={slug} direction="column">
+                <Box px="1">
+                  <KUILink asChild size="2" weight="medium" color="gray" highContrast>
+                    <Link href={`/docs/${slug}`}>{name}</Link>
+                  </KUILink>
+                </Box>
+                <Component showControls={false} height="360px" />
+              </Flex>
+            ))}
           </Grid>
         </Container>
       </Section>

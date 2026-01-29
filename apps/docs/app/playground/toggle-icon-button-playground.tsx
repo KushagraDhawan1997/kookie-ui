@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { ToggleIconButton } from '@kushagradhawan/kookie-ui';
-import { Star } from 'lucide-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { StarIcon } from '@hugeicons/core-free-icons';
 import Playground from '@/components/playground';
 
 const accentColors = [
@@ -39,7 +40,17 @@ const sizes = ['1', '2', '3', '4'] as const;
 const radiusOptions = ['none', 'small', 'medium', 'large', 'full'] as const;
 const materials = ['solid', 'translucent'] as const;
 
-export default function ToggleIconButtonPlayground() {
+type ToggleIconButtonPlaygroundProps = {
+  showControls?: boolean;
+  showToolbar?: boolean;
+  height?: string;
+};
+
+export default function ToggleIconButtonPlayground({
+  showControls = false,
+  showToolbar = true,
+  height,
+}: ToggleIconButtonPlaygroundProps = {}) {
   const [variant, setVariant] = React.useState<string>('soft');
   const [color, setColor] = React.useState<string>('theme');
   const [radius, setRadius] = React.useState<string>('theme');
@@ -123,7 +134,7 @@ export default function ToggleIconButtonPlayground() {
     const propsString = props.length > 0 ? `\n  ${props.join('\n  ')}` : '';
 
     return `<ToggleIconButton${propsString}>
-  <Star />
+  <HugeiconsIcon icon={StarIcon} strokeWidth={1.75} />
 </ToggleIconButton>`;
   };
 
@@ -141,13 +152,16 @@ export default function ToggleIconButtonPlayground() {
           onPressedChange={setPressed}
           aria-label="Toggle star"
         >
-          <Star />
+          <HugeiconsIcon icon={StarIcon} strokeWidth={1.75} />
         </ToggleIconButton>
       }
       code={generateCode()}
       items={items}
       showBackground={material === 'translucent'}
       hint={material === 'translucent' ? 'Translucent material is best observed with soft or surface variants.' : undefined}
+      showControls={showControls}
+      showToolbar={showToolbar}
+      height={height}
     />
   );
 }

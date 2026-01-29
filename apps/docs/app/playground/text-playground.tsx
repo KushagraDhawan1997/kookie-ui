@@ -37,12 +37,22 @@ const sizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
 const weights = ['light', 'regular', 'medium', 'semibold', 'bold'] as const;
 const aligns = ['left', 'center', 'right'] as const;
 
-export default function TextPlayground() {
+type TextPlaygroundProps = {
+  showControls?: boolean;
+  showToolbar?: boolean;
+  height?: string;
+};
+
+export default function TextPlayground({
+  showControls = false,
+  showToolbar = true,
+  height,
+}: TextPlaygroundProps = {}) {
   const [size, setSize] = React.useState<string>('3');
   const [weight, setWeight] = React.useState<string>('theme');
   const [color, setColor] = React.useState<string>('theme');
   const [align, setAlign] = React.useState<string>('theme');
-  const [highContrast, setHighContrast] = React.useState<boolean>(false);
+  const [highContrast, setHighContrast] = React.useState<boolean>(true);
 
   const items = [
     {
@@ -121,6 +131,9 @@ export default function TextPlayground() {
       }
       code={generateCode()}
       items={items}
+      showControls={showControls}
+      showToolbar={showToolbar}
+      height={height}
     />
   );
 }
