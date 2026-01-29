@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Flex, Card, Theme, Button, Box, Text, SegmentedControl } from '@kushagradhawan/kookie-ui';
+import { Flex, Card, Theme, Button, Box, Text, SegmentedControl, Popover, IconButton } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { Copy01Icon, Sun01Icon, Moon02Icon } from '@hugeicons/core-free-icons';
+import { Copy01Icon, Sun01Icon, Moon02Icon, SlidersHorizontalIcon } from '@hugeicons/core-free-icons';
 import { PropertyControl } from './property-control';
 
 interface PlaygroundProps {
@@ -108,7 +108,7 @@ export default function Playground({
                 />
               )}
 
-              {/* Toolbar - Copy button (left) and theme toggle (right) */}
+              {/* Toolbar - Copy button (left) and theme toggle + settings (right) */}
               {showToolbar && (
                 <>
                   <Flex position="absolute" top="2" left="2" style={{ zIndex: 2 }}>
@@ -116,7 +116,7 @@ export default function Playground({
                       <HugeiconsIcon icon={Copy01Icon} /> Copy
                     </Button>
                   </Flex>
-                  <Flex position="absolute" top="2" right="2" style={{ zIndex: 2 }}>
+                  <Flex position="absolute" top="2" right="2" gap="2" align="center" style={{ zIndex: 2 }}>
                     <SegmentedControl.Root size="2" value={appearance} onValueChange={(value) => setAppearance(value as 'light' | 'dark')}>
                       <SegmentedControl.Item value="light" iconOnly>
                         <HugeiconsIcon icon={Sun01Icon} />
@@ -125,6 +125,18 @@ export default function Playground({
                         <HugeiconsIcon icon={Moon02Icon} />
                       </SegmentedControl.Item>
                     </SegmentedControl.Root>
+                    {!showControls && (
+                      <Popover.Root>
+                        <Popover.Trigger>
+                          <IconButton size="2" variant="ghost" highContrast color="gray" aria-label="Settings">
+                            <HugeiconsIcon icon={SlidersHorizontalIcon} strokeWidth={1.75} />
+                          </IconButton>
+                        </Popover.Trigger>
+                        <Popover.Content size="1" side="bottom" align="end" width="280px">
+                          <PropertyControl.Group width="100%" items={items} />
+                        </Popover.Content>
+                      </Popover.Root>
+                    )}
                   </Flex>
                 </>
               )}

@@ -38,7 +38,17 @@ const sizes = ['1', '2', '3'] as const;
 const radiusOptions = ['none', 'small', 'medium', 'large', 'full'] as const;
 const materials = ['solid', 'translucent'] as const;
 
-export default function BadgePlayground() {
+type BadgePlaygroundProps = {
+  showControls?: boolean;
+  showToolbar?: boolean;
+  height?: string;
+};
+
+export default function BadgePlayground({
+  showControls = true,
+  showToolbar = true,
+  height,
+}: BadgePlaygroundProps = {}) {
   const [variant, setVariant] = React.useState<string>('soft');
   const [color, setColor] = React.useState<string>('theme');
   const [radius, setRadius] = React.useState<string>('theme');
@@ -135,6 +145,9 @@ export default function BadgePlayground() {
       items={items}
       showBackground={material === 'translucent'}
       hint={material === 'translucent' ? 'Translucent material is best observed with soft or surface variants.' : undefined}
+      showControls={showControls}
+      showToolbar={showToolbar}
+      height={height}
     />
   );
 }

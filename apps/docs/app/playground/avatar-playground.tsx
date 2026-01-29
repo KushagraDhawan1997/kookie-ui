@@ -54,7 +54,7 @@ export default function AvatarPlayground({
   const [color, setColor] = React.useState<string>('theme');
   const [radius, setRadius] = React.useState<string>('theme');
   const [size, setSize] = React.useState<string>('3');
-  const [highContrast, setHighContrast] = React.useState<boolean>(false);
+  const [highContrast, setHighContrast] = React.useState<boolean>(true);
   const [material, setMaterial] = React.useState<string>('theme');
   const [fit, setFit] = React.useState<string>('cover');
   const [showImage, setShowImage] = React.useState<boolean>(false);

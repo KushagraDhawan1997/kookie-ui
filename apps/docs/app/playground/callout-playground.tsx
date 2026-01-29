@@ -39,7 +39,17 @@ const variants = ['soft', 'surface', 'outline'] as const;
 const sizes = ['1', '2', '3'] as const;
 const materials = ['solid', 'translucent'] as const;
 
-export default function CalloutPlayground() {
+type CalloutPlaygroundProps = {
+  showControls?: boolean;
+  showToolbar?: boolean;
+  height?: string;
+};
+
+export default function CalloutPlayground({
+  showControls = true,
+  showToolbar = true,
+  height,
+}: CalloutPlaygroundProps = {}) {
   const [variant, setVariant] = React.useState<string>('soft');
   const [color, setColor] = React.useState<string>('theme');
   const [size, setSize] = React.useState<string>('2');
@@ -146,6 +156,9 @@ export default function CalloutPlayground() {
       items={items}
       showBackground={material === 'translucent'}
       hint={material === 'translucent' ? 'Translucent material is best observed with soft or surface variants.' : undefined}
+      showControls={showControls}
+      showToolbar={showToolbar}
+      height={height}
     />
   );
 }

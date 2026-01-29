@@ -8,7 +8,17 @@ const variants = ['surface', 'outline', 'classic', 'ghost', 'soft'] as const;
 const sizes = ['1', '2', '3', '4', '5'] as const;
 const materials = ['solid', 'translucent'] as const;
 
-export default function CardPlayground() {
+type CardPlaygroundProps = {
+  showControls?: boolean;
+  showToolbar?: boolean;
+  height?: string;
+};
+
+export default function CardPlayground({
+  showControls = true,
+  showToolbar = true,
+  height,
+}: CardPlaygroundProps = {}) {
   const [variant, setVariant] = React.useState<string>('classic');
   const [size, setSize] = React.useState<string>('2');
   const [material, setMaterial] = React.useState<string>('theme');
@@ -75,13 +85,16 @@ export default function CardPlayground() {
 </Card>`;
   };
 
+  // Use smaller height when in compact mode (no controls)
+  const contentHeight = showControls ? '320px' : '160px';
+
   const innerContent = (
     <Flex
       direction="column"
       gap="2"
       p="2"
       width="100%"
-      height="320px"
+      height={contentHeight}
       style={{
         border: '1px dashed var(--crimson-8)',
         borderRadius: 'var(--radius-2)',
@@ -119,6 +132,9 @@ export default function CardPlayground() {
             ? 'Translucent material is best observed with surface or soft variants.'
             : undefined
       }
+      showControls={showControls}
+      showToolbar={showToolbar}
+      height={height}
     />
   );
 }

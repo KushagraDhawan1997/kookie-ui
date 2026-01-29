@@ -7,7 +7,10 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { ArrowUpRight01Icon } from '@hugeicons/core-free-icons';
 import { Testimonial } from '@/components/testimonial';
 import AvatarPlayground from './playground/avatar-playground';
+import BadgePlayground from './playground/badge-playground';
 import ButtonPlayground from './playground/button-playground';
+import CalloutPlayground from './playground/callout-playground';
+import CardPlayground from './playground/card-playground';
 import ComboboxPlayground from './playground/combobox-playground';
 
 export default function HeroSection() {
@@ -62,9 +65,12 @@ export default function HeroSection() {
 
       <Section size="2">
         <Container size="4" px={{ initial: '4', sm: '6' }}>
-          <Grid columns={{ initial: '1', lg: '3' }} gap="6">
+          <Grid columns={{ initial: '1', sm: '2', lg: '3' }} gap="4">
             <AvatarPlayground showControls={false} height="320px" />
+            <BadgePlayground showControls={false} height="320px" />
             <ButtonPlayground showControls={false} height="320px" />
+            <CalloutPlayground showControls={false} height="320px" />
+            <CardPlayground showControls={false} height="320px" />
             <ComboboxPlayground showControls={false} height="320px" />
           </Grid>
         </Container>
