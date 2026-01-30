@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import Image from 'next/image';
-import { Flex, Card, Theme, Button, Box, Text, SegmentedControl, Popover, IconButton } from '@kushagradhawan/kookie-ui';
+import NextImage from 'next/image';
+import { Flex, Card, Theme, Button, Box, Text, SegmentedControl, Popover, IconButton, Image } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Copy01Icon, Sun01Icon, Moon02Icon, SlidersHorizontalIcon } from '@hugeicons/core-free-icons';
 import { PropertyControl } from './property-control';
@@ -67,16 +67,7 @@ interface PlaygroundProps {
   height?: string;
 }
 
-export default function Playground({
-  component,
-  code,
-  items,
-  showBackground = false,
-  hint,
-  showControls = false,
-  showToolbar = true,
-  height = '480px',
-}: PlaygroundProps) {
+export default function Playground({ component, code, items, showBackground = false, hint, showControls = false, showToolbar = true, height = '480px' }: PlaygroundProps) {
   const [copied, setCopied] = useState(false);
   const [appearance, setAppearance] = useState<'light' | 'dark'>('light');
 
@@ -98,15 +89,7 @@ export default function Playground({
           <Box position="relative" style={{ width: '100%', height }}>
             <Card size="1" variant="soft" style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
               {/* Background Image */}
-              {showBackground && (
-                <Image
-                  src="https://images.unsplash.com/photo-1653558368201-cf9d0b2a2c70?q=80&w=2756&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                  alt="Background"
-                  fill
-                  style={{ objectFit: 'cover', zIndex: 0 }}
-                  priority
-                />
-              )}
+              {showBackground && <Image as={NextImage} src="/playground/image.jpg" alt="Background" fill style={{ objectFit: 'cover', zIndex: 0 }} />}
 
               {/* Toolbar - Copy button (left) and theme toggle + settings (right) */}
               {showToolbar && (
