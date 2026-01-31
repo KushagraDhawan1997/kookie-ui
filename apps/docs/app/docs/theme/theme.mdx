@@ -30,6 +30,42 @@ export default function App() {
 }
 ```
 
+## Next.js App Router
+
+When using Next.js App Router, `Theme` must be wrapped in a Client Component since it uses React Context. Create a `providers.tsx` file:
+
+```tsx
+// components/providers.tsx
+'use client';
+
+import { Theme } from '@kushagradhawan/kookie-ui';
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <Theme accentColor="blue" grayColor="slate">
+      {children}
+    </Theme>
+  );
+}
+```
+
+Then use it in your root layout:
+
+```tsx
+// app/layout.tsx
+import { Providers } from '@/components/providers';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  );
+}
+```
+
 ## Props
 
 | Prop | Type | Description |
