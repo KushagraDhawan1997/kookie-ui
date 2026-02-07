@@ -100,14 +100,6 @@ function assignShellSlot<T extends React.ComponentType<any>>(component: T, slot:
   return component;
 }
 
-function isShellComponent(element: React.ReactElement, component: any): boolean {
-  if (!React.isValidElement(element)) return false;
-  const type: any = element.type;
-  if (type === component) return true;
-  const targetSlot = (component as any)?.[SHELL_SLOT];
-  return Boolean(type?.[SHELL_SLOT] && targetSlot && type[SHELL_SLOT] === targetSlot);
-}
-
 /**
  * Check if an element matches a component by type or displayName.
  * Uses displayName comparison to handle minification scenarios.
@@ -707,7 +699,6 @@ const Left = React.forwardRef<HTMLDivElement, LeftProps>((initialProps, ref) => 
   }, [shell]);
 
   const lastLeftModeRef = React.useRef<PaneMode | null>(null);
-  const initNotifiedRef = React.useRef(false);
   const normalizedLeftControlled = React.useMemo(() => {
     if (typeof propsOpen === 'undefined') return undefined;
     return propsOpen ? 'expanded' : 'collapsed';
@@ -947,8 +938,8 @@ const Panel = assignShellSlot(
       maxSize,
       resizable,
       collapsible = true,
-      onExpand,
-      onCollapse,
+      onExpand: _onExpand,
+      onCollapse: _onCollapse,
       onResize,
       onResizeStart,
       onResizeEnd,
@@ -1003,8 +994,6 @@ const Panel = assignShellSlot(
     const shell = useShell();
     const prevPanelModeRef = React.useRef<PaneMode | null>(null);
     const prevLeftModeRef = React.useRef<PaneMode | null>(null);
-    const initNotifiedRef = React.useRef(false);
-
     // Dev-only runtime guard
     if (process.env.NODE_ENV !== 'production') {
       if (typeof open !== 'undefined' && typeof defaultOpen !== 'undefined') {
