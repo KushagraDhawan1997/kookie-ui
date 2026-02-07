@@ -51,7 +51,6 @@ const Text = React.memo(
       <Tag
         data-accent-color={color}
         {...(textProps as React.HTMLAttributes<HTMLElement>)}
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ref={forwardedRef as any}
         className={combinedClassName}
       >

@@ -54,7 +54,6 @@ const Heading = React.memo(
       <Tag
         data-accent-color={color}
         {...(headingProps as React.HTMLAttributes<HTMLHeadingElement>)}
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ref={forwardedRef as any}
         className={combinedClassName}
       >
