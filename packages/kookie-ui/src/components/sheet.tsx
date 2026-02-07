@@ -48,7 +48,6 @@ import { useBodyPointerEventsCleanup } from '../hooks/use-body-pointer-events-cl
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { HeadingProps } from './heading.js';
-import type { TextProps } from './text.js';
 
 /**
  * Supported sides for the Sheet.

@@ -7,7 +7,7 @@ import { useResponsivePresentation, useResponsiveInitialState } from '../shell.h
 import { PaneResizeContext } from './shell-resize.js';
 import { InspectorHandle, PaneHandle } from './shell-handles.js';
 import { _BREAKPOINTS } from '../shell.types.js';
-import type { Breakpoint, PaneMode, PaneSizePersistence, ResponsivePresentation, PaneBaseProps, CSSPropertiesWithVars } from '../shell.types.js';
+import type { Breakpoint, PaneMode, PaneSizePersistence, PaneBaseProps, CSSPropertiesWithVars } from '../shell.types.js';
 import { extractPaneDomProps, mapResponsiveBooleanToPaneMode } from './shell-prop-helpers.js';
 import { normalizeToPx } from '../../helpers/normalize-to-px.js';
 
