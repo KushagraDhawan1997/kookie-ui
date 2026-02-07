@@ -134,11 +134,7 @@ function getResponsiveCustomProperties({
 
       for (const customProperty of customProperties) {
         const bpProperty = bp === 'initial' ? customProperty : `${customProperty}-${bp}`;
-
-        styles = {
-          [bpProperty]: value,
-          ...styles,
-        };
+        styles[bpProperty] = value;
       }
     }
   }
