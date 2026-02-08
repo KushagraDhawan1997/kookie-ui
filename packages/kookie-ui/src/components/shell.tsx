@@ -368,16 +368,21 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
     return childArray.some((el) => isShellComponentType(el, Sidebar));
   }, [children]);
 
+  // Keep a ref to sidebar mode so togglePane doesn't depend on it,
+  // preventing ActionsContext churn on every sidebar mode change
+  const sidebarModeRef = React.useRef(paneState.sidebarMode);
+  sidebarModeRef.current = paneState.sidebarMode;
+
   const togglePane = React.useCallback(
     (target: PaneTarget) => {
       if (target === 'sidebar') {
-        const next = sidebarToggleComputerRef.current(paneState.sidebarMode as SidebarMode);
+        const next = sidebarToggleComputerRef.current(sidebarModeRef.current as SidebarMode);
         setSidebarMode(next);
         return;
       }
       dispatchPane({ type: 'TOGGLE_PANE', target });
     },
-    [paneState.sidebarMode, setSidebarMode],
+    [setSidebarMode],
   );
 
   const expandPane = React.useCallback(
@@ -449,16 +454,28 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
     ],
   );
 
-  // Organize children by type
-  const childArray = React.Children.toArray(children) as React.ReactElement[];
-
-  const headerEls = childArray.filter((el) => isShellComponentType(el, Header));
-  const railEls = childArray.filter((el) => isShellComponentType(el, Rail));
-  const panelEls = childArray.filter((el) => isShellComponentType(el, Panel));
-  const sidebarEls = childArray.filter((el) => isShellComponentType(el, Sidebar));
-  const contentEls = childArray.filter((el) => isShellComponentType(el, Content));
-  const inspectorEls = childArray.filter((el) => isShellComponentType(el, Inspector));
-  const bottomEls = childArray.filter((el) => isShellComponentType(el, Bottom));
+  // Organize children by type — single pass instead of 7 filter calls
+  const { headerEls, railEls, panelEls, sidebarEls, contentEls, inspectorEls, bottomEls } = React.useMemo(() => {
+    const result = {
+      headerEls: [] as React.ReactElement[],
+      railEls: [] as React.ReactElement[],
+      panelEls: [] as React.ReactElement[],
+      sidebarEls: [] as React.ReactElement[],
+      contentEls: [] as React.ReactElement[],
+      inspectorEls: [] as React.ReactElement[],
+      bottomEls: [] as React.ReactElement[],
+    };
+    for (const el of React.Children.toArray(children) as React.ReactElement[]) {
+      if (isShellComponentType(el, Header)) result.headerEls.push(el);
+      else if (isShellComponentType(el, Rail)) result.railEls.push(el);
+      else if (isShellComponentType(el, Panel)) result.panelEls.push(el);
+      else if (isShellComponentType(el, Sidebar)) result.sidebarEls.push(el);
+      else if (isShellComponentType(el, Content)) result.contentEls.push(el);
+      else if (isShellComponentType(el, Inspector)) result.inspectorEls.push(el);
+      else if (isShellComponentType(el, Bottom)) result.bottomEls.push(el);
+    }
+    return result;
+  }, [children]);
 
   // Controlled sync in Root: mirror first Rail.open if provided
   const firstRailOpen = (railEls[0] as any)?.props?.open;
