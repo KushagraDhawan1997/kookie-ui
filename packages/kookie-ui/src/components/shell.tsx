@@ -43,13 +43,20 @@ import {
   ShellProvider,
   useShell,
   LeftModeContext,
+  useLeftMode,
   PanelModeContext,
+  usePanelMode,
   SidebarModeContext,
+  useSidebarMode,
   InspectorModeContext,
+  useInspectorMode,
   BottomModeContext,
+  useBottomMode,
   PresentationContext,
   PeekContext,
+  usePeek,
   ActionsContext,
+  useShellActions,
   CompositionContext,
   InsetContext,
   useInset,
@@ -1325,45 +1332,53 @@ interface TriggerProps extends React.ComponentPropsWithoutRef<'button'> {
 }
 
 const Trigger = React.forwardRef<HTMLButtonElement, TriggerProps>(({ target, action = 'toggle', peekOnHover, onClick, onMouseEnter, onMouseLeave, children, ...props }, ref) => {
-  const shell = useShell();
+  // Slice hooks — Trigger only re-renders when its target pane's slice changes,
+  // not on every unrelated shell state update (peek, composition, presentation, etc.)
+  const { leftMode } = useLeftMode();
+  const { panelMode } = usePanelMode();
+  const { sidebarMode } = useSidebarMode();
+  const { inspectorMode } = useInspectorMode();
+  const { bottomMode } = useBottomMode();
+  const { peekTarget, clearPeek, peekPane } = usePeek();
+  const { togglePane, expandPane, collapsePane } = useShellActions();
 
   const handleClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       onClick?.(event);
 
       // Clear any active peek on this target before toggling to avoid sticky peek state
-      if (shell.peekTarget === target) {
-        shell.clearPeek();
+      if (peekTarget === target) {
+        clearPeek();
       }
 
       switch (action) {
         case 'toggle':
-          shell.togglePane(target);
+          togglePane(target);
           break;
         case 'expand':
-          shell.expandPane(target);
+          expandPane(target);
           break;
         case 'collapse':
-          shell.collapsePane(target);
+          collapsePane(target);
           break;
       }
     },
-    [shell, target, action, onClick],
+    [peekTarget, clearPeek, togglePane, expandPane, collapsePane, target, action, onClick],
   );
 
   const isCollapsed = (() => {
     switch (target) {
       case 'left':
       case 'rail':
-        return shell.leftMode === 'collapsed';
+        return leftMode === 'collapsed';
       case 'panel':
-        return shell.leftMode === 'collapsed' || shell.panelMode === 'collapsed';
+        return leftMode === 'collapsed' || panelMode === 'collapsed';
       case 'sidebar':
-        return shell.sidebarMode === 'collapsed';
+        return sidebarMode === 'collapsed';
       case 'inspector':
-        return shell.inspectorMode === 'collapsed';
+        return inspectorMode === 'collapsed';
       case 'bottom':
-        return shell.bottomMode === 'collapsed';
+        return bottomMode === 'collapsed';
     }
   })();
 
@@ -1371,21 +1386,20 @@ const Trigger = React.forwardRef<HTMLButtonElement, TriggerProps>(({ target, act
     (event: React.MouseEvent<HTMLButtonElement>) => {
       onMouseEnter?.(event);
       if (!peekOnHover || !isCollapsed) return;
-      // Use the actual target for peek behavior (not mapped to left)
-      shell.peekPane(target);
+      peekPane(target);
     },
-    [onMouseEnter, peekOnHover, isCollapsed, shell, target],
+    [onMouseEnter, peekOnHover, isCollapsed, peekPane, target],
   );
 
   const handleMouseLeave = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       onMouseLeave?.(event);
       if (!peekOnHover) return;
-      if (shell.peekTarget === target) {
-        shell.clearPeek();
+      if (peekTarget === target) {
+        clearPeek();
       }
     },
-    [onMouseLeave, peekOnHover, shell, target],
+    [onMouseLeave, peekOnHover, peekTarget, clearPeek, target],
   );
 
   return (
