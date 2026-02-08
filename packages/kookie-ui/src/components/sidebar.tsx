@@ -82,9 +82,13 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>((props, forwarded
 
   // Update context with current props - we'll pass the resolved values
   const resolvedSize = typeof size === 'object' ? size.initial || '2' : size;
+  const visualContextValue = React.useMemo(
+    () => ({ size: resolvedSize, menuVariant, presentation, color: resolvedColor }),
+    [resolvedSize, menuVariant, presentation, resolvedColor],
+  );
   return (
     <div {...safeRootProps} ref={forwardedRef} data-accent-color={resolvedColor} className={classNames('rt-SidebarRoot', className)}>
-      <SidebarVisualContext.Provider value={{ size: resolvedSize, menuVariant, presentation, color: resolvedColor }}>
+      <SidebarVisualContext.Provider value={visualContextValue}>
         <div
           className={classNames('rt-SidebarContainer', `rt-variant-${variant}`, `rt-r-size-${resolvedSize}`, `rt-menu-variant-${menuVariant}`, resolvedLayout && `rt-layout-${resolvedLayout}`)}
           data-accent-color={resolvedColor}
@@ -231,9 +235,49 @@ interface SidebarMenuButtonProps extends React.ComponentPropsWithoutRef<'button'
   badge?: string | BadgeConfig;
 }
 
+// Extracted to module scope to avoid re-creation on every render
+function separateIconsAndLabels(node: React.ReactNode): { icons: React.ReactNode[]; labels: React.ReactNode[] } {
+  const icons: React.ReactNode[] = [];
+  const labels: React.ReactNode[] = [];
+
+  React.Children.forEach(node, (child) => {
+    if (typeof child === 'string' || typeof child === 'number') {
+      labels.push(<span key={labels.length} className="rt-SidebarMenuLabel">{child}</span>);
+    } else if (React.isValidElement(child)) {
+      const el = child as React.ReactElement<any>;
+      if (el.type === 'svg' || (el.props && el.props.icon) || (typeof el.type === 'function' && ((el.type as any).displayName?.includes('Icon') || (el.type as any).name?.includes('Icon')))) {
+        icons.push(child);
+      } else {
+        labels.push(child);
+      }
+    } else if (child) {
+      labels.push(child);
+    }
+  });
+
+  return { icons, labels };
+}
+
+function wrapTextNodes(node: React.ReactNode): React.ReactNode {
+  if (typeof node === 'string' || typeof node === 'number') {
+    return <span className="rt-SidebarMenuLabel">{node}</span>;
+  }
+  if (Array.isArray(node)) {
+    return node.map((child, index) => <React.Fragment key={index}>{wrapTextNodes(child)}</React.Fragment>);
+  }
+  if (React.isValidElement(node)) {
+    const el = node as React.ReactElement<any>;
+    const className: string = (el.props && (el.props as any).className) || '';
+    const isAlreadyLabel = typeof el.type === 'string' && className.split(' ').includes('rt-SidebarMenuLabel');
+    if (isAlreadyLabel) return el;
+    const newChildren = wrapTextNodes((el.props as any)?.children);
+    return React.cloneElement(el, { ...(el.props as any) }, newChildren);
+  }
+  return node;
+}
+
 const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonProps>(
-  ({ asChild = false, isActive = false, shortcut, badge, className, children, onMouseEnter, onMouseLeave, onKeyDown, ...props }, forwardedRef) => {
-    const [isHighlighted, setIsHighlighted] = React.useState(false);
+  ({ asChild = false, isActive = false, shortcut, badge, className, children, onKeyDown, ...props }, forwardedRef) => {
     const visual = useSidebarVisual();
     const sidebarSize = visual?.size ?? '2';
     const isThinMode = visual?.presentation === 'thin';
@@ -269,53 +313,14 @@ const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonP
       [onClick, onKeyDown],
     );
 
-    // Separate icons and labels for thin mode styling
-    const separateIconsAndLabels = (node: React.ReactNode): { icons: React.ReactNode[]; labels: React.ReactNode[] } => {
-      const icons: React.ReactNode[] = [];
-      const labels: React.ReactNode[] = [];
-
-      React.Children.forEach(node, (child) => {
-        if (typeof child === 'string' || typeof child === 'number') {
-          labels.push(<span key={labels.length} className="rt-SidebarMenuLabel">{child}</span>);
-        } else if (React.isValidElement(child)) {
-          const el = child as React.ReactElement<any>;
-          // Check if it's an SVG or icon component
-          if (el.type === 'svg' || (el.props && el.props.icon) || (typeof el.type === 'function' && ((el.type as any).displayName?.includes('Icon') || (el.type as any).name?.includes('Icon')))) {
-            icons.push(child);
-          } else {
-            labels.push(child);
-          }
-        } else if (child) {
-          labels.push(child);
-        }
-      });
-
-      return { icons, labels };
-    };
-
-    // Wrap bare text nodes so CSS can target labels (e.g., for truncation in thin mode)
-    const wrapTextNodes = (node: React.ReactNode): React.ReactNode => {
-      if (typeof node === 'string' || typeof node === 'number') {
-        return <span className="rt-SidebarMenuLabel">{node}</span>;
-      }
-      if (Array.isArray(node)) {
-        return node.map((child, index) => <React.Fragment key={index}>{wrapTextNodes(child)}</React.Fragment>);
-      }
-      if (React.isValidElement(node)) {
-        const el = node as React.ReactElement<any>;
-        const className: string = (el.props && (el.props as any).className) || '';
-        const isAlreadyLabel = typeof el.type === 'string' && className.split(' ').includes('rt-SidebarMenuLabel');
-        if (isAlreadyLabel) return el;
-        const newChildren = wrapTextNodes((el.props as any)?.children);
-        return React.cloneElement(el, { ...(el.props as any) }, newChildren);
-      }
-      return node;
-    };
-
-    const processedChildren = wrapTextNodes(children);
+    // Memoize child processing to avoid re-traversal on every render
+    const processedChildren = React.useMemo(() => wrapTextNodes(children), [children]);
 
     // For thin mode, separate icons into a wrapper for targeted background styling
-    const { icons, labels } = isThinMode ? separateIconsAndLabels(children) : { icons: [], labels: [] };
+    const { icons, labels } = React.useMemo(
+      () => isThinMode ? separateIconsAndLabels(children) : { icons: [] as React.ReactNode[], labels: [] as React.ReactNode[] },
+      [isThinMode, children],
+    );
 
     // When rendering asChild, Slot expects a single child element. We still want to
     // append optional badge/shortcut inside that element so they render with Link.
@@ -362,16 +367,7 @@ const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonP
         aria-current={isActive ? 'page' : undefined}
         className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-SidebarMenuButton', className)}
         data-active={isActive || undefined}
-        data-highlighted={isHighlighted || undefined}
         onKeyDown={handleKeyDown}
-        onMouseEnter={(event) => {
-          setIsHighlighted(true);
-          onMouseEnter?.(event);
-        }}
-        onMouseLeave={(event) => {
-          setIsHighlighted(false);
-          onMouseLeave?.(event);
-        }}
       >
         {asChild ? (
           slottedChildren
@@ -391,7 +387,6 @@ const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonP
         ) : (
           <>
             {processedChildren}
-            {/* Badge with soft variant default and size mapping to sidebar size */}
             {badge && (
               <div className="rt-SidebarMenuBadge">
                 {typeof badge === 'string' ? (
@@ -455,8 +450,7 @@ interface SidebarMenuSubTriggerProps extends React.ComponentPropsWithoutRef<type
 }
 
 const SidebarMenuSubTrigger = React.forwardRef<React.ElementRef<typeof Accordion.Trigger>, SidebarMenuSubTriggerProps>(
-  ({ asChild = false, className, children, onMouseEnter, onMouseLeave, ...props }, forwardedRef) => {
-    const [isHighlighted, setIsHighlighted] = React.useState(false);
+  ({ asChild = false, className, children, ...props }, forwardedRef) => {
     const mode = React.useContext(SidebarSubMenuModeContext);
 
     if (mode === 'dropdown') {
@@ -469,15 +463,6 @@ const SidebarMenuSubTrigger = React.forwardRef<React.ElementRef<typeof Accordion
             role="menuitem"
             aria-haspopup="menu"
             className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-SidebarMenuButton', 'rt-SidebarMenuSubTrigger', className)}
-            data-highlighted={isHighlighted || undefined}
-            onMouseEnter={(event) => {
-              setIsHighlighted(true);
-              onMouseEnter?.(event as any);
-            }}
-            onMouseLeave={(event) => {
-              setIsHighlighted(false);
-              onMouseLeave?.(event as any);
-            }}
           >
             {children}
           </button>
@@ -495,15 +480,6 @@ const SidebarMenuSubTrigger = React.forwardRef<React.ElementRef<typeof Accordion
             role="menuitem"
             aria-haspopup="true"
             className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-SidebarMenuButton', 'rt-SidebarMenuSubTrigger', className)}
-            data-highlighted={isHighlighted || undefined}
-            onMouseEnter={(event) => {
-              setIsHighlighted(true);
-              onMouseEnter?.(event);
-            }}
-            onMouseLeave={(event) => {
-              setIsHighlighted(false);
-              onMouseLeave?.(event);
-            }}
           >
             {asChild ? (
               children

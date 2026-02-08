@@ -347,12 +347,7 @@ const ContextMenuSubContent = React.forwardRef<
   ContextMenuSubContentElement,
   ContextMenuSubContentProps
 >((props, forwardedRef) => {
-  // Memoize context consumption to prevent unnecessary re-renders
-  const contextValue = React.useContext(ContextMenuContentContext);
-  const { size, variant, color, highContrast, material } = React.useMemo(
-    () => contextValue,
-    [contextValue],
-  );
+  const { size, variant, color, highContrast, material } = React.useContext(ContextMenuContentContext);
 
   const {
     className,

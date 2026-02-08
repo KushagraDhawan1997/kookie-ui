@@ -111,7 +111,7 @@ const PopoverContent = React.forwardRef<PopoverContentElement, PopoverContentPro
             data-panel-background={panelBackground}
             className={classNames('rt-PopperContent', 'rt-PopoverContent', className)}
           >
-            <PopoverContentContext.Provider value={{ contentRef, setToolbarOffset, setLabelId }}>
+            <PopoverContentContext.Provider value={React.useMemo(() => ({ contentRef, setToolbarOffset, setLabelId }), [setToolbarOffset])}>
               {props.children}
             </PopoverContentContext.Provider>
           </PopoverPrimitive.Content>

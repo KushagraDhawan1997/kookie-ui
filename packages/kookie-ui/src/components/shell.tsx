@@ -43,13 +43,20 @@ import {
   ShellProvider,
   useShell,
   LeftModeContext,
+  useLeftMode,
   PanelModeContext,
+  usePanelMode,
   SidebarModeContext,
+  useSidebarMode,
   InspectorModeContext,
+  useInspectorMode,
   BottomModeContext,
+  useBottomMode,
   PresentationContext,
   PeekContext,
+  usePeek,
   ActionsContext,
+  useShellActions,
   CompositionContext,
   InsetContext,
   useInset,
@@ -368,16 +375,21 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
     return childArray.some((el) => isShellComponentType(el, Sidebar));
   }, [children]);
 
+  // Keep a ref to sidebar mode so togglePane doesn't depend on it,
+  // preventing ActionsContext churn on every sidebar mode change
+  const sidebarModeRef = React.useRef(paneState.sidebarMode);
+  sidebarModeRef.current = paneState.sidebarMode;
+
   const togglePane = React.useCallback(
     (target: PaneTarget) => {
       if (target === 'sidebar') {
-        const next = sidebarToggleComputerRef.current(paneState.sidebarMode as SidebarMode);
+        const next = sidebarToggleComputerRef.current(sidebarModeRef.current as SidebarMode);
         setSidebarMode(next);
         return;
       }
       dispatchPane({ type: 'TOGGLE_PANE', target });
     },
-    [paneState.sidebarMode, setSidebarMode],
+    [setSidebarMode],
   );
 
   const expandPane = React.useCallback(
@@ -449,16 +461,28 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
     ],
   );
 
-  // Organize children by type
-  const childArray = React.Children.toArray(children) as React.ReactElement[];
-
-  const headerEls = childArray.filter((el) => isShellComponentType(el, Header));
-  const railEls = childArray.filter((el) => isShellComponentType(el, Rail));
-  const panelEls = childArray.filter((el) => isShellComponentType(el, Panel));
-  const sidebarEls = childArray.filter((el) => isShellComponentType(el, Sidebar));
-  const contentEls = childArray.filter((el) => isShellComponentType(el, Content));
-  const inspectorEls = childArray.filter((el) => isShellComponentType(el, Inspector));
-  const bottomEls = childArray.filter((el) => isShellComponentType(el, Bottom));
+  // Organize children by type — single pass instead of 7 filter calls
+  const { headerEls, railEls, panelEls, sidebarEls, contentEls, inspectorEls, bottomEls } = React.useMemo(() => {
+    const result = {
+      headerEls: [] as React.ReactElement[],
+      railEls: [] as React.ReactElement[],
+      panelEls: [] as React.ReactElement[],
+      sidebarEls: [] as React.ReactElement[],
+      contentEls: [] as React.ReactElement[],
+      inspectorEls: [] as React.ReactElement[],
+      bottomEls: [] as React.ReactElement[],
+    };
+    for (const el of React.Children.toArray(children) as React.ReactElement[]) {
+      if (isShellComponentType(el, Header)) result.headerEls.push(el);
+      else if (isShellComponentType(el, Rail)) result.railEls.push(el);
+      else if (isShellComponentType(el, Panel)) result.panelEls.push(el);
+      else if (isShellComponentType(el, Sidebar)) result.sidebarEls.push(el);
+      else if (isShellComponentType(el, Content)) result.contentEls.push(el);
+      else if (isShellComponentType(el, Inspector)) result.inspectorEls.push(el);
+      else if (isShellComponentType(el, Bottom)) result.bottomEls.push(el);
+    }
+    return result;
+  }, [children]);
 
   // Controlled sync in Root: mirror first Rail.open if provided
   const firstRailOpen = (railEls[0] as any)?.props?.open;
@@ -1308,45 +1332,53 @@ interface TriggerProps extends React.ComponentPropsWithoutRef<'button'> {
 }
 
 const Trigger = React.forwardRef<HTMLButtonElement, TriggerProps>(({ target, action = 'toggle', peekOnHover, onClick, onMouseEnter, onMouseLeave, children, ...props }, ref) => {
-  const shell = useShell();
+  // Slice hooks — Trigger only re-renders when its target pane's slice changes,
+  // not on every unrelated shell state update (peek, composition, presentation, etc.)
+  const { leftMode } = useLeftMode();
+  const { panelMode } = usePanelMode();
+  const { sidebarMode } = useSidebarMode();
+  const { inspectorMode } = useInspectorMode();
+  const { bottomMode } = useBottomMode();
+  const { peekTarget, clearPeek, peekPane } = usePeek();
+  const { togglePane, expandPane, collapsePane } = useShellActions();
 
   const handleClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       onClick?.(event);
 
       // Clear any active peek on this target before toggling to avoid sticky peek state
-      if (shell.peekTarget === target) {
-        shell.clearPeek();
+      if (peekTarget === target) {
+        clearPeek();
       }
 
       switch (action) {
         case 'toggle':
-          shell.togglePane(target);
+          togglePane(target);
           break;
         case 'expand':
-          shell.expandPane(target);
+          expandPane(target);
           break;
         case 'collapse':
-          shell.collapsePane(target);
+          collapsePane(target);
           break;
       }
     },
-    [shell, target, action, onClick],
+    [peekTarget, clearPeek, togglePane, expandPane, collapsePane, target, action, onClick],
   );
 
   const isCollapsed = (() => {
     switch (target) {
       case 'left':
       case 'rail':
-        return shell.leftMode === 'collapsed';
+        return leftMode === 'collapsed';
       case 'panel':
-        return shell.leftMode === 'collapsed' || shell.panelMode === 'collapsed';
+        return leftMode === 'collapsed' || panelMode === 'collapsed';
       case 'sidebar':
-        return shell.sidebarMode === 'collapsed';
+        return sidebarMode === 'collapsed';
       case 'inspector':
-        return shell.inspectorMode === 'collapsed';
+        return inspectorMode === 'collapsed';
       case 'bottom':
-        return shell.bottomMode === 'collapsed';
+        return bottomMode === 'collapsed';
     }
   })();
 
@@ -1354,21 +1386,20 @@ const Trigger = React.forwardRef<HTMLButtonElement, TriggerProps>(({ target, act
     (event: React.MouseEvent<HTMLButtonElement>) => {
       onMouseEnter?.(event);
       if (!peekOnHover || !isCollapsed) return;
-      // Use the actual target for peek behavior (not mapped to left)
-      shell.peekPane(target);
+      peekPane(target);
     },
-    [onMouseEnter, peekOnHover, isCollapsed, shell, target],
+    [onMouseEnter, peekOnHover, isCollapsed, peekPane, target],
   );
 
   const handleMouseLeave = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       onMouseLeave?.(event);
       if (!peekOnHover) return;
-      if (shell.peekTarget === target) {
-        shell.clearPeek();
+      if (peekTarget === target) {
+        clearPeek();
       }
     },
-    [onMouseLeave, peekOnHover, shell, target],
+    [onMouseLeave, peekOnHover, peekTarget, clearPeek, target],
   );
 
   return (

@@ -428,6 +428,29 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
 
   const Comp = asChild ? Slot : ('div' as any);
 
+  // Stable context setters — avoids new function references on every render
+  const handleSetOpen = React.useCallback(
+    (next: boolean) => {
+      if (!isOpenControlled) setOpenUncontrolled(next);
+      onOpenChangeProp?.(next);
+    },
+    [isOpenControlled, onOpenChangeProp],
+  );
+  const handleSetValue = React.useCallback(
+    (next: string) => {
+      if (!isValueControlled) setValueUncontrolled(next);
+      onValueChangeProp?.(next);
+    },
+    [isValueControlled, onValueChangeProp],
+  );
+  const handleSetAttachments = React.useCallback(
+    (next: ChatbarAttachment[]) => {
+      if (!isAttachmentsControlled) setAttachmentsUncontrolled(next);
+      onAttachmentsChange?.(next);
+    },
+    [isAttachmentsControlled, onAttachmentsChange],
+  );
+
   const handleBlurCapture = React.useCallback(
     (event: React.FocusEvent) => {
       const nextTarget = event.relatedTarget as Node | null;
@@ -526,48 +549,51 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
 
   return (
     <ChatbarContext.Provider
-      value={{
-        open,
-        setOpen: (next) => {
-          if (!isOpenControlled) setOpenUncontrolled(next);
-          onOpenChangeProp?.(next);
-        },
-        isOpenControlled,
-        value,
-        setValue: (next) => {
-          if (!isValueControlled) setValueUncontrolled(next);
-          onValueChangeProp?.(next);
-        },
-        isValueControlled,
-        size,
-        expandOn,
-        minLines,
-        maxLines,
-        sendMode,
-        disabled,
-        readOnly,
-        onSubmit,
-        rootRef,
-        textareaRef,
-        attachments,
-        setAttachments: (next) => {
-          if (!isAttachmentsControlled) setAttachmentsUncontrolled(next);
-          onAttachmentsChange?.(next);
-        },
-        isAttachmentsControlled,
-        accept,
-        multiple,
-        maxAttachments,
-        maxFileSize,
-        paste,
-        pasteAccept,
-        clearOnSubmit,
-        onAttachmentReject,
-        dropzone,
-        appendFiles,
-        appendFilesFromPaste,
-        fileDialogOpenRef,
-      }}
+      value={React.useMemo<ChatbarContextValue>(
+        () => ({
+          open,
+          setOpen: handleSetOpen,
+          isOpenControlled,
+          value,
+          setValue: handleSetValue,
+          isValueControlled,
+          size,
+          expandOn,
+          minLines,
+          maxLines,
+          sendMode,
+          disabled,
+          readOnly,
+          onSubmit,
+          rootRef,
+          textareaRef,
+          attachments,
+          setAttachments: handleSetAttachments,
+          isAttachmentsControlled,
+          accept,
+          multiple,
+          maxAttachments,
+          maxFileSize,
+          paste,
+          pasteAccept,
+          clearOnSubmit,
+          onAttachmentReject,
+          dropzone,
+          appendFiles,
+          appendFilesFromPaste,
+          fileDialogOpenRef,
+        }),
+        [
+          open, handleSetOpen, isOpenControlled,
+          value, handleSetValue, isValueControlled,
+          size, expandOn, minLines, maxLines, sendMode,
+          disabled, readOnly, onSubmit,
+          attachments, handleSetAttachments, isAttachmentsControlled,
+          accept, multiple, maxAttachments, maxFileSize,
+          paste, pasteAccept, clearOnSubmit, onAttachmentReject,
+          dropzone, appendFiles, appendFilesFromPaste,
+        ],
+      )}
     >
       <Comp
         {...divProps}
