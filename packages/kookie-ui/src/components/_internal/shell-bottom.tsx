@@ -2,7 +2,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import * as Sheet from '../sheet.js';
 import { VisuallyHidden } from '../visually-hidden.js';
-import { useShell, useInset } from '../shell.context.js';
+import { useBottomMode, usePresentation, usePeek, useShellActions, useInset } from '../shell.context.js';
 import { useResponsivePresentation, useResponsiveInitialState } from '../shell.hooks.js';
 import { PaneResizeContext } from './shell-resize.js';
 import { BottomHandle, PaneHandle } from './shell-handles.js';
@@ -76,7 +76,10 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((initi
     inset,
   } = initialProps;
   const bottomDomProps = extractPaneDomProps(initialProps, BOTTOM_DOM_PROP_KEYS);
-  const shell = useShell();
+  const { bottomMode, setBottomMode } = useBottomMode();
+  const { currentBreakpointReady } = usePresentation();
+  const { peekTarget } = usePeek();
+  const { togglePane } = useShellActions();
   const { registerInset, unregisterInset } = useInset();
 
   // Register/unregister inset
@@ -109,9 +112,9 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((initi
   useResponsiveInitialState<PaneMode>({
     controlledValue: normalizedControlledOpen,
     defaultValue: normalizedDefaultOpen,
-    currentValue: shell.bottomMode,
-    setValue: shell.setBottomMode,
-    breakpointReady: shell.currentBreakpointReady,
+    currentValue: bottomMode,
+    setValue: setBottomMode,
+    breakpointReady: currentBreakpointReady,
     controlledIsResponsive: openIsResponsive,
     onResponsiveChange: (next) => onOpenChange?.(next === 'expanded', { reason: 'responsive' }),
     onInit: (initial) => {
@@ -186,17 +189,17 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((initi
   const initNotifiedRef = React.useRef(false);
   const lastBottomModeRef = React.useRef<PaneMode | null>(null);
   React.useEffect(() => {
-    if (!initNotifiedRef.current && typeof open === 'undefined' && defaultOpen && shell.bottomMode === 'expanded') {
+    if (!initNotifiedRef.current && typeof open === 'undefined' && defaultOpen && bottomMode === 'expanded') {
       onOpenChange?.(true, { reason: 'init' });
       initNotifiedRef.current = true;
     }
     if (typeof open === 'undefined') {
-      if (lastBottomModeRef.current !== null && lastBottomModeRef.current !== shell.bottomMode) {
-        onOpenChange?.(shell.bottomMode === 'expanded', { reason: 'toggle' });
+      if (lastBottomModeRef.current !== null && lastBottomModeRef.current !== bottomMode) {
+        onOpenChange?.(bottomMode === 'expanded', { reason: 'toggle' });
       }
-      lastBottomModeRef.current = shell.bottomMode;
+      lastBottomModeRef.current = bottomMode;
     }
-  }, [shell.bottomMode, open, defaultOpen, onOpenChange]);
+  }, [bottomMode, open, defaultOpen, onOpenChange]);
 
   // Track previous mode to only fire callbacks on actual user-initiated state transitions.
   // We wait for breakpointReady to ensure the initial state sync from useResponsiveInitialState
@@ -212,10 +215,10 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((initi
   const prevBottomModeRef = React.useRef<PaneMode | null>(null);
   const hasInitializedRef = React.useRef(false);
   React.useEffect(() => {
-    const currentMode = shell.bottomMode;
+    const currentMode = bottomMode;
 
     // Wait for breakpoint to be ready before enabling callbacks
-    if (!shell.currentBreakpointReady) {
+    if (!currentBreakpointReady) {
       prevBottomModeRef.current = currentMode;
       return;
     }
@@ -238,9 +241,9 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((initi
       }
       prevBottomModeRef.current = currentMode;
     }
-  }, [shell.bottomMode, shell.currentBreakpointReady]);
+  }, [bottomMode, currentBreakpointReady]);
 
-  const isExpanded = shell.bottomMode === 'expanded';
+  const isExpanded = bottomMode === 'expanded';
 
   const persistenceAdapter = React.useMemo(() => {
     if (!paneId || persistence) return persistence;
@@ -322,8 +325,8 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((initi
           snapPoints,
           snapTolerance: snapTolerance ?? 8,
           collapseThreshold,
-          requestCollapse: () => shell.setBottomMode('collapsed'),
-          requestToggle: () => shell.togglePane('bottom'),
+          requestCollapse: () => setBottomMode('collapsed'),
+          requestToggle: () => togglePane('bottom'),
         }}
       >
         {handleChildren.length > 0 ? handleChildren.map((el, i) => React.cloneElement(el, { key: el.key ?? i })) : <PaneHandle />}
@@ -366,9 +369,9 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((initi
   }, [controlledSize, minSize, maxSize, normalizeSizeToPx, emitSizeChange]);
 
   if (isOverlay) {
-    const open = shell.bottomMode === 'expanded';
+    const open = bottomMode === 'expanded';
     return (
-      <Sheet.Root open={open} onOpenChange={(o) => shell.setBottomMode(o ? 'expanded' : 'collapsed')}>
+      <Sheet.Root open={open} onOpenChange={(o) => setBottomMode(o ? 'expanded' : 'collapsed')}>
         <Sheet.Content side="bottom" style={{ padding: 0 }} height={{ initial: `${expandedSize}px` }}>
           <VisuallyHidden>
             <Sheet.Title>Bottom panel</Sheet.Title>
@@ -384,10 +387,10 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((initi
       {...bottomDomProps}
       ref={setRef}
       className={classNames('rt-ShellBottom', className)}
-      data-mode={shell.bottomMode}
-      data-peek={shell.peekTarget === 'bottom' || undefined}
-      data-presentation={shell.currentBreakpointReady ? resolvedPresentation : undefined}
-      data-open={(shell.currentBreakpointReady && isStacked && isExpanded) || undefined}
+      data-mode={bottomMode}
+      data-peek={peekTarget === 'bottom' || undefined}
+      data-presentation={currentBreakpointReady ? resolvedPresentation : undefined}
+      data-open={(currentBreakpointReady && isStacked && isExpanded) || undefined}
       data-inset={inset || undefined}
       style={{
         ...style,

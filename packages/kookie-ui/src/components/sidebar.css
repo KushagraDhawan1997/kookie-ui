@@ -266,18 +266,18 @@
 }
 
 /* Highlighted label gets slightly darker color */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton[data-highlighted] .rt-SidebarMenuLabel) {
+:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuLabel) {
   color: var(--accent-11);
 }
 
 /* Remove background from button itself in thin mode - styles are on icon wrapper */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton[data-highlighted]),
+:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled])),
 :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton[data-active]) {
   background-color: transparent !important;
 }
 
 /* Soft variant icon wrapper states in thin mode */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-soft .rt-SidebarMenuButton[data-highlighted] .rt-SidebarMenuIconWrapper) {
+:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-soft .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
   background-color: var(--accent-4);
 }
 
@@ -286,7 +286,7 @@
 }
 
 /* Translucent panel support for soft variant */
-:where([data-panel-background='translucent']) :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-soft .rt-SidebarMenuButton[data-highlighted] .rt-SidebarMenuIconWrapper) {
+:where([data-panel-background='translucent']) :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-soft .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
   background-color: var(--accent-a4);
 }
 
@@ -295,7 +295,7 @@
 }
 
 /* Solid variant icon wrapper states in thin mode */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-solid .rt-SidebarMenuButton[data-highlighted] .rt-SidebarMenuIconWrapper) {
+:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-solid .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
   background-color: var(--accent-9);
   color: var(--accent-contrast);
 }
@@ -306,7 +306,7 @@
 }
 
 /* High contrast solid variant in thin mode */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-solid[data-high-contrast] .rt-SidebarMenuButton[data-highlighted] .rt-SidebarMenuIconWrapper) {
+:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-solid[data-high-contrast] .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
   background-color: var(--accent-12);
   color: var(--accent-1);
 }
@@ -853,7 +853,7 @@
   }
 
   /* Hover/highlighted state for solid variant - EXACT match to base menu */
-  & :where(.rt-SidebarMenuButton[data-highlighted]) {
+  & :where(.rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled])) {
     background-color: var(--accent-9);
     color: var(--accent-contrast);
 
@@ -902,7 +902,7 @@
 
   /* High contrast support for solid variant - EXACT match to base menu */
   &:where(.rt-high-contrast) {
-    & :where(.rt-SidebarMenuButton[data-highlighted]) {
+    & :where(.rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled])) {
       background-color: var(--accent-12);
       color: var(--accent-1);
 
@@ -1038,7 +1038,7 @@
   }
 
   /* Hover/highlighted state for soft variant - EXACT match to base menu */
-  & :where(.rt-SidebarMenuButton[data-highlighted]) {
+  & :where(.rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled])) {
     /* Base state: solid accent for solid panels */
     background-color: var(--accent-4);
 

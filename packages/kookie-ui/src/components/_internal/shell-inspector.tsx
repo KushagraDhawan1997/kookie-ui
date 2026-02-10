@@ -2,7 +2,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import * as Sheet from '../sheet.js';
 import { VisuallyHidden } from '../visually-hidden.js';
-import { useShell, useInset } from '../shell.context.js';
+import { useInspectorMode, usePresentation, usePeek, useShellActions, useInset } from '../shell.context.js';
 import { useResponsivePresentation, useResponsiveInitialState } from '../shell.hooks.js';
 import { PaneResizeContext } from './shell-resize.js';
 import { InspectorHandle, PaneHandle } from './shell-handles.js';
@@ -76,7 +76,10 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
     inset,
   } = initialProps;
   const inspectorDomProps = extractPaneDomProps(initialProps, INSPECTOR_DOM_PROP_KEYS);
-  const shell = useShell();
+  const { inspectorMode, setInspectorMode } = useInspectorMode();
+  const { currentBreakpointReady } = usePresentation();
+  const { peekTarget } = usePeek();
+  const { togglePane } = useShellActions();
   const { registerInset, unregisterInset } = useInset();
 
   // Register/unregister inset
@@ -109,9 +112,9 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
   useResponsiveInitialState<PaneMode>({
     controlledValue: normalizedControlledOpen,
     defaultValue: normalizedDefaultOpen,
-    currentValue: shell.inspectorMode,
-    setValue: shell.setInspectorMode,
-    breakpointReady: shell.currentBreakpointReady,
+    currentValue: inspectorMode,
+    setValue: setInspectorMode,
+    breakpointReady: currentBreakpointReady,
     controlledIsResponsive: openIsResponsive,
     onResponsiveChange: (next) => onOpenChange?.(next === 'expanded', { reason: 'responsive' }),
     onInit: (initial) => {
@@ -185,19 +188,19 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
   const lastInspectorModeRef = React.useRef<PaneMode | null>(null);
   React.useEffect(() => {
     // Notify init open
-    if (!initNotifiedRef.current && typeof open === 'undefined' && defaultOpen && shell.inspectorMode === 'expanded') {
+    if (!initNotifiedRef.current && typeof open === 'undefined' && defaultOpen && inspectorMode === 'expanded') {
       onOpenChange?.(true, { reason: 'init' });
       initNotifiedRef.current = true;
     }
 
     // Notify toggles when uncontrolled (avoid double-notify after responsive change)
     if (typeof open === 'undefined') {
-      if (lastInspectorModeRef.current !== null && lastInspectorModeRef.current !== shell.inspectorMode) {
-        onOpenChange?.(shell.inspectorMode === 'expanded', { reason: 'toggle' });
+      if (lastInspectorModeRef.current !== null && lastInspectorModeRef.current !== inspectorMode) {
+        onOpenChange?.(inspectorMode === 'expanded', { reason: 'toggle' });
       }
-      lastInspectorModeRef.current = shell.inspectorMode;
+      lastInspectorModeRef.current = inspectorMode;
     }
-  }, [shell.inspectorMode, open, defaultOpen, onOpenChange]);
+  }, [inspectorMode, open, defaultOpen, onOpenChange]);
 
   // Track previous mode to only fire callbacks on actual user-initiated state transitions.
   // We wait for breakpointReady to ensure the initial state sync from useResponsiveInitialState
@@ -213,10 +216,10 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
   const prevInspectorModeRef = React.useRef<PaneMode | null>(null);
   const hasInitializedRef = React.useRef(false);
   React.useEffect(() => {
-    const currentMode = shell.inspectorMode;
+    const currentMode = inspectorMode;
 
     // Wait for breakpoint to be ready before enabling callbacks
-    if (!shell.currentBreakpointReady) {
+    if (!currentBreakpointReady) {
       prevInspectorModeRef.current = currentMode;
       return;
     }
@@ -239,9 +242,9 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
       }
       prevInspectorModeRef.current = currentMode;
     }
-  }, [shell.inspectorMode, shell.currentBreakpointReady]);
+  }, [inspectorMode, currentBreakpointReady]);
 
-  const isExpanded = shell.inspectorMode === 'expanded';
+  const isExpanded = inspectorMode === 'expanded';
 
   const persistenceAdapter = React.useMemo(() => {
     if (!paneId || persistence) return persistence;
@@ -324,8 +327,8 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
           snapPoints,
           snapTolerance: snapTolerance ?? 8,
           collapseThreshold,
-          requestCollapse: () => shell.setInspectorMode('collapsed'),
-          requestToggle: () => shell.togglePane('inspector'),
+          requestCollapse: () => setInspectorMode('collapsed'),
+          requestToggle: () => togglePane('inspector'),
         }}
       >
         {handleChildren.length > 0 ? handleChildren.map((el, i) => React.cloneElement(el, { key: el.key ?? i })) : <PaneHandle />}
@@ -367,9 +370,9 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
   }, [controlledSize, minSize, maxSize, normalizeSizeToPx, emitSizeChange]);
 
   if (isOverlay) {
-    const open = shell.inspectorMode === 'expanded';
+    const open = inspectorMode === 'expanded';
     return (
-      <Sheet.Root open={open} onOpenChange={(o) => shell.setInspectorMode(o ? 'expanded' : 'collapsed')}>
+      <Sheet.Root open={open} onOpenChange={(o) => setInspectorMode(o ? 'expanded' : 'collapsed')}>
         <Sheet.Content side="end" style={{ padding: 0 }} width={{ initial: `${expandedSize}px` }}>
           <VisuallyHidden>
             <Sheet.Title>Inspector</Sheet.Title>
@@ -386,10 +389,10 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
       {...inspectorDomProps}
       ref={setRef}
       className={classNames('rt-ShellInspector', className)}
-      data-mode={shell.inspectorMode}
-      data-peek={shell.peekTarget === 'inspector' || undefined}
-      data-presentation={shell.currentBreakpointReady ? resolvedPresentation : undefined}
-      data-open={(shell.currentBreakpointReady && isStacked && isExpanded) || undefined}
+      data-mode={inspectorMode}
+      data-peek={peekTarget === 'inspector' || undefined}
+      data-presentation={currentBreakpointReady ? resolvedPresentation : undefined}
+      data-open={(currentBreakpointReady && isStacked && isExpanded) || undefined}
       data-inset={inset || undefined}
       style={{
         ...style,
