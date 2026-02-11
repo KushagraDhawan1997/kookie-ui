@@ -41,7 +41,7 @@ export function MyText() {
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
 | `as` | `'span' \| 'div' \| 'label' \| 'p'` | `'span'` | The HTML element to render. |
-| `size` | `'0' \| '1' \| '2' \| '3' \| ... \| '9'` | - | The font size. Supports responsive values. |
+| `size` | `'0' \| '1' \| '2' \| '3' \| ... \| '12'` | - | The font size. Supports responsive values. |
 | `weight` | `'thin' \| 'extralight' \| 'light' \| 'regular' \| 'medium' \| 'semibold' \| 'bold' \| 'extrabold'` | - | The font weight. Supports responsive values. |
 | `color` | `AccentColor` | - | The text color. Uses theme color if not specified. |
 | `highContrast` | `boolean` | `false` | Increases color contrast. |
@@ -53,7 +53,7 @@ export function MyText() {
 
 ## Sizes
 
-Text supports sizes from 0 (smallest) to 9 (largest).
+Text supports sizes from 0 (smallest) to 12 (largest).
 
 ```tsx
 <Flex direction="column" gap="2">
@@ -62,6 +62,9 @@ Text supports sizes from 0 (smallest) to 9 (largest).
   <Text size="3">Size 3 - Body text (16px)</Text>
   <Text size="4">Size 4 - Large body (18px)</Text>
   <Text size="5">Size 5 - Lead text (20px)</Text>
+  <Text size="10">Size 10 - Display (72px)</Text>
+  <Text size="11">Size 11 - Large display (86px)</Text>
+  <Text size="12">Size 12 - Extra large display (104px)</Text>
 </Flex>
 ```
 

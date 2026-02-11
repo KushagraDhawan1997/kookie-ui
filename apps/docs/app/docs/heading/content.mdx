@@ -41,7 +41,7 @@ export function MyHeadings() {
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
 | `as` | `'h1' \| 'h2' \| 'h3' \| 'h4' \| 'h5' \| 'h6'` | `'h1'` | The HTML heading element to render. |
-| `size` | `'0' \| '1' \| '2' \| '3' \| ... \| '9'` | `'6'` | The font size. Supports responsive values. |
+| `size` | `'0' \| '1' \| '2' \| '3' \| ... \| '12'` | `'6'` | The font size. Supports responsive values. |
 | `weight` | `'thin' \| 'extralight' \| 'light' \| 'regular' \| 'medium' \| 'semibold' \| 'bold' \| 'extrabold'` | - | The font weight. Supports responsive values. |
 | `color` | `AccentColor` | - | The text color. Uses theme color if not specified. |
 | `highContrast` | `boolean` | `false` | Increases color contrast. |
@@ -53,10 +53,13 @@ export function MyHeadings() {
 
 ## Sizes
 
-Heading supports sizes from 0 (smallest) to 9 (largest hero text).
+Heading supports sizes from 0 (smallest) to 12 (largest display text).
 
 ```tsx
 <Flex direction="column" gap="3">
+  <Heading size="12">Size 12 - Extra large display (104px)</Heading>
+  <Heading size="11">Size 11 - Large display (86px)</Heading>
+  <Heading size="10">Size 10 - Display (72px)</Heading>
   <Heading size="9">Size 9 - Hero (60px)</Heading>
   <Heading size="8">Size 8 - Page title (48px)</Heading>
   <Heading size="7">Size 7 - Section (36px)</Heading>

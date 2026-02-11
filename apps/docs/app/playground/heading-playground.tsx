@@ -33,7 +33,7 @@ const accentColors = [
   'sky',
 ] as const;
 
-const sizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
+const sizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] as const;
 const weights = ['light', 'regular', 'medium', 'semibold', 'bold'] as const;
 const aligns = ['left', 'center', 'right'] as const;
 
