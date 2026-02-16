@@ -6,5 +6,5 @@ export const size = ogSize;
 export const contentType = ogContentType;
 
 export default async function Image() {
-  return generateOgImage('Callout', 'Kookie UI');
+  return generateOgImage('Callout', 'Components');
 }

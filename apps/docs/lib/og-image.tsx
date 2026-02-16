@@ -3,23 +3,38 @@ import { ImageResponse } from 'next/og';
 export const ogSize = { width: 1200, height: 630 };
 export const ogContentType = 'image/png';
 
-async function loadGoogleFont(font: string, weight: number, text: string) {
-  const url = `https://fonts.googleapis.com/css2?family=${font}:wght@${weight}&text=${encodeURIComponent(text)}`;
-  const css = await (await fetch(url)).text();
-  const resource = css.match(/src: url\((.+)\) format\('(opentype|truetype)'\)/);
-  if (resource) {
-    const response = await fetch(resource[1]);
-    if (response.status === 200) {
-      return await response.arrayBuffer();
+async function loadGoogleFont(
+  font: string,
+  weight: number,
+  text: string
+): Promise<ArrayBuffer | null> {
+  try {
+    const url = `https://fonts.googleapis.com/css2?family=${font}:wght@${weight}&text=${encodeURIComponent(text)}`;
+    const css = await (await fetch(url)).text();
+    // Match any font format Google returns (woff2, opentype, truetype, etc.)
+    const resource = css.match(/src: url\((.+?)\) format\('/);
+    if (resource) {
+      const response = await fetch(resource[1]);
+      if (response.status === 200) {
+        return await response.arrayBuffer();
+      }
     }
+    return null;
+  } catch {
+    return null;
   }
-  throw new Error('Failed to load font');
 }
 
+// Light-mode only — OG images are static assets and cannot adapt to user theme preferences.
 export async function generateOgImage(title: string, category: string) {
-  const allText = `Kookie UI${title}${category}`;
+  const allText = `Kookie UI${title}${category}hellokookie.com`;
   const interMedium = await loadGoogleFont('Inter', 500, allText);
   const interRegular = await loadGoogleFont('Inter', 400, allText);
+
+  const fonts = [
+    ...(interMedium ? [{ name: 'Inter', data: interMedium, weight: 500 as const }] : []),
+    ...(interRegular ? [{ name: 'Inter', data: interRegular, weight: 400 as const }] : []),
+  ];
 
   return new ImageResponse(
     (
@@ -32,7 +47,7 @@ export async function generateOgImage(title: string, category: string) {
           flexDirection: 'column',
           justifyContent: 'space-between',
           padding: '80px',
-          fontFamily: 'Inter',
+          fontFamily: fonts.length > 0 ? 'Inter' : 'sans-serif',
         }}
       >
         <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -90,10 +105,7 @@ export async function generateOgImage(title: string, category: string) {
     ),
     {
       ...ogSize,
-      fonts: [
-        { name: 'Inter', data: interMedium, weight: 500 },
-        { name: 'Inter', data: interRegular, weight: 400 },
-      ],
+      ...(fonts.length > 0 ? { fonts } : {}),
     }
   );
 }

@@ -6,5 +6,5 @@ export const size = ogSize;
 export const contentType = ogContentType;
 
 export default async function Image() {
-  return generateOgImage('Heading', 'Kookie UI');
+  return generateOgImage('Heading', 'Components');
 }

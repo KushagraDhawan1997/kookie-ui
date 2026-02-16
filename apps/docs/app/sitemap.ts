@@ -1,14 +1,14 @@
 import type { MetadataRoute } from 'next';
 import { docsNavigation } from '../navigation-config';
+import { BASE_URL } from '../lib/constants';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://hellokookie.com';
   const now = new Date();
 
   const staticPages: MetadataRoute.Sitemap = [
-    { url: baseUrl, lastModified: now, changeFrequency: 'weekly', priority: 1.0 },
-    { url: `${baseUrl}/docs`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
-    { url: `${baseUrl}/playground`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: BASE_URL, lastModified: now, changeFrequency: 'weekly' as const, priority: 1.0 },
+    { url: `${BASE_URL}/docs`, lastModified: now, changeFrequency: 'weekly' as const, priority: 0.9 },
+    { url: `${BASE_URL}/playground`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.6 },
   ];
 
   const docPages: MetadataRoute.Sitemap = docsNavigation.groups.flatMap((group) =>
@@ -18,7 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       else if (group.label === 'Theme') priority = 0.8;
 
       return {
-        url: `${baseUrl}${item.href}`,
+        url: `${BASE_URL}${item.href}`,
         lastModified: now,
         changeFrequency: 'weekly' as const,
         priority,

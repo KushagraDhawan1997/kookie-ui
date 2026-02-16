@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import type { DocMetadata } from './frontmatter';
-
-const BASE_URL = 'https://hellokookie.com';
+import { BASE_URL } from './constants';
 
 /**
  * Generates comprehensive per-page SEO metadata for doc pages.

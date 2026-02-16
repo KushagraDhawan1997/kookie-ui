@@ -6,5 +6,5 @@ export const size = ogSize;
 export const contentType = ogContentType;
 
 export default async function Image() {
-  return generateOgImage('Toggle Icon Button', 'Kookie UI');
+  return generateOgImage('Toggle Icon Button', 'Components');
 }

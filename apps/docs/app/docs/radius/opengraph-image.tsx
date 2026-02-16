@@ -6,5 +6,5 @@ export const size = ogSize;
 export const contentType = ogContentType;
 
 export default async function Image() {
-  return generateOgImage('Radius', 'Kookie UI');
+  return generateOgImage('Radius', 'Theme');
 }

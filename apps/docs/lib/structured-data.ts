@@ -1,6 +1,5 @@
 import type { DocMetadata } from './frontmatter';
-
-const BASE_URL = 'https://hellokookie.com';
+import { BASE_URL } from './constants';
 
 /**
  * Generates JSON-LD BreadcrumbList + TechArticle structured data for a doc page.
@@ -17,8 +16,7 @@ export function generateDocStructuredData(metadata: DocMetadata): string {
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: 'Home', item: BASE_URL },
           { '@type': 'ListItem', position: 2, name: 'Documentation', item: `${BASE_URL}/docs` },
-          { '@type': 'ListItem', position: 3, name: metadata.category, item: `${BASE_URL}/docs` },
-          { '@type': 'ListItem', position: 4, name: metadata.title, item: url },
+          { '@type': 'ListItem', position: 3, name: metadata.title, item: url },
         ],
       },
       {
