@@ -29,7 +29,6 @@ const Avatar = React.forwardRef<AvatarImplElement, AvatarProps>((props, forwarde
     ...imageProps
   } = extractProps(props, avatarPropDefs, marginPropDefs);
 
-  // Warn if both status and badge are provided
   if (process.env.NODE_ENV !== 'production') {
     if (status !== undefined && badge !== undefined) {
       console.warn(
@@ -39,20 +38,14 @@ const Avatar = React.forwardRef<AvatarImplElement, AvatarProps>((props, forwarde
     }
   }
 
-  // Check if children contain a disabled element
-  const isDisabled = React.useMemo(() => {
-    if (!asChild || !children) return false;
+  // Cheap boolean checks — no memoization needed
+  const isDisabled =
+    asChild &&
+    children != null &&
+    React.isValidElement(children) &&
+    ((children.props as any).disabled === true ||
+      (children.props as any)['data-disabled'] === true);
 
-    // If children is a React element, check its props
-    if (React.isValidElement(children)) {
-      const childProps = children.props as any;
-      return childProps.disabled === true || childProps['data-disabled'] === true;
-    }
-
-    return false;
-  }, [asChild, children]);
-
-  // Determine if we need to render an indicator (badge takes precedence)
   const hasIndicator = badge !== undefined || status !== undefined;
 
   return (
@@ -89,38 +82,45 @@ interface AvatarImplProps
   fallback: NonNullable<AvatarOwnProps['fallback']>;
 }
 
-const AvatarImpl = React.forwardRef<AvatarImplElement, AvatarImplProps>(
-  ({ fallback, ...imageProps }, forwardedRef) => {
-    const [status, setStatus] = React.useState<'idle' | 'loading' | 'loaded' | 'error'>('idle');
+const AvatarImpl = React.memo(
+  React.forwardRef<AvatarImplElement, AvatarImplProps>(
+    ({ fallback, onLoadingStatusChange, ...imageProps }, forwardedRef) => {
+      const [status, setStatus] = React.useState<'idle' | 'loading' | 'loaded' | 'error'>('idle');
 
-    return (
-      <>
-        {status === 'idle' || status === 'loading' ? <span className="rt-AvatarFallback" /> : null}
+      const handleLoadingStatusChange = React.useCallback(
+        (newStatus: 'idle' | 'loading' | 'loaded' | 'error') => {
+          onLoadingStatusChange?.(newStatus);
+          setStatus(newStatus);
+        },
+        [onLoadingStatusChange],
+      );
 
-        {status === 'error' ? (
-          <AvatarPrimitive.Fallback
-            className={classNames('rt-AvatarFallback', {
-              'rt-one-letter': typeof fallback === 'string' && fallback.length === 1,
-              'rt-two-letters': typeof fallback === 'string' && fallback.length === 2,
-            })}
-            delayMs={0}
-          >
-            {fallback}
-          </AvatarPrimitive.Fallback>
-        ) : null}
+      return (
+        <>
+          {status === 'idle' || status === 'loading' ? <span className="rt-AvatarFallback" /> : null}
 
-        <AvatarPrimitive.Image
-          ref={forwardedRef}
-          className="rt-AvatarImage"
-          {...imageProps}
-          onLoadingStatusChange={(status) => {
-            imageProps.onLoadingStatusChange?.(status);
-            setStatus(status);
-          }}
-        />
-      </>
-    );
-  },
+          {status === 'error' ? (
+            <AvatarPrimitive.Fallback
+              className={classNames('rt-AvatarFallback', {
+                'rt-one-letter': typeof fallback === 'string' && fallback.length === 1,
+                'rt-two-letters': typeof fallback === 'string' && fallback.length === 2,
+              })}
+              delayMs={0}
+            >
+              {fallback}
+            </AvatarPrimitive.Fallback>
+          ) : null}
+
+          <AvatarPrimitive.Image
+            ref={forwardedRef}
+            className="rt-AvatarImage"
+            {...imageProps}
+            onLoadingStatusChange={handleLoadingStatusChange}
+          />
+        </>
+      );
+    },
+  ),
 );
 
 AvatarImpl.displayName = 'AvatarImpl';
