@@ -6,6 +6,7 @@ export interface DocFrontmatter {
   description?: string;
   source?: string;
   category?: string; // Optional override, auto-detected if not provided
+  keywords?: string[];
 }
 
 /**

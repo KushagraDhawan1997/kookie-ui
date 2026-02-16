@@ -1,5 +1,7 @@
 import React from 'react';
 import { getCachedDocMetadata } from '@/lib/docs-metadata';
+import { generateDocPageMetadata } from '@/lib/seo';
+import { generateDocStructuredData } from '@/lib/structured-data';
 import ConstantsPageClient from './page-client';
 import type { Metadata } from 'next';
 
@@ -10,14 +12,21 @@ export async function generateMetadata(): Promise<Metadata> {
     return {};
   }
 
-  return {
-    title: metadata.title,
-    description: metadata.description,
-  };
+  return generateDocPageMetadata(metadata);
 }
 
 export default function ConstantsPage() {
   const metadata = getCachedDocMetadata('/docs/constants');
 
-  return <ConstantsPageClient metadata={metadata || undefined} />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: metadata ? generateDocStructuredData(metadata) : '{}',
+        }}
+      />
+      <ConstantsPageClient metadata={metadata || undefined} />
+    </>
+  );
 }
