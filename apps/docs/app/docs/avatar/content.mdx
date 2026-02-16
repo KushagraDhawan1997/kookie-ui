@@ -249,3 +249,61 @@ The `fit` prop also supports responsive values:
   fallback="LO"
   fit={{ initial: 'cover', md: 'contain' }}
 />
+```
+
+## Enhancements
+
+Kookie UI extends Radix Themes Avatar with practical improvements:
+
+### Extended Sizes
+
+Size scale expanded from 9 to 12 values, with consistent radius-to-size mapping and two-letter fallback font sizes at every scale.
+
+### Additional Variants
+
+Three new variants beyond Radix's `solid` and `soft`: `classic` provides a raised 3D surface appearance with shadow, `surface` adds a subtle bordered background, and `outline` renders a border-only fallback with no fill.
+
+### Material Support
+
+`material` prop controls solid vs. translucent rendering. Translucent avatars use backdrop-filter for a frosted-glass effect and automatically blend with the background. Works across all variants.
+
+### Status Indicator
+
+`status` prop renders a colored dot at the bottom-right corner that scales automatically with the avatar size. Accepts any accent color for presence or state indication.
+
+### Badge Slot
+
+`badge` prop accepts arbitrary React content rendered at the bottom-right corner for notification counts, verification icons, or other indicators. Mutually exclusive with `status`; `badge` takes precedence if both are provided.
+
+### Image Fit Control
+
+Responsive `fit` prop controls `object-fit` on the avatar image. Useful for logos or non-square images that shouldn't be cropped. Supports `cover`, `contain`, `fill`, `scale-down`, and `none`.
+
+### Interactive Avatar Support
+
+When rendered as a `button`, `a`, or `[role="button"]` via `asChild`, avatars gain hover, active, focus, and disabled states with subtle image brightness/saturation filters. Each variant applies appropriate interactive colors. Disabled detection propagates from the child element automatically.
+
+## Changelog
+
+### Added
+
+- Sizes 10, 11, 12 for larger avatar use cases
+- `classic`, `surface`, and `outline` variants
+- `material` prop for solid/translucent theme contexts
+- `status` prop for colored presence indicators
+- `badge` prop for custom indicator content
+- `fit` prop with responsive support for image scaling control
+- Interactive states for button/link usage via `asChild`
+- Disabled state detection from child element props
+- Image hover/active filters with dark mode awareness
+
+### Changed
+
+- Border-radius scale tightened to match size number (size 1 uses radius-1, etc.)
+- Two-letter fallback font sizes defined for all sizes (Radix only defined sizes 1-4)
+- Soft variant uses solid colors (`--accent-3`) instead of alpha (`--accent-a3`) for better consistency
+- Solid high-contrast fallback uses `--gray-1` instead of `--accent-1`
+
+### Deprecated
+
+- `panelBackground` prop in favor of `material` prop

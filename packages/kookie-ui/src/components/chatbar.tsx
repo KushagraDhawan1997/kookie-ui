@@ -305,7 +305,6 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
     for (const patRaw of patterns) {
       const pat = patRaw.toLowerCase();
       if (pat.includes('/')) {
-        // MIME pattern
         const [type, subtype] = pat.split('/');
         const [fmType, fmSubtype] = mime.split('/');
         if (type === '*' || (type === fmType && (subtype === '*' || subtype === fmSubtype))) return true;
@@ -316,30 +315,44 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
     return false;
   };
 
-  /**
-   * Maps File objects to attachments with validation and preview URL generation.
-   */
-  const mapFilesToAttachments = (
-    files: File[],
-  ): {
-    accepted: ChatbarAttachment[];
-    rejected: { file: File; reason: 'type' | 'size' | 'count' }[];
-  } => {
+  // Refs for values that change frequently, read inside stable callbacks
+  const attachmentsRef = React.useRef(attachments);
+  attachmentsRef.current = attachments;
+  const acceptsRef = React.useRef(accepts);
+  acceptsRef.current = accepts;
+  const pasteAcceptsRef = React.useRef(pasteAccepts);
+  pasteAcceptsRef.current = pasteAccepts;
+  const maxAttachmentsRef = React.useRef(maxAttachments);
+  maxAttachmentsRef.current = maxAttachments;
+  const maxFileSizeRef = React.useRef(maxFileSize);
+  maxFileSizeRef.current = maxFileSize;
+  const onAttachmentRejectRef = React.useRef(onAttachmentReject);
+  onAttachmentRejectRef.current = onAttachmentReject;
+  const onAttachmentsChangeRef = React.useRef(onAttachmentsChange);
+  onAttachmentsChangeRef.current = onAttachmentsChange;
+  const onOpenChangePropRef = React.useRef(onOpenChangeProp);
+  onOpenChangePropRef.current = onOpenChangeProp;
+
+  const appendFiles = React.useCallback((files: File[]) => {
+    const currentAttachments = attachmentsRef.current;
+    const currentAccepts = acceptsRef.current;
+    const currentMaxAttachments = maxAttachmentsRef.current;
+    const currentMaxFileSize = maxFileSizeRef.current;
+
     const next: ChatbarAttachment[] = [];
     const rejected: { file: File; reason: 'type' | 'size' | 'count' }[] = [];
-
-    const remainingSlots = typeof maxAttachments === 'number' ? Math.max(maxAttachments - attachments.length, 0) : Infinity;
+    const remainingSlots = typeof currentMaxAttachments === 'number' ? Math.max(currentMaxAttachments - currentAttachments.length, 0) : Infinity;
 
     for (const file of files) {
       if (next.length >= remainingSlots) {
         rejected.push({ file, reason: 'count' });
         continue;
       }
-      if (typeof maxFileSize === 'number' && file.size > maxFileSize) {
+      if (typeof currentMaxFileSize === 'number' && file.size > currentMaxFileSize) {
         rejected.push({ file, reason: 'size' });
         continue;
       }
-      if (!matchesAccept(file, accepts)) {
+      if (!matchesAccept(file, currentAccepts)) {
         rejected.push({ file, reason: 'type' });
         continue;
       }
@@ -348,61 +361,49 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
       const isImageType = (file.type || '').toLowerCase().startsWith('image/');
       const url = isImageType || looksLikeImageByExt ? URL.createObjectURL(file) : undefined;
       if (url) generatedUrlSetRef.current.add(url);
-      next.push({
-        id,
-        name: file.name,
-        size: file.size,
-        type: file.type,
-        file,
-        url,
-        status: 'idle',
-      });
+      next.push({ id, name: file.name, size: file.size, type: file.type, file, url, status: 'idle' });
     }
-    return { accepted: next, rejected };
-  };
 
-  const appendFiles = (files: File[]) => {
-    const { accepted, rejected } = mapFilesToAttachments(files);
-    if (accepted.length > 0) {
-      const merged = attachments.concat(accepted);
+    if (next.length > 0) {
+      const merged = currentAttachments.concat(next);
       if (!isAttachmentsControlled) setAttachmentsUncontrolled(merged);
-      onAttachmentsChange?.(merged);
-      // Ensure chatbar expands when attachments are added
+      onAttachmentsChangeRef.current?.(merged);
       if (!isOpenControlled) setOpenUncontrolled(true);
-      onOpenChangeProp?.(true);
+      onOpenChangePropRef.current?.(true);
     }
-    if (rejected.length > 0) onAttachmentReject?.(rejected);
-  };
+    if (rejected.length > 0) onAttachmentRejectRef.current?.(rejected);
+  }, [isAttachmentsControlled, isOpenControlled]);
 
-  const appendFilesFromPaste = (files: File[]) => {
-    // Use pasteAccepts for type filtering
-    const matches = (file: File) => {
-      if (pasteAccepts.length === 0) return matchesAccept(file, accepts);
-      return matchesAccept(file, pasteAccepts);
-    };
+  const appendFilesFromPaste = React.useCallback((files: File[]) => {
+    const currentAccepts = acceptsRef.current;
+    const currentPasteAccepts = pasteAcceptsRef.current;
+    const currentMaxAttachments = maxAttachmentsRef.current;
+    const currentMaxFileSize = maxFileSizeRef.current;
+    const currentAttachments = attachmentsRef.current;
+
+    const patterns = currentPasteAccepts.length > 0 ? currentPasteAccepts : currentAccepts;
     const acceptedFiles: File[] = [];
     const rejected: { file: File; reason: 'type' | 'size' | 'count' }[] = [];
+    const remainingSlots = typeof currentMaxAttachments === 'number' ? Math.max(currentMaxAttachments - currentAttachments.length, 0) : Infinity;
 
-    // Enforce maxAttachments and maxFileSize
-    const remainingSlots = typeof maxAttachments === 'number' ? Math.max(maxAttachments - attachments.length, 0) : Infinity;
     for (const file of files) {
       if (acceptedFiles.length >= remainingSlots) {
         rejected.push({ file, reason: 'count' });
         continue;
       }
-      if (typeof maxFileSize === 'number' && file.size > maxFileSize) {
+      if (typeof currentMaxFileSize === 'number' && file.size > currentMaxFileSize) {
         rejected.push({ file, reason: 'size' });
         continue;
       }
-      if (!matches(file)) {
+      if (!matchesAccept(file, patterns)) {
         rejected.push({ file, reason: 'type' });
         continue;
       }
       acceptedFiles.push(file);
     }
     if (acceptedFiles.length > 0) appendFiles(acceptedFiles);
-    if (rejected.length > 0) onAttachmentReject?.(rejected);
-  };
+    if (rejected.length > 0) onAttachmentRejectRef.current?.(rejected);
+  }, [appendFiles]);
 
   // Revoke object URLs that are no longer referenced by current attachments
   React.useEffect(() => {

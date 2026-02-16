@@ -444,7 +444,6 @@
 }
 
 /* Solid interactive states */
-/* stylelint-disable selector-max-type */
 .rt-AvatarRoot:where(button, a, [role="button"]):where(.rt-variant-solid) {
   @media (hover: hover) {
     &:where(:hover:not(:disabled, [data-disabled])) {
