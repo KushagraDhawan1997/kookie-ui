@@ -202,5 +202,9 @@
   },
   "bugs": {
     "url": "https://github.com/KushagraDhawan1997/kookie-ui/issues"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/KushagraDhawan1997"
   }
 }
