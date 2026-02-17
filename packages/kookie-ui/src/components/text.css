@@ -3,6 +3,10 @@
   line-height: var(--line-height, var(--default-line-height));
   letter-spacing: var(--letter-spacing, inherit);
 
+  &:where(.rt-r-ff-sans) { font-family: var(--default-font-family-sans); }
+  &:where(.rt-r-ff-mono) { font-family: var(--default-font-family-mono); }
+  &:where(.rt-r-ff-serif) { font-family: var(--font-serif); }
+
   :where(&) {
     margin: 0;
   }

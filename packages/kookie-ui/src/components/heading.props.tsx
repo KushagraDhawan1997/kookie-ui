@@ -5,6 +5,7 @@ import { leadingTrimPropDef } from '../props/leading-trim.prop.js';
 import { textAlignPropDef } from '../props/text-align.prop.js';
 import { textWrapPropDef } from '../props/text-wrap.prop.js';
 import { truncatePropDef } from '../props/truncate.prop.js';
+import { fontFamilyPropDef } from '../props/font-family.prop.js';
 import { weightPropDef } from '../props/weight.prop.js';
 
 import type { PropDef } from '../props/prop-def.js';
@@ -22,6 +23,7 @@ const headingPropDefs = {
     default: '6',
     responsive: true,
   },
+  ...fontFamilyPropDef,
   ...weightPropDef,
   ...textAlignPropDef,
   ...leadingTrimPropDef,
