@@ -62,8 +62,13 @@ export * as Tabs from './tabs.js';
 export { TextArea, type TextAreaProps } from './text-area.js';
 export * as TextField from './text-field.js';
 export { Text, type TextProps } from './text.js';
-export { ThemePanel, type ThemePanelProps } from './theme-panel.js';
-export { Theme, ThemeContext, type ThemeProps, useThemeContext } from './theme.js';
+export {
+  ThemePanel,
+  ThemePanelContent,
+  type ThemePanelProps,
+  type ThemePanelContentProps,
+} from './theme-panel.js';
+export { Theme, ThemeContext, type ThemeContextValue, type ThemeProps, useThemeContext } from './theme.js';
 export { ToggleButton, type ToggleButtonProps } from './toggle-button.js';
 export { ToggleIconButton, type ToggleIconButtonProps } from './toggle-icon-button.js';
 export { Toolbar } from './toolbar.js';

@@ -32,6 +32,15 @@
   height: fit-content;
 
   color: var(--gray-12);
+}
+
+/***************************************************************************************************
+ *                                                                                                 *
+ * VARIANTS                                                                                        *
+ *                                                                                                 *
+ ***************************************************************************************************/
+
+.rt-Kbd:where(.rt-variant-classic) {
   background-color: var(--gray-1);
   /* prettier-ignore */
   box-shadow:
@@ -95,6 +104,27 @@
       transition-duration: 40ms, 40ms;
       background-color: var(--gray-2);
       box-shadow: inset 0 var(--classic-border-width) var(--black-a3), 0 0 0 var(--classic-border-width) var(--gray-a7);
+    }
+    &:where(:focus-visible) {
+      outline: 2px solid var(--focus-8);
+    }
+  }
+}
+
+.rt-Kbd:where(.rt-variant-soft) {
+  background-color: var(--gray-a3);
+
+  &:where(:any-link, button) {
+    @media (hover: hover) {
+      &:where(:hover) {
+        background-color: var(--gray-a4);
+      }
+    }
+    &:where([data-state='open']) {
+      background-color: var(--gray-a4);
+    }
+    &:where(:active:not([data-state='open'])) {
+      background-color: var(--gray-a5);
     }
     &:where(:focus-visible) {
       outline: 2px solid var(--focus-8);

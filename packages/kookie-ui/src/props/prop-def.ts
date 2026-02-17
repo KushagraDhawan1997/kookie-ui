@@ -5,6 +5,7 @@ import type React from 'react';
 type Union<S = string, T extends string | number = string> = T | Omit<S, T>;
 
 const breakpoints = ['initial', 'xs', 'sm', 'md', 'lg', 'xl'] as const;
+const breakpointSet: Set<string> = new Set(breakpoints);
 type Breakpoint = (typeof breakpoints)[number];
 type Responsive<T> = T | Partial<Record<Breakpoint, T>>;
 
@@ -80,7 +81,7 @@ type GetPropDefTypes<P> = {
   [K in keyof P]?: GetPropDefType<P[K]>;
 };
 
-export { breakpoints };
+export { breakpoints, breakpointSet };
 export type {
   PropDef,
   GetPropDefTypes,

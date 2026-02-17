@@ -1,3 +1,5 @@
+import type React from 'react';
+
 import { colorPropDef } from '../props/color.prop.js';
 import { highContrastPropDef } from '../props/high-contrast.prop.js';
 import { radiusPropDef } from '../props/radius.prop.js';
@@ -27,7 +29,7 @@ const selectTriggerPropDefs = {
   readOnly: { type: 'boolean' },
   ...colorPropDef,
   ...radiusPropDef,
-  placeholder: { type: 'string' },
+  placeholder: { type: 'ReactNode' },
 } satisfies {
   variant: PropDef<(typeof triggerVariants)[number]>;
   panelBackground: PropDef<'solid' | 'translucent'>;
@@ -35,7 +37,7 @@ const selectTriggerPropDefs = {
   loading: PropDef<boolean>;
   disabled: PropDef<boolean>;
   readOnly: PropDef<boolean>;
-  placeholder: PropDef<string>;
+  placeholder: PropDef<React.ReactNode>;
 };
 
 const contentVariants = ['solid', 'soft'] as const;

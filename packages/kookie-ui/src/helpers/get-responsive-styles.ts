@@ -1,4 +1,4 @@
-import { breakpoints } from '../props/prop-def.js';
+import { breakpointSet } from '../props/prop-def.js';
 import { hasOwnProperty } from './has-own-property.js';
 import { isResponsiveObject } from './is-responsive-object.js';
 
@@ -53,7 +53,7 @@ function getResponsiveClassNames({
 
     for (const bp in object) {
       // Make sure we are not iterating over keys that aren't breakpoints
-      if (!hasOwnProperty(object, bp) || !breakpoints.includes(bp)) {
+      if (!hasOwnProperty(object, bp) || !breakpointSet.has(bp)) {
         continue;
       }
 
@@ -121,7 +121,7 @@ function getResponsiveCustomProperties({
 
     for (const bp in object) {
       // Make sure we are not iterating over keys that aren't breakpoints
-      if (!hasOwnProperty(object, bp) || !breakpoints.includes(bp)) {
+      if (!hasOwnProperty(object, bp) || !breakpointSet.has(bp)) {
         continue;
       }
 
