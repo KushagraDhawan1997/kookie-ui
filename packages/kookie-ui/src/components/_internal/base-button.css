@@ -150,6 +150,15 @@
       scale: 1;
     }
   }
+
+  /* Disable scale on Windows (subpixel text re-rasterization causes flicker) */
+  :where([data-os='windows']) & {
+    &:where(:hover:not([data-disabled], [data-state='open'])),
+    &:where(:active:not([data-disabled])),
+    &:where([data-state='open']) {
+      scale: 1;
+    }
+  }
 }
 
 /* Full width mode */

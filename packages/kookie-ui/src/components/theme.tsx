@@ -179,6 +179,15 @@ interface ThemeImplPublicProps
 interface ThemeImplPrivateProps extends Partial<ThemeChangeHandlers> {
   isRoot?: boolean;
 }
+function getClientOS(): 'windows' | 'macos' | 'linux' | undefined {
+  if (typeof navigator === 'undefined') return undefined;
+  const ua = navigator.userAgent;
+  if (ua.includes('Win')) return 'windows';
+  if (ua.includes('Mac')) return 'macos';
+  if (ua.includes('Linux')) return 'linux';
+  return undefined;
+}
+
 const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, forwardedRef) => {
   const context = React.useContext(ThemeContext);
   const {
@@ -213,6 +222,12 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
   const isExplicitAppearance = props.appearance === 'light' || props.appearance === 'dark';
   const hasBackground =
     hasBackgroundProp === undefined ? isRoot || isExplicitAppearance : hasBackgroundProp;
+
+  const [clientOS, setClientOS] = React.useState<ReturnType<typeof getClientOS>>(undefined);
+  React.useEffect(() => {
+    if (isRoot) setClientOS(getClientOS());
+  }, [isRoot]);
+
   return (
     <ThemeContext.Provider
       value={React.useMemo(
@@ -269,6 +284,7 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
         data-radius={radius}
         data-scaling={scaling}
         data-font-family={fontFamily}
+        data-os={isRoot ? clientOS : undefined}
         ref={forwardedRef}
         {...themeProps}
         className={classNames(

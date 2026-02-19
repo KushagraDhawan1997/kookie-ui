@@ -124,6 +124,14 @@
       }
     }
   }
+
+  /* Disable scale on Windows (subpixel text re-rasterization causes flicker) */
+  :where([data-os='windows']) &:where(:any-link, button, label) {
+    &:where(:hover:not([data-state='open'])),
+    &:where(:active:not([data-state='open'])) {
+      scale: 1;
+    }
+  }
 }
 
 /***************************************************************************************************
