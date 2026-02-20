@@ -34,6 +34,7 @@ const accentColors = [
 ] as const;
 
 const sizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] as const;
+const fonts = ['sans', 'mono', 'serif'] as const;
 const weights = ['light', 'regular', 'medium', 'semibold', 'bold'] as const;
 const aligns = ['left', 'center', 'right'] as const;
 
@@ -49,6 +50,7 @@ export default function HeadingPlayground({
   height,
 }: HeadingPlaygroundProps = {}) {
   const [size, setSize] = React.useState<string>('8');
+  const [font, setFont] = React.useState<string>('theme');
   const [weight, setWeight] = React.useState<string>('semibold');
   const [color, setColor] = React.useState<string>('theme');
   const [align, setAlign] = React.useState<string>('theme');
@@ -63,6 +65,15 @@ export default function HeadingPlayground({
       onChange: setSize,
       options: sizes.map((s) => ({ label: s, value: s })),
       placeholder: 'Select size',
+    },
+    {
+      id: 'font',
+      label: 'Font',
+      type: 'select' as const,
+      value: font,
+      onChange: setFont,
+      options: [{ label: 'Theme', value: 'theme' }, ...fonts.map((f) => ({ label: f, value: f }))],
+      placeholder: 'Theme',
     },
     {
       id: 'weight',
@@ -104,6 +115,7 @@ export default function HeadingPlayground({
   const generateCode = () => {
     const props = [`size="${size}"`];
 
+    if (font !== 'theme') props.push(`font="${font}"`);
     if (weight !== 'theme') props.push(`weight="${weight}"`);
     if (color !== 'theme') props.push(`color="${color}"`);
     if (align !== 'theme') props.push(`align="${align}"`);
@@ -121,6 +133,7 @@ export default function HeadingPlayground({
       component={
         <Heading
           size={size as any}
+          font={font === 'theme' ? undefined : (font as any)}
           weight={weight === 'theme' ? undefined : (weight as any)}
           color={color === 'theme' ? undefined : (color as any)}
           align={align === 'theme' ? undefined : (align as any)}

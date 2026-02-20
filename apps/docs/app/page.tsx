@@ -1,10 +1,10 @@
 'use client';
 
-import { Button, Container, Section, Link as KUILink, Avatar, Callout, Flex, Grid, Separator, Text, Box } from '@kushagradhawan/kookie-ui';
+import { Button, Container, Section, Link as KUILink, Avatar, Callout, Flex, Grid, Heading, Separator, Text, Box } from '@kushagradhawan/kookie-ui';
 import { Hero, Footer } from '@kushagradhawan/kookie-blocks';
 import Link from 'next/link';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { ArrowUpRight01Icon } from '@hugeicons/core-free-icons';
+import { ArrowUpRight01Icon, ArrowRight01Icon } from '@hugeicons/core-free-icons';
 import { Testimonial } from '@/components/testimonial';
 import AvatarPlayground from './playground/avatar-playground';
 import BadgePlayground from './playground/badge-playground';
@@ -47,65 +47,76 @@ export default function HeroSection() {
 
   return (
     <>
-      <Section size="2">
-        <Container size="2">
-          <Hero.Root gap="8" p="6">
-            <Hero.Meta>
-              <Avatar fallback="K" size="2" color="gray" src="/kookie-ui-logo.png" />
-            </Hero.Meta>
-
-            <Hero.Title>A system to build consistent and scalable user interfaces.</Hero.Title>
-
-            <Hero.Description color="gray">
-              An open-source{' '}
-              <KUILink target="_blank" href="https://github.com/KushagraDhawan1997/kookie-ui" rel="noopener noreferrer">
-                fork
-              </KUILink>{' '}
-              of{' '}
-              <KUILink target="_blank" href="https://radix-ui.com/themes" rel="noopener noreferrer">
-                Radix Themes
-              </KUILink>
-              , focused on building scalable, consistent UI components with a fresh visual style and practical foundations. Component documentation is coming soon.
-            </Hero.Description>
-
-            <Hero.Actions>
-              <Button highContrast color="gray" variant="solid" size="2" asChild>
-                <Link href="/docs/installation">
-                  Get Started with UI
-                  <HugeiconsIcon icon={ArrowUpRight01Icon} strokeWidth={1.5} />
-                </Link>
-              </Button>
-            </Hero.Actions>
-
-            <Flex justify="center">
-              <Link href="https://www.kushagradhawan.com/articles/kookie-chatbar-update" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-                <Callout.Root highContrast variant="outline" color="gray" size="2" style={{ cursor: 'pointer' }}>
-                  <Callout.Text align="center">
-                    New component: <span style={{ textDecoration: 'underline' }}>Chatbar</span>. Read about the latest update.
-                  </Callout.Text>
-                </Callout.Root>
-              </Link>
+      <Section position="relative" size="4">
+        <Container size="4">
+          <Flex direction="column" align="start" gap={{ initial: '5', sm: '8' }} py={{ initial: '4', sm: '6' }} px={{ initial: '4', sm: '6' }}>
+            <Flex direction="column" gap="2" width="100%">
+              <Heading size="3" weight="medium">
+                Kookie UI
+              </Heading>
+              <Separator size="4" />
             </Flex>
-          </Hero.Root>
+
+            <Hero.Root align="start" gap={{ initial: '6', sm: '8' }}>
+              <Hero.Title size={{ initial: '8', sm: '9', lg: '10' }} weight="medium" align="left">
+                A system to build consistent and scalable user interfaces.
+              </Hero.Title>
+
+              <Hero.Description size={{ initial: '3', sm: '4' }} color="gray" align="left">
+                An open-source{' '}
+                <KUILink target="_blank" href="https://github.com/KushagraDhawan1997/kookie-ui" rel="noopener noreferrer" underline="always" color="blue">
+                  fork
+                </KUILink>{' '}
+                of{' '}
+                <KUILink target="_blank" href="https://radix-ui.com/themes" rel="noopener noreferrer" underline="always" color="blue">
+                  Radix Themes
+                </KUILink>
+                , focused on building scalable, consistent UI components with a fresh visual style and practical foundations.
+              </Hero.Description>
+
+              <Hero.Actions gap="3">
+                <Button asChild variant="solid" size="2" highContrast>
+                  <Link href="/docs/installation">
+                    Get Started
+                    <HugeiconsIcon icon={ArrowUpRight01Icon} />
+                  </Link>
+                </Button>
+                <Button asChild variant="soft" highContrast size="2">
+                  <a href="https://github.com/KushagraDhawan1997/kookie-ui" target="_blank" rel="noopener noreferrer">
+                    GitHub
+                    <HugeiconsIcon icon={ArrowRight01Icon} />
+                  </a>
+                </Button>
+              </Hero.Actions>
+
+              <Flex justify="start">
+                <Link href="https://www.kushagradhawan.com/articles/kookie-chatbar-update" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                  <Callout.Root highContrast variant="outline" color="gray" size="2" style={{ cursor: 'pointer' }}>
+                    <Callout.Text align="left">Read the latest → Chatbar component update</Callout.Text>
+                  </Callout.Root>
+                </Link>
+              </Flex>
+            </Hero.Root>
+          </Flex>
         </Container>
       </Section>
 
-      <Separator size="4" light />
-
-      <Section size="2">
-        <Container size="4" px={{ initial: '4', sm: '6' }}>
-          <Grid columns={{ initial: '1', sm: '2', lg: '2' }} gap="4">
-            {playgrounds.map(({ name, slug, Component }) => (
-              <Flex key={slug} direction="column">
-                <Box px="1">
-                  <KUILink asChild size="2" weight="medium" color="gray" highContrast>
-                    <Link href={`/docs/${slug}`}>{name}</Link>
-                  </KUILink>
-                </Box>
-                <Component showControls={false} height="360px" />
-              </Flex>
-            ))}
-          </Grid>
+      <Section size="4">
+        <Container size="4">
+          <Flex direction="column" py={{ initial: '4', sm: '6' }} px={{ initial: '4', sm: '6' }}>
+            <Grid columns={{ initial: '1', sm: '2', lg: '2' }} gap="4">
+              {playgrounds.map(({ name, slug, Component }) => (
+                <Flex key={slug} direction="column">
+                  <Box px="1">
+                    <KUILink asChild size="2" weight="medium" color="gray" highContrast>
+                      <Link href={`/docs/${slug}`}>{name}</Link>
+                    </KUILink>
+                  </Box>
+                  <Component showControls={false} height="360px" />
+                </Flex>
+              ))}
+            </Grid>
+          </Flex>
         </Container>
       </Section>
 

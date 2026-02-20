@@ -85,7 +85,7 @@ export default function Playground({ component, code, items, showBackground = fa
     <Flex direction={{ initial: 'column', md: showControls ? 'row' : 'column' }} gap="2" my="3" align="center">
       {/* Left side - Preview area */}
       <Flex direction="column" gap="2" width="100%" className="playground-container">
-        <Theme asChild appearance={appearance} hasBackground={false}>
+        <Theme fontFamily="sans" asChild appearance={appearance} hasBackground={false}>
           <Box position="relative" style={{ width: '100%', height }}>
             <Card size="1" variant="soft" style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
               {/* Background Image */}
