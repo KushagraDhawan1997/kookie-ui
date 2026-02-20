@@ -562,9 +562,12 @@ const items = [
   { icon: UserIcon, label: 'Profile' },
 ];
 
-const filtered = query
-  ? items.filter(i => i.label.toLowerCase().includes(query.toLowerCase()))
-  : items;
+const filtered = useMemo(
+  () => query
+    ? items.filter(i => i.label.toLowerCase().includes(query.toLowerCase()))
+    : items,
+  [query],
+);
 
 <Sidebar.Root presentation="expanded" size="2">
   <Sidebar.Search value={query} onValueChange={setQuery} placeholder="Search..." />
@@ -646,9 +649,13 @@ const searchDemoItems = [
 
 function SidebarSearchExpandedDemo() {
   const [query, setQuery] = React.useState('');
-  const filtered = query
-    ? searchDemoItems.filter((i) => i.label.toLowerCase().includes(query.toLowerCase()))
-    : searchDemoItems;
+  const filtered = React.useMemo(
+    () =>
+      query
+        ? searchDemoItems.filter((i) => i.label.toLowerCase().includes(query.toLowerCase()))
+        : searchDemoItems,
+    [query],
+  );
 
   return (
     <Sidebar.Root presentation="expanded" size="2">
@@ -671,9 +678,13 @@ function SidebarSearchExpandedDemo() {
 
 function SidebarSearchThinDemo() {
   const [query, setQuery] = React.useState('');
-  const filtered = query
-    ? searchDemoItems.filter((i) => i.label.toLowerCase().includes(query.toLowerCase()))
-    : searchDemoItems;
+  const filtered = React.useMemo(
+    () =>
+      query
+        ? searchDemoItems.filter((i) => i.label.toLowerCase().includes(query.toLowerCase()))
+        : searchDemoItems,
+    [query],
+  );
 
   return (
     <Sidebar.Root presentation="thin" size="2">

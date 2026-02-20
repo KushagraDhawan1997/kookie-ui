@@ -614,19 +614,25 @@ const SidebarSearch = React.forwardRef<HTMLDivElement, SidebarSearchProps>(
     const searchId = React.useId();
     const resultsId = `${searchId}-results`;
 
+    // Stable refs for values used in callbacks — avoids recreating handlers on every keystroke
+    const valueRef = React.useRef(value);
+    valueRef.current = value;
+    const onValueChangeRef = React.useRef(onValueChange);
+    onValueChangeRef.current = onValueChange;
+
     // Derive a clean aria-label from placeholder (strip trailing dots/ellipsis)
     const searchLabel = placeholder.replace(/\.+$/, '');
 
     const handleKeyDown = React.useCallback(
       (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Escape' && value) {
+        if (e.key === 'Escape' && valueRef.current) {
           e.preventDefault();
           e.stopPropagation();
-          onValueChange('');
+          onValueChangeRef.current('');
           inputRef.current?.focus();
         }
       },
-      [value, onValueChange],
+      [],
     );
 
     // Arrow key navigation within the popover (input ↔ results)
