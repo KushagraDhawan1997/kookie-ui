@@ -623,7 +623,7 @@ const filtered = query
   </Sidebar.Search>
   <Sidebar.Content>
     <Sidebar.Menu>
-      {/* Normal nav items */}
+      {/* Nav items (excluding Search, which is handled by Sidebar.Search) */}
     </Sidebar.Menu>
   </Sidebar.Content>
 </Sidebar.Root>`}
@@ -693,14 +693,16 @@ function SidebarSearchThinDemo() {
       </Sidebar.Search>
       <Sidebar.Content>
         <Sidebar.Menu>
-          {searchDemoItems.map((item) => (
-            <Sidebar.MenuItem key={item.label}>
-              <Sidebar.MenuButton>
-                <HugeiconsIcon icon={item.icon} strokeWidth={1.75} />
-                {item.label}
-              </Sidebar.MenuButton>
-            </Sidebar.MenuItem>
-          ))}
+          {searchDemoItems
+            .filter((item) => item.label !== 'Search')
+            .map((item) => (
+              <Sidebar.MenuItem key={item.label}>
+                <Sidebar.MenuButton>
+                  <HugeiconsIcon icon={item.icon} strokeWidth={1.75} />
+                  {item.label}
+                </Sidebar.MenuButton>
+              </Sidebar.MenuItem>
+            ))}
         </Sidebar.Menu>
       </Sidebar.Content>
     </Sidebar.Root>

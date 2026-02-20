@@ -35,7 +35,6 @@ export function DocsLayout({ children }: { children: React.ReactNode }) {
         </Flex>
       }
       sidebarFooter={<DarkModeToggle />}
-      sidebarToggle
     >
       {children}
     </DocsShell>
