@@ -533,7 +533,176 @@ export function SidebarExamples() {
           collapsible={false}
         />
       </Flex>
+
+      <Separator size="4" />
+
+      {/* Example 7: Search (Expanded) */}
+      <Flex direction="column" gap="4">
+        <SectionHeader.Root>
+          <SectionHeader.Content>
+            <SectionHeader.Title>Search (Expanded)</SectionHeader.Title>
+            <SectionHeader.Description>
+              Inline search input that filters navigation items. Place between Header and Content. The consumer controls filtering logic — the component just provides the input UI.
+            </SectionHeader.Description>
+          </SectionHeader.Content>
+        </SectionHeader.Root>
+        <PreviewBlock background="none" height="24rem">
+          <Box style={{ width: 240 }}>
+            <SidebarSearchExpandedDemo />
+          </Box>
+        </PreviewBlock>
+        <CodeBlock
+          code={`const [query, setQuery] = useState('');
+
+const items = [
+  { icon: Home01Icon, label: 'Home' },
+  { icon: Search01Icon, label: 'Search' },
+  { icon: FolderOpenIcon, label: 'Projects' },
+  { icon: Settings01Icon, label: 'Settings' },
+  { icon: UserIcon, label: 'Profile' },
+];
+
+const filtered = query
+  ? items.filter(i => i.label.toLowerCase().includes(query.toLowerCase()))
+  : items;
+
+<Sidebar.Root presentation="expanded" size="2">
+  <Sidebar.Search value={query} onValueChange={setQuery} placeholder="Search..." />
+  <Sidebar.Content>
+    <Sidebar.Menu>
+      {filtered.map(item => (
+        <Sidebar.MenuItem key={item.label}>
+          <Sidebar.MenuButton>
+            <HugeiconsIcon icon={item.icon} strokeWidth={1.75} />
+            {item.label}
+          </Sidebar.MenuButton>
+        </Sidebar.MenuItem>
+      ))}
+    </Sidebar.Menu>
+  </Sidebar.Content>
+</Sidebar.Root>`}
+          language="tsx"
+          showLineNumbers={true}
+          collapsible={false}
+        />
+      </Flex>
+
+      <Separator size="4" />
+
+      {/* Example 8: Search (Thin) */}
+      <Flex direction="column" gap="4">
+        <SectionHeader.Root>
+          <SectionHeader.Content>
+            <SectionHeader.Title>Search (Thin)</SectionHeader.Title>
+            <SectionHeader.Description>
+              In thin mode, search renders as an icon button that opens a popover. Pass filtered results as children — they render inside the popover.
+            </SectionHeader.Description>
+          </SectionHeader.Content>
+        </SectionHeader.Root>
+        <PreviewBlock background="none" height="24rem">
+          <Box style={{ width: 72 }}>
+            <SidebarSearchThinDemo />
+          </Box>
+        </PreviewBlock>
+        <CodeBlock
+          code={`<Sidebar.Root presentation="thin" size="2">
+  <Sidebar.Search value={query} onValueChange={setQuery} placeholder="Search...">
+    {/* Children render inside the popover in thin mode */}
+    {query && (
+      <Sidebar.Menu>
+        {filtered.map(item => (
+          <Sidebar.MenuItem key={item.label}>
+            <Sidebar.MenuButton>
+              <HugeiconsIcon icon={item.icon} strokeWidth={1.75} />
+              {item.label}
+            </Sidebar.MenuButton>
+          </Sidebar.MenuItem>
+        ))}
+      </Sidebar.Menu>
+    )}
+  </Sidebar.Search>
+  <Sidebar.Content>
+    <Sidebar.Menu>
+      {/* Normal nav items */}
+    </Sidebar.Menu>
+  </Sidebar.Content>
+</Sidebar.Root>`}
+          language="tsx"
+          showLineNumbers={true}
+          collapsible={false}
+        />
+      </Flex>
     </Flex>
   );
 }
 
+const searchDemoItems = [
+  { icon: Home01Icon, label: 'Home' },
+  { icon: Search01Icon, label: 'Search' },
+  { icon: FolderOpenIcon, label: 'Projects' },
+  { icon: Settings01Icon, label: 'Settings' },
+  { icon: UserIcon, label: 'Profile' },
+];
+
+function SidebarSearchExpandedDemo() {
+  const [query, setQuery] = React.useState('');
+  const filtered = query
+    ? searchDemoItems.filter((i) => i.label.toLowerCase().includes(query.toLowerCase()))
+    : searchDemoItems;
+
+  return (
+    <Sidebar.Root presentation="expanded" size="2">
+      <Sidebar.Search value={query} onValueChange={setQuery} placeholder="Search..." />
+      <Sidebar.Content>
+        <Sidebar.Menu>
+          {filtered.map((item) => (
+            <Sidebar.MenuItem key={item.label}>
+              <Sidebar.MenuButton>
+                <HugeiconsIcon icon={item.icon} strokeWidth={1.75} />
+                {item.label}
+              </Sidebar.MenuButton>
+            </Sidebar.MenuItem>
+          ))}
+        </Sidebar.Menu>
+      </Sidebar.Content>
+    </Sidebar.Root>
+  );
+}
+
+function SidebarSearchThinDemo() {
+  const [query, setQuery] = React.useState('');
+  const filtered = query
+    ? searchDemoItems.filter((i) => i.label.toLowerCase().includes(query.toLowerCase()))
+    : searchDemoItems;
+
+  return (
+    <Sidebar.Root presentation="thin" size="2">
+      <Sidebar.Search value={query} onValueChange={setQuery} placeholder="Search...">
+        {query && (
+          <Sidebar.Menu>
+            {filtered.map((item) => (
+              <Sidebar.MenuItem key={item.label}>
+                <Sidebar.MenuButton>
+                  <HugeiconsIcon icon={item.icon} strokeWidth={1.75} />
+                  {item.label}
+                </Sidebar.MenuButton>
+              </Sidebar.MenuItem>
+            ))}
+          </Sidebar.Menu>
+        )}
+      </Sidebar.Search>
+      <Sidebar.Content>
+        <Sidebar.Menu>
+          {searchDemoItems.map((item) => (
+            <Sidebar.MenuItem key={item.label}>
+              <Sidebar.MenuButton>
+                <HugeiconsIcon icon={item.icon} strokeWidth={1.75} />
+                {item.label}
+              </Sidebar.MenuButton>
+            </Sidebar.MenuItem>
+          ))}
+        </Sidebar.Menu>
+      </Sidebar.Content>
+    </Sidebar.Root>
+  );
+}

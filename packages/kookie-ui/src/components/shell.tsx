@@ -1432,6 +1432,7 @@ export {
   Bottom,
   Trigger,
   useShell,
+  useSidebarMode,
   useResponsivePresentation,
   type PaneMode,
   type SidebarMode,

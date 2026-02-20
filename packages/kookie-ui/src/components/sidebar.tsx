@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { Slot } from './slot.js';
 import * as Accordion from '@radix-ui/react-accordion';
 import * as DropdownMenu from './dropdown-menu.js';
+import * as Popover from './popover.js';
 
 import { sidebarPropDefs } from './sidebar.props.js';
 import { useThemeContext } from './theme.js';
@@ -582,6 +583,220 @@ const SidebarGroupContent = React.forwardRef<HTMLDivElement, SidebarGroupContent
 ));
 SidebarGroupContent.displayName = 'Sidebar.GroupContent';
 
+// Search component: inline input in expanded, popover trigger in thin
+interface SidebarSearchProps extends React.ComponentPropsWithoutRef<'div'> {
+  value: string;
+  onValueChange: (value: string) => void;
+  placeholder?: string;
+  children?: React.ReactNode;
+}
+
+const SearchIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <circle cx="11" cy="11" r="8" />
+    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+  </svg>
+);
+
+const ClearIcon = ({ className }: { className?: string }) => (
+  <svg className={className} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
+const SidebarSearch = React.forwardRef<HTMLDivElement, SidebarSearchProps>(
+  ({ value, onValueChange, placeholder = 'Search...', children, className, ...props }, forwardedRef) => {
+    const visual = useSidebarVisual();
+    const isThin = visual?.presentation === 'thin';
+    const inputRef = React.useRef<HTMLInputElement>(null);
+    const popoverRef = React.useRef<HTMLDivElement>(null);
+    const searchId = React.useId();
+    const resultsId = `${searchId}-results`;
+
+    // Derive a clean aria-label from placeholder (strip trailing dots/ellipsis)
+    const searchLabel = placeholder.replace(/\.+$/, '');
+
+    const handleKeyDown = React.useCallback(
+      (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Escape' && value) {
+          e.preventDefault();
+          e.stopPropagation();
+          onValueChange('');
+          inputRef.current?.focus();
+        }
+      },
+      [value, onValueChange],
+    );
+
+    // Arrow key navigation within the popover (input ↔ results)
+    const handlePopoverKeyDown = React.useCallback(
+      (e: React.KeyboardEvent<HTMLDivElement>) => {
+        const container = popoverRef.current;
+        if (!container) return;
+
+        const resultsGroup = container.querySelector('[role="group"]');
+        if (!resultsGroup) return;
+
+        const items = Array.from(
+          resultsGroup.querySelectorAll<HTMLElement>('a, button'),
+        );
+        if (items.length === 0) return;
+
+        const active = document.activeElement as HTMLElement;
+        const isOnInput = active === inputRef.current;
+        const currentIndex = items.indexOf(active);
+
+        // Typing while a result is focused → redirect focus to input
+        if (
+          e.key.length === 1 &&
+          !e.ctrlKey &&
+          !e.metaKey &&
+          !e.altKey &&
+          !isOnInput &&
+          currentIndex !== -1
+        ) {
+          inputRef.current?.focus();
+          return;
+        }
+
+        switch (e.key) {
+          case 'ArrowDown': {
+            e.preventDefault();
+            if (isOnInput || currentIndex === -1) {
+              items[0]?.focus();
+            } else if (currentIndex < items.length - 1) {
+              items[currentIndex + 1]?.focus();
+            }
+            break;
+          }
+          case 'ArrowUp': {
+            e.preventDefault();
+            if (currentIndex <= 0) {
+              inputRef.current?.focus();
+            } else {
+              items[currentIndex - 1]?.focus();
+            }
+            break;
+          }
+          case 'Home': {
+            // Only intercept when focused on a result, not the input (where Home moves cursor)
+            if (!isOnInput) {
+              e.preventDefault();
+              items[0]?.focus();
+            }
+            break;
+          }
+          case 'End': {
+            if (!isOnInput) {
+              e.preventDefault();
+              items[items.length - 1]?.focus();
+            }
+            break;
+          }
+        }
+      },
+      [],
+    );
+
+    if (isThin) {
+      return (
+        <div {...props} ref={forwardedRef} className={classNames('rt-SidebarSearch', 'rt-SidebarSearch--thin', className)}>
+          <Popover.Root>
+            <Popover.Trigger>
+              <button
+                type="button"
+                className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-SidebarMenuButton', 'rt-SidebarSearchTrigger')}
+                aria-label={searchLabel}
+              >
+                <span className="rt-SidebarMenuIconWrapper">
+                  <SearchIcon />
+                </span>
+                <span className="rt-SidebarMenuLabel">Search</span>
+              </button>
+            </Popover.Trigger>
+            <Popover.Content side="right" align="start" size="2" width="280px" aria-label={searchLabel}>
+              <div
+                ref={popoverRef}
+                className="rt-SidebarSearchPopover"
+                role="search"
+                onKeyDown={handlePopoverKeyDown}
+              >
+                <div className="rt-SidebarSearchInputWrapper">
+                  <SearchIcon className="rt-SidebarSearchIcon" />
+                  <input
+                    ref={inputRef}
+                    type="search"
+                    className="rt-SidebarSearchInput"
+                    value={value}
+                    onChange={(e) => onValueChange(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder={placeholder}
+                    aria-label={searchLabel}
+                    aria-controls={children ? resultsId : undefined}
+                    autoFocus
+                  />
+                  {value && (
+                    <button
+                      type="button"
+                      className="rt-reset rt-SidebarSearchClear"
+                      onClick={() => {
+                        onValueChange('');
+                        inputRef.current?.focus();
+                      }}
+                      aria-label="Clear search"
+                    >
+                      <ClearIcon />
+                    </button>
+                  )}
+                </div>
+                {children && (
+                  <div id={resultsId} role="group" aria-label="Search results">
+                    {children}
+                  </div>
+                )}
+              </div>
+            </Popover.Content>
+          </Popover.Root>
+        </div>
+      );
+    }
+
+    // Expanded mode: inline input
+    return (
+      <div {...props} ref={forwardedRef} className={classNames('rt-SidebarSearch', 'rt-SidebarSearch--expanded', className)} role="search">
+        <div className="rt-SidebarSearchInputWrapper">
+          <SearchIcon className="rt-SidebarSearchIcon" />
+          <input
+            ref={inputRef}
+            type="search"
+            className="rt-SidebarSearchInput"
+            value={value}
+            onChange={(e) => onValueChange(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder}
+            aria-label={searchLabel}
+          />
+          {value && (
+            <button
+              type="button"
+              className="rt-reset rt-SidebarSearchClear"
+              onClick={() => {
+                onValueChange('');
+                inputRef.current?.focus();
+              }}
+              aria-label="Clear search"
+            >
+              <ClearIcon />
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  },
+);
+SidebarSearch.displayName = 'Sidebar.Search';
+
 // Export all components following shadcn's pattern
 export {
   Sidebar as Root,
@@ -598,6 +813,7 @@ export {
   SidebarGroup as Group,
   SidebarGroupLabel as GroupLabel,
   SidebarGroupContent as GroupContent,
+  SidebarSearch as Search,
 };
 
 /**
