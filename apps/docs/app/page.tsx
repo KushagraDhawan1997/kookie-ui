@@ -147,52 +147,48 @@ export default function HeroSection() {
         </Container>
       </Section>
 
-      <Box mb="9">
+      <Box mb={{ initial: '6', sm: '9' }}>
         <Separator size="4" light />
-        <Container size="4">
-          <Footer.Root p="8" gap="8" px={{ initial: '4', sm: '6' }}>
-            <Footer.Main>
-              <Footer.Brand gap="6">
-                <Avatar fallback="K" size="3" color="gray" src="/kookie-ui-logo.png" />
-                <Flex direction="column" gap="4">
-                  <Footer.Tagline>
-                    Built with{' '}
-                    <Footer.Link href="https://www.hellokookie.com/" target="_blank" underline="always">
-                      Kookie UI
-                    </Footer.Link>
-                    {' + '}
-                    <Footer.Link href="https://kookieblocks.com/" target="_blank" underline="always">
-                      Kookie Blocks
-                    </Footer.Link>
-                    .
-                  </Footer.Tagline>
-                  <Footer.Legal>
-                    <Text size="2" color="gray">
-                      © {currentYear} Kushagra Dhawan. Licensed under MIT.
-                    </Text>
-                    <Footer.Link href="https://github.com/KushagraDhawan1997/kookie-ui" target="_blank">
-                      GitHub
-                    </Footer.Link>
-                    <Footer.Link href="/sitemap.xml">Sitemap</Footer.Link>
-                  </Footer.Legal>
-                </Flex>
-              </Footer.Brand>
-              <Footer.Links>
-                <Footer.LinkGroup title="Projects">
-                  <Footer.Link href="https://womp.com" target="_blank">
-                    Womp 3D
-                  </Footer.Link>
-                  <Footer.Link href="https://www.hellokookie.com/" target="_blank">
-                    Kookie UI
-                  </Footer.Link>
-                  <Footer.Link href="https://kookieblocks.com/" target="_blank">
-                    Kookie Blocks
-                  </Footer.Link>
-                </Footer.LinkGroup>
-              </Footer.Links>
-            </Footer.Main>
-          </Footer.Root>
-        </Container>
+        <Footer.Root p={{ initial: '4', sm: '8' }} gap={{ initial: '6', sm: '8' }} px={{ initial: '4', sm: '6' }}>
+          <Footer.Brand gap="6">
+            <Avatar fallback="K" size="3" color="gray" src="/kookie-ui-logo.png" />
+            <Flex direction="column" gap="4">
+              <Footer.Tagline>
+                Built with{' '}
+                <Footer.Link href="https://www.hellokookie.com/" target="_blank" underline="always">
+                  Kookie UI
+                </Footer.Link>
+                {' + '}
+                <Footer.Link href="https://kookieblocks.com/" target="_blank" underline="always">
+                  Kookie Blocks
+                </Footer.Link>
+                .
+              </Footer.Tagline>
+              <Footer.Legal>
+                <Text size="2" color="gray">
+                  © {currentYear} Kushagra Dhawan.
+                </Text>
+                <Footer.Link href="https://github.com/KushagraDhawan1997/kookie-ui" target="_blank">
+                  GitHub
+                </Footer.Link>
+                <Footer.Link href="/sitemap.xml">Sitemap</Footer.Link>
+              </Footer.Legal>
+            </Flex>
+          </Footer.Brand>
+          <Footer.Links>
+            <Footer.LinkGroup title="Projects">
+              <Footer.Link href="https://www.hellokookie.com/" target="_blank">
+                Kookie UI
+              </Footer.Link>
+              <Footer.Link href="https://kookieblocks.com/" target="_blank">
+                Kookie Blocks
+              </Footer.Link>
+              <Footer.Link href="https://womp.com" target="_blank">
+                Womp 3D
+              </Footer.Link>
+            </Footer.LinkGroup>
+          </Footer.Links>
+        </Footer.Root>
       </Box>
     </>
   );
