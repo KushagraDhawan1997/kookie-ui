@@ -1,11 +1,10 @@
 'use client';
 
 import { Button, Container, Section, Link as KUILink, Avatar, Callout, Flex, Grid, Heading, Separator, Text, Box } from '@kushagradhawan/kookie-ui';
-import { Hero, Footer } from '@kushagradhawan/kookie-blocks';
+import { Hero, Footer, Testimonial } from '@kushagradhawan/kookie-blocks';
 import Link from 'next/link';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ArrowUpRight01Icon, ArrowRight01Icon } from '@hugeicons/core-free-icons';
-import { Testimonial } from '@/components/testimonial';
 import AvatarPlayground from './playground/avatar-playground';
 import BadgePlayground from './playground/badge-playground';
 import ButtonPlayground from './playground/button-playground';
@@ -120,14 +119,33 @@ export default function HeroSection() {
         </Container>
       </Section>
 
-      <Separator size="4" light />
-
-      <Testimonial
-        quote="Components like Shell in Kookie UI are a game changer for building responsive layouts. Getting responsiveness right is so difficult otherwise — Kookie UI has significantly reduced the UI load on our team."
-        author="Anuj"
-        designation="Software Engineer at Womp"
-        avatar="https://media.licdn.com/dms/image/v2/D5603AQGWSOGxFf3cCw/profile-displayphoto-shrink_400_400/B56ZSwejfaGoAg-/0/1738127590217?e=1769040000&v=beta&t=set7ygl1nzZiXozOoibgjTYfIsenO28wVGcw1dK8sCw"
-      />
+      <Section size="4">
+        <Container size="4">
+          <Flex direction="column" align="start" gap={{ initial: '6', sm: '10' }} py={{ initial: '4', sm: '6' }} px={{ initial: '4', sm: '6' }}>
+            <Flex direction="column" gap="2" width="100%">
+              <Heading size="3" weight="medium">
+                Testimonial
+              </Heading>
+              <Separator size="4" />
+            </Flex>
+            <Testimonial.Root align="start">
+              <Testimonial.Quote size={{ initial: '6', sm: '7', lg: '8' }} align="left">
+                Components like Shell in Kookie UI are a game changer for building responsive layouts. Getting responsiveness right is so difficult otherwise — Kookie UI has significantly reduced the UI load on our team.
+              </Testimonial.Quote>
+              <Testimonial.Author align="start">
+                <Testimonial.Avatar
+                  src="https://media.licdn.com/dms/image/v2/D5603AQGWSOGxFf3cCw/profile-displayphoto-shrink_400_400/B56ZSwejfaGoAg-/0/1738127590217?e=1769040000&v=beta&t=set7ygl1nzZiXozOoibgjTYfIsenO28wVGcw1dK8sCw"
+                  fallback="A"
+                />
+                <Testimonial.Details align="start">
+                  <Testimonial.Name>Anuj</Testimonial.Name>
+                  <Testimonial.Role>Software Engineer at Womp</Testimonial.Role>
+                </Testimonial.Details>
+              </Testimonial.Author>
+            </Testimonial.Root>
+          </Flex>
+        </Container>
+      </Section>
 
       <Box mb="9">
         <Separator size="4" light />
