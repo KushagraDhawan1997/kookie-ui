@@ -716,6 +716,7 @@ const SidebarSearch = React.forwardRef<HTMLDivElement, SidebarSearchProps>(
               </button>
             </Popover.Trigger>
             <Popover.Content side="right" align="start" size="2" width="280px" aria-label={searchLabel}>
+              {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- keyDown manages arrow-key navigation between input and results, which is accessibility-enhancing */}
               <div
                 ref={popoverRef}
                 className="rt-SidebarSearchPopover"
@@ -734,6 +735,7 @@ const SidebarSearch = React.forwardRef<HTMLDivElement, SidebarSearchProps>(
                     placeholder={placeholder}
                     aria-label={searchLabel}
                     aria-controls={children ? resultsId : undefined}
+                    // eslint-disable-next-line jsx-a11y/no-autofocus -- intentional: popover opens on user action, focusing the input is expected UX
                     autoFocus
                   />
                   {value && (
