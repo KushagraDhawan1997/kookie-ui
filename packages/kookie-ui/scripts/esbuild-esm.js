@@ -20,6 +20,7 @@ const options = {
   sourcemap: true,
   minify: true,
   bundle: true,
+  splitting: true,
   external,
 };
 
