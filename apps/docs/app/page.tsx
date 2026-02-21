@@ -152,7 +152,7 @@ export default function HeroSection() {
         <Container size="4">
           <Footer.Root p={{ initial: '4', sm: '8' }} gap={{ initial: '6', sm: '8' }} px={{ initial: '4', sm: '6' }}>
             <Footer.Brand gap="6">
-              <Avatar fallback="K" size="3" color="gray" src="/kookie-ui-logo.png" />
+              <Avatar fallback="K" size="4" color="gray" src="/logos/kookie-ui/kookie-ui.png" />
               <Flex direction="column" gap="4">
                 <Footer.Tagline>
                   Built with{' '}

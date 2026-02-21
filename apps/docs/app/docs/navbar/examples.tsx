@@ -20,7 +20,7 @@ export function NavbarExamples() {
         <PreviewBlock background="none" height="10rem">
           <Navbar.Root position="static">
             <Navbar.Logo>
-              <Avatar src="/kookie-ui-logo.png" fallback="K" size="2" />
+              <Avatar src="/logos/kookie-ui/kookie-ui.png" fallback="K" size="2" />
             </Navbar.Logo>
             <Navbar.Navigation>
               <Button variant="ghost" size="2">
@@ -65,7 +65,7 @@ export function NavbarExamples() {
         <PreviewBlock background="none" height="10rem">
           <Navbar.Root position="static">
             <Navbar.Logo>
-              <Avatar src="/kookie-ui-logo.png" fallback="K" size="2" />
+              <Avatar src="/logos/kookie-ui/kookie-ui.png" fallback="K" size="2" />
             </Navbar.Logo>
 
             <Navbar.Navigation>
@@ -220,7 +220,7 @@ export function NavbarExamples() {
         <PreviewBlock background="none" height="10rem">
           <Navbar.Root position="static">
             <Navbar.Logo>
-              <Avatar src="/kookie-ui-logo.png" fallback="K" size="2" />
+              <Avatar src="/logos/kookie-ui/kookie-ui.png" fallback="K" size="2" />
             </Navbar.Logo>
             <Navbar.Navigation>
               <Button variant="ghost" size="2">
@@ -288,7 +288,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
         <PreviewBlock background="none" height="10rem">
           <Navbar.Root position="static">
             <Navbar.Logo>
-              <Avatar src="/kookie-ui-logo.png" fallback="K" size="2" />
+              <Avatar src="/logos/kookie-ui/kookie-ui.png" fallback="K" size="2" />
             </Navbar.Logo>
             <Navbar.Navigation>
               <Button variant="ghost" size="2">
@@ -363,7 +363,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
         <PreviewBlock background="none" height="10rem">
           <Navbar.Root position="static">
             <Navbar.Logo>
-              <Avatar src="/kookie-ui-logo.png" fallback="K" size="2" />
+              <Avatar src="/logos/kookie-ui/kookie-ui.png" fallback="K" size="2" />
             </Navbar.Logo>
             <Navbar.Actions>
               <Button variant="soft" size="2" color="gray" highContrast>
@@ -401,7 +401,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
           <Flex direction="column" gap="4" width="100%">
             <Navbar.Root position="static" size="1">
               <Navbar.Logo>
-                <Avatar src="/kookie-ui-logo.png" fallback="K" size="1" />
+                <Avatar src="/logos/kookie-ui/kookie-ui.png" fallback="K" size="1" />
                 <Text size="1" color="gray">
                   size=&quot;1&quot;
                 </Text>
@@ -414,7 +414,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
             </Navbar.Root>
             <Navbar.Root position="static" size="2">
               <Navbar.Logo>
-                <Avatar src="/kookie-ui-logo.png" fallback="K" size="2" />
+                <Avatar src="/logos/kookie-ui/kookie-ui.png" fallback="K" size="2" />
                 <Text size="2" color="gray">
                   size=&quot;2&quot; (default)
                 </Text>
@@ -427,7 +427,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
             </Navbar.Root>
             <Navbar.Root position="static" size="3">
               <Navbar.Logo>
-                <Avatar src="/kookie-ui-logo.png" fallback="K" size="3" />
+                <Avatar src="/logos/kookie-ui/kookie-ui.png" fallback="K" size="3" />
                 <Text size="3" color="gray">
                   size=&quot;3&quot;
                 </Text>
@@ -480,7 +480,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
         <PreviewBlock background="none" height="10rem">
           <Navbar.Root position="static">
             <Navbar.Logo>
-              <Avatar src="/kookie-ui-logo.png" fallback="K" size="2" />
+              <Avatar src="/logos/kookie-ui/kookie-ui.png" fallback="K" size="2" />
             </Navbar.Logo>
           </Navbar.Root>
         </PreviewBlock>

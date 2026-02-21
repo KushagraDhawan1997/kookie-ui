@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     siteName: 'Kookie UI',
     images: [
       {
-        url: '/kookie-ui-logo.png',
+        url: '/logos/kookie-ui/kookie-ui.png',
         width: 1200,
         height: 630,
         alt: 'Kookie UI – Open-Source React Component Library',
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     title: 'Kookie UI – Open-Source React Component Library by Kushagra Dhawan',
     description:
       'Kookie UI is an open-source React component library created by Kushagra Dhawan. Beautiful, accessible components for building design systems.',
-    images: ['/kookie-ui-logo.png'],
+    images: ['/logos/kookie-ui/kookie-ui.png'],
     site: '@kookieui',
     creator: '@kushagradhawan',
   },
