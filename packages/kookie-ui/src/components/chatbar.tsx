@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { motion } from 'motion/react';
+import { LazyMotion, domAnimation, m } from 'motion/react';
 
 import { IconButton, type IconButtonProps } from './icon-button.js';
 import { CloseIcon, FileTextIcon } from './icons.js';
@@ -596,47 +596,37 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
         ],
       )}
     >
-      <Comp
-        {...divProps}
-        ref={(node: HTMLDivElement) => {
-          if (typeof forwardedRef === 'function') forwardedRef(node);
-          else if (forwardedRef) (forwardedRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-          (rootRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-        }}
-        className={classNames('rt-ChatbarRoot', `rt-r-size-${size}`, className)}
-        style={{ position: 'relative', width, maxWidth, ...style }}
-        data-state={open ? 'open' : 'closed'}
-        data-disabled={disabled ? '' : undefined}
-        data-readonly={readOnly ? '' : undefined}
-        data-drop-active={dropzone && isDragActive ? '' : undefined}
-        data-accent-color={color}
-        data-radius={radius as any}
-        data-panel-background={effectiveMaterial}
-        data-material={effectiveMaterial}
-        aria-expanded={open}
-        onBlurCapture={handleBlurCapture}
-      >
-        {dropzone && <input {...getInputProps()} />}
-        <div {...(dropzone ? getRootProps() : {})} style={{ width: '100%', height: '100%' }} onPointerDown={handleContainerPointerDown}>
-          <motion.div
-            className={classNames('rt-ChatbarBox', `rt-variant-${variant ?? 'surface'}`)}
-            style={{ position: 'relative' }}
-            data-accent-color={color}
-            data-radius={radius as any}
-            data-panel-background={effectiveMaterial}
-            data-material={effectiveMaterial}
-            layout
-            transition={{
-              layout: {
-                type: 'spring',
-                visualDuration: 0.15,
-                bounce: 0.1,
-              },
-            }}
-          >
-            <motion.div 
-              className="rt-ChatbarGrid" 
-              layout="position"
+      <LazyMotion features={domAnimation}>
+        <Comp
+          {...divProps}
+          ref={(node: HTMLDivElement) => {
+            if (typeof forwardedRef === 'function') forwardedRef(node);
+            else if (forwardedRef) (forwardedRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+            (rootRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+          }}
+          className={classNames('rt-ChatbarRoot', `rt-r-size-${size}`, className)}
+          style={{ position: 'relative', width, maxWidth, ...style }}
+          data-state={open ? 'open' : 'closed'}
+          data-disabled={disabled ? '' : undefined}
+          data-readonly={readOnly ? '' : undefined}
+          data-drop-active={dropzone && isDragActive ? '' : undefined}
+          data-accent-color={color}
+          data-radius={radius as any}
+          data-panel-background={effectiveMaterial}
+          data-material={effectiveMaterial}
+          aria-expanded={open}
+          onBlurCapture={handleBlurCapture}
+        >
+          {dropzone && <input {...getInputProps()} />}
+          <div {...(dropzone ? getRootProps() : {})} style={{ width: '100%', height: '100%' }} onPointerDown={handleContainerPointerDown}>
+            <m.div
+              className={classNames('rt-ChatbarBox', `rt-variant-${variant ?? 'surface'}`)}
+              style={{ position: 'relative' }}
+              data-accent-color={color}
+              data-radius={radius as any}
+              data-panel-background={effectiveMaterial}
+              data-material={effectiveMaterial}
+              layout
               transition={{
                 layout: {
                   type: 'spring',
@@ -645,20 +635,32 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
                 },
               }}
             >
-              {children}
-            </motion.div>
-            {dropzone && isDragActive && (
-              <div className="rt-ChatbarDropOverlay">
-                <div className="rt-ChatbarDropContent">
-                  <Text color="gray" size={size} weight="medium">
-                    Drop files here to attach
-                  </Text>
+              <m.div
+                className="rt-ChatbarGrid"
+                layout="position"
+                transition={{
+                  layout: {
+                    type: 'spring',
+                    visualDuration: 0.15,
+                    bounce: 0.1,
+                  },
+                }}
+              >
+                {children}
+              </m.div>
+              {dropzone && isDragActive && (
+                <div className="rt-ChatbarDropOverlay">
+                  <div className="rt-ChatbarDropContent">
+                    <Text color="gray" size={size} weight="medium">
+                      Drop files here to attach
+                    </Text>
+                  </div>
                 </div>
-              </div>
-            )}
-          </motion.div>
-        </div>
-      </Comp>
+              )}
+            </m.div>
+          </div>
+        </Comp>
+      </LazyMotion>
     </ChatbarContext.Provider>
   );
 });
@@ -923,7 +925,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>((props, fo
 
   const Comp = asChild ? Slot : ('textarea' as any);
   return (
-    <motion.div 
+    <m.div 
       className={classNames('rt-ChatbarField', 'rt-ChatbarTextarea', className)}
       layout="position"
       transition={{
@@ -955,7 +957,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>((props, fo
         autoCorrect={textareaProps.autoCorrect ?? 'on'}
         style={style}
       />
-    </motion.div>
+    </m.div>
   );
 });
 Textarea.displayName = 'Chatbar.Textarea';
@@ -1010,7 +1012,7 @@ const AttachmentsRow = React.forwardRef<HTMLDivElement, AttachmentsRowProps>((pr
   if (!hasItems && !forceMount) return null;
   const Comp = asChild ? Slot : ('div' as any);
   return (
-    <motion.div
+    <m.div
       layout="position"
       transition={{
         layout: {
@@ -1031,7 +1033,7 @@ const AttachmentsRow = React.forwardRef<HTMLDivElement, AttachmentsRowProps>((pr
           </Flex>
         </ScrollArea>
       </Comp>
-    </motion.div>
+    </m.div>
   );
 });
 AttachmentsRow.displayName = 'Chatbar.AttachmentsRow';
@@ -1169,7 +1171,7 @@ const Row = React.forwardRef<HTMLDivElement, RowProps>((props, forwardedRef) => 
   if (!ctx.open) return null;
   const Comp = asChild ? Slot : ('div' as any);
   return (
-    <motion.div
+    <m.div
       layout="position"
       transition={{
         layout: {
@@ -1184,7 +1186,7 @@ const Row = React.forwardRef<HTMLDivElement, RowProps>((props, forwardedRef) => 
           {children}
         </Flex>
       </Comp>
-    </motion.div>
+    </m.div>
   );
 });
 Row.displayName = 'Chatbar.Row';

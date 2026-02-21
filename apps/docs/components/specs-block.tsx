@@ -296,7 +296,7 @@ const SpecsSection = memo(function SpecsSection({
           <Table.Body>
             {/* Render each specification row */}
             {specs.map((row, index) => (
-              <Table.Row key={index} style={index === specs.length - 1 ? { borderBottom: 'none' } : undefined}>
+              <Table.Row key={row.property} style={index === specs.length - 1 ? { borderBottom: 'none' } : undefined}>
                 {/* Property name cell */}
                 <Table.RowHeaderCell>
                   <Text size="2" weight="medium">
