@@ -125,10 +125,12 @@ interface SpecsBlockProps {
  * />
  * ```
  */
+const EMPTY_BACKGROUND_PROPS = {} as const;
+
 const PreviewSection = ({
   preview,
   background = 'none',
-  backgroundProps = {},
+  backgroundProps = EMPTY_BACKGROUND_PROPS,
 }: {
   preview: React.ReactNode;
   background?: 'none' | 'dots' | string;

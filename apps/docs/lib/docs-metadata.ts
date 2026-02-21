@@ -7,7 +7,7 @@ import type { DocFrontmatter, DocMetadata } from './frontmatter';
 /**
  * Finds the category for a given pathname by matching against navigation config
  */
-export function findCategoryForPath(pathname: string): string | null {
+function findCategoryForPath(pathname: string): string | null {
   for (const group of docsNavigation.groups) {
     const foundItem = group.items.find((item) => item.href === pathname);
     if (foundItem) {

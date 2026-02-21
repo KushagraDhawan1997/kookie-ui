@@ -142,7 +142,7 @@ function Group({ width, items, style }: { width?: string | number; items: Item[]
   );
 }
 
-export type { Item as PropertyControlItem, SelectItem as PropertyControlSelectItem, SwitchItem as PropertyControlSwitchItem, SelectOption as PropertyControlSelectOption };
+export type { SelectItem as PropertyControlSelectItem, SwitchItem as PropertyControlSwitchItem, SelectOption as PropertyControlSelectOption };
 
 export const PropertyControl = {
   Root,

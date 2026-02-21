@@ -320,7 +320,7 @@ describe('Image', () => {
 
     it('renders as custom component when as prop is provided', () => {
       const CustomImage = React.forwardRef<HTMLImageElement, React.ImgHTMLAttributes<HTMLImageElement>>(
-        (props, ref) => <img ref={ref} data-custom="true" {...props} />,
+        (props, ref) => <img ref={ref} alt="" data-custom="true" {...props} />,
       );
       CustomImage.displayName = 'CustomImage';
 
@@ -334,7 +334,7 @@ describe('Image', () => {
     it('passes additional props to custom component', () => {
       const CustomImage = React.forwardRef<HTMLImageElement, React.ImgHTMLAttributes<HTMLImageElement> & { priority?: boolean }>(
         ({ priority, ...props }, ref) => (
-          <img ref={ref} data-priority={priority ? 'true' : 'false'} {...props} />
+          <img ref={ref} alt="" data-priority={priority ? 'true' : 'false'} {...props} />
         ),
       );
       CustomImage.displayName = 'CustomImage';
@@ -434,6 +434,7 @@ describe('Next.js Image fill compatibility', () => {
     >(({ width, height, ...props }, ref) => (
       <img
         ref={ref}
+        alt=""
         data-width={width}
         data-height={height}
         {...props}
@@ -456,6 +457,7 @@ describe('Next.js Image fill compatibility', () => {
     >(({ fill, ...props }, ref) => (
       <img
         ref={ref}
+        alt=""
         data-fill={fill ? 'true' : 'false'}
         style={fill ? { position: 'absolute', inset: 0 } : undefined}
         {...props}

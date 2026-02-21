@@ -89,7 +89,7 @@ export default function Playground({ component, code, items, showBackground = fa
           <Box position="relative" style={{ width: '100%', height }}>
             <Card size="1" variant="soft" style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
               {/* Background Image */}
-              {showBackground && <Image as={NextImage} src="/playground/image.jpg" alt="Background" fill style={{ objectFit: 'cover', zIndex: 0 }} />}
+              {showBackground && <Image as={NextImage} src="/playground/image.jpg" alt="Background" fill sizes="100vw" style={{ objectFit: 'cover', zIndex: 0 }} />}
 
               {/* Toolbar - Copy button (left) and theme toggle + settings (right) */}
               {showToolbar && (

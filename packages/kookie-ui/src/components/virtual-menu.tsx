@@ -368,7 +368,7 @@ function VirtualMenuRoot<T>({
   return (
     <div
       ref={parentRef}
-      role={isInsideMenu ? undefined : 'menu'}
+      role={isInsideMenu ? 'group' : 'menu'}
       aria-label={ariaLabel}
       aria-activedescendant={safeHighlightedIndex >= 0 ? getItemId(safeHighlightedIndex) : undefined}
       tabIndex={0}

@@ -315,6 +315,7 @@ const ThemePanelContent = React.forwardRef<ThemePanelContentElement, ThemePanelC
                 <Box asChild key={color}>
                   <label
                     className="rt-ThemePanelSwatch"
+                    aria-label={upperFirst(color)}
                     style={{ backgroundColor: `var(--${color}-9)` }}
                   >
                     <Tooltip
@@ -349,6 +350,7 @@ const ThemePanelContent = React.forwardRef<ThemePanelContentElement, ThemePanelC
                 <Flex key={gray} asChild align="center" justify="center">
                   <label
                     className="rt-ThemePanelSwatch"
+                    aria-label={upperFirst(gray)}
                     style={{
                       backgroundColor:
                         gray === 'auto'
@@ -496,7 +498,7 @@ const ThemePanelContent = React.forwardRef<ThemePanelContentElement, ThemePanelC
               aria-labelledby="scaling-title"
             >
               {themePropDefs.scaling.values.map((value) => (
-                <label key={value} className="rt-ThemePanelRadioCard">
+                <label key={value} className="rt-ThemePanelRadioCard" aria-label={`Scaling ${value}`}>
                   <input
                     className="rt-ThemePanelRadioCardInput"
                     type="radio"
