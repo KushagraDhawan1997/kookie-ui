@@ -61,10 +61,11 @@ interface ComboboxContextValue {
 
 const ComboboxContext = React.createContext<ComboboxContextValue | null>(null);
 
-const useComboboxContext = () => {
+const useComboboxContext = (componentName?: string) => {
   const ctx = React.useContext(ComboboxContext);
   if (!ctx) {
-    throw new Error('Combobox components must be used within Combobox.Root');
+    const name = componentName ? `Combobox.${componentName}` : 'Combobox components';
+    throw new Error(`${name} must be used within Combobox.Root`);
   }
   return ctx;
 };
@@ -244,7 +245,7 @@ type NativeTriggerProps = Omit<React.ComponentPropsWithoutRef<'button'>, 'color'
 interface ComboboxTriggerProps extends NativeTriggerProps, MarginProps, ComboboxTriggerOwnProps {}
 
 const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTriggerProps>((props, forwardedRef) => {
-  const ctx = useComboboxContext();
+  const ctx = useComboboxContext('Trigger');
 
   const { children, className, placeholder, disabled, readOnly, error, loading, color, radius, ...triggerProps } = extractProps(
     { size: ctx.size, highContrast: ctx.highContrast, ...props },
@@ -291,9 +292,11 @@ const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTrigger
         data-read-only={readOnly || undefined}
         {...restTriggerProps}
         role="combobox"
-        aria-controls={ctx.listboxId}
+        aria-autocomplete="list"
+        aria-controls={ctx.open ? ctx.listboxId : undefined}
         aria-expanded={ctx.open}
         aria-haspopup="listbox"
+        aria-disabled={isDisabled || undefined}
         type={buttonType ?? 'button'}
         disabled={isDisabled}
         ref={forwardedRef}
@@ -317,7 +320,7 @@ interface ComboboxValueProps extends React.ComponentPropsWithoutRef<'span'> {
 
 const ComboboxValue = React.forwardRef<ComboboxValueElement, ComboboxValueProps>(
   ({ placeholder, children, className, ...valueProps }, forwardedRef) => {
-    const ctx = useComboboxContext();
+    const ctx = useComboboxContext('Value');
     const display = ctx.displayValue ?? ctx.value ?? undefined;
     return (
       <span {...valueProps} ref={forwardedRef} className={classNames('rt-ComboboxValue', className)}>
@@ -339,7 +342,7 @@ type ComboboxContentOwnProps = GetPropDefTypes<typeof comboboxContentPropDefs> &
 interface ComboboxContentProps extends Omit<ComponentPropsWithout<typeof Popover.Content, RemovedProps>, 'size'>, ComboboxContentOwnProps {}
 
 const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContentProps>((props, forwardedRef) => {
-  const ctx = useComboboxContext();
+  const ctx = useComboboxContext('Content');
   const cmdkConfigRef = React.useContext(CmdkConfigContext);
   const themeContext = useThemeContext();
   const effectiveMaterial = themeContext.panelBackground;
@@ -415,7 +418,7 @@ interface ComboboxInputProps extends Omit<React.ComponentPropsWithoutRef<typeof 
 
 const ComboboxInput = React.forwardRef<ComboboxInputElement, ComboboxInputProps>(
   ({ className, startAdornment, endAdornment, placeholder, variant: inputVariant, value, onValueChange, ...inputProps }, forwardedRef) => {
-    const ctx = useComboboxContext();
+    const ctx = useComboboxContext('Input');
     const contentContext = useComboboxContentContext();
     const cmdkConfigRef = React.useContext(CmdkConfigContext);
 
@@ -466,7 +469,7 @@ type ComboboxListElement = React.ElementRef<typeof CommandPrimitive.List>;
 interface ComboboxListProps extends React.ComponentPropsWithoutRef<typeof CommandPrimitive.List> {}
 
 const ComboboxList = React.forwardRef<ComboboxListElement, ComboboxListProps>(({ className, children, ...listProps }, forwardedRef) => {
-  const ctx = useComboboxContext();
+  const ctx = useComboboxContext('List');
   return (
     <div className="rt-ComboboxScrollArea">
       <div className={classNames('rt-BaseMenuViewport', 'rt-ComboboxViewport')}>
@@ -550,7 +553,7 @@ interface ComboboxItemProps extends Omit<React.ComponentPropsWithoutRef<typeof C
 
 const ComboboxItem = React.forwardRef<ComboboxItemElement, ComboboxItemProps>(
   ({ className, children, label, value, disabled, onSelect, keywords, ...itemProps }, forwardedRef) => {
-    const ctx = useComboboxContext();
+    const ctx = useComboboxContext('Item');
     const contentContext = useComboboxContentContext();
 
     const isSelected = value != null && ctx.value === value;
