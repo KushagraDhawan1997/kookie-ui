@@ -139,7 +139,7 @@ export default function AvatarPlayground({
     if (material !== 'theme') props.push(`material="${material}"`);
     if (fit !== 'cover') props.push(`fit="${fit}"`);
     if (highContrast) props.push('highContrast');
-    if (showImage) props.push('src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=100"');
+    if (showImage) props.push('src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"');
     props.push('fallback="JD"');
 
     const propsString = props.length > 0 ? `\n  ${props.join('\n  ')}` : '';
@@ -159,7 +159,7 @@ export default function AvatarPlayground({
           material={material === 'theme' ? undefined : (material as any)}
           fit={fit as any}
           highContrast={highContrast || undefined}
-          src={showImage ? 'https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=100' : undefined}
+          src={showImage ? 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' : undefined}
           fallback="JD"
         />
       }

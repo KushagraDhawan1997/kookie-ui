@@ -18,8 +18,14 @@
   /* Force Chrome to recalculate styles when radius changes */
   will-change: border-radius;
 
+  /* Material system defaults (solid) */
+  --material-blend: 100%;
+  --material-alpha: 0;
+
   /* Theme-level translucent override */
   :where([data-panel-background='translucent'], [data-material='translucent']) & {
+    --material-blend: 60%;
+    --material-alpha: 1;
     backdrop-filter: var(--backdrop-filter-components);
     --backdrop-filter-components: blur(var(--backdrop-blur-components));
   }
@@ -29,11 +35,15 @@
 
   /* Component-level overrides */
   &:where([data-panel-background='solid'], [data-material='solid']) {
+    --material-blend: 100%;
+    --material-alpha: 0;
     backdrop-filter: none;
     --backdrop-filter-components: none;
   }
   
   &:where([data-panel-background='translucent'], [data-material='translucent']) {
+    --material-blend: 60%;
+    --material-alpha: 1;
     backdrop-filter: var(--backdrop-filter-components);
     --backdrop-filter-components: blur(var(--backdrop-blur-components));
   }
@@ -49,7 +59,6 @@
     color: CanvasText;
     background-color: Canvas;
   }
-
 }
 
 /***************************************************************************************************
@@ -68,7 +77,6 @@
       gap: calc(var(--space-1) * 1.5);
       border-radius: max(calc(var(--radius-1) * var(--spacing-multiplier-medium)), var(--radius-full));
       
-      /* Ghost variant gets reduced padding */
       &:where(.rt-variant-ghost) {
         padding: calc(var(--space-1) * 0.25) var(--space-1);
         gap: var(--space-1);
@@ -82,7 +90,6 @@
       gap: calc(var(--space-1) * 1.5);
       border-radius: max(var(--radius-1), var(--radius-full));
       
-      /* Ghost variant gets reduced padding */
       &:where(.rt-variant-ghost) {
         padding: calc(var(--space-1) * 0.5) calc(var(--space-1) * 1.25);
         gap: var(--space-1);
@@ -96,7 +103,6 @@
       gap: var(--space-2);
       border-radius: max(var(--radius-2), var(--radius-full));
       
-      /* Ghost variant gets reduced padding */
       &:where(.rt-variant-ghost) {
         padding: calc(var(--space-1) * 0.75) var(--space-2);
         gap: calc(var(--space-1) * 1.5);
@@ -110,7 +116,6 @@
       gap: calc(var(--space-2) * 1.25);
       border-radius: max(var(--radius-3), var(--radius-full));
       
-      /* Ghost variant gets reduced padding */
       &:where(.rt-variant-ghost) {
         padding: var(--space-1) calc(var(--space-2) * 1.25);
         gap: var(--space-2);
@@ -128,45 +133,16 @@
 /* solid */
 
 .rt-Badge:where(.rt-variant-solid) {
-  /* Base state: solid color for solid panels */
-  background-color: var(--accent-9);
+  --solid-blend: calc(100% - (var(--material-alpha) * 90%));
+
+  background-color: color-mix(in srgb, var(--accent-a9) calc(var(--material-alpha) * 100%), var(--accent-9) var(--solid-blend));
   color: var(--accent-contrast);
 
-  /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a9), var(--accent-9) 10%);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    background-color: var(--accent-9);
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a9), var(--accent-9) 10%);
-  }
-
-
   &:where(.rt-high-contrast) {
-    background-color: var(--accent-12);
+    background-color: color-mix(in srgb, var(--accent-a12) calc(var(--material-alpha) * 100%), var(--accent-12) var(--solid-blend));
     color: var(--gray-1);
-
-    /* Theme-level translucent override for high contrast */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a12), var(--accent-12) 10%);
-    }
-
-    /* Component-level overrides for high contrast */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--accent-12);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a12), var(--accent-12) 10%);
-    }
-
-
   }
+
   &:where([data-disabled]) {
     color: var(--gray-a8);
     background-color: var(--gray-a3);
@@ -180,27 +156,9 @@
 /* surface */
 
 .rt-Badge:where(.rt-variant-surface) {
-  /* Base state: solid accent for solid panels */
-  background-color: var(--accent-2);
-  box-shadow: inset 0 0 0 1px var(--accent-6);
+  background-color: color-mix(in srgb, var(--accent-a2) calc(var(--material-alpha) * 100%), var(--accent-2) var(--material-blend));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-a6) calc(var(--material-alpha) * 100%), var(--accent-6) var(--material-blend));
   color: var(--accent-a11);
-
-  /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    background-color: var(--accent-2);
-    box-shadow: inset 0 0 0 1px var(--accent-6);
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-  }
 
   &:where(.rt-high-contrast) {
     color: var(--accent-12);
@@ -215,6 +173,7 @@
   &:where(.rt-high-contrast) {
     color: var(--accent-12);
   }
+
   &:where([data-disabled]) {
     color: var(--gray-a8);
     background-color: var(--gray-a3);
@@ -224,28 +183,7 @@
 }
 
 .rt-Badge:where(.rt-variant-soft) {
-  /* Base state: solid color for solid panels */
-  background-color: var(--accent-3);
-
-  /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    backdrop-filter: var(--backdrop-filter-components);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    background-color: var(--accent-3);
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: blur(var(--backdrop-blur-components));
-  }
-
+  background-color: color-mix(in srgb, var(--accent-a3) calc(var(--material-alpha) * 100%), var(--accent-3) var(--material-blend));
 
   &:where([data-disabled]) {
     color: var(--gray-a8);
@@ -258,27 +196,9 @@
 /* outline */
 
 .rt-Badge:where(.rt-variant-outline) {
-  /* Base state: solid colors for solid panels */
-  box-shadow: inset 0 0 0 1px var(--accent-6);
-  color: var(--accent-11);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-a6) calc(var(--material-alpha) * 100%), var(--accent-6) var(--material-blend));
+  color: color-mix(in srgb, var(--accent-a11) calc(var(--material-alpha) * 100%), var(--accent-11) var(--material-blend));
   transition: var(--transition-background-blur);
-
-  /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-    color: var(--accent-a11);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    box-shadow: inset 0 0 0 1px var(--accent-6);
-    color: var(--accent-11);
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-    color: var(--accent-a11);
-  }
 
   &:where(.rt-high-contrast) {
     color: var(--accent-12);
@@ -288,7 +208,6 @@
 /* ghost */
 
 .rt-Badge:where(.rt-variant-ghost) {
-  /* Transparent by default */
   background-color: transparent;
   color: var(--accent-a11);
 
@@ -303,44 +222,25 @@
   position: relative;
   top: var(--classic-elevation-offset);
   color: var(--accent-a11);
-  background-color: var(--color-surface-solid);
   box-shadow: var(--shadow-2);
   transition: var(--transition-text-field);
 
-  /* Theme-level translucent override */
+  --classic-surface: var(--color-surface-solid);
+  background-color: var(--classic-surface);
+
   :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: var(--color-surface-translucent);
+    --classic-surface: var(--color-surface-translucent);
   }
 
-  /* Component-level overrides (higher specificity) */
   &:where([data-panel-background='solid'], [data-material='solid']) {
-    background-color: var(--color-surface-solid);
+    --classic-surface: var(--color-surface-solid);
   }
 
   &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: var(--color-surface-translucent);
+    --classic-surface: var(--color-surface-translucent);
   }
-
-  /* Dark mode uses same styling as light mode for simplicity */
 
   &:where(.rt-high-contrast) {
     color: var(--accent-12);
-    background-color: var(--color-surface-solid);
-
-    /* Theme-level translucent override for high contrast */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: var(--color-surface-translucent);
-    }
-
-    /* Component-level overrides for high contrast */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--color-surface-solid);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: var(--color-surface-translucent);
-    }
   }
-
-
 }
