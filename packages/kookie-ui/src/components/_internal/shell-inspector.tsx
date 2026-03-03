@@ -109,7 +109,7 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
   const normalizedControlledOpen = React.useMemo(() => mapResponsiveBooleanToPaneMode(open), [open]);
   const normalizedDefaultOpen = React.useMemo(() => mapResponsiveBooleanToPaneMode(defaultOpen), [defaultOpen]);
   const openIsResponsive = typeof open === 'object' && open !== null;
-  useResponsiveInitialState<PaneMode>({
+  const { resolvedControlled: resolvedInspectorControlled } = useResponsiveInitialState<PaneMode>({
     controlledValue: normalizedControlledOpen,
     defaultValue: normalizedDefaultOpen,
     currentValue: inspectorMode,
@@ -184,23 +184,26 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
     }
   }, [open]);
 
-  const initNotifiedRef = React.useRef(false);
   const lastInspectorModeRef = React.useRef<PaneMode | null>(null);
+  const prevResolvedInspectorControlledRef = React.useRef<PaneMode | undefined>(undefined);
   React.useEffect(() => {
-    // Notify init open
-    if (!initNotifiedRef.current && typeof open === 'undefined' && defaultOpen && inspectorMode === 'expanded') {
-      onOpenChange?.(true, { reason: 'init' });
-      initNotifiedRef.current = true;
+    const prevInspectorMode = lastInspectorModeRef.current;
+    const prevControlled = prevResolvedInspectorControlledRef.current;
+
+    if (prevInspectorMode !== null && prevInspectorMode !== inspectorMode) {
+      const nextOpen = inspectorMode === 'expanded';
+      const nextControlledOpen = resolvedInspectorControlled === undefined ? undefined : resolvedInspectorControlled === 'expanded';
+      const controlledChanged = prevControlled !== resolvedInspectorControlled;
+      const isPropSync = typeof open !== 'undefined' && controlledChanged && nextControlledOpen === nextOpen;
+
+      if (!isPropSync) {
+        onOpenChange?.(nextOpen, { reason: 'toggle' });
+      }
     }
 
-    // Notify toggles when uncontrolled (avoid double-notify after responsive change)
-    if (typeof open === 'undefined') {
-      if (lastInspectorModeRef.current !== null && lastInspectorModeRef.current !== inspectorMode) {
-        onOpenChange?.(inspectorMode === 'expanded', { reason: 'toggle' });
-      }
-      lastInspectorModeRef.current = inspectorMode;
-    }
-  }, [inspectorMode, open, defaultOpen, onOpenChange]);
+    lastInspectorModeRef.current = inspectorMode;
+    prevResolvedInspectorControlledRef.current = resolvedInspectorControlled;
+  }, [inspectorMode, open, onOpenChange, resolvedInspectorControlled]);
 
   // Track previous mode to only fire callbacks on actual user-initiated state transitions.
   // We wait for breakpointReady to ensure the initial state sync from useResponsiveInitialState

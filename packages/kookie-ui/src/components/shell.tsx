@@ -486,11 +486,26 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
 
   // Controlled sync in Root: mirror first Rail.open if provided
   const firstRailOpen = (railEls[0] as any)?.props?.open;
+  const resolvedFirstRailOpen = React.useMemo(() => {
+    if (typeof firstRailOpen === 'undefined') return undefined;
+    if (typeof firstRailOpen === 'boolean') return firstRailOpen;
+    if (typeof firstRailOpen !== 'object' || firstRailOpen === null) return Boolean(firstRailOpen);
+
+    const responsive = firstRailOpen as Partial<Record<Breakpoint, boolean>>;
+    if (responsive[currentBreakpoint] !== undefined) return responsive[currentBreakpoint];
+
+    const fallbackOrder: Breakpoint[] = ['xl', 'lg', 'md', 'sm', 'xs', 'initial'];
+    const startIdx = fallbackOrder.indexOf(currentBreakpoint);
+    for (let i = startIdx + 1; i < fallbackOrder.length; i++) {
+      const bp = fallbackOrder[i];
+      if (responsive[bp] !== undefined) return responsive[bp];
+    }
+    return undefined;
+  }, [firstRailOpen, currentBreakpoint]);
   React.useEffect(() => {
-    if (typeof firstRailOpen === 'undefined') return;
-    const shouldOpen = Boolean(firstRailOpen);
-    setLeftMode(shouldOpen ? 'expanded' : 'collapsed');
-  }, [firstRailOpen, setLeftMode]);
+    if (typeof resolvedFirstRailOpen === 'undefined') return;
+    setLeftMode(resolvedFirstRailOpen ? 'expanded' : 'collapsed');
+  }, [resolvedFirstRailOpen, setLeftMode]);
 
   const heightStyle = React.useMemo(() => {
     if (height === 'full') return { height: '100vh' };
@@ -728,7 +743,7 @@ const Left = React.forwardRef<HTMLDivElement, LeftProps>((initialProps, ref) => 
     return propsOpen ? 'expanded' : 'collapsed';
   }, [propsOpen]);
   const normalizedLeftDefault = React.useMemo(() => mapResponsiveBooleanToPaneMode(propsDefaultOpen), [propsDefaultOpen]);
-  useResponsiveInitialState<PaneMode>({
+  const { resolvedControlled: resolvedLeftControlled } = useResponsiveInitialState<PaneMode>({
     controlledValue: normalizedLeftControlled,
     defaultValue: normalizedLeftDefault,
     currentValue: shell.leftMode,
@@ -737,14 +752,35 @@ const Left = React.forwardRef<HTMLDivElement, LeftProps>((initialProps, ref) => 
     onInit: (initial) => propsOnOpenChange?.(initial === 'expanded', { reason: 'init' }),
   });
 
-  // Emit mode changes (uncontrolled toggles + init)
+  // Emit mode changes for user/internal transitions.
+  // In controlled mode, skip notifications that are pure prop syncs.
+  const prevResolvedLeftControlledRef = React.useRef<PaneMode | undefined>(undefined);
+  const prevPanelModeRef = React.useRef<PaneMode | null>(null);
   React.useEffect(() => {
-    if (typeof propsOpen !== 'undefined') return; // controlled, notifications only via parent changes
-    if (lastLeftModeRef.current !== null && lastLeftModeRef.current !== shell.leftMode) {
-      propsOnOpenChange?.(shell.leftMode === 'expanded', { reason: 'toggle' });
+    const prevLeftMode = lastLeftModeRef.current;
+    const prevControlled = prevResolvedLeftControlledRef.current;
+    const prevPanelMode = prevPanelModeRef.current;
+
+    if (prevLeftMode !== null && prevLeftMode !== shell.leftMode) {
+      const nextOpen = shell.leftMode === 'expanded';
+      const nextControlledOpen = resolvedLeftControlled === undefined ? undefined : resolvedLeftControlled === 'expanded';
+      const controlledChanged = prevControlled !== resolvedLeftControlled;
+      const isPropSync = typeof propsOpen !== 'undefined' && controlledChanged && nextControlledOpen === nextOpen;
+
+      if (!isPropSync) {
+        let reason: LeftOpenChangeMeta['reason'] = 'toggle';
+        const panelDrivenOpen = prevPanelMode !== null && prevPanelMode !== shell.panelMode && prevLeftMode === 'collapsed' && shell.leftMode === 'expanded' && shell.panelMode === 'expanded';
+        if (panelDrivenOpen) {
+          reason = 'panel';
+        }
+        propsOnOpenChange?.(nextOpen, { reason });
+      }
     }
+
     lastLeftModeRef.current = shell.leftMode;
-  }, [shell, propsOnOpenChange, propsOpen]);
+    prevResolvedLeftControlledRef.current = resolvedLeftControlled;
+    prevPanelModeRef.current = shell.panelMode;
+  }, [shell.leftMode, shell.panelMode, propsOnOpenChange, propsOpen, resolvedLeftControlled]);
 
   // Emit expand/collapse events
   React.useEffect(() => {
