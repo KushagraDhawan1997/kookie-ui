@@ -797,6 +797,7 @@ const Left = React.forwardRef<HTMLDivElement, LeftProps>((initialProps, ref) => 
   const propsOnOpenChange = restProps.onOpenChange;
   const domProps = omitPaneProps(restProps, LEFT_DOM_OMIT_PROPS);
   const shell = useShell();
+  const { setHasLeft } = shell;
   const resolvedPresentation = useResponsivePresentation(presentation);
   const isOverlay = resolvedPresentation === 'overlay';
   const isStacked = resolvedPresentation === 'stacked';
@@ -816,9 +817,9 @@ const Left = React.forwardRef<HTMLDivElement, LeftProps>((initialProps, ref) => 
 
   // Register with shell
   React.useEffect(() => {
-    shell.setHasLeft(true);
-    return () => shell.setHasLeft(false);
-  }, [shell.setHasLeft]);
+    setHasLeft(true);
+    return () => setHasLeft(false);
+  }, [setHasLeft]);
 
   const lastLeftModeRef = React.useRef<PaneMode | null>(null);
   const lastResolvedLeftControlledRef = React.useRef<PaneMode | undefined>(undefined);
