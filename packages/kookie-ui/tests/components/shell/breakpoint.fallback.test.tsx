@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { renderWithProviders, screen } from '../../test-utils';
+import { renderWithProviders, screen, act } from '../../test-utils';
 import { waitFor } from '@testing-library/react';
 import { Shell } from '../../../src/components/index';
 import { usePresentation } from '../../../src/components/shell.context';
@@ -93,15 +93,21 @@ describe('useBreakpoint fallback to addListener/removeListener', () => {
     expect(el.textContent).toBe('initial');
 
     // Set md true and wait for update
-    mock.setMatches('md', true);
+    act(() => {
+      mock.setMatches('md', true);
+    });
     await waitFor(() => expect(el.textContent).toBe('md'));
 
     // Set lg true as well (higher)
-    mock.setMatches('lg', true);
+    act(() => {
+      mock.setMatches('lg', true);
+    });
     await waitFor(() => expect(el.textContent).toBe('lg'));
 
     // Turn off lg, keep md
-    mock.setMatches('lg', false);
+    act(() => {
+      mock.setMatches('lg', false);
+    });
     await waitFor(() => expect(el.textContent).toBe('md'));
   });
 });

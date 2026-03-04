@@ -5,6 +5,8 @@ export interface ShellContextValue {
   // Pane states
   leftMode: PaneMode;
   setLeftMode: (mode: PaneMode) => void;
+  /** When Rail is controlled, this reflects the resolved open state for the current breakpoint. */
+  leftControlledOpen?: boolean;
   panelMode: PaneMode; // Panel state within left container
   setPanelMode: (mode: PaneMode) => void;
   sidebarMode: SidebarMode;

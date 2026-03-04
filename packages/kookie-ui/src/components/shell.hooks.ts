@@ -97,20 +97,67 @@ function useResponsiveInitialState<T>({
   const resolvedDefault = useResponsiveValue(defaultValue);
 
   const lastControlledRef = React.useRef<T | undefined>(undefined);
+  const pendingSyncRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const latestControlledRef = React.useRef<T | undefined>(resolvedControlled);
+  const latestValueRef = React.useRef(currentValue);
+  const setValueRef = React.useRef(setValue);
+
+  React.useLayoutEffect(() => {
+    latestControlledRef.current = resolvedControlled;
+    latestValueRef.current = currentValue;
+    setValueRef.current = setValue;
+  });
+
   React.useEffect(() => {
     if (resolvedControlled === undefined) return;
+
+    const prevControlled = lastControlledRef.current;
+    const controlledChanged = prevControlled !== resolvedControlled;
     lastControlledRef.current = resolvedControlled;
+
     if (currentValue === resolvedControlled) {
+      if (pendingSyncRef.current) {
+        clearTimeout(pendingSyncRef.current);
+        pendingSyncRef.current = null;
+      }
       if (controlledIsResponsive) {
         onResponsiveChange?.(resolvedControlled);
       }
       return;
     }
-    setValue(resolvedControlled);
-    if (controlledIsResponsive) {
-      onResponsiveChange?.(resolvedControlled);
+
+    if (controlledChanged) {
+      if (pendingSyncRef.current) {
+        clearTimeout(pendingSyncRef.current);
+        pendingSyncRef.current = null;
+      }
+      setValue(resolvedControlled);
+      if (controlledIsResponsive) {
+        onResponsiveChange?.(resolvedControlled);
+      }
+      return;
+    }
+
+    if (!pendingSyncRef.current) {
+      pendingSyncRef.current = setTimeout(() => {
+        pendingSyncRef.current = null;
+        const latestControlled = latestControlledRef.current;
+        const latestValue = latestValueRef.current;
+        if (latestControlled === undefined) return;
+        if (latestValue === latestControlled) return;
+        setValueRef.current(latestControlled);
+      }, 0);
     }
   }, [resolvedControlled, currentValue, setValue, onResponsiveChange, controlledIsResponsive]);
+
+  React.useEffect(() => {
+    return () => {
+      if (pendingSyncRef.current) {
+        clearTimeout(pendingSyncRef.current);
+        pendingSyncRef.current = null;
+      }
+    };
+  }, []);
 
   const didInitRef = React.useRef(false);
   React.useEffect(() => {

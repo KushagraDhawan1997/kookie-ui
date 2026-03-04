@@ -95,7 +95,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
   const { registerInset, unregisterInset } = useInset();
 
   // Register/unregister inset
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (inset) {
       registerInset('sidebar');
       return () => unregisterInset('sidebar');
@@ -190,32 +190,47 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
     }
   }, [state]);
 
+  // Stable ref for onStateChange to avoid effect dep churn
+  const onStateChangeRef = React.useRef(onStateChange);
+  const stateRef = React.useRef(state);
+  React.useLayoutEffect(() => {
+    onStateChangeRef.current = onStateChange;
+    stateRef.current = state;
+  });
+
   // Resolve responsive controlled state at top level
   const stateIsResponsive = typeof state === 'object' && state !== null;
-  const { resolvedDefault: resolvedSidebarDefault } = useResponsiveInitialState<SidebarMode>({
+  const { resolvedControlled: resolvedSidebarControlled, resolvedDefault: resolvedSidebarDefault } = useResponsiveInitialState<SidebarMode>({
     controlledValue: state,
     defaultValue: defaultState,
     currentValue: sidebarMode as SidebarMode,
     setValue: setSidebarMode,
     breakpointReady: currentBreakpointReady,
     controlledIsResponsive: stateIsResponsive,
-    onResponsiveChange: (next) => onStateChange?.(next, { reason: 'responsive' }),
-    onInit: (initial) => onStateChange?.(initial, { reason: 'init' }),
+    onResponsiveChange: (next) => onStateChangeRef.current?.(next, { reason: 'responsive' }),
+    onInit: (initial) => onStateChangeRef.current?.(initial, { reason: 'init' }),
   });
 
-  // Emit mode changes
+  // Emit mode changes. In controlled mode, skip when mode matches the controlled prop.
   const lastNotifyModeRef = React.useRef<SidebarMode | null>(null);
+  const lastResolvedSidebarControlledRef = React.useRef<SidebarMode | undefined>(undefined);
   React.useEffect(() => {
-    // notify new API when uncontrolled; skip first run to avoid masking init
-    if (typeof state === 'undefined') {
-      if (lastNotifyModeRef.current === null) {
-        lastNotifyModeRef.current = sidebarMode as SidebarMode;
-      } else if (lastNotifyModeRef.current !== sidebarMode) {
-        lastNotifyModeRef.current = sidebarMode as SidebarMode;
-        onStateChange?.(sidebarMode as SidebarMode, { reason: 'toggle' });
+    const current = sidebarMode as SidebarMode;
+    const prevMode = lastNotifyModeRef.current;
+    const prevResolvedControlled = lastResolvedSidebarControlledRef.current;
+    const controlledChanged = prevResolvedControlled !== resolvedSidebarControlled;
+
+    if (prevMode !== null && prevMode !== current) {
+      const isControlled = typeof stateRef.current !== 'undefined';
+
+      if (!isControlled || (!controlledChanged && current !== resolvedSidebarControlled)) {
+        onStateChangeRef.current?.(current, { reason: 'toggle' });
       }
     }
-  }, [sidebarMode, state, onStateChange]);
+
+    lastNotifyModeRef.current = current;
+    lastResolvedSidebarControlledRef.current = resolvedSidebarControlled;
+  }, [sidebarMode, resolvedSidebarControlled]);
 
   // Track previous mode to only fire callbacks on actual user-initiated state transitions.
   // We wait for breakpointReady to ensure the initial state sync from useResponsiveInitialState
@@ -445,6 +460,8 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
         <Sheet.Content
           side="start"
           style={{ padding: 0 }}
+          aria-label="Navigation"
+          aria-describedby={undefined}
           width={{
             initial: `${open ? (sidebarMode === 'thin' ? thinSize : expandedSize) : lastOverlayWidthRef.current}px`,
           }}

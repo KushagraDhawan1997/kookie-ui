@@ -83,7 +83,7 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
   const { registerInset, unregisterInset } = useInset();
 
   // Register/unregister inset
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (inset) {
       registerInset('inspector');
       return () => unregisterInset('inspector');
@@ -105,7 +105,14 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
   const handleChildren = childArray.filter((el: React.ReactElement) => React.isValidElement(el) && el.type === InspectorHandle);
   const contentChildren = childArray.filter((el: React.ReactElement) => !(React.isValidElement(el) && el.type === InspectorHandle));
 
-  // Throttled/debounced emitter for onSizeChange
+  // Stable ref for onOpenChange to avoid effect dep churn
+  const onOpenChangeRef = React.useRef(onOpenChange);
+  const openRef = React.useRef(open);
+  React.useLayoutEffect(() => {
+    onOpenChangeRef.current = onOpenChange;
+    openRef.current = open;
+  });
+
   const normalizedControlledOpen = React.useMemo(() => mapResponsiveBooleanToPaneMode(open), [open]);
   const normalizedDefaultOpen = React.useMemo(() => mapResponsiveBooleanToPaneMode(defaultOpen), [defaultOpen]);
   const openIsResponsive = typeof open === 'object' && open !== null;
@@ -116,10 +123,10 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
     setValue: setInspectorMode,
     breakpointReady: currentBreakpointReady,
     controlledIsResponsive: openIsResponsive,
-    onResponsiveChange: (next) => onOpenChange?.(next === 'expanded', { reason: 'responsive' }),
+    onResponsiveChange: (next) => onOpenChangeRef.current?.(next === 'expanded', { reason: 'responsive' }),
     onInit: (initial) => {
-      if (typeof open === 'undefined') {
-        onOpenChange?.(initial === 'expanded', { reason: 'init' });
+      if (typeof openRef.current === 'undefined') {
+        onOpenChangeRef.current?.(initial === 'expanded', { reason: 'init' });
       }
     },
   });
@@ -184,26 +191,27 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
     }
   }, [open]);
 
+  // Emit mode changes. In controlled mode, skip when mode matches the controlled prop.
   const lastInspectorModeRef = React.useRef<PaneMode | null>(null);
-  const prevResolvedInspectorControlledRef = React.useRef<PaneMode | undefined>(undefined);
+  const lastResolvedInspectorControlledRef = React.useRef<PaneMode | undefined>(undefined);
   React.useEffect(() => {
     const prevInspectorMode = lastInspectorModeRef.current;
-    const prevControlled = prevResolvedInspectorControlledRef.current;
+    const prevResolvedControlled = lastResolvedInspectorControlledRef.current;
+    const controlledChanged = prevResolvedControlled !== resolvedInspectorControlled;
 
     if (prevInspectorMode !== null && prevInspectorMode !== inspectorMode) {
       const nextOpen = inspectorMode === 'expanded';
-      const nextControlledOpen = resolvedInspectorControlled === undefined ? undefined : resolvedInspectorControlled === 'expanded';
-      const controlledChanged = prevControlled !== resolvedInspectorControlled;
-      const isPropSync = typeof open !== 'undefined' && controlledChanged && nextControlledOpen === nextOpen;
+      const isControlled = typeof openRef.current !== 'undefined';
+      const controlledTarget = resolvedInspectorControlled === undefined ? undefined : resolvedInspectorControlled === 'expanded';
 
-      if (!isPropSync) {
-        onOpenChange?.(nextOpen, { reason: 'toggle' });
+      if (!isControlled || (!controlledChanged && nextOpen !== controlledTarget)) {
+        onOpenChangeRef.current?.(nextOpen, { reason: 'toggle' });
       }
     }
 
     lastInspectorModeRef.current = inspectorMode;
-    prevResolvedInspectorControlledRef.current = resolvedInspectorControlled;
-  }, [inspectorMode, open, onOpenChange, resolvedInspectorControlled]);
+    lastResolvedInspectorControlledRef.current = resolvedInspectorControlled;
+  }, [inspectorMode, resolvedInspectorControlled]);
 
   // Track previous mode to only fire callbacks on actual user-initiated state transitions.
   // We wait for breakpointReady to ensure the initial state sync from useResponsiveInitialState
@@ -376,7 +384,7 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
     const open = inspectorMode === 'expanded';
     return (
       <Sheet.Root open={open} onOpenChange={(o) => setInspectorMode(o ? 'expanded' : 'collapsed')}>
-        <Sheet.Content side="end" style={{ padding: 0 }} width={{ initial: `${expandedSize}px` }}>
+        <Sheet.Content side="end" style={{ padding: 0 }} aria-label="Inspector" aria-describedby={undefined} width={{ initial: `${expandedSize}px` }}>
           <VisuallyHidden>
             <Sheet.Title>Inspector</Sheet.Title>
           </VisuallyHidden>

@@ -12,7 +12,7 @@ function ChatbarFixture(props: React.ComponentProps<typeof Chatbar.Root>) {
         <Chatbar.AttachmentsRow />
         <Chatbar.Textarea aria-label="Message" />
         <Chatbar.Row>
-          <Chatbar.AttachTrigger>
+          <Chatbar.AttachTrigger asChild>
             <IconButton aria-label="Attach" />
           </Chatbar.AttachTrigger>
           <Chatbar.Send>Send</Chatbar.Send>
@@ -74,7 +74,7 @@ describe('Chatbar behaviors', () => {
     expect(root).toHaveAttribute('data-state', 'open');
 
     // Safari-like sequence: pointer down on attach trigger sets guard, then blur with relatedTarget=null
-    const attachBtn = screen.getByRole('button', { name: /add attachments/i });
+    const attachBtn = screen.getByRole('button', { name: /attach/i });
     fireEvent.pointerDown(attachBtn);
     fireEvent.blur(textarea, { relatedTarget: null });
 

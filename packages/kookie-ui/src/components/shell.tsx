@@ -122,24 +122,28 @@ assignShellSlot(Bottom as any, 'Shell.Bottom');
 function paneReducer(state: PaneState, action: PaneAction): PaneState {
   switch (action.type) {
     case 'SET_LEFT_MODE': {
-      // Collapsing left cascades to panel collapse
       if (action.mode === 'collapsed') {
+        if (state.leftMode === 'collapsed' && state.panelMode === 'collapsed') return state;
         return { ...state, leftMode: 'collapsed', panelMode: 'collapsed' };
       }
+      if (state.leftMode === action.mode) return state;
       return { ...state, leftMode: action.mode };
     }
     case 'SET_PANEL_MODE': {
-      // Expanding panel ensures left is expanded
       if (action.mode === 'expanded' && state.leftMode !== 'expanded') {
         return { ...state, leftMode: 'expanded', panelMode: 'expanded' };
       }
+      if (state.panelMode === action.mode) return state;
       return { ...state, panelMode: action.mode };
     }
     case 'SET_SIDEBAR_MODE':
+      if (state.sidebarMode === action.mode) return state;
       return { ...state, sidebarMode: action.mode };
     case 'SET_INSPECTOR_MODE':
+      if (state.inspectorMode === action.mode) return state;
       return { ...state, inspectorMode: action.mode };
     case 'SET_BOTTOM_MODE':
+      if (state.bottomMode === action.mode) return state;
       return { ...state, bottomMode: action.mode };
     case 'TOGGLE_PANE': {
       switch (action.target) {
@@ -153,8 +157,6 @@ function paneReducer(state: PaneState, action: PaneAction): PaneState {
           return { ...state, panelMode: state.panelMode === 'expanded' ? 'collapsed' : 'expanded' };
         }
         case 'sidebar': {
-          // Sidebar toggle sequencing is handled externally via setSidebarToggleComputer
-          // This reducer only flips between expanded<->collapsed by default; thin is set by caller
           const next: SidebarMode = state.sidebarMode === 'collapsed' ? 'expanded' : state.sidebarMode === 'expanded' ? 'collapsed' : 'expanded';
           return { ...state, sidebarMode: next };
         }
@@ -165,46 +167,50 @@ function paneReducer(state: PaneState, action: PaneAction): PaneState {
         default:
           return state;
       }
-      // Fallback to satisfy no-fallthrough in some environments
-      return state;
     }
     case 'EXPAND_PANE': {
       switch (action.target) {
         case 'left':
         case 'rail':
+          if (state.leftMode === 'expanded') return state;
           return { ...state, leftMode: 'expanded' };
         case 'panel':
+          if (state.leftMode === 'expanded' && state.panelMode === 'expanded') return state;
           return { ...state, leftMode: 'expanded', panelMode: 'expanded' };
         case 'sidebar':
+          if (state.sidebarMode === 'expanded') return state;
           return { ...state, sidebarMode: 'expanded' };
         case 'inspector':
+          if (state.inspectorMode === 'expanded') return state;
           return { ...state, inspectorMode: 'expanded' };
         case 'bottom':
+          if (state.bottomMode === 'expanded') return state;
           return { ...state, bottomMode: 'expanded' };
         default:
           return state;
       }
-      // Fallback to satisfy no-fallthrough in some environments
-      return state;
     }
     case 'COLLAPSE_PANE': {
       switch (action.target) {
         case 'left':
         case 'rail':
+          if (state.leftMode === 'collapsed' && state.panelMode === 'collapsed') return state;
           return { ...state, leftMode: 'collapsed', panelMode: 'collapsed' };
         case 'panel':
+          if (state.panelMode === 'collapsed') return state;
           return { ...state, panelMode: 'collapsed' };
         case 'sidebar':
+          if (state.sidebarMode === 'collapsed') return state;
           return { ...state, sidebarMode: 'collapsed' };
         case 'inspector':
+          if (state.inspectorMode === 'collapsed') return state;
           return { ...state, inspectorMode: 'collapsed' };
         case 'bottom':
+          if (state.bottomMode === 'collapsed') return state;
           return { ...state, bottomMode: 'collapsed' };
         default:
           return state;
       }
-      // Fallback to satisfy no-fallthrough in some environments
-      return state;
     }
   }
   return state;
@@ -346,7 +352,7 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
   // Reducer handles left→panel cascade; no effect needed
 
   // Composition validation
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (hasSidebar && hasLeft) {
       console.warn('Shell: Sidebar cannot coexist with Rail or Panel. Use either Rail+Panel OR Sidebar.');
     }
@@ -484,7 +490,7 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
     return result;
   }, [children]);
 
-  // Controlled sync in Root: mirror first Rail.open if provided
+  // Controlled sync in Root: mirror first Rail/Panel open if provided
   const firstRailOpen = (railEls[0] as any)?.props?.open;
   const resolvedFirstRailOpen = React.useMemo(() => {
     if (typeof firstRailOpen === 'undefined') return undefined;
@@ -502,10 +508,86 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
     }
     return undefined;
   }, [firstRailOpen, currentBreakpoint]);
-  React.useEffect(() => {
+
+  const firstPanelOpen = (panelEls[0] as any)?.props?.open;
+  const resolvedFirstPanelOpen = React.useMemo(() => {
+    if (typeof firstPanelOpen === 'undefined') return undefined;
+    if (typeof firstPanelOpen === 'boolean') return firstPanelOpen;
+    if (typeof firstPanelOpen !== 'object' || firstPanelOpen === null) return Boolean(firstPanelOpen);
+
+    const responsive = firstPanelOpen as Partial<Record<Breakpoint, boolean>>;
+    if (responsive[currentBreakpoint] !== undefined) return responsive[currentBreakpoint];
+
+    const fallbackOrder: Breakpoint[] = ['xl', 'lg', 'md', 'sm', 'xs', 'initial'];
+    const startIdx = fallbackOrder.indexOf(currentBreakpoint);
+    for (let i = startIdx + 1; i < fallbackOrder.length; i++) {
+      const bp = fallbackOrder[i];
+      if (responsive[bp] !== undefined) return responsive[bp];
+    }
+    return undefined;
+  }, [firstPanelOpen, currentBreakpoint]);
+
+  const controlSeqRef = React.useRef(0);
+  const lastRailChangeRef = React.useRef(0);
+  const lastPanelChangeRef = React.useRef(0);
+  const lastRailOpenRef = React.useRef<boolean | undefined>(resolvedFirstRailOpen);
+  const lastPanelOpenRef = React.useRef<boolean | undefined>(resolvedFirstPanelOpen);
+
+  React.useLayoutEffect(() => {
+    if (resolvedFirstRailOpen === undefined) {
+      lastRailOpenRef.current = undefined;
+      return;
+    }
+    if (lastRailOpenRef.current === resolvedFirstRailOpen) return;
+    lastRailOpenRef.current = resolvedFirstRailOpen;
+    lastRailChangeRef.current = ++controlSeqRef.current;
+  }, [resolvedFirstRailOpen]);
+
+  React.useLayoutEffect(() => {
+    if (resolvedFirstPanelOpen === undefined) {
+      lastPanelOpenRef.current = undefined;
+      return;
+    }
+    if (lastPanelOpenRef.current === resolvedFirstPanelOpen) return;
+    lastPanelOpenRef.current = resolvedFirstPanelOpen;
+    lastPanelChangeRef.current = ++controlSeqRef.current;
+  }, [resolvedFirstPanelOpen]);
+
+  React.useLayoutEffect(() => {
     if (typeof resolvedFirstRailOpen === 'undefined') return;
     setLeftMode(resolvedFirstRailOpen ? 'expanded' : 'collapsed');
   }, [resolvedFirstRailOpen, setLeftMode]);
+
+  const railOnOpenChange = (railEls[0] as any)?.props?.onOpenChange as
+    | ((open: boolean, meta: { reason: 'init' | 'toggle' | 'responsive' | 'panel' }) => void)
+    | undefined;
+  const panelOnOpenChange = (panelEls[0] as any)?.props?.onOpenChange as
+    | ((open: boolean, meta: { reason: 'toggle' | 'left' | 'init' | 'responsive' }) => void)
+    | undefined;
+  const lastConflictRef = React.useRef<{ railSeq: number; panelSeq: number; action: 'open-rail' | 'close-panel' } | null>(null);
+
+  React.useLayoutEffect(() => {
+    if (resolvedFirstRailOpen !== false || resolvedFirstPanelOpen !== true) {
+      lastConflictRef.current = null;
+      return;
+    }
+
+    const panelWins = lastPanelChangeRef.current > lastRailChangeRef.current;
+    const action: 'open-rail' | 'close-panel' = panelWins ? 'open-rail' : 'close-panel';
+    const lastConflict = lastConflictRef.current;
+    if (lastConflict && lastConflict.railSeq === lastRailChangeRef.current && lastConflict.panelSeq === lastPanelChangeRef.current && lastConflict.action === action) {
+      return;
+    }
+    lastConflictRef.current = { railSeq: lastRailChangeRef.current, panelSeq: lastPanelChangeRef.current, action };
+
+    if (panelWins) {
+      railOnOpenChange?.(true, { reason: 'panel' });
+    } else {
+      panelOnOpenChange?.(false, { reason: 'left' });
+    }
+  }, [resolvedFirstRailOpen, resolvedFirstPanelOpen, railOnOpenChange, panelOnOpenChange]);
+
+  const leftControlledOpen = resolvedFirstRailOpen;
 
   const heightStyle = React.useMemo(() => {
     if (height === 'full') return { height: '100vh' };
@@ -559,12 +641,13 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
   const shellContextValue = React.useMemo(
     () => ({
       ...baseContextValue,
+      leftControlledOpen,
       peekTarget,
       setPeekTarget,
       peekPane,
       clearPeek,
     }),
-    [baseContextValue, peekTarget, setPeekTarget, peekPane, clearPeek],
+    [baseContextValue, leftControlledOpen, peekTarget, setPeekTarget, peekPane, clearPeek],
   );
 
   // Memoize the Left content to avoid recreating the IIFE on every render
@@ -735,61 +818,102 @@ const Left = React.forwardRef<HTMLDivElement, LeftProps>((initialProps, ref) => 
   React.useEffect(() => {
     shell.setHasLeft(true);
     return () => shell.setHasLeft(false);
-  }, [shell]);
+  }, [shell.setHasLeft]);
 
   const lastLeftModeRef = React.useRef<PaneMode | null>(null);
+  const lastResolvedLeftControlledRef = React.useRef<PaneMode | undefined>(undefined);
   const normalizedLeftControlled = React.useMemo(() => {
     if (typeof propsOpen === 'undefined') return undefined;
     return propsOpen ? 'expanded' : 'collapsed';
   }, [propsOpen]);
   const normalizedLeftDefault = React.useMemo(() => mapResponsiveBooleanToPaneMode(propsDefaultOpen), [propsDefaultOpen]);
+
+  // Stable refs for notification callbacks to avoid effect dep churn
+  const propsOnOpenChangeRef = React.useRef(propsOnOpenChange);
+  const propsOpenRef = React.useRef(propsOpen);
+  React.useLayoutEffect(() => {
+    propsOnOpenChangeRef.current = propsOnOpenChange;
+    propsOpenRef.current = propsOpen;
+  });
+
   const { resolvedControlled: resolvedLeftControlled } = useResponsiveInitialState<PaneMode>({
     controlledValue: normalizedLeftControlled,
     defaultValue: normalizedLeftDefault,
     currentValue: shell.leftMode,
     setValue: shell.setLeftMode,
     breakpointReady: shell.currentBreakpointReady,
-    onInit: (initial) => propsOnOpenChange?.(initial === 'expanded', { reason: 'init' }),
+    onInit: (initial) => propsOnOpenChangeRef.current?.(initial === 'expanded', { reason: 'init' }),
   });
 
   // Emit mode changes for user/internal transitions.
-  // In controlled mode, skip notifications that are pure prop syncs.
-  const prevResolvedLeftControlledRef = React.useRef<PaneMode | undefined>(undefined);
+  // In controlled mode, skip when the mode matches the controlled prop (prop-driven sync).
   const prevPanelModeRef = React.useRef<PaneMode | null>(null);
   React.useEffect(() => {
     const prevLeftMode = lastLeftModeRef.current;
-    const prevControlled = prevResolvedLeftControlledRef.current;
     const prevPanelMode = prevPanelModeRef.current;
 
-    if (prevLeftMode !== null && prevLeftMode !== shell.leftMode) {
-      const nextOpen = shell.leftMode === 'expanded';
-      const nextControlledOpen = resolvedLeftControlled === undefined ? undefined : resolvedLeftControlled === 'expanded';
-      const controlledChanged = prevControlled !== resolvedLeftControlled;
-      const isPropSync = typeof propsOpen !== 'undefined' && controlledChanged && nextControlledOpen === nextOpen;
+    const prevResolvedControlled = lastResolvedLeftControlledRef.current;
+    const controlledChanged = prevResolvedControlled !== resolvedLeftControlled;
 
-      if (!isPropSync) {
+    if (prevLeftMode !== null && prevLeftMode !== shell.leftMode) {
+      const isControlled = typeof propsOpenRef.current !== 'undefined';
+      const controlledTarget = resolvedLeftControlled === undefined ? undefined : resolvedLeftControlled === 'expanded';
+      const nextOpen = shell.leftMode === 'expanded';
+
+      // In controlled mode, only notify when internal mode diverges from the
+      // controlled prop — that means a trigger/cascade changed it, not a prop sync.
+      if (!isControlled || (!controlledChanged && nextOpen !== controlledTarget)) {
         let reason: LeftOpenChangeMeta['reason'] = 'toggle';
         const panelDrivenOpen = prevPanelMode !== null && prevPanelMode !== shell.panelMode && prevLeftMode === 'collapsed' && shell.leftMode === 'expanded' && shell.panelMode === 'expanded';
         if (panelDrivenOpen) {
           reason = 'panel';
         }
-        propsOnOpenChange?.(nextOpen, { reason });
+        propsOnOpenChangeRef.current?.(nextOpen, { reason });
       }
     }
 
     lastLeftModeRef.current = shell.leftMode;
-    prevResolvedLeftControlledRef.current = resolvedLeftControlled;
     prevPanelModeRef.current = shell.panelMode;
-  }, [shell.leftMode, shell.panelMode, propsOnOpenChange, propsOpen, resolvedLeftControlled]);
+    lastResolvedLeftControlledRef.current = resolvedLeftControlled;
+  }, [shell.leftMode, shell.panelMode, resolvedLeftControlled]);
 
-  // Emit expand/collapse events
+  // Emit expand/collapse events.
+  // Use callback refs to avoid re-running effect when inline callbacks change,
+  // matching the pattern used by Inspector and Bottom.
+  const onExpandRef = React.useRef(onExpand);
+  const onCollapseRef = React.useRef(onCollapse);
+  React.useLayoutEffect(() => {
+    onExpandRef.current = onExpand;
+    onCollapseRef.current = onCollapse;
+  });
+
+  const prevLeftModeForCallbackRef = React.useRef<PaneMode | null>(null);
+  const hasLeftInitializedRef = React.useRef(false);
   React.useEffect(() => {
-    if (shell.leftMode === 'expanded') {
-      onExpand?.();
-    } else {
-      onCollapse?.();
+    const currentMode = shell.leftMode;
+
+    if (!shell.currentBreakpointReady) {
+      prevLeftModeForCallbackRef.current = currentMode;
+      return;
     }
-  }, [shell.leftMode, onExpand, onCollapse]);
+
+    if (!hasLeftInitializedRef.current) {
+      hasLeftInitializedRef.current = true;
+      prevLeftModeForCallbackRef.current = currentMode;
+      return;
+    }
+
+    const prevMode = prevLeftModeForCallbackRef.current;
+
+    if (prevMode !== null && prevMode !== currentMode) {
+      if (currentMode === 'expanded') {
+        onExpandRef.current?.();
+      } else if (currentMode === 'collapsed') {
+        onCollapseRef.current?.();
+      }
+      prevLeftModeForCallbackRef.current = currentMode;
+    }
+  }, [shell.leftMode, shell.currentBreakpointReady]);
 
   const _isExpanded = shell.leftMode === 'expanded';
 
@@ -811,6 +935,8 @@ const Left = React.forwardRef<HTMLDivElement, LeftProps>((initialProps, ref) => 
         <Sheet.Content
           side="start"
           style={{ padding: 0 }}
+          aria-label="Navigation"
+          aria-describedby={undefined}
           width={{
             initial: `${overlayPx}px`,
           }}
@@ -878,7 +1004,7 @@ Left.displayName = 'Shell.Left';
 assignShellSlot(Left as any, 'Shell.Left');
 
 const Rail = React.forwardRef<HTMLDivElement, RailProps>((initialProps, ref) => {
-  const { className, presentation, expandedSize = 64, collapsible, onExpand, onCollapse, children, style, open, defaultOpen, onOpenChange, ...domProps } = initialProps;
+  const { className, presentation, expandedSize = 64, collapsible, onExpand, onCollapse, children, style, open, defaultOpen, onOpenChange, inset: _inset, ...domProps } = initialProps;
   const shell = useShell();
 
   // Dev guards
@@ -1018,7 +1144,7 @@ const Panel = assignShellSlot(
     // Ref for debounce cleanup
     const debounceTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
     // Cleanup debounce timeout on unmount or when dependencies change
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
       return () => {
         if (debounceTimeoutRef.current) {
           clearTimeout(debounceTimeoutRef.current);
@@ -1054,6 +1180,7 @@ const Panel = assignShellSlot(
     const shell = useShell();
     const prevPanelModeRef = React.useRef<PaneMode | null>(null);
     const prevLeftModeRef = React.useRef<PaneMode | null>(null);
+    const lastResolvedPanelControlledRef = React.useRef<PaneMode | undefined>(undefined);
     // Dev-only runtime guard
     if (process.env.NODE_ENV !== 'production') {
       if (typeof open !== 'undefined' && typeof defaultOpen !== 'undefined') {
@@ -1069,24 +1196,30 @@ const Panel = assignShellSlot(
     const normalizedDefaultOpen = React.useMemo(() => mapResponsiveBooleanToPaneMode(defaultOpen), [defaultOpen]);
     const openIsResponsive = typeof open === 'object' && open !== null;
 
+    // Stable ref for onOpenChange to avoid effect dep churn
+    const onOpenChangeRef = React.useRef(onOpenChange);
+    React.useLayoutEffect(() => {
+      onOpenChangeRef.current = onOpenChange;
+    });
+
     // Use responsive initial state hook for proper breakpoint handling
-    useResponsiveInitialState<PaneMode>({
+    const { resolvedControlled: resolvedPanelControlled } = useResponsiveInitialState<PaneMode>({
       controlledValue: normalizedControlledOpen,
       defaultValue: normalizedDefaultOpen,
       currentValue: shell.panelMode,
       setValue: (mode) => {
-        // Ensure Left is expanded when Panel is expanded
-        if (mode === 'expanded' && shell.leftMode !== 'expanded') {
+        // Ensure Left is expanded when Panel is expanded unless Rail is controlled closed
+        if (mode === 'expanded' && shell.leftMode !== 'expanded' && shell.leftControlledOpen !== false) {
           shell.setLeftMode('expanded');
         }
         shell.setPanelMode(mode);
       },
       breakpointReady: shell.currentBreakpointReady,
       controlledIsResponsive: openIsResponsive,
-      onResponsiveChange: (next) => onOpenChange?.(next === 'expanded', { reason: 'responsive' }),
+      onResponsiveChange: (next) => onOpenChangeRef.current?.(next === 'expanded', { reason: 'responsive' }),
       onInit: (initial) => {
         if (typeof open === 'undefined') {
-          onOpenChange?.(initial === 'expanded', { reason: 'init' });
+          onOpenChangeRef.current?.(initial === 'expanded', { reason: 'init' });
         }
       },
     });
@@ -1232,21 +1365,30 @@ const Panel = assignShellSlot(
 
     const isExpanded = shell.leftMode === 'expanded' && shell.panelMode === 'expanded';
 
-    // Notify on internal toggles and left cascade
+    // Notify on internal toggles and left cascade.
+    // In controlled mode, skip when the mode matches the controlled prop (prop-driven sync).
     React.useEffect(() => {
       const prevPanel = prevPanelModeRef.current;
       const prevLeft = prevLeftModeRef.current;
+      const prevResolvedControlled = lastResolvedPanelControlledRef.current;
+      const controlledChanged = prevResolvedControlled !== resolvedPanelControlled;
       if (prevPanel !== null && prevPanel !== shell.panelMode) {
-        const open = shell.panelMode === 'expanded';
-        let reason: PanelOpenChangeMeta['reason'] = 'toggle';
-        if (prevLeft !== shell.leftMode && shell.leftMode === 'collapsed' && !open) {
-          reason = 'left';
+        const nextOpen = shell.panelMode === 'expanded';
+        const isControlled = typeof open !== 'undefined';
+        const controlledTarget = resolvedPanelControlled === undefined ? undefined : resolvedPanelControlled === 'expanded';
+
+        if (!isControlled || (!controlledChanged && nextOpen !== controlledTarget)) {
+          let reason: PanelOpenChangeMeta['reason'] = 'toggle';
+          if (prevLeft !== shell.leftMode && shell.leftMode === 'collapsed' && !nextOpen) {
+            reason = 'left';
+          }
+          onOpenChangeRef.current?.(nextOpen, { reason });
         }
-        onOpenChange?.(open, { reason });
       }
       prevPanelModeRef.current = shell.panelMode;
       prevLeftModeRef.current = shell.leftMode;
-    }, [shell.panelMode, shell.leftMode, onOpenChange]);
+      lastResolvedPanelControlledRef.current = resolvedPanelControlled;
+    }, [shell.panelMode, shell.leftMode, open, resolvedPanelControlled]);
 
     // Provide resizer handle when fixed (not overlay)
     const handleEl =

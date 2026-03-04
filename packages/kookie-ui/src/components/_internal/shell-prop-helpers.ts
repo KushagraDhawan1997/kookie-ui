@@ -31,6 +31,7 @@ const PANE_BASE_INTERNAL_PROPS = [
   'collapseThreshold',
   'paneId',
   'persistence',
+  'inset',
 ] as const;
 
 export function extractPaneDomProps<T extends object, Extra extends KeyList<T> | undefined = undefined>(source: T, extraKeys?: Extra) {

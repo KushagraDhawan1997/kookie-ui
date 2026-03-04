@@ -83,7 +83,7 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((initi
   const { registerInset, unregisterInset } = useInset();
 
   // Register/unregister inset
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (inset) {
       registerInset('bottom');
       return () => unregisterInset('bottom');
@@ -105,21 +105,28 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((initi
   const handleChildren = childArray.filter((el: React.ReactElement) => React.isValidElement(el) && el.type === BottomHandle);
   const contentChildren = childArray.filter((el: React.ReactElement) => !(React.isValidElement(el) && el.type === BottomHandle));
 
-  // Throttled/debounced emitter for onSizeChange
+  // Stable ref for onOpenChange to avoid effect dep churn
+  const onOpenChangeRef = React.useRef(onOpenChange);
+  const openRef = React.useRef(open);
+  React.useLayoutEffect(() => {
+    onOpenChangeRef.current = onOpenChange;
+    openRef.current = open;
+  });
+
   const normalizedControlledOpen = React.useMemo(() => mapResponsiveBooleanToPaneMode(open), [open]);
   const normalizedDefaultOpen = React.useMemo(() => mapResponsiveBooleanToPaneMode(defaultOpen), [defaultOpen]);
   const openIsResponsive = typeof open === 'object' && open !== null;
-  useResponsiveInitialState<PaneMode>({
+  const { resolvedControlled: resolvedBottomControlled } = useResponsiveInitialState<PaneMode>({
     controlledValue: normalizedControlledOpen,
     defaultValue: normalizedDefaultOpen,
     currentValue: bottomMode,
     setValue: setBottomMode,
     breakpointReady: currentBreakpointReady,
     controlledIsResponsive: openIsResponsive,
-    onResponsiveChange: (next) => onOpenChange?.(next === 'expanded', { reason: 'responsive' }),
+    onResponsiveChange: (next) => onOpenChangeRef.current?.(next === 'expanded', { reason: 'responsive' }),
     onInit: (initial) => {
-      if (typeof open === 'undefined') {
-        onOpenChange?.(initial === 'expanded', { reason: 'init' });
+      if (typeof openRef.current === 'undefined') {
+        onOpenChangeRef.current?.(initial === 'expanded', { reason: 'init' });
       }
     },
   });
@@ -186,20 +193,27 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((initi
     }
   }, [open]);
 
-  const initNotifiedRef = React.useRef(false);
+  // Emit mode changes. In controlled mode, skip when mode matches the controlled prop.
   const lastBottomModeRef = React.useRef<PaneMode | null>(null);
+  const lastResolvedBottomControlledRef = React.useRef<PaneMode | undefined>(undefined);
   React.useEffect(() => {
-    if (!initNotifiedRef.current && typeof open === 'undefined' && defaultOpen && bottomMode === 'expanded') {
-      onOpenChange?.(true, { reason: 'init' });
-      initNotifiedRef.current = true;
-    }
-    if (typeof open === 'undefined') {
-      if (lastBottomModeRef.current !== null && lastBottomModeRef.current !== bottomMode) {
-        onOpenChange?.(bottomMode === 'expanded', { reason: 'toggle' });
+    const prevMode = lastBottomModeRef.current;
+    const prevResolvedControlled = lastResolvedBottomControlledRef.current;
+    const controlledChanged = prevResolvedControlled !== resolvedBottomControlled;
+
+    if (prevMode !== null && prevMode !== bottomMode) {
+      const nextOpen = bottomMode === 'expanded';
+      const isControlled = typeof openRef.current !== 'undefined';
+      const controlledTarget = resolvedBottomControlled === undefined ? undefined : resolvedBottomControlled === 'expanded';
+
+      if (!isControlled || (!controlledChanged && nextOpen !== controlledTarget)) {
+        onOpenChangeRef.current?.(nextOpen, { reason: 'toggle' });
       }
-      lastBottomModeRef.current = bottomMode;
     }
-  }, [bottomMode, open, defaultOpen, onOpenChange]);
+
+    lastBottomModeRef.current = bottomMode;
+    lastResolvedBottomControlledRef.current = resolvedBottomControlled;
+  }, [bottomMode, resolvedBottomControlled]);
 
   // Track previous mode to only fire callbacks on actual user-initiated state transitions.
   // We wait for breakpointReady to ensure the initial state sync from useResponsiveInitialState
@@ -372,7 +386,7 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((initi
     const open = bottomMode === 'expanded';
     return (
       <Sheet.Root open={open} onOpenChange={(o) => setBottomMode(o ? 'expanded' : 'collapsed')}>
-        <Sheet.Content side="bottom" style={{ padding: 0 }} height={{ initial: `${expandedSize}px` }}>
+        <Sheet.Content side="bottom" style={{ padding: 0 }} aria-label="Bottom panel" aria-describedby={undefined} height={{ initial: `${expandedSize}px` }}>
           <VisuallyHidden>
             <Sheet.Title>Bottom panel</Sheet.Title>
           </VisuallyHidden>
