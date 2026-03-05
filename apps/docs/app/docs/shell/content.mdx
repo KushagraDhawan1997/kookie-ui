@@ -236,6 +236,52 @@ Button trigger for controlling shell panes. Renders as an unstyled button—wrap
 | `peekOnHover` | `boolean` | Temporarily show pane on hover without changing state. Default: `false` |
 | `children` | `React.ReactNode` | Trigger content (typically an icon) |
 
+## Controlled Behavior
+
+Use controlled props (`open` / `state`) with their matching change handlers. Do not pass both controlled and default props.
+
+### Controlled vs Default
+
+- `open` + `defaultOpen` is invalid for Rail/Panel/Inspector/Bottom
+- `state` + `defaultState` is invalid for Sidebar
+- When controlled, always pass `onOpenChange` / `onStateChange`
+
+### Rail + Panel Conflicts
+
+When both Rail and Panel are controlled, Shell resolves conflicts through callbacks:
+
+- If Panel is opened while Rail is closed, Shell calls `Rail.onOpenChange(true, { reason: 'panel' })`
+- If Rail is closed while Panel is open, Shell calls `Panel.onOpenChange(false, { reason: 'left' })`
+
+```tsx
+function App() {
+  const [railOpen, setRailOpen] = React.useState(true);
+  const [panelOpen, setPanelOpen] = React.useState(true);
+
+  return (
+    <Shell.Root>
+      <Shell.Rail
+        open={railOpen}
+        onOpenChange={setRailOpen}
+        presentation="fixed"
+      >
+        <nav>Rail</nav>
+      </Shell.Rail>
+      <Shell.Panel
+        open={panelOpen}
+        onOpenChange={setPanelOpen}
+      >
+        <nav>Panel</nav>
+      </Shell.Panel>
+      <Shell.Content>
+        <Button onClick={() => setRailOpen(false)}>Close Rail</Button>
+        <Button onClick={() => setPanelOpen(true)}>Open Panel</Button>
+      </Shell.Content>
+    </Shell.Root>
+  );
+}
+```
+
 ## Examples
 
 ### Basic Sidebar Layout
