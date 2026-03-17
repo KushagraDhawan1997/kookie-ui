@@ -140,65 +140,37 @@ const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>
       };
     }, []);
 
-    const contentElement = (
-      <DialogPrimitive.Content
-        {...contentProps}
-        ref={combinedRef}
-        className={classNames('rt-BaseDialogContent', 'rt-DialogContent', className)}
-        data-material={materialValue}
-        data-panel-background={materialValue}
-        tabIndex={-1}
-        role="dialog"
-        aria-modal="true"
-        onCloseAutoFocus={(event) => {
-          // Prevent default focus behavior
-          event.preventDefault();
-          // Restore pointer-events to body (Radix UI fix for issue #1241)
-          document.body.style.pointerEvents = '';
-        }}
-      />
-    );
-
-    const ariaLiveRegion = (
-      <div
-        aria-live="polite"
-        aria-atomic="true"
-        className="rt-sr-only"
-        id="dialog-announcement"
-      />
-    );
-
-    // When forceMount is used, render Overlay and Content as siblings so the
-    // Overlay (which uses react-remove-scroll) can unmount independently when
-    // the dialog closes, while the Content stays mounted.
-    if (forceMount) {
-      return (
-        <DialogPrimitive.Portal container={container} forceMount>
-          <Theme>
-            <DialogPrimitive.Overlay className="rt-BaseDialogOverlay rt-DialogOverlay" />
-            <div className="rt-BaseDialogScroll rt-DialogScroll rt-BaseDialogScroll--detached">
-              <div
-                className={`rt-BaseDialogScrollPadding rt-DialogScrollPadding ${alignClassName}`}
-              >
-                {React.cloneElement(contentElement, { forceMount: true })}
-                {ariaLiveRegion}
-              </div>
-            </div>
-          </Theme>
-        </DialogPrimitive.Portal>
-      );
-    }
-
     return (
-      <DialogPrimitive.Portal container={container}>
+      <DialogPrimitive.Portal container={container} forceMount={forceMount}>
         <Theme asChild>
           <DialogPrimitive.Overlay className="rt-BaseDialogOverlay rt-DialogOverlay">
             <div className="rt-BaseDialogScroll rt-DialogScroll">
               <div
                 className={`rt-BaseDialogScrollPadding rt-DialogScrollPadding ${alignClassName}`}
               >
-                {contentElement}
-                {ariaLiveRegion}
+                <DialogPrimitive.Content
+                  {...contentProps}
+                  ref={combinedRef}
+                  className={classNames('rt-BaseDialogContent', 'rt-DialogContent', className)}
+                  data-material={materialValue}
+                  data-panel-background={materialValue}
+                  tabIndex={-1}
+                  role="dialog"
+                  aria-modal="true"
+                  onCloseAutoFocus={(event) => {
+                    // Prevent default focus behavior
+                    event.preventDefault();
+                    // Restore pointer-events to body (Radix UI fix for issue #1241)
+                    document.body.style.pointerEvents = '';
+                  }}
+                />
+                {/* ARIA live region for screen reader announcements */}
+                <div
+                  aria-live="polite"
+                  aria-atomic="true"
+                  className="rt-sr-only"
+                  id="dialog-announcement"
+                />
               </div>
             </div>
           </DialogPrimitive.Overlay>

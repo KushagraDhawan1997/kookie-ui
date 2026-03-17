@@ -18,18 +18,6 @@
   inset: 0;
 }
 
-/* When forceMount detaches the scroll wrapper from the overlay, it needs its
-   own fixed positioning and must become inert when the content is closed. */
-.rt-BaseDialogScroll--detached {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-}
-.rt-BaseDialogScroll--detached:has(.rt-BaseDialogContent[data-state='closed']) {
-  pointer-events: none;
-  visibility: hidden;
-}
-
 .rt-BaseDialogScrollPadding {
   flex-grow: 1;
   margin: auto;
