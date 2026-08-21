@@ -2,212 +2,315 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { usePaneResize } from './shell-resize.js';
 
-export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<'div'>>(({ className, children, ...props }, ref) => {
-  const {
-    containerRef,
-    cssVarName,
-    minSize,
-    maxSize,
-    defaultSize,
-    orientation,
-    edge,
-    computeNext,
-    onResize,
-    onResizeStart,
-    onResizeEnd,
-    snapPoints,
-    snapTolerance,
-    collapseThreshold,
-    collapsible,
-    target,
-    requestCollapse,
-    requestToggle,
-  } = usePaneResize();
+/** How long a held arrow key waits before the resize is treated as finished. */
+const KEY_COMMIT_DELAY_MS = 120;
 
-  const activeCleanupRef = React.useRef<(() => void) | null>(null);
-  React.useEffect(
-    () => () => {
-      try {
-        activeCleanupRef.current?.();
-      } catch {}
-      activeCleanupRef.current = null;
-    },
-    [],
-  );
+const TARGET_LABELS: Record<string, string> = {
+  left: 'Navigation',
+  rail: 'Navigation',
+  panel: 'Navigation panel',
+  sidebar: 'Sidebar',
+  inspector: 'Inspector',
+  bottom: 'Bottom panel',
+};
 
-  const ariaOrientation = orientation;
+function readSize(container: HTMLElement, cssVarName: string, fallback: number) {
+  const raw = getComputedStyle(container).getPropertyValue(cssVarName);
+  const parsed = Number.parseFloat(raw.trim());
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
 
-  // Generate accessible label from target
-  const targetLabel = target.charAt(0).toUpperCase() + target.slice(1);
-  const ariaLabel = `Resize ${targetLabel} pane`;
+export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<'div'>>(
+  ({ className, children, onKeyDown, onKeyUp, onBlur, onPointerDown, onDoubleClick, ...props }, ref) => {
+    const {
+      containerRef,
+      cssVarName,
+      minSize,
+      maxSize,
+      defaultSize,
+      currentSize,
+      orientation,
+      edge,
+      computeNext,
+      onResize,
+      onResizeStart,
+      onResizeEnd,
+      snapPoints,
+      snapTolerance,
+      collapseThreshold,
+      collapsible,
+      target,
+      requestCollapse,
+      requestToggle,
+    } = usePaneResize();
 
-  return (
-    <div
-      {...props}
-      ref={ref}
-      className={classNames('rt-ShellResizer', className)}
-      data-orientation={orientation}
-      data-edge={edge}
-      role="slider"
-      aria-label={ariaLabel}
-      aria-orientation={ariaOrientation}
-      aria-valuemin={minSize}
-      aria-valuemax={maxSize}
-      aria-valuenow={defaultSize}
-      tabIndex={0}
-      onPointerDown={(e) => {
-        if (!containerRef.current) return;
-        e.preventDefault();
-        const container = containerRef.current;
-        const handleEl = e.currentTarget as HTMLElement;
-        const pointerId = e.pointerId;
+    const handleRef = React.useRef<HTMLDivElement | null>(null);
+    const setRef = React.useCallback(
+      (node: HTMLDivElement | null) => {
+        handleRef.current = node;
+        if (typeof ref === 'function') ref(node);
+        else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      },
+      [ref],
+    );
+
+    const activeCleanupRef = React.useRef<(() => void) | null>(null);
+    const keySessionRef = React.useRef<{ timeout: ReturnType<typeof setTimeout> | null; size: number } | null>(null);
+
+    const endKeySession = React.useCallback(() => {
+      const session = keySessionRef.current;
+      if (!session) return;
+      if (session.timeout) clearTimeout(session.timeout);
+      keySessionRef.current = null;
+      onResizeEnd?.(session.size);
+    }, [onResizeEnd]);
+
+    React.useEffect(
+      () => () => {
         try {
           activeCleanupRef.current?.();
-        } catch {}
+        } catch {
+          /* the pane may already be detached */
+        }
+        activeCleanupRef.current = null;
+        const session = keySessionRef.current;
+        if (session?.timeout) clearTimeout(session.timeout);
+        keySessionRef.current = null;
+      },
+      [],
+    );
+
+    const clamp = React.useCallback((value: number) => Math.min(Math.max(value, minSize), maxSize), [minSize, maxSize]);
+
+    /** Writes a size to the DOM during an interaction. React state catches up when the gesture commits. */
+    const paint = React.useCallback(
+      (container: HTMLElement, next: number) => {
+        container.style.setProperty(cssVarName, `${next}px`);
+        handleRef.current?.setAttribute('aria-valuenow', String(Math.round(next)));
+        onResize?.(next);
+      },
+      [cssVarName, onResize],
+    );
+
+    const handlePointerDown = React.useCallback(
+      (event: React.PointerEvent<HTMLDivElement>) => {
+        onPointerDown?.(event);
+        if (event.defaultPrevented) return;
+        const container = containerRef.current;
+        if (!container) return;
+
+        event.preventDefault();
+        const handleEl = event.currentTarget;
+        const pointerId = event.pointerId;
+
+        try {
+          activeCleanupRef.current?.();
+        } catch {
+          /* a previous gesture may already be gone */
+        }
+        endKeySession();
+
         container.setAttribute('data-resizing', '');
         try {
           handleEl.setPointerCapture(pointerId);
-        } catch {}
-        const startClient = orientation === 'vertical' ? e.clientX : e.clientY;
-        const startSize = parseFloat(getComputedStyle(container).getPropertyValue(cssVarName) || `${defaultSize}`);
-        const clamp = (v: number) => Math.min(Math.max(v, minSize), maxSize);
+        } catch {
+          /* pointer capture is best-effort */
+        }
+
+        const startClient = orientation === 'vertical' ? event.clientX : event.clientY;
+        const startSize = readSize(container, cssVarName, defaultSize);
         const body = document.body;
-        const prevCursor = body.style.cursor;
-        const prevUserSelect = body.style.userSelect;
+        const previousCursor = body.style.cursor;
+        const previousUserSelect = body.style.userSelect;
         body.style.cursor = orientation === 'vertical' ? 'col-resize' : 'row-resize';
         body.style.userSelect = 'none';
         onResizeStart?.(startSize);
-        const handleMove = (ev: PointerEvent) => {
-          const client = orientation === 'vertical' ? ev.clientX : ev.clientY;
-          const next = clamp(computeNext(client, startClient, startSize));
-          container.style.setProperty(cssVarName, `${next}px`);
-          handleEl.setAttribute('aria-valuenow', String(next));
-          onResize?.(next);
+
+        const handleMove = (moveEvent: PointerEvent) => {
+          const client = orientation === 'vertical' ? moveEvent.clientX : moveEvent.clientY;
+          paint(container, clamp(computeNext(client, startClient, startSize)));
         };
+
         const cleanup = () => {
           try {
             handleEl.releasePointerCapture(pointerId);
-          } catch {}
-          window.removeEventListener('pointermove', handleMove as EventListener);
-          document.removeEventListener('pointermove', handleMove as EventListener);
-          window.removeEventListener('mousemove', handleMove as EventListener);
-          document.removeEventListener('mousemove', handleMove as EventListener);
-          handleEl.removeEventListener('pointermove', handleMove as EventListener);
-          window.removeEventListener('pointerup', handleUp as EventListener);
-          document.removeEventListener('pointerup', handleUp as EventListener);
-          window.removeEventListener('mouseup', handleUp as EventListener);
-          document.removeEventListener('mouseup', handleUp as EventListener);
-          window.removeEventListener('pointercancel', handleUp as EventListener);
-          document.removeEventListener('pointercancel', handleUp as EventListener);
-          window.removeEventListener('keydown', handleKey as EventListener);
-          handleEl.removeEventListener('lostpointercapture', handleUp as EventListener);
+          } catch {
+            /* capture may already be released */
+          }
+          window.removeEventListener('pointermove', handleMove);
+          window.removeEventListener('pointerup', handleUp);
+          window.removeEventListener('pointercancel', handleUp);
+          window.removeEventListener('keydown', handleKey);
+          handleEl.removeEventListener('lostpointercapture', handleUp);
           container.removeAttribute('data-resizing');
-          body.style.cursor = prevCursor;
-          body.style.userSelect = prevUserSelect;
+          body.style.cursor = previousCursor;
+          body.style.userSelect = previousUserSelect;
           activeCleanupRef.current = null;
         };
+
         const handleUp = () => {
-          const finalSize = parseFloat(getComputedStyle(container).getPropertyValue(cssVarName) || `${defaultSize}`);
-          let snapped = finalSize;
+          const finalSize = readSize(container, cssVarName, defaultSize);
+          let committed = finalSize;
+
           if (snapPoints && snapPoints.length) {
-            const nearest = snapPoints.reduce((acc, p) => (Math.abs(p - finalSize) < Math.abs(acc - finalSize) ? p : acc), snapPoints[0]);
+            const nearest = snapPoints.reduce((acc, point) => (Math.abs(point - finalSize) < Math.abs(acc - finalSize) ? point : acc), snapPoints[0]);
             if (Math.abs(nearest - finalSize) <= (snapTolerance ?? 8)) {
-              snapped = nearest;
-              container.style.setProperty(cssVarName, `${snapped}px`);
-              handleEl.setAttribute('aria-valuenow', String(snapped));
-              onResize?.(snapped);
+              committed = nearest;
+              paint(container, committed);
             }
           }
+
           if (collapsible && typeof collapseThreshold === 'number' && finalSize <= collapseThreshold) {
             requestCollapse?.();
           }
-          onResizeEnd?.(snapped);
+
+          onResizeEnd?.(committed);
           cleanup();
         };
-        const handleKey = (kev: KeyboardEvent) => {
-          if (kev.key === 'Escape') {
-            container.style.setProperty(cssVarName, `${startSize}px`);
-            handleEl.setAttribute('aria-valuenow', String(startSize));
-            onResizeEnd?.(startSize);
-            cleanup();
-          }
+
+        const handleKey = (keyEvent: KeyboardEvent) => {
+          if (keyEvent.key !== 'Escape') return;
+          paint(container, startSize);
+          onResizeEnd?.(startSize);
+          cleanup();
         };
-        window.addEventListener('pointermove', handleMove as EventListener);
-        document.addEventListener('pointermove', handleMove as EventListener);
-        // Fallbacks for environments that don't fully support PointerEvent on window
-        window.addEventListener('mousemove', handleMove as EventListener);
-        document.addEventListener('mousemove', handleMove as EventListener);
-        handleEl.addEventListener('pointermove', handleMove as EventListener);
-        window.addEventListener('pointerup', handleUp as EventListener);
-        document.addEventListener('pointerup', handleUp as EventListener);
-        window.addEventListener('mouseup', handleUp as EventListener);
-        document.addEventListener('mouseup', handleUp as EventListener);
-        window.addEventListener('pointercancel', handleUp as EventListener);
-        document.addEventListener('pointercancel', handleUp as EventListener);
-        window.addEventListener('keydown', handleKey as EventListener);
-        handleEl.addEventListener('lostpointercapture', handleUp as EventListener);
+
+        // One listener per event: the pointer is captured, so window sees every move.
+        window.addEventListener('pointermove', handleMove);
+        window.addEventListener('pointerup', handleUp);
+        window.addEventListener('pointercancel', handleUp);
+        window.addEventListener('keydown', handleKey);
+        handleEl.addEventListener('lostpointercapture', handleUp);
         activeCleanupRef.current = cleanup;
-      }}
-      onDoubleClick={() => {
-        if (collapsible) requestToggle?.();
-      }}
-      onKeyDown={(e) => {
-        if (!containerRef.current) return;
+      },
+      [
+        clamp,
+        collapseThreshold,
+        collapsible,
+        computeNext,
+        containerRef,
+        cssVarName,
+        defaultSize,
+        endKeySession,
+        onPointerDown,
+        onResizeEnd,
+        onResizeStart,
+        orientation,
+        paint,
+        requestCollapse,
+        snapPoints,
+        snapTolerance,
+      ],
+    );
+
+    const handleKeyDown = React.useCallback(
+      (event: React.KeyboardEvent<HTMLDivElement>) => {
+        onKeyDown?.(event);
+        if (event.defaultPrevented) return;
         const container = containerRef.current;
-        const rawCurrent = getComputedStyle(container).getPropertyValue(cssVarName);
-        const parsedCurrent = Number.parseFloat(rawCurrent.trim());
-        const current = Number.isFinite(parsedCurrent) ? parsedCurrent : defaultSize;
-        const clamp = (v: number) => Math.min(Math.max(v, minSize), maxSize);
-        const step = e.shiftKey ? 32 : 8;
-        let delta = 0;
-        if (orientation === 'vertical') {
-          const docDir = typeof document !== 'undefined' ? document.dir : undefined;
-          const cssDir = getComputedStyle(container).direction;
-          const hasRtlAncestor = !!(container.closest && container.closest('[dir="rtl"]'));
-          const isRtl = docDir === 'rtl' || cssDir === 'rtl' || hasRtlAncestor;
-          if (e.key === 'ArrowRight')
-            delta = isRtl ? -step : step; // inline-end
-          else if (e.key === 'ArrowLeft') delta = isRtl ? step : -step; // inline-start
+        if (!container) return;
+
+        const current = readSize(container, cssVarName, defaultSize);
+        const step = event.shiftKey ? 32 : 8;
+
+        let next: number | null = null;
+        if (event.key === 'Home') {
+          next = clamp(minSize);
+        } else if (event.key === 'End') {
+          next = clamp(maxSize);
         } else {
-          if (e.key === 'ArrowDown') delta = step;
-          else if (e.key === 'ArrowUp') delta = -step;
+          let delta = 0;
+          if (orientation === 'vertical') {
+            const documentDirection = typeof document !== 'undefined' ? document.dir : undefined;
+            const computedDirection = getComputedStyle(container).direction;
+            const hasRtlAncestor = Boolean(container.closest?.('[dir="rtl"]'));
+            const isRtl = documentDirection === 'rtl' || computedDirection === 'rtl' || hasRtlAncestor;
+            if (event.key === 'ArrowRight') delta = isRtl ? -step : step;
+            else if (event.key === 'ArrowLeft') delta = isRtl ? step : -step;
+          } else {
+            if (event.key === 'ArrowDown') delta = step;
+            else if (event.key === 'ArrowUp') delta = -step;
+          }
+          if (delta === 0) return;
+          // A handle on the start edge grows the pane when it moves away from the pane's content,
+          // so the key delta is inverted there — for both orientations.
+          next = clamp(current + (edge === 'start' ? -delta : delta));
         }
-        if (e.key === 'Home') {
-          e.preventDefault();
+
+        event.preventDefault();
+
+        // One resize session per burst of keys: start once, commit when the keys stop.
+        if (!keySessionRef.current) {
           onResizeStart?.(current);
-          const next = clamp(minSize);
-          container.style.setProperty(cssVarName, `${next}px`);
-          (e.currentTarget as HTMLElement).setAttribute('aria-valuenow', String(next));
-          onResize?.(next);
-          onResizeEnd?.(next);
-          return;
+          keySessionRef.current = { timeout: null, size: current };
         }
-        if (e.key === 'End') {
-          e.preventDefault();
-          onResizeStart?.(current);
-          const next = clamp(maxSize);
-          container.style.setProperty(cssVarName, `${next}px`);
-          (e.currentTarget as HTMLElement).setAttribute('aria-valuenow', String(next));
-          onResize?.(next);
-          onResizeEnd?.(next);
-          return;
-        }
-        if (delta !== 0) {
-          e.preventDefault();
-          onResizeStart?.(current);
-          const signedDelta = orientation === 'vertical' ? (edge === 'start' ? -delta : delta) : delta;
-          const next = clamp(current + signedDelta);
-          container.style.setProperty(cssVarName, `${next}px`);
-          (e.currentTarget as HTMLElement).setAttribute('aria-valuenow', String(next));
-          onResize?.(next);
-          onResizeEnd?.(next);
-        }
-      }}
-    >
-      {children}
-    </div>
-  );
-});
+        paint(container, next);
+
+        const session = keySessionRef.current;
+        session.size = next;
+        if (session.timeout) clearTimeout(session.timeout);
+        session.timeout = setTimeout(endKeySession, KEY_COMMIT_DELAY_MS);
+      },
+      [clamp, containerRef, cssVarName, defaultSize, edge, endKeySession, maxSize, minSize, onKeyDown, onResizeStart, orientation, paint],
+    );
+
+    const handleKeyUp = React.useCallback(
+      (event: React.KeyboardEvent<HTMLDivElement>) => {
+        onKeyUp?.(event);
+        endKeySession();
+      },
+      [endKeySession, onKeyUp],
+    );
+
+    const handleBlur = React.useCallback(
+      (event: React.FocusEvent<HTMLDivElement>) => {
+        onBlur?.(event);
+        endKeySession();
+      },
+      [endKeySession, onBlur],
+    );
+
+    const handleDoubleClick = React.useCallback(
+      (event: React.MouseEvent<HTMLDivElement>) => {
+        onDoubleClick?.(event);
+        if (event.defaultPrevented) return;
+        if (collapsible) requestToggle?.();
+      },
+      [collapsible, onDoubleClick, requestToggle],
+    );
+
+    const paneLabel = TARGET_LABELS[target] ?? target;
+
+    // A focusable `separator` is the ARIA window-splitter pattern: it is a widget, so it takes
+    // keyboard focus and key handlers. jsx-a11y only models the non-focusable, decorative variant.
+    /* eslint-disable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex */
+    return (
+      <div
+        {...props}
+        ref={setRef}
+        className={classNames('rt-ShellResizer', className)}
+        data-orientation={orientation}
+        data-edge={edge}
+        role="separator"
+        aria-label={`Resize ${paneLabel}`}
+        aria-orientation={orientation}
+        aria-valuemin={minSize}
+        aria-valuemax={maxSize}
+        aria-valuenow={Math.round(currentSize)}
+        aria-valuetext={`${Math.round(currentSize)} pixels`}
+        tabIndex={0}
+        onPointerDown={handlePointerDown}
+        onDoubleClick={handleDoubleClick}
+        onKeyDown={handleKeyDown}
+        onKeyUp={handleKeyUp}
+        onBlur={handleBlur}
+      >
+        {children}
+      </div>
+    );
+    /* eslint-enable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex */
+  },
+);
 PaneHandle.displayName = 'Shell.Handle';
 
 export const PanelHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<'div'>>((props, ref) => <PaneHandle {...props} ref={ref} />);

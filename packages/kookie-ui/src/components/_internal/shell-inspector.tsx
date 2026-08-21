@@ -2,14 +2,13 @@ import * as React from 'react';
 import classNames from 'classnames';
 import * as Sheet from '../sheet.js';
 import { VisuallyHidden } from '../visually-hidden.js';
-import { useInspectorMode, usePresentation, usePeek, useShellActions, useInset } from '../shell.context.js';
+import { useInspectorMode, usePresentation, usePeek, useShellActions, useInset, usePaneIds } from '../shell.context.js';
 import { useResponsivePresentation, useResponsiveInitialState } from '../shell.hooks.js';
 import { PaneResizeContext } from './shell-resize.js';
 import { InspectorHandle, PaneHandle } from './shell-handles.js';
-import { _BREAKPOINTS } from '../shell.types.js';
-import type { Breakpoint, PaneMode, PaneSizePersistence, PaneBaseProps, CSSPropertiesWithVars } from '../shell.types.js';
+import type { Breakpoint, PaneMode, PaneBaseProps, CSSPropertiesWithVars } from '../shell.types.js';
 import { extractPaneDomProps, mapResponsiveBooleanToPaneMode } from './shell-prop-helpers.js';
-import { normalizeToPx } from '../../helpers/normalize-to-px.js';
+import { usePaneSize, usePaneChangeNotify, usePaneExpandCollapse, useControlledSwitchWarning } from './shell-pane-hooks.js';
 
 type InspectorOpenChangeMeta = { reason: 'init' | 'toggle' | 'responsive' };
 type InspectorControlledProps = { open: boolean | Partial<Record<Breakpoint, boolean>>; onOpenChange?: (open: boolean, meta: InspectorOpenChangeMeta) => void; defaultOpen?: never };
@@ -81,6 +80,14 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
   const { peekTarget } = usePeek();
   const { togglePane } = useShellActions();
   const { registerInset, unregisterInset } = useInset();
+  const { registerPaneId } = usePaneIds();
+
+  const generatedId = React.useId();
+  const elementId = initialProps.id ?? generatedId;
+  React.useEffect(() => {
+    registerPaneId('inspector', elementId);
+    return () => registerPaneId('inspector', undefined);
+  }, [registerPaneId, elementId]);
 
   // Register/unregister inset
   React.useLayoutEffect(() => {
@@ -105,12 +112,12 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
   const handleChildren = childArray.filter((el: React.ReactElement) => React.isValidElement(el) && el.type === InspectorHandle);
   const contentChildren = childArray.filter((el: React.ReactElement) => !(React.isValidElement(el) && el.type === InspectorHandle));
 
+  const isControlled = typeof open !== 'undefined';
+
   // Stable ref for onOpenChange to avoid effect dep churn
   const onOpenChangeRef = React.useRef(onOpenChange);
-  const openRef = React.useRef(open);
   React.useLayoutEffect(() => {
     onOpenChangeRef.current = onOpenChange;
-    openRef.current = open;
   });
 
   const normalizedControlledOpen = React.useMemo(() => mapResponsiveBooleanToPaneMode(open), [open]);
@@ -125,190 +132,59 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
     controlledIsResponsive: openIsResponsive,
     onResponsiveChange: (next) => onOpenChangeRef.current?.(next === 'expanded', { reason: 'responsive' }),
     onInit: (initial) => {
-      if (typeof openRef.current === 'undefined') {
+      if (!isControlled) {
         onOpenChangeRef.current?.(initial === 'expanded', { reason: 'init' });
       }
     },
   });
 
-  // Ref for debounce cleanup
-  const debounceTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  // Cleanup debounce timeout on unmount or when dependencies change
-  React.useEffect(() => {
-    return () => {
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
-        debounceTimeoutRef.current = null;
-      }
-    };
-  }, [onSizeChange, sizeUpdate, sizeUpdateMs]);
-  // Throttled/debounced emitter for onSizeChange
-  const emitSizeChange = React.useMemo(() => {
-    const cb = onSizeChange as undefined | ((s: number, meta: InspectorSizeChangeMeta) => void);
-    const strategy = sizeUpdate as undefined | 'throttle' | 'debounce';
-    const ms = sizeUpdateMs ?? 50;
-    if (!cb) return () => {};
-    if (strategy === 'debounce') {
-      return (s: number, meta: InspectorSizeChangeMeta) => {
-        if (debounceTimeoutRef.current) clearTimeout(debounceTimeoutRef.current);
-        debounceTimeoutRef.current = setTimeout(() => {
-          cb(s, meta);
-          debounceTimeoutRef.current = null;
-        }, ms);
-      };
-    }
-    if (strategy === 'throttle') {
-      let last = 0;
-      return (s: number, meta: InspectorSizeChangeMeta) => {
-        const now = Date.now();
-        if (now - last >= ms) {
-          last = now;
-          cb(s, meta);
-        }
-      };
-    }
-    return (s: number, meta: InspectorSizeChangeMeta) => cb(s, meta);
-  }, [onSizeChange, sizeUpdate, sizeUpdateMs]);
-
   // Dev guards
-  const wasControlledRef = React.useRef<boolean | null>(null);
   if (process.env.NODE_ENV !== 'production') {
     if (typeof open !== 'undefined' && typeof defaultOpen !== 'undefined') {
       console.error('Shell.Inspector: Do not pass both `open` and `defaultOpen`. Choose one.');
     }
+    if (typeof size !== 'undefined' && typeof defaultSize !== 'undefined') {
+      console.error('Shell.Inspector: Do not pass both `size` and `defaultSize`. Choose one.');
+    }
   }
+  useControlledSwitchWarning('Shell.Inspector', 'open', isControlled);
 
-  // Warn on controlled/uncontrolled mode switch
-  React.useEffect(() => {
-    const isControlled = typeof open !== 'undefined';
-    if (wasControlledRef.current === null) {
-      wasControlledRef.current = isControlled;
-      return;
-    }
-    if (wasControlledRef.current !== isControlled) {
-      console.warn('Shell.Inspector: Switching between controlled and uncontrolled `open` is not supported.');
-      wasControlledRef.current = isControlled;
-    }
-  }, [open]);
-
-  // Emit mode changes. In controlled mode, skip when mode matches the controlled prop.
-  const lastInspectorModeRef = React.useRef<PaneMode | null>(null);
-  const lastResolvedInspectorControlledRef = React.useRef<PaneMode | undefined>(undefined);
-  React.useEffect(() => {
-    const prevInspectorMode = lastInspectorModeRef.current;
-    const prevResolvedControlled = lastResolvedInspectorControlledRef.current;
-    const controlledChanged = prevResolvedControlled !== resolvedInspectorControlled;
-
-    if (prevInspectorMode !== null && prevInspectorMode !== inspectorMode) {
-      const nextOpen = inspectorMode === 'expanded';
-      const isControlled = typeof openRef.current !== 'undefined';
-      const controlledTarget = resolvedInspectorControlled === undefined ? undefined : resolvedInspectorControlled === 'expanded';
-
-      if (!isControlled || (!controlledChanged && nextOpen !== controlledTarget)) {
-        onOpenChangeRef.current?.(nextOpen, { reason: 'toggle' });
-      }
-    }
-
-    lastInspectorModeRef.current = inspectorMode;
-    lastResolvedInspectorControlledRef.current = resolvedInspectorControlled;
-  }, [inspectorMode, resolvedInspectorControlled]);
-
-  // Track previous mode to only fire callbacks on actual user-initiated state transitions.
-  // We wait for breakpointReady to ensure the initial state sync from useResponsiveInitialState
-  // is complete before enabling callbacks. This avoids spurious callbacks during initialization.
-  // Use callback refs to avoid re-running effect when inline callbacks change.
-  const onExpandRef = React.useRef(onExpand);
-  const onCollapseRef = React.useRef(onCollapse);
-  React.useLayoutEffect(() => {
-    onExpandRef.current = onExpand;
-    onCollapseRef.current = onCollapse;
+  usePaneChangeNotify<PaneMode>({
+    value: inspectorMode,
+    resolvedControlled: resolvedInspectorControlled,
+    isControlled,
+    notify: (mode) => onOpenChangeRef.current?.(mode === 'expanded', { reason: 'toggle' }),
   });
 
-  const prevInspectorModeRef = React.useRef<PaneMode | null>(null);
-  const hasInitializedRef = React.useRef(false);
-  React.useEffect(() => {
-    const currentMode = inspectorMode;
-
-    // Wait for breakpoint to be ready before enabling callbacks
-    if (!currentBreakpointReady) {
-      prevInspectorModeRef.current = currentMode;
-      return;
-    }
-
-    // Skip the first run after breakpoint is ready - this captures the post-sync state
-    if (!hasInitializedRef.current) {
-      hasInitializedRef.current = true;
-      prevInspectorModeRef.current = currentMode;
-      return;
-    }
-
-    const prevMode = prevInspectorModeRef.current;
-
-    // Only fire on actual state transitions
-    if (prevMode !== null && prevMode !== currentMode) {
-      if (currentMode === 'expanded') {
-        onExpandRef.current?.();
-      } else if (currentMode === 'collapsed') {
-        onCollapseRef.current?.();
-      }
-      prevInspectorModeRef.current = currentMode;
-    }
-  }, [inspectorMode, currentBreakpointReady]);
+  usePaneExpandCollapse<PaneMode>({
+    mode: inspectorMode,
+    isOpen: isPaneOpen,
+    breakpointReady: currentBreakpointReady,
+    onExpand,
+    onCollapse,
+  });
 
   const isExpanded = inspectorMode === 'expanded';
 
-  const persistenceAdapter = React.useMemo(() => {
-    if (!paneId || persistence) return persistence;
-    const key = `kookie-ui:shell:inspector:${paneId}`;
-    const adapter: PaneSizePersistence = {
-      load: () => {
-        if (typeof window === 'undefined') return undefined;
-        try {
-          const v = window.localStorage.getItem(key);
-          return v ? Number(v) : undefined;
-        } catch (err) {
-          if (process.env.NODE_ENV !== 'production') {
-            console.warn('Shell.Inspector: failed to load persisted size', err);
-          }
-          return undefined;
-        }
-      },
-      save: (size: number) => {
-        if (typeof window === 'undefined') return;
-        try {
-          window.localStorage.setItem(key, String(size));
-        } catch (err) {
-          if (process.env.NODE_ENV !== 'production') {
-            console.warn('Shell.Inspector: failed to save persisted size', err);
-          }
-        }
-      },
-    };
-    return adapter;
-  }, [paneId, persistence]);
-
-  React.useEffect(() => {
-    let mounted = true;
-    if (!resizable || !persistenceAdapter?.load || isOverlay) return undefined;
-    const loaded = persistenceAdapter.load();
-    const applyLoaded = (value?: number) => {
-      if (!mounted || typeof value !== 'number' || !localRef.current) return;
-      localRef.current.style.setProperty('--inspector-size', `${value}px`);
-      onResize?.(value);
-    };
-    if (loaded instanceof Promise) {
-      loaded.then(applyLoaded).catch((err) => {
-        if (process.env.NODE_ENV !== 'production') {
-          console.warn('Shell.Inspector: failed to load persisted size', err);
-        }
-      });
-    } else {
-      applyLoaded(loaded);
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [resizable, persistenceAdapter, onResize, isOverlay]);
+  const { currentSize, commitSize, persistenceAdapter } = usePaneSize({
+    containerRef: localRef,
+    cssVar: '--inspector-size',
+    storageNamespace: 'inspector',
+    orientation: 'horizontal',
+    componentName: 'Shell.Inspector',
+    expandedSize,
+    minSize,
+    maxSize,
+    size,
+    defaultSize,
+    onSizeChange,
+    sizeUpdate,
+    sizeUpdateMs,
+    onResize,
+    paneId,
+    persistence,
+    persistenceEnabled: Boolean(resizable) && !isOverlay,
+  });
 
   const handleEl =
     resizable && !isOverlay && isExpanded ? (
@@ -319,19 +195,21 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
           minSize,
           maxSize,
           defaultSize: expandedSize,
+          currentSize,
           orientation: 'vertical',
           edge: 'start',
           computeNext: (client, startClient, startSize) => {
-            const isRtl = getComputedStyle(localRef.current!).direction === 'rtl';
+            const container = localRef.current;
+            const isRtl = container ? getComputedStyle(container).direction === 'rtl' : false;
             const delta = client - startClient;
             return startSize + (isRtl ? delta : -delta);
           },
           onResize,
           onResizeStart,
-          onResizeEnd: (size) => {
-            onResizeEnd?.(size);
-            emitSizeChange(size, { reason: 'resize' });
-            persistenceAdapter?.save?.(size);
+          onResizeEnd: (nextSize) => {
+            onResizeEnd?.(nextSize);
+            commitSize(nextSize, 'resize');
+            persistenceAdapter?.save?.(nextSize);
           },
           target: 'inspector',
           collapsible,
@@ -346,44 +224,10 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
       </PaneResizeContext.Provider>
     ) : null;
 
-  // Normalize CSS lengths to px helper
-  const normalizeSizeToPx = React.useCallback((value: number | string | undefined) => normalizeToPx(value, 'horizontal'), []);
-
-  // Apply defaultSize on mount when uncontrolled
-  React.useEffect(() => {
-    if (!localRef.current) return;
-    if (typeof size === 'undefined' && typeof defaultSize !== 'undefined') {
-      const px = normalizeSizeToPx(defaultSize);
-      if (typeof px === 'number' && Number.isFinite(px)) {
-        const minPx = typeof minSize === 'number' ? minSize : undefined;
-        const maxPx = typeof maxSize === 'number' ? maxSize : undefined;
-        const clamped = Math.min(maxPx ?? px, Math.max(minPx ?? px, px));
-        localRef.current.style.setProperty('--inspector-size', `${clamped}px`);
-        emitSizeChange(clamped, { reason: 'init' });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Controlled size sync
-  const controlledSize = size;
-  React.useEffect(() => {
-    if (!localRef.current) return;
-    if (typeof controlledSize === 'undefined') return;
-    const px = normalizeSizeToPx(controlledSize);
-    if (typeof px === 'number' && Number.isFinite(px)) {
-      const minPx = typeof minSize === 'number' ? minSize : undefined;
-      const maxPx = typeof maxSize === 'number' ? maxSize : undefined;
-      const clamped = Math.min(maxPx ?? px, Math.max(minPx ?? px, px));
-      localRef.current.style.setProperty('--inspector-size', `${clamped}px`);
-      emitSizeChange(clamped, { reason: 'controlled' });
-    }
-  }, [controlledSize, minSize, maxSize, normalizeSizeToPx, emitSizeChange]);
-
   if (isOverlay) {
-    const open = inspectorMode === 'expanded';
+    const overlayOpen = inspectorMode === 'expanded';
     return (
-      <Sheet.Root open={open} onOpenChange={(o) => setInspectorMode(o ? 'expanded' : 'collapsed')}>
+      <Sheet.Root open={overlayOpen} onOpenChange={(o) => setInspectorMode(o ? 'expanded' : 'collapsed')}>
         <Sheet.Content side="end" style={{ padding: 0 }} aria-label="Inspector" aria-describedby={undefined} width={{ initial: `${expandedSize}px` }}>
           <VisuallyHidden>
             <Sheet.Title>Inspector</Sheet.Title>
@@ -397,7 +241,10 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
   // Strip control/size props from DOM spread
   return (
     <div
+      role="complementary"
+      aria-label="Inspector"
       {...inspectorDomProps}
+      id={elementId}
       ref={setRef}
       className={classNames('rt-ShellInspector', className)}
       data-mode={inspectorMode}
@@ -405,12 +252,14 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
       data-presentation={currentBreakpointReady ? resolvedPresentation : undefined}
       data-open={(currentBreakpointReady && isStacked && isExpanded) || undefined}
       data-inset={inset || undefined}
-      style={{
-        ...style,
-        '--inspector-size': `${expandedSize}px`,
-        '--inspector-min-size': `${minSize}px`,
-        '--inspector-max-size': `${maxSize}px`,
-      } as CSSPropertiesWithVars}
+      style={
+        {
+          ...style,
+          '--inspector-size': `${currentSize}px`,
+          '--inspector-min-size': `${minSize}px`,
+          '--inspector-max-size': `${maxSize}px`,
+        } as CSSPropertiesWithVars
+      }
     >
       <div className="rt-ShellInspectorContent" data-visible={isExpanded || undefined}>
         {contentChildren}
@@ -419,6 +268,10 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
     </div>
   );
 }) as InspectorComponent;
+
+function isPaneOpen(mode: PaneMode) {
+  return mode === 'expanded';
+}
 
 Inspector.displayName = 'Shell.Inspector';
 Inspector.Handle = InspectorHandle;

@@ -12,12 +12,7 @@ describe('Inspector onExpand/onCollapse callbacks', () => {
     renderWithProviders(
       <Shell.Root>
         <Shell.Content>content</Shell.Content>
-        <Shell.Inspector
-          presentation={{ initial: 'fixed' }}
-          defaultOpen={false}
-          onExpand={onExpand}
-          onCollapse={onCollapse}
-        >
+        <Shell.Inspector presentation={{ initial: 'fixed' }} defaultOpen={false} onExpand={onExpand} onCollapse={onCollapse}>
           inspector
         </Shell.Inspector>
       </Shell.Root>,
@@ -34,12 +29,7 @@ describe('Inspector onExpand/onCollapse callbacks', () => {
     renderWithProviders(
       <Shell.Root>
         <Shell.Content>content</Shell.Content>
-        <Shell.Inspector
-          presentation={{ initial: 'fixed' }}
-          defaultOpen={true}
-          onExpand={onExpand}
-          onCollapse={onCollapse}
-        >
+        <Shell.Inspector presentation={{ initial: 'fixed' }} defaultOpen={true} onExpand={onExpand} onCollapse={onCollapse}>
           inspector
         </Shell.Inspector>
       </Shell.Root>,
@@ -61,12 +51,7 @@ describe('Inspector onExpand/onCollapse callbacks', () => {
             <button onClick={() => setOpen(true)}>open</button>
           </Shell.Header>
           <Shell.Content>content</Shell.Content>
-          <Shell.Inspector
-            presentation={{ initial: 'fixed' }}
-            open={open}
-            onExpand={onExpand}
-            onCollapse={onCollapse}
-          >
+          <Shell.Inspector presentation={{ initial: 'fixed' }} open={open} onExpand={onExpand} onCollapse={onCollapse}>
             inspector
           </Shell.Inspector>
         </Shell.Root>
@@ -100,12 +85,7 @@ describe('Inspector onExpand/onCollapse callbacks', () => {
             <button onClick={() => setOpen(false)}>close</button>
           </Shell.Header>
           <Shell.Content>content</Shell.Content>
-          <Shell.Inspector
-            presentation={{ initial: 'fixed' }}
-            open={open}
-            onExpand={onExpand}
-            onCollapse={onCollapse}
-          >
+          <Shell.Inspector presentation={{ initial: 'fixed' }} open={open} onExpand={onExpand} onCollapse={onCollapse}>
             inspector
           </Shell.Inspector>
         </Shell.Root>
@@ -139,12 +119,7 @@ describe('Inspector onExpand/onCollapse callbacks', () => {
             <button onClick={() => setOpen((o) => !o)}>toggle</button>
           </Shell.Header>
           <Shell.Content>content</Shell.Content>
-          <Shell.Inspector
-            presentation={{ initial: 'fixed' }}
-            open={open}
-            onExpand={onExpand}
-            onCollapse={onCollapse}
-          >
+          <Shell.Inspector presentation={{ initial: 'fixed' }} open={open} onExpand={onExpand} onCollapse={onCollapse}>
             inspector
           </Shell.Inspector>
         </Shell.Root>
@@ -173,4 +148,3 @@ describe('Inspector onExpand/onCollapse callbacks', () => {
     expect(onCollapse).toHaveBeenCalledTimes(1);
   });
 });
-

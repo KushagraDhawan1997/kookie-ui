@@ -65,7 +65,7 @@ export function ShellProvider({ value, children }: { value: ShellContextValue; c
 // Pane mode slice contexts
 type ModeSetter<T> = (mode: T) => void;
 
-export const LeftModeContext = React.createContext<{ leftMode: PaneMode; setLeftMode: ModeSetter<PaneMode> } | null>(null);
+export const LeftModeContext = React.createContext<{ leftMode: PaneMode; setLeftMode: ModeSetter<PaneMode>; leftControlledOpen?: boolean } | null>(null);
 export function useLeftMode() {
   const ctx = React.useContext(LeftModeContext);
   if (!ctx) throw new Error('useLeftMode must be used within Shell.Root');
@@ -109,9 +109,7 @@ export function usePresentation() {
 }
 
 // Peek slice
-export const PeekContext = React.createContext<{ peekTarget: PaneTarget | null; setPeekTarget: (t: PaneTarget | null) => void; peekPane: (t: PaneTarget) => void; clearPeek: () => void } | null>(
-  null,
-);
+export const PeekContext = React.createContext<{ peekTarget: PaneTarget | null; setPeekTarget: (t: PaneTarget | null) => void; peekPane: (t: PaneTarget) => void; clearPeek: () => void } | null>(null);
 export function usePeek() {
   const ctx = React.useContext(PeekContext);
   if (!ctx) throw new Error('usePeek must be used within Shell.Root');
@@ -124,6 +122,11 @@ export const ActionsContext = React.createContext<{
   expandPane: (t: PaneTarget) => void;
   collapsePane: (t: PaneTarget) => void;
   setSidebarToggleComputer?: (fn: (current: SidebarMode) => SidebarMode) => void;
+  /** Left publishes its resolved presentation so Rail and Panel can gate peek behaviour. */
+  onLeftPres?: (presentation: PresentationValue) => void;
+  /** Rail and Panel publish their expanded sizes for peek measurements. */
+  onRailDefaults?: (size: number) => void;
+  onPanelDefaults?: (size: number) => void;
 } | null>(null);
 export function useShellActions() {
   const ctx = React.useContext(ActionsContext);
@@ -150,5 +153,14 @@ export const InsetContext = React.createContext<{
 export function useInset() {
   const ctx = React.useContext(InsetContext);
   if (!ctx) throw new Error('useInset must be used within Shell.Root');
+  return ctx;
+}
+
+// Pane id slice - lets Trigger point `aria-controls` at the pane it operates
+export type PaneIdMap = Partial<Record<PaneTarget, string>>;
+export const PaneIdContext = React.createContext<{ paneIds: PaneIdMap; registerPaneId: (target: PaneTarget, id: string | undefined) => void } | null>(null);
+export function usePaneIds() {
+  const ctx = React.useContext(PaneIdContext);
+  if (!ctx) throw new Error('usePaneIds must be used within Shell.Root');
   return ctx;
 }

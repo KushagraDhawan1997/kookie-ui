@@ -6,11 +6,11 @@ import { Shell } from '../../../src/components/index';
 
 /**
  * Layout tests for Issue 1: Collapsed panes taking up space
- * 
+ *
  * Note: jsdom doesn't compute CSS styles, so we test:
  * 1. The data-mode attribute is correctly set (CSS relies on this)
  * 2. The layout relationship between content and body
- * 
+ *
  * The actual CSS rules are verified by inspecting shell.css which has:
  * - .rt-ShellInspector[data-mode='collapsed'] { position: absolute; width: 0px; flex-shrink: 0; flex-basis: 0; }
  * - .rt-ShellSidebar[data-mode='collapsed'] { position: absolute; width: 0px; flex-shrink: 0; flex-basis: 0; }
@@ -252,4 +252,3 @@ describe('Collapsed panes layout (Issue 1: space taken when collapsed)', () => {
     });
   });
 });
-

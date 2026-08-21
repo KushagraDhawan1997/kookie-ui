@@ -3,31 +3,34 @@ import type { Breakpoint, PresentationValue, ResponsivePresentation } from './sh
 import { _BREAKPOINTS } from './shell.types.js';
 import { useShell } from './shell.context.js';
 
+/**
+ * Breakpoint chain, widest first. Resolution walks down from the current breakpoint.
+ */
+const BREAKPOINT_FALLBACK_ORDER: Breakpoint[] = ([...(Object.keys(_BREAKPOINTS) as Array<keyof typeof _BREAKPOINTS>)].reverse() as Breakpoint[]).concat('initial' as Breakpoint);
+
+/**
+ * Resolve a responsive value against a breakpoint, without React.
+ * Falls back through smaller breakpoints down to `initial`.
+ */
+function resolveResponsiveValue<T>(value: T | Partial<Record<Breakpoint, T>> | undefined, breakpoint: Breakpoint): T | undefined {
+  if (value == null) return undefined;
+  if (typeof value !== 'object') return value as T;
+
+  const map = value as Partial<Record<Breakpoint, T>>;
+  if (map[breakpoint] !== undefined) return map[breakpoint];
+
+  const startIdx = BREAKPOINT_FALLBACK_ORDER.indexOf(breakpoint);
+  for (let i = startIdx + 1; i < BREAKPOINT_FALLBACK_ORDER.length; i++) {
+    const bp = BREAKPOINT_FALLBACK_ORDER[i];
+    if (map[bp] !== undefined) return map[bp];
+  }
+  return undefined;
+}
+
 function useResponsivePresentation(presentation: ResponsivePresentation): PresentationValue {
   const { currentBreakpoint } = useShell();
 
-  return React.useMemo(() => {
-    if (typeof presentation === 'string') {
-      return presentation;
-    }
-
-    if (presentation[currentBreakpoint]) {
-      return presentation[currentBreakpoint]!;
-    }
-
-    const bpKeys = Object.keys(_BREAKPOINTS) as Array<keyof typeof _BREAKPOINTS>;
-    const order: Breakpoint[] = ([...bpKeys].reverse() as Breakpoint[]).concat('initial' as Breakpoint);
-    const startIdx = order.indexOf(currentBreakpoint as Breakpoint);
-
-    for (let i = startIdx + 1; i < order.length; i++) {
-      const bp = order[i];
-      if (presentation[bp]) {
-        return presentation[bp]!;
-      }
-    }
-
-    return 'fixed';
-  }, [presentation, currentBreakpoint]);
+  return React.useMemo(() => resolveResponsiveValue<PresentationValue>(presentation, currentBreakpoint) ?? 'fixed', [presentation, currentBreakpoint]);
 }
 
 /**
@@ -38,31 +41,7 @@ function useResponsivePresentation(presentation: ResponsivePresentation): Presen
 function useResponsiveValue<T>(value: T | Partial<Record<Breakpoint, T>> | undefined): T | undefined {
   const { currentBreakpoint } = useShell();
 
-  return React.useMemo(() => {
-    if (value == null) return undefined;
-    // Primitive value
-    if (typeof value !== 'object') {
-      return value as T;
-    }
-
-    const map = value as Partial<Record<Breakpoint, T>>;
-    if (map[currentBreakpoint as Breakpoint] !== undefined) {
-      return map[currentBreakpoint as Breakpoint] as T;
-    }
-
-    const bpKeys = Object.keys(_BREAKPOINTS) as Array<keyof typeof _BREAKPOINTS>;
-    const order: Breakpoint[] = ([...bpKeys].reverse() as Breakpoint[]).concat('initial' as Breakpoint);
-    const startIdx = order.indexOf(currentBreakpoint as Breakpoint);
-
-    for (let i = startIdx + 1; i < order.length; i++) {
-      const bp = order[i];
-      if (map[bp] !== undefined) {
-        return map[bp] as T;
-      }
-    }
-
-    return undefined;
-  }, [value, currentBreakpoint]);
+  return React.useMemo(() => resolveResponsiveValue<T>(value, currentBreakpoint), [value, currentBreakpoint]);
 }
 
 type ResponsiveStateValue<T> = T | Partial<Record<Breakpoint, T>>;
@@ -175,4 +154,4 @@ function useResponsiveInitialState<T>({
   return { resolvedControlled, resolvedDefault };
 }
 
-export { useResponsivePresentation, useResponsiveValue, useResponsiveInitialState };
+export { useResponsivePresentation, useResponsiveValue, useResponsiveInitialState, resolveResponsiveValue };

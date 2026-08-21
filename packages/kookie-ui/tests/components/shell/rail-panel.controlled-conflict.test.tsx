@@ -61,9 +61,7 @@ describe('Rail/Panel controlled conflict resolution', () => {
   it('closing rail requests panel close without re-opening rail', async () => {
     const railSpy = vi.fn();
     const panelSpy = vi.fn();
-    renderWithProviders(
-      <ControlledConflictFixture onRailOpenChange={railSpy} onPanelOpenChange={panelSpy} />,
-    );
+    renderWithProviders(<ControlledConflictFixture onRailOpenChange={railSpy} onPanelOpenChange={panelSpy} />);
 
     await userEvent.click(screen.getByRole('button', { name: /close rail/i }));
 
@@ -80,9 +78,7 @@ describe('Rail/Panel controlled conflict resolution', () => {
   it('opening panel requests rail open when rail is controlled closed', async () => {
     const railSpy = vi.fn();
     const panelSpy = vi.fn();
-    renderWithProviders(
-      <ControlledConflictFixture initialRailOpen={false} initialPanelOpen={false} onRailOpenChange={railSpy} onPanelOpenChange={panelSpy} />,
-    );
+    renderWithProviders(<ControlledConflictFixture initialRailOpen={false} initialPanelOpen={false} onRailOpenChange={railSpy} onPanelOpenChange={panelSpy} />);
 
     await userEvent.click(screen.getByRole('button', { name: /open panel/i }));
 

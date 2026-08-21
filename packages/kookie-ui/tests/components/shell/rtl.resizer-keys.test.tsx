@@ -38,27 +38,27 @@ function AppInspectorRTL({ dir = 'rtl' as 'rtl' | 'ltr' }) {
 describe('RTL logical resizer keys', () => {
   it('Panel vertical resizer: ArrowLeft grows, ArrowRight shrinks in RTL', () => {
     renderWithProviders(<AppPanelRTL dir="rtl" />);
-    const slider = screen.getByRole('slider');
-    const style = getComputedStyle(slider.parentElement as HTMLElement);
+    const handle = screen.getByRole('separator');
+    const style = getComputedStyle(handle.parentElement as HTMLElement);
     const before = parseFloat(style.getPropertyValue('--panel-size')) || 200;
-    fireEvent.keyDown(slider, { key: 'ArrowLeft' });
-    const afterLeft = parseFloat(getComputedStyle(slider.parentElement as HTMLElement).getPropertyValue('--panel-size')) || before;
+    fireEvent.keyDown(handle, { key: 'ArrowLeft' });
+    const afterLeft = parseFloat(getComputedStyle(handle.parentElement as HTMLElement).getPropertyValue('--panel-size')) || before;
     expect(afterLeft).toBeGreaterThan(before);
-    fireEvent.keyDown(slider, { key: 'ArrowRight' });
-    const afterRight = parseFloat(getComputedStyle(slider.parentElement as HTMLElement).getPropertyValue('--panel-size')) || afterLeft;
+    fireEvent.keyDown(handle, { key: 'ArrowRight' });
+    const afterRight = parseFloat(getComputedStyle(handle.parentElement as HTMLElement).getPropertyValue('--panel-size')) || afterLeft;
     expect(afterRight).toBeLessThanOrEqual(afterLeft);
   });
 
   it('Inspector vertical resizer: ArrowLeft shrinks, ArrowRight grows in RTL (edge=start)', () => {
     renderWithProviders(<AppInspectorRTL dir="rtl" />);
-    const inspectorSlider = screen.getByRole('slider');
-    const style = getComputedStyle(inspectorSlider.parentElement as HTMLElement);
+    const inspectorHandle = screen.getByRole('separator');
+    const style = getComputedStyle(inspectorHandle.parentElement as HTMLElement);
     const before = parseFloat(style.getPropertyValue('--inspector-size')) || 320;
-    fireEvent.keyDown(inspectorSlider, { key: 'ArrowLeft' });
-    const afterLeft = parseFloat(getComputedStyle(inspectorSlider.parentElement as HTMLElement).getPropertyValue('--inspector-size')) || before;
+    fireEvent.keyDown(inspectorHandle, { key: 'ArrowLeft' });
+    const afterLeft = parseFloat(getComputedStyle(inspectorHandle.parentElement as HTMLElement).getPropertyValue('--inspector-size')) || before;
     expect(afterLeft).toBeLessThan(before);
-    fireEvent.keyDown(inspectorSlider, { key: 'ArrowRight' });
-    const afterRight = parseFloat(getComputedStyle(inspectorSlider.parentElement as HTMLElement).getPropertyValue('--inspector-size')) || afterLeft;
+    fireEvent.keyDown(inspectorHandle, { key: 'ArrowRight' });
+    const afterRight = parseFloat(getComputedStyle(inspectorHandle.parentElement as HTMLElement).getPropertyValue('--inspector-size')) || afterLeft;
     expect(afterRight).toBeGreaterThanOrEqual(afterLeft);
   });
 });

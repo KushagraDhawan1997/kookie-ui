@@ -11,12 +11,7 @@ describe('Sidebar onExpand/onCollapse callbacks', () => {
 
     renderWithProviders(
       <Shell.Root>
-        <Shell.Sidebar
-          presentation="fixed"
-          defaultState="collapsed"
-          onExpand={onExpand}
-          onCollapse={onCollapse}
-        >
+        <Shell.Sidebar presentation="fixed" defaultState="collapsed" onExpand={onExpand} onCollapse={onCollapse}>
           sidebar
         </Shell.Sidebar>
         <Shell.Content>content</Shell.Content>
@@ -33,12 +28,7 @@ describe('Sidebar onExpand/onCollapse callbacks', () => {
 
     renderWithProviders(
       <Shell.Root>
-        <Shell.Sidebar
-          presentation="fixed"
-          defaultState="expanded"
-          onExpand={onExpand}
-          onCollapse={onCollapse}
-        >
+        <Shell.Sidebar presentation="fixed" defaultState="expanded" onExpand={onExpand} onCollapse={onCollapse}>
           sidebar
         </Shell.Sidebar>
         <Shell.Content>content</Shell.Content>
@@ -60,12 +50,7 @@ describe('Sidebar onExpand/onCollapse callbacks', () => {
           <Shell.Header>
             <button onClick={() => setState('expanded')}>expand</button>
           </Shell.Header>
-          <Shell.Sidebar
-            presentation="fixed"
-            state={state}
-            onExpand={onExpand}
-            onCollapse={onCollapse}
-          >
+          <Shell.Sidebar presentation="fixed" state={state} onExpand={onExpand} onCollapse={onCollapse}>
             sidebar
           </Shell.Sidebar>
           <Shell.Content>content</Shell.Content>
@@ -99,12 +84,7 @@ describe('Sidebar onExpand/onCollapse callbacks', () => {
           <Shell.Header>
             <button onClick={() => setState('thin')}>thin</button>
           </Shell.Header>
-          <Shell.Sidebar
-            presentation="fixed"
-            state={state}
-            onExpand={onExpand}
-            onCollapse={onCollapse}
-          >
+          <Shell.Sidebar presentation="fixed" state={state} onExpand={onExpand} onCollapse={onCollapse}>
             sidebar
           </Shell.Sidebar>
           <Shell.Content>content</Shell.Content>
@@ -138,12 +118,7 @@ describe('Sidebar onExpand/onCollapse callbacks', () => {
           <Shell.Header>
             <button onClick={() => setState('collapsed')}>collapse</button>
           </Shell.Header>
-          <Shell.Sidebar
-            presentation="fixed"
-            state={state}
-            onExpand={onExpand}
-            onCollapse={onCollapse}
-          >
+          <Shell.Sidebar presentation="fixed" state={state} onExpand={onExpand} onCollapse={onCollapse}>
             sidebar
           </Shell.Sidebar>
           <Shell.Content>content</Shell.Content>
@@ -177,12 +152,7 @@ describe('Sidebar onExpand/onCollapse callbacks', () => {
           <Shell.Header>
             <button onClick={() => setState('expanded')}>expand</button>
           </Shell.Header>
-          <Shell.Sidebar
-            presentation="fixed"
-            state={state}
-            onExpand={onExpand}
-            onCollapse={onCollapse}
-          >
+          <Shell.Sidebar presentation="fixed" state={state} onExpand={onExpand} onCollapse={onCollapse}>
             sidebar
           </Shell.Sidebar>
           <Shell.Content>content</Shell.Content>
@@ -216,12 +186,7 @@ describe('Sidebar onExpand/onCollapse callbacks', () => {
             <button onClick={() => setState('expanded')}>expand</button>
             <button onClick={() => setState('collapsed')}>collapse</button>
           </Shell.Header>
-          <Shell.Sidebar
-            presentation="fixed"
-            state={state}
-            onExpand={onExpand}
-            onCollapse={onCollapse}
-          >
+          <Shell.Sidebar presentation="fixed" state={state} onExpand={onExpand} onCollapse={onCollapse}>
             sidebar
           </Shell.Sidebar>
           <Shell.Content>content</Shell.Content>
@@ -251,4 +216,3 @@ describe('Sidebar onExpand/onCollapse callbacks', () => {
     expect(onCollapse).toHaveBeenCalledTimes(1);
   });
 });
-

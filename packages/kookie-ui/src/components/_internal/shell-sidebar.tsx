@@ -2,18 +2,17 @@ import * as React from 'react';
 import classNames from 'classnames';
 import * as Sheet from '../sheet.js';
 import { VisuallyHidden } from '../visually-hidden.js';
-import { useSidebarMode, usePresentation, usePeek, useShellActions, useComposition, useInset } from '../shell.context.js';
+import { useSidebarMode, usePresentation, usePeek, useShellActions, useComposition, useInset, usePaneIds } from '../shell.context.js';
 import { useResponsivePresentation, useResponsiveInitialState } from '../shell.hooks.js';
 import { PaneResizeContext } from './shell-resize.js';
 import { extractPaneDomProps } from './shell-prop-helpers.js';
 import { SidebarHandle, PaneHandle } from './shell-handles.js';
-import type { Breakpoint, PaneMode, PaneSizePersistence, SidebarMode, Responsive, PaneBaseProps, CSSPropertiesWithVars } from '../shell.types.js';
-import { _BREAKPOINTS } from '../shell.types.js';
-import { normalizeToPx } from '../../helpers/normalize-to-px.js';
+import type { Breakpoint, PaneMode, SidebarMode, Responsive, PaneBaseProps, CSSPropertiesWithVars } from '../shell.types.js';
+import { usePaneSize, usePaneChangeNotify, usePaneExpandCollapse, useControlledSwitchWarning } from './shell-pane-hooks.js';
 
 type SidebarPaneProps = PaneBaseProps & {
   mode?: PaneMode;
-  defaultMode?: any;
+  defaultMode?: never;
   onModeChange?: (mode: PaneMode | SidebarMode) => void;
 };
 
@@ -52,6 +51,8 @@ const SIDEBAR_DOM_PROP_KEYS = [
   'style',
   'inset',
 ] as const satisfies readonly (keyof SidebarPublicProps)[];
+
+const isSidebarOpen = (mode: SidebarMode) => mode !== 'collapsed';
 
 export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((initialProps, ref) => {
   const {
@@ -93,6 +94,14 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
   const { togglePane, setSidebarToggleComputer } = useShellActions();
   const { setHasSidebar } = useComposition();
   const { registerInset, unregisterInset } = useInset();
+  const { registerPaneId } = usePaneIds();
+
+  const generatedId = React.useId();
+  const elementId = initialProps.id ?? generatedId;
+  React.useEffect(() => {
+    registerPaneId('sidebar', elementId);
+    return () => registerPaneId('sidebar', undefined);
+  }, [registerPaneId, elementId]);
 
   // Register/unregister inset
   React.useLayoutEffect(() => {
@@ -104,7 +113,6 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
   const resolvedPresentation = useResponsivePresentation(presentation);
   const isOverlay = resolvedPresentation === 'overlay';
   const isStacked = resolvedPresentation === 'stacked';
-  // Phase sequencing is now CSS-driven; no JS-managed phase
   const localRef = React.useRef<HTMLDivElement | null>(null);
   const setRef = React.useCallback(
     (node: HTMLDivElement | null) => {
@@ -118,56 +126,17 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
   const handleChildren = childArray.filter((el: React.ReactElement) => React.isValidElement(el) && el.type === SidebarHandle);
   const contentChildren = childArray.filter((el: React.ReactElement) => !(React.isValidElement(el) && el.type === SidebarHandle));
 
-  // Ref for debounce cleanup
-  const debounceTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  // Cleanup debounce timeout on unmount or when dependencies change
-  React.useEffect(() => {
-    return () => {
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
-        debounceTimeoutRef.current = null;
-      }
-    };
-  }, [onSizeChange, sizeUpdate, sizeUpdateMs]);
-  // Throttled/debounced emitter for onSizeChange
-  const emitSizeChange = React.useMemo(() => {
-    const cb = onSizeChange as undefined | ((s: number, meta: { reason: 'init' | 'resize' | 'controlled' }) => void);
-    const strategy = sizeUpdate as undefined | 'throttle' | 'debounce';
-    const ms = sizeUpdateMs ?? 50;
-    if (!cb) return () => {};
-    if (strategy === 'debounce') {
-      return (s: number, meta: { reason: 'init' | 'resize' | 'controlled' }) => {
-        if (debounceTimeoutRef.current) clearTimeout(debounceTimeoutRef.current);
-        debounceTimeoutRef.current = setTimeout(() => {
-          cb(s, meta);
-          debounceTimeoutRef.current = null;
-        }, ms);
-      };
-    }
-    if (strategy === 'throttle') {
-      let last = 0;
-      return (s: number, meta: { reason: 'init' | 'resize' | 'controlled' }) => {
-        const now = Date.now();
-        if (now - last >= ms) {
-          last = now;
-          cb(s, meta);
-        }
-      };
-    }
-    return (s: number, meta: { reason: 'init' | 'resize' | 'controlled' }) => cb(s, meta);
-  }, [onSizeChange, sizeUpdate, sizeUpdateMs]);
-
   // Register with shell
-  const sidebarId = React.useId();
   React.useEffect(() => {
     setHasSidebar(true);
     return () => {
       setHasSidebar(false);
     };
-  }, [setHasSidebar, sidebarId]);
+  }, [setHasSidebar]);
+
+  const isControlled = typeof state !== 'undefined';
 
   // Dev guards
-  const wasControlledRef = React.useRef<boolean | null>(null);
   if (process.env.NODE_ENV !== 'production') {
     if (typeof state !== 'undefined' && typeof defaultState !== 'undefined') {
       console.error('Shell.Sidebar: Do not pass both `state` and `defaultState`. Choose one.');
@@ -176,26 +145,12 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
       console.error('Shell.Sidebar: Do not pass both `size` and `defaultSize`. Choose one.');
     }
   }
-
-  // Warn on mode switch between controlled/uncontrolled
-  React.useEffect(() => {
-    const isControlled = typeof state !== 'undefined';
-    if (wasControlledRef.current === null) {
-      wasControlledRef.current = isControlled;
-      return;
-    }
-    if (wasControlledRef.current !== isControlled) {
-      console.warn('Shell.Sidebar: Switching between controlled and uncontrolled `state` is not supported.');
-      wasControlledRef.current = isControlled;
-    }
-  }, [state]);
+  useControlledSwitchWarning('Shell.Sidebar', 'state', isControlled);
 
   // Stable ref for onStateChange to avoid effect dep churn
   const onStateChangeRef = React.useRef(onStateChange);
-  const stateRef = React.useRef(state);
   React.useLayoutEffect(() => {
     onStateChangeRef.current = onStateChange;
-    stateRef.current = state;
   });
 
   // Resolve responsive controlled state at top level
@@ -211,120 +166,43 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
     onInit: (initial) => onStateChangeRef.current?.(initial, { reason: 'init' }),
   });
 
-  // Emit mode changes. In controlled mode, skip when mode matches the controlled prop.
-  const lastNotifyModeRef = React.useRef<SidebarMode | null>(null);
-  const lastResolvedSidebarControlledRef = React.useRef<SidebarMode | undefined>(undefined);
-  React.useEffect(() => {
-    const current = sidebarMode as SidebarMode;
-    const prevMode = lastNotifyModeRef.current;
-    const prevResolvedControlled = lastResolvedSidebarControlledRef.current;
-    const controlledChanged = prevResolvedControlled !== resolvedSidebarControlled;
-
-    if (prevMode !== null && prevMode !== current) {
-      const isControlled = typeof stateRef.current !== 'undefined';
-
-      if (!isControlled || (!controlledChanged && current !== resolvedSidebarControlled)) {
-        onStateChangeRef.current?.(current, { reason: 'toggle' });
-      }
-    }
-
-    lastNotifyModeRef.current = current;
-    lastResolvedSidebarControlledRef.current = resolvedSidebarControlled;
-  }, [sidebarMode, resolvedSidebarControlled]);
-
-  // Track previous mode to only fire callbacks on actual user-initiated state transitions.
-  // We wait for breakpointReady to ensure the initial state sync from useResponsiveInitialState
-  // is complete before enabling callbacks. This avoids spurious callbacks during initialization.
-  // Use callback refs to avoid re-running effect when inline callbacks change.
-  const onExpandRef = React.useRef(onExpand);
-  const onCollapseRef = React.useRef(onCollapse);
-  React.useLayoutEffect(() => {
-    onExpandRef.current = onExpand;
-    onCollapseRef.current = onCollapse;
+  usePaneChangeNotify<SidebarMode>({
+    value: sidebarMode as SidebarMode,
+    resolvedControlled: resolvedSidebarControlled,
+    isControlled,
+    notify: (mode) => onStateChangeRef.current?.(mode, { reason: 'toggle' }),
   });
 
-  const prevSidebarModeRef = React.useRef<SidebarMode | null>(null);
-  const hasInitializedRef = React.useRef(false);
-  React.useEffect(() => {
-    const currentMode = sidebarMode as SidebarMode;
-
-    // Wait for breakpoint to be ready before enabling callbacks
-    if (!currentBreakpointReady) {
-      prevSidebarModeRef.current = currentMode;
-      return;
-    }
-
-    // Skip the first run after breakpoint is ready - this captures the post-sync state
-    if (!hasInitializedRef.current) {
-      hasInitializedRef.current = true;
-      prevSidebarModeRef.current = currentMode;
-      return;
-    }
-
-    const prevMode = prevSidebarModeRef.current;
-
-    // Only fire on actual state transitions
-    if (prevMode !== null && prevMode !== currentMode) {
-      // onExpand: when becoming visible (collapsed → thin/expanded)
-      if (prevMode === 'collapsed' && currentMode !== 'collapsed') {
-        onExpandRef.current?.();
-      }
-      // onCollapse: when becoming hidden (any → collapsed)
-      else if (currentMode === 'collapsed') {
-        onCollapseRef.current?.();
-      }
-      prevSidebarModeRef.current = currentMode;
-    }
-  }, [sidebarMode, currentBreakpointReady]);
+  usePaneExpandCollapse<SidebarMode>({
+    mode: sidebarMode as SidebarMode,
+    isOpen: isSidebarOpen,
+    breakpointReady: currentBreakpointReady,
+    onExpand,
+    onCollapse,
+  });
 
   // Option A: thin is width-only; content remains visible whenever not collapsed
   const isContentVisible = sidebarMode !== 'collapsed';
 
-  // Default persistence if paneId provided and none supplied (fixed only)
-  const persistenceAdapter = React.useMemo(() => {
-    if (!paneId || persistence) return persistence;
-    const key = `kookie-ui:shell:sidebar:${paneId}`;
-    const adapter: PaneSizePersistence = {
-      load: () => {
-        if (typeof window === 'undefined') return undefined;
-        try {
-          const v = window.localStorage.getItem(key);
-          return v ? Number(v) : undefined;
-        } catch (err) {
-          if (process.env.NODE_ENV !== 'production') {
-            console.warn('Shell.Sidebar: failed to load persisted size', err);
-          }
-          return undefined;
-        }
-      },
-      save: (size: number) => {
-        if (typeof window === 'undefined') return;
-        try {
-          window.localStorage.setItem(key, String(size));
-        } catch (err) {
-          if (process.env.NODE_ENV !== 'production') {
-            console.warn('Shell.Sidebar: failed to save persisted size', err);
-          }
-        }
-      },
-    };
-    return adapter;
-  }, [paneId, persistence]);
-
-  React.useEffect(() => {
-    let mounted = true;
-    (async () => {
-      if (!resizable || !persistenceAdapter?.load || isOverlay) return;
-      const loaded = await persistenceAdapter.load();
-      if (mounted && typeof loaded === 'number' && localRef.current) {
-        localRef.current.style.setProperty('--sidebar-size', `${loaded}px`);
-        onResize?.(loaded);
-      }
-    })();
-    return () => {
-      mounted = false;
-    };
-  }, [resizable, persistenceAdapter, onResize, isOverlay]);
+  const { currentSize, commitSize, persistenceAdapter } = usePaneSize({
+    containerRef: localRef,
+    cssVar: '--sidebar-size',
+    storageNamespace: 'sidebar',
+    orientation: 'horizontal',
+    componentName: 'Shell.Sidebar',
+    expandedSize,
+    minSize,
+    maxSize,
+    size,
+    defaultSize,
+    onSizeChange,
+    sizeUpdate,
+    sizeUpdateMs,
+    onResize,
+    paneId,
+    persistence,
+    persistenceEnabled: Boolean(resizable) && !isOverlay,
+  });
 
   // Register custom toggle behavior based on toggleModes (both|single)
   const resolveDefaultSidebarMode = React.useCallback((): SidebarMode => {
@@ -353,15 +231,11 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
   }, [setSidebarToggleComputer, toggleModes, resolveDefaultSidebarMode]);
 
   const lastOverlayWidthRef = React.useRef<number>(expandedSize);
-  const lastOverlayModeRef = React.useRef<SidebarMode>('expanded');
   React.useEffect(() => {
     if (sidebarMode !== 'collapsed') {
-      lastOverlayModeRef.current = sidebarMode as SidebarMode;
       lastOverlayWidthRef.current = sidebarMode === 'thin' ? thinSize : expandedSize;
     }
   }, [sidebarMode, thinSize, expandedSize]);
-
-  // Remove responsive default mode behavior entirely
 
   const handleEl =
     resizable && !isOverlay && sidebarMode === 'expanded' ? (
@@ -372,19 +246,21 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
           minSize,
           maxSize,
           defaultSize: expandedSize,
+          currentSize,
           orientation: 'vertical',
           edge: 'end',
           computeNext: (client, startClient, startSize) => {
-            const isRtl = getComputedStyle(localRef.current!).direction === 'rtl';
+            const container = localRef.current;
+            const isRtl = container ? getComputedStyle(container).direction === 'rtl' : false;
             const delta = client - startClient;
             return startSize + (isRtl ? -delta : delta);
           },
           onResize,
           onResizeStart,
-          onResizeEnd: (size) => {
-            onResizeEnd?.(size);
-            emitSizeChange(size, { reason: 'resize' });
-            persistenceAdapter?.save?.(size);
+          onResizeEnd: (nextSize) => {
+            onResizeEnd?.(nextSize);
+            commitSize(nextSize, 'resize');
+            persistenceAdapter?.save?.(nextSize);
           },
           target: 'sidebar',
           collapsible,
@@ -399,54 +275,13 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
       </PaneResizeContext.Provider>
     ) : null;
 
-  // Normalize CSS lengths to px helper
-  const normalizeSizeToPx = React.useCallback((value: number | string | undefined) => normalizeToPx(value, 'horizontal'), []);
-
-  // Apply defaultSize on mount when uncontrolled
-  React.useEffect(() => {
-    if (!localRef.current) return;
-    if (typeof size === 'undefined' && typeof defaultSize !== 'undefined') {
-      const px = normalizeSizeToPx(defaultSize);
-      if (typeof px === 'number' && Number.isFinite(px)) {
-        const minPx = typeof minSize === 'number' ? minSize : undefined;
-        const maxPx = typeof maxSize === 'number' ? maxSize : undefined;
-        const clamped = Math.min(maxPx ?? px, Math.max(minPx ?? px, px));
-        localRef.current.style.setProperty('--sidebar-size', `${clamped}px`);
-        emitSizeChange(clamped, { reason: 'init' });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Controlled size sync
-  const controlledSize = size;
-  React.useEffect(() => {
-    if (!localRef.current) return;
-    if (typeof controlledSize === 'undefined') return;
-    const px = normalizeSizeToPx(controlledSize);
-    if (typeof px === 'number' && Number.isFinite(px)) {
-      const minPx = typeof minSize === 'number' ? minSize : undefined;
-      const maxPx = typeof maxSize === 'number' ? maxSize : undefined;
-      const clamped = Math.min(maxPx ?? px, Math.max(minPx ?? px, px));
-      localRef.current.style.setProperty('--sidebar-size', `${clamped}px`);
-      emitSizeChange(clamped, { reason: 'controlled' });
-    }
-  }, [controlledSize, minSize, maxSize, normalizeSizeToPx, emitSizeChange]);
-
-  // Memoize peek styles to avoid IIFE recreation on every render
+  // Peek shows the width the next toggle would produce.
   const peekStyles = React.useMemo((): CSSPropertiesWithVars | undefined => {
     if (!(peekTarget === 'sidebar' && sidebarMode === 'collapsed' && !isOverlay)) {
       return undefined;
     }
     const strategy: 'both' | 'single' = toggleModes ?? 'both';
-    const current = sidebarMode as SidebarMode;
-    let next: SidebarMode;
-    if (strategy === 'both') {
-      next = current === 'collapsed' ? 'thin' : current === 'thin' ? 'expanded' : 'collapsed';
-    } else {
-      const target = resolveDefaultSidebarMode();
-      next = current === 'collapsed' ? target : 'collapsed';
-    }
+    const next: SidebarMode = strategy === 'both' ? 'thin' : resolveDefaultSidebarMode();
     if (next === 'thin') {
       return { '--peek-sidebar-width': `${thinSize}px` } as CSSPropertiesWithVars;
     }
@@ -454,16 +289,16 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
   }, [peekTarget, sidebarMode, isOverlay, toggleModes, resolveDefaultSidebarMode, thinSize, expandedSize]);
 
   if (isOverlay) {
-    const open = sidebarMode !== 'collapsed';
+    const overlayOpen = sidebarMode !== 'collapsed';
     return (
-      <Sheet.Root open={open} onOpenChange={(o) => setSidebarMode(o ? 'expanded' : 'collapsed')}>
+      <Sheet.Root open={overlayOpen} onOpenChange={(o) => setSidebarMode(o ? 'expanded' : 'collapsed')}>
         <Sheet.Content
           side="start"
           style={{ padding: 0 }}
           aria-label="Navigation"
           aria-describedby={undefined}
           width={{
-            initial: `${open ? (sidebarMode === 'thin' ? thinSize : expandedSize) : lastOverlayWidthRef.current}px`,
+            initial: `${overlayOpen ? (sidebarMode === 'thin' ? thinSize : expandedSize) : lastOverlayWidthRef.current}px`,
           }}
         >
           <VisuallyHidden>
@@ -476,7 +311,10 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
   }
   return (
     <div
+      role="navigation"
+      aria-label="Navigation"
       {...sidebarDomProps}
+      id={elementId}
       ref={setRef}
       className={classNames('rt-ShellSidebar', className)}
       data-mode={sidebarMode}
@@ -484,14 +322,16 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
       data-presentation={currentBreakpointReady ? resolvedPresentation : undefined}
       data-open={(currentBreakpointReady && isStacked && isContentVisible) || undefined}
       data-inset={inset || undefined}
-      style={{
-        ...style,
-        '--sidebar-size': `${expandedSize}px`,
-        '--sidebar-thin-size': `${thinSize}px`,
-        '--sidebar-min-size': `${minSize}px`,
-        '--sidebar-max-size': `${maxSize}px`,
-        ...peekStyles,
-      } as CSSPropertiesWithVars}
+      style={
+        {
+          ...style,
+          '--sidebar-size': `${currentSize}px`,
+          '--sidebar-thin-size': `${thinSize}px`,
+          '--sidebar-min-size': `${minSize}px`,
+          '--sidebar-max-size': `${maxSize}px`,
+          ...peekStyles,
+        } as CSSPropertiesWithVars
+      }
     >
       <div className="rt-ShellSidebarContent" data-visible={isContentVisible || undefined}>
         {contentChildren}

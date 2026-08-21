@@ -33,33 +33,43 @@ describe('Sidebar onSizeChange', () => {
   it('emits px on boundary keys (Home/End), clamped to min/max', () => {
     const spy = vi.fn();
     renderWithProviders(<App onSizeChange={spy} min={200} max={400} />);
-    const slider = screen.getByRole('slider');
-    fireEvent.keyDown(slider, { key: 'End' });
+    const handle = screen.getByRole('separator');
+    fireEvent.keyDown(handle, { key: 'End' });
+    fireEvent.keyUp(handle, { key: 'End' });
     expect(spy).toHaveBeenCalled();
     let [size, meta] = spy.mock.calls.at(-1)!;
     expect(meta).toEqual({ reason: 'resize' });
     expect(size).toBe(400);
-    fireEvent.keyDown(slider, { key: 'Home' });
+    fireEvent.keyDown(handle, { key: 'Home' });
+    fireEvent.keyUp(handle, { key: 'Home' });
     [size, meta] = spy.mock.calls.at(-1)!;
     expect(meta).toEqual({ reason: 'resize' });
     expect(size).toBe(200);
   });
 
-  it('throttle: rapid key repeats limited to budget', () => {
+  it('throttle: rate-limits key presses but still delivers the final size', () => {
     vi.useFakeTimers();
     const spy = vi.fn();
     renderWithProviders(<App onSizeChange={spy} sizeUpdate="throttle" sizeUpdateMs={50} />);
-    const slider = screen.getByRole('slider');
-    for (let i = 0; i < 10; i++) fireEvent.keyDown(slider, { key: 'End' });
-    vi.advanceTimersByTime(40);
-    const calls40 = spy.mock.calls.length;
-    for (let i = 0; i < 10; i++) fireEvent.keyDown(slider, { key: 'Home' });
-    vi.advanceTimersByTime(40);
-    const calls80 = spy.mock.calls.length;
-    expect(calls80 - calls40).toBe(0);
-    vi.advanceTimersByTime(20);
-    fireEvent.keyDown(slider, { key: 'End' });
-    expect(spy.mock.calls.length).toBeGreaterThan(calls80);
+    const handle = screen.getByRole('separator');
+
+    // Leading edge: the first press is reported immediately.
+    fireEvent.keyDown(handle, { key: 'End' });
+    fireEvent.keyUp(handle, { key: 'End' });
+    const afterFirst = spy.mock.calls.length;
+    expect(afterFirst).toBe(1);
+    expect(spy.mock.calls.at(-1)![0]).toBe(400);
+
+    // A second press inside the window is held back...
+    fireEvent.keyDown(handle, { key: 'Home' });
+    fireEvent.keyUp(handle, { key: 'Home' });
+    expect(spy.mock.calls.length).toBe(afterFirst);
+
+    // ...and delivered on the trailing edge, so the final size is never dropped.
+    vi.advanceTimersByTime(50);
+    expect(spy.mock.calls.length).toBe(afterFirst + 1);
+    expect(spy.mock.calls.at(-1)![0]).toBe(200);
+    expect(spy.mock.calls.at(-1)![1]).toEqual({ reason: 'resize' });
     vi.useRealTimers();
   });
 });

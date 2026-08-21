@@ -6,6 +6,8 @@ export interface PaneResizeContextValue {
   minSize: number;
   maxSize: number;
   defaultSize: number;
+  /** The pane's current size in px. Renders the handle's `aria-valuenow`. */
+  currentSize: number;
   orientation: 'vertical' | 'horizontal';
   edge: 'start' | 'end';
   computeNext: (clientPos: number, startClientPos: number, startSize: number) => number;
