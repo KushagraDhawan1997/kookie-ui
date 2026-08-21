@@ -36,6 +36,7 @@ import { omitPaneProps, extractPaneDomProps, mapResponsiveBooleanToPaneMode } fr
 import { Sidebar } from './_internal/shell-sidebar.js';
 import { Bottom } from './_internal/shell-bottom.js';
 import { Inspector } from './_internal/shell-inspector.js';
+import { _BREAKPOINTS } from './shell.types.js';
 import type { PresentationValue, ResponsivePresentation, PaneMode, SidebarMode, PaneSizePersistence, Breakpoint, PaneTarget, Responsive, PaneBaseProps, CSSPropertiesWithVars } from './shell.types.js';
 import { normalizeToPx } from '../helpers/normalize-to-px.js';
 import { useBreakpoint } from '../hooks/use-breakpoint.js';
@@ -228,7 +229,24 @@ interface ShellRootProps extends React.ComponentPropsWithoutRef<'div'> {
  * Runs once at mount, for the reducer's initial state, and again whenever a
  * pane family enters after mount. Pure - it only reads the children's props.
  */
-function readPaneStateFromChildren(initialChildren: React.ReactNode): PaneState & { hasPanelDefaultOpen: boolean } {
+/**
+ * Pick the entry of a responsive map that applies at `breakpoint`, falling
+ * back down the scale the way useResponsiveValue does. With no breakpoint it
+ * takes `initial`, which is what the mount path has always done.
+ */
+function pickResponsive<T>(map: Partial<Record<Breakpoint, T>>, breakpoint?: Breakpoint): T | undefined {
+  if (breakpoint === undefined) return (map.initial ?? Object.values(map)[0]) as T | undefined;
+  if (map[breakpoint] !== undefined) return map[breakpoint];
+
+  const bpKeys = Object.keys(_BREAKPOINTS) as Array<keyof typeof _BREAKPOINTS>;
+  const order: Breakpoint[] = ([...bpKeys].reverse() as Breakpoint[]).concat('initial' as Breakpoint);
+  for (let i = order.indexOf(breakpoint) + 1; i < order.length; i++) {
+    if (map[order[i]] !== undefined) return map[order[i]];
+  }
+  return undefined;
+}
+
+function readPaneStateFromChildren(initialChildren: React.ReactNode, breakpoint?: Breakpoint): PaneState & { hasPanelDefaultOpen: boolean } {
   const childArray = React.Children.toArray(initialChildren) as React.ReactElement[];
 
   // Compute initial defaults from immediate children (one-time, uncontrolled defaults)
@@ -285,14 +303,14 @@ function readPaneStateFromChildren(initialChildren: React.ReactNode): PaneState 
       if (typeof sidebarProps.state === 'string') return sidebarProps.state as SidebarMode;
       // Responsive object - use 'initial' breakpoint or first defined value
       if (typeof sidebarProps.state === 'object') {
-        return (sidebarProps.state.initial ?? Object.values(sidebarProps.state)[0] ?? 'expanded') as SidebarMode;
+        return (pickResponsive<SidebarMode>(sidebarProps.state, breakpoint) ?? 'expanded') as SidebarMode;
       }
     }
     // Check defaultState
     if (typeof sidebarProps?.defaultState !== 'undefined') {
       if (typeof sidebarProps.defaultState === 'string') return sidebarProps.defaultState as SidebarMode;
       if (typeof sidebarProps.defaultState === 'object') {
-        return (sidebarProps.defaultState.initial ?? Object.values(sidebarProps.defaultState)[0] ?? 'expanded') as SidebarMode;
+        return (pickResponsive<SidebarMode>(sidebarProps.defaultState, breakpoint) ?? 'expanded') as SidebarMode;
       }
     }
     return 'expanded';
@@ -414,7 +432,13 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
     enteredFamilyRef.current = { left: hasLeftChildren, sidebar: hasSidebarChildren };
 
     if (leftEntered || sidebarEntered) {
-      const { hasPanelDefaultOpen, ...modes } = readPaneStateFromChildren(children);
+      // The live breakpoint, not the mount default: a responsive
+      // defaultState like { initial: 'collapsed', md: 'expanded' } must be
+      // read for the width the reader is on. Taking `initial` would send a
+      // desktop sidebar in collapsed and let its own start-up effect open it
+      // again after the paint, which is the blink this whole block exists to
+      // remove.
+      const { hasPanelDefaultOpen, ...modes } = readPaneStateFromChildren(children, currentBreakpoint as Breakpoint);
       if (leftEntered) {
         hasPanelDefaultOpenRef.current = hasPanelDefaultOpen;
         // Only when the mode actually differs, so a family that enters
