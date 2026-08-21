@@ -19,13 +19,14 @@
   position: relative;
 }
 
-/* Default height when no height prop is provided */
-.rt-ShellRoot:not([style*='height']) {
+/* Default height (height="full"). Set here rather than inline so the dynamic-viewport unit
+   can win on mobile browsers, where 100vh includes the retracting URL bar. */
+.rt-ShellRoot[data-height='full'] {
   height: 100vh;
 }
 
 @supports (height: 100dvh) {
-  .rt-ShellRoot:not([style*='height']) {
+  .rt-ShellRoot[data-height='full'] {
     height: 100dvh;
   }
 }
@@ -221,22 +222,6 @@
   pointer-events: auto;
 }
 
-/* Sidebar presentation switch sequencing (thin ↔ expanded) */
-.rt-ShellSidebarContent[data-phase='hiding'] {
-  /* Immediately fade out */
-  opacity: 0;
-  transition: opacity var(--motion-duration-small) var(--motion-ease-standard);
-}
-.rt-ShellSidebarContent[data-phase='resizing'] {
-  /* Keep hidden during width transition */
-  opacity: 0;
-}
-.rt-ShellSidebarContent[data-phase='showing'] {
-  /* Fade back in after width settles */
-  opacity: 1;
-  transition: opacity var(--motion-duration-small) var(--motion-ease-standard);
-}
-
 .rt-ShellSidebar[data-mode='collapsed'] .rt-ShellSidebarContent {
   /* Exit animation: fade out content first, then collapse */
   opacity: 0;
@@ -408,7 +393,10 @@
 }
 
 /* Overlay mode handling */
-[data-presentation='overlay'] {
+.rt-ShellLeft[data-presentation='overlay'],
+.rt-ShellSidebar[data-presentation='overlay'],
+.rt-ShellInspector[data-presentation='overlay'],
+.rt-ShellBottom[data-presentation='overlay'] {
   /* Overlay handled by JS/Sheet; no extra CSS needed */
   contain: style;
 }
@@ -480,8 +468,11 @@
   transform: translateY(0);
 }
 
-/* Accessibility - reduced motion */
+/* Accessibility - reduced motion.
+   `!important` is required: the stacked and peek rules that own the transform transitions are
+   attribute-qualified, and a media query adds no specificity of its own. */
 @media (prefers-reduced-motion: reduce) {
+  .rt-ShellLeft,
   .rt-ShellRail,
   .rt-ShellPanel,
   .rt-ShellSidebar,
@@ -492,7 +483,7 @@
   .rt-ShellSidebarContent,
   .rt-ShellInspectorContent,
   .rt-ShellBottomContent {
-    transition: none;
+    transition: none !important;
   }
 }
 
@@ -535,6 +526,32 @@
   inline-size: 100%;
   block-size: var(--resizer-hit);
   cursor: row-resize;
+  transform: translateY(-50%);
+}
+
+/* The resizer is a focusable splitter: keyboard users must be able to see where they are. */
+.rt-ShellResizer:focus-visible {
+  outline: none;
+}
+
+.rt-ShellResizer:focus-visible::after {
+  content: '';
+  position: absolute;
+  background-color: var(--focus-8);
+  border-radius: var(--radius-1);
+}
+
+.rt-ShellResizer[data-orientation='vertical']:focus-visible::after {
+  inset-block: 0;
+  inset-inline-start: 50%;
+  inline-size: 2px;
+  transform: translateX(-50%);
+}
+
+.rt-ShellResizer[data-orientation='horizontal']:focus-visible::after {
+  inset-inline: 0;
+  inset-block-start: 50%;
+  block-size: 2px;
   transform: translateY(-50%);
 }
 
@@ -622,9 +639,12 @@
 
 /* --- Inset mode: floating panes with gray backdrop --- */
 
-/* Shell body gets gray backdrop when any pane has inset */
-.rt-ShellBody[data-has-inset] {
+/* The whole shell gets the gray backdrop when any pane has inset — Bottom sits outside
+   .rt-ShellBody, so painting the body alone left its margin showing the page background. */
+.rt-ShellRoot[data-has-inset] {
   background: var(--gray-2);
+  /* Override this to change the gap around every inset pane. */
+  --shell-inset-gap: var(--space-2);
 }
 
 /* Inset pane shared styles */
@@ -633,8 +653,7 @@
 .rt-ShellContent[data-inset],
 .rt-ShellInspector[data-inset],
 .rt-ShellBottom[data-inset] {
-  --shell-inset-gap: var(--space-2);
-  margin: var(--shell-inset-gap);
+  margin: var(--shell-inset-gap, var(--space-2));
   border-radius: var(--radius-3);
   background: var(--color-background);
   box-shadow: var(--shadow-2);

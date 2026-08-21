@@ -4,6 +4,10 @@
     "Shell-handleSchema": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "description": "Element id"
+        },
         "className": {
           "type": "string",
           "description": "Additional CSS class name"
@@ -19,7 +23,7 @@
           "description": "Inline styles"
         },
         "children": {
-          "description": "Handle content"
+          "description": "Slot content"
         }
       },
       "additionalProperties": false
@@ -29,6 +33,6 @@
   "title": "Shell-handle Component Props",
   "description": "Props schema for the shell-handle component in Kookie UI",
   "version": "1.0.0",
-  "generatedAt": "2025-09-10T19:04:45.609Z",
+  "generatedAt": "2026-08-21T11:49:34.367Z",
   "source": "Zod schema"
 }

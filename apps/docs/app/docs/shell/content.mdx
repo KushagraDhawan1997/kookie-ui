@@ -604,7 +604,7 @@ The `inset` prop handles spatial positioning only. For visual styling (backgroun
 Override the inset gap with CSS variables:
 
 ```css
-.rt-ShellBody[data-has-inset] {
+.rt-ShellRoot[data-has-inset] {
   --shell-inset-gap: var(--space-3);
 }
 ```
@@ -683,20 +683,23 @@ Shell provides comprehensive accessibility through semantic HTML and ARIA attrib
 
 - `Shell.Header` renders as `<header>`
 - `Shell.Content` renders as `<main>`
-- Proper landmark structure for screen readers
+- `Shell.Rail` and `Shell.Sidebar` are `navigation` landmarks; `Shell.Inspector` and `Shell.Bottom` are `complementary`
+- Every default landmark and label can be replaced by passing `role` or `aria-label`
 
 ### Keyboard Navigation
 
 - Tab navigation through all interactive elements
-- Escape key closes overlay presentations
-- Arrow keys for resize handle adjustment
+- Escape key closes overlay presentations, and cancels an in-progress drag
+- Arrow keys adjust a focused resize handle; `Home`/`End` jump to `minSize`/`maxSize`, `Shift` uses a larger step
+- A burst of key presses is one resize: `onResizeEnd`, `onSizeChange` and persistence run when the keys stop
 - Enter/Space for trigger activation
+- Resize handles show a focus indicator when reached by keyboard
 
 ### Screen Reader Support
 
-- State announcements for panel open/close
-- Resize operations announce current dimensions
-- ARIA attributes: `aria-expanded`, `aria-hidden`, `aria-label`
+- Resize handles follow the ARIA window splitter pattern: `role="separator"`, `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-valuetext`, all tracking the pane's real size
+- `Shell.Trigger` exposes `aria-expanded` and points `aria-controls` at the pane it operates
+- ARIA attributes: `aria-expanded`, `aria-controls`, `aria-label`
 
 ### High Contrast
 
@@ -716,9 +719,16 @@ Shell provides comprehensive accessibility through semantic HTML and ARIA attrib
 - Size persistence API
 - Peek functionality for temporary previews
 - `useShell()` hook for context access
-- ARIA slider implementation for resize handles
+- ARIA window splitter implementation for resize handles
 - Focus management for overlay presentations
 - `inset` prop for floating pane layouts with gray backdrop
+
+### Changed
+
+- Resize handles are `role="separator"` (the ARIA window splitter pattern) instead of `role="slider"`, and `aria-valuenow` now follows the pane's real size
+- Keyboard resizing commits once per key burst rather than once per key press, so `onResizeEnd`, `onSizeChange` and size persistence run once
+- `--shell-inset-gap` is declared on `.rt-ShellRoot[data-has-inset]`; override it there
+- `height="full"` resolves to `100dvh` where supported, so mobile browsers no longer overshoot
 
 ### Technical
 

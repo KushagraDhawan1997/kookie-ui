@@ -573,7 +573,14 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
   }, [hasLeftChildren, hasSidebarChildren, railEls, panelEls, hasPanelDefaultOpen]);
 
   return (
-    <div {...props} ref={ref} className={classNames('rt-ShellRoot', className)} data-height={height === 'full' ? 'full' : undefined} style={{ ...heightStyle, ...props.style }}>
+    <div
+      {...props}
+      ref={ref}
+      className={classNames('rt-ShellRoot', className)}
+      data-height={height === 'full' ? 'full' : undefined}
+      data-has-inset={hasAnyInset || undefined}
+      style={{ ...heightStyle, ...props.style }}
+    >
       <ShellProvider value={shellContextValue}>
         <PresentationContext.Provider value={presentationCtxValue}>
           <LeftModeContext.Provider value={leftModeCtxValue}>
@@ -640,6 +647,7 @@ const Header = React.forwardRef<HTMLElement, ShellHeaderProps>(({ className, hei
   />
 ));
 Header.displayName = 'Shell.Header';
+assignShellSlot(Header, 'Shell.Header');
 
 // Pane Props Interface (shared by Panel, Sidebar, Inspector, Bottom)
 type PaneProps = PaneBaseProps;
@@ -906,7 +914,7 @@ const Left = React.forwardRef<HTMLDivElement, LeftProps>((initialProps, ref) => 
   );
 });
 Left.displayName = 'Shell.Left';
-assignShellSlot(Left as any, 'Shell.Left');
+assignShellSlot(Left, 'Shell.Left');
 
 const Rail = React.forwardRef<HTMLDivElement, RailProps>((initialProps, ref) => {
   const {
@@ -969,7 +977,7 @@ const Rail = React.forwardRef<HTMLDivElement, RailProps>((initialProps, ref) => 
   );
 });
 Rail.displayName = 'Shell.Rail';
-assignShellSlot(Rail as any, 'Shell.Rail');
+assignShellSlot(Rail, 'Shell.Rail');
 
 // Panel
 type HandleComponent = React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'div'> & React.RefAttributes<HTMLDivElement>>;
@@ -1265,7 +1273,7 @@ const Content = React.forwardRef<HTMLElement, ShellContentProps>(({ className, i
   return <main {...props} ref={ref} className={classNames('rt-ShellContent', className)} data-inset={inset || undefined} />;
 });
 Content.displayName = 'Shell.Content';
-assignShellSlot(Content as any, 'Shell.Content');
+assignShellSlot(Content, 'Shell.Content');
 
 // Inspector moved to ./_internal/shell-inspector
 

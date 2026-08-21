@@ -5,6 +5,33 @@ import { usePaneResize } from './shell-resize.js';
 /** How long a held arrow key waits before the resize is treated as finished. */
 const KEY_COMMIT_DELAY_MS = 120;
 
+/**
+ * Body cursor/selection state, shared by every handle.
+ *
+ * Two pointers can drag two panes at once; without a count, the second drag would save the
+ * *modified* values and restore those when it ends.
+ */
+let activeDragCount = 0;
+let savedBodyStyle: { cursor: string; userSelect: string } | null = null;
+
+function lockBodyForDrag(cursor: string) {
+  const body = document.body;
+  if (activeDragCount === 0) {
+    savedBodyStyle = { cursor: body.style.cursor, userSelect: body.style.userSelect };
+  }
+  activeDragCount += 1;
+  body.style.cursor = cursor;
+  body.style.userSelect = 'none';
+}
+
+function unlockBodyAfterDrag() {
+  activeDragCount = Math.max(0, activeDragCount - 1);
+  if (activeDragCount > 0 || !savedBodyStyle) return;
+  document.body.style.cursor = savedBodyStyle.cursor;
+  document.body.style.userSelect = savedBodyStyle.userSelect;
+  savedBodyStyle = null;
+}
+
 const TARGET_LABELS: Record<string, string> = {
   left: 'Navigation',
   rail: 'Navigation',
@@ -85,6 +112,8 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
     /** Writes a size to the DOM during an interaction. React state catches up when the gesture commits. */
     const paint = React.useCallback(
       (container: HTMLElement, next: number) => {
+        // A pointer event without usable coordinates would otherwise write `NaNpx`.
+        if (!Number.isFinite(next)) return;
         container.style.setProperty(cssVarName, `${next}px`);
         handleRef.current?.setAttribute('aria-valuenow', String(Math.round(next)));
         onResize?.(next);
@@ -119,11 +148,7 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
 
         const startClient = orientation === 'vertical' ? event.clientX : event.clientY;
         const startSize = readSize(container, cssVarName, defaultSize);
-        const body = document.body;
-        const previousCursor = body.style.cursor;
-        const previousUserSelect = body.style.userSelect;
-        body.style.cursor = orientation === 'vertical' ? 'col-resize' : 'row-resize';
-        body.style.userSelect = 'none';
+        lockBodyForDrag(orientation === 'vertical' ? 'col-resize' : 'row-resize');
         onResizeStart?.(startSize);
 
         const handleMove = (moveEvent: PointerEvent) => {
@@ -143,8 +168,7 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
           window.removeEventListener('keydown', handleKey);
           handleEl.removeEventListener('lostpointercapture', handleUp);
           container.removeAttribute('data-resizing');
-          body.style.cursor = previousCursor;
-          body.style.userSelect = previousUserSelect;
+          unlockBodyAfterDrag();
           activeCleanupRef.current = null;
         };
 

@@ -7,76 +7,56 @@ import { z } from 'zod';
  * application interfaces. It manages layout state, composition rules, and responsive
  * behavior across seven core slots.
  *
+ * Schemas are permissive about unknown keys: every slot also accepts the DOM props of the
+ * element it renders (`id`, `data-*`, `aria-*`, event handlers). Only the documented props
+ * are validated.
+ *
  * @example
  * ```tsx
  * // Basic shell validation
  * const props = ShellRootSchema.parse({ height: 'full' });
  *
- * // Shell with responsive sidebar
+ * // Shell with a responsive sidebar
  * const sidebarProps = ShellSidebarSchema.parse({
- *   defaultMode: { initial: 'collapsed', md: 'expanded' },
+ *   defaultState: { initial: 'collapsed', md: 'expanded' },
  *   presentation: { initial: 'overlay', lg: 'fixed' }
  * });
  * ```
  */
 
 // Common types
-const PaneModeSchema = z.enum(['expanded', 'collapsed']).describe('Pane state mode');
+const _PaneModeSchema = z.enum(['expanded', 'collapsed']).describe('Pane state mode');
 const SidebarModeSchema = z.enum(['collapsed', 'thin', 'expanded']).describe('Sidebar state mode');
 const PresentationValueSchema = z.enum(['fixed', 'overlay', 'stacked']).describe('Presentation mode');
 const _BreakpointSchema = z.enum(['initial', 'xs', 'sm', 'md', 'lg', 'xl']).describe('Responsive breakpoint');
 const PaneTargetSchema = z.enum(['left', 'rail', 'panel', 'sidebar', 'inspector', 'bottom']).describe('Pane target');
 const TriggerActionSchema = z.enum(['toggle', 'expand', 'collapse']).describe('Trigger action');
 
+/** Build the responsive-object form of a value schema. */
+const responsive = <T extends z.ZodTypeAny>(value: T) =>
+  z.union([
+    value,
+    z.object({
+      initial: value.optional(),
+      xs: value.optional(),
+      sm: value.optional(),
+      md: value.optional(),
+      lg: value.optional(),
+      xl: value.optional(),
+    }),
+  ]);
+
 // Responsive schemas
-const ResponsiveModeSchema = z
-  .union([
-    PaneModeSchema,
-    z.object({
-      initial: PaneModeSchema.optional(),
-      xs: PaneModeSchema.optional(),
-      sm: PaneModeSchema.optional(),
-      md: PaneModeSchema.optional(),
-      lg: PaneModeSchema.optional(),
-      xl: PaneModeSchema.optional(),
-    }),
-  ])
-  .describe('Responsive pane mode configuration');
-
-const ResponsiveSidebarModeSchema = z
-  .union([
-    SidebarModeSchema,
-    z.object({
-      initial: SidebarModeSchema.optional(),
-      xs: SidebarModeSchema.optional(),
-      sm: SidebarModeSchema.optional(),
-      md: SidebarModeSchema.optional(),
-      lg: SidebarModeSchema.optional(),
-      xl: SidebarModeSchema.optional(),
-    }),
-  ])
-  .describe('Responsive sidebar mode configuration');
-
-const ResponsivePresentationSchema = z
-  .union([
-    PresentationValueSchema,
-    z.object({
-      initial: PresentationValueSchema.optional(),
-      xs: PresentationValueSchema.optional(),
-      sm: PresentationValueSchema.optional(),
-      md: PresentationValueSchema.optional(),
-      lg: PresentationValueSchema.optional(),
-      xl: PresentationValueSchema.optional(),
-    }),
-  ])
-  .describe('Responsive presentation configuration');
+const ResponsiveBooleanSchema = responsive(z.boolean()).describe('Boolean, or a per-breakpoint map');
+const ResponsiveSidebarModeSchema = responsive(SidebarModeSchema).describe('Responsive sidebar state configuration');
+const ResponsivePresentationSchema = responsive(PresentationValueSchema).describe('Responsive presentation configuration');
 
 // Size persistence adapter
 const PaneSizePersistenceSchema = z
   .object({
     load: z
       .function()
-      .returns(z.union([z.number(), z.promise(z.number()), z.undefined()]))
+      .returns(z.union([z.number(), z.promise(z.union([z.number(), z.undefined()])), z.undefined()]))
       .optional(),
     save: z
       .function()
@@ -86,190 +66,157 @@ const PaneSizePersistenceSchema = z
   })
   .describe('Size persistence adapter');
 
-// Common pane props
-const PanePropsSchema = z
-  .object({
-    presentation: ResponsivePresentationSchema.optional(),
-    mode: PaneModeSchema.optional(),
-    defaultMode: ResponsiveModeSchema.optional(),
-    onModeChange: z.function().args(PaneModeSchema).returns(z.void()).optional(),
-    expandedSize: z.number().optional(),
-    minSize: z.number().optional(),
-    maxSize: z.number().optional(),
-    resizable: z.boolean().optional(),
-    collapsible: z.boolean().optional(),
-    onExpand: z.function().returns(z.void()).optional(),
-    onCollapse: z.function().returns(z.void()).optional(),
-    onResize: z.function().args(z.number()).returns(z.void()).optional(),
-    resizer: z.any().optional(),
-    onResizeStart: z.function().args(z.number()).returns(z.void()).optional(),
-    onResizeEnd: z.function().args(z.number()).returns(z.void()).optional(),
-    snapPoints: z.array(z.number()).optional(),
-    snapTolerance: z.number().optional(),
-    collapseThreshold: z.number().optional(),
-    paneId: z.string().optional(),
-    persistence: PaneSizePersistenceSchema.optional(),
-    className: z.string().optional(),
-    style: z.record(z.string(), z.union([z.string(), z.number()])).optional(),
-    children: z.any().optional(),
-  })
-  .strict();
+// Reason codes carried by callback metadata
+const OpenChangeMetaSchema = z.object({ reason: z.enum(['init', 'toggle', 'responsive', 'panel', 'left']) }).describe('Why the open state changed');
+const StateChangeMetaSchema = z.object({ reason: z.enum(['init', 'toggle', 'responsive']) }).describe('Why the sidebar state changed');
+const SizeChangeMetaSchema = z.object({ reason: z.enum(['init', 'resize', 'controlled']) }).describe('Why the size changed');
+
+const SizeValueSchema = z.union([z.number(), z.string()]).describe('Size in pixels, or any CSS length');
+
+const ElementPropsSchema = z.object({
+  id: z.string().optional().describe('Element id'),
+  className: z.string().optional().describe('Additional CSS class name'),
+  style: z
+    .record(z.string(), z.union([z.string(), z.number()]))
+    .optional()
+    .describe('Inline styles'),
+  children: z.any().optional().describe('Slot content'),
+});
+
+/** Drag-to-resize behaviour, shared by Panel, Sidebar, Inspector and Bottom. */
+const ResizablePropsSchema = z.object({
+  resizable: z.boolean().optional().describe('Enable drag-to-resize. Default: false'),
+  collapsible: z.boolean().optional().describe('Allow collapsing. Default: true'),
+  size: SizeValueSchema.optional().describe('Controlled size'),
+  defaultSize: SizeValueSchema.optional().describe('Initial size when uncontrolled'),
+  onSizeChange: z.function().args(z.number(), SizeChangeMetaSchema).returns(z.void()).optional().describe('Fired when the size changes'),
+  sizeUpdate: z.enum(['throttle', 'debounce']).optional().describe('Rate-limit strategy for onSizeChange'),
+  sizeUpdateMs: z.number().optional().describe('Milliseconds for throttle/debounce. Default: 50'),
+  onResize: z.function().args(z.number()).returns(z.void()).optional().describe('Fired continuously during a resize'),
+  onResizeStart: z.function().args(z.number()).returns(z.void()).optional().describe('Fired when a resize starts'),
+  onResizeEnd: z.function().args(z.number()).returns(z.void()).optional().describe('Fired when a resize ends'),
+  snapPoints: z.array(z.number()).optional().describe('Sizes the handle snaps to'),
+  snapTolerance: z.number().optional().describe('Distance in pixels that triggers a snap. Default: 8'),
+  collapseThreshold: z.number().optional().describe('Size below which the pane auto-collapses'),
+  paneId: z.string().optional().describe('Unique id used for built-in size persistence'),
+  persistence: PaneSizePersistenceSchema.optional().describe('Custom adapter for saving/loading size'),
+  onExpand: z.function().returns(z.void()).optional().describe('Fired when the pane expands'),
+  onCollapse: z.function().returns(z.void()).optional().describe('Fired when the pane collapses'),
+  inset: z.boolean().optional().describe('Float the pane with a margin and a gray shell backdrop'),
+});
+
+/** `open` / `defaultOpen` / `onOpenChange`, shared by Rail, Panel, Inspector and Bottom. */
+const OpenPropsSchema = z.object({
+  open: ResponsiveBooleanSchema.optional().describe('Controlled open state'),
+  defaultOpen: ResponsiveBooleanSchema.optional().describe('Initial open state when uncontrolled'),
+  onOpenChange: z.function().args(z.boolean(), OpenChangeMetaSchema).returns(z.void()).optional().describe('Fired when the open state changes'),
+});
 
 /**
  * Shell.Root component schema
  */
-export const ShellRootSchema = z
-  .object({
-    height: z
-      .union([z.literal('full'), z.literal('auto'), z.string(), z.number()])
-      .default('full')
-      .describe('Height of the shell container'),
-    className: z.string().optional().describe('Additional CSS class name'),
-    style: z
-      .record(z.string(), z.union([z.string(), z.number()]))
-      .optional()
-      .describe('Inline styles'),
-    children: z.any().optional().describe('Shell components'),
-  })
-  .strict();
+export const ShellRootSchema = ElementPropsSchema.extend({
+  height: z
+    .union([z.literal('full'), z.literal('auto'), z.string(), z.number()])
+    .default('full')
+    .describe('Height of the shell container'),
+});
 
 /**
  * Shell.Header component schema
  */
-export const ShellHeaderSchema = z
-  .object({
-    height: z.union([z.string(), z.number()]).default(64).describe('Height of the header'),
-    className: z.string().optional().describe('Additional CSS class name'),
-    style: z
-      .record(z.string(), z.union([z.string(), z.number()]))
-      .optional()
-      .describe('Inline styles'),
-    children: z.any().optional().describe('Header content'),
-  })
-  .strict();
+export const ShellHeaderSchema = ElementPropsSchema.extend({
+  height: z.number().default(64).describe('Height of the header in pixels'),
+});
 
 /**
  * Shell.Rail component schema
  */
-export const ShellRailSchema = z
-  .object({
-    presentation: ResponsivePresentationSchema.optional(),
-    mode: PaneModeSchema.optional(),
-    defaultMode: ResponsiveModeSchema.optional(),
-    onModeChange: z.function().args(PaneModeSchema).returns(z.void()).optional(),
-    expandedSize: z.number().default(64).describe('Default width in pixels'),
-    collapsible: z.boolean().optional(),
-    onExpand: z.function().returns(z.void()).optional(),
-    onCollapse: z.function().returns(z.void()).optional(),
-    className: z.string().optional().describe('Additional CSS class name'),
-    style: z
-      .record(z.string(), z.union([z.string(), z.number()]))
-      .optional()
-      .describe('Inline styles'),
-    children: z.any().optional().describe('Rail content'),
-  })
-  .strict();
+export const ShellRailSchema = ElementPropsSchema.merge(OpenPropsSchema).extend({
+  presentation: ResponsivePresentationSchema.optional().describe("How the rail interacts with layout. Default: { initial: 'fixed', sm: 'fixed' }"),
+  expandedSize: z.number().default(64).describe('Width in pixels'),
+  collapsible: z.boolean().optional().describe('Allow collapsing. Default: true'),
+  onExpand: z.function().returns(z.void()).optional().describe('Fired when the rail expands'),
+  onCollapse: z.function().returns(z.void()).optional().describe('Fired when the rail collapses'),
+  inset: z.boolean().optional().describe('Float Rail+Panel with a margin and a gray shell backdrop'),
+});
 
 /**
  * Shell.Panel component schema
  */
-export const ShellPanelSchema = PanePropsSchema.extend({
-  expandedSize: z.number().default(288).describe('Default width in pixels'),
-  minSize: z.number().default(200).describe('Minimum width when resizing'),
-  maxSize: z.number().default(800).describe('Maximum width when resizing'),
-  resizable: z.boolean().default(false).describe('Whether the panel can be resized'),
-  collapsible: z.boolean().default(true).describe('Whether the panel can be collapsed via resize handle'),
-}).strict();
+export const ShellPanelSchema = ElementPropsSchema.merge(OpenPropsSchema)
+  .merge(ResizablePropsSchema)
+  .extend({
+    expandedSize: z.number().default(288).describe('Width in pixels when expanded'),
+    minSize: z.number().default(100).describe('Minimum width when resizing'),
+    maxSize: z.number().default(800).describe('Maximum width when resizing'),
+  });
 
 /**
  * Shell.Sidebar component schema
  */
-export const ShellSidebarSchema = PanePropsSchema.extend({
-  mode: SidebarModeSchema.optional(),
-  defaultMode: ResponsiveSidebarModeSchema.default('expanded').describe('Initial sidebar mode'),
-  expandedSize: z.number().default(288).describe('Default width in pixels'),
+export const ShellSidebarSchema = ElementPropsSchema.merge(ResizablePropsSchema).extend({
+  state: ResponsiveSidebarModeSchema.optional().describe('Controlled sidebar state'),
+  defaultState: ResponsiveSidebarModeSchema.optional().describe("Initial sidebar state when uncontrolled. Default: 'expanded'"),
+  onStateChange: z.function().args(SidebarModeSchema, StateChangeMetaSchema).returns(z.void()).optional().describe('Fired when the sidebar state changes'),
+  presentation: ResponsivePresentationSchema.optional().describe("How the sidebar interacts with layout. Default: { initial: 'overlay', md: 'fixed' }"),
+  expandedSize: z.number().default(288).describe('Width in pixels when expanded'),
   minSize: z.number().default(200).describe('Minimum width when resizing'),
   maxSize: z.number().default(400).describe('Maximum width when resizing'),
-  thinSize: z.number().default(64).describe('Width in thin mode'),
-  toggleModes: z.enum(['both', 'single']).optional().describe('Available modes in toggle sequence'),
-  resizable: z.boolean().default(false).describe('Whether the sidebar can be resized'),
-  collapsible: z.boolean().default(true).describe('Whether the sidebar can be collapsed via resize handle'),
-}).strict();
+  thinSize: z.number().default(64).describe('Width in thin state'),
+  toggleModes: z.enum(['both', 'single']).optional().describe('States included in the toggle sequence'),
+});
 
 /**
  * Shell.Content component schema
  */
-export const ShellContentSchema = z
-  .object({
-    className: z.string().optional().describe('Additional CSS class name'),
-    style: z
-      .record(z.string(), z.union([z.string(), z.number()]))
-      .optional()
-      .describe('Inline styles'),
-    children: z.any().optional().describe('Main content'),
-  })
-  .strict();
+export const ShellContentSchema = ElementPropsSchema.extend({
+  inset: z.boolean().optional().describe('Float the content with a margin and a gray shell backdrop'),
+});
 
 /**
  * Shell.Inspector component schema
  */
-export const ShellInspectorSchema = PanePropsSchema.extend({
-  presentation: ResponsivePresentationSchema.default({ initial: 'overlay', lg: 'fixed' }).describe('Presentation mode'),
-  expandedSize: z.number().default(320).describe('Default width in pixels'),
-  minSize: z.number().default(200).describe('Minimum width when resizing'),
-  maxSize: z.number().default(500).describe('Maximum width when resizing'),
-  resizable: z.boolean().default(false).describe('Whether the inspector can be resized'),
-  collapsible: z.boolean().default(true).describe('Whether the inspector can be collapsed via resize handle'),
-}).strict();
+export const ShellInspectorSchema = ElementPropsSchema.merge(OpenPropsSchema)
+  .merge(ResizablePropsSchema)
+  .extend({
+    presentation: ResponsivePresentationSchema.optional().describe("How the inspector interacts with layout. Default: { initial: 'overlay', lg: 'fixed' }"),
+    expandedSize: z.number().default(320).describe('Width in pixels when expanded'),
+    minSize: z.number().default(200).describe('Minimum width when resizing'),
+    maxSize: z.number().default(500).describe('Maximum width when resizing'),
+  });
 
 /**
  * Shell.Bottom component schema
  */
-export const ShellBottomSchema = PanePropsSchema.extend({
-  presentation: ResponsivePresentationSchema.default('fixed').describe('Presentation mode'),
-  expandedSize: z.number().default(200).describe('Default height in pixels'),
-  minSize: z.number().default(100).describe('Minimum height when resizing'),
-  maxSize: z.number().default(400).describe('Maximum height when resizing'),
-  resizable: z.boolean().default(false).describe('Whether the bottom panel can be resized'),
-  collapsible: z.boolean().default(true).describe('Whether the bottom panel can be collapsed via resize handle'),
-}).strict();
+export const ShellBottomSchema = ElementPropsSchema.merge(OpenPropsSchema)
+  .merge(ResizablePropsSchema)
+  .extend({
+    presentation: ResponsivePresentationSchema.optional().describe("How the bottom panel interacts with layout. Default: 'fixed'"),
+    expandedSize: z.number().default(200).describe('Height in pixels when expanded'),
+    minSize: z.number().default(100).describe('Minimum height when resizing'),
+    maxSize: z.number().default(400).describe('Maximum height when resizing'),
+  });
 
 /**
  * Shell.Trigger component schema
  */
-export const ShellTriggerSchema = z
-  .object({
-    target: PaneTargetSchema.describe('Which pane to control'),
-    action: TriggerActionSchema.default('toggle').describe('Action to perform'),
-    peekOnHover: z.boolean().default(false).describe('Whether to show peek preview on hover when collapsed'),
-    className: z.string().optional().describe('Additional CSS class name'),
-    style: z
-      .record(z.string(), z.union([z.string(), z.number()]))
-      .optional()
-      .describe('Inline styles'),
-    children: z.any().optional().describe('Trigger content'),
-    onClick: z.function().optional().describe('Click handler'),
-    onMouseEnter: z.function().optional().describe('Mouse enter handler'),
-    onMouseLeave: z.function().optional().describe('Mouse leave handler'),
-    'aria-label': z.string().optional().describe('ARIA label for accessibility'),
-    'aria-labelledby': z.string().optional().describe('ARIA labelled by reference'),
-    'aria-describedby': z.string().optional().describe('ARIA described by reference'),
-  })
-  .strict();
+export const ShellTriggerSchema = ElementPropsSchema.extend({
+  target: PaneTargetSchema.describe('Which pane to control'),
+  action: TriggerActionSchema.default('toggle').describe('Action to perform'),
+  peekOnHover: z.boolean().default(false).describe('Show a peek preview on hover while the target is collapsed'),
+  onClick: z.function().optional().describe('Click handler'),
+  onMouseEnter: z.function().optional().describe('Mouse enter handler'),
+  onMouseLeave: z.function().optional().describe('Mouse leave handler'),
+  'aria-label': z.string().optional().describe('ARIA label for accessibility'),
+  'aria-labelledby': z.string().optional().describe('ARIA labelled by reference'),
+  'aria-describedby': z.string().optional().describe('ARIA described by reference'),
+});
 
 /**
  * Shell.Handle component schema (for resize handles)
  */
-export const ShellHandleSchema = z
-  .object({
-    className: z.string().optional().describe('Additional CSS class name'),
-    style: z
-      .record(z.string(), z.union([z.string(), z.number()]))
-      .optional()
-      .describe('Inline styles'),
-    children: z.any().optional().describe('Handle content'),
-  })
-  .strict();
+export const ShellHandleSchema = ElementPropsSchema;
 
 // Type exports
 export type ShellRootProps = z.infer<typeof ShellRootSchema>;
@@ -284,13 +231,13 @@ export type ShellTriggerProps = z.infer<typeof ShellTriggerSchema>;
 export type ShellHandleProps = z.infer<typeof ShellHandleSchema>;
 
 // Common type exports
-export type PaneMode = z.infer<typeof PaneModeSchema>;
+export type PaneMode = z.infer<typeof _PaneModeSchema>;
 export type SidebarMode = z.infer<typeof SidebarModeSchema>;
 export type PresentationValue = z.infer<typeof PresentationValueSchema>;
 export type Breakpoint = z.infer<typeof _BreakpointSchema>;
 export type PaneTarget = z.infer<typeof PaneTargetSchema>;
 export type TriggerAction = z.infer<typeof TriggerActionSchema>;
-export type ResponsiveMode = z.infer<typeof ResponsiveModeSchema>;
+export type ResponsiveBoolean = z.infer<typeof ResponsiveBooleanSchema>;
 export type ResponsiveSidebarMode = z.infer<typeof ResponsiveSidebarModeSchema>;
 export type ResponsivePresentation = z.infer<typeof ResponsivePresentationSchema>;
 export type PaneSizePersistence = z.infer<typeof PaneSizePersistenceSchema>;

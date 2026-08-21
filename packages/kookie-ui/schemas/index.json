@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Kookie UI Button Components",
-  "description": "Complete JSON Schema collection for all button components in Kookie UI",
+  "title": "Kookie UI Components",
+  "description": "Complete JSON Schema collection for all components in Kookie UI",
   "version": "1.0.0",
-  "generatedAt": "2026-03-04T05:15:10.961Z",
+  "generatedAt": "2026-08-21T11:49:34.367Z",
   "source": "Zod schemas",
   "components": {
     "base-button": {
@@ -287,7 +287,7 @@
       "title": "Base-button Component Props",
       "description": "Props schema for the base-button component in Kookie UI",
       "version": "1.0.0",
-      "generatedAt": "2026-03-04T05:15:10.950Z",
+      "generatedAt": "2026-08-21T11:49:34.358Z",
       "source": "Zod schema"
     },
     "button": {
@@ -822,7 +822,7 @@
       "title": "Button Component Props",
       "description": "Props schema for the button component in Kookie UI",
       "version": "1.0.0",
-      "generatedAt": "2026-03-04T05:15:10.959Z",
+      "generatedAt": "2026-08-21T11:49:34.359Z",
       "source": "Zod schema"
     },
     "icon-button": {
@@ -1140,7 +1140,7 @@
       "title": "Icon-button Component Props",
       "description": "Props schema for the icon-button component in Kookie UI",
       "version": "1.0.0",
-      "generatedAt": "2026-03-04T05:15:10.960Z",
+      "generatedAt": "2026-08-21T11:49:34.360Z",
       "source": "Zod schema"
     },
     "toggle-button": {
@@ -1683,7 +1683,7 @@
       "title": "Toggle-button Component Props",
       "description": "Props schema for the toggle-button component in Kookie UI",
       "version": "1.0.0",
-      "generatedAt": "2026-03-04T05:15:10.960Z",
+      "generatedAt": "2026-08-21T11:49:34.361Z",
       "source": "Zod schema"
     },
     "toggle-icon-button": {
@@ -2009,7 +2009,1152 @@
       "title": "Toggle-icon-button Component Props",
       "description": "Props schema for the toggle-icon-button component in Kookie UI",
       "version": "1.0.0",
-      "generatedAt": "2026-03-04T05:15:10.961Z",
+      "generatedAt": "2026-08-21T11:49:34.362Z",
+      "source": "Zod schema"
+    },
+    "shell-root": {
+      "$ref": "#/definitions/Shell-rootSchema",
+      "definitions": {
+        "Shell-rootSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Element id"
+            },
+            "className": {
+              "type": "string",
+              "description": "Additional CSS class name"
+            },
+            "style": {
+              "type": "object",
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              },
+              "description": "Inline styles"
+            },
+            "children": {
+              "description": "Slot content"
+            },
+            "height": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "full"
+                },
+                {
+                  "type": "string",
+                  "const": "auto"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "default": "full",
+              "description": "Height of the shell container"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-root Component Props",
+      "description": "Props schema for the shell-root component in Kookie UI",
+      "version": "1.0.0",
+      "generatedAt": "2026-08-21T11:49:34.362Z",
+      "source": "Zod schema"
+    },
+    "shell-header": {
+      "$ref": "#/definitions/Shell-headerSchema",
+      "definitions": {
+        "Shell-headerSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Element id"
+            },
+            "className": {
+              "type": "string",
+              "description": "Additional CSS class name"
+            },
+            "style": {
+              "type": "object",
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              },
+              "description": "Inline styles"
+            },
+            "children": {
+              "description": "Slot content"
+            },
+            "height": {
+              "type": "number",
+              "default": 64,
+              "description": "Height of the header in pixels"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-header Component Props",
+      "description": "Props schema for the shell-header component in Kookie UI",
+      "version": "1.0.0",
+      "generatedAt": "2026-08-21T11:49:34.363Z",
+      "source": "Zod schema"
+    },
+    "shell-rail": {
+      "$ref": "#/definitions/Shell-railSchema",
+      "definitions": {
+        "Shell-railSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Element id"
+            },
+            "className": {
+              "type": "string",
+              "description": "Additional CSS class name"
+            },
+            "style": {
+              "type": "object",
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              },
+              "description": "Inline styles"
+            },
+            "children": {
+              "description": "Slot content"
+            },
+            "open": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "initial": {
+                      "$ref": "#/definitions/Shell-railSchema/properties/open/anyOf/0"
+                    },
+                    "xs": {
+                      "$ref": "#/definitions/Shell-railSchema/properties/open/anyOf/0"
+                    },
+                    "sm": {
+                      "$ref": "#/definitions/Shell-railSchema/properties/open/anyOf/0"
+                    },
+                    "md": {
+                      "$ref": "#/definitions/Shell-railSchema/properties/open/anyOf/0"
+                    },
+                    "lg": {
+                      "$ref": "#/definitions/Shell-railSchema/properties/open/anyOf/0"
+                    },
+                    "xl": {
+                      "$ref": "#/definitions/Shell-railSchema/properties/open/anyOf/0"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ],
+              "description": "Controlled open state"
+            },
+            "defaultOpen": {
+              "$ref": "#/definitions/Shell-railSchema/properties/open",
+              "description": "Initial open state when uncontrolled"
+            },
+            "presentation": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "fixed",
+                    "overlay",
+                    "stacked"
+                  ],
+                  "description": "Presentation mode"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "initial": {
+                      "$ref": "#/definitions/Shell-railSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "xs": {
+                      "$ref": "#/definitions/Shell-railSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "sm": {
+                      "$ref": "#/definitions/Shell-railSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "md": {
+                      "$ref": "#/definitions/Shell-railSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "lg": {
+                      "$ref": "#/definitions/Shell-railSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "xl": {
+                      "$ref": "#/definitions/Shell-railSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ],
+              "description": "How the rail interacts with layout. Default: { initial: 'fixed', sm: 'fixed' }"
+            },
+            "expandedSize": {
+              "type": "number",
+              "default": 64,
+              "description": "Width in pixels"
+            },
+            "collapsible": {
+              "type": "boolean",
+              "description": "Allow collapsing. Default: true"
+            },
+            "inset": {
+              "type": "boolean",
+              "description": "Float Rail+Panel with a margin and a gray shell backdrop"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-rail Component Props",
+      "description": "Props schema for the shell-rail component in Kookie UI",
+      "version": "1.0.0",
+      "generatedAt": "2026-08-21T11:49:34.363Z",
+      "source": "Zod schema"
+    },
+    "shell-panel": {
+      "$ref": "#/definitions/Shell-panelSchema",
+      "definitions": {
+        "Shell-panelSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Element id"
+            },
+            "className": {
+              "type": "string",
+              "description": "Additional CSS class name"
+            },
+            "style": {
+              "type": "object",
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              },
+              "description": "Inline styles"
+            },
+            "children": {
+              "description": "Slot content"
+            },
+            "open": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "initial": {
+                      "$ref": "#/definitions/Shell-panelSchema/properties/open/anyOf/0"
+                    },
+                    "xs": {
+                      "$ref": "#/definitions/Shell-panelSchema/properties/open/anyOf/0"
+                    },
+                    "sm": {
+                      "$ref": "#/definitions/Shell-panelSchema/properties/open/anyOf/0"
+                    },
+                    "md": {
+                      "$ref": "#/definitions/Shell-panelSchema/properties/open/anyOf/0"
+                    },
+                    "lg": {
+                      "$ref": "#/definitions/Shell-panelSchema/properties/open/anyOf/0"
+                    },
+                    "xl": {
+                      "$ref": "#/definitions/Shell-panelSchema/properties/open/anyOf/0"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ],
+              "description": "Controlled open state"
+            },
+            "defaultOpen": {
+              "$ref": "#/definitions/Shell-panelSchema/properties/open",
+              "description": "Initial open state when uncontrolled"
+            },
+            "resizable": {
+              "type": "boolean",
+              "description": "Enable drag-to-resize. Default: false"
+            },
+            "collapsible": {
+              "type": "boolean",
+              "description": "Allow collapsing. Default: true"
+            },
+            "size": {
+              "type": [
+                "number",
+                "string"
+              ],
+              "description": "Controlled size"
+            },
+            "defaultSize": {
+              "$ref": "#/definitions/Shell-panelSchema/properties/size",
+              "description": "Initial size when uncontrolled"
+            },
+            "sizeUpdate": {
+              "type": "string",
+              "enum": [
+                "throttle",
+                "debounce"
+              ],
+              "description": "Rate-limit strategy for onSizeChange"
+            },
+            "sizeUpdateMs": {
+              "type": "number",
+              "description": "Milliseconds for throttle/debounce. Default: 50"
+            },
+            "snapPoints": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "description": "Sizes the handle snaps to"
+            },
+            "snapTolerance": {
+              "type": "number",
+              "description": "Distance in pixels that triggers a snap. Default: 8"
+            },
+            "collapseThreshold": {
+              "type": "number",
+              "description": "Size below which the pane auto-collapses"
+            },
+            "paneId": {
+              "type": "string",
+              "description": "Unique id used for built-in size persistence"
+            },
+            "persistence": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": false,
+              "description": "Custom adapter for saving/loading size"
+            },
+            "inset": {
+              "type": "boolean",
+              "description": "Float the pane with a margin and a gray shell backdrop"
+            },
+            "expandedSize": {
+              "type": "number",
+              "default": 288,
+              "description": "Width in pixels when expanded"
+            },
+            "minSize": {
+              "type": "number",
+              "default": 100,
+              "description": "Minimum width when resizing"
+            },
+            "maxSize": {
+              "type": "number",
+              "default": 800,
+              "description": "Maximum width when resizing"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-panel Component Props",
+      "description": "Props schema for the shell-panel component in Kookie UI",
+      "version": "1.0.0",
+      "generatedAt": "2026-08-21T11:49:34.364Z",
+      "source": "Zod schema"
+    },
+    "shell-sidebar": {
+      "$ref": "#/definitions/Shell-sidebarSchema",
+      "definitions": {
+        "Shell-sidebarSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Element id"
+            },
+            "className": {
+              "type": "string",
+              "description": "Additional CSS class name"
+            },
+            "style": {
+              "type": "object",
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              },
+              "description": "Inline styles"
+            },
+            "children": {
+              "description": "Slot content"
+            },
+            "resizable": {
+              "type": "boolean",
+              "description": "Enable drag-to-resize. Default: false"
+            },
+            "collapsible": {
+              "type": "boolean",
+              "description": "Allow collapsing. Default: true"
+            },
+            "size": {
+              "type": [
+                "number",
+                "string"
+              ],
+              "description": "Controlled size"
+            },
+            "defaultSize": {
+              "$ref": "#/definitions/Shell-sidebarSchema/properties/size",
+              "description": "Initial size when uncontrolled"
+            },
+            "sizeUpdate": {
+              "type": "string",
+              "enum": [
+                "throttle",
+                "debounce"
+              ],
+              "description": "Rate-limit strategy for onSizeChange"
+            },
+            "sizeUpdateMs": {
+              "type": "number",
+              "description": "Milliseconds for throttle/debounce. Default: 50"
+            },
+            "snapPoints": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "description": "Sizes the handle snaps to"
+            },
+            "snapTolerance": {
+              "type": "number",
+              "description": "Distance in pixels that triggers a snap. Default: 8"
+            },
+            "collapseThreshold": {
+              "type": "number",
+              "description": "Size below which the pane auto-collapses"
+            },
+            "paneId": {
+              "type": "string",
+              "description": "Unique id used for built-in size persistence"
+            },
+            "persistence": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": false,
+              "description": "Custom adapter for saving/loading size"
+            },
+            "inset": {
+              "type": "boolean",
+              "description": "Float the pane with a margin and a gray shell backdrop"
+            },
+            "state": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "collapsed",
+                    "thin",
+                    "expanded"
+                  ],
+                  "description": "Sidebar state mode"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "initial": {
+                      "$ref": "#/definitions/Shell-sidebarSchema/properties/state/anyOf/0",
+                      "description": "Sidebar state mode"
+                    },
+                    "xs": {
+                      "$ref": "#/definitions/Shell-sidebarSchema/properties/state/anyOf/0",
+                      "description": "Sidebar state mode"
+                    },
+                    "sm": {
+                      "$ref": "#/definitions/Shell-sidebarSchema/properties/state/anyOf/0",
+                      "description": "Sidebar state mode"
+                    },
+                    "md": {
+                      "$ref": "#/definitions/Shell-sidebarSchema/properties/state/anyOf/0",
+                      "description": "Sidebar state mode"
+                    },
+                    "lg": {
+                      "$ref": "#/definitions/Shell-sidebarSchema/properties/state/anyOf/0",
+                      "description": "Sidebar state mode"
+                    },
+                    "xl": {
+                      "$ref": "#/definitions/Shell-sidebarSchema/properties/state/anyOf/0",
+                      "description": "Sidebar state mode"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ],
+              "description": "Controlled sidebar state"
+            },
+            "defaultState": {
+              "$ref": "#/definitions/Shell-sidebarSchema/properties/state",
+              "description": "Initial sidebar state when uncontrolled. Default: 'expanded'"
+            },
+            "presentation": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "fixed",
+                    "overlay",
+                    "stacked"
+                  ],
+                  "description": "Presentation mode"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "initial": {
+                      "$ref": "#/definitions/Shell-sidebarSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "xs": {
+                      "$ref": "#/definitions/Shell-sidebarSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "sm": {
+                      "$ref": "#/definitions/Shell-sidebarSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "md": {
+                      "$ref": "#/definitions/Shell-sidebarSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "lg": {
+                      "$ref": "#/definitions/Shell-sidebarSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "xl": {
+                      "$ref": "#/definitions/Shell-sidebarSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ],
+              "description": "How the sidebar interacts with layout. Default: { initial: 'overlay', md: 'fixed' }"
+            },
+            "expandedSize": {
+              "type": "number",
+              "default": 288,
+              "description": "Width in pixels when expanded"
+            },
+            "minSize": {
+              "type": "number",
+              "default": 200,
+              "description": "Minimum width when resizing"
+            },
+            "maxSize": {
+              "type": "number",
+              "default": 400,
+              "description": "Maximum width when resizing"
+            },
+            "thinSize": {
+              "type": "number",
+              "default": 64,
+              "description": "Width in thin state"
+            },
+            "toggleModes": {
+              "type": "string",
+              "enum": [
+                "both",
+                "single"
+              ],
+              "description": "States included in the toggle sequence"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-sidebar Component Props",
+      "description": "Props schema for the shell-sidebar component in Kookie UI",
+      "version": "1.0.0",
+      "generatedAt": "2026-08-21T11:49:34.365Z",
+      "source": "Zod schema"
+    },
+    "shell-content": {
+      "$ref": "#/definitions/Shell-contentSchema",
+      "definitions": {
+        "Shell-contentSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Element id"
+            },
+            "className": {
+              "type": "string",
+              "description": "Additional CSS class name"
+            },
+            "style": {
+              "type": "object",
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              },
+              "description": "Inline styles"
+            },
+            "children": {
+              "description": "Slot content"
+            },
+            "inset": {
+              "type": "boolean",
+              "description": "Float the content with a margin and a gray shell backdrop"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-content Component Props",
+      "description": "Props schema for the shell-content component in Kookie UI",
+      "version": "1.0.0",
+      "generatedAt": "2026-08-21T11:49:34.365Z",
+      "source": "Zod schema"
+    },
+    "shell-inspector": {
+      "$ref": "#/definitions/Shell-inspectorSchema",
+      "definitions": {
+        "Shell-inspectorSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Element id"
+            },
+            "className": {
+              "type": "string",
+              "description": "Additional CSS class name"
+            },
+            "style": {
+              "type": "object",
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              },
+              "description": "Inline styles"
+            },
+            "children": {
+              "description": "Slot content"
+            },
+            "open": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "initial": {
+                      "$ref": "#/definitions/Shell-inspectorSchema/properties/open/anyOf/0"
+                    },
+                    "xs": {
+                      "$ref": "#/definitions/Shell-inspectorSchema/properties/open/anyOf/0"
+                    },
+                    "sm": {
+                      "$ref": "#/definitions/Shell-inspectorSchema/properties/open/anyOf/0"
+                    },
+                    "md": {
+                      "$ref": "#/definitions/Shell-inspectorSchema/properties/open/anyOf/0"
+                    },
+                    "lg": {
+                      "$ref": "#/definitions/Shell-inspectorSchema/properties/open/anyOf/0"
+                    },
+                    "xl": {
+                      "$ref": "#/definitions/Shell-inspectorSchema/properties/open/anyOf/0"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ],
+              "description": "Controlled open state"
+            },
+            "defaultOpen": {
+              "$ref": "#/definitions/Shell-inspectorSchema/properties/open",
+              "description": "Initial open state when uncontrolled"
+            },
+            "resizable": {
+              "type": "boolean",
+              "description": "Enable drag-to-resize. Default: false"
+            },
+            "collapsible": {
+              "type": "boolean",
+              "description": "Allow collapsing. Default: true"
+            },
+            "size": {
+              "type": [
+                "number",
+                "string"
+              ],
+              "description": "Controlled size"
+            },
+            "defaultSize": {
+              "$ref": "#/definitions/Shell-inspectorSchema/properties/size",
+              "description": "Initial size when uncontrolled"
+            },
+            "sizeUpdate": {
+              "type": "string",
+              "enum": [
+                "throttle",
+                "debounce"
+              ],
+              "description": "Rate-limit strategy for onSizeChange"
+            },
+            "sizeUpdateMs": {
+              "type": "number",
+              "description": "Milliseconds for throttle/debounce. Default: 50"
+            },
+            "snapPoints": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "description": "Sizes the handle snaps to"
+            },
+            "snapTolerance": {
+              "type": "number",
+              "description": "Distance in pixels that triggers a snap. Default: 8"
+            },
+            "collapseThreshold": {
+              "type": "number",
+              "description": "Size below which the pane auto-collapses"
+            },
+            "paneId": {
+              "type": "string",
+              "description": "Unique id used for built-in size persistence"
+            },
+            "persistence": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": false,
+              "description": "Custom adapter for saving/loading size"
+            },
+            "inset": {
+              "type": "boolean",
+              "description": "Float the pane with a margin and a gray shell backdrop"
+            },
+            "presentation": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "fixed",
+                    "overlay",
+                    "stacked"
+                  ],
+                  "description": "Presentation mode"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "initial": {
+                      "$ref": "#/definitions/Shell-inspectorSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "xs": {
+                      "$ref": "#/definitions/Shell-inspectorSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "sm": {
+                      "$ref": "#/definitions/Shell-inspectorSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "md": {
+                      "$ref": "#/definitions/Shell-inspectorSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "lg": {
+                      "$ref": "#/definitions/Shell-inspectorSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "xl": {
+                      "$ref": "#/definitions/Shell-inspectorSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ],
+              "description": "How the inspector interacts with layout. Default: { initial: 'overlay', lg: 'fixed' }"
+            },
+            "expandedSize": {
+              "type": "number",
+              "default": 320,
+              "description": "Width in pixels when expanded"
+            },
+            "minSize": {
+              "type": "number",
+              "default": 200,
+              "description": "Minimum width when resizing"
+            },
+            "maxSize": {
+              "type": "number",
+              "default": 500,
+              "description": "Maximum width when resizing"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-inspector Component Props",
+      "description": "Props schema for the shell-inspector component in Kookie UI",
+      "version": "1.0.0",
+      "generatedAt": "2026-08-21T11:49:34.365Z",
+      "source": "Zod schema"
+    },
+    "shell-bottom": {
+      "$ref": "#/definitions/Shell-bottomSchema",
+      "definitions": {
+        "Shell-bottomSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Element id"
+            },
+            "className": {
+              "type": "string",
+              "description": "Additional CSS class name"
+            },
+            "style": {
+              "type": "object",
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              },
+              "description": "Inline styles"
+            },
+            "children": {
+              "description": "Slot content"
+            },
+            "open": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "initial": {
+                      "$ref": "#/definitions/Shell-bottomSchema/properties/open/anyOf/0"
+                    },
+                    "xs": {
+                      "$ref": "#/definitions/Shell-bottomSchema/properties/open/anyOf/0"
+                    },
+                    "sm": {
+                      "$ref": "#/definitions/Shell-bottomSchema/properties/open/anyOf/0"
+                    },
+                    "md": {
+                      "$ref": "#/definitions/Shell-bottomSchema/properties/open/anyOf/0"
+                    },
+                    "lg": {
+                      "$ref": "#/definitions/Shell-bottomSchema/properties/open/anyOf/0"
+                    },
+                    "xl": {
+                      "$ref": "#/definitions/Shell-bottomSchema/properties/open/anyOf/0"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ],
+              "description": "Controlled open state"
+            },
+            "defaultOpen": {
+              "$ref": "#/definitions/Shell-bottomSchema/properties/open",
+              "description": "Initial open state when uncontrolled"
+            },
+            "resizable": {
+              "type": "boolean",
+              "description": "Enable drag-to-resize. Default: false"
+            },
+            "collapsible": {
+              "type": "boolean",
+              "description": "Allow collapsing. Default: true"
+            },
+            "size": {
+              "type": [
+                "number",
+                "string"
+              ],
+              "description": "Controlled size"
+            },
+            "defaultSize": {
+              "$ref": "#/definitions/Shell-bottomSchema/properties/size",
+              "description": "Initial size when uncontrolled"
+            },
+            "sizeUpdate": {
+              "type": "string",
+              "enum": [
+                "throttle",
+                "debounce"
+              ],
+              "description": "Rate-limit strategy for onSizeChange"
+            },
+            "sizeUpdateMs": {
+              "type": "number",
+              "description": "Milliseconds for throttle/debounce. Default: 50"
+            },
+            "snapPoints": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "description": "Sizes the handle snaps to"
+            },
+            "snapTolerance": {
+              "type": "number",
+              "description": "Distance in pixels that triggers a snap. Default: 8"
+            },
+            "collapseThreshold": {
+              "type": "number",
+              "description": "Size below which the pane auto-collapses"
+            },
+            "paneId": {
+              "type": "string",
+              "description": "Unique id used for built-in size persistence"
+            },
+            "persistence": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": false,
+              "description": "Custom adapter for saving/loading size"
+            },
+            "inset": {
+              "type": "boolean",
+              "description": "Float the pane with a margin and a gray shell backdrop"
+            },
+            "presentation": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "fixed",
+                    "overlay",
+                    "stacked"
+                  ],
+                  "description": "Presentation mode"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "initial": {
+                      "$ref": "#/definitions/Shell-bottomSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "xs": {
+                      "$ref": "#/definitions/Shell-bottomSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "sm": {
+                      "$ref": "#/definitions/Shell-bottomSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "md": {
+                      "$ref": "#/definitions/Shell-bottomSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "lg": {
+                      "$ref": "#/definitions/Shell-bottomSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    },
+                    "xl": {
+                      "$ref": "#/definitions/Shell-bottomSchema/properties/presentation/anyOf/0",
+                      "description": "Presentation mode"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ],
+              "description": "How the bottom panel interacts with layout. Default: 'fixed'"
+            },
+            "expandedSize": {
+              "type": "number",
+              "default": 200,
+              "description": "Height in pixels when expanded"
+            },
+            "minSize": {
+              "type": "number",
+              "default": 100,
+              "description": "Minimum height when resizing"
+            },
+            "maxSize": {
+              "type": "number",
+              "default": 400,
+              "description": "Maximum height when resizing"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-bottom Component Props",
+      "description": "Props schema for the shell-bottom component in Kookie UI",
+      "version": "1.0.0",
+      "generatedAt": "2026-08-21T11:49:34.366Z",
+      "source": "Zod schema"
+    },
+    "shell-trigger": {
+      "$ref": "#/definitions/Shell-triggerSchema",
+      "definitions": {
+        "Shell-triggerSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Element id"
+            },
+            "className": {
+              "type": "string",
+              "description": "Additional CSS class name"
+            },
+            "style": {
+              "type": "object",
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              },
+              "description": "Inline styles"
+            },
+            "children": {
+              "description": "Slot content"
+            },
+            "target": {
+              "type": "string",
+              "enum": [
+                "left",
+                "rail",
+                "panel",
+                "sidebar",
+                "inspector",
+                "bottom"
+              ],
+              "description": "Which pane to control"
+            },
+            "action": {
+              "type": "string",
+              "enum": [
+                "toggle",
+                "expand",
+                "collapse"
+              ],
+              "description": "Action to perform",
+              "default": "toggle"
+            },
+            "peekOnHover": {
+              "type": "boolean",
+              "default": false,
+              "description": "Show a peek preview on hover while the target is collapsed"
+            },
+            "aria-label": {
+              "type": "string",
+              "description": "ARIA label for accessibility"
+            },
+            "aria-labelledby": {
+              "type": "string",
+              "description": "ARIA labelled by reference"
+            },
+            "aria-describedby": {
+              "type": "string",
+              "description": "ARIA described by reference"
+            }
+          },
+          "required": [
+            "target"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-trigger Component Props",
+      "description": "Props schema for the shell-trigger component in Kookie UI",
+      "version": "1.0.0",
+      "generatedAt": "2026-08-21T11:49:34.366Z",
+      "source": "Zod schema"
+    },
+    "shell-handle": {
+      "$ref": "#/definitions/Shell-handleSchema",
+      "definitions": {
+        "Shell-handleSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Element id"
+            },
+            "className": {
+              "type": "string",
+              "description": "Additional CSS class name"
+            },
+            "style": {
+              "type": "object",
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              },
+              "description": "Inline styles"
+            },
+            "children": {
+              "description": "Slot content"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-handle Component Props",
+      "description": "Props schema for the shell-handle component in Kookie UI",
+      "version": "1.0.0",
+      "generatedAt": "2026-08-21T11:49:34.367Z",
       "source": "Zod schema"
     }
   }

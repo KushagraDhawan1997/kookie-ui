@@ -79,7 +79,7 @@ export type {
   Breakpoint,
   PaneTarget,
   TriggerAction,
-  ResponsiveMode,
+  ResponsiveBoolean,
   ResponsiveSidebarMode,
   ResponsivePresentation,
   PaneSizePersistence,

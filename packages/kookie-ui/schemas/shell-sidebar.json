@@ -4,6 +4,135 @@
     "Shell-sidebarSchema": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "description": "Element id"
+        },
+        "className": {
+          "type": "string",
+          "description": "Additional CSS class name"
+        },
+        "style": {
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number"
+            ]
+          },
+          "description": "Inline styles"
+        },
+        "children": {
+          "description": "Slot content"
+        },
+        "resizable": {
+          "type": "boolean",
+          "description": "Enable drag-to-resize. Default: false"
+        },
+        "collapsible": {
+          "type": "boolean",
+          "description": "Allow collapsing. Default: true"
+        },
+        "size": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "description": "Controlled size"
+        },
+        "defaultSize": {
+          "$ref": "#/definitions/Shell-sidebarSchema/properties/size",
+          "description": "Initial size when uncontrolled"
+        },
+        "sizeUpdate": {
+          "type": "string",
+          "enum": [
+            "throttle",
+            "debounce"
+          ],
+          "description": "Rate-limit strategy for onSizeChange"
+        },
+        "sizeUpdateMs": {
+          "type": "number",
+          "description": "Milliseconds for throttle/debounce. Default: 50"
+        },
+        "snapPoints": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Sizes the handle snaps to"
+        },
+        "snapTolerance": {
+          "type": "number",
+          "description": "Distance in pixels that triggers a snap. Default: 8"
+        },
+        "collapseThreshold": {
+          "type": "number",
+          "description": "Size below which the pane auto-collapses"
+        },
+        "paneId": {
+          "type": "string",
+          "description": "Unique id used for built-in size persistence"
+        },
+        "persistence": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false,
+          "description": "Custom adapter for saving/loading size"
+        },
+        "inset": {
+          "type": "boolean",
+          "description": "Float the pane with a margin and a gray shell backdrop"
+        },
+        "state": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "collapsed",
+                "thin",
+                "expanded"
+              ],
+              "description": "Sidebar state mode"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "initial": {
+                  "$ref": "#/definitions/Shell-sidebarSchema/properties/state/anyOf/0",
+                  "description": "Sidebar state mode"
+                },
+                "xs": {
+                  "$ref": "#/definitions/Shell-sidebarSchema/properties/state/anyOf/0",
+                  "description": "Sidebar state mode"
+                },
+                "sm": {
+                  "$ref": "#/definitions/Shell-sidebarSchema/properties/state/anyOf/0",
+                  "description": "Sidebar state mode"
+                },
+                "md": {
+                  "$ref": "#/definitions/Shell-sidebarSchema/properties/state/anyOf/0",
+                  "description": "Sidebar state mode"
+                },
+                "lg": {
+                  "$ref": "#/definitions/Shell-sidebarSchema/properties/state/anyOf/0",
+                  "description": "Sidebar state mode"
+                },
+                "xl": {
+                  "$ref": "#/definitions/Shell-sidebarSchema/properties/state/anyOf/0",
+                  "description": "Sidebar state mode"
+                }
+              },
+              "additionalProperties": false
+            }
+          ],
+          "description": "Controlled sidebar state"
+        },
+        "defaultState": {
+          "$ref": "#/definitions/Shell-sidebarSchema/properties/state",
+          "description": "Initial sidebar state when uncontrolled. Default: 'expanded'"
+        },
         "presentation": {
           "anyOf": [
             {
@@ -46,60 +175,12 @@
               "additionalProperties": false
             }
           ],
-          "description": "Responsive presentation configuration"
-        },
-        "mode": {
-          "type": "string",
-          "enum": [
-            "collapsed",
-            "thin",
-            "expanded"
-          ],
-          "description": "Sidebar state mode"
-        },
-        "defaultMode": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Shell-sidebarSchema/properties/mode"
-            },
-            {
-              "type": "object",
-              "properties": {
-                "initial": {
-                  "$ref": "#/definitions/Shell-sidebarSchema/properties/mode",
-                  "description": "Sidebar state mode"
-                },
-                "xs": {
-                  "$ref": "#/definitions/Shell-sidebarSchema/properties/mode",
-                  "description": "Sidebar state mode"
-                },
-                "sm": {
-                  "$ref": "#/definitions/Shell-sidebarSchema/properties/mode",
-                  "description": "Sidebar state mode"
-                },
-                "md": {
-                  "$ref": "#/definitions/Shell-sidebarSchema/properties/mode",
-                  "description": "Sidebar state mode"
-                },
-                "lg": {
-                  "$ref": "#/definitions/Shell-sidebarSchema/properties/mode",
-                  "description": "Sidebar state mode"
-                },
-                "xl": {
-                  "$ref": "#/definitions/Shell-sidebarSchema/properties/mode",
-                  "description": "Sidebar state mode"
-                }
-              },
-              "additionalProperties": false
-            }
-          ],
-          "description": "Initial sidebar mode",
-          "default": "expanded"
+          "description": "How the sidebar interacts with layout. Default: { initial: 'overlay', md: 'fixed' }"
         },
         "expandedSize": {
           "type": "number",
           "default": 288,
-          "description": "Default width in pixels"
+          "description": "Width in pixels when expanded"
         },
         "minSize": {
           "type": "number",
@@ -111,55 +192,10 @@
           "default": 400,
           "description": "Maximum width when resizing"
         },
-        "resizable": {
-          "type": "boolean",
-          "default": false,
-          "description": "Whether the sidebar can be resized"
-        },
-        "collapsible": {
-          "type": "boolean",
-          "default": true,
-          "description": "Whether the sidebar can be collapsed via resize handle"
-        },
-        "resizer": {},
-        "snapPoints": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          }
-        },
-        "snapTolerance": {
-          "type": "number"
-        },
-        "collapseThreshold": {
-          "type": "number"
-        },
-        "paneId": {
-          "type": "string"
-        },
-        "persistence": {
-          "type": "object",
-          "properties": {},
-          "additionalProperties": false,
-          "description": "Size persistence adapter"
-        },
-        "className": {
-          "type": "string"
-        },
-        "style": {
-          "type": "object",
-          "additionalProperties": {
-            "type": [
-              "string",
-              "number"
-            ]
-          }
-        },
-        "children": {},
         "thinSize": {
           "type": "number",
           "default": 64,
-          "description": "Width in thin mode"
+          "description": "Width in thin state"
         },
         "toggleModes": {
           "type": "string",
@@ -167,7 +203,7 @@
             "both",
             "single"
           ],
-          "description": "Available modes in toggle sequence"
+          "description": "States included in the toggle sequence"
         }
       },
       "additionalProperties": false
@@ -177,6 +213,6 @@
   "title": "Shell-sidebar Component Props",
   "description": "Props schema for the shell-sidebar component in Kookie UI",
   "version": "1.0.0",
-  "generatedAt": "2025-09-10T19:04:45.608Z",
+  "generatedAt": "2026-08-21T11:49:34.365Z",
   "source": "Zod schema"
 }

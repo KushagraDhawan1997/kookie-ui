@@ -4,6 +4,123 @@
     "Shell-inspectorSchema": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "description": "Element id"
+        },
+        "className": {
+          "type": "string",
+          "description": "Additional CSS class name"
+        },
+        "style": {
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number"
+            ]
+          },
+          "description": "Inline styles"
+        },
+        "children": {
+          "description": "Slot content"
+        },
+        "open": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "initial": {
+                  "$ref": "#/definitions/Shell-inspectorSchema/properties/open/anyOf/0"
+                },
+                "xs": {
+                  "$ref": "#/definitions/Shell-inspectorSchema/properties/open/anyOf/0"
+                },
+                "sm": {
+                  "$ref": "#/definitions/Shell-inspectorSchema/properties/open/anyOf/0"
+                },
+                "md": {
+                  "$ref": "#/definitions/Shell-inspectorSchema/properties/open/anyOf/0"
+                },
+                "lg": {
+                  "$ref": "#/definitions/Shell-inspectorSchema/properties/open/anyOf/0"
+                },
+                "xl": {
+                  "$ref": "#/definitions/Shell-inspectorSchema/properties/open/anyOf/0"
+                }
+              },
+              "additionalProperties": false
+            }
+          ],
+          "description": "Controlled open state"
+        },
+        "defaultOpen": {
+          "$ref": "#/definitions/Shell-inspectorSchema/properties/open",
+          "description": "Initial open state when uncontrolled"
+        },
+        "resizable": {
+          "type": "boolean",
+          "description": "Enable drag-to-resize. Default: false"
+        },
+        "collapsible": {
+          "type": "boolean",
+          "description": "Allow collapsing. Default: true"
+        },
+        "size": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "description": "Controlled size"
+        },
+        "defaultSize": {
+          "$ref": "#/definitions/Shell-inspectorSchema/properties/size",
+          "description": "Initial size when uncontrolled"
+        },
+        "sizeUpdate": {
+          "type": "string",
+          "enum": [
+            "throttle",
+            "debounce"
+          ],
+          "description": "Rate-limit strategy for onSizeChange"
+        },
+        "sizeUpdateMs": {
+          "type": "number",
+          "description": "Milliseconds for throttle/debounce. Default: 50"
+        },
+        "snapPoints": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Sizes the handle snaps to"
+        },
+        "snapTolerance": {
+          "type": "number",
+          "description": "Distance in pixels that triggers a snap. Default: 8"
+        },
+        "collapseThreshold": {
+          "type": "number",
+          "description": "Size below which the pane auto-collapses"
+        },
+        "paneId": {
+          "type": "string",
+          "description": "Unique id used for built-in size persistence"
+        },
+        "persistence": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false,
+          "description": "Custom adapter for saving/loading size"
+        },
+        "inset": {
+          "type": "boolean",
+          "description": "Float the pane with a margin and a gray shell backdrop"
+        },
         "presentation": {
           "anyOf": [
             {
@@ -46,62 +163,12 @@
               "additionalProperties": false
             }
           ],
-          "description": "Presentation mode",
-          "default": {
-            "initial": "overlay",
-            "lg": "fixed"
-          }
-        },
-        "mode": {
-          "type": "string",
-          "enum": [
-            "expanded",
-            "collapsed"
-          ],
-          "description": "Pane state mode"
-        },
-        "defaultMode": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Shell-inspectorSchema/properties/mode"
-            },
-            {
-              "type": "object",
-              "properties": {
-                "initial": {
-                  "$ref": "#/definitions/Shell-inspectorSchema/properties/mode",
-                  "description": "Pane state mode"
-                },
-                "xs": {
-                  "$ref": "#/definitions/Shell-inspectorSchema/properties/mode",
-                  "description": "Pane state mode"
-                },
-                "sm": {
-                  "$ref": "#/definitions/Shell-inspectorSchema/properties/mode",
-                  "description": "Pane state mode"
-                },
-                "md": {
-                  "$ref": "#/definitions/Shell-inspectorSchema/properties/mode",
-                  "description": "Pane state mode"
-                },
-                "lg": {
-                  "$ref": "#/definitions/Shell-inspectorSchema/properties/mode",
-                  "description": "Pane state mode"
-                },
-                "xl": {
-                  "$ref": "#/definitions/Shell-inspectorSchema/properties/mode",
-                  "description": "Pane state mode"
-                }
-              },
-              "additionalProperties": false
-            }
-          ],
-          "description": "Responsive pane mode configuration"
+          "description": "How the inspector interacts with layout. Default: { initial: 'overlay', lg: 'fixed' }"
         },
         "expandedSize": {
           "type": "number",
           "default": 320,
-          "description": "Default width in pixels"
+          "description": "Width in pixels when expanded"
         },
         "minSize": {
           "type": "number",
@@ -112,52 +179,7 @@
           "type": "number",
           "default": 500,
           "description": "Maximum width when resizing"
-        },
-        "resizable": {
-          "type": "boolean",
-          "default": false,
-          "description": "Whether the inspector can be resized"
-        },
-        "collapsible": {
-          "type": "boolean",
-          "default": true,
-          "description": "Whether the inspector can be collapsed via resize handle"
-        },
-        "resizer": {},
-        "snapPoints": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          }
-        },
-        "snapTolerance": {
-          "type": "number"
-        },
-        "collapseThreshold": {
-          "type": "number"
-        },
-        "paneId": {
-          "type": "string"
-        },
-        "persistence": {
-          "type": "object",
-          "properties": {},
-          "additionalProperties": false,
-          "description": "Size persistence adapter"
-        },
-        "className": {
-          "type": "string"
-        },
-        "style": {
-          "type": "object",
-          "additionalProperties": {
-            "type": [
-              "string",
-              "number"
-            ]
-          }
-        },
-        "children": {}
+        }
       },
       "additionalProperties": false
     }
@@ -166,6 +188,6 @@
   "title": "Shell-inspector Component Props",
   "description": "Props schema for the shell-inspector component in Kookie UI",
   "version": "1.0.0",
-  "generatedAt": "2025-09-10T19:04:45.609Z",
+  "generatedAt": "2026-08-21T11:49:34.365Z",
   "source": "Zod schema"
 }

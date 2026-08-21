@@ -4,6 +4,27 @@
     "Shell-rootSchema": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "description": "Element id"
+        },
+        "className": {
+          "type": "string",
+          "description": "Additional CSS class name"
+        },
+        "style": {
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number"
+            ]
+          },
+          "description": "Inline styles"
+        },
+        "children": {
+          "description": "Slot content"
+        },
         "height": {
           "anyOf": [
             {
@@ -23,23 +44,6 @@
           ],
           "default": "full",
           "description": "Height of the shell container"
-        },
-        "className": {
-          "type": "string",
-          "description": "Additional CSS class name"
-        },
-        "style": {
-          "type": "object",
-          "additionalProperties": {
-            "type": [
-              "string",
-              "number"
-            ]
-          },
-          "description": "Inline styles"
-        },
-        "children": {
-          "description": "Shell components"
         }
       },
       "additionalProperties": false
@@ -49,6 +53,6 @@
   "title": "Shell-root Component Props",
   "description": "Props schema for the shell-root component in Kookie UI",
   "version": "1.0.0",
-  "generatedAt": "2025-09-10T19:04:45.607Z",
+  "generatedAt": "2026-08-21T11:49:34.362Z",
   "source": "Zod schema"
 }
