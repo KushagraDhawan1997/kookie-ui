@@ -14,6 +14,14 @@ Each item has this structure:
 
 ---
 
+> **Status. All the faults in this report now have a correction.**
+> The corrections are in commit `a7f1a92` (the components) and commit `06bbcf9` (the CSS, the
+> schemas and the documentation). The tests give 149 correct results in 48 files. `tsc`, ESLint and
+> Stylelint find no error. Two items stay as they are. The different default presentation (item 23)
+> is a decision about the product, not a fault. A change of presentation removes the pane from the
+> tree, thus the size is lost. The `paneId` prop prevents this loss. Five CSS items (10, 13 to 17)
+> have no test: jsdom does not apply CSS files.
+
 ## Scope
 
 | Item | Data |

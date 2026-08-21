@@ -2,6 +2,15 @@
 
 **Date:** 2026-08-21 · **Version audited:** 0.3.22 · **Branch:** `claude/shell-code-audit-iewfp8`
 
+> **Status — all findings resolved.** Fixed in `a7f1a92` (component layer) and `06bbcf9` (CSS,
+> schemas, docs) on this branch. The suite now runs **48 files / 149 tests** for Shell, all green,
+> with `tsc --noEmit`, ESLint and Stylelint clean. Two items were deliberately left as they are:
+> the asymmetric default presentation (item 23, last bullet) is a product decision rather than a
+> defect, and a fixed ↔ overlay switch still remounts the pane, so a DOM-only size is lost unless
+> `paneId` persistence is configured — the size now lives in React state, which fixes re-renders
+> but not remounts. Five CSS items (10, 13–17) are verified by reading, not by CI: jsdom does not
+> apply stylesheets, so no test can assert them.
+
 ## Scope & method
 
 | Area | Detail |
