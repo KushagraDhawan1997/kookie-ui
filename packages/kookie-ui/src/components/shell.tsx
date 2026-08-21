@@ -222,6 +222,113 @@ interface ShellRootProps extends React.ComponentPropsWithoutRef<'div'> {
   height?: 'full' | 'auto' | string | number;
 }
 
+/**
+ * Read the pane modes a set of Shell children asks for.
+ *
+ * Runs once at mount, for the reducer's initial state, and again whenever a
+ * pane family enters after mount. Pure - it only reads the children's props.
+ */
+function readPaneStateFromChildren(initialChildren: React.ReactNode): PaneState & { hasPanelDefaultOpen: boolean } {
+  const childArray = React.Children.toArray(initialChildren) as React.ReactElement[];
+
+  // Compute initial defaults from immediate children (one-time, uncontrolled defaults)
+  const hasPanelDefaultOpen = childArray.some(
+    (el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Panel' && Boolean((el as any).props?.defaultOpen),
+  );
+
+  // Rail defaults to open (true) unless explicitly set to false
+  // Supports responsive objects: { initial: false, md: true }
+  const railEl = childArray.find((el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Rail');
+  const railDefaultOpen = railEl ? (railEl as any).props?.defaultOpen : undefined;
+  const hasRailDefaultOpen = (() => {
+    if (!railEl) return false;
+    if (railDefaultOpen === undefined) return true; // Default to open
+    if (typeof railDefaultOpen === 'boolean') return railDefaultOpen;
+    // Responsive object - use 'initial' value, or first defined value, or default true
+    if (typeof railDefaultOpen === 'object') {
+      return railDefaultOpen.initial ?? Object.values(railDefaultOpen)[0] ?? true;
+    }
+    return true;
+  })();
+
+  const hasInspectorDefaultOpen = childArray.some(
+    (el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Inspector' && Boolean((el as any).props?.defaultOpen),
+  );
+  const hasInspectorOpenControlled = childArray.some(
+    (el) =>
+      React.isValidElement(el) &&
+      (el as any).type?.displayName === 'Shell.Inspector' &&
+      typeof (el as any).props?.open !== 'undefined' &&
+      Boolean((el as any).props?.open),
+  );
+
+  // Detect Panel controlled open state for initial reducer state
+  const hasPanelOpenControlled = childArray.some((el) => {
+    if (!React.isValidElement(el) || (el as any).type?.displayName !== 'Shell.Panel') return false;
+    const openProp = (el as any).props?.open;
+    if (typeof openProp === 'undefined') return false;
+    if (typeof openProp === 'boolean') return openProp;
+    // Responsive object - check 'initial' or first truthy value
+    if (typeof openProp === 'object' && openProp !== null) {
+      return openProp.initial ?? Object.values(openProp)[0] ?? false;
+    }
+    return false;
+  });
+
+  // Detect Sidebar initial state from props
+  const getSidebarInitialState = (): SidebarMode => {
+    const sidebarEl = childArray.find((el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Sidebar');
+    if (!sidebarEl) return 'expanded';
+    const sidebarProps = (sidebarEl as any).props;
+    // Check controlled state first
+    if (typeof sidebarProps?.state !== 'undefined') {
+      if (typeof sidebarProps.state === 'string') return sidebarProps.state as SidebarMode;
+      // Responsive object - use 'initial' breakpoint or first defined value
+      if (typeof sidebarProps.state === 'object') {
+        return (sidebarProps.state.initial ?? Object.values(sidebarProps.state)[0] ?? 'expanded') as SidebarMode;
+      }
+    }
+    // Check defaultState
+    if (typeof sidebarProps?.defaultState !== 'undefined') {
+      if (typeof sidebarProps.defaultState === 'string') return sidebarProps.defaultState as SidebarMode;
+      if (typeof sidebarProps.defaultState === 'object') {
+        return (sidebarProps.defaultState.initial ?? Object.values(sidebarProps.defaultState)[0] ?? 'expanded') as SidebarMode;
+      }
+    }
+    return 'expanded';
+  };
+
+  // Detect Bottom initial state from props
+  const getBottomInitialState = (): PaneMode => {
+    const bottomEl = childArray.find((el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Bottom');
+    if (!bottomEl) return 'collapsed';
+    const bottomProps = (bottomEl as any).props;
+    // Check controlled open first
+    if (typeof bottomProps?.open !== 'undefined') {
+      if (typeof bottomProps.open === 'boolean') return bottomProps.open ? 'expanded' : 'collapsed';
+      // Responsive object - use 'initial' breakpoint or first defined value
+      if (typeof bottomProps.open === 'object') {
+        const val = bottomProps.open.initial ?? Object.values(bottomProps.open)[0];
+        return val ? 'expanded' : 'collapsed';
+      }
+    }
+    // Check defaultOpen
+    if (typeof bottomProps?.defaultOpen !== 'undefined') {
+      return bottomProps.defaultOpen ? 'expanded' : 'collapsed';
+    }
+    return 'collapsed';
+  };
+
+  return {
+    hasPanelDefaultOpen,
+    leftMode: hasPanelDefaultOpen || hasPanelOpenControlled || hasRailDefaultOpen ? 'expanded' : ('collapsed' as PaneMode),
+    panelMode: hasPanelDefaultOpen || hasPanelOpenControlled ? 'expanded' : ('collapsed' as PaneMode),
+    sidebarMode: getSidebarInitialState(),
+    inspectorMode: hasInspectorDefaultOpen || hasInspectorOpenControlled ? 'expanded' : ('collapsed' as PaneMode),
+    bottomMode: getBottomInitialState(),
+  };
+}
+
 const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, children, height = 'full', ...props }, ref) => {
   const { breakpoint: currentBreakpoint, ready: currentBreakpointReady } = useBreakpoint();
 
@@ -231,105 +338,10 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
   // Pane state management via reducer with lazy initialization
   // This computation only runs once on mount, not on every render
   const [paneState, dispatchPane] = React.useReducer(paneReducer, children, (initialChildren) => {
-    const childArray = React.Children.toArray(initialChildren) as React.ReactElement[];
-
-    // Compute initial defaults from immediate children (one-time, uncontrolled defaults)
-    const hasPanelDefaultOpen = childArray.some(
-      (el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Panel' && Boolean((el as any).props?.defaultOpen),
-    );
+    const { hasPanelDefaultOpen, ...modes } = readPaneStateFromChildren(initialChildren);
     // Store for use in passthrough props
     hasPanelDefaultOpenRef.current = hasPanelDefaultOpen;
-
-    // Rail defaults to open (true) unless explicitly set to false
-    // Supports responsive objects: { initial: false, md: true }
-    const railEl = childArray.find((el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Rail');
-    const railDefaultOpen = railEl ? (railEl as any).props?.defaultOpen : undefined;
-    const hasRailDefaultOpen = (() => {
-      if (!railEl) return false;
-      if (railDefaultOpen === undefined) return true; // Default to open
-      if (typeof railDefaultOpen === 'boolean') return railDefaultOpen;
-      // Responsive object - use 'initial' value, or first defined value, or default true
-      if (typeof railDefaultOpen === 'object') {
-        return railDefaultOpen.initial ?? Object.values(railDefaultOpen)[0] ?? true;
-      }
-      return true;
-    })();
-
-    const hasInspectorDefaultOpen = childArray.some(
-      (el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Inspector' && Boolean((el as any).props?.defaultOpen),
-    );
-    const hasInspectorOpenControlled = childArray.some(
-      (el) =>
-        React.isValidElement(el) &&
-        (el as any).type?.displayName === 'Shell.Inspector' &&
-        typeof (el as any).props?.open !== 'undefined' &&
-        Boolean((el as any).props?.open),
-    );
-
-    // Detect Panel controlled open state for initial reducer state
-    const hasPanelOpenControlled = childArray.some((el) => {
-      if (!React.isValidElement(el) || (el as any).type?.displayName !== 'Shell.Panel') return false;
-      const openProp = (el as any).props?.open;
-      if (typeof openProp === 'undefined') return false;
-      if (typeof openProp === 'boolean') return openProp;
-      // Responsive object - check 'initial' or first truthy value
-      if (typeof openProp === 'object' && openProp !== null) {
-        return openProp.initial ?? Object.values(openProp)[0] ?? false;
-      }
-      return false;
-    });
-
-    // Detect Sidebar initial state from props
-    const getSidebarInitialState = (): SidebarMode => {
-      const sidebarEl = childArray.find((el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Sidebar');
-      if (!sidebarEl) return 'expanded';
-      const sidebarProps = (sidebarEl as any).props;
-      // Check controlled state first
-      if (typeof sidebarProps?.state !== 'undefined') {
-        if (typeof sidebarProps.state === 'string') return sidebarProps.state as SidebarMode;
-        // Responsive object - use 'initial' breakpoint or first defined value
-        if (typeof sidebarProps.state === 'object') {
-          return (sidebarProps.state.initial ?? Object.values(sidebarProps.state)[0] ?? 'expanded') as SidebarMode;
-        }
-      }
-      // Check defaultState
-      if (typeof sidebarProps?.defaultState !== 'undefined') {
-        if (typeof sidebarProps.defaultState === 'string') return sidebarProps.defaultState as SidebarMode;
-        if (typeof sidebarProps.defaultState === 'object') {
-          return (sidebarProps.defaultState.initial ?? Object.values(sidebarProps.defaultState)[0] ?? 'expanded') as SidebarMode;
-        }
-      }
-      return 'expanded';
-    };
-
-    // Detect Bottom initial state from props
-    const getBottomInitialState = (): PaneMode => {
-      const bottomEl = childArray.find((el) => React.isValidElement(el) && (el as any).type?.displayName === 'Shell.Bottom');
-      if (!bottomEl) return 'collapsed';
-      const bottomProps = (bottomEl as any).props;
-      // Check controlled open first
-      if (typeof bottomProps?.open !== 'undefined') {
-        if (typeof bottomProps.open === 'boolean') return bottomProps.open ? 'expanded' : 'collapsed';
-        // Responsive object - use 'initial' breakpoint or first defined value
-        if (typeof bottomProps.open === 'object') {
-          const val = bottomProps.open.initial ?? Object.values(bottomProps.open)[0];
-          return val ? 'expanded' : 'collapsed';
-        }
-      }
-      // Check defaultOpen
-      if (typeof bottomProps?.defaultOpen !== 'undefined') {
-        return bottomProps.defaultOpen ? 'expanded' : 'collapsed';
-      }
-      return 'collapsed';
-    };
-
-    return {
-      leftMode: hasPanelDefaultOpen || hasPanelOpenControlled || hasRailDefaultOpen ? 'expanded' : ('collapsed' as PaneMode),
-      panelMode: hasPanelDefaultOpen || hasPanelOpenControlled ? 'expanded' : ('collapsed' as PaneMode),
-      sidebarMode: getSidebarInitialState(),
-      inspectorMode: hasInspectorDefaultOpen || hasInspectorOpenControlled ? 'expanded' : ('collapsed' as PaneMode),
-      bottomMode: getBottomInitialState(),
-    };
+    return modes;
   });
   const setLeftMode = React.useCallback((mode: PaneMode) => dispatchPane({ type: 'SET_LEFT_MODE', mode }), []);
   const setPanelMode = React.useCallback((mode: PaneMode) => dispatchPane({ type: 'SET_PANEL_MODE', mode }), []);
@@ -380,6 +392,41 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
     const childArray = React.Children.toArray(children) as React.ReactElement[];
     return childArray.some((el) => isShellComponentType(el, Sidebar));
   }, [children]);
+
+  // Re-read the defaults when a pane family enters after mount.
+  //
+  // The initial modes are computed once, from the children present at mount.
+  // That is right until an app swaps families at runtime - a Sidebar giving
+  // way to Rail+Panel on one route, and back on the next. The entering pane
+  // then renders against the mode left behind by the family that just went:
+  // a Rail mounting 'collapsed', at width 0, with its content faded out, put
+  // right one layout effect later. The reader sees a flicker in place where
+  // the pane should have been there already.
+  //
+  // Adjusting state during render keeps this out of the paint: React re-runs
+  // Root before the children render, so the entering pane never sees the
+  // mode of the family it replaced. The ref guard is what makes the update
+  // terminate - it fires only on the edge, never on a steady render.
+  const enteredFamilyRef = React.useRef({ left: hasLeftChildren, sidebar: hasSidebarChildren });
+  if (enteredFamilyRef.current.left !== hasLeftChildren || enteredFamilyRef.current.sidebar !== hasSidebarChildren) {
+    const leftEntered = hasLeftChildren && !enteredFamilyRef.current.left;
+    const sidebarEntered = hasSidebarChildren && !enteredFamilyRef.current.sidebar;
+    enteredFamilyRef.current = { left: hasLeftChildren, sidebar: hasSidebarChildren };
+
+    if (leftEntered || sidebarEntered) {
+      const { hasPanelDefaultOpen, ...modes } = readPaneStateFromChildren(children);
+      if (leftEntered) {
+        hasPanelDefaultOpenRef.current = hasPanelDefaultOpen;
+        // Only when the mode actually differs, so a family that enters
+        // already in the right mode dispatches nothing.
+        if (modes.leftMode !== paneState.leftMode) dispatchPane({ type: 'SET_LEFT_MODE', mode: modes.leftMode });
+        if (modes.panelMode !== paneState.panelMode) dispatchPane({ type: 'SET_PANEL_MODE', mode: modes.panelMode });
+      }
+      if (sidebarEntered && modes.sidebarMode !== paneState.sidebarMode) {
+        dispatchPane({ type: 'SET_SIDEBAR_MODE', mode: modes.sidebarMode });
+      }
+    }
+  }
 
   // Keep a ref to sidebar mode so togglePane doesn't depend on it,
   // preventing ActionsContext churn on every sidebar mode change
