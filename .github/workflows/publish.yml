@@ -28,7 +28,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          # 22, not 20: the next step installs npm@latest for OIDC
+          # publishing, and current npm refuses to install on Node 20.
+          node-version: '22'
           cache: 'pnpm'
 
       - name: Ensure npm CLI supports OIDC
