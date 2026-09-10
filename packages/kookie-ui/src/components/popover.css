@@ -1,4 +1,11 @@
 .rt-PopoverContent {
+  /*
+   * This surface blurs its own backdrop, which makes it the backdrop root for
+   * everything inside it. A component nested here would re-blur an already
+   * blurred, already flat surface for the full cost of another blur pass, so
+   * switch the component filter off for the subtree. See tokens/blur.css.
+   */
+  --backdrop-filter-components-enabled: none;
   /* Base state: use --color-panel which adapts to theme context */
   background-color: var(--color-panel);
   backdrop-filter: var(--backdrop-filter-panel);

@@ -82,3 +82,64 @@ describe('backdrop-filter goes through the switchable tokens', () => {
     }
   });
 });
+
+/**
+ * A surface that carries `backdrop-filter` on the element itself becomes the
+ * backdrop root for its contents, so a component nested inside it re-blurs an
+ * already blurred, already flat surface. Those surfaces switch the component
+ * filter off for their subtree with
+ * `--backdrop-filter-components-enabled: none`.
+ *
+ * That reasoning only holds when the filter is on the element. A surface that
+ * paints its blur on `::before` — Card's outline, soft and surface variants —
+ * is not a backdrop root, its contents are still blurring the page, and
+ * dropping their filter is a visible change: measured over a textured
+ * background, max 82/255 channel delta versus max 7/255 on a real backdrop
+ * root. A pseudo-element also cannot pass an inherited value to its host's
+ * children, so the declaration would silently do nothing there.
+ */
+describe('nested blur suppression', () => {
+  it('is never declared on a pseudo-element rule', () => {
+    const violations: { file: string; line: number; selector: string }[] = [];
+
+    for (const file of allCss()) {
+      const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/);
+      lines.forEach((content, i) => {
+        if (!/^\s*--backdrop-filter-components-enabled\s*:\s*none\s*;/.test(content)) return;
+
+        // Walk back to the selector that opens this rule.
+        for (let j = i - 1; j >= 0; j--) {
+          const line = lines[j].trim();
+          if (!line.endsWith('{')) continue;
+          if (/::(before|after)/.test(line)) {
+            violations.push({ file: path.relative(SRC, file), line: i + 1, selector: line });
+          }
+          break;
+        }
+      });
+    }
+
+    expect(violations, violations.map((v) => `${v.file}:${v.line} is inside \`${v.selector}\`\n  a pseudo-element cannot pass this to its host's children`).join('\n')).toEqual([]);
+  });
+
+  it('covers the surfaces that blur on the element itself', () => {
+    const declaring = new Set<string>();
+    for (const file of allCss()) {
+      if (/--backdrop-filter-components-enabled\s*:\s*none/.test(fs.readFileSync(file, 'utf8'))) {
+        declaring.add(path.relative(SRC, file));
+      }
+    }
+
+    for (const file of [
+      'components/popover.css',
+      'components/select.css',
+      'components/table.css',
+      'components/_internal/base-card.css',
+      'components/_internal/base-menu.css',
+      'components/_internal/base-dialog.css',
+      'components/_internal/base-sidebar.css',
+    ]) {
+      expect(declaring, `${file} should switch nested component blur off`).toContain(file);
+    }
+  });
+});

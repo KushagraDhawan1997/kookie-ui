@@ -71,6 +71,13 @@
 }
 
 .rt-SelectContent {
+  /*
+   * This surface blurs its own backdrop, which makes it the backdrop root for
+   * everything inside it. A component nested here would re-blur an already
+   * blurred, already flat surface for the full cost of another blur pass, so
+   * switch the component filter off for the subtree. See tokens/blur.css.
+   */
+  --backdrop-filter-components-enabled: none;
   --scrollarea-scrollbar-vertical-margin-top: var(--select-content-padding);
   --scrollarea-scrollbar-vertical-margin-bottom: var(--select-content-padding);
   --scrollarea-scrollbar-horizontal-margin-left: var(--select-content-padding);
