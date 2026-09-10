@@ -1,0 +1,54 @@
+name: CI
+
+# The publish workflow ships to npm on every push to main that touches the
+# package, and it does not run the test suite. This is the gate that does, so a
+# change is checked before it can be published rather than after.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A new push supersedes whatever was already running for the same ref.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Lint, test and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      # Reads the version from the root packageManager field, so CI cannot
+      # drift from what contributors run locally.
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # eslint, stylelint and tsc --noEmit. Same command prepublishOnly runs.
+      - name: Lint
+        run: pnpm --filter @kushagradhawan/kookie-ui lint
+
+      - name: Test
+        run: pnpm --filter @kushagradhawan/kookie-ui test
+
+      # The publish workflow builds before publishing, so a build that fails
+      # here would otherwise fail during a release.
+      - name: Build
+        run: pnpm build:pkg
+
+      # `pnpm test:types` is deliberately not run here: it fails on main today,
+      # independently of any change, with four tsd errors — three module
+      # resolution complaints about `radix-ui/internal` and one about
+      # typings.d.ts not being in the files list. Add it back once those are
+      # fixed, so a green CI run means something.
