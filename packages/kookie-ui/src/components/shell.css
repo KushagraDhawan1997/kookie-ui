@@ -94,7 +94,7 @@
 
   display: flex;
   flex-direction: column;
-  width: var(--rail-size, 64px);
+  width: 100%;
   height: 100%;
   gap: var(--space-2);
 
@@ -162,7 +162,7 @@
 
   display: flex;
   flex-direction: column;
-  width: var(--panel-size, 288px);
+  width: 100%;
   height: 100%;
   overflow: hidden;
 
@@ -199,10 +199,17 @@
   position: relative;
   z-index: 1;
 
-  /* Animation setup */
-  transition: width var(--motion-duration-small) var(--motion-ease-standard);
 }
 
+/*
+ * Steps to its width in one layout pass — see .rt-ShellPanel for why.
+ *
+ * Sidebar has two open sizes, so expanded and thin both apply immediately and
+ * the switch between them is a step rather than a slide: there is no composited
+ * way to move a pane between two widths that both take space in the flow. The
+ * phase rules below already fade the contents out across that switch, so the
+ * step lands while they are not visible.
+ */
 .rt-ShellSidebar[data-mode='expanded'] {
   width: var(--sidebar-size, 288px);
 }
@@ -211,19 +218,16 @@
   width: var(--sidebar-thin-size, 64px);
 }
 
-/* Ensure content matches thin width in thin mode */
-.rt-ShellSidebar[data-mode='thin'] .rt-ShellSidebarContent {
-  width: var(--sidebar-thin-size, 64px);
-}
-
-/* Collapsed sidebar: stay in flow during transition, then hide */
 .rt-ShellSidebar[data-mode='collapsed'] {
   width: 0px;
-  /* Delay container collapse until content fade completes */
-  transition-delay: var(--motion-duration-small);
+  transition: width 0s var(--motion-duration-small);
 }
 
 .rt-ShellSidebarContent {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -233,7 +237,14 @@
   /* Content animation */
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--motion-duration-small) var(--motion-ease-standard) var(--motion-duration-small);
+  transform: translateX(-100%);
+  transition:
+    transform var(--motion-duration-small) var(--motion-ease-standard),
+    opacity var(--motion-duration-small) var(--motion-ease-standard);
+}
+
+:where([dir='rtl']) .rt-ShellSidebarContent {
+  transform: translateX(100%);
 }
 
 /* Hide resizer in thin mode */
@@ -244,6 +255,7 @@
 .rt-ShellSidebarContent[data-visible] {
   opacity: 1;
   pointer-events: auto;
+  transform: translateX(0);
 }
 
 /* Sidebar presentation switch sequencing (thin ↔ expanded) */
@@ -262,13 +274,6 @@
   transition: opacity var(--motion-duration-small) var(--motion-ease-standard);
 }
 
-.rt-ShellSidebar[data-mode='collapsed'] .rt-ShellSidebarContent {
-  /* Exit animation: fade out content first, then collapse */
-  opacity: 0;
-  width: 0;
-  visibility: hidden;
-  transition: opacity var(--motion-duration-small) var(--motion-ease-standard);
-}
 
 /* Stacked Sidebar: left side, floating without reflow */
 .rt-ShellSidebar[data-presentation='stacked'] {
@@ -336,7 +341,7 @@
 
   display: flex;
   flex-direction: column;
-  width: var(--inspector-size, 320px);
+  width: 100%;
   height: 100%;
   overflow: hidden;
 
@@ -389,7 +394,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: var(--bottom-size, 200px);
+  height: 100%;
   overflow: hidden;
 
   /* Content animation */

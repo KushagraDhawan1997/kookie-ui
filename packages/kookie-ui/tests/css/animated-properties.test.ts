@@ -92,15 +92,7 @@ describe('animations avoid layout properties', () => {
     const pattern = new RegExp(`^\\s*transition:\\s*(${LAYOUT_PROPERTIES})\\s+(?!0s\\b)`);
 
     shell.split(/\r?\n/).forEach((content, i) => {
-      if (!pattern.test(content)) return;
-      // Sidebar still resizes between its expanded and thin modes, which is a
-      // genuine resize rather than an open/close, so it has no slide equivalent
-      // and is deliberately left alone.
-      const context = shell.slice(0, shell.indexOf(content));
-      const rule = context.lastIndexOf('.rt-Shell');
-      const owner = context.slice(rule, rule + 40);
-      if (owner.startsWith('.rt-ShellSidebar')) return;
-      violations.push({ line: i + 1, content: content.trim() });
+      if (pattern.test(content)) violations.push({ line: i + 1, content: content.trim() });
     });
 
     expect(violations, violations.map((v) => `components/shell.css:${v.line} ${v.content}\n  animating a pane's size re-lays-out .rt-ShellContent on every frame`).join('\n')).toEqual([]);
@@ -109,7 +101,7 @@ describe('animations avoid layout properties', () => {
   it('shell pane contents slide on transform', () => {
     const shell = fs.readFileSync(path.join(SRC, 'components/shell.css'), 'utf8');
 
-    for (const pane of ['Rail', 'Panel', 'Inspector', 'Bottom']) {
+    for (const pane of ['Rail', 'Panel', 'Sidebar', 'Inspector', 'Bottom']) {
       const selector = `.rt-Shell${pane}Content {`;
       const start = shell.indexOf(selector);
       expect(start, `${selector} should exist`).toBeGreaterThan(-1);
