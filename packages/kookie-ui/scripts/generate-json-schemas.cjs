@@ -58,8 +58,10 @@ for (const [name, schema] of Object.entries(schemas)) {
     jsonSchema.title = `${name.charAt(0).toUpperCase() + name.slice(1)} Component Props`;
     jsonSchema.description = `Props schema for the ${name} component in Kookie UI`;
     jsonSchema.version = '1.0.0';
-    jsonSchema.generatedAt = new Date().toISOString();
     jsonSchema.source = 'Zod schema';
+    // Deliberately no `generatedAt`: the schemas are committed to the
+    // repository, so a timestamp would make every build dirty them with a
+    // change that carries no information.
 
     // Write individual schema file + ambient d.ts for TS resolution
     const filePath = join(schemasDir, `${name}.json`);
@@ -81,7 +83,6 @@ const combinedSchema = {
   title: 'Kookie UI Button Components',
   description: 'Complete JSON Schema collection for all button components in Kookie UI',
   version: '1.0.0',
-  generatedAt: new Date().toISOString(),
   source: 'Zod schemas',
   components: generatedSchemas,
 };

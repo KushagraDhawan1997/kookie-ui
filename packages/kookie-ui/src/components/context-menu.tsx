@@ -23,6 +23,7 @@ import { Kbd } from './kbd.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
+import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 
 interface ContextMenuRootProps
   extends React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Root> {}
@@ -56,14 +57,7 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
   (props, forwardedRef) => {
     const themeContext = useThemeContext();
 
-    // Show deprecation warning for panelBackground when used
-    React.useEffect(() => {
-      if (props.panelBackground !== undefined) {
-        console.warn(
-          'Warning: The `panelBackground` prop is deprecated and will be removed in a future version. Use `material` prop instead.',
-        );
-      }
-    }, [props.panelBackground]);
+    useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
     // Material takes precedence over panelBackground
     const effectiveMaterial =

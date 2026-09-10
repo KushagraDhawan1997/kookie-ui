@@ -16,6 +16,34 @@
 
 [data-blur='none'] {
   --blur-factor: 0;
+
+  /*
+   * `backdrop-filter: blur(0px)` is not free. The browser still snapshots the
+   * backdrop, runs the filter and composites the result, so a zeroed blur
+   * factor alone costs as much per frame as a full blur. Only switching the
+   * property off entirely actually skips that work, so disable the filters
+   * rather than relying on the factor.
+   */
+  --backdrop-filter-components-enabled: none;
+  --backdrop-filter-panel-enabled: none;
+  --backdrop-filter-dialog-enabled: none;
+}
+
+/*
+ * Readers who have asked their OS to reduce transparency get the same
+ * treatment: no translucency to see, and none of the compositing cost.
+ */
+@media (prefers-reduced-transparency: reduce) {
+  /*
+   * Deliberately not wrapped in `:where()`: this has to outrank the enabled
+   * values in tokens/constants.css, and a media query adds no specificity of
+   * its own.
+   */
+  .radix-themes {
+    --backdrop-filter-components-enabled: none;
+    --backdrop-filter-panel-enabled: none;
+    --backdrop-filter-dialog-enabled: none;
+  }
 }
 
 [data-blur='small'] {

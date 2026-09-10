@@ -15,7 +15,7 @@
    */
   :where([data-panel-background='translucent'], [data-material='translucent']) & {
     backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: blur(var(--backdrop-blur-components));
+    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
 
   /* Prevent backdrop-filter stacking with parent elements */
@@ -32,7 +32,7 @@
   
   &:where([data-panel-background='translucent'], [data-material='translucent']) {
     backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: blur(var(--backdrop-blur-components));
+    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
 }
 
@@ -40,8 +40,21 @@
 .rt-ProgressIndicator {
   display: block;
   height: var(--position-full);
-  width: max(calc(var(--progress-value) / var(--progress-max) * 100%), var(--progress-height));
+  width: var(--position-full);
   border-radius: var(--progress-indicator-radius);
+
+  /*
+   * The bar is full width and slid into place rather than grown. `width` is a
+   * layout property: animating it re-lays-out on every frame, and the
+   * indeterminate animation never stops, so a visible bar reflowed forever.
+   * `.rt-ProgressRoot` clips the overhang. `max()` keeps a sliver of the bar
+   * visible at very low values, as the width form did.
+   */
+  transform: translateX(
+    calc(
+      -100% + max(calc(var(--progress-value) / var(--progress-max) * 100%), var(--progress-height))
+    )
+  );
   transition: var(--transition-progress);
 
   &:where([data-state='indeterminate']) {
@@ -55,20 +68,20 @@
 
 @keyframes rt-progress-indicator-indeterminate-grow {
   0% {
-    width: calc(var(--progress-scale-initial) * 100%);
+    transform: translateX(calc(-100% + var(--progress-scale-initial) * 100%));
   }
   20% {
-    width: calc(var(--progress-scale-step-1) * 100%);
+    transform: translateX(calc(-100% + var(--progress-scale-step-1) * 100%));
   }
   30% {
-    width: calc(var(--progress-scale-step-2) * 100%);
+    transform: translateX(calc(-100% + var(--progress-scale-step-2) * 100%));
   }
   40%,
   50% {
-    width: calc(var(--progress-scale-step-3) * 100%);
+    transform: translateX(calc(-100% + var(--progress-scale-step-3) * 100%));
   }
   100% {
-    width: calc(var(--progress-scale-final) * 100%);
+    transform: translateX(calc(-100% + var(--progress-scale-final) * 100%));
   }
 }
 

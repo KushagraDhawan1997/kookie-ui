@@ -88,7 +88,7 @@
   /* Backdrop-filter for ::before - applies to outline, soft, surface */
   :where([data-panel-background='translucent'], [data-material='translucent']) &::before {
     backdrop-filter: var(--backdrop-filter-panel);
-    --backdrop-filter-panel: blur(var(--backdrop-blur-panel));
+    --backdrop-filter-panel: var(--backdrop-filter-panel-enabled);
   }
 
   &:where([data-material='solid'], [data-panel-background='solid'])::before {
@@ -97,7 +97,7 @@
 
   &:where([data-material='translucent'], [data-panel-background='translucent'])::before {
     backdrop-filter: var(--backdrop-filter-panel);
-    --backdrop-filter-panel: blur(var(--backdrop-blur-panel));
+    --backdrop-filter-panel: var(--backdrop-filter-panel-enabled);
   }
 
   /* Interactive scale - applies to all interactive cards */
@@ -413,6 +413,21 @@
  ***************************************************************************************************/
 
 .rt-BaseCard:where(.rt-variant-ghost) {
+  /*
+   * Ghost is the only card variant whose backdrop filter sits on the element
+   * rather than on ::before, which makes it — and only it — the backdrop root
+   * for its contents. A component nested here would re-blur an already blurred
+   * surface, so switch the component filter off for the subtree.
+   *
+   * The other variants deliberately do not do this: their filter is on
+   * ::before, so the card element is not a backdrop root and a nested
+   * component is still blurring the page itself. Measured over a textured
+   * background, dropping it there is a visible change (max 82/255 channel
+   * delta) rather than the imperceptible one it is on a real backdrop root
+   * (max 7/255).
+   */
+  --backdrop-filter-components-enabled: none;
+
   --card-border-width: 0px;
   --v-bg-hover: var(--gray-3);
   --v-bg-hover-a: var(--gray-a3);
@@ -454,7 +469,7 @@
   /* Backdrop-filter handling for ghost - on element, not ::before */
   :where([data-panel-background='translucent'], [data-material='translucent']) & {
     backdrop-filter: var(--backdrop-filter-panel);
-    --backdrop-filter-panel: blur(var(--backdrop-blur-panel));
+    --backdrop-filter-panel: var(--backdrop-filter-panel-enabled);
   }
 
   &:where([data-panel-background='solid'], [data-material='solid']) {
@@ -463,7 +478,7 @@
 
   &:where([data-panel-background='translucent'], [data-material='translucent']) {
     backdrop-filter: var(--backdrop-filter-panel);
-    --backdrop-filter-panel: blur(var(--backdrop-blur-panel));
+    --backdrop-filter-panel: var(--backdrop-filter-panel-enabled);
   }
 
   /* Interactive states - background on element, not ::before */

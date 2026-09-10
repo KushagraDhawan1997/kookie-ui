@@ -1,13 +1,13 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { Slot } from 'radix-ui';
-import { composeRefs } from 'radix-ui/internal';
 
 import { baseButtonPropDefs } from './base-button.props.js';
 import { Flex } from '../flex.js';
 import { Spinner } from '../spinner.js';
 import { VisuallyHidden } from '../visually-hidden.js';
 import { extractProps } from '../../helpers/extract-props.js';
+import { useDeprecatedPanelBackgroundWarning } from '../../helpers/use-deprecation-warning.js';
 import { mapResponsiveProp, mapButtonSizeToSpinnerSize } from '../../helpers/map-prop-values.js';
 import { marginPropDefs } from '../../props/margin.props.js';
 
@@ -80,65 +80,10 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((props, 
     ...baseButtonProps
   } = extractProps(props, baseButtonPropDefs, marginPropDefs);
 
-  // Show deprecation warning for panelBackground when used
-  // This helps developers migrate to the new material prop
-  React.useEffect(() => {
-    if (props.panelBackground !== undefined) {
-      console.warn('Warning: The `panelBackground` prop is deprecated and will be removed in a future version. Use `material` prop instead.');
-    }
-  }, [props.panelBackground]);
+  useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
   // Material takes precedence over panelBackground for backward compatibility
   const effectiveMaterial = material ?? panelBackground;
-
-  // Will-change cleanup for backdrop-filter performance optimization
-  // This prevents layout thrashing when using translucent materials
-  const buttonRef = React.useRef<HTMLElement>(null);
-
-  // Use a ref to track current material value to avoid stale closures in setTimeout
-  const materialRef = React.useRef(effectiveMaterial);
-  materialRef.current = effectiveMaterial;
-
-  React.useEffect(() => {
-    const button = buttonRef.current;
-    if (!button) return;
-
-    const hasTranslucentMaterial = effectiveMaterial === 'translucent';
-
-    if (hasTranslucentMaterial) {
-      // Add will-change when material is translucent to optimize rendering
-      button.style.setProperty('will-change', 'backdrop-filter');
-
-      // Track timeout for cleanup
-      let timeoutId: ReturnType<typeof setTimeout> | undefined;
-
-      // Clean up will-change after transition completes to prevent memory leaks
-      const cleanup = () => {
-        const transitionDuration = getComputedStyle(button).getPropertyValue('--duration-2') || '75ms';
-        const duration = parseInt(transitionDuration) || 75;
-
-        timeoutId = setTimeout(() => {
-          // Use ref to get current value, not stale closure value
-          if (button && materialRef.current !== 'translucent') {
-            button.style.setProperty('will-change', 'auto');
-          }
-        }, duration);
-      };
-
-      // Listen for material changes to clean up will-change property
-      const observer = new MutationObserver(cleanup);
-      observer.observe(button, { attributes: true, attributeFilter: ['data-material'] });
-
-      return () => {
-        if (timeoutId) clearTimeout(timeoutId);
-        observer.disconnect();
-        button.style.setProperty('will-change', 'auto');
-      };
-    } else {
-      // Remove will-change when material is not translucent
-      button.style.setProperty('will-change', 'auto');
-    }
-  }, [effectiveMaterial]);
 
   // asChild takes precedence over as prop for Radix Slot integration
   // When asChild is true, we use Slot.Root to merge props onto the child element
@@ -194,7 +139,7 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((props, 
       data-flush={flush ? 'true' : undefined}
       {...baseButtonProps}
       {...accessibilityProps}
-      ref={composeRefs(buttonRef, forwardedRef)}
+      ref={forwardedRef}
       className={classNames('rt-reset', 'rt-BaseButton', className)}
       {...(shouldPassDisabled && { disabled })}
       {...(isNativeButtonElement && !hasExplicitTypeAttribute ? { type: 'button' } : {})}

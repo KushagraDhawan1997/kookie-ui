@@ -10,6 +10,17 @@
   --backdrop-blur-panel: var(--blur-5);
   --backdrop-blur-dialog: var(--blur-6);
 
+  /*
+   * The filter a translucent surface uses when blur is enabled. Everything that
+   * opts into a backdrop filter reads one of these rather than writing
+   * `blur(...)` itself, so `[data-blur='none']` and
+   * `prefers-reduced-transparency` can switch the property off entirely — see
+   * tokens/blur.css.
+   */
+  --backdrop-filter-components-enabled: blur(var(--backdrop-blur-components));
+  --backdrop-filter-panel-enabled: blur(var(--backdrop-blur-panel));
+  --backdrop-filter-dialog-enabled: blur(var(--backdrop-blur-dialog));
+
   /* Surface background opacity constants - using new opacity tokens */
   --surface-opacity-light: var(--opacity-5);
   --surface-opacity-heavy: var(--opacity-6);

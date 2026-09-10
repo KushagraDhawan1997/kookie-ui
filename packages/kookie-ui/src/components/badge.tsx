@@ -10,6 +10,7 @@ import { Tooltip } from './tooltip.js';
 import type { MarginProps } from '../props/margin.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
+import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 
 type BadgeElement = React.ElementRef<'span'>;
 type BadgeOwnProps = GetPropDefTypes<typeof badgePropDefs>;
@@ -52,14 +53,7 @@ const Badge = React.forwardRef<BadgeElement, BadgeProps>((props, forwardedRef) =
     [material, panelBackground],
   );
 
-  // Show deprecation warning for panelBackground when used
-  React.useEffect(() => {
-    if (panelBackground !== undefined) {
-      console.warn(
-        'Warning: The `panelBackground` prop is deprecated and will be removed in a future version. Use `material` prop instead.',
-      );
-    }
-  }, [panelBackground]);
+  useDeprecatedPanelBackgroundWarning(panelBackground);
 
   // Memoize component variable to prevent unnecessary re-renders
   const Comp = React.useMemo(() => (asChild ? Slot.Root : 'span'), [asChild]);

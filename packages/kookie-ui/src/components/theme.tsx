@@ -3,8 +3,11 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { Direction, Slot, Tooltip as TooltipPrimitive } from 'radix-ui';
+import { useComposedRefs, useLayoutEffect } from 'radix-ui/internal';
 
 import { getMatchingGrayColor } from '../helpers/get-matching-gray-color.js';
+import { usePropSyncedState } from '../hooks/use-prop-synced-state.js';
+import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 import { themePropDefs } from './theme.props.js';
 
 import type { ThemeOwnProps } from './theme.props.js';
@@ -104,42 +107,27 @@ const ThemeRoot = React.forwardRef<ThemeImplElement, ThemeImplPublicProps>(
       ...rootProps
     } = props;
 
-    // Show deprecation warning for panelBackground when used
-    React.useEffect(() => {
-      if (props.panelBackground !== undefined) {
-        console.warn(
-          'Warning: The `panelBackground` prop is deprecated and will be removed in a future version. Use `material` prop instead.',
-        );
-      }
-    }, [props.panelBackground]);
+    useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
-    const [appearance, setAppearance] = React.useState(appearanceProp);
-    React.useEffect(() => setAppearance(appearanceProp), [appearanceProp]);
-
-    const [accentColor, setAccentColor] = React.useState(accentColorProp);
-    React.useEffect(() => setAccentColor(accentColorProp), [accentColorProp]);
-
-    const [grayColor, setGrayColor] = React.useState(grayColorProp);
-    React.useEffect(() => setGrayColor(grayColorProp), [grayColorProp]);
+    // Each of these follows its prop but stays independently settable, so
+    // `ThemePanel` can change the theme at runtime. Syncing during render
+    // rather than in an effect matters here: an effect would commit the old
+    // theme first and re-render every consumer of the context a second time.
+    const [appearance, setAppearance] = usePropSyncedState(appearanceProp);
+    const [accentColor, setAccentColor] = usePropSyncedState(accentColorProp);
+    const [grayColor, setGrayColor] = usePropSyncedState(grayColorProp);
 
     // Material takes precedence over panelBackground
     const effectiveMaterial =
       materialProp !== themePropDefs.material.default ? materialProp : panelBackgroundProp;
-    const [material, setMaterial] = React.useState(effectiveMaterial);
-    React.useEffect(() => setMaterial(effectiveMaterial), [effectiveMaterial]);
+    const [material, setMaterial] = usePropSyncedState(effectiveMaterial);
 
     // Keep panelBackground in sync with material for backward compatibility
-    const [panelBackground, setPanelBackground] = React.useState(panelBackgroundProp);
-    React.useEffect(() => setPanelBackground(material), [material]);
+    const [panelBackground, setPanelBackground] = usePropSyncedState(material);
 
-    const [radius, setRadius] = React.useState(radiusProp);
-    React.useEffect(() => setRadius(radiusProp), [radiusProp]);
-
-    const [scaling, setScaling] = React.useState(scalingProp);
-    React.useEffect(() => setScaling(scalingProp), [scalingProp]);
-
-    const [fontFamily, setFontFamily] = React.useState(fontFamilyProp);
-    React.useEffect(() => setFontFamily(fontFamilyProp), [fontFamilyProp]);
+    const [radius, setRadius] = usePropSyncedState(radiusProp);
+    const [scaling, setScaling] = usePropSyncedState(scalingProp);
+    const [fontFamily, setFontFamily] = usePropSyncedState(fontFamilyProp);
 
     return (
       <ThemeImpl
@@ -223,10 +211,24 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
   const hasBackground =
     hasBackgroundProp === undefined ? isRoot || isExplicitAppearance : hasBackgroundProp;
 
-  const [clientOS, setClientOS] = React.useState<ReturnType<typeof getClientOS>>(undefined);
-  React.useEffect(() => {
-    if (isRoot) setClientOS(getClientOS());
-  }, [isRoot]);
+  // `data-os` can only be resolved on the client. Writing it straight to the
+  // DOM keeps it out of the server markup — so hydration still matches — without
+  // spending a render pass, and a state update here would re-render the whole
+  // application on mount.
+  const rootRef = React.useRef<ThemeImplElement>(null);
+  const composedRef = useComposedRefs(forwardedRef, rootRef);
+  const hasExplicitOS = 'data-os' in themeProps;
+
+  useLayoutEffect(() => {
+    if (!isRoot || hasExplicitOS) return;
+    const node = rootRef.current;
+    if (!node) return;
+
+    const os = getClientOS();
+    if (!os) return;
+    node.setAttribute('data-os', os);
+    return () => node.removeAttribute('data-os');
+  }, [isRoot, hasExplicitOS]);
 
   return (
     <ThemeContext.Provider
@@ -284,8 +286,7 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
         data-radius={radius}
         data-scaling={scaling}
         data-font-family={fontFamily}
-        data-os={isRoot ? clientOS : undefined}
-        ref={forwardedRef}
+        ref={composedRef}
         {...themeProps}
         className={classNames(
           'radix-themes',

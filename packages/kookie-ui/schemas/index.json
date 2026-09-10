@@ -3,7 +3,6 @@
   "title": "Kookie UI Button Components",
   "description": "Complete JSON Schema collection for all button components in Kookie UI",
   "version": "1.0.0",
-  "generatedAt": "2026-03-04T05:15:10.961Z",
   "source": "Zod schemas",
   "components": {
     "base-button": {
@@ -287,7 +286,6 @@
       "title": "Base-button Component Props",
       "description": "Props schema for the base-button component in Kookie UI",
       "version": "1.0.0",
-      "generatedAt": "2026-03-04T05:15:10.950Z",
       "source": "Zod schema"
     },
     "button": {
@@ -822,7 +820,6 @@
       "title": "Button Component Props",
       "description": "Props schema for the button component in Kookie UI",
       "version": "1.0.0",
-      "generatedAt": "2026-03-04T05:15:10.959Z",
       "source": "Zod schema"
     },
     "icon-button": {
@@ -1140,7 +1137,6 @@
       "title": "Icon-button Component Props",
       "description": "Props schema for the icon-button component in Kookie UI",
       "version": "1.0.0",
-      "generatedAt": "2026-03-04T05:15:10.960Z",
       "source": "Zod schema"
     },
     "toggle-button": {
@@ -1683,7 +1679,6 @@
       "title": "Toggle-button Component Props",
       "description": "Props schema for the toggle-button component in Kookie UI",
       "version": "1.0.0",
-      "generatedAt": "2026-03-04T05:15:10.960Z",
       "source": "Zod schema"
     },
     "toggle-icon-button": {
@@ -2009,7 +2004,6 @@
       "title": "Toggle-icon-button Component Props",
       "description": "Props schema for the toggle-icon-button component in Kookie UI",
       "version": "1.0.0",
-      "generatedAt": "2026-03-04T05:15:10.961Z",
       "source": "Zod schema"
     }
   }

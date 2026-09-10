@@ -19,6 +19,7 @@ import type {
   AccordionContentOwnProps,
 } from './accordion.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
+import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 
 // Root component
 type AccordionRootElement = React.ElementRef<typeof AccordionPrimitive.Root>;
@@ -35,14 +36,7 @@ const AccordionRoot = React.forwardRef<AccordionRootElement, AccordionRootProps>
       typeof AccordionPrimitive.Root
     >;
 
-    // Show deprecation warning for panelBackground when used
-    React.useEffect(() => {
-      if (props.panelBackground !== undefined) {
-        console.warn(
-          'Warning: The `panelBackground` prop is deprecated and will be removed in a future version. Use `material` prop instead.',
-        );
-      }
-    }, [props.panelBackground]);
+    useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
     // Material takes precedence over panelBackground
     const effectiveMaterial = material ?? panelBackground;

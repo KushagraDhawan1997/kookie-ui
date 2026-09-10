@@ -19,7 +19,7 @@
   /* Theme-level translucent override */
   :where([data-panel-background='translucent'], [data-material='translucent']) & {
     backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: blur(var(--backdrop-blur-components));
+    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
 
   /* Prevent backdrop-filter stacking with parents */
@@ -33,7 +33,7 @@
   
   &:where([data-panel-background='translucent'], [data-material='translucent']) {
     backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: blur(var(--backdrop-blur-components));
+    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
 
 
