@@ -16,6 +16,20 @@ export function useBodyPointerEventsCleanup() {
 
     cleanupInstalled = true;
 
+    // Deferred cleanups are tracked so unmount can cancel the ones still
+    // queued. A timer that outlives the document reaches for `document.body`
+    // after it is gone; under jsdom that surfaces as an unhandled
+    // ReferenceError attributed to whichever test happened to be running.
+    const pending = new Set<ReturnType<typeof setTimeout>>();
+
+    const defer = (fn: () => void, delay: number) => {
+      const id = setTimeout(() => {
+        pending.delete(id);
+        fn();
+      }, delay);
+      pending.add(id);
+    };
+
     const hasOpenModal = (): boolean => {
       // Check for open dialogs/alertdialogs
       const hasDialogs = Boolean(
@@ -64,20 +78,20 @@ export function useBodyPointerEventsCleanup() {
         )
       ) {
         // Clicked outside any modal - force cleanup after a short delay
-        setTimeout(forceCleanup, 100);
+        defer(forceCleanup, 100);
       }
     };
 
     // Force cleanup on ESC key
     const onEscapeKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setTimeout(forceCleanup, 200);
+        defer(forceCleanup, 200);
       }
     };
 
     // Safe cleanup on other interactions
     const onInteraction = () => {
-      setTimeout(safeCleanup, 50);
+      defer(safeCleanup, 50);
     };
 
     // Install global listeners
@@ -89,7 +103,7 @@ export function useBodyPointerEventsCleanup() {
 
     // Watch for DOM changes that might indicate overlay removal
     const observer = new MutationObserver(() => {
-      setTimeout(safeCleanup, 0);
+      defer(safeCleanup, 0);
     });
     observer.observe(document.body, { childList: true, subtree: true, attributes: true });
 
@@ -102,11 +116,27 @@ export function useBodyPointerEventsCleanup() {
     }, 1000);
 
     // Initial cleanup
-    setTimeout(safeCleanup, 100);
+    defer(safeCleanup, 100);
 
-    // Cleanup function (keep listeners for app lifetime)
+    // Tear everything down together. The observer is the important one: it
+    // fires while React unmounts the tree, so leaving it connected keeps
+    // queueing work against a document that is about to go away. Releasing the
+    // latch lets a later mount reinstall.
     return () => {
       clearInterval(intervalId);
+
+      pending.forEach(clearTimeout);
+      pending.clear();
+
+      observer.disconnect();
+
+      document.removeEventListener('click', onDocumentClick, true);
+      document.removeEventListener('keydown', onEscapeKey, true);
+      document.removeEventListener('pointerup', onInteraction, true);
+      document.removeEventListener('transitionend', onInteraction, true);
+      document.removeEventListener('animationend', onInteraction, true);
+
+      cleanupInstalled = false;
     };
   }, []);
 }
