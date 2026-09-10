@@ -149,9 +149,9 @@
     --color-panel: var(--color-panel-translucent);
     --color-surface: var(--color-surface-translucent);
     --color-dialog: var(--color-dialog-translucent);
-    --backdrop-filter-panel: blur(var(--backdrop-blur-panel));
-    --backdrop-filter-components: blur(var(--backdrop-blur-components));
-    --backdrop-filter-dialog: blur(var(--backdrop-blur-dialog));
+    --backdrop-filter-panel: var(--backdrop-filter-panel-enabled);
+    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
+    --backdrop-filter-dialog: var(--backdrop-filter-dialog-enabled);
     /* Material system for component backgrounds */
     --material-blend: 60%;
     --material-alpha: 1;

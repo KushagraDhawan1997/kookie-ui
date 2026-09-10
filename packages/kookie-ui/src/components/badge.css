@@ -27,7 +27,7 @@
     --material-blend: 60%;
     --material-alpha: 1;
     backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: blur(var(--backdrop-blur-components));
+    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
 
   /* Prevent backdrop-filter stacking with parents */
@@ -45,7 +45,7 @@
     --material-blend: 60%;
     --material-alpha: 1;
     backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: blur(var(--backdrop-blur-components));
+    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
 
   /* Reduced motion support */

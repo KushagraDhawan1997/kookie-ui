@@ -88,7 +88,7 @@
   /* Backdrop-filter for ::before - applies to outline, soft, surface */
   :where([data-panel-background='translucent'], [data-material='translucent']) &::before {
     backdrop-filter: var(--backdrop-filter-panel);
-    --backdrop-filter-panel: blur(var(--backdrop-blur-panel));
+    --backdrop-filter-panel: var(--backdrop-filter-panel-enabled);
   }
 
   &:where([data-material='solid'], [data-panel-background='solid'])::before {
@@ -97,7 +97,7 @@
 
   &:where([data-material='translucent'], [data-panel-background='translucent'])::before {
     backdrop-filter: var(--backdrop-filter-panel);
-    --backdrop-filter-panel: blur(var(--backdrop-blur-panel));
+    --backdrop-filter-panel: var(--backdrop-filter-panel-enabled);
   }
 
   /* Interactive scale - applies to all interactive cards */
@@ -454,7 +454,7 @@
   /* Backdrop-filter handling for ghost - on element, not ::before */
   :where([data-panel-background='translucent'], [data-material='translucent']) & {
     backdrop-filter: var(--backdrop-filter-panel);
-    --backdrop-filter-panel: blur(var(--backdrop-blur-panel));
+    --backdrop-filter-panel: var(--backdrop-filter-panel-enabled);
   }
 
   &:where([data-panel-background='solid'], [data-material='solid']) {
@@ -463,7 +463,7 @@
 
   &:where([data-panel-background='translucent'], [data-material='translucent']) {
     backdrop-filter: var(--backdrop-filter-panel);
-    --backdrop-filter-panel: blur(var(--backdrop-blur-panel));
+    --backdrop-filter-panel: var(--backdrop-filter-panel-enabled);
   }
 
   /* Interactive states - background on element, not ::before */

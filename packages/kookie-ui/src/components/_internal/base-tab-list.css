@@ -161,7 +161,7 @@
       :where(.rt-BaseTabList[data-panel-background='translucent']) & {
         background-color: var(--gray-a3);
         backdrop-filter: var(--backdrop-filter-components);
-        --backdrop-filter-components: blur(var(--backdrop-blur-components));
+        --backdrop-filter-components: var(--backdrop-filter-components-enabled);
       }
 
       /* Disable backdrop-filter when inside elements that already have backdrop-filter */
@@ -189,7 +189,7 @@
       :where(.rt-BaseTabList[data-panel-background='translucent']) & {
         background-color: var(--accent-a3);
         backdrop-filter: var(--backdrop-filter-components);
-        --backdrop-filter-components: blur(var(--backdrop-blur-components));
+        --backdrop-filter-components: var(--backdrop-filter-components-enabled);
       }
     }
   }

@@ -173,7 +173,7 @@
 /* Theme-level translucent override for the visual shell */
 .rt-ChatbarRoot:where([data-panel-background='translucent'], [data-material='translucent']) .rt-ChatbarBox {
   backdrop-filter: var(--backdrop-filter-components);
-  --backdrop-filter-components: blur(var(--backdrop-blur-components));
+  --backdrop-filter-components: var(--backdrop-filter-components-enabled);
 }
 .rt-ChatbarRoot:where([data-panel-background='solid'], [data-material='solid']) .rt-ChatbarBox {
   backdrop-filter: none;

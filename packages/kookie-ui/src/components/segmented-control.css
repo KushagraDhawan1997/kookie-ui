@@ -32,7 +32,7 @@
    */
   :where([data-panel-background='translucent'], [data-material='translucent']) & {
     backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: blur(var(--backdrop-blur-components));
+    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
 
   /* 
@@ -46,7 +46,7 @@
   
   &:where([data-panel-background='translucent'], [data-material='translucent']) {
     backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: blur(var(--backdrop-blur-components));
+    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
 
   /* Disable backdrop-filter when inside elements that already have backdrop-filter */

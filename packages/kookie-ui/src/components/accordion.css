@@ -7,7 +7,7 @@
   /* Theme-level translucent override */
   :where([data-panel-background='translucent'], [data-material='translucent']) & {
     backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: blur(var(--backdrop-blur-components));
+    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
 
   /* Prevent backdrop-filter stacking with parents */
@@ -21,7 +21,7 @@
   
   &:where([data-panel-background='translucent'], [data-material='translucent']) {
     backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: blur(var(--backdrop-blur-components));
+    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
 }
 
@@ -68,7 +68,7 @@
     background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
     box-shadow: inset 0 0 0 1px var(--accent-a6);
     backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: blur(var(--backdrop-blur-components));
+    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
 }
 
@@ -94,7 +94,7 @@
   &:where([data-panel-background='translucent'], [data-material='translucent']) {
     background-color: var(--color-surface-translucent);
     backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: blur(var(--backdrop-blur-components));
+    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
 }
 
@@ -119,7 +119,7 @@
   &:where([data-panel-background='translucent'], [data-material='translucent']) {
     background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
     backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: blur(var(--backdrop-blur-components));
+    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
 }
 
@@ -143,7 +143,7 @@
   &:where([data-panel-background='translucent'], [data-material='translucent']) {
     box-shadow: inset 0 0 0 1px var(--accent-a6);
     backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: blur(var(--backdrop-blur-components));
+    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
 }
 
