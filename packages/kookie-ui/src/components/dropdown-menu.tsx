@@ -30,6 +30,7 @@ import { Kbd } from './kbd.js';
 import type { IconProps } from './icons.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes, Responsive } from '../props/prop-def.js';
+import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 
 interface DropdownMenuRootProps
   extends React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Root> {}
@@ -113,14 +114,7 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
   (props, forwardedRef) => {
     const themeContext = useThemeContext();
 
-    // Show deprecation warning for panelBackground when used
-    React.useEffect(() => {
-      if (props.panelBackground !== undefined) {
-        console.warn(
-          'Warning: The `panelBackground` prop is deprecated and will be removed in a future version. Use `material` prop instead.',
-        );
-      }
-    }, [props.panelBackground]);
+    useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
     // Material takes precedence over panelBackground
     const effectiveMaterial =

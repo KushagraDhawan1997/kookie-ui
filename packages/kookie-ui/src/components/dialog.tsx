@@ -7,6 +7,7 @@ import { Heading } from './heading.js';
 import { Text } from './text.js';
 import { Theme } from './theme.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
 import { useBodyPointerEventsCleanup } from '../hooks/use-body-pointer-events-cleanup.js';
 
@@ -33,6 +34,19 @@ const DialogTrigger = React.forwardRef<DialogTriggerElement, DialogTriggerProps>
 );
 DialogTrigger.displayName = 'Dialog.Trigger';
 
+// Split once at module scope. `extractProps` memoises on the identity of the
+// prop def objects it is handed, so rebuilding these per render would recompile
+// them on every render.
+const {
+  align: alignPropDef,
+  panelBackground: panelBackgroundPropDef,
+  material: materialPropDef,
+  ...contentPropDefs
+} = dialogContentPropDefs;
+const alignPropDefs = { align: alignPropDef };
+const panelBackgroundPropDefs = { panelBackground: panelBackgroundPropDef };
+const materialPropDefs = { material: materialPropDef };
+
 type DialogContentElement = React.ElementRef<typeof DialogPrimitive.Content>;
 interface DialogContentProps
   extends ComponentPropsWithout<typeof DialogPrimitive.Content, RemovedProps>,
@@ -41,35 +55,23 @@ interface DialogContentProps
 }
 const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>(
   ({ align, ...props }, forwardedRef) => {
-    const {
-      align: alignPropDef,
-      panelBackground: panelBackgroundPropDef,
-      material: materialPropDef,
-      ...propDefs
-    } = dialogContentPropDefs;
-
-    const { className: alignClassName } = extractProps({ align }, { align: alignPropDef });
+    const { className: alignClassName } = extractProps({ align }, alignPropDefs);
 
     // Extract panelBackground and material from props
     const { panelBackground: extractedPanelBackground } = extractProps(
       { panelBackground: props.panelBackground },
-      { panelBackground: panelBackgroundPropDef },
+      panelBackgroundPropDefs,
     );
 
     const { material: extractedMaterial } = extractProps(
       { material: props.material },
-      { material: materialPropDef },
+      materialPropDefs,
     );
 
-    // Handle material prop with panelBackground fallback
-    const materialValue = React.useMemo(() => {
-      if (extractedMaterial !== undefined) {
-        console.warn(
-          'Warning: The `panelBackground` prop is deprecated and will be removed in a future version. Use `material` prop instead.',
-        );
-      }
-      return extractedMaterial ?? extractedPanelBackground;
-    }, [extractedMaterial, extractedPanelBackground]);
+    useDeprecatedPanelBackgroundWarning(props.panelBackground);
+
+    // Material takes precedence over the deprecated panelBackground
+    const materialValue = extractedMaterial ?? extractedPanelBackground;
 
     const {
       className,
@@ -78,7 +80,7 @@ const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>
       panelBackground: _,
       material: __,
       ...contentProps
-    } = extractProps(props, propDefs);
+    } = extractProps(props, contentPropDefs);
 
     // Focus management
     const contentRef = React.useRef<HTMLDivElement>(null);

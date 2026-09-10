@@ -43,6 +43,7 @@ import { Theme } from './theme.js';
 import { Heading } from './heading.js';
 import { Text } from './text.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
 import { useBodyPointerEventsCleanup } from '../hooks/use-body-pointer-events-cleanup.js';
 
@@ -85,6 +86,30 @@ Trigger.displayName = 'Sheet.Trigger';
 
 // Content
 /** Element type for `Sheet.Content`. */
+// Reuse dialog content prop defs for size/width/height tokens, but handle
+// material/panelBackground explicitly to avoid forwarding unknown DOM props.
+// Built once at module scope: `extractProps` memoises on the identity of the
+// prop def objects it is handed, so rebuilding these per render would recompile
+// them every time a sheet renders.
+const {
+  align: _alignPropDef,
+  panelBackground: panelBackgroundPropDef,
+  material: materialPropDef,
+  ...dialogPropDefsForSheet
+} = dialogContentPropDefs;
+
+const materialPropDefs = {
+  panelBackground: panelBackgroundPropDef,
+  material: materialPropDef,
+};
+
+// Override dialog's default maxWidth (600px) to avoid clamping Sheet by default
+const { default: _mwDefault, ...maxWidthWithoutDefault } = dialogPropDefsForSheet.maxWidth;
+const sheetPropDefs = {
+  ...dialogPropDefsForSheet,
+  maxWidth: maxWidthWithoutDefault,
+} as typeof dialogPropDefsForSheet;
+
 type SheetContentElement = React.ElementRef<typeof DialogPrimitive.Content>;
 interface SheetContentProps
   extends ComponentPropsWithout<typeof DialogPrimitive.Content, RemovedProps>,
@@ -120,40 +145,18 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>(
       bottom: 'bottom',
     };
     const normalizedSide = normalizedSideMap[side];
-    // Reuse dialog content prop defs for size/width/height tokens, but handle
-    // material/panelBackground explicitly to avoid forwarding unknown DOM props.
-    const {
-      align: _alignPropDef,
-      panelBackground: panelBackgroundPropDef,
-      material: materialPropDef,
-      ...propDefs
-    } = dialogContentPropDefs;
-
     // Extract panelBackground and material together (remove from DOM props)
     const { panelBackground: resolvedPanelBackground, material: resolvedMaterial } = extractProps(
       { panelBackground: panelBackgroundProp, material: materialProp },
-      { panelBackground: panelBackgroundPropDef, material: materialPropDef },
+      materialPropDefs,
     );
 
-    const materialValue = React.useMemo(() => {
-      if (resolvedPanelBackground !== undefined) {
-        if (process.env.NODE_ENV !== 'production') {
-          console.warn(
-            'Warning: The `panelBackground` prop is deprecated and will be removed in a future version. Use the `material` prop instead.',
-          );
-        }
-      }
-      return resolvedMaterial ?? resolvedPanelBackground;
-    }, [resolvedMaterial, resolvedPanelBackground]);
+    useDeprecatedPanelBackgroundWarning(panelBackgroundProp);
 
-    // Now extract remaining props using dialog defs so size/width/height classnames are applied
-    // Override dialog's default maxWidth (600px) to avoid clamping Sheet by default
-    // Match dialog.tsx: extract once and avoid leaking panel/material
-    const { default: _mwDefault, ...maxWidthWithoutDefault } = propDefs.maxWidth;
-    const sheetPropDefs = {
-      ...propDefs,
-      maxWidth: maxWidthWithoutDefault,
-    } as typeof propDefs;
+    // Material takes precedence over the deprecated panelBackground
+    const materialValue = resolvedMaterial ?? resolvedPanelBackground;
+
+    // Size/width/height class names come from the dialog defs — see `sheetPropDefs`.
     const { className: extractedClassName, ...contentProps } = extractProps(
       restProps,
       sheetPropDefs,
