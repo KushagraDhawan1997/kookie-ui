@@ -16,9 +16,7 @@ function readAllCssFiles(dir: string, out: string[] = []) {
 const SRC = path.join(__dirname, '../../src');
 
 function allCss() {
-  return [path.join(SRC, 'components'), path.join(SRC, 'styles')].flatMap((r) =>
-    fs.existsSync(r) ? readAllCssFiles(r) : [],
-  );
+  return [path.join(SRC, 'components'), path.join(SRC, 'styles')].flatMap((r) => (fs.existsSync(r) ? readAllCssFiles(r) : []));
 }
 
 /**
@@ -50,15 +48,7 @@ describe('backdrop-filter goes through the switchable tokens', () => {
         });
     }
 
-    expect(
-      violations,
-      violations
-        .map(
-          (v) =>
-            `${v.file}:${v.line} ${v.content}\n  use var(--backdrop-filter-<scope>-enabled) so [data-blur='none'] can switch it off`,
-        )
-        .join('\n'),
-    ).toEqual([]);
+    expect(violations, violations.map((v) => `${v.file}:${v.line} ${v.content}\n  use var(--backdrop-filter-<scope>-enabled) so [data-blur='none'] can switch it off`).join('\n')).toEqual([]);
   });
 
   it('no rule sets backdrop-filter to a literal blur()', () => {
@@ -77,10 +67,7 @@ describe('backdrop-filter goes through the switchable tokens', () => {
         });
     }
 
-    expect(
-      violations,
-      violations.map((v) => `${v.file}:${v.line} ${v.content}`).join('\n'),
-    ).toEqual([]);
+    expect(violations, violations.map((v) => `${v.file}:${v.line} ${v.content}`).join('\n')).toEqual([]);
   });
 
   it('the enabled tokens are defined, and blur.css switches all of them off', () => {

@@ -77,7 +77,30 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
         body.style.cursor = orientation === 'vertical' ? 'col-resize' : 'row-resize';
         body.style.userSelect = 'none';
         onResizeStart?.(startSize);
+
+        // The move handler is attached to the handle, the document and the
+        // window so the drag survives environments where PointerEvent does not
+        // reach all three. A real move therefore arrives here several times:
+        // once per node it propagates through, plus again as the compatibility
+        // mouse event. Doing the work more than once per movement is pure waste
+        // on the most latency-sensitive interaction in the shell, so ignore the
+        // repeats.
+        let lastHandledMove: Event | null = null;
+        let seenPointerEvent = false;
+
+        const shouldHandle = (ev: Event, pointerType: string) => {
+          if (ev.type === pointerType) seenPointerEvent = true;
+          // Once pointer events are known to work, the mouse fallbacks are
+          // duplicates of an event we have already handled.
+          else if (seenPointerEvent) return false;
+          return true;
+        };
+
         const handleMove = (ev: PointerEvent) => {
+          if (!shouldHandle(ev, 'pointermove')) return;
+          if (ev === lastHandledMove) return;
+          lastHandledMove = ev;
+
           const client = orientation === 'vertical' ? ev.clientX : ev.clientY;
           const next = clamp(computeNext(client, startClient, startSize));
           container.style.setProperty(cssVarName, `${next}px`);
@@ -106,7 +129,11 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
           body.style.userSelect = prevUserSelect;
           activeCleanupRef.current = null;
         };
+        let finished = false;
         const handleUp = () => {
+          if (finished) return;
+          finished = true;
+
           const finalSize = parseFloat(getComputedStyle(container).getPropertyValue(cssVarName) || `${defaultSize}`);
           let snapped = finalSize;
           if (snapPoints && snapPoints.length) {
