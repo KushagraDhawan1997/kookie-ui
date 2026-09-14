@@ -244,3 +244,20 @@
     box-sizing: border-box;
   }
 }
+
+/*
+ * Visually hidden, still read aloud. Shared by Dialog, AlertDialog and Image
+ * for their live regions and required-but-unwanted titles, so it lives here
+ * rather than being redefined by each of them.
+ */
+.rt-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

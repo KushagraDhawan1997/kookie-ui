@@ -18,72 +18,76 @@
   - Context-aware: works with Shell.Sidebar or standalone
 */
 
-/* Rail Layout Styling */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent) {
-  padding: var(--space-2);
-}
+/***************************************************************************************************
+ *                                                                                                 *
+ * THIN PRESENTATION                                                                               *
+ *                                                                                                 *
+ * The icon rail: items become a centred icon over a small label, badges and                       *
+ * group labels drop out, and submenus flatten rather than indent.                                 *
+ *                                                                                                 *
+ * Every rule here is scoped to one ancestor, written once, rather than                            *
+ * repeating the container selector per rule. The `:where()` around that                           *
+ * ancestor keeps the whole block at zero specificity, exactly as before, so                       *
+ * a consumer's own selector still wins without needing to out-specify this                        *
+ * file.                                                                                           *
+ *                                                                                                 *
+ * The `!important`s below are load-bearing: they override Base Menu, which                        *
+ * sets the same custom properties on this very element (`.rt-SidebarContent`                      *
+ * is also `.rt-BaseMenuContent`) at a higher specificity.                                         *
+ *                                                                                                 *
+ ***************************************************************************************************/
 
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-BaseMenuViewport) {
-  padding: var(--space-2) !important;
-}
-
-/* Enforce vertical stack and compact typography for all buttons in thin mode */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent) :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
-  justify-content: center !important;
-  align-items: center !important;
-  flex-direction: column !important;
-  gap: var(--space-1) !important;
-  text-align: center !important;
-  font-size: var(--font-size-0) !important;
-  line-height: var(--line-height-0) !important;
-  padding-inline-start: var(--space-1) !important;
-  padding-inline-end: var(--space-1) !important;
-  /* Add margin for balanced spacing like normal variant */
-  margin-top: 1px;
-  margin-bottom: 1px;
-}
-
-/* Size-specific vertical padding for thin mode buttons */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-r-size-1) :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
-  padding-top: var(--space-1) !important;
-  padding-bottom: var(--space-1) !important;
-}
-
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-r-size-2) :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
-  padding-top: var(--space-1) !important;
-  padding-bottom: var(--space-1) !important;
-}
-
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-r-size-3) :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
-  padding-top: var(--space-2) !important;
-  padding-bottom: var(--space-2) !important;
-}
-
-/* Consolidated thin mode size blocks */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-r-size-1) {
-  /* Horizontal padding tokens to free space for text */
-  --base-menu-item-padding-left: var(--space-1) !important;
-  --base-menu-item-padding-right: var(--space-1) !important;
-  /* Unify vertical padding via tokens (used by BaseMenuItem) */
-  --base-menu-item-padding-y: var(--space-2) !important;
-
-  /* Override BaseMenu left padding resets */
-  &:where(:not(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem))) {
-    --base-menu-item-padding-left: var(--space-1) !important;
-  }
-  &:where(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem)) {
-    --base-menu-item-padding-left: var(--space-1) !important;
+:where(.rt-SidebarContainer[data-presentation='thin']) {
+  :where(.rt-SidebarContent) {
+    padding: var(--space-2);
   }
 
-  /* Button and subtrigger layout */
-  :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: var(--space-1);
-    text-align: center;
-    font-size: var(--font-size-0);
-    line-height: var(--line-height-0);
+  :where(.rt-BaseMenuViewport) {
+    padding: var(--space-2) !important;
+  }
+
+  /*
+   * Item layout: a centred icon stacked over a small label. Base Menu lays
+   * these out as a row at a higher specificity, hence `!important`.
+   */
+  :where(.rt-SidebarContent) :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
+    justify-content: center !important;
+    align-items: center !important;
+    flex-direction: column !important;
+    gap: var(--space-1) !important;
+    text-align: center !important;
+    font-size: var(--font-size-0) !important;
+    line-height: var(--line-height-0) !important;
+    padding-inline-start: var(--space-1) !important;
+    padding-inline-end: var(--space-1) !important;
+    /* Add margin for balanced spacing like normal variant */
+    margin-top: 1px;
+    margin-bottom: 1px;
+  }
+
+  /* Sizes 1 and 2 are tighter vertically than size 3. */
+  :where(.rt-SidebarContent.rt-r-size-1, .rt-SidebarContent.rt-r-size-2) :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
+    padding-top: var(--space-1) !important;
+    padding-bottom: var(--space-1) !important;
+  }
+
+  :where(.rt-SidebarContent.rt-r-size-3) :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
+    padding-top: var(--space-2) !important;
+    padding-bottom: var(--space-2) !important;
+  }
+
+  /*
+   * Item padding tokens are the same at every size here: the rail is narrow
+   * enough that the label needs all the horizontal room it can get.
+   */
+  :where(.rt-SidebarContent) {
+    --base-menu-item-padding-left: var(--space-1) !important;
+    --base-menu-item-padding-right: var(--space-1) !important;
+    --base-menu-item-padding-y: var(--space-2) !important;
+  }
+
+  /* Labels are clipped rather than wrapped, so an item stays one row tall. */
+  :where(.rt-SidebarContent) :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -91,142 +95,156 @@
     min-width: 0;
   }
 
-  /* Icon sizing */
+  /* Icons step up with the size scale. */
   /* stylelint-disable-next-line selector-max-type */
-  :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) :where(svg) {
+  :where(.rt-SidebarContent.rt-r-size-1) :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) :where(svg) {
     width: var(--content-icon-size-3);
     height: var(--content-icon-size-3);
   }
-}
-
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-r-size-2) {
-  --base-menu-item-padding-left: var(--space-1) !important;
-  --base-menu-item-padding-right: var(--space-1) !important;
-  --base-menu-item-padding-y: var(--space-2) !important;
-
-  &:where(:not(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem))) {
-    --base-menu-item-padding-left: var(--space-1) !important;
-  }
-  &:where(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem)) {
-    --base-menu-item-padding-left: var(--space-1) !important;
-  }
-
-  :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: var(--space-1);
-    text-align: center;
-    font-size: var(--font-size-0);
-    line-height: var(--line-height-0);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-    min-width: 0;
-  }
 
   /* stylelint-disable-next-line selector-max-type */
-  :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) :where(svg) {
+  :where(.rt-SidebarContent.rt-r-size-2) :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) :where(svg) {
     width: var(--content-icon-size-4);
     height: var(--content-icon-size-4);
   }
-}
 
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-r-size-3) {
-  --base-menu-item-padding-left: var(--space-1) !important;
-  --base-menu-item-padding-right: var(--space-1) !important;
-  --base-menu-item-padding-y: var(--space-2) !important;
-
-  &:where(:not(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem))) {
-    --base-menu-item-padding-left: var(--space-1) !important;
-  }
-  &:where(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem)) {
-    --base-menu-item-padding-left: var(--space-1) !important;
+  /* stylelint-disable-next-line selector-max-type */
+  :where(.rt-SidebarContent.rt-r-size-3) :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) :where(svg) {
+    width: var(--content-icon-size-5);
+    height: var(--content-icon-size-5);
   }
 
-  :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
-    justify-content: center;
-    align-items: center;
+  /*
+   * `asChild` puts a consumer's own element (a Next.js Link, say) between the
+   * button and its contents, so that wrapper has to stack and clip too.
+   */
+  :where(.rt-SidebarMenuButton > *),
+  :where(.rt-SidebarMenuSubContent .rt-SidebarMenuButton > *) {
+    display: flex;
     flex-direction: column;
-    gap: var(--space-1);
-    text-align: center;
-    font-size: var(--font-size-0);
-    line-height: var(--line-height-0);
+    align-items: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 100%;
+    width: 100%;
+    min-width: 0;
+  }
+
+  :where(.rt-SidebarMenuSubTrigger > *) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
     min-width: 0;
   }
 
   /* stylelint-disable-next-line selector-max-type */
-  :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) :where(svg) {
-    width: var(--content-icon-size-5);
-    height: var(--content-icon-size-5);
+  :where(.rt-SidebarMenuButton > * > svg) {
+    flex-shrink: 0;
+  }
+
+  /* Icons are sized by the tokens above; this only keeps layout stable. */
+  /* stylelint-disable-next-line selector-max-type */
+  :where(.rt-SidebarMenuButton) :where(svg) {
+    display: block;
+  }
+
+  /* Ensure submenu buttons also truncate */
+  :where(.rt-SidebarMenuSubContent .rt-SidebarMenuButton) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  /*
+   * The hover/active background sits on the icon wrapper rather than the whole
+   * button, so the label underneath stays outside the highlight.
+   */
+  :where(.rt-SidebarMenuIconWrapper) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Override the 100% width from .rt-SidebarMenuButton > * - icon wrapper should fit content */
+    width: auto;
+    padding: var(--space-3) var(--space-2);
+    border-radius: var(--radius-2);
+    transition:
+      background-color var(--motion-duration-micro) var(--motion-ease-standard),
+      color var(--motion-duration-small) var(--motion-ease-standard);
+  }
+
+  /* Labels sit below the highlight, so they are coloured independently. */
+  :where(.rt-SidebarMenuButton .rt-SidebarMenuLabel) {
+    display: block;
+    max-width: 100%;
+    min-width: 0;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: nowrap;
+    text-align: center;
+    color: var(--gray-11);
+    font-size: var(--font-size-0);
+    line-height: var(--line-height-0);
+  }
+
+  :where(.rt-SidebarMenuButton[data-active] .rt-SidebarMenuLabel) {
+    color: var(--accent-11);
+    font-weight: var(--font-weight-medium);
+  }
+
+  :where(.rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuLabel) {
+    color: var(--accent-11);
+  }
+
+  /* The button itself never carries a background here — the wrapper does. */
+  :where(.rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled])),
+  :where(.rt-SidebarMenuButton[data-active]) {
+    background-color: transparent !important;
+  }
+
+  /* Badges, shortcuts and group labels have nowhere to go in a rail. */
+  :where(.rt-SidebarMenuBadge),
+  :where(.rt-SidebarMenuShortcut),
+  :where(.rt-Badge),
+  :where(.rt-Kbd),
+  :where(.rt-SidebarGroupLabel),
+  :where(.rt-SidebarMenuSubTriggerIcon),
+  :where(.rt-BaseMenuSubTriggerIcon) {
+    display: none !important;
+  }
+
+  /* Submenus flatten: no indent, no connector, just a ruled band. */
+  :where(.rt-SidebarMenuSubList),
+  :where(.rt-BaseMenuSubList) {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    border-left: 0 !important;
+    border-top: 0 !important;
+    border-bottom: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  :where(.rt-SidebarMenuSubList::before),
+  :where(.rt-BaseMenuSubList::before) {
+    content: none !important;
+    display: none !important;
+  }
+
+  :where(.rt-SidebarMenuSubContent) {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    border-left: 0 !important;
+    border-top: 1px solid var(--gray-a6) !important;
+    border-bottom: 1px solid var(--gray-a6) !important;
+    margin-top: var(--space-2) !important;
+    margin-bottom: var(--space-2) !important;
   }
 }
 
-/* Ellipsis on root child content when using asChild (e.g., Next.js Link) */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton > *) {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
-  min-width: 0;
-}
-
-/* Ensure submenu trigger asChild containers also stack vertically */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuSubTrigger > *) {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  min-width: 0;
-}
-
-/* stylelint-disable-next-line selector-max-type */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton > * > svg) {
-  flex-shrink: 0;
-}
-
-/* Ensure submenu anchors also truncate */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuSubContent .rt-SidebarMenuButton > *) {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
-  min-width: 0;
-}
-
-/* Ensure icons remain visible at their token sizes in thin mode */
-/* stylelint-disable-next-line selector-max-type */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton) :where(svg) {
-  /* svg size is already controlled by tokens; this ensures layout stability */
-  display: block;
-}
-
-/* Icon wrapper for thin mode - receives hover/active background */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuIconWrapper) {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* Override the 100% width from .rt-SidebarMenuButton > * - icon wrapper should fit content */
-  width: auto;
-  padding: var(--space-3) var(--space-2);
-  border-radius: var(--radius-2);
-  transition:
-    background-color var(--motion-duration-micro) var(--motion-ease-standard),
-    color var(--motion-duration-small) var(--motion-ease-standard);
-}
-
-/* Size-specific icon wrapper padding */
+/* Icon wrapper sizing keeps its original specificity so the search trigger's
+   own size rules further down continue to win where they should. */
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-r-size-1 .rt-SidebarMenuIconWrapper {
   padding: var(--space-2) var(--space-2);
@@ -245,134 +263,47 @@
   border-radius: var(--radius-2);
 }
 
-/* Label styling in thin mode - outside the background area */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton .rt-SidebarMenuLabel) {
-  display: block;
-  max-width: 100%;
-  min-width: 0;
-  overflow: visible;
-  text-overflow: clip;
-  white-space: nowrap;
-  text-align: center;
-  color: var(--gray-11);
-  font-size: var(--font-size-0);
-  line-height: var(--line-height-0);
+/*
+ * Menu variant highlights for the icon wrapper. Each variant states its rest,
+ * hover and active colours; the translucent panel swaps the solid steps for
+ * their alpha equivalents so the panel behind shows through.
+ */
+:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-soft) {
+  :where(.rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
+    background-color: var(--accent-4);
+  }
+
+  :where(.rt-SidebarMenuButton[data-active] .rt-SidebarMenuIconWrapper) {
+    background-color: var(--accent-3);
+  }
 }
 
-/* Active label gets accent color and medium weight */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton[data-active] .rt-SidebarMenuLabel) {
-  color: var(--accent-11);
-  font-weight: var(--font-weight-medium);
+:where([data-panel-background='translucent']) :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-soft) {
+  :where(.rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
+    background-color: var(--accent-a4);
+  }
+
+  :where(.rt-SidebarMenuButton[data-active] .rt-SidebarMenuIconWrapper) {
+    background-color: var(--accent-a3);
+  }
 }
 
-/* Highlighted label gets slightly darker color */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuLabel) {
-  color: var(--accent-11);
+:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-solid) {
+  :where(.rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuIconWrapper),
+  :where(.rt-SidebarMenuButton[data-active] .rt-SidebarMenuIconWrapper) {
+    background-color: var(--accent-9);
+    color: var(--accent-contrast);
+  }
 }
 
-/* Remove background from button itself in thin mode - styles are on icon wrapper */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled])),
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton[data-active]) {
-  background-color: transparent !important;
+:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-solid[data-high-contrast]) {
+  :where(.rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuIconWrapper),
+  :where(.rt-SidebarMenuButton[data-active] .rt-SidebarMenuIconWrapper) {
+    background-color: var(--accent-12);
+    color: var(--accent-1);
+  }
 }
 
-/* Soft variant icon wrapper states in thin mode */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-soft .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
-  background-color: var(--accent-4);
-}
-
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-soft .rt-SidebarMenuButton[data-active] .rt-SidebarMenuIconWrapper) {
-  background-color: var(--accent-3);
-}
-
-/* Translucent panel support for soft variant */
-:where([data-panel-background='translucent']) :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-soft .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
-  background-color: var(--accent-a4);
-}
-
-:where([data-panel-background='translucent']) :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-soft .rt-SidebarMenuButton[data-active] .rt-SidebarMenuIconWrapper) {
-  background-color: var(--accent-a3);
-}
-
-/* Solid variant icon wrapper states in thin mode */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-solid .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
-  background-color: var(--accent-9);
-  color: var(--accent-contrast);
-}
-
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-solid .rt-SidebarMenuButton[data-active] .rt-SidebarMenuIconWrapper) {
-  background-color: var(--accent-9);
-  color: var(--accent-contrast);
-}
-
-/* High contrast solid variant in thin mode */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-solid[data-high-contrast] .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
-  background-color: var(--accent-12);
-  color: var(--accent-1);
-}
-
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-solid[data-high-contrast] .rt-SidebarMenuButton[data-active] .rt-SidebarMenuIconWrapper) {
-  background-color: var(--accent-12);
-  color: var(--accent-1);
-}
-
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuBadge),
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuShortcut),
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-Badge),
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-Kbd) {
-  display: none !important;
-}
-
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarGroupLabel) {
-  display: none !important;
-}
-
-/* Hide submenu chevrons and flatten sublists in rail */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuSubTriggerIcon),
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-BaseMenuSubTriggerIcon) {
-  display: none !important;
-}
-
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuSubList),
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-BaseMenuSubList) {
-  padding-left: 0 !important;
-  margin-left: 0 !important;
-  border-left: 0 !important;
-  border-top: 0 !important;
-  border-bottom: 0 !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-/* Also remove any decorative rule on the submenu list in thin mode */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuSubList::before),
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-BaseMenuSubList::before) {
-  content: none !important;
-  display: none !important;
-}
-
-/* Ensure the Accordion content wrapper doesn't add indentation */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuSubContent) {
-  padding-left: 0 !important;
-  margin-left: 0 !important;
-  border-left: 0 !important;
-  border-top: 1px solid var(--gray-a6) !important;
-  border-bottom: 1px solid var(--gray-a6) !important;
-  margin-top: var(--space-2) !important;
-  margin-bottom: var(--space-2) !important;
-  /* background-color: var(--accent-3); */
-}
-
-/* Remove vertical connector in thin mode */
-/* (intentionally no ::before) */
-
-/* Ensure submenu buttons also truncate */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuSubContent .rt-SidebarMenuButton) {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
 
 /* Panel Layout Styling (default) - inherits existing styles */
 
@@ -454,20 +385,11 @@
 }
 
 /* Header/Footer Layout Utilities */
-.rt-SidebarHeader:where(.rt-SidebarHeader--container) {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--sidebar-base-padding);
-  min-height: var(--sidebar-item-height);
-
-  /* Make MenuButtons expand to full width */
-  & :where(.rt-SidebarMenuButton) {
-    flex: 1;
-  }
-}
-
+/*
+ * Header and Footer are the same strip of layout at opposite ends of the
+ * sidebar, so they share every rule here; only the corner rounding differs.
+ */
+.rt-SidebarHeader:where(.rt-SidebarHeader--container),
 .rt-SidebarFooter:where(.rt-SidebarFooter--container) {
   display: flex;
   flex-direction: row;
@@ -483,82 +405,55 @@
 }
 
 /* Flex utilities for header/footer layouts */
-.rt-SidebarHeader:where(.rt-flex-row) {
-  flex-direction: row;
-}
-.rt-SidebarHeader:where(.rt-flex-col) {
-  flex-direction: column;
-}
-.rt-SidebarHeader:where(.rt-items-center) {
-  align-items: center;
-}
-.rt-SidebarHeader:where(.rt-items-start) {
-  align-items: flex-start;
-}
-.rt-SidebarHeader:where(.rt-items-end) {
-  align-items: flex-end;
-}
-.rt-SidebarHeader:where(.rt-justify-between) {
-  justify-content: space-between;
-}
-.rt-SidebarHeader:where(.rt-justify-center) {
-  justify-content: center;
-}
-.rt-SidebarHeader:where(.rt-justify-start) {
-  justify-content: flex-start;
-}
-.rt-SidebarHeader:where(.rt-justify-end) {
-  justify-content: flex-end;
-}
-.rt-SidebarHeader:where(.rt-gap-1) {
-  gap: var(--space-1);
-}
-.rt-SidebarHeader:where(.rt-gap-2) {
-  gap: var(--space-2);
-}
-.rt-SidebarHeader:where(.rt-gap-3) {
-  gap: var(--space-3);
-}
-.rt-SidebarHeader:where(.rt-gap-4) {
-  gap: var(--space-4);
-}
-
+.rt-SidebarHeader:where(.rt-flex-row),
 .rt-SidebarFooter:where(.rt-flex-row) {
   flex-direction: row;
 }
+.rt-SidebarHeader:where(.rt-flex-col),
 .rt-SidebarFooter:where(.rt-flex-col) {
   flex-direction: column;
 }
+.rt-SidebarHeader:where(.rt-items-center),
 .rt-SidebarFooter:where(.rt-items-center) {
   align-items: center;
 }
+.rt-SidebarHeader:where(.rt-items-start),
 .rt-SidebarFooter:where(.rt-items-start) {
   align-items: flex-start;
 }
+.rt-SidebarHeader:where(.rt-items-end),
 .rt-SidebarFooter:where(.rt-items-end) {
   align-items: flex-end;
 }
+.rt-SidebarHeader:where(.rt-justify-between),
 .rt-SidebarFooter:where(.rt-justify-between) {
   justify-content: space-between;
 }
+.rt-SidebarHeader:where(.rt-justify-center),
 .rt-SidebarFooter:where(.rt-justify-center) {
   justify-content: center;
 }
+.rt-SidebarHeader:where(.rt-justify-start),
 .rt-SidebarFooter:where(.rt-justify-start) {
   justify-content: flex-start;
 }
+.rt-SidebarHeader:where(.rt-justify-end),
 .rt-SidebarFooter:where(.rt-justify-end) {
   justify-content: flex-end;
 }
+.rt-SidebarHeader:where(.rt-gap-1),
 .rt-SidebarFooter:where(.rt-gap-1) {
   gap: var(--space-1);
 }
+.rt-SidebarHeader:where(.rt-gap-2),
 .rt-SidebarFooter:where(.rt-gap-2) {
   gap: var(--space-2);
 }
+.rt-SidebarHeader:where(.rt-gap-3),
 .rt-SidebarFooter:where(.rt-gap-3) {
   gap: var(--space-3);
 }
+.rt-SidebarHeader:where(.rt-gap-4),
 .rt-SidebarFooter:where(.rt-gap-4) {
   gap: var(--space-4);
 }
@@ -741,18 +636,6 @@
         width: var(--content-icon-size-3);
         height: var(--content-icon-size-3);
         flex-shrink: 0;
-      }
-    }
-    /* stylelint-disable-next-line selector-max-specificity */
-    .rt-SidebarContent:where(.rt-r-size-3) {
-      /* stylelint-disable-next-line selector-max-specificity */
-      & :where(.rt-SidebarMenuButton) {
-        /* stylelint-disable-next-line selector-max-type, selector-max-specificity */
-        & :where(svg) {
-          width: var(--content-icon-size-3);
-          height: var(--content-icon-size-3);
-          flex-shrink: 0;
-        }
       }
     }
 

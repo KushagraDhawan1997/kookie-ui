@@ -101,14 +101,31 @@ describe('animations avoid layout properties', () => {
   it('shell pane contents slide on transform', () => {
     const shell = fs.readFileSync(path.join(SRC, 'components/shell.css'), 'utf8');
 
-    for (const pane of ['Rail', 'Panel', 'Sidebar', 'Inspector', 'Bottom']) {
-      const selector = `.rt-Shell${pane}Content {`;
-      const start = shell.indexOf(selector);
-      expect(start, `${selector} should exist`).toBeGreaterThan(-1);
-      const block = shell.slice(start, shell.indexOf('}', start));
+    // The panes share most of this behaviour through grouped selectors, so
+    // gather every declaration that reaches a pane rather than reading one
+    // block per pane.
+    const declarationsFor = (className: string) => {
+      const withoutComments = shell.replace(/\/\*[\s\S]*?\*\//g, '');
+      const declarations: string[] = [];
 
-      expect(block, `${pane} content should be taken out of flow to slide`).toContain('position: absolute');
-      expect(block, `${pane} content should slide on transform`).toMatch(/transform: translate[XY]\(/);
+      for (const [, selectorList, body] of withoutComments.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+        const matchesPane = selectorList
+          .split(',')
+          .some((selector) => selector.trim() === `.${className}`);
+
+        if (matchesPane) declarations.push(body);
+      }
+
+      return declarations.join('\n');
+    };
+
+    for (const pane of ['Rail', 'Panel', 'Sidebar', 'Inspector', 'Bottom']) {
+      const className = `rt-Shell${pane}Content`;
+      const declarations = declarationsFor(className);
+
+      expect(declarations, `.${className} should exist`).not.toBe('');
+      expect(declarations, `${pane} content should be taken out of flow to slide`).toContain('position: absolute');
+      expect(declarations, `${pane} content should slide on transform`).toMatch(/transform: translate[XY]\(/);
     }
   });
 

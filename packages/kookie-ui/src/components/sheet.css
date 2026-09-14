@@ -1,3 +1,14 @@
+/*
+ * The `!important`s here are load-bearing, not defensive habit. A Sheet takes
+ * the same layout props as any other component, and the margin, inset and
+ * position utilities are imported after the component layer — so a stray
+ * `m="4"` on Sheet.Content would otherwise win on source order and knock the
+ * sheet off its edge. Importance is what keeps the anchoring non-negotiable.
+ *
+ * `border-radius: 0 !important` likewise overrides the size-scaled corner
+ * rounding Base Dialog applies, which a sheet flush to the viewport edge
+ * should not have.
+ */
 :where(.rt-SheetContent) {
   position: fixed !important;
   /* Use physical properties to integrate with width/height responsive utilities */
@@ -18,44 +29,42 @@
   }
 }
 
-/* Logical side anchoring (RTL-aware via logical inset) */
-:where(.rt-SheetContent[data-side='start']) {
-  inset-block: 0 !important;
-  inset-inline-start: 0 !important;
-  margin: 0 !important;
-  border-start-start-radius: 0;
-  border-end-start-radius: 0;
-  /* iOS safe area for home indicator */
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-}
+/*
+ * Logical side anchoring (RTL-aware via logical inset).
+ *
+ * Each side states only its own anchoring: the margin reset and the corner
+ * rounding are already settled, with importance, by the rule above.
+ */
+:where(.rt-SheetContent[data-side='start']),
 :where(.rt-SheetContent[data-side='end']) {
   inset-block: 0 !important;
-  inset-inline-end: 0 !important;
-  margin: 0 !important;
-  border-start-end-radius: 0;
-  border-end-end-radius: 0;
   /* iOS safe area for home indicator */
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
+
+:where(.rt-SheetContent[data-side='start']) {
+  inset-inline-start: 0 !important;
+}
+
+:where(.rt-SheetContent[data-side='end']) {
+  inset-inline-end: 0 !important;
+}
+
+/* The horizontal sides span the viewport and take their height from a prop. */
+:where(.rt-SheetContent[data-side='top']),
+:where(.rt-SheetContent[data-side='bottom']) {
+  inset-inline: 0 !important;
+  width: auto;
+  max-width: none;
+  height: var(--height, 75vh);
+}
+
 :where(.rt-SheetContent[data-side='top']) {
   inset-block-start: 0 !important;
-  inset-inline: 0 !important;
-  width: auto;
-  max-width: none;
-  height: var(--height, 75vh);
-  margin: 0 !important;
-  border-start-start-radius: 0;
-  border-start-end-radius: 0;
 }
+
 :where(.rt-SheetContent[data-side='bottom']) {
   inset-block-end: 0 !important;
-  inset-inline: 0 !important;
-  width: auto;
-  max-width: none;
-  height: var(--height, 75vh);
-  margin: 0 !important;
-  border-end-start-radius: 0;
-  border-end-end-radius: 0;
 }
 
 /* Overlay adjustments: avoid double-fade jank from base dialog */

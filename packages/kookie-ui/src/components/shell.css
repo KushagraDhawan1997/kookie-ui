@@ -63,70 +63,71 @@
   height: 100%;
 }
 
-/* Rail - slim navigation strip */
-.rt-ShellRail {
+/***************************************************************************************************
+ *                                                                                                 *
+ * PANES                                                                                           *
+ *                                                                                                 *
+ * Rail, Panel, Sidebar, Inspector and Bottom are the same mechanism pointed at                    *
+ * different edges: a pane that steps between widths (or heights) in the flow,                     *
+ * and an absolutely positioned content layer that slides across the space the                     *
+ * pane no longer occupies.                                                                        *
+ *                                                                                                 *
+ * The shared behaviour is written once below and each pane then states only                       *
+ * what is genuinely its own — which edge it is pinned to, which way its                           *
+ * contents slide, and how big it is when open.                                                    *
+ *                                                                                                 *
+ ***************************************************************************************************/
+
+/* Every pane stacks its contents and anchors the absolutely positioned content layer. */
+.rt-ShellRail,
+.rt-ShellPanel,
+.rt-ShellSidebar,
+.rt-ShellInspector,
+.rt-ShellBottom {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  overflow: hidden;
-
-  /* Above the panel, so a collapsing panel tucks behind it rather than across it. */
   position: relative;
+}
+
+/* Inline panes span the body's height; the block pane spans its width. */
+.rt-ShellRail,
+.rt-ShellPanel,
+.rt-ShellSidebar,
+.rt-ShellInspector {
+  height: 100%;
+}
+
+.rt-ShellBottom {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/*
+ * Resize handles bleed across the pane boundary, so the panes that carry one
+ * cannot clip. The rail has no handle and clips its own contents instead.
+ */
+.rt-ShellPanel,
+.rt-ShellSidebar,
+.rt-ShellInspector,
+.rt-ShellBottom {
+  overflow: visible;
+}
+
+.rt-ShellRail {
+  overflow: hidden;
+  /* Above the panel, so a collapsing panel tucks behind it rather than across it. */
   z-index: 2;
 }
 
-/* Steps to its width in one layout pass — see .rt-ShellPanel for why. */
-.rt-ShellRail[data-mode='expanded'] {
-  width: var(--rail-size, 64px);
-}
-
-.rt-ShellRail[data-mode='collapsed'] {
-  width: 0px;
-  transition: width 0s var(--motion-duration-small);
-}
-
-/* Peek overlay rules consolidated later to avoid duplication */
-
-.rt-ShellRailContent {
-  position: absolute;
-  inset-block: 0;
-  inset-inline-start: 0;
-
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  gap: var(--space-2);
-
-  /* Content animation */
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(-100%);
-  transition:
-    transform var(--motion-duration-small) var(--motion-ease-standard),
-    opacity var(--motion-duration-small) var(--motion-ease-standard);
-}
-
-:where([dir='rtl']) .rt-ShellRailContent {
-  transform: translateX(100%);
-}
-
-.rt-ShellRailContent[data-visible] {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(0);
-}
-
-/* Panel - sidebar content next to Rail */
-.rt-ShellPanel {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  /* Allow handle to bleed across boundary */
-  overflow: visible;
-  position: relative;
+.rt-ShellPanel,
+.rt-ShellSidebar,
+.rt-ShellInspector {
   z-index: 1;
 }
+
+/***************************************************************************************************
+ * Pane sizing                                                                                     *
+ ***************************************************************************************************/
 
 /*
  * The pane takes its width in one step rather than animating it. `width` is a
@@ -142,68 +143,15 @@
  * transition with a delay — so the contents are never sliding across
  * `.rt-ShellContent`, and the content area widens once, at the end.
  */
+.rt-ShellRail[data-mode='expanded'] {
+  width: var(--rail-size, 64px);
+}
+
 .rt-ShellPanel[data-visible] {
   width: var(--panel-size, 288px);
 }
 
-.rt-ShellPanel:not([data-visible]) {
-  width: 0px;
-  transition: width 0s var(--motion-duration-small);
-}
-
-.rt-ShellPanelContent {
-  /*
-   * Taken out of flow so it can slide across the space the pane no longer
-   * occupies. `.rt-ShellBody` clips it at the edge of the shell.
-   */
-  position: absolute;
-  inset-block: 0;
-  inset-inline-start: 0;
-
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-
-  /* Content animation */
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(-100%);
-  transition:
-    transform var(--motion-duration-small) var(--motion-ease-standard),
-    opacity var(--motion-duration-small) var(--motion-ease-standard);
-}
-
-:where([dir='rtl']) .rt-ShellPanelContent {
-  transform: translateX(100%);
-}
-
-.rt-ShellPanelContent[data-visible] {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(0);
-}
-
-:where([dir='rtl']) .rt-ShellPanelContent[data-visible] {
-  transform: translateX(0);
-}
-
-/* Sidebar - alternative to Rail+Panel */
-.rt-ShellSidebar {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  /* Allow handle to bleed across boundary */
-  overflow: visible;
-  position: relative;
-  z-index: 1;
-
-}
-
 /*
- * Steps to its width in one layout pass — see .rt-ShellPanel for why.
- *
  * Sidebar has two open sizes, so expanded and thin both apply immediately and
  * the switch between them is a step rather than a slide: there is no composited
  * way to move a pane between two widths that both take space in the flow. The
@@ -218,15 +166,51 @@
   width: var(--sidebar-thin-size, 64px);
 }
 
-.rt-ShellSidebar[data-mode='collapsed'] {
+.rt-ShellInspector[data-mode='expanded'] {
+  width: var(--inspector-size, 320px);
+}
+
+.rt-ShellBottom[data-mode='expanded'] {
+  height: var(--bottom-size, 200px);
+}
+
+/* Collapsed panes hold their size until the contents have finished sliding. */
+.rt-ShellRail[data-mode='collapsed'],
+.rt-ShellSidebar[data-mode='collapsed'],
+.rt-ShellInspector[data-mode='collapsed'] {
   width: 0px;
   transition: width 0s var(--motion-duration-small);
 }
 
-.rt-ShellSidebarContent {
+.rt-ShellPanel:not([data-visible]) {
+  width: 0px;
+  transition: width 0s var(--motion-duration-small);
+}
+
+.rt-ShellBottom[data-mode='collapsed'] {
+  height: 0px;
+  transition: height 0s var(--motion-duration-small);
+}
+
+/* Hide resizer in thin mode */
+.rt-ShellSidebar[data-mode='thin'] .rt-ShellResizer {
+  display: none;
+}
+
+/***************************************************************************************************
+ * Pane content layers                                                                             *
+ ***************************************************************************************************/
+
+/*
+ * Taken out of flow so it can slide across the space the pane no longer
+ * occupies. `.rt-ShellBody` clips it at the edge of the shell.
+ */
+.rt-ShellRailContent,
+.rt-ShellPanelContent,
+.rt-ShellSidebarContent,
+.rt-ShellInspectorContent,
+.rt-ShellBottomContent {
   position: absolute;
-  inset-block: 0;
-  inset-inline-start: 0;
 
   display: flex;
   flex-direction: column;
@@ -237,28 +221,72 @@
   /* Content animation */
   opacity: 0;
   pointer-events: none;
-  transform: translateX(-100%);
   transition:
     transform var(--motion-duration-small) var(--motion-ease-standard),
     opacity var(--motion-duration-small) var(--motion-ease-standard);
 }
 
+/* The rail lays its own items out with a gap and is clipped by the pane itself. */
+.rt-ShellRailContent {
+  overflow: visible;
+  gap: var(--space-2);
+}
+
+/* Which edge each content layer is pinned to, and which way it slides away. */
+.rt-ShellRailContent,
+.rt-ShellPanelContent,
+.rt-ShellSidebarContent {
+  inset-block: 0;
+  inset-inline-start: 0;
+  transform: translateX(-100%);
+}
+
+.rt-ShellInspectorContent {
+  inset-block: 0;
+  inset-inline-end: 0;
+  transform: translateX(100%);
+}
+
+.rt-ShellBottomContent {
+  inset-inline: 0;
+  inset-block-end: 0;
+  transform: translateY(100%);
+}
+
+/*
+ * `transform` is physical, so the inline-axis panes slide the other way when
+ * the document does. The block-axis pane is unaffected.
+ */
+:where([dir='rtl']) .rt-ShellRailContent,
+:where([dir='rtl']) .rt-ShellPanelContent,
 :where([dir='rtl']) .rt-ShellSidebarContent {
   transform: translateX(100%);
 }
 
-/* Hide resizer in thin mode */
-.rt-ShellSidebar[data-mode='thin'] .rt-ShellResizer {
-  display: none;
+:where([dir='rtl']) .rt-ShellInspectorContent {
+  transform: translateX(-100%);
 }
 
-.rt-ShellSidebarContent[data-visible] {
+/* Open: slide home and take pointer events. */
+.rt-ShellRailContent[data-visible],
+.rt-ShellPanelContent[data-visible],
+.rt-ShellSidebarContent[data-visible],
+.rt-ShellInspectorContent[data-visible] {
   opacity: 1;
   pointer-events: auto;
   transform: translateX(0);
 }
 
-/* Sidebar presentation switch sequencing (thin ↔ expanded) */
+.rt-ShellBottomContent[data-visible] {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/*
+ * Sidebar presentation switch sequencing (thin <-> expanded). These share
+ * specificity with the `[data-visible]` rule above and must stay after it.
+ */
 .rt-ShellSidebarContent[data-phase='hiding'] {
   /* Immediately fade out */
   opacity: 0;
@@ -274,27 +302,12 @@
   transition: opacity var(--motion-duration-small) var(--motion-ease-standard);
 }
 
-
-/* Stacked Sidebar: left side, floating without reflow */
-.rt-ShellSidebar[data-presentation='stacked'] {
-  position: absolute;
-  inset-block: 0;
-  inset-inline-start: 0;
-  z-index: 31; /* between left and inspector; above content */
-  transform: translateX(-100%);
-  will-change: transform;
-  transition:
-    transform var(--motion-duration-small) var(--motion-ease-standard),
-    box-shadow var(--motion-duration-small) var(--motion-ease-standard);
-  box-shadow: 4px 0 12px -6px rgba(0, 0, 0, 0.2);
-}
-
-.rt-ShellSidebar[data-presentation='stacked'][data-open] {
-  transform: translateX(0);
-}
-
-.rt-ShellSidebar[data-presentation='stacked'][data-peek] {
-  transform: translateX(0);
+.rt-ShellBottom[data-mode='collapsed'] .rt-ShellBottomContent {
+  /* Exit animation: fade out content first, then collapse */
+  opacity: 0;
+  height: 0;
+  visibility: hidden;
+  transition: opacity var(--motion-duration-small) var(--motion-ease-standard);
 }
 
 /* Content - main work area (always required) */
@@ -309,107 +322,6 @@
   padding-bottom: env(safe-area-inset-bottom, 0px);
   /* Prevent overscroll bounce from triggering parent scroll */
   overscroll-behavior: contain;
-}
-
-/* Inspector - right-side panel */
-.rt-ShellInspector {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  /* Allow handle to bleed across boundary */
-  overflow: visible;
-  position: relative;
-  z-index: 1;
-
-}
-
-/* Steps to its width in one layout pass — see .rt-ShellPanel for why. */
-.rt-ShellInspector[data-mode='expanded'] {
-  width: var(--inspector-size, 320px);
-}
-
-/* Collapsed inspector: stay in flow during transition, then hide */
-.rt-ShellInspector[data-mode='collapsed'] {
-  width: 0px;
-  transition: width 0s var(--motion-duration-small);
-}
-
-.rt-ShellInspectorContent {
-  position: absolute;
-  inset-block: 0;
-  inset-inline-end: 0;
-
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-
-  /* Content animation */
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(100%);
-  transition:
-    transform var(--motion-duration-small) var(--motion-ease-standard),
-    opacity var(--motion-duration-small) var(--motion-ease-standard);
-}
-
-:where([dir='rtl']) .rt-ShellInspectorContent {
-  transform: translateX(-100%);
-}
-
-.rt-ShellInspectorContent[data-visible] {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(0);
-}
-
-/* Bottom - bottom panel */
-.rt-ShellBottom {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  /* Allow handle to bleed across boundary */
-  overflow: visible;
-  flex-shrink: 0;
-  position: relative;
-
-}
-
-/* Steps to its height in one layout pass — see .rt-ShellPanel for why. */
-.rt-ShellBottom[data-mode='expanded'] {
-  height: var(--bottom-size, 200px);
-}
-
-.rt-ShellBottom[data-mode='collapsed'] {
-  height: 0px;
-  transition: height 0s var(--motion-duration-small);
-}
-
-.rt-ShellBottomContent {
-  position: absolute;
-  inset-inline: 0;
-  inset-block-end: 0;
-
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-
-  /* Content animation */
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(100%);
-  transition:
-    transform var(--motion-duration-small) var(--motion-ease-standard),
-    opacity var(--motion-duration-small) var(--motion-ease-standard);
-}
-
-.rt-ShellBottomContent[data-visible] {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
 }
 
 /* Disable transitions during active resize */
@@ -450,72 +362,81 @@
   contain: style;
 }
 
-/* Stacked mode handling: panes float above content without reflow */
-.rt-ShellLeft[data-presentation='stacked'] {
+/***************************************************************************************************
+ *                                                                                                 *
+ * STACKED PRESENTATION                                                                            *
+ *                                                                                                 *
+ * A stacked pane floats above the content instead of taking space in the flow,                    *
+ * so opening and closing one costs no layout at all: it is parked off its own                     *
+ * edge and slides in on `transform`.                                                              *
+ *                                                                                                 *
+ ***************************************************************************************************/
+
+.rt-ShellLeft[data-presentation='stacked'],
+.rt-ShellSidebar[data-presentation='stacked'],
+.rt-ShellInspector[data-presentation='stacked'],
+.rt-ShellBottom[data-presentation='stacked'] {
   position: absolute;
-  inset-block: 0;
-  inset-inline-start: 0;
-  z-index: 30; /* below overlay sheets, above content/fixed */
-  transform: translateX(-100%);
-  will-change: transform;
   transition:
     transform var(--motion-duration-small) var(--motion-ease-standard),
     box-shadow var(--motion-duration-small) var(--motion-ease-standard);
+}
+
+/*
+ * The left panes are the ones a user drags open and shut repeatedly, so they
+ * are worth keeping on their own compositor layer between gestures.
+ */
+.rt-ShellLeft[data-presentation='stacked'],
+.rt-ShellSidebar[data-presentation='stacked'] {
+  inset-block: 0;
+  inset-inline-start: 0;
+  transform: translateX(-100%);
+  will-change: transform;
   box-shadow: 4px 0 12px -6px rgba(0, 0, 0, 0.2);
 }
 
-.rt-ShellLeft[data-presentation='stacked'][data-open] {
-  transform: translateX(0);
+/* z-index order: left (30) below sidebar (31) and bottom (31), below inspector (32). */
+.rt-ShellLeft[data-presentation='stacked'] {
+  z-index: 30;
 }
 
-/* Ensure peek forces visibility in stacked mode */
-.rt-ShellLeft[data-presentation='stacked'][data-peek] {
-  transform: translateX(0);
+.rt-ShellSidebar[data-presentation='stacked'] {
+  z-index: 31;
 }
 
-/* Stacked Inspector: right side */
 .rt-ShellInspector[data-presentation='stacked'] {
-  position: absolute;
   inset-block: 0;
   inset-inline-end: 0;
-  z-index: 32; /* above left and bottom stacked */
+  z-index: 32;
   width: var(--inspector-size, 320px);
   transform: translateX(100%);
-  transition:
-    transform var(--motion-duration-small) var(--motion-ease-standard),
-    box-shadow var(--motion-duration-small) var(--motion-ease-standard);
   box-shadow: -4px 0 12px -6px rgba(0, 0, 0, 0.2);
 }
 
-.rt-ShellInspector[data-presentation='stacked'][data-open] {
-  transform: translateX(0);
+.rt-ShellBottom[data-presentation='stacked'] {
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: 31;
+  height: var(--bottom-size, 200px);
+  transform: translateY(100%);
+  box-shadow: 0 -4px 12px -6px rgba(0, 0, 0, 0.2);
 }
 
+/* Open, or peeked, slides the pane home. */
+.rt-ShellLeft[data-presentation='stacked'][data-open],
+.rt-ShellLeft[data-presentation='stacked'][data-peek],
+.rt-ShellSidebar[data-presentation='stacked'][data-open],
+.rt-ShellSidebar[data-presentation='stacked'][data-peek],
+.rt-ShellInspector[data-presentation='stacked'][data-open],
 .rt-ShellInspector[data-presentation='stacked'][data-peek] {
   transform: translateX(0);
 }
 
-/* Stacked Bottom: bottom edge */
-.rt-ShellBottom[data-presentation='stacked'] {
-  position: absolute;
-  inset-inline: 0;
-  inset-block-end: 0;
-  z-index: 31; /* between left and inspector */
-  height: var(--bottom-size, 200px);
-  transform: translateY(100%);
-  transition:
-    transform var(--motion-duration-small) var(--motion-ease-standard),
-    box-shadow var(--motion-duration-small) var(--motion-ease-standard);
-  box-shadow: 0 -4px 12px -6px rgba(0, 0, 0, 0.2);
-}
-
-.rt-ShellBottom[data-presentation='stacked'][data-open] {
-  transform: translateY(0);
-}
-
+.rt-ShellBottom[data-presentation='stacked'][data-open],
 .rt-ShellBottom[data-presentation='stacked'][data-peek] {
   transform: translateY(0);
 }
+
 
 /* Accessibility - reduced motion */
 @media (prefers-reduced-motion: reduce) {

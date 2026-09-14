@@ -29,23 +29,6 @@
 }
 
 /* 
- * Screen reader only class for accessibility announcements
- * Visually hidden but available to assistive technology
- * Used for error messages and loading state announcements
- */
-.rt-sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* 
  * Reduced motion support for accessibility
  * Respects user's motion preferences and disables animations
  */

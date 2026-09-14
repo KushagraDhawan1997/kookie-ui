@@ -1,7 +1,22 @@
-/* Inter, JetBrains Mono, and Playfair Display from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+/*
+ * Font stacks for the theme.
+ *
+ * The webfonts themselves are NOT fetched here. A CSS `@import` inside a
+ * stylesheet is render-blocking and serialised: the browser has to download
+ * and parse this file before it can even discover the font CSS, then fetch
+ * that, then fetch the font files it points at — three round trips deep on
+ * the critical path, paid by every consumer whether or not they use these
+ * families. Load the fonts from the document instead, where they can be
+ * preconnected and fetched in parallel with the stylesheet:
+ *
+ *   <link rel="preconnect" href="https://fonts.googleapis.com" />
+ *   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+ *   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?..." />
+ *
+ * Or import "@kushagradhawan/kookie-ui/fonts.css" for the previous behaviour
+ * in one line. Every stack below falls back to a system font, so the theme
+ * renders correctly when the webfonts are absent.
+ */
 
 /* Font Variables - Customize these to change fonts throughout your app */
 :root {
@@ -25,11 +40,3 @@
   font-family: var(--default-font-family);
 }
 
-/* System font fallback for critical loading scenarios */
-@font-face {
-  font-family: 'System Fallback';
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: block;
-  src: local('-apple-system'), local('BlinkMacSystemFont'), local('Segoe UI'), local('Roboto');
-}

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Google+Sans+Code:wght@400..700&display=swap');
+/* Webfonts are loaded from <head> in app/layout.tsx — see the note there. */
 @import '@kushagradhawan/kookie-ui/styles.css';
 @import '@kushagradhawan/kookie-blocks/styles.css';
 @import 'tailwindcss/preflight.css';

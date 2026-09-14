@@ -169,6 +169,32 @@ var(--em-font-family)       /* Font stack for <Em> */
 var(--quote-font-family)    /* Font stack for <Quote> */
 ```
 
+## Loading Fonts
+
+Kookie UI defines the font *stacks* but does not fetch the webfonts for you. Every stack falls back to a system font, so the theme renders correctly out of the box — but Inter, JetBrains Mono and Playfair Display only appear once you load them.
+
+Load them from your document, so the font CSS is discovered on the first parse and fetched in parallel with your stylesheet:
+
+```tsx showLineNumbers
+// app/layout.tsx
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+  />
+</head>
+```
+
+Request only the families you actually use — if you have overridden `--font-sans`, you do not need Inter at all.
+
+If you cannot add tags to your document, import the bundled stylesheet instead. It is one line, but it costs an extra serialised round trip before first paint, because a CSS `@import` cannot be discovered until the importing stylesheet has been downloaded and parsed:
+
+```tsx
+import '@kushagradhawan/kookie-ui/fonts.css';
+```
+
 ## Font Customization
 
 Kookie UI makes font customization simple and flexible. Switch between font families instantly using theme props or customize with your own fonts.

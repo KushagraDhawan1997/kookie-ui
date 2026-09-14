@@ -85,6 +85,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/*
+         * Fetched from the document rather than through a CSS `@import`, so the
+         * font CSS is discovered on the first parse and downloaded in parallel
+         * with the stylesheet instead of waiting behind it. One request covers
+         * every family the site uses: Geist and Google Sans Code for the site
+         * chrome, Playfair Display / Inter / JetBrains Mono so the typography
+         * page can demonstrate the theme's own `fontFamily` values.
+         */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Google+Sans+Code:wght@400..700&family=Inter:ital,wght@0,100..900;1,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+        />
+      </head>
       <body>
         <Providers>
           <DocsLayout>{children}</DocsLayout>

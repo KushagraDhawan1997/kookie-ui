@@ -1,0 +1,13 @@
+/*
+ * Opt-in webfont loading.
+ *
+ * Published as "@kushagradhawan/kookie-ui/fonts.css" for consumers who want
+ * the theme's default families in one line and are not in a position to add
+ * <link> tags to their document.
+ *
+ * Prefer the <link> route where you can — see src/styles/fonts.css for why.
+ * Importing this file costs an extra serialised round trip before first paint.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
