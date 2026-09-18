@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
-import { CodeBlock } from '@/components/blocks/code-block/code-block';
 import { SectionHeader } from '@/components/blocks/section-header/section-header';
 import { Flex, Separator, Box, Sidebar } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
@@ -16,46 +15,12 @@ export function SidebarExamples() {
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Expanded with Icons</SectionHeader.Title>
-            <SectionHeader.Description>
-              Standard panel layout with icons and text labels. The default presentation for most navigation sidebars.
-            </SectionHeader.Description>
+            <SectionHeader.Description>Standard panel layout with icons and text labels. The default presentation for most navigation sidebars.</SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="20rem">
-          <Box style={{ width: 240 }}>
-            <Sidebar.Root presentation="expanded" size="2">
-              <Sidebar.Content>
-                <Sidebar.Menu>
-                  <Sidebar.MenuItem>
-                    <Sidebar.MenuButton isActive>
-                      <HugeiconsIcon icon={Home01Icon} strokeWidth={1.75} />
-                      Home
-                    </Sidebar.MenuButton>
-                  </Sidebar.MenuItem>
-                  <Sidebar.MenuItem>
-                    <Sidebar.MenuButton>
-                      <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
-                      Search
-                    </Sidebar.MenuButton>
-                  </Sidebar.MenuItem>
-                  <Sidebar.MenuItem>
-                    <Sidebar.MenuButton>
-                      <HugeiconsIcon icon={FolderOpenIcon} strokeWidth={1.75} />
-                      Projects
-                    </Sidebar.MenuButton>
-                  </Sidebar.MenuItem>
-                  <Sidebar.MenuItem>
-                    <Sidebar.MenuButton>
-                      <HugeiconsIcon icon={Settings01Icon} strokeWidth={1.75} />
-                      Settings
-                    </Sidebar.MenuButton>
-                  </Sidebar.MenuItem>
-                </Sidebar.Menu>
-              </Sidebar.Content>
-            </Sidebar.Root>
-          </Box>
-        </PreviewBlock>
-        <CodeBlock
+        <PreviewBlock
+          background="none"
+          height="20rem"
           code={`<Sidebar.Root presentation="expanded" size="2">
   <Sidebar.Content>
     <Sidebar.Menu>
@@ -86,10 +51,40 @@ export function SidebarExamples() {
     </Sidebar.Menu>
   </Sidebar.Content>
 </Sidebar.Root>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Box style={{ width: 240 }}>
+            <Sidebar.Root presentation="expanded" size="2">
+              <Sidebar.Content>
+                <Sidebar.Menu>
+                  <Sidebar.MenuItem>
+                    <Sidebar.MenuButton isActive>
+                      <HugeiconsIcon icon={Home01Icon} strokeWidth={1.75} />
+                      Home
+                    </Sidebar.MenuButton>
+                  </Sidebar.MenuItem>
+                  <Sidebar.MenuItem>
+                    <Sidebar.MenuButton>
+                      <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
+                      Search
+                    </Sidebar.MenuButton>
+                  </Sidebar.MenuItem>
+                  <Sidebar.MenuItem>
+                    <Sidebar.MenuButton>
+                      <HugeiconsIcon icon={FolderOpenIcon} strokeWidth={1.75} />
+                      Projects
+                    </Sidebar.MenuButton>
+                  </Sidebar.MenuItem>
+                  <Sidebar.MenuItem>
+                    <Sidebar.MenuButton>
+                      <HugeiconsIcon icon={Settings01Icon} strokeWidth={1.75} />
+                      Settings
+                    </Sidebar.MenuButton>
+                  </Sidebar.MenuItem>
+                </Sidebar.Menu>
+              </Sidebar.Content>
+            </Sidebar.Root>
+          </Box>
+        </PreviewBlock>
       </Flex>
 
       <Separator size="4" />
@@ -104,7 +99,29 @@ export function SidebarExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="20rem">
+        <PreviewBlock
+          background="none"
+          height="20rem"
+          code={`<Sidebar.Root presentation="thin" size="2">
+  <Sidebar.Content>
+    <Sidebar.Menu>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton isActive>
+          <HugeiconsIcon icon={Home01Icon} strokeWidth={1.75} />
+          Home
+        </Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton>
+          <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
+          Search
+        </Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+      {/* ... more items */}
+    </Sidebar.Menu>
+  </Sidebar.Content>
+</Sidebar.Root>`}
+        >
           <Box style={{ width: 72 }}>
             <Sidebar.Root presentation="thin" size="2">
               <Sidebar.Content>
@@ -138,30 +155,6 @@ export function SidebarExamples() {
             </Sidebar.Root>
           </Box>
         </PreviewBlock>
-        <CodeBlock
-          code={`<Sidebar.Root presentation="thin" size="2">
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton isActive>
-          <HugeiconsIcon icon={Home01Icon} strokeWidth={1.75} />
-          Home
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>
-          <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
-          Search
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-      {/* ... more items */}
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
 
       <Separator size="4" />
@@ -176,7 +169,28 @@ export function SidebarExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="20rem">
+        <PreviewBlock
+          background="none"
+          height="20rem"
+          code={`<Sidebar.Root presentation="expanded" size="2">
+  <Sidebar.Content>
+    <Sidebar.Menu>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton isActive>Dashboard</Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton>Analytics</Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton>Reports</Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton>Settings</Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+    </Sidebar.Menu>
+  </Sidebar.Content>
+</Sidebar.Root>`}
+        >
           <Box style={{ width: 240 }}>
             <Sidebar.Root presentation="expanded" size="2">
               <Sidebar.Content>
@@ -198,29 +212,6 @@ export function SidebarExamples() {
             </Sidebar.Root>
           </Box>
         </PreviewBlock>
-        <CodeBlock
-          code={`<Sidebar.Root presentation="expanded" size="2">
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton isActive>Dashboard</Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>Analytics</Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>Reports</Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>Settings</Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
 
       <Separator size="4" />
@@ -230,12 +221,31 @@ export function SidebarExamples() {
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Thin without Icons</SectionHeader.Title>
-            <SectionHeader.Description>
-              Text-only items in thin mode. Labels are centered and truncated. Best for short labels or when combined with icons elsewhere.
-            </SectionHeader.Description>
+            <SectionHeader.Description>Text-only items in thin mode. Labels are centered and truncated. Best for short labels or when combined with icons elsewhere.</SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="20rem">
+        <PreviewBlock
+          background="none"
+          height="20rem"
+          code={`<Sidebar.Root presentation="thin" size="2">
+  <Sidebar.Content>
+    <Sidebar.Menu>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton isActive>Home</Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton>Search</Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton>Files</Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton>Settings</Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+    </Sidebar.Menu>
+  </Sidebar.Content>
+</Sidebar.Root>`}
+        >
           <Box style={{ width: 72 }}>
             <Sidebar.Root presentation="thin" size="2">
               <Sidebar.Content>
@@ -257,29 +267,6 @@ export function SidebarExamples() {
             </Sidebar.Root>
           </Box>
         </PreviewBlock>
-        <CodeBlock
-          code={`<Sidebar.Root presentation="thin" size="2">
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton isActive>Home</Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>Search</Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>Files</Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>Settings</Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
 
       <Separator size="4" />
@@ -289,12 +276,40 @@ export function SidebarExamples() {
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Size Comparison</SectionHeader.Title>
-            <SectionHeader.Description>
-              Size 1 provides compact density for information-dense layouts. Size 2 is the standard spacing for most applications.
-            </SectionHeader.Description>
+            <SectionHeader.Description>Size 1 provides compact density for information-dense layouts. Size 2 is the standard spacing for most applications.</SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="20rem">
+        <PreviewBlock
+          background="none"
+          height="20rem"
+          code={`{/* Size 1: Compact density */}
+<Sidebar.Root presentation="expanded" size="1">
+  <Sidebar.Content>
+    <Sidebar.Menu>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton isActive>
+          <HomeIcon />
+          Home
+        </Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+    </Sidebar.Menu>
+  </Sidebar.Content>
+</Sidebar.Root>
+
+{/* Size 2: Standard spacing */}
+<Sidebar.Root presentation="expanded" size="2">
+  <Sidebar.Content>
+    <Sidebar.Menu>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton isActive>
+          <HomeIcon />
+          Home
+        </Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+    </Sidebar.Menu>
+  </Sidebar.Content>
+</Sidebar.Root>`}
+        >
           <Flex gap="6">
             <Box style={{ width: 200 }}>
               <Sidebar.Root presentation="expanded" size="1">
@@ -360,38 +375,6 @@ export function SidebarExamples() {
             </Box>
           </Flex>
         </PreviewBlock>
-        <CodeBlock
-          code={`{/* Size 1: Compact density */}
-<Sidebar.Root presentation="expanded" size="1">
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton isActive>
-          <HomeIcon />
-          Home
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>
-
-{/* Size 2: Standard spacing */}
-<Sidebar.Root presentation="expanded" size="2">
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton isActive>
-          <HomeIcon />
-          Home
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
 
       <Separator size="4" />
@@ -406,7 +389,51 @@ export function SidebarExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="20rem">
+        <PreviewBlock
+          background="none"
+          height="20rem"
+          code={`{/* Size 1: Tighter rail */}
+<Sidebar.Root presentation="thin" size="1">
+  <Sidebar.Content>
+    <Sidebar.Menu>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton isActive>
+          <HomeIcon />
+          Home
+        </Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+    </Sidebar.Menu>
+  </Sidebar.Content>
+</Sidebar.Root>
+
+{/* Size 2: Standard spacing */}
+<Sidebar.Root presentation="thin" size="2">
+  <Sidebar.Content>
+    <Sidebar.Menu>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton isActive>
+          <HomeIcon />
+          Home
+        </Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+    </Sidebar.Menu>
+  </Sidebar.Content>
+</Sidebar.Root>
+
+{/* Size 3: More breathing room */}
+<Sidebar.Root presentation="thin" size="3">
+  <Sidebar.Content>
+    <Sidebar.Menu>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton isActive>
+          <HomeIcon />
+          Home
+        </Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+    </Sidebar.Menu>
+  </Sidebar.Content>
+</Sidebar.Root>`}
+        >
           <Flex gap="6">
             <Box style={{ width: 56 }}>
               <Sidebar.Root presentation="thin" size="1">
@@ -488,52 +515,6 @@ export function SidebarExamples() {
             </Box>
           </Flex>
         </PreviewBlock>
-        <CodeBlock
-          code={`{/* Size 1: Tighter rail */}
-<Sidebar.Root presentation="thin" size="1">
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton isActive>
-          <HomeIcon />
-          Home
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>
-
-{/* Size 2: Standard spacing */}
-<Sidebar.Root presentation="thin" size="2">
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton isActive>
-          <HomeIcon />
-          Home
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>
-
-{/* Size 3: More breathing room */}
-<Sidebar.Root presentation="thin" size="3">
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton isActive>
-          <HomeIcon />
-          Home
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
 
       <Separator size="4" />
@@ -548,12 +529,9 @@ export function SidebarExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="24rem">
-          <Box style={{ width: 240 }}>
-            <SidebarSearchExpandedDemo />
-          </Box>
-        </PreviewBlock>
-        <CodeBlock
+        <PreviewBlock
+          background="none"
+          height="24rem"
           code={`const [query, setQuery] = useState('');
 
 const items = [
@@ -586,10 +564,11 @@ const filtered = useMemo(
     </Sidebar.Menu>
   </Sidebar.Content>
 </Sidebar.Root>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Box style={{ width: 240 }}>
+            <SidebarSearchExpandedDemo />
+          </Box>
+        </PreviewBlock>
       </Flex>
 
       <Separator size="4" />
@@ -604,12 +583,9 @@ const filtered = useMemo(
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="24rem">
-          <Box style={{ width: 72 }}>
-            <SidebarSearchThinDemo />
-          </Box>
-        </PreviewBlock>
-        <CodeBlock
+        <PreviewBlock
+          background="none"
+          height="24rem"
           code={`<Sidebar.Root presentation="thin" size="2">
   <Sidebar.Search value={query} onValueChange={setQuery} placeholder="Search...">
     {/* Children render inside the popover in thin mode */}
@@ -632,10 +608,11 @@ const filtered = useMemo(
     </Sidebar.Menu>
   </Sidebar.Content>
 </Sidebar.Root>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Box style={{ width: 72 }}>
+            <SidebarSearchThinDemo />
+          </Box>
+        </PreviewBlock>
       </Flex>
     </Flex>
   );
@@ -651,13 +628,7 @@ const searchDemoItems = [
 
 function SidebarSearchExpandedDemo() {
   const [query, setQuery] = React.useState('');
-  const filtered = React.useMemo(
-    () =>
-      query
-        ? searchDemoItems.filter((i) => i.label.toLowerCase().includes(query.toLowerCase()))
-        : searchDemoItems,
-    [query],
-  );
+  const filtered = React.useMemo(() => (query ? searchDemoItems.filter((i) => i.label.toLowerCase().includes(query.toLowerCase())) : searchDemoItems), [query]);
 
   return (
     <Sidebar.Root presentation="expanded" size="2">
@@ -680,13 +651,7 @@ function SidebarSearchExpandedDemo() {
 
 function SidebarSearchThinDemo() {
   const [query, setQuery] = React.useState('');
-  const filtered = React.useMemo(
-    () =>
-      query
-        ? searchDemoItems.filter((i) => i.label.toLowerCase().includes(query.toLowerCase()))
-        : searchDemoItems,
-    [query],
-  );
+  const filtered = React.useMemo(() => (query ? searchDemoItems.filter((i) => i.label.toLowerCase().includes(query.toLowerCase())) : searchDemoItems), [query]);
 
   return (
     <Sidebar.Root presentation="thin" size="2">

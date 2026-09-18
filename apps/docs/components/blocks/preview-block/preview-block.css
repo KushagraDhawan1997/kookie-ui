@@ -1,0 +1,65 @@
+/*
+ * Preview frame. Shares its outline with `.code-block`, so a preview and its code read as one
+ * object. Override these on `.preview-block` to restyle.
+ */
+.preview-block {
+  --preview-block-radius: var(--radius-surface-4);
+  --preview-block-border: var(--gray-a4);
+  --preview-block-padding: var(--space-6);
+  --preview-block-min-height: 10rem;
+
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--preview-block-border);
+  border-radius: var(--preview-block-radius);
+  overflow: hidden;
+}
+
+.preview-block-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--space-7);
+  padding: 0 var(--space-2) 0 var(--space-4);
+  background-color: var(--gray-a2);
+  border-bottom: 1px solid var(--preview-block-border);
+}
+
+.preview-block-label {
+  color: var(--gray-11);
+  font-size: var(--font-size-1);
+  line-height: var(--line-height-1);
+}
+
+.preview-block-theme-toggle {
+  margin-left: auto;
+}
+
+/* The nested Theme paints the stage in the preview's own appearance. */
+.preview-block-theme {
+  min-height: 0;
+}
+
+.preview-block-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: var(--preview-block-min-height);
+  padding: var(--preview-block-padding);
+  overflow: auto;
+}
+
+/* Attached source: one frame, divided by a rule. */
+.preview-block > .code-block {
+  border: 0;
+  border-top: 1px solid var(--preview-block-border);
+  border-radius: 0;
+}
+
+@media (max-width: 520px) {
+  .preview-block {
+    --preview-block-padding: var(--space-4);
+  }
+}

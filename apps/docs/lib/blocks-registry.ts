@@ -15,7 +15,7 @@ const HUGEICONS = ['@hugeicons/react', '@hugeicons/core-free-icons'];
 
 export const blocksRegistry: BlockEntry[] = [
   { slug: 'code-block', title: 'Code Block', dependencies: ['shiki', ...HUGEICONS], blocks: [] },
-  { slug: 'preview-block', title: 'Preview Block', dependencies: HUGEICONS, blocks: [] },
+  { slug: 'preview-block', title: 'Preview Block', dependencies: HUGEICONS, blocks: ['code-block'] },
   { slug: 'markdown', title: 'Markdown', dependencies: ['react-markdown'], blocks: ['code-block'] },
   {
     slug: 'streaming-markdown',

@@ -11,7 +11,3 @@ export default function RootLayout({ children }) {
   );
 }`;
 
-export const buttonsSource = `<Flex gap="2">
-  <Button variant="soft" color="gray" highContrast>Cancel</Button>
-  <Button variant="classic" highContrast>Save</Button>
-</Flex>`;

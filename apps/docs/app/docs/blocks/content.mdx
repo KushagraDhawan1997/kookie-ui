@@ -41,9 +41,9 @@ Blocks marked `'use client'` use state or effects. In the Next.js App Router the
 
 | Block | Use it for |
 | ----- | ---------- |
-| [Code Block](/docs/blocks/code-block) | Syntax-highlighted code with copy, collapse and an optional live preview |
-| [Preview Block](/docs/blocks/preview-block) | A framed stage for live component demos, with a light/dark switch |
-| [Markdown](/docs/blocks/markdown) | Mapping markdown and MDX elements to Kookie UI components |
+| [Code Block](/docs/blocks/code-block) | Syntax-highlighted code with copy and collapse |
+| [Preview Block](/docs/blocks/preview-block) | A live demo and its code in one frame, with a light/dark switch |
+| [Markdown](/docs/blocks/markdown) | Rendering markdown and MDX with Kookie UI, with consistent spacing |
 | [Streaming Markdown](/docs/blocks/streaming-markdown) | Rendering AI responses as they stream in |
 | [Docs Shell](/docs/blocks/docs-shell) | The frame of a docs site: searchable sidebar and content area |
 | [Docs Page](/docs/blocks/docs-page) | A docs page with header, content column and table of contents |
@@ -54,26 +54,3 @@ Blocks marked `'use client'` use state or effects. In the Next.js App Router the
 | [Footer](/docs/blocks/footer) | Site footer with brand, link groups and legal line |
 | [Testimonial](/docs/blocks/testimonial) | A customer quote with author details |
 | [Empty State](/docs/blocks/empty-state) | What to show when there is nothing to show |
-
-## Migrating From Kookie Blocks
-
-These blocks replace the `@kushagradhawan/kookie-blocks` package. To move over:
-
-1. Copy the blocks you use into `components/blocks`.
-2. Change imports from `@kushagradhawan/kookie-blocks` to the block files, for example `@/components/blocks/code-block/code-block`.
-3. Remove `@import '@kushagradhawan/kookie-blocks/styles.css'`. Each block now imports its own CSS.
-4. Uninstall `@kushagradhawan/kookie-blocks`.
-
-What changed on the way over:
-
-| Before | Now |
-| ------ | --- |
-| `.docs-code-block`, `.code-content` and other code classes | Prefixed `code-block`, e.g. `.code-block`, `.code-block-content` |
-| `.kb-empty-state-icon` | `.empty-state-icon` |
-| `.kb-markdown` | Removed. Use `<Flex direction="column">` |
-| `useCodeCard`, `LanguageBadge`, `formatLanguageForDisplay`, `extractTextFromChildren` exports | Private to `code-block.tsx`. Export them yourself if you need them |
-| `ShikiConfig.langAlias` passed to Shiki | Resolved by `CodeBlock` before highlighting, as Shiki 4 no longer accepts it |
-| Shiki loaded with the page | Loaded the first time a runtime-highlighted `CodeBlock` renders |
-| `TableOfContents` rescanned on every render | Rescans when the content area's DOM changes |
-| `Hero.Media` `position` prop | Removed. It never did anything |
-| `DocsShell` `linkComponent` typed loosely | Typed as `DocsLinkComponent`. `next/link` fits without a cast |

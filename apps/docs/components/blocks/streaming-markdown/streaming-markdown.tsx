@@ -5,8 +5,7 @@ import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import hardenReactMarkdown from 'harden-react-markdown';
-import { Box, Flex } from '@kushagradhawan/kookie-ui';
-import { createMarkdownComponents, type MarkdownComponentOptions } from '../markdown/markdown';
+import { MarkdownContent, createMarkdownComponents, type MarkdownComponentOptions } from '../markdown/markdown';
 import { completeUnterminatedMarkdown, parseMarkdownIntoBlocks } from './complete-markdown';
 
 const HardenedMarkdown = hardenReactMarkdown(ReactMarkdown);
@@ -18,6 +17,8 @@ const REMARK_PLUGINS = [remarkGfm];
 const REHYPE_PLUGINS = [rehypeRaw];
 
 export type StreamingMarkdownOptions = MarkdownComponentOptions & {
+  /** @default "compact" */
+  spacing?: 'compact' | 'spacious';
   /** Origin used to resolve and validate relative links and images. Defaults to the page origin. */
   defaultOrigin?: string;
   /** Memoize each top-level block so only the growing tail re-renders. Needs `blockParser`. @default true */
@@ -48,22 +49,21 @@ type MarkdownBlockProps = {
   components: Components;
 };
 
+// Each block renders straight into the shared MarkdownContent, so spacing flows across blocks.
 const MarkdownBlock = React.memo(function MarkdownBlock({ content, defaultOrigin, components }: MarkdownBlockProps) {
   return (
-    <Box width="100%">
-      <HardenedMarkdown
-        defaultOrigin={defaultOrigin}
-        allowedLinkPrefixes={LINK_PREFIXES}
-        allowedImagePrefixes={IMAGE_PREFIXES}
-        allowedProtocols={ALLOWED_PROTOCOLS}
-        allowDataImages
-        components={components}
-        remarkPlugins={REMARK_PLUGINS}
-        rehypePlugins={REHYPE_PLUGINS}
-      >
-        {content}
-      </HardenedMarkdown>
-    </Box>
+    <HardenedMarkdown
+      defaultOrigin={defaultOrigin}
+      allowedLinkPrefixes={LINK_PREFIXES}
+      allowedImagePrefixes={IMAGE_PREFIXES}
+      allowedProtocols={ALLOWED_PROTOCOLS}
+      allowDataImages
+      components={components}
+      remarkPlugins={REMARK_PLUGINS}
+      rehypePlugins={REHYPE_PLUGINS}
+    >
+      {content}
+    </HardenedMarkdown>
   );
 });
 
@@ -81,8 +81,8 @@ export function StreamingMarkdown({ content, id, options = EMPTY_OPTIONS }: Stre
     components: customComponents,
     codeBlockCollapsible = false,
     imageComponent,
-    inlineCodeHighContrast = true,
-    spacing = 'spacious',
+    linkComponent,
+    spacing = 'compact',
   } = options;
 
   const defaultOrigin = resolveOrigin(customOrigin);
@@ -90,10 +90,10 @@ export function StreamingMarkdown({ content, id, options = EMPTY_OPTIONS }: Stre
   // Primitive deps, so an inline `options` object does not rebuild every renderer.
   const components = React.useMemo(
     () => ({
-      ...createMarkdownComponents({ codeBlockCollapsible, imageComponent, inlineCodeHighContrast, spacing }),
+      ...createMarkdownComponents({ codeBlockCollapsible, imageComponent, linkComponent }),
       ...customComponents,
     }),
-    [codeBlockCollapsible, imageComponent, inlineCodeHighContrast, spacing, customComponents],
+    [codeBlockCollapsible, imageComponent, linkComponent, customComponents],
   );
 
   const blocks = React.useMemo(() => {
@@ -104,15 +104,11 @@ export function StreamingMarkdown({ content, id, options = EMPTY_OPTIONS }: Stre
 
   if (blocks.length === 0) return null;
 
-  if (blocks.length === 1) {
-    return <MarkdownBlock content={blocks[0]} defaultOrigin={defaultOrigin} components={components} />;
-  }
-
   return (
-    <Flex direction="column" gap="2" width="100%">
+    <MarkdownContent spacing={spacing}>
       {blocks.map((block, index) => (
         <MarkdownBlock key={`${id}-${index}`} content={block} defaultOrigin={defaultOrigin} components={components} />
       ))}
-    </Flex>
+    </MarkdownContent>
   );
 }

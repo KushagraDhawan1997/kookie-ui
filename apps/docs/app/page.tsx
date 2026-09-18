@@ -61,15 +61,19 @@ export default function HeroSection() {
               </Hero.Title>
 
               <Hero.Description size={{ initial: '3', sm: '4' }} color="gray" align="left">
-                An open-source{' '}
-                <KUILink target="_blank" href="https://github.com/KushagraDhawan1997/kookie-ui" rel="noopener noreferrer" underline="always" color="blue">
-                  fork
-                </KUILink>{' '}
-                of{' '}
+                Kookie UI v1 is the design system behind{' '}
+                <KUILink target="_blank" href="https://womp.com" rel="noopener noreferrer" underline="always" color="blue">
+                  Womp
+                </KUILink>
+                . It started as an open-source fork of{' '}
                 <KUILink target="_blank" href="https://radix-ui.com/themes" rel="noopener noreferrer" underline="always" color="blue">
                   Radix Themes
+                </KUILink>{' '}
+                and now powers every screen of the product. Built and maintained by{' '}
+                <KUILink target="_blank" href="https://www.kushagradhawan.com" rel="noopener noreferrer" underline="always" color="blue">
+                  Kushagra Dhawan
                 </KUILink>
-                , focused on building scalable, consistent UI components with a fresh visual style and practical foundations.
+                , Head of Product and Design at Womp.
               </Hero.Description>
 
               <Hero.Actions gap="3">

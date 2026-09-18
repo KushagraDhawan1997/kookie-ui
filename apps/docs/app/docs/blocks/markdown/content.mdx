@@ -6,42 +6,96 @@ source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/comp
 
 import ReactMarkdown from 'react-markdown';
 import { BlockInstallation } from '@/components/block-doc-page';
-import { createMarkdownComponents } from '@/components/blocks/markdown/markdown';
+import { MarkdownContent, createMarkdownComponents } from '@/components/blocks/markdown/markdown';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
-import { Box } from '@kushagradhawan/kookie-ui';
+import { chatComponents, chatReply, chatSource } from './snippets';
 
-Markdown maps each markdown element to a Kookie UI component: headings to `Heading`, paragraphs to `Text`, tables to `Table`, fenced code to [Code Block](/docs/blocks/code-block). The same mapping works for react-markdown and for MDX, so articles, chat messages and docs all look alike.
+Markdown renders markdown and MDX with Kookie UI: headings become `Heading`, paragraphs `Text`, tables `Table`, fenced code a [Code Block](/docs/blocks/code-block). It has two parts:
+
+- `MarkdownContent`, a wrapper that sets the text size and **every gap between blocks**. The elements inside carry no margins of their own, so a paragraph, a table or a component you drop into MDX all space the same way.
+- `createMarkdownComponents()`, the element renderers, for react-markdown's `components` prop or MDX's `useMDXComponents`.
+
+These docs are rendered with it.
 
 ## Installation
 
 <BlockInstallation />
 
-`react-markdown` is only needed for its `Components` type if you use the mapping with MDX alone.
+`react-markdown` is only needed for its `Components` type if you use the renderers with MDX alone.
 
 ## Usage
 
-```tsx
-import ReactMarkdown from 'react-markdown';
-import { createMarkdownComponents } from '@/components/blocks/markdown/markdown';
+### React Markdown
 
+```tsx showLineNumbers
+import ReactMarkdown from 'react-markdown';
+import { MarkdownContent, createMarkdownComponents } from '@/components/blocks/markdown/markdown';
+
+// Create once. New renderers on every render would remount the whole tree.
 const components = createMarkdownComponents();
 
 export function Article({ content }: { content: string }) {
-  return <ReactMarkdown components={components}>{content}</ReactMarkdown>;
+  return (
+    <MarkdownContent>
+      <ReactMarkdown components={components}>{content}</ReactMarkdown>
+    </MarkdownContent>
+  );
 }
 ```
 
-Create the mapping once, outside the component or in `useMemo`, so react-markdown doesn't see new renderers on every render.
+### MDX
 
-## Options
+Return the renderers from `mdx-components.tsx`, and `MarkdownContent` as the `wrapper` so every page gets the spacing.
 
-`createMarkdownComponents(options)` takes:
+```tsx showLineNumbers
+import type { MDXComponents } from 'mdx/types';
+import NextLink from 'next/link';
+import { MarkdownContent, createMarkdownComponents } from '@/components/blocks/markdown/markdown';
+
+const components: MDXComponents = {
+  ...createMarkdownComponents({ linkComponent: NextLink }),
+  wrapper: ({ children }) => <MarkdownContent>{children}</MarkdownContent>,
+};
+
+export function useMDXComponents(overrides: MDXComponents): MDXComponents {
+  return { ...components, ...overrides };
+}
+```
+
+Code fences highlighted at build time by rehype-pretty-code are framed in a Code Block as they are. Its `<figure>` wrapper is dropped so the block sits in the page's spacing.
+
+## Spacing
+
+Gaps depend on what meets what:
+
+| Between | Spacious | Compact |
+| ------- | -------- | ------- |
+| Paragraphs, lists and quotes | `--space-4` | `--space-3` |
+| Anything and a block (code, preview, table, callout, your components) | `--space-5` | `--space-3` |
+| Anything and an `h2` below it | `--space-8` | `--space-5` |
+| Anything and an `h3` below it | `--space-6` | `--space-4` |
+| An `h2` and what follows | `--space-4` | `--space-2` |
+| An `h3` and what follows | `--space-3` | `--space-2` |
+| A [Preview Block](/docs/blocks/preview-block) and the code right after it | Joined into one frame | Joined into one frame |
+
+Every gap is a custom property on `.markdown`, such as `--markdown-block-gap` and `--markdown-h2-gap`, so you can retune the rhythm in one place. Leave margin props off top-level elements in MDX; the gaps already fit them.
+
+## Props
+
+### MarkdownContent
+
+Takes any `div` props, plus:
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `spacing` | `'spacious' \| 'compact'` | `'spacious'` | `spacious` for articles and docs at text size 3. `compact` for chat, at the surrounding text size. |
+
+### createMarkdownComponents
 
 | Option | Type | Default | Description |
 | ------ | ---- | ------- | ----------- |
-| `spacing` | `'compact' \| 'spacious'` | `'spacious'` | `compact` for chat, `spacious` for articles and docs. |
-| `codeBlockCollapsible` | `boolean` | `false` | Collapse long fenced code. |
-| `inlineCodeHighContrast` | `boolean` | `true` | High-contrast inline code. |
+| `linkComponent` | `ComponentType<{ href, children }>` | - | Router link for paths starting with `/` or `#`, e.g. `next/link`. External links open in a new tab. |
+| `codeBlockCollapsible` | `boolean` | `true` | Collapse long code behind "Show all". |
 | `imageComponent` | `(props: { src, alt, width?, height? }) => ReactNode` | - | Render images with your own component, such as `next/image`. |
 
 It returns a react-markdown `Components` object. Spread it and override any element.
@@ -50,39 +104,13 @@ It returns a react-markdown `Components` object. Spread it and override any elem
 
 ### Chat Message
 
-Compact spacing keeps replies tight.
+Compact spacing, at the size of the surrounding text.
 
-export const reply = ['Sure. Run this from the project root:', '', '```bash', 'pnpm add @kushagradhawan/kookie-ui', '```', '', 'Then wrap your app in **Theme**. Things to check:', '', '- The stylesheet is imported once', '- `Theme` sits at the root'].join('\n');
-
-<PreviewBlock background="none" height="auto" showThemeToggle={false}>
-  <Box maxWidth="32rem" width="100%" p="4">
-    <ReactMarkdown components={createMarkdownComponents({ spacing: 'compact' })}>{reply}</ReactMarkdown>
-  </Box>
+<PreviewBlock background="none" code={chatSource}>
+  <MarkdownContent spacing="compact" style={{ maxWidth: '30rem', width: '100%', fontSize: 'var(--font-size-2)' }}>
+    <ReactMarkdown components={chatComponents}>{chatReply}</ReactMarkdown>
+  </MarkdownContent>
 </PreviewBlock>
-
-```tsx
-<ReactMarkdown components={createMarkdownComponents({ spacing: 'compact' })}>
-  {reply}
-</ReactMarkdown>
-```
-
-### MDX Pages
-
-Return the mapping from `useMDXComponents` and override what you need. This site does this, with its own `pre` so build-time highlighted code keeps its colors.
-
-```tsx showLineNumbers
-import type { MDXComponents } from 'mdx/types';
-import { createMarkdownComponents } from '@/components/blocks/markdown/markdown';
-
-const markdownComponents = createMarkdownComponents({ spacing: 'spacious' });
-
-export function useMDXComponents(components: MDXComponents): MDXComponents {
-  return {
-    ...markdownComponents,
-    ...components,
-  };
-}
-```
 
 ### Next.js Images
 
@@ -90,12 +118,13 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 import Image from 'next/image';
 
 const components = createMarkdownComponents({
-  imageComponent: ({ src, alt }) => (
-    <Image src={src} alt={alt} width={800} height={450} />
-  ),
+  imageComponent: ({ src, alt }) => <Image src={src} alt={alt} width={800} height={450} />,
 });
 ```
 
-## Notes
+## Behavior
 
-Newer react-markdown versions no longer tell the `code` renderer whether code is inline. Code counts as inline when it has no language, is on one line and is under 100 characters. Fenced code without a language that is short and single-line renders inline too; add a language to force a block.
+- Headings with an `id` (from rehype-slug, for example) show a `#` link on hover. The `#` is drawn in CSS, so it isn't part of the heading's text.
+- Inline code scales with its context: body text, headings and tables each get code at their own size.
+- Code counts as a block when it has a language or spans several lines. Everything else is inline.
+- Links are always underlined, so they stand out from surrounding text without relying on color.

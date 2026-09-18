@@ -1,17 +1,16 @@
 ---
 title: Code Block
-description: Highlighted code with copy, collapse and preview
+description: Highlighted code with copy and collapse
 source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/components/blocks/code-block
 ---
 
 import { BlockInstallation } from '@/components/block-doc-page';
 import { CodeBlock } from '@/components/blocks/code-block/code-block';
-import { Button, Flex } from '@kushagradhawan/kookie-ui';
-import { buttonsSource, layoutSource } from './snippets';
+import { layoutSource } from './snippets';
 
-Code Block shows code in a card with a language label, a copy button and line numbers. Long code collapses behind an expand toggle. It highlights with [Shiki](https://shiki.style) at runtime, or wraps markup that was already highlighted at build time, such as MDX processed by rehype-pretty-code.
+Code Block puts code in a quiet frame with a copy button. It highlights with [Shiki](https://shiki.style) at runtime, or frames markup that was already highlighted at build time, such as MDX processed by rehype-pretty-code. Long code collapses behind a "Show all" button, and longer snippets get line numbers.
 
-Shiki is loaded the first time a runtime-highlighted block renders, so pages without code don't pay for it.
+Shiki loads the first time a runtime-highlighted block renders, so pages without code don't pay for it. Until it arrives the code shows as plain text, so nothing shifts when the colors land.
 
 ## Installation
 
@@ -22,136 +21,90 @@ Shiki is loaded the first time a runtime-highlighted block renders, so pages wit
 ```tsx
 import { CodeBlock } from '@/components/blocks/code-block/code-block';
 
-export function Snippet() {
-  return <CodeBlock code={`npm install @kushagradhawan/kookie-ui`} language="bash" />;
-}
+<CodeBlock code="npm install @kushagradhawan/kookie-ui" language="bash" />
 ```
+
+To show a live demo above its code, use [Preview Block](/docs/blocks/preview-block) with its `code` prop.
 
 ## Props
 
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
 | `code` | `string` | - | Raw code, highlighted at runtime. Use instead of `children`. |
-| `language` | `string` | `'text'` | Shiki language for `code`, e.g. `'tsx'`. Detected from `children` when omitted. |
-| `children` | `ReactNode` | - | Pre-highlighted markup. Use instead of `code`. |
-| `file` | `string` | - | File path shown in the header. |
-| `showCopy` | `boolean` | `true` | Show the copy button. |
-| `showLanguage` | `boolean` | `true` | Show the language label. |
-| `showLineNumbers` | `boolean` | `true` | Show line numbers. |
-| `collapsible` | `boolean` | `true` | Collapse long code behind an expand toggle. |
-| `collapsedHeight` | `number` | `360` | Height in pixels before the code collapses. |
+| `language` | `string` | `'tsx'` | Shiki language for `code`. Read from the markup for `children`. |
+| `children` | `ReactNode` | - | A pre-highlighted `<pre>`. Use instead of `code`. |
+| `file` | `string` | - | File path shown in a header above the code. |
+| `showLanguage` | `boolean` | `false` | Show the language in the header. |
+| `showLineNumbers` | `boolean` | Automatic | Runtime code is numbered past five lines. Pre-highlighted code follows its markup. |
+| `showCopy` | `boolean` | `true` | Show the copy button. It floats top-right, or sits in the header when there is one. |
+| `collapsible` | `boolean` | `true` | Cap long code with a "Show all" button. |
+| `collapsedHeight` | `number` | `400` | Height in pixels before code collapses. |
 | `shikiConfig` | `ShikiConfig` | - | Themes, language aliases and transformers. Only applies to `code`. |
-| `preview` | `ReactNode` | - | Live preview rendered above the code. |
-| `background` | `'none' \| 'dots' \| string` | `'none'` | Preview background. A string other than the presets is used as an image URL. |
-| `backgroundProps` | `PreviewBackgroundProps` | - | Dot size and color, background color, size and radius for the preview. |
+| `className` | `string` | - | Class on the frame. |
 
 ### ShikiConfig
 
 | Field | Type | Default | Description |
 | ----- | ---- | ------- | ----------- |
-| `themes` | `{ light?: string; dark?: string }` | `one-light`, `one-dark-pro` | Any bundled Shiki theme. Dark applies under `.dark`, `.dark-theme` or `[data-appearance="dark"]`. |
+| `themes` | `{ light?: string; dark?: string }` | `github-light`, `github-dark` | Any bundled Shiki theme. Dark applies under `.dark`, `.dark-theme` or `[data-appearance="dark"]`. |
 | `langAlias` | `Record<string, string>` | - | Maps your language names to Shiki's, e.g. `{ vue3: 'vue' }`. |
 | `transformers` | `ShikiTransformer[]` | - | Shiki transformers for line highlights, diffs and similar. |
 | `meta` | `string` | - | Meta string handed to transformers, e.g. `'{1,3-5}'`. |
 
+### Styling
+
+The frame reads these custom properties. Set them on `.code-block` or any ancestor.
+
+| Property | Default |
+| -------- | ------- |
+| `--code-block-radius` | `var(--radius-surface-4)` |
+| `--code-block-border` | `var(--gray-a4)` |
+| `--code-block-background` | `var(--gray-a2)` |
+| `--code-block-font-size` | `var(--font-size-2)` |
+| `--code-block-line-height` | `1.7` |
+| `--code-block-padding-x` | `var(--space-4)` |
+| `--code-block-padding-y` | `var(--space-3)` |
+
 ### useCodeBlockContext
 
-Returns `true` inside a `CodeBlock`. Use it in an MDX `pre` override to avoid wrapping a code block twice. See [MDX Code](#mdx-code).
+Returns `true` inside a `CodeBlock`. [Markdown](/docs/blocks/markdown) uses it to tell a highlighted block's `<code>` from inline code.
 
 ## Examples
 
 ### Named File
 
-Label the snippet with the file it belongs in.
+A `file` adds a header with the path, and moves the copy button into it.
 
-<CodeBlock
-  file="app/layout.tsx"
-  language="tsx"
-  code={layoutSource}
-/>
+<CodeBlock file="app/layout.tsx" code={layoutSource} />
 
-```tsx showLineNumbers
-<CodeBlock
-  file="app/layout.tsx"
-  language="tsx"
-  code={layoutSource}
-/>
+```tsx
+<CodeBlock file="app/layout.tsx" code={layoutSource} />
 ```
 
 ### Terminal Command
 
-One-line commands read better without line numbers.
+Short commands stay compact: no header, no line numbers, and the copy button floats beside the line.
 
-<CodeBlock
-  code="pnpm add @kushagradhawan/kookie-ui"
-  language="bash"
-  showLineNumbers={false}
-/>
+<CodeBlock code="pnpm add @kushagradhawan/kookie-ui" language="bash" />
 
 ```tsx
-<CodeBlock
-  code="pnpm add @kushagradhawan/kookie-ui"
-  language="bash"
-  showLineNumbers={false}
-/>
-```
-
-### Live Preview
-
-Pass `preview` to render the result above its code.
-
-<CodeBlock
-  language="tsx"
-  background="dots"
-  preview={
-    <Flex gap="2">
-      <Button variant="soft" color="gray" highContrast>Cancel</Button>
-      <Button variant="classic" highContrast>Save</Button>
-    </Flex>
-  }
-  code={buttonsSource}
-/>
-
-```tsx showLineNumbers
-<CodeBlock
-  language="tsx"
-  background="dots"
-  preview={
-    <Flex gap="2">
-      <Button variant="soft" color="gray" highContrast>Cancel</Button>
-      <Button variant="classic" highContrast>Save</Button>
-    </Flex>
-  }
-  code={buttonsSource}
-/>
+<CodeBlock code="pnpm add @kushagradhawan/kookie-ui" language="bash" />
 ```
 
 ### MDX Code
 
-With rehype-pretty-code, code fences arrive already highlighted. Wrap them in `CodeBlock` from your `mdx-components.tsx`, and skip the wrap when the `pre` is already inside one. This is how this site does it.
+Code fences highlighted by rehype-pretty-code arrive as a `<pre>`. [Markdown](/docs/blocks/markdown) frames them in a Code Block for you. Configure rehype-pretty-code with the same themes and `defaultColor: false`, so build-time and runtime code share one palette:
 
-```tsx showLineNumbers
-import type { MDXComponents } from 'mdx/types';
-import { CodeBlock, useCodeBlockContext } from '@/components/blocks/code-block/code-block';
-
-function Pre(props: React.ComponentProps<'pre'>) {
-  const isInsideCodeBlock = useCodeBlockContext();
-  if (isInsideCodeBlock) return <pre {...props} />;
-
-  return (
-    <CodeBlock>
-      <pre {...props} />
-    </CodeBlock>
-  );
-}
-
-export function useMDXComponents(components: MDXComponents): MDXComponents {
-  return { ...components, pre: Pre, CodeBlock };
-}
+```ts showLineNumbers
+const rehypePrettyCodeOptions = {
+  theme: { light: 'github-light', dark: 'github-dark' },
+  keepBackground: false,
+  defaultColor: false,
+};
 ```
 
-Configure rehype-pretty-code with `defaultColor: false` so it emits the same light and dark variables the block's CSS reads.
+Add `showLineNumbers` after a fence's language to number it, and `{2,4}` to highlight lines.
 
 ## Accessibility
 
-The copy and expand buttons have labels that change with their state ("Copy code" and "Copied!", "Expand code" and "Collapse code"). The loading shimmer stops under `prefers-reduced-motion`.
+The copy button is labelled "Copy code" and changes to "Copied" once the code is on the clipboard. "Show all" is a real button, so collapsed code can be expanded with the keyboard.

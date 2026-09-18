@@ -1,37 +1,24 @@
 'use client';
 
-import { DocsPage } from '@/components/blocks/docs-page/docs-page';
-import type { DocsPageMeta } from '@/components/blocks/docs-page/docs-page';
 import type { ReactNode } from 'react';
+import { DocsPage, type DocsPageMeta } from '@/components/blocks/docs-page/docs-page';
 
 interface SiteDocsPageProps {
   children: ReactNode;
   meta?: DocsPageMeta;
   tableOfContents?: ReactNode;
-  maxWidth?: string;
-  padding?: '3' | '4' | '5' | '6' | '7' | '8' | '9';
   headerActions?: ReactNode;
   headerTabs?: ReactNode;
   header?: ReactNode;
 }
 
-/**
- * Site-specific DocsPage wrapper with default footer configuration.
- * Use this instead of DocsPage directly to avoid repeating footer props.
- */
+const FOOTER = {
+  name: 'Kushagra Dhawan',
+  url: 'https://www.kushagradhawan.com',
+  githubUrl: 'https://github.com/KushagraDhawan1997/kookie-ui',
+};
+
+/** DocsPage with this site's footer. */
 export function SiteDocsPage(props: SiteDocsPageProps) {
-  return (
-    <DocsPage
-      containerSize="2"
-      {...props}
-      headerContentGap="5"
-      headerSeparator={!props.headerTabs}
-      showFooter
-      footerCopyright={{
-        name: 'Kushagra Dhawan',
-        url: 'https://www.kushagradhawan.com',
-      }}
-      githubUrl="https://github.com/KushagraDhawan1997/kookie-ui"
-    />
-  );
+  return <DocsPage {...props} footer={FOOTER} />;
 }

@@ -1,14 +1,15 @@
 ---
 title: Preview Block
-description: A framed stage for live component demos
+description: A framed stage for live demos and their code
 source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/components/blocks/preview-block
 ---
 
 import { BlockInstallation } from '@/components/block-doc-page';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
 import { Badge, Button, Card, Flex, Text } from '@kushagradhawan/kookie-ui';
+import { previewSources } from './snippets';
 
-Preview Block frames a live demo on a dotted, gridded or custom background, with a light/dark switch in the corner. Every example on this site sits in one. It sets its own `Theme`, so switching the preview to dark leaves the rest of the page alone.
+Preview Block frames a live demo: a toolbar with a light/dark switch, a padded stage, and optionally the demo's source attached underneath, all in one outline. Every example on this site is one. The stage has its own `Theme`, so switching a preview to dark leaves the page alone.
 
 ## Installation
 
@@ -18,32 +19,41 @@ Preview Block frames a live demo on a dotted, gridded or custom background, with
 
 ```tsx
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
-import { Button } from '@kushagradhawan/kookie-ui';
 
-export function ButtonDemo() {
-  return (
-    <PreviewBlock>
-      <Button variant="classic" highContrast>Save</Button>
-    </PreviewBlock>
-  );
-}
+<PreviewBlock code={`<Button variant="classic" highContrast>Save</Button>`}>
+  <Button variant="classic" highContrast>Save</Button>
+</PreviewBlock>
 ```
+
+In MDX you can also follow a `PreviewBlock` with a code fence. [Markdown](/docs/blocks/markdown) joins the two into one frame, as on this page.
 
 ## Props
 
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
+| `code` | `string` | - | Source shown under the stage, in the same frame. |
+| `language` | `string` | `'tsx'` | Language for `code`. |
+| `codeProps` | `CodeBlockProps` | - | Extra [Code Block](/docs/blocks/code-block) options for `code`, such as `file`. |
 | `background` | `'none' \| 'dots' \| 'grid' \| CSSProperties` | `'dots'` | A preset pattern, or your own styles for the stage. |
-| `patternSize` | `number` | `24` | Spacing of the dots or grid lines, in pixels. |
-| `patternColor` | `string` | `--gray-a6` (dots), `--gray-a3` (grid) | Pattern color. |
-| `width` | `string` | - | Stage width. |
-| `height` | `string` | - | Stage height. Without it the stage is at least `240px` tall. |
-| `variant` | `'surface' \| 'classic' \| 'soft' \| 'ghost'` | `'soft'` | Card variant for the frame. |
-| `appearance` | `'light' \| 'dark' \| 'inherit'` | `'inherit'` | Starting appearance of the preview. |
+| `patternSize` | `number` | `20` | Spacing of the dots or grid lines, in pixels. |
+| `patternColor` | `string` | `--gray-a5` (dots), `--gray-a3` (grid) | Pattern color. |
+| `height` | `string` | - | Fixed stage height, for demos that fill their container. Without it the stage fits its content, at least `10rem` tall. |
+| `appearance` | `'light' \| 'dark'` | Page's | Starting appearance of the stage. |
 | `showThemeToggle` | `boolean` | `true` | Show the light/dark switch. |
-| `fontFamily` | `'sans' \| 'mono' \| 'serif'` | `'sans'` | Font for the preview. |
-| `p`, `px`, `py`, `pt`, `pr`, `pb`, `pl` | Space scale | `p="2"` | Padding inside the frame. |
-| `m`, `mx`, `my`, `mt`, `mr`, `mb`, `ml` | Space scale | `my="3"` | Margin around the frame. |
+| `label` | `ReactNode` | - | Text on the left of the toolbar. |
+| `fontFamily` | `'sans' \| 'mono' \| 'serif'` | `'sans'` | Font for the stage. |
+| `className` | `string` | - | Class on the frame. |
+
+The toolbar only renders when there is a switch or a label.
+
+### Styling
+
+| Property | Default |
+| -------- | ------- |
+| `--preview-block-radius` | `var(--radius-surface-4)` |
+| `--preview-block-border` | `var(--gray-a4)` |
+| `--preview-block-padding` | `var(--space-6)`, `var(--space-4)` on small screens |
+| `--preview-block-min-height` | `10rem` |
 
 ## Examples
 
@@ -51,70 +61,38 @@ export function ButtonDemo() {
 
 A grid suits layout demos, where alignment matters.
 
-<PreviewBlock background="grid" height="16rem">
+<PreviewBlock background="grid" label="Storage card" code={previewSources.grid}>
   <Card variant="classic" size="2">
-    <Flex direction="column" gap="2" width="240px">
+    <Flex direction="column" gap="1" width="240px">
       <Text size="2" weight="medium">Storage</Text>
       <Text size="2" color="gray">18.4 GB of 50 GB used</Text>
     </Flex>
   </Card>
 </PreviewBlock>
 
-```tsx
-<PreviewBlock background="grid" height="16rem">
-  <Card variant="classic" size="2">...</Card>
-</PreviewBlock>
-```
+### Fixed Dark Stage
 
-### Fixed Dark Preview
+Pin the stage to dark and hide the switch when a demo only makes sense one way.
 
-Pin the preview to dark and hide the switch when a demo only makes sense one way.
-
-<PreviewBlock appearance="dark" showThemeToggle={false} height="12rem">
+<PreviewBlock appearance="dark" showThemeToggle={false} code={previewSources.dark}>
   <Flex gap="2" align="center">
     <Badge color="green" variant="soft">Live</Badge>
     <Text size="2">Deployed 2 minutes ago</Text>
   </Flex>
 </PreviewBlock>
 
-```tsx
-<PreviewBlock
-  appearance="dark"
-  showThemeToggle={false}
-  height="12rem"
->
-  ...
-</PreviewBlock>
-```
-
 ### Custom Background
 
 Pass styles instead of a preset for gradients or images.
 
 <PreviewBlock
-  height="12rem"
   showThemeToggle={false}
-  background={{
-    backgroundImage: 'linear-gradient(135deg, var(--iris-4), var(--pink-4))',
-    borderRadius: 'var(--radius-3)',
-  }}
+  background={{ backgroundImage: 'linear-gradient(135deg, var(--iris-4), var(--pink-4))' }}
+  code={previewSources.gradient}
 >
   <Button variant="soft" highContrast material="translucent">Action</Button>
 </PreviewBlock>
-
-```tsx showLineNumbers
-<PreviewBlock
-  height="12rem"
-  showThemeToggle={false}
-  background={{
-    backgroundImage: 'linear-gradient(135deg, var(--iris-4), var(--pink-4))',
-    borderRadius: 'var(--radius-3)',
-  }}
->
-  <Button variant="soft" highContrast material="translucent">Action</Button>
-</PreviewBlock>
-```
 
 ## Accessibility
 
-The light/dark switch is a segmented control; each option has a label ("Light preview", "Dark preview"). The preview content keeps its own semantics.
+The light/dark switch is a segmented control whose options are labelled "Light preview" and "Dark preview". The demo keeps its own semantics.

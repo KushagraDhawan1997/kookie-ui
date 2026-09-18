@@ -1,9 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { Box, Button, Card, Code, Flex, IconButton, ScrollArea, Text, Theme } from '@kushagradhawan/kookie-ui';
+import { Button, IconButton, ScrollArea, Text } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { ArrowDown01Icon, Copy01Icon, Tick01Icon } from '@hugeicons/core-free-icons';
+import { Copy01Icon, Tick01Icon } from '@hugeicons/core-free-icons';
 import type { BundledLanguage, BundledTheme, ShikiTransformer } from 'shiki';
 import './code-block.css';
 
@@ -12,9 +12,9 @@ import './code-block.css';
  * -----------------------------------------------------------------------------------------------*/
 
 export interface ShikiConfig {
-  /** Light and dark themes. Defaults to `one-light` and `one-dark-pro`. */
+  /** Light and dark themes. Defaults to `github-light` and `github-dark`. */
   themes?: { light?: string; dark?: string };
-  /** Language aliases, e.g. `{ js: 'javascript' }`. */
+  /** Language aliases, e.g. `{ vue3: 'vue' }`. */
   langAlias?: Record<string, string>;
   /** Shiki transformers for line highlighting, diffs and similar. */
   transformers?: ShikiTransformer[];
@@ -22,116 +22,80 @@ export interface ShikiConfig {
   meta?: string;
 }
 
-export interface PreviewBackgroundProps {
-  /** Dot size in pixels for the dots background. */
-  dotSize?: number;
-  /** Dot color. */
-  color?: string;
-  /** Background color behind the dots. */
-  backgroundColor?: string;
-  height?: string;
-  width?: string;
-  /** Radius token, e.g. `"3"` for `var(--radius-3)`. */
-  radius?: string;
-}
-
 export interface CodeBlockProps {
   /** Raw code, highlighted at runtime with Shiki. Use instead of `children`. */
   code?: string;
-  /** Language for `code`, e.g. `tsx` or `bash`. */
+  /** Language for `code`, e.g. `tsx` or `bash`. @default "tsx" */
   language?: string;
-  /** Pre-highlighted markup, e.g. from rehype-pretty-code. Use instead of `code`. */
+  /** Pre-highlighted markup, e.g. a `<pre>` from rehype-pretty-code. Use instead of `code`. */
   children?: React.ReactNode;
   /** Shiki options. Only applies to `code`. */
   shikiConfig?: ShikiConfig;
+  /** File path shown in a header above the code. */
+  file?: string;
+  /** Show the language in the header. @default false */
+  showLanguage?: boolean;
+  /**
+   * Number the lines. By default, runtime code is numbered past five lines and pre-highlighted
+   * code follows its markup (rehype-pretty-code's `showLineNumbers`).
+   */
+  showLineNumbers?: boolean;
   /** @default true */
   showCopy?: boolean;
-  /** @default true */
-  showLanguage?: boolean;
-  /** @default true */
-  showLineNumbers?: boolean;
-  /** File path shown in the header. */
-  file?: string;
-  /** Collapse long code behind an expand toggle. @default true */
+  /** Cap long code at `collapsedHeight` with a "Show more" button. @default true */
   collapsible?: boolean;
-  /** Height in pixels before the code collapses. @default 360 */
+  /** Height in pixels before code collapses. @default 400 */
   collapsedHeight?: number;
-  /** Live preview rendered above the code. */
-  preview?: React.ReactNode;
-  /** Preview background: `none`, `dots`, or an image URL. @default "none" */
-  background?: 'none' | 'dots' | string;
-  backgroundProps?: PreviewBackgroundProps;
+  className?: string;
 }
 
 /* -------------------------------------------------------------------------------------------------
  * Helpers
  * -----------------------------------------------------------------------------------------------*/
 
-const DEFAULT_COLLAPSED_HEIGHT = 360;
-const DEFAULT_LIGHT_THEME = 'one-light';
-const DEFAULT_DARK_THEME = 'one-dark-pro';
+const DEFAULT_COLLAPSED_HEIGHT = 400;
+const DEFAULT_LIGHT_THEME = 'github-light';
+const DEFAULT_DARK_THEME = 'github-dark';
+const AUTO_LINE_NUMBERS_AFTER = 5;
 const COPY_FEEDBACK_MS = 2000;
 
 const LANGUAGE_LABELS: Record<string, string> = {
-  js: 'JS',
-  javascript: 'JS',
+  js: 'JavaScript',
+  javascript: 'JavaScript',
   jsx: 'JSX',
-  ts: 'TS',
-  typescript: 'TS',
+  ts: 'TypeScript',
+  typescript: 'TypeScript',
   tsx: 'TSX',
-  py: 'Python',
-  python: 'Python',
-  rb: 'Ruby',
-  ruby: 'Ruby',
   sh: 'Shell',
   bash: 'Shell',
   shell: 'Shell',
   zsh: 'Shell',
   css: 'CSS',
   scss: 'SCSS',
-  sass: 'Sass',
-  less: 'Less',
   html: 'HTML',
-  xml: 'XML',
   json: 'JSON',
   yaml: 'YAML',
   yml: 'YAML',
   md: 'Markdown',
   markdown: 'Markdown',
   mdx: 'MDX',
+  py: 'Python',
+  python: 'Python',
   sql: 'SQL',
   graphql: 'GraphQL',
-  gql: 'GraphQL',
-  go: 'Go',
-  rust: 'Rust',
-  rs: 'Rust',
-  swift: 'Swift',
-  kotlin: 'Kotlin',
-  java: 'Java',
-  cpp: 'C++',
-  c: 'C',
-  cs: 'C#',
-  csharp: 'C#',
-  php: 'PHP',
-  vue: 'Vue',
-  svelte: 'Svelte',
-  astro: 'Astro',
-  dockerfile: 'Docker',
-  docker: 'Docker',
   text: 'Text',
   plaintext: 'Text',
   txt: 'Text',
 };
 
 function formatLanguage(language: string): string {
-  return LANGUAGE_LABELS[language.toLowerCase().trim()] ?? language.toUpperCase();
+  return LANGUAGE_LABELS[language.toLowerCase()] ?? language;
 }
 
 type ElementWithProps = React.ReactElement<{
   children?: React.ReactNode;
-  className?: string;
-  class?: string;
   'data-language'?: string;
+  'data-line-numbers'?: string | boolean;
 }>;
 
 function isElementWithProps(node: unknown): node is ElementWithProps {
@@ -147,209 +111,81 @@ function extractText(node: React.ReactNode): string {
   return '';
 }
 
-/** Language from `data-language` (rehype-pretty-code) or a `language-xxx` class. */
-function extractLanguage(node: React.ReactNode): string | null {
+/** First value of a prop found walking down pre-highlighted children. */
+function findProp(node: React.ReactNode, key: 'data-language' | 'data-line-numbers'): string | boolean | undefined {
   if (Array.isArray(node)) {
     for (const child of node) {
-      const language = extractLanguage(child);
-      if (language) return language;
+      const value = findProp(child, key);
+      if (value !== undefined) return value;
     }
-    return null;
+    return undefined;
   }
-  if (!isElementWithProps(node)) return null;
-
-  const { props } = node;
-  if (props['data-language']) return props['data-language'];
-
-  const className = props.className ?? props.class ?? '';
-  const match = className.match(/language-([\w-]+)/i);
-  if (match) return match[1];
-
-  return extractLanguage(props.children);
+  if (!isElementWithProps(node)) return undefined;
+  return node.props[key] ?? findProp(node.props.children, key);
 }
 
 /* -------------------------------------------------------------------------------------------------
- * Context — lets MDX `pre` overrides skip double-wrapping
+ * Context — lets markdown renderers tell block code from inline code
  * -----------------------------------------------------------------------------------------------*/
 
 const CodeBlockContext = React.createContext(false);
 
+/** `true` inside a `CodeBlock`. */
 export function useCodeBlockContext() {
   return React.useContext(CodeBlockContext);
 }
 
 /* -------------------------------------------------------------------------------------------------
- * Code card
+ * Behaviour
  * -----------------------------------------------------------------------------------------------*/
 
-function useCodeCard(code: string, collapsedHeight: number) {
-  const [isExpanded, setIsExpanded] = React.useState(false);
-  const [contentHeight, setContentHeight] = React.useState(collapsedHeight);
+function useCopy(text: string) {
   const [copied, setCopied] = React.useState(false);
-  const contentRef = React.useRef<HTMLDivElement | null>(null);
-  const resetTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // ResizeObserver only fires on real size changes, so highlighting finishing re-measures once.
-  React.useEffect(() => {
-    const element = contentRef.current;
-    if (!element) return;
-
-    setContentHeight(element.scrollHeight);
-    const observer = new ResizeObserver(() => setContentHeight(element.scrollHeight));
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [code]);
 
   React.useEffect(() => {
-    return () => {
-      if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
-    };
-  }, []);
+    if (!copied) return;
+    const timeout = window.setTimeout(() => setCopied(false), COPY_FEEDBACK_MS);
+    return () => window.clearTimeout(timeout);
+  }, [copied]);
 
-  const handleCopy = React.useCallback(async () => {
-    if (!code.trim()) return;
+  const copy = React.useCallback(async () => {
+    if (!text.trim()) return;
     try {
-      await navigator.clipboard.writeText(code);
+      await navigator.clipboard.writeText(text);
       setCopied(true);
-      if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
-      resetTimeoutRef.current = setTimeout(() => setCopied(false), COPY_FEEDBACK_MS);
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {
         console.error('[CodeBlock] Failed to copy to clipboard:', error);
       }
     }
-  }, [code]);
+  }, [text]);
 
-  return {
-    isExpanded,
-    shouldShowToggle: contentHeight > collapsedHeight,
-    contentMaxHeight: isExpanded ? contentHeight : collapsedHeight,
-    copied,
-    contentRef,
-    toggle: () => setIsExpanded((previous) => !previous),
-    handleCopy,
-  };
+  return { copied, copy };
 }
 
-const SKELETON_LINE_WIDTHS = ['85%', '70%', '90%', '60%', '75%', '80%'];
+/** Whether the content is taller than `limit`, re-measured as it resizes. */
+function useOverflow(ref: React.RefObject<HTMLElement | null>, limit: number) {
+  const [overflows, setOverflows] = React.useState(false);
 
-function CodeSkeleton() {
-  return (
-    <Box className="code-block-skeleton">
-      {SKELETON_LINE_WIDTHS.map((width, index) => (
-        <Box key={index} className="code-block-skeleton-line" width={width} />
-      ))}
-    </Box>
-  );
+  React.useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+    const measure = () => setOverflows(element.scrollHeight > limit + 1);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [ref, limit]);
+
+  return overflows;
 }
-
-interface CodeCardProps {
-  code: string;
-  language: string;
-  showCopy: boolean;
-  showLanguage: boolean;
-  showLineNumbers: boolean;
-  collapsible: boolean;
-  collapsedHeight: number;
-  file?: string;
-  isLoading?: boolean;
-  children: React.ReactNode;
-}
-
-const CodeCard = React.memo(function CodeCard({
-  code,
-  language,
-  showCopy,
-  showLanguage,
-  showLineNumbers,
-  collapsible,
-  collapsedHeight,
-  file,
-  isLoading = false,
-  children,
-}: CodeCardProps) {
-  const { isExpanded, shouldShowToggle, contentMaxHeight, copied, contentRef, toggle, handleCopy } = useCodeCard(
-    code,
-    collapsedHeight,
-  );
-
-  const showToggle = collapsible && shouldShowToggle;
-  const contentClassName = showLineNumbers ? 'code-block-content' : 'code-block-content hide-line-numbers';
-
-  return (
-    <Box position="relative">
-      <Card size="1" variant="soft" inset>
-        <Flex direction="column">
-          <Flex justify="between" align="start" gap="2" p="2">
-            <Flex align="center" gap="2">
-              {showLanguage && (
-                <Code size="1" color="gray" variant="ghost">
-                  {formatLanguage(language).toLowerCase()}
-                </Code>
-              )}
-              {file && (
-                <Text size="1" color="gray" highContrast>
-                  {file}
-                </Text>
-              )}
-            </Flex>
-
-            <Flex align="center" flexShrink="0">
-              {showToggle && (
-                <IconButton
-                  size="2"
-                  variant="ghost"
-                  color="gray"
-                  onClick={toggle}
-                  tooltip={isExpanded ? 'Collapse' : 'Expand'}
-                  aria-label={isExpanded ? 'Collapse code' : 'Expand code'}
-                >
-                  <HugeiconsIcon
-                    icon={ArrowDown01Icon}
-                    className="code-block-chevron"
-                    data-expanded={isExpanded || undefined}
-                    strokeWidth={1.75}
-                  />
-                </IconButton>
-              )}
-              {showCopy && (
-                <Button
-                  size="2"
-                  variant="ghost"
-                  color="gray"
-                  onClick={handleCopy}
-                  tooltip={copied ? 'Copied!' : 'Copy'}
-                  aria-label={copied ? 'Copied!' : 'Copy code'}
-                >
-                  <HugeiconsIcon icon={copied ? Tick01Icon : Copy01Icon} strokeWidth={1.75} />
-                  Copy
-                </Button>
-              )}
-            </Flex>
-          </Flex>
-
-          <ScrollArea type="hover" scrollbars="horizontal" style={{ maxHeight: collapsible ? contentMaxHeight : undefined }}>
-            <Box ref={contentRef} className={contentClassName} p="2">
-              {isLoading ? <CodeSkeleton /> : children}
-            </Box>
-          </ScrollArea>
-
-          {showToggle && !isExpanded && <Box className="code-block-shadow" />}
-        </Flex>
-      </Card>
-    </Box>
-  );
-});
 
 /* -------------------------------------------------------------------------------------------------
  * Runtime highlighting
  * -----------------------------------------------------------------------------------------------*/
 
-type RuntimeCodeProps = Omit<CodeCardProps, 'children' | 'isLoading'> & { shikiConfig?: ShikiConfig };
-
-const RuntimeCode = React.memo(function RuntimeCode({ shikiConfig, ...cardProps }: RuntimeCodeProps) {
-  const { code, language } = cardProps;
-  const [highlighted, setHighlighted] = React.useState<string | null>(null);
+function useHighlightedHtml(code: string | undefined, language: string, shikiConfig?: ShikiConfig) {
+  const [html, setHtml] = React.useState<string | null>(null);
   const [failed, setFailed] = React.useState(false);
 
   const lightTheme = shikiConfig?.themes?.light ?? DEFAULT_LIGHT_THEME;
@@ -357,6 +193,7 @@ const RuntimeCode = React.memo(function RuntimeCode({ shikiConfig, ...cardProps 
   const { langAlias, transformers, meta } = shikiConfig ?? {};
 
   React.useEffect(() => {
+    if (code === undefined) return;
     let cancelled = false;
 
     // Shiki is large; load it only once a code block actually renders.
@@ -370,14 +207,14 @@ const RuntimeCode = React.memo(function RuntimeCode({ shikiConfig, ...cardProps 
           meta: meta ? { __raw: meta } : undefined,
         }),
       )
-      .then((html) => {
+      .then((result) => {
         if (cancelled) return;
-        setHighlighted(html);
+        setHtml(result);
         setFailed(false);
       })
       .catch((error) => {
         if (cancelled) return;
-        // Keep the last good highlight while editing; fall back to plain text only if there is none.
+        // Keep the last good highlight while code changes; plain text only if there is none.
         setFailed(true);
         if (process.env.NODE_ENV === 'development') {
           console.error('[CodeBlock] Shiki highlighting failed:', error);
@@ -389,135 +226,120 @@ const RuntimeCode = React.memo(function RuntimeCode({ shikiConfig, ...cardProps 
     };
   }, [code, language, lightTheme, darkTheme, langAlias, transformers, meta]);
 
-  let content: React.ReactNode = null;
-  if (highlighted) {
-    content = <Box dangerouslySetInnerHTML={{ __html: highlighted }} />;
-  } else if (failed) {
-    content = (
-      <pre>
-        <code>{code}</code>
-      </pre>
-    );
-  }
-
-  return (
-    <CodeCard {...cardProps} isLoading={!highlighted && !failed}>
-      {content}
-    </CodeCard>
-  );
-});
-
-/* -------------------------------------------------------------------------------------------------
- * Preview
- * -----------------------------------------------------------------------------------------------*/
-
-const EMPTY_BACKGROUND_PROPS: PreviewBackgroundProps = {};
-
-function PreviewSection({
-  children,
-  background = 'none',
-  backgroundProps = EMPTY_BACKGROUND_PROPS,
-}: {
-  children: React.ReactNode;
-  background?: CodeBlockProps['background'];
-  backgroundProps?: PreviewBackgroundProps;
-}) {
-  const {
-    dotSize = 24,
-    color = 'var(--gray-10)',
-    backgroundColor = 'var(--gray-2)',
-    height,
-    width = '100%',
-    radius = '3',
-  } = backgroundProps;
-
-  let backgroundStyle: React.CSSProperties | undefined;
-  if (background === 'dots') {
-    backgroundStyle = {
-      backgroundImage: `radial-gradient(circle, ${color} 1px, transparent 1px)`,
-      backgroundSize: `${dotSize}px ${dotSize}px`,
-      backgroundPosition: 'center',
-      backgroundColor,
-      borderRadius: `var(--radius-${radius})`,
-    };
-  } else if (background !== 'none') {
-    backgroundStyle = {
-      backgroundImage: `url(${background})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      borderRadius: `var(--radius-${radius})`,
-    };
-  }
-  const hasBackground = backgroundStyle !== undefined;
-
-  return (
-    <Card size="1" variant="soft">
-      <Flex
-        justify="center"
-        align="center"
-        py="4"
-        width={hasBackground ? width : undefined}
-        height={hasBackground ? height : undefined}
-        style={backgroundStyle}
-      >
-        <Theme fontFamily="sans">{children}</Theme>
-      </Flex>
-    </Card>
-  );
+  return { html, failed };
 }
 
 /* -------------------------------------------------------------------------------------------------
  * CodeBlock
  * -----------------------------------------------------------------------------------------------*/
 
+/**
+ * Code in a quiet frame with a copy button. Highlights `code` with Shiki at runtime, or frames
+ * markup that was highlighted at build time. Long code collapses behind "Show more".
+ */
 export function CodeBlock({
-  children,
   code,
-  language,
-  preview,
-  showCopy = true,
-  showLanguage = true,
-  showLineNumbers = true,
+  language: languageProp,
+  children,
   shikiConfig,
-  background,
-  backgroundProps,
+  file,
+  showLanguage = false,
+  showLineNumbers,
+  showCopy = true,
   collapsible = true,
   collapsedHeight = DEFAULT_COLLAPSED_HEIGHT,
-  file,
+  className,
 }: CodeBlockProps) {
-  const cardProps = { showCopy, showLanguage, showLineNumbers, collapsible, collapsedHeight, file };
+  const isRuntime = code !== undefined;
+  const text = isRuntime ? code : extractText(children);
+  const detected = isRuntime ? undefined : findProp(children, 'data-language');
+  const language = languageProp ?? (typeof detected === 'string' ? detected : isRuntime ? 'tsx' : 'text');
+  const lineCount = text.replace(/\n$/, '').split('\n').length;
+
+  const numbered = showLineNumbers ?? (isRuntime ? lineCount > AUTO_LINE_NUMBERS_AFTER : findProp(children, 'data-line-numbers') !== undefined);
+
+  const { html, failed } = useHighlightedHtml(code, language, shikiConfig);
+  const { copied, copy } = useCopy(text);
+
+  const contentRef = React.useRef<HTMLDivElement | null>(null);
+  const [expanded, setExpanded] = React.useState(false);
+  const overflows = useOverflow(contentRef, collapsedHeight);
+  const collapsed = collapsible && overflows && !expanded;
+
+  let content: React.ReactNode = children;
+  if (isRuntime) {
+    if (html) {
+      content = <div dangerouslySetInnerHTML={{ __html: html }} />;
+    } else {
+      // Plain text while Shiki loads, so nothing jumps when colors arrive.
+      content = (
+        <pre data-pending={failed ? undefined : true}>
+          <code>{code}</code>
+        </pre>
+      );
+    }
+  }
+
+  const hasHeader = Boolean(file) || showLanguage;
+  const copyLabel = copied ? 'Copied' : 'Copy code';
 
   return (
     <CodeBlockContext.Provider value={true}>
-      <Box className="code-block" my="3">
-        <Flex direction="column" gap="2">
-          {preview && (
-            <PreviewSection background={background} backgroundProps={backgroundProps}>
-              {preview}
-            </PreviewSection>
-          )}
+      <div
+        className={className ? `code-block ${className}` : 'code-block'}
+        data-line-numbers={numbered || undefined}
+        data-collapsed={collapsed || undefined}
+      >
+        {hasHeader && (
+          <div className="code-block-header">
+            <Text size="1" color="gray" highContrast={Boolean(file)} truncate>
+              {file ?? formatLanguage(language)}
+            </Text>
+            {file && showLanguage && (
+              <Text size="1" color="gray">
+                {formatLanguage(language)}
+              </Text>
+            )}
+            {showCopy && (
+              <Button size="1" variant="ghost" color="gray" onClick={copy} aria-label={copyLabel} className="code-block-copy">
+                <HugeiconsIcon icon={copied ? Tick01Icon : Copy01Icon} strokeWidth={1.75} />
+                {copied ? 'Copied' : 'Copy'}
+              </Button>
+            )}
+          </div>
+        )}
 
-          {code ? (
-            <RuntimeCode
-              {...cardProps}
-              code={code}
-              language={language ?? 'text'}
-              shikiConfig={shikiConfig}
-            />
-          ) : (
-            children && (
-              <CodeCard
-                {...cardProps}
-                code={extractText(children)}
-                language={language ?? extractLanguage(children) ?? 'text'}
+        <div className="code-block-body">
+          {showCopy && !hasHeader && (
+            <div className="code-block-floating-actions">
+              <IconButton
+                size="1"
+                variant="ghost"
+                color="gray"
+                onClick={copy}
+                aria-label={copyLabel}
+                tooltip={copyLabel}
+                className="code-block-copy"
               >
-                {children}
-              </CodeCard>
-            )
+                <HugeiconsIcon icon={copied ? Tick01Icon : Copy01Icon} strokeWidth={1.75} />
+              </IconButton>
+            </div>
           )}
-        </Flex>
-      </Box>
+          <ScrollArea type="hover" scrollbars="horizontal" style={{ maxHeight: collapsed ? collapsedHeight : undefined }}>
+            <div ref={contentRef} className="code-block-content">
+              {content}
+            </div>
+          </ScrollArea>
+        </div>
+
+        {collapsible && overflows && (
+          <div className="code-block-footer">
+            <Button size="1" variant="soft" color="gray" highContrast onClick={() => setExpanded((value) => !value)}>
+              {expanded ? 'Show less' : `Show all ${lineCount} lines`}
+            </Button>
+          </div>
+        )}
+      </div>
     </CodeBlockContext.Provider>
   );
 }

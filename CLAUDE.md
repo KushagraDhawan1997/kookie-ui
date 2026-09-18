@@ -332,12 +332,11 @@ Use `variant="classic"` for Cards providing UI context:
   height="12rem"
   appearance="dark"
   showThemeToggle={false}
-  variant="ghost"
   background={{
     backgroundColor: 'hsl(220, 20%, 10%)',
     backgroundImage: 'radial-gradient(...)',
-    borderRadius: 'var(--radius-3)',
   }}
+  code={source}
 >
   <Button variant="soft" highContrast material="translucent">
     Action

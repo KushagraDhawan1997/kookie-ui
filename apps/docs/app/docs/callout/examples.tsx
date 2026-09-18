@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
-import { CodeBlock } from '@/components/blocks/code-block/code-block';
 import { SectionHeader } from '@/components/blocks/section-header/section-header';
 import { Flex, Callout, Text, Card, Separator, Code, Link, Button } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
@@ -21,7 +20,18 @@ export function CalloutExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
+        <PreviewBlock
+          background="none"
+          code={`<Callout.Root color="blue">
+  <Callout.Icon>
+    <HugeiconsIcon icon={InformationCircleIcon} />
+  </Callout.Icon>
+  <Callout.Text>
+    You can generate API keys from your{' '}
+    <Link href="#">dashboard settings</Link>.
+  </Callout.Text>
+</Callout.Root>`}
+        >
           <Card variant="classic" size="3" style={{ maxWidth: 520 }}>
             <Flex direction="column" gap="4">
               <Text size="3" weight="medium">
@@ -41,20 +51,6 @@ export function CalloutExamples() {
             </Flex>
           </Card>
         </PreviewBlock>
-        <CodeBlock
-          code={`<Callout.Root color="blue">
-  <Callout.Icon>
-    <HugeiconsIcon icon={InformationCircleIcon} />
-  </Callout.Icon>
-  <Callout.Text>
-    You can generate API keys from your{' '}
-    <Link href="#">dashboard settings</Link>.
-  </Callout.Text>
-</Callout.Root>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
 
       <Separator size="4" />
@@ -69,23 +65,8 @@ export function CalloutExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
-          <Flex direction="column" gap="4" style={{ maxWidth: 440 }}>
-            <Callout.Root color="green">
-              <Callout.Icon>
-                <HugeiconsIcon icon={CheckmarkCircle02Icon} strokeWidth={1.75} />
-              </Callout.Icon>
-              <Callout.Text>Your changes have been saved successfully. The new settings will take effect immediately.</Callout.Text>
-            </Callout.Root>
-            <Callout.Root color="red">
-              <Callout.Icon>
-                <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
-              </Callout.Icon>
-              <Callout.Text>Unable to save changes. Please check your network connection and try again.</Callout.Text>
-            </Callout.Root>
-          </Flex>
-        </PreviewBlock>
-        <CodeBlock
+        <PreviewBlock
+          background="none"
           code={`// Success feedback
 <Callout.Root color="green">
   <Callout.Icon>
@@ -105,10 +86,22 @@ export function CalloutExamples() {
     Unable to save changes. Please try again.
   </Callout.Text>
 </Callout.Root>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Flex direction="column" gap="4" style={{ maxWidth: 440 }}>
+            <Callout.Root color="green">
+              <Callout.Icon>
+                <HugeiconsIcon icon={CheckmarkCircle02Icon} strokeWidth={1.75} />
+              </Callout.Icon>
+              <Callout.Text>Your changes have been saved successfully. The new settings will take effect immediately.</Callout.Text>
+            </Callout.Root>
+            <Callout.Root color="red">
+              <Callout.Icon>
+                <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
+              </Callout.Icon>
+              <Callout.Text>Unable to save changes. Please check your network connection and try again.</Callout.Text>
+            </Callout.Root>
+          </Flex>
+        </PreviewBlock>
       </Flex>
 
       <Separator size="4" />
@@ -123,7 +116,18 @@ export function CalloutExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
+        <PreviewBlock
+          background="none"
+          code={`<Callout.Root color="violet">
+  <Callout.Icon>
+    <HugeiconsIcon icon={Rocket01Icon} />
+  </Callout.Icon>
+  <Callout.Text>
+    <Text weight="medium">New Feature:</Text> AI-powered code
+    suggestions are now available.
+  </Callout.Text>
+</Callout.Root>`}
+        >
           <Flex direction="column" gap="4" style={{ maxWidth: 480 }}>
             <Callout.Root color="violet">
               <Callout.Icon>
@@ -143,20 +147,6 @@ export function CalloutExamples() {
             </Callout.Root>
           </Flex>
         </PreviewBlock>
-        <CodeBlock
-          code={`<Callout.Root color="violet">
-  <Callout.Icon>
-    <HugeiconsIcon icon={Rocket01Icon} />
-  </Callout.Icon>
-  <Callout.Text>
-    <Text weight="medium">New Feature:</Text> AI-powered code
-    suggestions are now available.
-  </Callout.Text>
-</Callout.Root>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
 
       <Separator size="4" />
@@ -169,7 +159,18 @@ export function CalloutExamples() {
             <SectionHeader.Description>Amber callouts signal caution without the severity of red. Use highContrast for critical warnings that require immediate attention.</SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
+        <PreviewBlock
+          background="none"
+          code={`<Callout.Root color="amber" highContrast>
+  <Callout.Icon>
+    <HugeiconsIcon icon={SecurityCheckIcon} />
+  </Callout.Icon>
+  <Callout.Text>
+    <Text weight="medium">Security Notice:</Text> Two-factor
+    authentication is not enabled for your account.
+  </Callout.Text>
+</Callout.Root>`}
+        >
           <Card variant="classic" size="3" style={{ maxWidth: 480 }}>
             <Flex direction="column" gap="4">
               <Text size="3" weight="medium">
@@ -190,20 +191,6 @@ export function CalloutExamples() {
             </Flex>
           </Card>
         </PreviewBlock>
-        <CodeBlock
-          code={`<Callout.Root color="amber" highContrast>
-  <Callout.Icon>
-    <HugeiconsIcon icon={SecurityCheckIcon} />
-  </Callout.Icon>
-  <Callout.Text>
-    <Text weight="medium">Security Notice:</Text> Two-factor
-    authentication is not enabled for your account.
-  </Callout.Text>
-</Callout.Root>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
 
       <Separator size="4" />
@@ -218,7 +205,18 @@ export function CalloutExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
+        <PreviewBlock
+          background="none"
+          code={`<Callout.Root color="orange" size="2" highContrast>
+  <Callout.Icon>
+    <HugeiconsIcon icon={Alert02Icon} />
+  </Callout.Icon>
+  <Callout.Text>
+    <Text weight="medium">Deprecated:</Text> This hook will be
+    removed in v3.0. Migrate to <Code>useNewHook()</Code>.
+  </Callout.Text>
+</Callout.Root>`}
+        >
           <Card variant="classic" size="3" style={{ maxWidth: 520 }}>
             <Flex direction="column" gap="4" align="start">
               <Code size="3" highContrast>
@@ -238,20 +236,6 @@ export function CalloutExamples() {
             </Flex>
           </Card>
         </PreviewBlock>
-        <CodeBlock
-          code={`<Callout.Root color="orange" size="2" highContrast>
-  <Callout.Icon>
-    <HugeiconsIcon icon={Alert02Icon} />
-  </Callout.Icon>
-  <Callout.Text>
-    <Text weight="medium">Deprecated:</Text> This hook will be
-    removed in v3.0. Migrate to <Code>useNewHook()</Code>.
-  </Callout.Text>
-</Callout.Root>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
 
       <Separator size="4" />
@@ -264,7 +248,17 @@ export function CalloutExamples() {
             <SectionHeader.Description>Size 1 callouts work as subtle inline banners. The gray color keeps informational messages unobtrusive while still visible.</SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
+        <PreviewBlock
+          background="none"
+          code={`<Callout.Root color="gray" size="1">
+  <Callout.Icon>
+    <HugeiconsIcon icon={Clock01Icon} />
+  </Callout.Icon>
+  <Callout.Text>
+    Scheduled maintenance on Sunday, Jan 5th.
+  </Callout.Text>
+</Callout.Root>`}
+        >
           <Flex direction="column" gap="4" style={{ maxWidth: 500 }}>
             <Callout.Root color="gray" size="1">
               <Callout.Icon>
@@ -274,19 +268,6 @@ export function CalloutExamples() {
             </Callout.Root>
           </Flex>
         </PreviewBlock>
-        <CodeBlock
-          code={`<Callout.Root color="gray" size="1">
-  <Callout.Icon>
-    <HugeiconsIcon icon={Clock01Icon} />
-  </Callout.Icon>
-  <Callout.Text>
-    Scheduled maintenance on Sunday, Jan 5th.
-  </Callout.Text>
-</Callout.Root>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
 
       <Separator size="4" />
@@ -301,7 +282,14 @@ export function CalloutExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
+        <PreviewBlock
+          background="none"
+          code={`<Callout.Root color="gray" variant="outline" size="2" highContrast>
+  <Callout.Text>
+    CSV exports are limited to 10,000 rows.
+  </Callout.Text>
+</Callout.Root>`}
+        >
           <Card variant="classic" size="3" style={{ maxWidth: 400 }}>
             <Flex direction="column" gap="3">
               <Text size="2" weight="medium">
@@ -313,16 +301,6 @@ export function CalloutExamples() {
             </Flex>
           </Card>
         </PreviewBlock>
-        <CodeBlock
-          code={`<Callout.Root color="gray" variant="outline" size="2" highContrast>
-  <Callout.Text>
-    CSV exports are limited to 10,000 rows.
-  </Callout.Text>
-</Callout.Root>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
 
       <Separator size="4" />
@@ -338,24 +316,12 @@ export function CalloutExamples() {
         <PreviewBlock
           showThemeToggle={false}
           appearance="dark"
-          variant="ghost"
-          height="30rem"
-          p="0"
           background={{
             backgroundImage:
               'url(https://images.unsplash.com/photo-1765572446249-a583906255f0?q=80&w=1341&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
-        >
-          <Callout.Root color="blue" material="translucent" highContrast style={{ maxWidth: 440 }}>
-            <Callout.Icon>
-              <HugeiconsIcon icon={InformationCircleIcon} strokeWidth={1.75} />
-            </Callout.Icon>
-            <Callout.Text>Translucent callouts blend seamlessly with dynamic backgrounds while maintaining readability.</Callout.Text>
-          </Callout.Root>
-        </PreviewBlock>
-        <CodeBlock
           code={`<Theme appearance="dark">
   <Callout.Root color="blue" material="translucent" highContrast>
     <Callout.Icon>
@@ -367,10 +333,14 @@ export function CalloutExamples() {
     </Callout.Text>
   </Callout.Root>
 </Theme>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Callout.Root color="blue" material="translucent" highContrast style={{ maxWidth: 440 }}>
+            <Callout.Icon>
+              <HugeiconsIcon icon={InformationCircleIcon} strokeWidth={1.75} />
+            </Callout.Icon>
+            <Callout.Text>Translucent callouts blend seamlessly with dynamic backgrounds while maintaining readability.</Callout.Text>
+          </Callout.Root>
+        </PreviewBlock>
       </Flex>
     </Flex>
   );

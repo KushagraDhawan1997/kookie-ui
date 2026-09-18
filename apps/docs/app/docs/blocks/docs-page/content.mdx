@@ -6,7 +6,7 @@ source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/comp
 
 import { BlockInstallation } from '@/components/block-doc-page';
 
-Docs Page lays out a single documentation page: a header with category, title, description and a "Copy page" button, a readable content column, and an optional table of contents that sticks to the side on large screens. Every page on this site uses it.
+Docs Page lays out a single documentation page: a header with the category and actions on one row, then the title, a lead and optional tabs; a reading column capped at a comfortable line length; and a table of contents that sticks beside it on large screens. Every page on this site uses it.
 
 ## Installation
 
@@ -50,59 +50,43 @@ The content column is marked with `data-content-area`. [Table of Contents](/docs
 
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
-| `meta` | `DocsPageMeta` | - | Title, description, category and source link for the header. |
+| `meta` | `DocsPageMeta` | - | Category, title, description and source link for the header. |
 | `header` | `ReactNode` | - | Replaces the generated header. |
-| `headerActions` | `ReactNode` | - | Extra buttons beside the title. |
-| `headerTabs` | `ReactNode` | - | Tabs under the header, e.g. Documentation and Examples. |
-| `headerSeparator` | `boolean` | `false` | Separator under the header. Leave off when using tabs. |
-| `headerContentGap` | Space scale | `'4'` | Gap between category, title and description. |
-| `headerRootGap` | Space scale | `'4'` | Gap between the header and its tabs. |
+| `headerActions` | `ReactNode` | - | Extra buttons in the header's action row, before "Copy page". |
+| `headerTabs` | `ReactNode` | - | Tabs under the header, e.g. Documentation and Examples. They replace the header's rule. |
 | `tableOfContents` | `ReactNode` | - | Shown in a sticky column from the `lg` breakpoint. |
-| `containerSize` | `'1' \| '2' \| '3' \| '4'` | `'3'` | Container size for the content. |
-| `maxWidth` | `string` | `'48rem'` | Maximum width of the content column. |
-| `contentGap` | Space scale | `'8'` | Gap between the header and the content. |
-| `padding` | Space scale | `'4'` | Padding around the content. |
-| `paddingX` | Space scale | - | Overrides horizontal padding. |
-| `paddingY` | Space scale | `'6'` | Overrides vertical padding. |
-| `contentPadding` | `{ initial?, sm? }` | `{ initial: '2', sm: '4' }` | Padding of the outer content area. |
-| `outerMargin` | Space scale | `'6'` | Vertical margin of the whole page. |
-| `showFooter` | `boolean` | `false` | Copyright line under the content. |
-| `footerCopyright` | `{ name: string; url?: string }` | - | Copyright holder for the footer. |
-| `githubUrl` | `string` | - | GitHub link in the footer. |
+| `maxWidth` | `string` | `'44rem'` | Width cap for the reading column, around 75 characters of body text. |
+| `footer` | `{ name: string; url?: string; githubUrl?: string }` | - | Copyright line under the content. |
 
 ### DocsPageMeta
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | `title` | `string` | Page title, rendered as the `h1`. |
-| `description` | `string` | Shown under the title. |
-| `category` | `string` | Shown above the title. |
-| `source` | `string` | URL for a "View source" link. |
+| `description` | `string` | The lead under the title. |
+| `category` | `string` | Shown at the start of the action row. |
+| `source` | `string` | URL for a "Source" button in the action row. |
 
 ## Examples
 
 ### Site Defaults
 
-Wrap `DocsPage` once with your site's footer and spacing, and use the wrapper everywhere. This site does this.
+Wrap `DocsPage` once with your footer and use the wrapper everywhere. This site does this.
 
 ```tsx showLineNumbers
 import { DocsPage, type DocsPageProps } from '@/components/blocks/docs-page/docs-page';
 
+const FOOTER = { name: 'Acme', url: 'https://acme.com', githubUrl: 'https://github.com/acme/docs' };
+
 export function SiteDocsPage(props: DocsPageProps) {
-  return (
-    <DocsPage
-      containerSize="2"
-      headerContentGap="5"
-      headerSeparator={!props.headerTabs}
-      showFooter
-      footerCopyright={{ name: 'Acme', url: 'https://acme.com' }}
-      githubUrl="https://github.com/acme/docs"
-      {...props}
-    />
-  );
+  return <DocsPage {...props} footer={FOOTER} />;
 }
 ```
 
+### With Markdown
+
+The page doesn't style its content. Render MDX inside [Markdown](/docs/blocks/markdown)'s `MarkdownContent` for type sizes and spacing that match the header.
+
 ## Accessibility
 
-The title renders as the page's only `h1`. "Copy page" confirms with a changed label and icon once the text is on the clipboard.
+The title renders as the page's only `h1`. "Copy page" changes to "Copied" once the text is on the clipboard, and "Source" opens in a new tab.

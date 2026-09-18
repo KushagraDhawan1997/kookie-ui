@@ -1,0 +1,202 @@
+/*
+ * Markdown rhythm.
+ *
+ * The container owns every vertical gap; the elements inside carry none. Gaps depend on what
+ * meets what: text next to text sits close, anything next to a block (code, preview, table,
+ * callout, your own components) gets more room, and headings pull away from what came before
+ * and hug what follows.
+ *
+ * Keep margin props off top-level MDX elements; the gaps below already fit them.
+ */
+
+.markdown {
+  --markdown-font-size: var(--font-size-3);
+  --markdown-line-height: 1.65;
+  --markdown-text-gap: var(--space-4);
+  --markdown-block-gap: var(--space-5);
+  --markdown-list-gap: var(--space-2);
+  --markdown-h2-gap: var(--space-8);
+  --markdown-h3-gap: var(--space-6);
+  --markdown-h4-gap: var(--space-5);
+  --markdown-after-h2: var(--space-4);
+  --markdown-after-h3: var(--space-3);
+  --markdown-after-h4: var(--space-2);
+
+  /* A block formatting context: margins stay inside, and adjacent ones collapse. */
+  display: flow-root;
+  min-width: 0;
+  font-size: var(--markdown-font-size);
+  line-height: var(--markdown-line-height);
+  overflow-wrap: break-word;
+}
+
+.markdown[data-spacing='compact'] {
+  --markdown-font-size: inherit;
+  --markdown-line-height: 1.6;
+  --markdown-text-gap: var(--space-3);
+  --markdown-block-gap: var(--space-3);
+  --markdown-list-gap: var(--space-1);
+  --markdown-h2-gap: var(--space-5);
+  --markdown-h3-gap: var(--space-4);
+  --markdown-h4-gap: var(--space-4);
+  --markdown-after-h2: var(--space-2);
+  --markdown-after-h3: var(--space-2);
+  --markdown-after-h4: var(--space-1);
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Rhythm between siblings
+ *
+ * One class of specificity: enough to beat component resets such as Text's `:where()` margin,
+ * low enough for anything more specific to override.
+ * -------------------------------------------------------------------------------------------*/
+
+.markdown > * {
+  margin-block: 0;
+}
+
+/* Default: anything next to anything is a block boundary. */
+.markdown > * + * {
+  margin-top: var(--markdown-block-gap);
+}
+
+.markdown > * + :is(h1, h2) {
+  margin-top: var(--markdown-h2-gap);
+}
+
+.markdown > * + h3 {
+  margin-top: var(--markdown-h3-gap);
+}
+
+.markdown > * + :is(h4, h5, h6) {
+  margin-top: var(--markdown-h4-gap);
+}
+
+.markdown > :is(h1, h2) + * {
+  margin-top: var(--markdown-after-h2);
+}
+
+.markdown > h3 + * {
+  margin-top: var(--markdown-after-h3);
+}
+
+.markdown > :is(h4, h5, h6) + * {
+  margin-top: var(--markdown-after-h4);
+}
+
+/* Running text stays close together. */
+.markdown > :is(p, ul, ol, blockquote) + :is(p, ul, ol, blockquote) {
+  margin-top: var(--markdown-text-gap);
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Text
+ * -------------------------------------------------------------------------------------------*/
+
+.markdown :is(ul, ol) {
+  margin-block: 0;
+  padding-left: 1.5em;
+}
+
+.markdown ul {
+  list-style-type: disc;
+}
+
+.markdown ol {
+  list-style-type: decimal;
+}
+
+.markdown li {
+  padding-left: 0.25em;
+}
+
+.markdown li + li,
+.markdown li > :is(ul, ol) {
+  margin-top: var(--markdown-list-gap);
+}
+
+.markdown li::marker {
+  color: var(--gray-a9);
+}
+
+/* Loose lists and blockquotes hold their own blocks. */
+.markdown :is(li, blockquote) > * + * {
+  margin-top: var(--markdown-text-gap);
+}
+
+.markdown img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-surface-3);
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Headings
+ * -------------------------------------------------------------------------------------------*/
+
+.markdown-heading {
+  /* Land a little below the top when jumped to from the table of contents. */
+  scroll-margin-top: var(--space-6);
+}
+
+.markdown-heading-anchor {
+  margin-left: 0.35em;
+  color: var(--gray-a8);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 120ms;
+}
+
+.markdown-heading-anchor::after {
+  content: '#';
+}
+
+.markdown-heading:hover .markdown-heading-anchor,
+.markdown-heading-anchor:focus-visible {
+  opacity: 1;
+}
+
+.markdown-heading-anchor:hover {
+  color: var(--gray-a11);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .markdown-heading-anchor {
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Tables
+ * -------------------------------------------------------------------------------------------*/
+
+.markdown .markdown-table {
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-2);
+}
+
+.markdown .markdown-table :where(th) {
+  white-space: nowrap;
+}
+
+/* The first column usually names things (props, tokens); keep those on one line. */
+.markdown .markdown-table :where(td:first-child code) {
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * A preview followed by its code reads as one framed example.
+ * -------------------------------------------------------------------------------------------*/
+
+.markdown > .preview-block:has(+ .code-block) {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.markdown > .preview-block + .code-block {
+  margin-top: 0;
+  border-top-width: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}

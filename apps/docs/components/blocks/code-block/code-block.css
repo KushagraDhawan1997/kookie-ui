@@ -1,124 +1,152 @@
-/* inline-size containment stops long lines from pushing the page wider. */
+/*
+ * Code block frame. Override these on `.code-block` (or any ancestor) to restyle every instance.
+ */
 .code-block {
+  --code-block-radius: var(--radius-surface-4);
+  --code-block-border: var(--gray-a4);
+  --code-block-background: var(--gray-a2);
+  --code-block-font-size: var(--font-size-2);
+  --code-block-line-height: 1.7;
+  --code-block-padding-x: var(--space-4);
+  --code-block-padding-y: var(--space-3);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  /* Long lines scroll inside the block instead of widening the page. */
   contain: inline-size;
+  background-color: var(--code-block-background);
+  border: 1px solid var(--code-block-border);
+  border-radius: var(--code-block-radius);
+  overflow: hidden;
 }
 
-.code-block-content {
+.code-block-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--space-7);
+  padding: 0 var(--space-2) 0 var(--code-block-padding-x);
+  border-bottom: 1px solid var(--code-block-border);
+}
+
+.code-block-header .code-block-copy {
+  margin-left: auto;
+}
+
+.code-block-body {
   position: relative;
 }
 
-/* fit-content sizes to the code; min-width fills the card when the code is short. */
+/* Floating copy button for header-less blocks. Its backdrop runs to the frame's edge and fades
+   in from the left, so long first lines slide under it instead of showing through. */
+.code-block-floating-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  height: calc(var(--code-block-padding-y) * 2 + 1lh);
+  padding: 0 var(--space-2) 0 var(--space-5);
+  line-height: var(--code-block-line-height);
+  font-size: var(--code-block-font-size);
+  background: linear-gradient(to right, transparent, var(--color-background) var(--space-4));
+}
+
+/* Re-apply the frame's tint over the opaque page color. */
+.code-block-floating-actions::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to right, transparent, var(--code-block-background) var(--space-4));
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Code
+ * -------------------------------------------------------------------------------------------*/
+
 .code-block-content pre {
   margin: 0;
-  box-sizing: border-box;
-  font-family: var(--font-mono);
-  font-size: var(--font-size-2);
-  line-height: 1.75;
-  padding: var(--space-3);
-  width: fit-content;
+  padding: var(--code-block-padding-y) var(--code-block-padding-x);
+  /* Fills the block when short, grows with the longest line when not, so the scrollbar spans it. */
+  width: max-content;
   min-width: 100%;
+  box-sizing: border-box;
+  background: none !important;
+  font-family: var(--font-code, var(--font-mono));
+  font-size: var(--code-block-font-size);
+  line-height: var(--code-block-line-height);
+  tab-size: 2;
+}
+
+/* Keep one-line code clear of the floating copy button. */
+.code-block-body:has(.code-block-floating-actions) .code-block-content pre {
+  padding-right: calc(var(--code-block-padding-x) + var(--space-7));
 }
 
 .code-block-content pre code {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-2);
-  line-height: 1.75;
-  background: none !important;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
+  display: grid;
+  font: inherit;
+  background: none;
+  padding: 0;
   counter-reset: line;
 }
 
-.code-block-content pre code .line {
-  display: flex;
-  align-items: center;
+/* Shiki emits `.line`, rehype-pretty-code emits `[data-line]`. Grid items keep empty lines tall. */
+.code-block-content :is(.line, [data-line]) {
+  min-height: 1lh;
 }
 
-.code-block-content pre code .line::before {
+.code-block[data-line-numbers] .code-block-content :is(.line, [data-line])::before {
   counter-increment: line;
   content: counter(line);
   display: inline-block;
-  min-width: 2ch;
-  text-align: right;
-  font-size: var(--font-size-1);
-  color: var(--gray-a9);
-  user-select: none;
-  flex-shrink: 0;
+  width: 2ch;
   margin-right: var(--space-4);
+  text-align: right;
+  color: var(--gray-a8);
+  user-select: none;
 }
 
-.code-block-content.hide-line-numbers pre code .line::before {
-  display: none;
+.code-block-content [data-highlighted-line] {
+  margin-inline: calc(var(--code-block-padding-x) * -1);
+  padding-inline: var(--code-block-padding-x);
+  background-color: var(--gray-a3);
 }
 
-/* Shiki and rehype-pretty-code both emit dual-theme CSS variables (defaultColor: false).
-   Light is the default; any dark ancestor switches to the dark set. */
-.code-block-content pre.shiki span,
-pre[data-theme] code span {
+.code-block-content pre[data-pending] {
+  color: var(--gray-12);
+}
+
+/* Shiki and rehype-pretty-code both emit dual-theme variables (defaultColor: false). */
+.code-block-content pre span {
   color: var(--shiki-light);
   font-style: var(--shiki-light-font-style);
   font-weight: var(--shiki-light-font-weight);
   text-decoration: var(--shiki-light-text-decoration);
 }
 
-pre[data-theme] code {
-  background: none !important;
-}
-
-:is(.dark, .dark-theme, [data-appearance='dark']) :is(.code-block-content pre.shiki span, pre[data-theme] code span) {
+:is(.dark, .dark-theme, [data-appearance='dark']) .code-block-content pre span {
   color: var(--shiki-dark);
   font-style: var(--shiki-dark-font-style);
   font-weight: var(--shiki-dark-font-weight);
   text-decoration: var(--shiki-dark-text-decoration);
 }
 
-.code-block-skeleton {
+/* ---------------------------------------------------------------------------------------------
+ * Collapse
+ * -------------------------------------------------------------------------------------------*/
+
+.code-block[data-collapsed] .code-block-body {
+  mask-image: linear-gradient(to bottom, black calc(100% - var(--space-9)), transparent);
+}
+
+.code-block-footer {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-3);
-}
-
-.code-block-skeleton-line {
-  height: 1em;
-  background: linear-gradient(90deg, var(--gray-a3) 0%, var(--gray-a4) 50%, var(--gray-a3) 100%);
-  background-size: 200% 100%;
-  animation: code-block-shimmer 1.5s ease-in-out infinite;
-  border-radius: var(--radius-1);
-}
-
-@keyframes code-block-shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .code-block-skeleton-line {
-    animation: none;
-  }
-}
-
-/* Fades the bottom of collapsed code into the card. */
-.code-block-shadow {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 80px;
-  background: linear-gradient(to top, var(--color-panel-solid), transparent);
-  pointer-events: none;
-  z-index: 1;
-}
-
-.code-block-chevron {
-  transition: transform 0.2s ease-in-out;
-}
-
-.code-block-chevron[data-expanded] {
-  transform: rotate(180deg);
+  justify-content: center;
+  padding: var(--space-1);
+  border-top: 1px solid var(--code-block-border);
 }

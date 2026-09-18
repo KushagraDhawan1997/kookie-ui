@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
-import { CodeBlock } from '@/components/blocks/code-block/code-block';
 import { SectionHeader } from '@/components/blocks/section-header/section-header';
 import { EmptyState } from '@/components/blocks/empty-state/empty-state';
 import { Flex, Card, Text, Heading, Separator, IconButton, Button, Toolbar, ScrollArea } from '@kushagradhawan/kookie-ui';
@@ -24,7 +23,61 @@ export function ToolbarExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="24rem">
+        <PreviewBlock
+          background="none"
+          height="24rem"
+          code={`<Card
+  variant="classic"
+  size="3"
+  inset
+  style={{
+    height: '22rem',
+    display: 'flex',
+    flexDirection: 'column',
+  }}
+>
+  <Toolbar variant="ghost" size="1">
+    <Toolbar.Left>
+      <IconButton
+        radius="full"
+        variant="soft"
+        size="2"
+        color="gray"
+        highContrast
+        aria-label="Go back"
+      >
+        <ArrowLeftIcon />
+      </IconButton>
+    </Toolbar.Left>
+    <Toolbar.Center>
+      <Toolbar.Title>Settings</Toolbar.Title>
+    </Toolbar.Center>
+    <Toolbar.Right gap="1">
+      <IconButton radius="full" size="2" aria-label="Add">
+        <PlusIcon />
+      </IconButton>
+      <IconButton
+        radius="full"
+        variant="soft"
+        size="2"
+        color="gray"
+        highContrast
+        aria-label="Close"
+      >
+        <CloseIcon />
+      </IconButton>
+    </Toolbar.Right>
+  </Toolbar>
+  <ScrollArea
+    scrollbars="vertical"
+    style={{ flexGrow: 1, marginTop: 'var(--rt-toolbar-height)' }}
+  >
+    <Flex direction="column" gap="4" p="4">
+      {/* Settings content */}
+    </Flex>
+  </ScrollArea>
+</Card>`}
+        >
           <Card variant="classic" size="3" inset style={{ width: '100%', maxWidth: '400px', height: '22rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
             <Toolbar variant="ghost" size="1">
               <Toolbar.Left>
@@ -103,62 +156,6 @@ export function ToolbarExamples() {
             </ScrollArea>
           </Card>
         </PreviewBlock>
-        <CodeBlock
-          code={`<Card
-  variant="classic"
-  size="3"
-  inset
-  style={{
-    height: '22rem',
-    display: 'flex',
-    flexDirection: 'column',
-  }}
->
-  <Toolbar variant="ghost" size="1">
-    <Toolbar.Left>
-      <IconButton
-        radius="full"
-        variant="soft"
-        size="2"
-        color="gray"
-        highContrast
-        aria-label="Go back"
-      >
-        <ArrowLeftIcon />
-      </IconButton>
-    </Toolbar.Left>
-    <Toolbar.Center>
-      <Toolbar.Title>Settings</Toolbar.Title>
-    </Toolbar.Center>
-    <Toolbar.Right gap="1">
-      <IconButton radius="full" size="2" aria-label="Add">
-        <PlusIcon />
-      </IconButton>
-      <IconButton
-        radius="full"
-        variant="soft"
-        size="2"
-        color="gray"
-        highContrast
-        aria-label="Close"
-      >
-        <CloseIcon />
-      </IconButton>
-    </Toolbar.Right>
-  </Toolbar>
-  <ScrollArea
-    scrollbars="vertical"
-    style={{ flexGrow: 1, marginTop: 'var(--rt-toolbar-height)' }}
-  >
-    <Flex direction="column" gap="4" p="4">
-      {/* Settings content */}
-    </Flex>
-  </ScrollArea>
-</Card>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
 
       <Separator size="4" />
@@ -177,43 +174,12 @@ export function ToolbarExamples() {
           height="40rem"
           showThemeToggle={false}
           appearance="dark"
-          variant="ghost"
           background={{
             backgroundImage: `url(${IMAGE_URL})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
-        >
-          <Card variant="classic" material="translucent" size="3" inset style={{ width: '100%', maxWidth: '400px', height: '24rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-            <Toolbar floating variant="surface" material="translucent" size="1">
-              <Toolbar.Left>
-                <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Home">
-                  <HugeiconsIcon icon={Home01Icon} strokeWidth={1.75} />
-                </IconButton>
-              </Toolbar.Left>
-              <Toolbar.Center>
-                <Toolbar.Title>Explore</Toolbar.Title>
-              </Toolbar.Center>
-              <Toolbar.Right>
-                <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Search">
-                  <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
-                </IconButton>
-              </Toolbar.Right>
-            </Toolbar>
-            <EmptyState pt="var(--rt-toolbar-height)" height="100%" justify="center">
-              <EmptyState.Icon>
-                <HugeiconsIcon icon={Search01Icon} size={32} strokeWidth={1.5} />
-              </EmptyState.Icon>
-              <EmptyState.Content>
-                <EmptyState.Title>No results</EmptyState.Title>
-                <EmptyState.Description>Try adjusting your search</EmptyState.Description>
-              </EmptyState.Content>
-            </EmptyState>
-          </Card>
-        </PreviewBlock>
-        <CodeBlock
           code={`<Card
-  variant="classic"
   material="translucent"
   size="3"
   inset
@@ -265,10 +231,34 @@ export function ToolbarExamples() {
     </EmptyState.Content>
   </EmptyState>
 </Card>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Card variant="classic" material="translucent" size="3" inset style={{ width: '100%', maxWidth: '400px', height: '24rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+            <Toolbar floating variant="surface" material="translucent" size="1">
+              <Toolbar.Left>
+                <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Home">
+                  <HugeiconsIcon icon={Home01Icon} strokeWidth={1.75} />
+                </IconButton>
+              </Toolbar.Left>
+              <Toolbar.Center>
+                <Toolbar.Title>Explore</Toolbar.Title>
+              </Toolbar.Center>
+              <Toolbar.Right>
+                <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Search">
+                  <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
+                </IconButton>
+              </Toolbar.Right>
+            </Toolbar>
+            <EmptyState pt="var(--rt-toolbar-height)" height="100%" justify="center">
+              <EmptyState.Icon>
+                <HugeiconsIcon icon={Search01Icon} size={32} strokeWidth={1.5} />
+              </EmptyState.Icon>
+              <EmptyState.Content>
+                <EmptyState.Title>No results</EmptyState.Title>
+                <EmptyState.Description>Try adjusting your search</EmptyState.Description>
+              </EmptyState.Content>
+            </EmptyState>
+          </Card>
+        </PreviewBlock>
       </Flex>
 
       <Separator size="4" />
@@ -283,7 +273,34 @@ export function ToolbarExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="20rem">
+        <PreviewBlock
+          background="none"
+          height="20rem"
+          code={`<Card variant="classic" size="2" style={{ display: 'flex', flexDirection: 'column' }}>
+  <Flex direction="column" gap="4" p="4" flexGrow="1" pb="var(--rt-toolbar-height)">
+    <Heading size="4" weight="medium">Edit Profile</Heading>
+    <Text size="2" color="gray">Update your account information.</Text>
+    {/* Form fields */}
+  </Flex>
+  <Toolbar anchor="bottom" variant="soft" size="2">
+    <Toolbar.Left>
+      <Button
+        variant="ghost"
+        size="2"
+        color="gray"
+        highContrast
+      >
+        Cancel
+      </Button>
+    </Toolbar.Left>
+    <Toolbar.Right>
+      <Button variant="solid" size="2" highContrast>
+        Save Changes
+      </Button>
+    </Toolbar.Right>
+  </Toolbar>
+</Card>`}
+        >
           <Card
             variant="classic"
             size="1"
@@ -337,35 +354,6 @@ export function ToolbarExamples() {
             </Toolbar>
           </Card>
         </PreviewBlock>
-        <CodeBlock
-          code={`<Card variant="classic" size="2" style={{ display: 'flex', flexDirection: 'column' }}>
-  <Flex direction="column" gap="4" p="4" flexGrow="1" pb="var(--rt-toolbar-height)">
-    <Heading size="4" weight="medium">Edit Profile</Heading>
-    <Text size="2" color="gray">Update your account information.</Text>
-    {/* Form fields */}
-  </Flex>
-  <Toolbar anchor="bottom" variant="soft" size="2">
-    <Toolbar.Left>
-      <Button
-        variant="ghost"
-        size="2"
-        color="gray"
-        highContrast
-      >
-        Cancel
-      </Button>
-    </Toolbar.Left>
-    <Toolbar.Right>
-      <Button variant="solid" size="2" highContrast>
-        Save Changes
-      </Button>
-    </Toolbar.Right>
-  </Toolbar>
-</Card>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
 
       <Separator size="4" />
@@ -380,7 +368,44 @@ export function ToolbarExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="22rem">
+        <PreviewBlock
+          background="none"
+          height="22rem"
+          code={`<Card variant="classic" size="2">
+  <Toolbar variant="surface" size="2">
+    <Toolbar.Left>
+      <Toolbar.Title>Documents</Toolbar.Title>
+    </Toolbar.Left>
+    <Toolbar.Right gap="1">
+      <IconButton
+        variant="soft"
+        size="2"
+        color="gray"
+        highContrast
+        aria-label="Search"
+      >
+        <SearchIcon />
+      </IconButton>
+      <IconButton
+        variant="soft"
+        size="2"
+        color="gray"
+        highContrast
+        aria-label="Settings"
+      >
+        <SettingsIcon />
+      </IconButton>
+      <Button variant="solid" size="2" highContrast>
+        <AddIcon />
+        New
+      </Button>
+    </Toolbar.Right>
+  </Toolbar>
+  <Flex direction="column" p="3" gap="1" pt="var(--rt-toolbar-height)">
+    {/* File list */}
+  </Flex>
+</Card>`}
+        >
           <Card variant="classic" size="2" style={{ width: '100%', maxWidth: '500px', overflow: 'hidden' }}>
             <Toolbar variant="surface" size="2">
               <Toolbar.Left>
@@ -436,45 +461,6 @@ export function ToolbarExamples() {
             </Flex>
           </Card>
         </PreviewBlock>
-        <CodeBlock
-          code={`<Card variant="classic" size="2">
-  <Toolbar variant="surface" size="2">
-    <Toolbar.Left>
-      <Toolbar.Title>Documents</Toolbar.Title>
-    </Toolbar.Left>
-    <Toolbar.Right gap="1">
-      <IconButton
-        variant="soft"
-        size="2"
-        color="gray"
-        highContrast
-        aria-label="Search"
-      >
-        <SearchIcon />
-      </IconButton>
-      <IconButton
-        variant="soft"
-        size="2"
-        color="gray"
-        highContrast
-        aria-label="Settings"
-      >
-        <SettingsIcon />
-      </IconButton>
-      <Button variant="solid" size="2" highContrast>
-        <AddIcon />
-        New
-      </Button>
-    </Toolbar.Right>
-  </Toolbar>
-  <Flex direction="column" p="3" gap="1" pt="var(--rt-toolbar-height)">
-    {/* File list */}
-  </Flex>
-</Card>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
     </Flex>
   );

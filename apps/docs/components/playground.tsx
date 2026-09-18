@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NextImage from 'next/image';
-import { Flex, Card, Theme, Button, Box, Text, SegmentedControl, Popover, IconButton, Image } from '@kushagradhawan/kookie-ui';
+import { Flex, Theme, Button, Box, Text, SegmentedControl, Popover, IconButton, Image } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { Copy01Icon, Sun01Icon, Moon02Icon, SlidersHorizontalIcon } from '@hugeicons/core-free-icons';
+import { Copy01Icon, Sun01Icon, Moon02Icon, SlidersHorizontalIcon, Tick01Icon } from '@hugeicons/core-free-icons';
+import '@/components/blocks/preview-block/preview-block.css';
 import { PropertyControl } from './property-control';
 
 interface PlaygroundProps {
@@ -62,77 +63,78 @@ interface PlaygroundProps {
   showToolbar?: boolean;
 
   /**
-   * Custom height for the preview area (default: 480px)
+   * Stage height (default: 22rem)
    */
   height?: string;
 }
 
-export default function Playground({ component, code, items, showBackground = false, hint, showControls = false, showToolbar = true, height = '480px' }: PlaygroundProps) {
+export default function Playground({ component, code, items, showBackground = false, hint, showControls = false, showToolbar = true, height = '22rem' }: PlaygroundProps) {
   const [copied, setCopied] = useState(false);
   const [appearance, setAppearance] = useState<'light' | 'dark'>('light');
+
+  useEffect(() => {
+    if (!copied) return;
+    const timeout = window.setTimeout(() => setCopied(false), 2000);
+    return () => window.clearTimeout(timeout);
+  }, [copied]);
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(code);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy code:', err);
+    } catch (error) {
+      console.error('Failed to copy code:', error);
     }
   };
 
   return (
-    <Flex direction={{ initial: 'column', md: showControls ? 'row' : 'column' }} gap="2" my="3" align="center">
-      {/* Left side - Preview area */}
-      <Flex direction="column" gap="2" width="100%" className="playground-container">
-        <Theme fontFamily="sans" asChild appearance={appearance} hasBackground={false}>
-          <Box position="relative" style={{ width: '100%', height }}>
-            <Card size="1" variant="soft" style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
-              {/* Background Image */}
-              {showBackground && <Image as={NextImage} src="/playground/image.jpg" alt="Background" fill sizes="100vw" style={{ objectFit: 'cover', zIndex: 0 }} />}
+    <Flex direction={{ initial: 'column', md: showControls ? 'row' : 'column' }} gap="3" align="start">
+      {/* Same frame as PreviewBlock, so playgrounds and examples read alike. */}
+      <Flex direction="column" gap="2" width="100%" minWidth="0">
+        <div className="preview-block">
+          {showToolbar && (
+            <div className="preview-block-toolbar">
+              <Button size="1" variant="ghost" color="gray" highContrast onClick={handleCopy}>
+                <HugeiconsIcon icon={copied ? Tick01Icon : Copy01Icon} strokeWidth={1.75} />
+                {copied ? 'Copied' : 'Copy code'}
+              </Button>
+              <Flex gap="2" align="center" ml="auto">
+                <SegmentedControl.Root size="1" value={appearance} onValueChange={(value) => setAppearance(value === 'dark' ? 'dark' : 'light')}>
+                  <SegmentedControl.Item value="light" iconOnly aria-label="Light preview">
+                    <HugeiconsIcon icon={Sun01Icon} strokeWidth={1.75} />
+                  </SegmentedControl.Item>
+                  <SegmentedControl.Item value="dark" iconOnly aria-label="Dark preview">
+                    <HugeiconsIcon icon={Moon02Icon} strokeWidth={1.75} />
+                  </SegmentedControl.Item>
+                </SegmentedControl.Root>
+                {!showControls && (
+                  <Popover.Root>
+                    <Popover.Trigger>
+                      <IconButton size="1" variant="ghost" highContrast color="gray" aria-label="Properties">
+                        <HugeiconsIcon icon={SlidersHorizontalIcon} strokeWidth={1.75} />
+                      </IconButton>
+                    </Popover.Trigger>
+                    <Popover.Content size="1" side="bottom" align="end" width="280px">
+                      <PropertyControl.Group width="100%" items={items} />
+                    </Popover.Content>
+                  </Popover.Root>
+                )}
+              </Flex>
+            </div>
+          )}
 
-              {/* Toolbar - Copy button (left) and theme toggle + settings (right) */}
-              {showToolbar && (
-                <>
-                  <Flex position="absolute" top="2" left="2" style={{ zIndex: 2 }}>
-                    <Button size="2" variant="ghost" color="gray" onClick={handleCopy} tooltip={copied ? 'Copied!' : 'Copy'} aria-label={copied ? 'Copied!' : 'Copy code'}>
-                      <HugeiconsIcon icon={Copy01Icon} /> Copy
-                    </Button>
-                  </Flex>
-                  <Flex position="absolute" top="2" right="2" gap="2" align="center" style={{ zIndex: 2 }}>
-                    <SegmentedControl.Root size="2" value={appearance} onValueChange={(value) => setAppearance(value as 'light' | 'dark')}>
-                      <SegmentedControl.Item value="light" iconOnly>
-                        <HugeiconsIcon icon={Sun01Icon} />
-                      </SegmentedControl.Item>
-                      <SegmentedControl.Item value="dark" iconOnly>
-                        <HugeiconsIcon icon={Moon02Icon} />
-                      </SegmentedControl.Item>
-                    </SegmentedControl.Root>
-                    {!showControls && (
-                      <Popover.Root>
-                        <Popover.Trigger>
-                          <IconButton size="2" variant="ghost" highContrast color="gray" aria-label="Settings">
-                            <HugeiconsIcon icon={SlidersHorizontalIcon} strokeWidth={1.75} />
-                          </IconButton>
-                        </Popover.Trigger>
-                        <Popover.Content size="1" side="right" align="start" width="280px">
-                          <PropertyControl.Group width="100%" items={items} />
-                        </Popover.Content>
-                      </Popover.Root>
-                    )}
-                  </Flex>
-                </>
+          <Theme appearance={appearance} fontFamily="sans" hasBackground className="preview-block-theme">
+            <div className="preview-block-stage" style={{ position: 'relative', height }}>
+              {showBackground && (
+                <Image as={NextImage} src="/playground/image.jpg" alt="" fill sizes="100vw" style={{ objectFit: 'cover' }} />
               )}
-
-              {/* Preview area */}
-              <Flex direction="column" align="center" justify="center" height="100%" p="4" style={{ position: 'relative', zIndex: 1 }}>
+              <Flex position="relative" align="center" justify="center">
                 {component}
               </Flex>
-            </Card>
-          </Box>
-        </Theme>
+            </div>
+          </Theme>
+        </div>
 
-        {/* Hint */}
         {hint && (
           <Text size="1" color="gray">
             {hint}
@@ -140,7 +142,6 @@ export default function Playground({ component, code, items, showBackground = fa
         )}
       </Flex>
 
-      {/* Right side - Property controls */}
       {showControls && (
         <Box width={{ initial: '100%', md: '256px' }} flexShrink="0">
           <PropertyControl.Group width="100%" items={items} />

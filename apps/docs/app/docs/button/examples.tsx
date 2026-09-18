@@ -2,11 +2,23 @@
 
 import * as React from 'react';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
-import { CodeBlock } from '@/components/blocks/code-block/code-block';
 import { SectionHeader } from '@/components/blocks/section-header/section-header';
 import { Flex, Button, Text, Separator, Card, Heading, Spinner } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { ArrowRight01Icon, Download01Icon, Add01Icon, Delete01Icon, Copy01Icon, Share01Icon, Tick01Icon, FilterIcon, SortingAZ01Icon, Settings01Icon, PlayIcon, Bookmark01Icon } from '@hugeicons/core-free-icons';
+import {
+  ArrowRight01Icon,
+  Download01Icon,
+  Add01Icon,
+  Delete01Icon,
+  Copy01Icon,
+  Share01Icon,
+  Tick01Icon,
+  FilterIcon,
+  SortingAZ01Icon,
+  Settings01Icon,
+  PlayIcon,
+  Bookmark01Icon,
+} from '@hugeicons/core-free-icons';
 
 export function ButtonExamples() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -35,34 +47,13 @@ export function ButtonExamples() {
           <SectionHeader.Content>
             <SectionHeader.Title>Form Submission</SectionHeader.Title>
             <SectionHeader.Description>
-              The classic variant commands attention for primary actions. Click to see the loading state - the button replaces all content with a centered spinner and disables interaction automatically.
+              The classic variant commands attention for primary actions. Click to see the loading state - the button replaces all content with a centered spinner and disables interaction
+              automatically.
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
-          <Flex gap="2" align="center">
-            <Button
-              variant="soft"
-              size="2"
-              color="gray"
-              highContrast
-              disabled={isSubmitting}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="classic"
-              size="2"
-              highContrast
-              loading={isSubmitting}
-              onClick={handleSubmit}
-            >
-              <HugeiconsIcon icon={Tick01Icon} strokeWidth={1.75} />
-              Save Changes
-            </Button>
-          </Flex>
-        </PreviewBlock>
-        <CodeBlock
+        <PreviewBlock
+          background="none"
           code={`<Flex gap="2" align="center">
   <Button
     variant="soft"
@@ -84,10 +75,17 @@ export function ButtonExamples() {
     Save Changes
   </Button>
 </Flex>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Flex gap="2" align="center">
+            <Button variant="soft" size="2" color="gray" highContrast disabled={isSubmitting}>
+              Cancel
+            </Button>
+            <Button variant="classic" size="2" highContrast loading={isSubmitting} onClick={handleSubmit}>
+              <HugeiconsIcon icon={Tick01Icon} strokeWidth={1.75} />
+              Save Changes
+            </Button>
+          </Flex>
+        </PreviewBlock>
       </Flex>
 
       <Separator size="4" />
@@ -98,30 +96,28 @@ export function ButtonExamples() {
           <SectionHeader.Content>
             <SectionHeader.Title>Icon Loading State</SectionHeader.Title>
             <SectionHeader.Description>
-              For a more sophisticated loading design, wrap the icon in a Spinner component. 
-              The spinner replaces just the icon while the text remains visible, providing clearer context during the action.
+              For a more sophisticated loading design, wrap the icon in a Spinner component. The spinner replaces just the icon while the text remains visible, providing clearer context during the
+              action.
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
+        <PreviewBlock
+          background="none"
+          code={`<Button disabled={isBookmarking} variant="classic">
+  <Spinner loading={isBookmarking}>
+    <BookmarkIcon />
+  </Spinner>
+  Bookmark
+</Button>`}
+        >
           <Flex gap="2" align="center">
-            <Button
-              variant="classic"
-              size="2"
-              disabled={isBookmarking}
-              onClick={handleBookmark}
-            >
+            <Button variant="classic" size="2" disabled={isBookmarking} onClick={handleBookmark}>
               <Spinner loading={isBookmarking}>
                 <HugeiconsIcon icon={Bookmark01Icon} strokeWidth={1.75} />
               </Spinner>
               Bookmark
             </Button>
-            <Button
-              variant="soft"
-              size="2"
-              disabled={isBookmarking}
-              onClick={handleBookmark}
-            >
+            <Button variant="soft" size="2" disabled={isBookmarking} onClick={handleBookmark}>
               <Spinner loading={isBookmarking}>
                 <HugeiconsIcon icon={Bookmark01Icon} strokeWidth={1.75} />
               </Spinner>
@@ -129,17 +125,6 @@ export function ButtonExamples() {
             </Button>
           </Flex>
         </PreviewBlock>
-        <CodeBlock
-          code={`<Button disabled={isBookmarking} variant="classic">
-  <Spinner loading={isBookmarking}>
-    <BookmarkIcon />
-  </Spinner>
-  Bookmark
-</Button>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
 
       <Separator size="4" />
@@ -154,7 +139,18 @@ export function ButtonExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
+        <PreviewBlock
+          background="none"
+          code={`<Flex gap="2" align="center">
+  <Button variant="outline" size="2" color="gray">
+    Cancel
+  </Button>
+  <Button variant="solid" size="2" color="red">
+    <HugeiconsIcon icon={Delete01Icon} strokeWidth={1.75} />
+    Delete Project
+  </Button>
+</Flex>`}
+        >
           <Flex gap="2" align="center">
             <Button variant="outline" size="2" color="gray">
               Cancel
@@ -165,20 +161,6 @@ export function ButtonExamples() {
             </Button>
           </Flex>
         </PreviewBlock>
-        <CodeBlock
-          code={`<Flex gap="2" align="center">
-  <Button variant="outline" size="2" color="gray">
-    Cancel
-  </Button>
-  <Button variant="solid" size="2" color="red">
-    <HugeiconsIcon icon={Delete01Icon} strokeWidth={1.75} />
-    Delete Project
-  </Button>
-</Flex>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
 
       <Separator size="4" />
@@ -193,30 +175,8 @@ export function ButtonExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
-          <Card variant="classic" size="2" style={{ maxWidth: 320 }}>
-            <Flex direction="column" gap="6" p="2">
-              <Flex direction="column" gap="1">
-                <Heading size="4" weight="medium">
-                  Pro Plan
-                </Heading>
-                <Text size="2" color="gray">
-                  Unlimited projects and collaborators
-                </Text>
-              </Flex>
-              <Flex direction="column" gap="1">
-                <Button variant="solid" size="2">
-                  Upgrade Now
-                  <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={1.75} />
-                </Button>
-                <Button variant="ghost" size="2" color="gray">
-                  Compare Plans
-                </Button>
-              </Flex>
-            </Flex>
-          </Card>
-        </PreviewBlock>
-        <CodeBlock
+        <PreviewBlock
+          background="none"
           code={`<Card
   variant="classic"
   size="2"
@@ -242,10 +202,29 @@ export function ButtonExamples() {
     </Flex>
   </Flex>
 </Card>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Card variant="classic" size="2" style={{ maxWidth: 320 }}>
+            <Flex direction="column" gap="6" p="2">
+              <Flex direction="column" gap="1">
+                <Heading size="4" weight="medium">
+                  Pro Plan
+                </Heading>
+                <Text size="2" color="gray">
+                  Unlimited projects and collaborators
+                </Text>
+              </Flex>
+              <Flex direction="column" gap="1">
+                <Button variant="solid" size="2">
+                  Upgrade Now
+                  <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={1.75} />
+                </Button>
+                <Button variant="ghost" size="2" color="gray">
+                  Compare Plans
+                </Button>
+              </Flex>
+            </Flex>
+          </Card>
+        </PreviewBlock>
       </Flex>
 
       <Separator size="4" />
@@ -260,51 +239,8 @@ export function ButtonExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
-          <Flex gap="2" align="center">
-            <Button
-              variant="soft"
-              size="2"
-              color="gray"
-              highContrast
-              onClick={toggleSelection}
-            >
-              {selectedCount > 0 ? `${selectedCount} selected` : 'Select items'}
-            </Button>
-            <Button
-              variant="soft"
-              size="2"
-              color="gray"
-              highContrast
-              disabled={selectedCount === 0}
-              tooltip={selectedCount === 0 ? 'Select items first' : undefined}
-            >
-              <HugeiconsIcon icon={Download01Icon} strokeWidth={1.75} />
-              Export
-            </Button>
-            <Button
-              variant="soft"
-              size="2"
-              color="gray"
-              highContrast
-              tooltip="Copy link"
-            >
-              <HugeiconsIcon icon={Copy01Icon} strokeWidth={1.75} />
-              Copy
-            </Button>
-            <Button
-              variant="soft"
-              size="2"
-              color="gray"
-              highContrast
-              tooltip="Share with team"
-            >
-              <HugeiconsIcon icon={Share01Icon} strokeWidth={1.75} />
-              Share
-            </Button>
-          </Flex>
-        </PreviewBlock>
-        <CodeBlock
+        <PreviewBlock
+          background="none"
           code={`<Flex gap="2" align="center">
   <Button
     variant="soft"
@@ -337,10 +273,25 @@ export function ButtonExamples() {
     Copy
   </Button>
 </Flex>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Flex gap="2" align="center">
+            <Button variant="soft" size="2" color="gray" highContrast onClick={toggleSelection}>
+              {selectedCount > 0 ? `${selectedCount} selected` : 'Select items'}
+            </Button>
+            <Button variant="soft" size="2" color="gray" highContrast disabled={selectedCount === 0} tooltip={selectedCount === 0 ? 'Select items first' : undefined}>
+              <HugeiconsIcon icon={Download01Icon} strokeWidth={1.75} />
+              Export
+            </Button>
+            <Button variant="soft" size="2" color="gray" highContrast tooltip="Copy link">
+              <HugeiconsIcon icon={Copy01Icon} strokeWidth={1.75} />
+              Copy
+            </Button>
+            <Button variant="soft" size="2" color="gray" highContrast tooltip="Share with team">
+              <HugeiconsIcon icon={Share01Icon} strokeWidth={1.75} />
+              Share
+            </Button>
+          </Flex>
+        </PreviewBlock>
       </Flex>
 
       <Separator size="4" />
@@ -355,23 +306,8 @@ export function ButtonExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
-          <Flex direction="column" align="center" justify="center" gap="4" py="5" style={{ textAlign: 'center' }}>
-            <Flex direction="column" gap="1">
-              <Heading size="4" weight="medium">
-                No projects yet
-              </Heading>
-              <Text size="2" color="gray">
-                Create your first project to get started
-              </Text>
-            </Flex>
-            <Button variant="surface" size="2" highContrast>
-              <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
-              Create Project
-            </Button>
-          </Flex>
-        </PreviewBlock>
-        <CodeBlock
+        <PreviewBlock
+          background="none"
           code={`<Flex
   direction="column"
   align="center"
@@ -393,10 +329,22 @@ export function ButtonExamples() {
     Create Project
   </Button>
 </Flex>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Flex direction="column" align="center" justify="center" gap="4" py="5" style={{ textAlign: 'center' }}>
+            <Flex direction="column" gap="1">
+              <Heading size="4" weight="medium">
+                No projects yet
+              </Heading>
+              <Text size="2" color="gray">
+                Create your first project to get started
+              </Text>
+            </Flex>
+            <Button variant="surface" size="2" highContrast>
+              <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
+              Create Project
+            </Button>
+          </Flex>
+        </PreviewBlock>
       </Flex>
 
       <Separator size="4" />
@@ -411,33 +359,8 @@ export function ButtonExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
-          <Flex gap="1" align="center">
-            <Button
-              variant="soft"
-              size="1"
-              color="gray"
-              highContrast
-            >
-              <HugeiconsIcon icon={FilterIcon} strokeWidth={1.75} />
-              Filter
-            </Button>
-            <Button
-              variant="soft"
-              size="1"
-              color="gray"
-              highContrast
-            >
-              <HugeiconsIcon icon={SortingAZ01Icon} strokeWidth={1.75} />
-              Sort
-            </Button>
-            <Button variant="ghost" size="1" color="gray">
-              <HugeiconsIcon icon={Settings01Icon} strokeWidth={1.75} />
-              Settings
-            </Button>
-          </Flex>
-        </PreviewBlock>
-        <CodeBlock
+        <PreviewBlock
+          background="none"
           code={`<Flex gap="1" align="center">
   <Button
     variant="soft"
@@ -462,10 +385,22 @@ export function ButtonExamples() {
     Settings
   </Button>
 </Flex>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Flex gap="1" align="center">
+            <Button variant="soft" size="1" color="gray" highContrast>
+              <HugeiconsIcon icon={FilterIcon} strokeWidth={1.75} />
+              Filter
+            </Button>
+            <Button variant="soft" size="1" color="gray" highContrast>
+              <HugeiconsIcon icon={SortingAZ01Icon} strokeWidth={1.75} />
+              Sort
+            </Button>
+            <Button variant="ghost" size="1" color="gray">
+              <HugeiconsIcon icon={Settings01Icon} strokeWidth={1.75} />
+              Settings
+            </Button>
+          </Flex>
+        </PreviewBlock>
       </Flex>
 
       <Separator size="4" />
@@ -481,11 +416,8 @@ export function ButtonExamples() {
           </SectionHeader.Content>
         </SectionHeader.Root>
         <PreviewBlock
-          height="30rem"
           showThemeToggle={false}
           appearance="dark"
-          p="0"
-          variant="ghost"
           background={{
             backgroundColor: 'hsl(220, 20%, 10%)',
             backgroundImage:
@@ -493,18 +425,6 @@ export function ButtonExamples() {
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
-        >
-          <Flex gap="2" align="center">
-            <Button variant="soft" size="2" highContrast material="translucent">
-              <HugeiconsIcon icon={PlayIcon} strokeWidth={1.75} />
-              Watch Demo
-            </Button>
-            <Button variant="soft" size="2" color="gray" highContrast material="translucent">
-              Learn More
-            </Button>
-          </Flex>
-        </PreviewBlock>
-        <CodeBlock
           code={`<Theme appearance="dark" material="translucent">
   <Flex gap="2" align="center">
     <Button variant="soft" size="2" highContrast>
@@ -516,10 +436,17 @@ export function ButtonExamples() {
     </Button>
   </Flex>
 </Theme>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Flex gap="2" align="center">
+            <Button variant="soft" size="2" highContrast material="translucent">
+              <HugeiconsIcon icon={PlayIcon} strokeWidth={1.75} />
+              Watch Demo
+            </Button>
+            <Button variant="soft" size="2" color="gray" highContrast material="translucent">
+              Learn More
+            </Button>
+          </Flex>
+        </PreviewBlock>
       </Flex>
     </Flex>
   );

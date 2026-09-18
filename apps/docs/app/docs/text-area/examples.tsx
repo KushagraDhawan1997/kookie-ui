@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
-import { CodeBlock } from '@/components/blocks/code-block/code-block';
 import { SectionHeader } from '@/components/blocks/section-header/section-header';
 import { Flex, TextArea, Text, Separator, Card, Heading, Button } from '@kushagradhawan/kookie-ui';
 
@@ -53,20 +52,8 @@ export function TextAreaExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="24rem">
-          <Flex direction="column" gap="3" style={{ width: 480 }}>
-            <TextArea size="2" variant="surface" placeholder="Share your thoughts..." value={comment} onChange={(e) => setComment(e.target.value)} error={!!commentError} errorMessage={commentError} rows={4} />
-            <Flex gap="2" justify="end">
-              <Button variant="soft" size="2" onClick={() => setComment('')}>
-                Cancel
-              </Button>
-              <Button variant="classic" size="2" onClick={handleCommentSubmit}>
-                Post Comment
-              </Button>
-            </Flex>
-          </Flex>
-        </PreviewBlock>
-        <CodeBlock
+        <PreviewBlock
+          background="none"
           code={`const [comment, setComment] = React.useState('');
 const [error, setError] = React.useState('');
 
@@ -89,10 +76,28 @@ const handleSubmit = () => {
   errorMessage={error}
   rows={4}
 />`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Flex direction="column" gap="3" style={{ width: 480 }}>
+            <TextArea
+              size="2"
+              variant="surface"
+              placeholder="Share your thoughts..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              error={!!commentError}
+              errorMessage={commentError}
+              rows={4}
+            />
+            <Flex gap="2" justify="end">
+              <Button variant="soft" size="2" onClick={() => setComment('')}>
+                Cancel
+              </Button>
+              <Button variant="classic" size="2" onClick={handleCommentSubmit}>
+                Post Comment
+              </Button>
+            </Flex>
+          </Flex>
+        </PreviewBlock>
       </Flex>
 
       <Separator size="4" />
@@ -107,7 +112,27 @@ const handleSubmit = () => {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="dots" height="32rem">
+        <PreviewBlock
+          background="dots"
+          code={`const [feedback, setFeedback] = React.useState('');
+const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+const handleSubmit = async () => {
+  setIsSubmitting(true);
+  await submitFeedback(feedback);
+  setIsSubmitting(false);
+};
+
+<TextArea
+  size="2"
+  variant="outline"
+  placeholder="Tell us about your experience..."
+  value={feedback}
+  onChange={(e) => setFeedback(e.target.value)}
+  disabled={isSubmitting}
+  rows={6}
+/>`}
+        >
           <Card variant="classic" size="2" style={{ maxWidth: 560 }}>
             <Flex direction="column" gap="6">
               <Flex direction="column" gap="2">
@@ -132,29 +157,6 @@ const handleSubmit = () => {
             </Flex>
           </Card>
         </PreviewBlock>
-        <CodeBlock
-          code={`const [feedback, setFeedback] = React.useState('');
-const [isSubmitting, setIsSubmitting] = React.useState(false);
-
-const handleSubmit = async () => {
-  setIsSubmitting(true);
-  await submitFeedback(feedback);
-  setIsSubmitting(false);
-};
-
-<TextArea
-  size="2"
-  variant="outline"
-  placeholder="Tell us about your experience..."
-  value={feedback}
-  onChange={(e) => setFeedback(e.target.value)}
-  disabled={isSubmitting}
-  rows={6}
-/>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
 
       <Separator size="4" />
@@ -169,20 +171,8 @@ const handleSubmit = async () => {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="20rem">
-          <Flex direction="column" gap="2" style={{ width: 480 }}>
-            <TextArea size="2" variant="soft" placeholder="What's happening?" value={tweet} onChange={(e) => setTweet(e.target.value)} maxLength={maxLength} rows={3} />
-            <Flex justify="between" align="center">
-              <Text size="1" color="gray">
-                {tweet.length} / {maxLength}
-              </Text>
-              <Button variant="classic" size="1" disabled={tweet.length === 0 || tweet.length > maxLength}>
-                Post
-              </Button>
-            </Flex>
-          </Flex>
-        </PreviewBlock>
-        <CodeBlock
+        <PreviewBlock
+          background="none"
           code={`const [tweet, setTweet] = React.useState('');
 const maxLength = 280;
 
@@ -198,10 +188,19 @@ const maxLength = 280;
 <Text size="1" color="gray">
   {tweet.length} / {maxLength}
 </Text>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Flex direction="column" gap="2" style={{ width: 480 }}>
+            <TextArea size="2" variant="soft" placeholder="What's happening?" value={tweet} onChange={(e) => setTweet(e.target.value)} maxLength={maxLength} rows={3} />
+            <Flex justify="between" align="center">
+              <Text size="1" color="gray">
+                {tweet.length} / {maxLength}
+              </Text>
+              <Button variant="classic" size="1" disabled={tweet.length === 0 || tweet.length > maxLength}>
+                Post
+              </Button>
+            </Flex>
+          </Flex>
+        </PreviewBlock>
       </Flex>
 
       <Separator size="4" />
@@ -212,11 +211,25 @@ const maxLength = 280;
           <SectionHeader.Content>
             <SectionHeader.Title>Note Taking</SectionHeader.Title>
             <SectionHeader.Description>
-              The ghost variant creates a seamless inline editing experience. Perfect for note-taking apps, documentation editors, and content management systems where the textarea should blend with surrounding text.
+              The ghost variant creates a seamless inline editing experience. Perfect for note-taking apps, documentation editors, and content management systems where the textarea should blend with
+              surrounding text.
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="24rem">
+        <PreviewBlock
+          background="none"
+          code={`const [note, setNote] = React.useState('');
+
+<TextArea
+  size="2"
+  variant="ghost"
+  resize="vertical"
+  placeholder="Start typing your notes..."
+  value={note}
+  onChange={(e) => setNote(e.target.value)}
+  style={{ minHeight: 200 }}
+/>`}
+        >
           <Flex direction="column" gap="3" style={{ width: 600 }}>
             <Flex direction="column" gap="2">
               <Heading size="4" weight="medium">
@@ -229,22 +242,6 @@ const maxLength = 280;
             <TextArea size="2" variant="ghost" resize="vertical" placeholder="Start typing your notes..." value={note} onChange={(e) => setNote(e.target.value)} style={{ minHeight: 200 }} />
           </Flex>
         </PreviewBlock>
-        <CodeBlock
-          code={`const [note, setNote] = React.useState('');
-
-<TextArea
-  size="2"
-  variant="ghost"
-  resize="vertical"
-  placeholder="Start typing your notes..."
-  value={note}
-  onChange={(e) => setNote(e.target.value)}
-  style={{ minHeight: 200 }}
-/>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
 
       <Separator size="4" />
@@ -255,11 +252,21 @@ const maxLength = 280;
           <SectionHeader.Content>
             <SectionHeader.Title>Product Description Editor</SectionHeader.Title>
             <SectionHeader.Description>
-              Use the classic variant for prominent content editing areas. This example shows a product description editor with a clear, elevated appearance that draws focus to the content creation task.
+              Use the classic variant for prominent content editing areas. This example shows a product description editor with a clear, elevated appearance that draws focus to the content creation
+              task.
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="dots" height="36rem">
+        <PreviewBlock
+          background="dots"
+          code={`<TextArea
+  size="3"
+  variant="classic"
+  placeholder="Describe your product features, benefits, and specifications..."
+  resize="none"
+  rows={8}
+/>`}
+        >
           <Card variant="classic" size="2" style={{ maxWidth: 640 }}>
             <Flex direction="column" gap="6">
               <Flex direction="column" gap="2">
@@ -289,18 +296,6 @@ const maxLength = 280;
             </Flex>
           </Card>
         </PreviewBlock>
-        <CodeBlock
-          code={`<TextArea
-  size="3"
-  variant="classic"
-  placeholder="Describe your product features, benefits, and specifications..."
-  resize="none"
-  rows={8}
-/>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
     </Flex>
   );

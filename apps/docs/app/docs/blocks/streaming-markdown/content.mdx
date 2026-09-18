@@ -10,9 +10,9 @@ import { StreamingDemo } from './streaming-demo';
 
 Streaming Markdown renders a model's reply while it is still arriving. Half-written syntax, such as a code fence that hasn't closed or a bold phrase that hasn't ended, is closed before parsing, so the message doesn't flicker between states. Links and images are restricted to safe targets, and finished blocks can be memoized so only the growing tail re-renders.
 
-It renders with the [Markdown](/docs/blocks/markdown) mapping, so streamed replies look the same as static ones.
+It renders with [Markdown](/docs/blocks/markdown) inside a compact `MarkdownContent`, so streamed replies look like static ones. Blocks render straight into that one wrapper, so spacing flows across block boundaries while memoized blocks stay put.
 
-<PreviewBlock background="none" height="auto" showThemeToggle={false}>
+<PreviewBlock background="none" showThemeToggle={false}>
   <StreamingDemo />
 </PreviewBlock>
 
@@ -48,10 +48,11 @@ export function AssistantMessage({ message }: { message: { id: string; text: str
 
 ### Options
 
-Includes every [Markdown option](/docs/blocks/markdown#options), plus:
+Includes every [createMarkdownComponents option](/docs/blocks/markdown#createmarkdowncomponents), plus:
 
 | Option | Type | Default | Description |
 | ------ | ---- | ------- | ----------- |
+| `spacing` | `'compact' \| 'spacious'` | `'compact'` | Rhythm of the wrapping [MarkdownContent](/docs/blocks/markdown#spacing). |
 | `defaultOrigin` | `string` | Page origin | Origin used to resolve and check relative links and images. Set it when rendering on the server. |
 | `blockParser` | `(content: string) => { raw?: string }[]` | - | Splits content into top-level blocks, e.g. `marked.lexer`. |
 | `enableBlockMemoization` | `boolean` | `true` | Memoize each block. Only applies with `blockParser`. |

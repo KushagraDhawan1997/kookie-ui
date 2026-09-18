@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import NextLink from 'next/link';
-import { Box, Code, Link, Text } from '@kushagradhawan/kookie-ui';
+import { Code, Link, Text } from '@kushagradhawan/kookie-ui';
 import { CodeBlock } from '@/components/blocks/code-block/code-block';
 import { TableOfContents } from '@/components/blocks/table-of-contents/table-of-contents';
 import { SiteDocsPage } from '@/components/site-docs-page';
@@ -38,22 +38,13 @@ export function BlockDocPage({ slug, files, metadata, children }: BlockDocPagePr
 }
 
 function Path({ children }: { children: React.ReactNode }) {
-  return (
-    <Code size="3" color="gray" variant="soft" highContrast>
-      {children}
-    </Code>
-  );
+  return <Code variant="soft">{children}</Code>;
 }
 
-function Paragraph({ children }: { children: React.ReactNode }) {
-  return (
-    <Text as="p" size="3" my="2" style={{ lineHeight: 1.6 }}>
-      {children}
-    </Text>
-  );
-}
-
-/** Dependencies, required blocks and every source file, in the order you need them. */
+/**
+ * Dependencies, required blocks and every source file, in the order you need them. Renders
+ * top-level elements so the page's markdown rhythm spaces them like the rest of the MDX.
+ */
 export function BlockInstallation() {
   const context = React.useContext(BlockContext);
   if (!context) throw new Error('BlockInstallation must be rendered inside BlockDocPage.');
@@ -63,32 +54,32 @@ export function BlockInstallation() {
   const requiredBlocks = getRequiredBlocks(slug);
 
   return (
-    <Box>
-      <Paragraph>Install the dependencies.</Paragraph>
-      <CodeBlock code={`npm install ${dependencies.join(' ')}`} language="bash" showLineNumbers={false} />
+    <>
+      <Text as="p">Install the dependencies.</Text>
+      <CodeBlock code={`npm install ${dependencies.join(' ')}`} language="bash" />
 
       {requiredBlocks.length > 0 && (
-        <Paragraph>
+        <Text as="p">
           This block imports{' '}
           {requiredBlocks.map((block, index) => (
             <React.Fragment key={block.slug}>
               {index > 0 && (index === requiredBlocks.length - 1 ? ' and ' : ', ')}
-              <Link asChild>
+              <Link asChild underline="always">
                 <NextLink href={`/docs/blocks/${block.slug}`}>{block.title}</NextLink>
               </Link>
             </React.Fragment>
           ))}
           . Copy {requiredBlocks.length > 1 ? 'those' : 'that'} into <Path>components/blocks</Path> first.
-        </Paragraph>
+        </Text>
       )}
 
-      <Paragraph>
+      <Text as="p">
         Copy {files.length > 1 ? 'these files' : 'this file'} into <Path>components/blocks/{slug}</Path>. Keep the
-        folder names — blocks import each other by relative path.
-      </Paragraph>
+        folder names, since blocks import each other by relative path.
+      </Text>
       {files.map((file) => (
         <CodeBlock key={file.path} code={file.code} language={file.language} file={file.path} />
       ))}
-    </Box>
+    </>
   );
 }

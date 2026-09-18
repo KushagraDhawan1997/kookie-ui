@@ -1,167 +1,164 @@
 import * as React from 'react';
 import type { Components } from 'react-markdown';
-import { Blockquote, Box, Code, Heading, Separator, Table, Text } from '@kushagradhawan/kookie-ui';
-import { CodeBlock } from '../code-block/code-block';
+import { Blockquote, Code, Em, Heading, Link, Separator, Strong, Table, Text } from '@kushagradhawan/kookie-ui';
+import { CodeBlock, useCodeBlockContext } from '../code-block/code-block';
+import './markdown.css';
 
-export interface MarkdownComponentOptions {
-  /** Collapse long fenced code blocks. @default false */
-  codeBlockCollapsible?: boolean;
-  /** Render images with your own component, e.g. `next/image`. */
-  imageComponent?: (props: { src: string; alt: string; width?: string; height?: string }) => React.ReactNode;
-  /** High-contrast inline code. @default true */
-  inlineCodeHighContrast?: boolean;
-  /** `compact` for chat, `spacious` for articles and docs. @default "spacious" */
+/* -------------------------------------------------------------------------------------------------
+ * MarkdownContent — owns the vertical rhythm
+ * -----------------------------------------------------------------------------------------------*/
+
+export interface MarkdownContentProps extends React.ComponentPropsWithoutRef<'div'> {
+  /** `spacious` for articles and docs, `compact` for chat. @default "spacious" */
   spacing?: 'compact' | 'spacious';
 }
 
+/**
+ * Wrap rendered markdown in this. It sets the text size and every gap between blocks, so the
+ * element renderers carry no margins and any component you drop into MDX spaces correctly.
+ */
+export function MarkdownContent({ spacing = 'spacious', className, ...props }: MarkdownContentProps) {
+  return <div className={className ? `markdown ${className}` : 'markdown'} data-spacing={spacing} {...props} />;
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * Element renderers
+ * -----------------------------------------------------------------------------------------------*/
+
+export interface MarkdownComponentOptions {
+  /** Collapse long fenced code behind "Show more". @default true */
+  codeBlockCollapsible?: boolean;
+  /** Render images with your own component, e.g. `next/image`. */
+  imageComponent?: (props: { src: string; alt: string; width?: string; height?: string }) => React.ReactNode;
+  /** Render links that start with `/` or `#` with your router's link, e.g. `next/link`. */
+  linkComponent?: React.ComponentType<{ href: string; children?: React.ReactNode }>;
+}
+
 type ChildrenProps = { children?: React.ReactNode };
+type HeadingLevel = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
-function languageFromClassName(className?: string): string {
-  return className?.match(/language-([\w-]+)/i)?.[1] ?? 'text';
+const HEADING_SIZES: Record<HeadingLevel, '8' | '7' | '5' | '4' | '3' | '2'> = {
+  h1: '8',
+  h2: '7',
+  h3: '5',
+  h4: '4',
+  h5: '3',
+  h6: '2',
+};
+
+function languageFromClassName(className?: string): string | undefined {
+  return className?.match(/language-([\w-]+)/i)?.[1];
 }
 
-function codeFromChildren(children?: React.ReactNode): string {
-  let code = '';
-  if (typeof children === 'string') {
-    code = children;
-  } else if (Array.isArray(children)) {
-    code = children.map((child) => (typeof child === 'string' ? child : '')).join('');
+function textFromChildren(children?: React.ReactNode): string {
+  if (typeof children === 'string') return children;
+  if (Array.isArray(children)) return children.map((child) => (typeof child === 'string' ? child : '')).join('');
+  return '';
+}
+
+function createHeading(level: HeadingLevel) {
+  function MarkdownHeading({ id, children }: { id?: string; children?: React.ReactNode }) {
+    return (
+      <Heading as={level} size={HEADING_SIZES[level]} weight="medium" id={id} className="markdown-heading">
+        {children}
+        {/* The "#" is drawn in CSS so it stays out of the heading's text. */}
+        {id && <a className="markdown-heading-anchor" href={`#${id}`} aria-label="Link to this section" />}
+      </Heading>
+    );
   }
-  return code.replace(/^\n+|\n+$/g, '');
+  MarkdownHeading.displayName = `Markdown.${level}`;
+  return MarkdownHeading;
 }
-
-const SPACING = {
-  compact: {
-    h1: ['1.5rem', '1rem'],
-    h2: ['2rem', '0.375rem'],
-    h3: ['1.5rem', '0.375rem'],
-    h4: ['0.5rem', '0.25rem'],
-    h5: ['0.375rem', '0.25rem'],
-    h6: ['0.375rem', '0.25rem'],
-    list: '0.25rem',
-    listItem: '0.125rem',
-    codeBlock: '1',
-    hr: '0.375rem',
-    paragraph: '0',
-    blockquote: '0.5rem',
-  },
-  spacious: {
-    h1: ['3rem', '1.5rem'],
-    h2: ['3rem', '0.5rem'],
-    h3: ['2rem', '0.5rem'],
-    h4: ['0.625rem', '0.5rem'],
-    h5: ['0.5rem', '0.5rem'],
-    h6: ['0.5rem', '0.5rem'],
-    list: '0.5rem',
-    listItem: '0.25rem',
-    codeBlock: '2',
-    hr: '0.5rem',
-    paragraph: '0.5rem',
-    blockquote: '1rem',
-  },
-} as const;
 
 /**
- * Maps markdown elements to Kookie UI components. Works with react-markdown's `components`
- * prop and with MDX's `useMDXComponents`.
+ * Maps markdown elements to Kookie UI components. Works with react-markdown's `components` prop
+ * and with MDX's `useMDXComponents`, including code highlighted at build time by
+ * rehype-pretty-code. Render the output inside `MarkdownContent`.
  */
 export function createMarkdownComponents(options: MarkdownComponentOptions = {}): Components {
-  const { codeBlockCollapsible = false, imageComponent, inlineCodeHighContrast = true, spacing = 'spacious' } = options;
-  const space = SPACING[spacing];
+  const { codeBlockCollapsible = true, imageComponent, linkComponent: RouterLink } = options;
 
-  const heading = (as: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6', size: '9' | '7' | '5' | '4' | '3' | '2') =>
-    function MarkdownHeading({ children }: ChildrenProps) {
-      const [top, bottom] = space[as];
+  function MarkdownCode({ className, children, ...props }: React.ComponentPropsWithoutRef<'code'>) {
+    const isInsideCodeBlock = useCodeBlockContext();
+    // Build-time highlighted: the code element already carries its markup, keep it intact.
+    if (isInsideCodeBlock) {
       return (
-        <Heading as={as} size={size} weight="medium" mt={top} mb={bottom}>
+        <code className={className} {...props}>
           {children}
-        </Heading>
+        </code>
       );
-    };
+    }
+
+    const language = languageFromClassName(className);
+    const text = textFromChildren(children);
+    // Fenced code has a language or spans lines; everything else is inline.
+    if (language || text.includes('\n')) {
+      return (
+        <CodeBlock code={text.replace(/\n$/, '')} language={language ?? 'text'} collapsible={codeBlockCollapsible} />
+      );
+    }
+
+    return <Code variant="soft">{children}</Code>;
+  }
+
+  function MarkdownPre({ children, ...props }: React.ComponentPropsWithoutRef<'pre'>) {
+    const isHighlighted = 'data-language' in props || 'data-theme' in props;
+    // react-markdown: `code` renders the whole block, so `pre` steps aside.
+    if (!isHighlighted) return <>{children}</>;
+    return (
+      <CodeBlock collapsible={codeBlockCollapsible}>
+        <pre {...props}>{children}</pre>
+      </CodeBlock>
+    );
+  }
+
+  function MarkdownLink({ href = '', children }: { href?: string; children?: React.ReactNode }) {
+    const isInternal = href.startsWith('/') || href.startsWith('#');
+    if (isInternal && RouterLink) {
+      return (
+        <Link asChild underline="always">
+          <RouterLink href={href}>{children}</RouterLink>
+        </Link>
+      );
+    }
+    const external = /^https?:\/\//.test(href);
+    return (
+      <Link href={href} underline="always" {...(external && { target: '_blank', rel: 'noreferrer' })}>
+        {children}
+      </Link>
+    );
+  }
 
   return {
-    h1: heading('h1', '9'),
-    h2: heading('h2', '7'),
-    h3: heading('h3', '5'),
-    h4: heading('h4', '4'),
-    h5: heading('h5', '3'),
-    h6: heading('h6', '2'),
+    h1: createHeading('h1'),
+    h2: createHeading('h2'),
+    h3: createHeading('h3'),
+    h4: createHeading('h4'),
+    h5: createHeading('h5'),
+    h6: createHeading('h6'),
 
-    p: ({ children }: ChildrenProps) => (
-      <Text as="p" size="3" my={space.paragraph} style={{ lineHeight: 1.6 }}>
-        {children}
-      </Text>
-    ),
+    p: ({ children }: ChildrenProps) => <Text as="p">{children}</Text>,
+    a: MarkdownLink,
+    strong: ({ children }: ChildrenProps) => <Strong>{children}</Strong>,
+    em: ({ children }: ChildrenProps) => <Em>{children}</Em>,
 
-    code: ({ className, children, inline }: { className?: string; children?: React.ReactNode; inline?: boolean }) => {
-      const code = codeFromChildren(children);
-      // react-markdown no longer passes `inline`, so short single-line code without a language counts as inline.
-      const isInline =
-        inline === true || (inline === undefined && !className && !code.includes('\n') && code.length < 100);
+    code: MarkdownCode,
+    pre: MarkdownPre,
+    // rehype-pretty-code wraps each block in a figure; drop it so the block sits in the rhythm.
+    figure: ({ children, ...props }: React.ComponentPropsWithoutRef<'figure'>) =>
+      'data-rehype-pretty-code-figure' in props ? <>{children}</> : <figure {...props}>{children}</figure>,
 
-      if (isInline) {
-        return (
-          <Code size="3" highContrast={inlineCodeHighContrast}>
-            {code}
-          </Code>
-        );
-      }
+    ul: ({ children }: ChildrenProps) => <ul>{children}</ul>,
+    ol: ({ children }: ChildrenProps) => <ol>{children}</ol>,
+    li: ({ children }: ChildrenProps) => <li>{children}</li>,
 
-      return (
-        <Box my={space.codeBlock} minWidth="0">
-          <CodeBlock code={code} language={languageFromClassName(className)} collapsible={codeBlockCollapsible} />
-        </Box>
-      );
-    },
-
-    // `code` renders the block, so `pre` only passes through.
-    pre: ({ children }: ChildrenProps) => <>{children}</>,
-
-    ul: ({ children }: ChildrenProps) => (
-      <ul style={{ marginBlock: space.list, lineHeight: 1.6, paddingLeft: '1.5rem', listStyleType: 'disc' }}>
-        {children}
-      </ul>
-    ),
-    ol: ({ children }: ChildrenProps) => (
-      <ol style={{ marginBlock: space.list, lineHeight: 1.6, paddingLeft: '1.5rem', listStyleType: 'decimal' }}>
-        {children}
-      </ol>
-    ),
-    li: ({ children }: ChildrenProps) => (
-      <li style={{ marginBottom: space.listItem, lineHeight: 1.6 }}>{children}</li>
-    ),
-
-    blockquote: ({ children }: ChildrenProps) => (
-      <Blockquote size="1" my={space.blockquote}>
-        {children}
-      </Blockquote>
-    ),
-
-    a: ({ href, children }: { href?: string; children?: React.ReactNode }) => (
-      <a href={href} style={{ color: 'var(--accent-9)', textDecoration: 'underline' }}>
-        {children}
-      </a>
-    ),
-
-    strong: ({ children }: ChildrenProps) => (
-      <Text weight="medium" style={{ lineHeight: 1.6 }}>
-        {children}
-      </Text>
-    ),
-    em: ({ children }: ChildrenProps) => <Text style={{ lineHeight: 1.6, fontStyle: 'italic' }}>{children}</Text>,
-
-    hr: () => (
-      <Box my={space.hr}>
-        <Separator orientation="horizontal" light />
-      </Box>
-    ),
+    blockquote: ({ children }: ChildrenProps) => <Blockquote>{children}</Blockquote>,
+    hr: () => <Separator size="4" />,
 
     table: ({ children }: ChildrenProps) => (
-      <Box my="2">
-        <Table.Root size="2" variant="ghost">
-          {children}
-        </Table.Root>
-      </Box>
+      <Table.Root size="2" variant="ghost" className="markdown-table">
+        {children}
+      </Table.Root>
     ),
     thead: ({ children }: ChildrenProps) => <Table.Header>{children}</Table.Header>,
     tbody: ({ children }: ChildrenProps) => <Table.Body>{children}</Table.Body>,
@@ -169,23 +166,10 @@ export function createMarkdownComponents(options: MarkdownComponentOptions = {})
     th: ({ children }: ChildrenProps) => <Table.ColumnHeaderCell>{children}</Table.ColumnHeaderCell>,
     td: ({ children }: ChildrenProps) => <Table.Cell>{children}</Table.Cell>,
 
-    sub: ({ children }: ChildrenProps) => <sub>{children}</sub>,
-    sup: ({ children }: ChildrenProps) => <sup>{children}</sup>,
-    br: () => <br />,
-
-    img: imageComponent
-      ? ({ src, alt, width, height }: React.ImgHTMLAttributes<HTMLImageElement>) => {
-          if (typeof src !== 'string' || !src) return null;
-          return imageComponent({
-            src,
-            alt: alt ?? 'Image',
-            width: width ? String(width) : undefined,
-            height: height ? String(height) : undefined,
-          });
-        }
-      : undefined,
-
-    details: ({ children }: ChildrenProps) => <details style={{ padding: '0.5rem 0' }}>{children}</details>,
-    summary: ({ children }: ChildrenProps) => <summary style={{ cursor: 'pointer', fontWeight: 500 }}>{children}</summary>,
+    img: ({ src, alt, width, height }: React.ImgHTMLAttributes<HTMLImageElement>) => {
+      if (typeof src !== 'string' || !src) return null;
+      const image = { src, alt: alt ?? '', width: width ? String(width) : undefined, height: height ? String(height) : undefined };
+      return imageComponent ? imageComponent(image) : <img {...image} />;
+    },
   };
 }

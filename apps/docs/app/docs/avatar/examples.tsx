@@ -2,26 +2,10 @@
 
 import * as React from 'react';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
-import { CodeBlock } from '@/components/blocks/code-block/code-block';
 import { SectionHeader } from '@/components/blocks/section-header/section-header';
-import {
-  Flex,
-  Avatar,
-  Text,
-  Card,
-  Badge,
-  Separator,
-  Heading,
-  IconButton,
-  Button,
-} from '@kushagradhawan/kookie-ui';
+import { Flex, Avatar, Text, Card, Badge, Separator, Heading, IconButton, Button } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
-import {
-  MoreHorizontalIcon,
-  Mail01Icon,
-  Clock01Icon,
-  Add01Icon,
-} from '@hugeicons/core-free-icons';
+import { MoreHorizontalIcon, Mail01Icon, Clock01Icon, Add01Icon } from '@hugeicons/core-free-icons';
 
 export function AvatarExamples() {
   return (
@@ -36,60 +20,8 @@ export function AvatarExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
-          <Card variant="classic" size="2" style={{ minWidth: 320, maxWidth: 400 }}>
-            <Flex direction="column" gap="3">
-              <Flex justify="between" align="center">
-                <Flex gap="3" align="center">
-                  <Avatar
-                    size="4"
-                    fallback="SK"
-                    color="violet"
-                    variant="solid"
-                  />
-                  <Flex direction="column" gap="0">
-                    <Text size="2" weight="medium">Sarah Kim</Text>
-                    <Text size="1" color="gray">Product Lead</Text>
-                  </Flex>
-                </Flex>
-                <Badge size="1" color="violet" variant="soft">Admin</Badge>
-              </Flex>
-              <Separator size="4" />
-              <Flex justify="between" align="center">
-                <Flex gap="3" align="center">
-                  <Avatar
-                    size="4"
-                    fallback="JD"
-                    color="blue"
-                    variant="solid"
-                  />
-                  <Flex direction="column" gap="0">
-                    <Text size="2" weight="medium">John Doe</Text>
-                    <Text size="1" color="gray">Engineer</Text>
-                  </Flex>
-                </Flex>
-                <Badge size="1" color="blue" variant="soft">Member</Badge>
-              </Flex>
-              <Separator size="4" />
-              <Flex justify="between" align="center">
-                <Flex gap="3" align="center">
-                  <Avatar
-                    size="4"
-                    fallback="AL"
-                    color="green"
-                    variant="solid"
-                  />
-                  <Flex direction="column" gap="0">
-                    <Text size="2" weight="medium">Alex Lee</Text>
-                    <Text size="1" color="gray">Designer</Text>
-                  </Flex>
-                </Flex>
-                <Badge size="1" color="green" variant="soft">Member</Badge>
-              </Flex>
-            </Flex>
-          </Card>
-        </PreviewBlock>
-        <CodeBlock
+        <PreviewBlock
+          background="none"
           code={`<Card variant="classic" size="2" style={{ minWidth: 320 }}>
   <Flex direction="column" gap="3">
     <Flex justify="between" align="center">
@@ -109,10 +41,62 @@ export function AvatarExamples() {
     </Flex>
   </Flex>
 </Card>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Card variant="classic" size="2" style={{ minWidth: 320, maxWidth: 400 }}>
+            <Flex direction="column" gap="3">
+              <Flex justify="between" align="center">
+                <Flex gap="3" align="center">
+                  <Avatar size="4" fallback="SK" color="violet" variant="solid" />
+                  <Flex direction="column" gap="0">
+                    <Text size="2" weight="medium">
+                      Sarah Kim
+                    </Text>
+                    <Text size="1" color="gray">
+                      Product Lead
+                    </Text>
+                  </Flex>
+                </Flex>
+                <Badge size="1" color="violet" variant="soft">
+                  Admin
+                </Badge>
+              </Flex>
+              <Separator size="4" />
+              <Flex justify="between" align="center">
+                <Flex gap="3" align="center">
+                  <Avatar size="4" fallback="JD" color="blue" variant="solid" />
+                  <Flex direction="column" gap="0">
+                    <Text size="2" weight="medium">
+                      John Doe
+                    </Text>
+                    <Text size="1" color="gray">
+                      Engineer
+                    </Text>
+                  </Flex>
+                </Flex>
+                <Badge size="1" color="blue" variant="soft">
+                  Member
+                </Badge>
+              </Flex>
+              <Separator size="4" />
+              <Flex justify="between" align="center">
+                <Flex gap="3" align="center">
+                  <Avatar size="4" fallback="AL" color="green" variant="solid" />
+                  <Flex direction="column" gap="0">
+                    <Text size="2" weight="medium">
+                      Alex Lee
+                    </Text>
+                    <Text size="1" color="gray">
+                      Designer
+                    </Text>
+                  </Flex>
+                </Flex>
+                <Badge size="1" color="green" variant="soft">
+                  Member
+                </Badge>
+              </Flex>
+            </Flex>
+          </Card>
+        </PreviewBlock>
       </Flex>
 
       <Separator size="4" />
@@ -127,54 +111,8 @@ export function AvatarExamples() {
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
-          <Card variant="classic" size="2" style={{ maxWidth: 440 }}>
-            <Flex direction="column" gap="4">
-              <Flex gap="3" align="start">
-                <Avatar
-                  size="3"
-                  fallback="MJ"
-                  color="blue"
-                  variant="soft"
-                />
-                <Flex direction="column" gap="0" style={{ flex: 1 }}>
-                  <Flex justify="between" align="center">
-                    <Flex gap="2" align="center">
-                      <Text size="2" weight="medium">Mike Johnson</Text>
-                      <Text size="1" color="gray">2 hours ago</Text>
-                    </Flex>
-                    <IconButton variant="ghost" size="1" color="gray" aria-label="More options">
-                      <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
-                    </IconButton>
-                  </Flex>
-                  <Text size="2">This looks great! Love the new design direction.</Text>
-                </Flex>
-              </Flex>
-              <Separator size="4" />
-              <Flex gap="3" align="start">
-                <Avatar
-                  size="3"
-                  fallback="EW"
-                  color="pink"
-                  variant="soft"
-                />
-                <Flex direction="column" gap="0" style={{ flex: 1 }}>
-                  <Flex justify="between" align="center">
-                    <Flex gap="2" align="center">
-                      <Text size="2" weight="medium">Emma Wilson</Text>
-                      <Text size="1" color="gray">1 hour ago</Text>
-                    </Flex>
-                    <IconButton variant="ghost" size="1" color="gray" aria-label="More options">
-                      <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
-                    </IconButton>
-                  </Flex>
-                  <Text size="2">Thanks! We're excited about the direction too.</Text>
-                </Flex>
-              </Flex>
-            </Flex>
-          </Card>
-        </PreviewBlock>
-        <CodeBlock
+        <PreviewBlock
+          background="none"
           code={`<Flex gap="3" align="start">
   <Avatar
     size="3"
@@ -195,10 +133,51 @@ export function AvatarExamples() {
     <Text size="2">This looks great!</Text>
   </Flex>
 </Flex>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Card variant="classic" size="2" style={{ maxWidth: 440 }}>
+            <Flex direction="column" gap="4">
+              <Flex gap="3" align="start">
+                <Avatar size="3" fallback="MJ" color="blue" variant="soft" />
+                <Flex direction="column" gap="0" style={{ flex: 1 }}>
+                  <Flex justify="between" align="center">
+                    <Flex gap="2" align="center">
+                      <Text size="2" weight="medium">
+                        Mike Johnson
+                      </Text>
+                      <Text size="1" color="gray">
+                        2 hours ago
+                      </Text>
+                    </Flex>
+                    <IconButton variant="ghost" size="1" color="gray" aria-label="More options">
+                      <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
+                    </IconButton>
+                  </Flex>
+                  <Text size="2">This looks great! Love the new design direction.</Text>
+                </Flex>
+              </Flex>
+              <Separator size="4" />
+              <Flex gap="3" align="start">
+                <Avatar size="3" fallback="EW" color="pink" variant="soft" />
+                <Flex direction="column" gap="0" style={{ flex: 1 }}>
+                  <Flex justify="between" align="center">
+                    <Flex gap="2" align="center">
+                      <Text size="2" weight="medium">
+                        Emma Wilson
+                      </Text>
+                      <Text size="1" color="gray">
+                        1 hour ago
+                      </Text>
+                    </Flex>
+                    <IconButton variant="ghost" size="1" color="gray" aria-label="More options">
+                      <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
+                    </IconButton>
+                  </Flex>
+                  <Text size="2">Thanks! We're excited about the direction too.</Text>
+                </Flex>
+              </Flex>
+            </Flex>
+          </Card>
+        </PreviewBlock>
       </Flex>
 
       <Separator size="4" />
@@ -208,44 +187,11 @@ export function AvatarExamples() {
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Profile Header</SectionHeader.Title>
-            <SectionHeader.Description>
-              Large avatars (size 6-7) anchor profile headers. Use solid variant for visual weight and pair with clear typography hierarchy.
-            </SectionHeader.Description>
+            <SectionHeader.Description>Large avatars (size 6-7) anchor profile headers. Use solid variant for visual weight and pair with clear typography hierarchy.</SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
-          <Card variant="classic" size="3" style={{ maxWidth: 360 }}>
-            <Flex direction="column" gap="5" align="center" p="1" style={{ textAlign: 'center' }}>
-              <Avatar
-                size="6"
-                fallback="SK"
-                color="violet"
-                variant="solid"
-              />
-              <Flex direction="column" gap="1">
-                <Flex align="center" justify="center" gap="2">
-                  <Heading size="4">Sarah Kim</Heading>
-                  <Badge size="1" color="violet">Pro</Badge>
-                </Flex>
-                <Text size="2" color="gray">Senior Product Designer</Text>
-                <Flex gap="1" align="center" justify="center">
-                  <HugeiconsIcon icon={Clock01Icon} strokeWidth={1.75} size={14} />
-                  <Text size="1" color="gray">Joined March 2023</Text>
-                </Flex>
-              </Flex>
-              <Flex gap="2">
-                <Button variant="solid" size="2">
-                  <HugeiconsIcon icon={Mail01Icon} strokeWidth={1.75} />
-                  Message
-                </Button>
-                <Button variant="soft" size="2" color="gray" highContrast>
-                  Follow
-                </Button>
-              </Flex>
-            </Flex>
-          </Card>
-        </PreviewBlock>
-        <CodeBlock
+        <PreviewBlock
+          background="none"
           code={`<Card variant="classic" size="3">
   <Flex direction="column" gap="5" align="center" p="1">
     <Avatar
@@ -272,10 +218,39 @@ export function AvatarExamples() {
     </Flex>
   </Flex>
 </Card>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Card variant="classic" size="3" style={{ maxWidth: 360 }}>
+            <Flex direction="column" gap="5" align="center" p="1" style={{ textAlign: 'center' }}>
+              <Avatar size="6" fallback="SK" color="violet" variant="solid" />
+              <Flex direction="column" gap="1">
+                <Flex align="center" justify="center" gap="2">
+                  <Heading size="4">Sarah Kim</Heading>
+                  <Badge size="1" color="violet">
+                    Pro
+                  </Badge>
+                </Flex>
+                <Text size="2" color="gray">
+                  Senior Product Designer
+                </Text>
+                <Flex gap="1" align="center" justify="center">
+                  <HugeiconsIcon icon={Clock01Icon} strokeWidth={1.75} size={14} />
+                  <Text size="1" color="gray">
+                    Joined March 2023
+                  </Text>
+                </Flex>
+              </Flex>
+              <Flex gap="2">
+                <Button variant="solid" size="2">
+                  <HugeiconsIcon icon={Mail01Icon} strokeWidth={1.75} />
+                  Message
+                </Button>
+                <Button variant="soft" size="2" color="gray" highContrast>
+                  Follow
+                </Button>
+              </Flex>
+            </Flex>
+          </Card>
+        </PreviewBlock>
       </Flex>
 
       <Separator size="4" />
@@ -285,62 +260,11 @@ export function AvatarExamples() {
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Status Indicators</SectionHeader.Title>
-            <SectionHeader.Description>
-              Use the native status prop to show presence with a colored dot. The indicator scales automatically with avatar size.
-            </SectionHeader.Description>
+            <SectionHeader.Description>Use the native status prop to show presence with a colored dot. The indicator scales automatically with avatar size.</SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
-          <Card variant="classic" size="2" style={{ maxWidth: 340 }}>
-            <Flex direction="column" gap="3">
-              <Flex justify="between" align="center">
-                <Flex gap="3" align="center">
-                  <Avatar
-                    size="4"
-                    fallback="JD"
-                    variant="soft"
-                    status="green"
-                  />
-                  <Flex direction="column" gap="0">
-                    <Text size="2" weight="medium">John Doe</Text>
-                    <Text size="1" color="green">Online</Text>
-                  </Flex>
-                </Flex>
-              </Flex>
-              <Separator size="4" />
-              <Flex justify="between" align="center">
-                <Flex gap="3" align="center">
-                  <Avatar
-                    size="4"
-                    fallback="AB"
-                    variant="soft"
-                    status="amber"
-                  />
-                  <Flex direction="column" gap="0">
-                    <Text size="2" weight="medium">Alice Brown</Text>
-                    <Text size="1" color="amber">Away</Text>
-                  </Flex>
-                </Flex>
-              </Flex>
-              <Separator size="4" />
-              <Flex justify="between" align="center">
-                <Flex gap="3" align="center">
-                  <Avatar
-                    size="4"
-                    fallback="CD"
-                    variant="soft"
-                    status="gray"
-                  />
-                  <Flex direction="column" gap="0">
-                    <Text size="2" weight="medium">Chris Davis</Text>
-                    <Text size="1" color="gray">Offline</Text>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </Flex>
-          </Card>
-        </PreviewBlock>
-        <CodeBlock
+        <PreviewBlock
+          background="none"
           code={`<Avatar
   size="4"
   fallback="JD"
@@ -359,10 +283,53 @@ export function AvatarExamples() {
   variant="soft"
   status="gray"
 />`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Card variant="classic" size="2" style={{ maxWidth: 340 }}>
+            <Flex direction="column" gap="3">
+              <Flex justify="between" align="center">
+                <Flex gap="3" align="center">
+                  <Avatar size="4" fallback="JD" variant="soft" status="green" />
+                  <Flex direction="column" gap="0">
+                    <Text size="2" weight="medium">
+                      John Doe
+                    </Text>
+                    <Text size="1" color="green">
+                      Online
+                    </Text>
+                  </Flex>
+                </Flex>
+              </Flex>
+              <Separator size="4" />
+              <Flex justify="between" align="center">
+                <Flex gap="3" align="center">
+                  <Avatar size="4" fallback="AB" variant="soft" status="amber" />
+                  <Flex direction="column" gap="0">
+                    <Text size="2" weight="medium">
+                      Alice Brown
+                    </Text>
+                    <Text size="1" color="amber">
+                      Away
+                    </Text>
+                  </Flex>
+                </Flex>
+              </Flex>
+              <Separator size="4" />
+              <Flex justify="between" align="center">
+                <Flex gap="3" align="center">
+                  <Avatar size="4" fallback="CD" variant="soft" status="gray" />
+                  <Flex direction="column" gap="0">
+                    <Text size="2" weight="medium">
+                      Chris Davis
+                    </Text>
+                    <Text size="1" color="gray">
+                      Offline
+                    </Text>
+                  </Flex>
+                </Flex>
+              </Flex>
+            </Flex>
+          </Card>
+        </PreviewBlock>
       </Flex>
 
       <Separator size="4" />
@@ -372,12 +339,22 @@ export function AvatarExamples() {
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Custom Badge</SectionHeader.Title>
-            <SectionHeader.Description>
-              Use the badge prop for custom content like notification counts or verification icons.
-            </SectionHeader.Description>
+            <SectionHeader.Description>Use the badge prop for custom content like notification counts or verification icons.</SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
+        <PreviewBlock
+          background="none"
+          code={`<Avatar
+  size="5"
+  fallback="JD"
+  variant="surface"
+  badge={
+    <Badge size="2" color="red" variant="solid" radius="full">
+      3
+    </Badge>
+  }
+/>`}
+        >
           <Avatar
             size="5"
             fallback="JD"
@@ -389,21 +366,6 @@ export function AvatarExamples() {
             }
           />
         </PreviewBlock>
-        <CodeBlock
-          code={`<Avatar
-  size="5"
-  fallback="JD"
-  variant="surface"
-  badge={
-    <Badge size="2" color="red" variant="solid" radius="full">
-      3
-    </Badge>
-  }
-/>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
       </Flex>
 
       <Separator size="4" />
@@ -413,65 +375,11 @@ export function AvatarExamples() {
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Company Logos</SectionHeader.Title>
-            <SectionHeader.Description>
-              Use fit="contain" to display logos without cropping. This ensures the entire logo is visible within the avatar bounds.
-            </SectionHeader.Description>
+            <SectionHeader.Description>Use fit="contain" to display logos without cropping. This ensures the entire logo is visible within the avatar bounds.</SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
-          <Card variant="classic" size="2" style={{ minWidth: 320, maxWidth: 400 }}>
-            <Flex direction="column" gap="3">
-              <Flex justify="between" align="center">
-                <Flex gap="3" align="center">
-                  <Avatar
-                    size="4"
-                    src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
-                    fallback="AZ"
-                    fit="contain"
-                    variant="surface"
-                  />
-                  <Flex direction="column" gap="0">
-                    <Text size="2" weight="medium">Amazon</Text>
-                    <Text size="1" color="gray">E-commerce</Text>
-                  </Flex>
-                </Flex>
-              </Flex>
-              <Separator size="4" />
-              <Flex justify="between" align="center">
-                <Flex gap="3" align="center">
-                  <Avatar
-                    size="4"
-                    src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg"
-                    fallback="GO"
-                    fit="contain"
-                    variant="surface"
-                  />
-                  <Flex direction="column" gap="0">
-                    <Text size="2" weight="medium">Google</Text>
-                    <Text size="1" color="gray">Technology</Text>
-                  </Flex>
-                </Flex>
-              </Flex>
-              <Separator size="4" />
-              <Flex justify="between" align="center">
-                <Flex gap="3" align="center">
-                  <Avatar
-                    size="4"
-                    src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
-                    fallback="AP"
-                    fit="contain"
-                    variant="surface"
-                  />
-                  <Flex direction="column" gap="0">
-                    <Text size="2" weight="medium">Apple</Text>
-                    <Text size="1" color="gray">Consumer Electronics</Text>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </Flex>
-          </Card>
-        </PreviewBlock>
-        <CodeBlock
+        <PreviewBlock
+          background="none"
           code={`<Avatar
   size="4"
   src="/company-logo.svg"
@@ -479,10 +387,53 @@ export function AvatarExamples() {
   fit="contain"
   variant="surface"
 />`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Card variant="classic" size="2" style={{ minWidth: 320, maxWidth: 400 }}>
+            <Flex direction="column" gap="3">
+              <Flex justify="between" align="center">
+                <Flex gap="3" align="center">
+                  <Avatar size="4" src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" fallback="AZ" fit="contain" variant="surface" />
+                  <Flex direction="column" gap="0">
+                    <Text size="2" weight="medium">
+                      Amazon
+                    </Text>
+                    <Text size="1" color="gray">
+                      E-commerce
+                    </Text>
+                  </Flex>
+                </Flex>
+              </Flex>
+              <Separator size="4" />
+              <Flex justify="between" align="center">
+                <Flex gap="3" align="center">
+                  <Avatar size="4" src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" fallback="GO" fit="contain" variant="surface" />
+                  <Flex direction="column" gap="0">
+                    <Text size="2" weight="medium">
+                      Google
+                    </Text>
+                    <Text size="1" color="gray">
+                      Technology
+                    </Text>
+                  </Flex>
+                </Flex>
+              </Flex>
+              <Separator size="4" />
+              <Flex justify="between" align="center">
+                <Flex gap="3" align="center">
+                  <Avatar size="4" src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" fallback="AP" fit="contain" variant="surface" />
+                  <Flex direction="column" gap="0">
+                    <Text size="2" weight="medium">
+                      Apple
+                    </Text>
+                    <Text size="1" color="gray">
+                      Consumer Electronics
+                    </Text>
+                  </Flex>
+                </Flex>
+              </Flex>
+            </Flex>
+          </Card>
+        </PreviewBlock>
       </Flex>
 
       <Separator size="4" />
@@ -492,43 +443,11 @@ export function AvatarExamples() {
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Invite Members</SectionHeader.Title>
-            <SectionHeader.Description>
-              Use IconButton with outline variant as an "add member" action that blends with existing avatars.
-            </SectionHeader.Description>
+            <SectionHeader.Description>Use IconButton with outline variant as an "add member" action that blends with existing avatars.</SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
-        <PreviewBlock background="none" height="30rem">
-          <Flex gap="3" align="center">
-            <Avatar
-              size="4"
-              fallback="JD"
-              variant="soft"
-              radius="full"
-            />
-            <Avatar
-              size="4"
-              fallback="SK"
-              variant="soft"
-              radius="full"
-            />
-            <Avatar
-              size="4"
-              fallback="AL"
-              variant="soft"
-              radius="full"
-            />
-            <IconButton
-              size="4"
-              variant="outline"
-              color="gray"
-              radius="full"
-              aria-label="Add member"
-            >
-              <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
-            </IconButton>
-          </Flex>
-        </PreviewBlock>
-        <CodeBlock
+        <PreviewBlock
+          background="none"
           code={`<Flex gap="3" align="center">
   <Avatar
     size="4"
@@ -558,10 +477,16 @@ export function AvatarExamples() {
     <HugeiconsIcon icon={Add01Icon} />
   </IconButton>
 </Flex>`}
-          language="tsx"
-          showLineNumbers={true}
-          collapsible={false}
-        />
+        >
+          <Flex gap="3" align="center">
+            <Avatar size="4" fallback="JD" variant="soft" radius="full" />
+            <Avatar size="4" fallback="SK" variant="soft" radius="full" />
+            <Avatar size="4" fallback="AL" variant="soft" radius="full" />
+            <IconButton size="4" variant="outline" color="gray" radius="full" aria-label="Add member">
+              <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
+            </IconButton>
+          </Flex>
+        </PreviewBlock>
       </Flex>
     </Flex>
   );
