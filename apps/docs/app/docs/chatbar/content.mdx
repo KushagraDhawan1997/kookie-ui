@@ -79,13 +79,13 @@ Chatbar is a compound component with the following parts:
 | `open` | `boolean` | - | Controlled expansion state |
 | `defaultOpen` | `boolean` | `false` | Initial expansion state for uncontrolled usage |
 | `onOpenChange` | `(open: boolean) => void` | - | Callback when expansion state changes |
-| `expandOn` | `'none' \| 'focus' \| 'overflow' \| 'both'` | `'both'` | When to auto-expand: on focus, when content overflows, both, or manual only |
-| `minLines` | `number` | `3` | Minimum visible lines when expanded |
+| `expandOn` | `'none' \| 'focus' \| 'overflow' \| 'both'` | `'both'` | When to auto-expand: on focus, when content overflows, or both. `'none'` never auto-opens or auto-collapses |
+| `minLines` | `number` | `3` | Minimum visible lines when expanded. The compact state is always one line |
 | `maxLines` | `number` | `6` | Maximum visible lines before scrolling |
-| `sendMode` | `'always' \| 'whenDirty' \| 'never'` | `'whenDirty'` | When to show send button: always visible, only with content, or hidden |
-| `disabled` | `boolean` | - | Disables all interactions |
-| `readOnly` | `boolean` | - | Prevents editing while allowing selection |
-| `onSubmit` | `(payload: { value: string; attachments: ChatbarAttachment[] }) => void` | - | Callback with message text and attachments on submit |
+| `sendMode` | `'always' \| 'whenDirty' \| 'never'` | `'whenDirty'` | Send button visibility only: always visible, visible with content, or not rendered |
+| `disabled` | `boolean` | - | Blocks text editing, submitting and every way of adding attachments |
+| `readOnly` | `boolean` | - | Allows selection; blocks editing, submitting and adding attachments |
+| `onSubmit` | `(payload: Chatbar.ChatbarSubmitPayload) => void` | - | Called with text and attachments. Only fires when there is text or at least one attachment |
 | `size` | `'1' \| '2' \| '3'` | `'2'` | Component density: 1 for compact, 2 for standard, 3 for prominent |
 | `variant` | `'surface' \| 'outline' \| 'classic' \| 'ghost' \| 'soft'` | `'surface'` | Visual style variant |
 | `color` | `AccentColor` | - | Accent color for focus states and send button |
@@ -93,8 +93,7 @@ Chatbar is a compound component with the following parts:
 | `material` | `'solid' \| 'translucent'` | - | Background appearance for layered interfaces |
 | `width` | `CSSProperties['width']` | - | Fixed width |
 | `maxWidth` | `CSSProperties['maxWidth']` | - | Maximum width constraint |
-| `asChild` | `boolean` | - | Merge props onto child element using Radix Slot |
-| `apiRef` | `Ref<ChatbarApi>` | - | Imperative API for programmatic control |
+| `apiRef` | `Ref<Chatbar.ChatbarApi>` | - | Imperative API for programmatic control |
 
 ### Attachment Props
 
@@ -104,28 +103,32 @@ Chatbar is a compound component with the following parts:
 | `defaultAttachments` | `ChatbarAttachment[]` | `[]` | Initial attachments for uncontrolled usage |
 | `onAttachmentsChange` | `(attachments: ChatbarAttachment[]) => void` | - | Callback when attachments change |
 | `accept` | `string \| string[]` | - | Accepted MIME types or extensions (e.g., `'image/*'`, `'.pdf'`) |
-| `multiple` | `boolean` | `true` | Allow multiple file selection |
+| `multiple` | `boolean` | `true` | Allow more than one file per pick, paste or drop. Extra files are rejected with reason `count` |
 | `maxAttachments` | `number` | - | Maximum number of attachments |
 | `maxFileSize` | `number` | - | Maximum file size in bytes |
 | `paste` | `boolean` | `true` | Enable paste-to-attach for clipboard files |
-| `pasteAccept` | `string \| string[]` | - | Accepted types for paste (defaults to `accept`) |
-| `clearOnSubmit` | `boolean` | `true` | Clear message and attachments after submit |
-| `onAttachmentReject` | `(rejections: { file: File; reason: 'type' \| 'size' \| 'count' }[]) => void` | - | Callback for rejected file uploads |
+| `pasteAccept` | `string \| string[]` | - | Accepted types for pasted files. Replaces `accept` for paste, so it can be wider or narrower |
+| `clearOnSubmit` | `boolean` | `true` | Clear message and attachments after submitting with Enter or Send. Clearing calls `onValueChange('')`, also for a controlled value |
+| `onAttachmentReject` | `(rejections: Chatbar.ChatbarAttachmentRejection[]) => void` | - | Called with files rejected for `type`, `size` or `count` |
 | `dropzone` | `boolean` | `true` | Enable drag-and-drop file uploads |
 
 ### Textarea
 
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
-| `submitOnEnter` | `boolean` | `false` | Submit on Enter key (Shift+Enter for newline) |
+| `submitOnEnter` | `boolean` | `false` | Plain Enter submits and never inserts a newline. Shift+Enter inserts a newline. Works with every `sendMode` |
 | `aria-label` | `string` | - | Accessible name (required for accessibility) |
+| `onKeyDown` | `KeyboardEventHandler` | - | Runs before the built-in handler. Call `preventDefault` to skip submit-on-Enter |
+| `onPaste` | `ClipboardEventHandler` | - | Runs before the built-in handler. Call `preventDefault` to skip paste-to-attach |
 | `asChild` | `boolean` | - | Merge props onto child element |
+
+Textarea does not accept `rows`. Its height is driven by `minLines` and `maxLines` on Root.
 
 ### Send
 
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
-| `clearOnSend` | `boolean` | `true` | Clear input after sending |
+| `clearOnSend` | `boolean` | Root's `clearOnSubmit` | Clear message and attachments after sending. Overrides Root `clearOnSubmit` for this button |
 | `aria-label` | `string` | `"Send"` | Accessible button name |
 | `highContrast` | `boolean` | - | Maximum visibility mode |
 
@@ -140,11 +143,23 @@ Chatbar is a compound component with the following parts:
 
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
-| `accept` | `string \| string[]` | Root's `accept` | Override accepted file types |
+| `accept` | `string \| string[]` | Root's `accept` | Overrides Root `accept` for files picked through this trigger |
 | `multiple` | `boolean` | Root's `multiple` | Override multiple selection |
 | `asChild` | `boolean` | - | Merge props onto child element |
 
+AttachTrigger is disabled while Root is `disabled` or `readOnly`.
+
 ## Types
+
+Types are exported on the `Chatbar` namespace. Use them as `Chatbar.X`:
+
+```tsx
+import { Chatbar } from '@kushagradhawan/kookie-ui';
+
+const handleSubmit = (payload: Chatbar.ChatbarSubmitPayload) => {};
+```
+
+Available types: `ChatbarApi`, `ChatbarAttachment`, `ChatbarAttachmentStatus`, `ChatbarAttachmentRejection`, `ChatbarRejectReason`, `ChatbarSubmitPayload`, `ChatbarSendMode`, `ChatbarExpandOn`, and the part props types (`ChatbarRootProps`, `ChatbarTextareaProps`, `ChatbarInlineSlotProps`, `ChatbarAttachmentsRowProps`, `ChatbarAttachmentProps`, `ChatbarAttachTriggerProps`, `ChatbarRowProps`, `ChatbarRowSlotProps`, `ChatbarSendProps`).
 
 ### ChatbarAttachment
 
@@ -162,11 +177,35 @@ interface ChatbarAttachment {
 }
 ```
 
+For images, `url` is an object URL. Chatbar revokes it when the attachment is removed. When a submit clears the chatbar, you own the URLs in the payload and should revoke them with `URL.revokeObjectURL` when done. If the chatbar is not cleared, Chatbar keeps ownership.
+
+### ChatbarSubmitPayload
+
+```tsx
+interface ChatbarSubmitPayload {
+  value: string;
+  attachments: ChatbarAttachment[];
+}
+```
+
+### ChatbarAttachmentRejection
+
+```tsx
+type ChatbarRejectReason = 'type' | 'size' | 'count';
+
+interface ChatbarAttachmentRejection {
+  file: File;
+  reason: ChatbarRejectReason;
+}
+```
+
 ### ChatbarApi
 
 ```tsx
 interface ChatbarApi {
   focusTextarea: () => void;
+  // Works without an AttachTrigger and with dropzone={false}.
+  // Does nothing when disabled or readOnly.
   openFilePicker: () => void;
 }
 ```
@@ -276,7 +315,7 @@ For prominent AI chat experiences and hero sections.
 
 ## Colors
 
-Use the `color` prop to set the accent color for focus states and the send button. Use `highContrast` on the Send button for maximum visibility.
+Use the `color` prop (any accent color) to set the accent color for focus states and the send button. Use `highContrast` on the Send button for maximum visibility.
 
 ```tsx
 <Chatbar.Root color="blue">
@@ -319,7 +358,7 @@ Override the theme's material for specific effects:
 
 ### Disabled
 
-Disables all interactions including text input and file uploads.
+Blocks text editing, submitting, and every attach path: trigger, paste, drop and `apiRef`. AttachTrigger is disabled and attachment remove buttons are hidden.
 
 ```tsx
 <Chatbar.Root disabled>
@@ -329,7 +368,7 @@ Disables all interactions including text input and file uploads.
 
 ### Read Only
 
-Allows viewing and selection but prevents editing.
+Allows viewing and selection. Blocks editing, submitting and adding attachments, the same as `disabled`. Remove buttons are hidden.
 
 ```tsx
 <Chatbar.Root readOnly defaultValue="This message cannot be edited">
@@ -373,10 +412,12 @@ Expand on either focus or overflow. The default behavior:
 
 ### None
 
-Never auto-expand; control manually via `open` prop:
+Never auto-open, even when a file is attached, and never auto-collapse on blur. Control it with the `open` prop:
 
-```tsx
+```tsx showLineNumbers
 const [open, setOpen] = useState(false);
+
+<Button onClick={() => setOpen(!open)}>Toggle</Button>
 
 <Chatbar.Root expandOn="none" open={open} onOpenChange={setOpen}>
   <Chatbar.Textarea aria-label="Message" />
@@ -387,17 +428,23 @@ const [open, setOpen] = useState(false);
 
 ### File Picker
 
-Use `AttachTrigger` with `asChild` to create a custom file picker button:
+Use `AttachTrigger` with `asChild` to create a custom file picker button. Its `accept` overrides Root `accept` for files picked through it:
 
-```tsx
+```tsx showLineNumbers
 <Chatbar.Root accept="image/*,.pdf" maxFileSize={5 * 1024 * 1024}>
   <Chatbar.AttachmentsRow />
   <Chatbar.Textarea aria-label="Message" />
   <Chatbar.Row>
     <Chatbar.RowStart>
       <Chatbar.AttachTrigger asChild>
-        <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Attach file">
-          <HugeiconsIcon icon={AttachmentIcon} strokeWidth={1.75} />
+        <IconButton
+          variant="ghost"
+          size="2"
+          color="gray"
+          highContrast
+          aria-label="Attach file"
+        >
+          <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
         </IconButton>
       </Chatbar.AttachTrigger>
     </Chatbar.RowStart>
@@ -407,9 +454,9 @@ Use `AttachTrigger` with `asChild` to create a custom file picker button:
 
 ### Drag and Drop
 
-Dropzone is enabled by default. Files can be dropped anywhere on the chatbar with visual feedback:
+Dropzone is enabled by default. Files can be dropped anywhere on the chatbar with visual feedback. The same `accept`, `multiple`, `maxFileSize` and `maxAttachments` rules apply to pick, paste and drop:
 
-```tsx
+```tsx showLineNumbers
 <Chatbar.Root
   dropzone={true}
   accept="image/*"
@@ -427,7 +474,7 @@ Dropzone is enabled by default. Files can be dropped anywhere on the chatbar wit
 
 ### Paste to Attach
 
-Paste images or files directly from clipboard:
+Paste images or files directly from the clipboard. A pasted file is attached once. `pasteAccept` replaces `accept` for paste. If every pasted file is rejected, the normal text paste still happens.
 
 ```tsx
 <Chatbar.Root paste={true} pasteAccept="image/*">
@@ -458,11 +505,11 @@ Override the default attachment tile renderer:
 
 ## Send Mode
 
-Control when the send button appears with `sendMode`.
+`sendMode` controls only whether the Send button is visible. Submitting, with Enter or Send, always requires text or at least one attachment. A hidden Send is `aria-hidden` and not focusable.
 
 ### When Dirty
 
-Show send button only when there's content or attachments. The default:
+Show Send only when there is text or an attachment. The default:
 
 ```tsx
 <Chatbar.Root sendMode="whenDirty">
@@ -475,7 +522,7 @@ Show send button only when there's content or attachments. The default:
 
 ### Always
 
-Always show the send button:
+Always show Send. With nothing to send it is visible but disabled:
 
 ```tsx
 <Chatbar.Root sendMode="always">
@@ -488,7 +535,7 @@ Always show the send button:
 
 ### Never
 
-Never show the send button. Use with `submitOnEnter`:
+Never render Send. Pair with `submitOnEnter` so Enter submits:
 
 ```tsx
 <Chatbar.Root sendMode="never">
@@ -498,16 +545,42 @@ Never show the send button. Use with `submitOnEnter`:
 
 ## Imperative API
 
-Use `apiRef` for programmatic control:
+Use `apiRef` for programmatic control. `openFilePicker()` works without an AttachTrigger and with `dropzone={false}`, and does nothing when the chatbar is disabled or read-only.
 
-```tsx
-const chatbarApi = useRef<ChatbarApi>(null);
+```tsx showLineNumbers
+import { useRef } from 'react';
+import { Button, Chatbar, Flex } from '@kushagradhawan/kookie-ui';
 
-<Button onClick={() => chatbarApi.current?.focusTextarea()}>Focus Chat</Button>
+export function ChatWithShortcuts() {
+  const chatbarApi = useRef<Chatbar.ChatbarApi>(null);
 
-<Chatbar.Root apiRef={chatbarApi}>
-  <Chatbar.Textarea aria-label="Message" />
-</Chatbar.Root>
+  return (
+    <Flex direction="column" gap="2">
+      <Flex gap="2">
+        <Button
+          variant="soft"
+          color="gray"
+          highContrast
+          onClick={() => chatbarApi.current?.focusTextarea()}
+        >
+          Focus chat
+        </Button>
+        <Button
+          variant="soft"
+          color="gray"
+          highContrast
+          onClick={() => chatbarApi.current?.openFilePicker()}
+        >
+          Attach files
+        </Button>
+      </Flex>
+      <Chatbar.Root apiRef={chatbarApi}>
+        <Chatbar.AttachmentsRow />
+        <Chatbar.Textarea aria-label="Message" />
+      </Chatbar.Root>
+    </Flex>
+  );
+}
 ```
 
 ## Data Attributes
@@ -524,34 +597,37 @@ The Root component exposes data attributes for custom styling:
 
 ## Accessibility
 
-Chatbar provides comprehensive accessibility through semantic markup, keyboard navigation, and screen reader support.
+Chatbar provides accessibility through semantic markup, keyboard support and live announcements.
 
 ### Keyboard Navigation
 
-- **Enter** - Submit message (when `submitOnEnter` is enabled)
-- **Shift+Enter** - Insert new line
-- **Tab** - Navigate between interactive elements
-- **Escape** - Blur the textarea
+- **Enter** - Submit when `submitOnEnter` is on. A plain Enter never inserts a newline, even with nothing to send
+- **Shift+Enter** - Insert a new line
+- **Tab** - Move between interactive elements. A hidden Send is skipped
+- Enter used to confirm IME composition is ignored
 
 ### ARIA Attributes
 
-- `aria-expanded` on root reflects open/closed state
-- `aria-label` required on Textarea for accessible name
-- `role="list"` on attachments container
-- `role="listitem"` on individual attachments
+- `aria-label` or `aria-labelledby` required on Textarea for an accessible name
+- `role="list"` on the attachments container and `role="listitem"` on each attachment
+- Remove buttons are labelled "Remove" plus the file name
+- A hidden Send carries `aria-hidden`
 
 ### Screen Readers
 
-- Textarea requires `aria-label` or `aria-labelledby`
-- Attachments announce file name and size
-- Remove buttons announce the file being removed
-- Drop overlay announces when files can be dropped
+- A polite live region announces attachments added, rejected and removed
+- The live region announces a hint while files are dragged over the chatbar
+- Image tiles carry visually hidden name, size and status
 
 ### Focus Management
 
-- Clicking anywhere on chatbar focuses the textarea
-- Focus remains within chatbar during file dialog
-- Blur behavior respects active file dialogs
+- Clicking a non-interactive area of the chatbar focuses the textarea
+- After removing an attachment, focus moves to the neighbouring remove button, or back to the textarea
+- Blur collapse is held off while the file dialog is open
+
+### Motion
+
+- Layout animations respect `prefers-reduced-motion`
 
 ## Changelog
 
@@ -565,3 +641,27 @@ Chatbar provides comprehensive accessibility through semantic markup, keyboard n
 - Multiple visual variants: surface, outline, classic, ghost, soft
 - Material support for translucent surfaces
 - Comprehensive accessibility with ARIA attributes and keyboard navigation
+- Exported types on the `Chatbar` namespace: `ChatbarApi`, `ChatbarAttachment`, `ChatbarAttachmentRejection`, `ChatbarRejectReason`, `ChatbarSubmitPayload`, `ChatbarSendMode`, `ChatbarExpandOn`, and part props types
+- Polite live region for attachment and drag-over announcements
+
+### Changed
+
+- Root no longer accepts `asChild`
+- Root no longer sets `aria-expanded`
+- `sendMode` controls Send visibility only
+- `Send clearOnSend` defaults to Root `clearOnSubmit`
+- `pasteAccept` replaces `accept` for paste
+- `color` is typed as an accent color and `radius` as `'none' | 'small' | 'medium' | 'large' | 'full'`
+
+### Fixed
+
+- `sendMode="never"` with `submitOnEnter` now submits
+- Empty messages with no attachments no longer submit
+- Clearing now calls `onValueChange('')` for a controlled value
+- Plain Enter with `submitOnEnter` no longer inserts a newline; IME composition Enter is ignored
+- `disabled` and `readOnly` block every attach path and hide remove buttons
+- `expandOn="none"` no longer opens on attach or collapses on blur
+- `multiple={false}` applies to paste and drop
+- Pasted files attach once, and text paste still happens when all pasted files are rejected
+- `apiRef.openFilePicker()` works without an AttachTrigger and with `dropzone={false}`
+- Image preview URLs are revoked on removal

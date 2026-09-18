@@ -33,6 +33,8 @@ export default function ChatbarPlayground({
   const [disabled, setDisabled] = React.useState<boolean>(false);
   const [showAttach, setShowAttach] = React.useState<boolean>(true);
   const [textValue, setTextValue] = React.useState<string>('');
+  // expandOn="none" leaves open state to the consumer
+  const [open, setOpen] = React.useState<boolean>(false);
 
   const items = [
     {
@@ -89,6 +91,17 @@ export default function ChatbarPlayground({
       options: sendModeOptions.map((s) => ({ label: s, value: s })),
       placeholder: 'whenDirty',
     },
+    ...(expandOn === 'none'
+      ? [
+          {
+            id: 'open',
+            label: 'Open',
+            type: 'switch' as const,
+            value: open,
+            onChange: setOpen,
+          },
+        ]
+      : []),
     {
       id: 'show-attach',
       label: 'Show Attach',
@@ -106,6 +119,7 @@ export default function ChatbarPlayground({
   ];
 
   const generateCode = () => {
+    const manualOpen = expandOn === 'none';
     const props = [`variant="${variant}"`, `size="${size}"`];
 
     if (radius !== 'theme') props.push(`radius="${radius}"`);
@@ -113,31 +127,62 @@ export default function ChatbarPlayground({
     if (expandOn !== 'both') props.push(`expandOn="${expandOn}"`);
     if (sendMode !== 'whenDirty') props.push(`sendMode="${sendMode}"`);
     if (disabled) props.push('disabled');
+    if (manualOpen) props.push('open={open}', 'onOpenChange={setOpen}');
+    props.push('value={value}', 'onValueChange={setValue}', 'width={400}', 'minLines={3}');
 
-    const propsString = props.length > 0 ? `\n  ${props.join('\n  ')}` : '';
+    const imports = [
+      `import { useState } from 'react';`,
+      `import { Chatbar${showAttach ? ', IconButton' : ''} } from '@kushagradhawan/kookie-ui';`,
+      ...(showAttach
+        ? [`import { HugeiconsIcon } from '@hugeicons/react';`, `import { Attachment01Icon } from '@hugeicons/core-free-icons';`]
+        : []),
+    ].join('\n');
+
+    const openState = manualOpen
+      ? `
+  // expandOn="none" never opens or collapses on its own, so control open
+  const [open, setOpen] = useState(false);`
+      : '';
 
     const attachRow = showAttach
       ? `
-    <Chatbar.RowStart>
-      <Chatbar.AttachTrigger asChild>
-        <IconButton variant="ghost" size="${size}" aria-label="Attach">
-          <AttachmentIcon />
-        </IconButton>
-      </Chatbar.AttachTrigger>
-    </Chatbar.RowStart>`
-      : '';
+        <Chatbar.RowStart>
+          <Chatbar.AttachTrigger asChild>
+            <IconButton
+              variant="ghost"
+              size="${size}"
+              color="gray"
+              highContrast
+              aria-label="Attach file"
+            >
+              <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
+            </IconButton>
+          </Chatbar.AttachTrigger>
+        </Chatbar.RowStart>`
+      : `
+        <Chatbar.RowStart />`;
 
-    return `<Chatbar.Root${propsString}>${showAttach ? '\n  <Chatbar.AttachmentsRow />' : ''}
-  <Chatbar.Textarea aria-label="Message" placeholder="Type a message..." />
-  <Chatbar.InlineEnd>
-    <Chatbar.Send />
-  </Chatbar.InlineEnd>
-  <Chatbar.Row>${attachRow}
-    <Chatbar.RowEnd>
-      <Chatbar.Send />
-    </Chatbar.RowEnd>
-  </Chatbar.Row>
-</Chatbar.Root>`;
+    return `${imports}
+
+export function ChatbarDemo() {
+  const [value, setValue] = useState('');${openState}
+
+  return (
+    <Chatbar.Root
+      ${props.join('\n      ')}
+    >${showAttach ? '\n      <Chatbar.AttachmentsRow />' : ''}
+      <Chatbar.Textarea aria-label="Message" placeholder="Type a message..." />
+      <Chatbar.InlineEnd>
+        <Chatbar.Send />
+      </Chatbar.InlineEnd>
+      <Chatbar.Row>${attachRow}
+        <Chatbar.RowEnd>
+          <Chatbar.Send />
+        </Chatbar.RowEnd>
+      </Chatbar.Row>
+    </Chatbar.Root>
+  );
+}`;
   };
 
   return (
@@ -151,6 +196,8 @@ export default function ChatbarPlayground({
           expandOn={expandOn as any}
           sendMode={sendMode as any}
           disabled={disabled}
+          open={expandOn === 'none' ? open : undefined}
+          onOpenChange={setOpen}
           value={textValue}
           onValueChange={setTextValue}
           width={400}
@@ -165,7 +212,13 @@ export default function ChatbarPlayground({
             <Chatbar.RowStart>
               {showAttach && (
                 <Chatbar.AttachTrigger asChild>
-                  <IconButton variant="ghost" size={size as any} color="gray" highContrast aria-label="Attach file">
+                  <IconButton
+                    variant="ghost"
+                    size={size as any}
+                    color="gray"
+                    highContrast
+                    aria-label="Attach file"
+                  >
                     <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
                   </IconButton>
                 </Chatbar.AttachTrigger>
@@ -187,7 +240,7 @@ export default function ChatbarPlayground({
             ? 'Click to focus and expand the chatbar. Type multiple lines to see auto-resize.'
             : expandOn === 'overflow'
               ? 'Type multiple lines to expand the chatbar automatically.'
-              : 'Control expansion manually via the open prop.'
+              : 'expandOn="none" never opens on its own. Use the Open switch, which drives the controlled open prop.'
       }
       showControls={showControls}
       showToolbar={showToolbar}

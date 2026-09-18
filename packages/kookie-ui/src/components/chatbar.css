@@ -40,11 +40,14 @@
   font: inherit;
   line-height: inherit;
   text-align: start;
-  transition: height 150ms ease-out;
+  transition: height var(--motion-duration-small) ease-out;
 }
 .rt-ChatbarInput:focus,
 .rt-ChatbarInput:focus-visible {
   outline: none;
+}
+.rt-ChatbarInput::selection {
+  background-color: var(--v-selection-color, var(--focus-a5));
 }
 
 /* Main container - flex layout */
@@ -79,6 +82,12 @@
   transition: var(--transition-button), opacity var(--motion-duration-small) var(--motion-ease-standard);
 }
 
+/* Hidden send button stays invisible even when disabled styling applies */
+.rt-ChatbarSend[aria-hidden='true'] {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* Row visibility and layout */
 .rt-ChatbarRoot:where([data-state='closed']) :where(.rt-ChatbarRow) {
   display: none;
@@ -99,9 +108,9 @@
   border-radius: var(--chatbar-attachments-radius);
 }
 
-/* Hide scrollbars completely */
-.rt-ChatbarScrollArea :where(.rt-ScrollAreaScrollbar) {
-  display: none;
+/* Thin scrollbar (shown on hover) so overflowed attachments stay reachable with a mouse */
+.rt-ChatbarScrollArea :where(.rt-ScrollAreaScrollbar[data-orientation='horizontal']) {
+  --scrollarea-scrollbar-size: 3px;
 }
 
 /* Attachment tile now uses Card + Flex, no custom layout needed */
@@ -170,8 +179,8 @@
   isolation: isolate;
 }
 
-/* Theme-level translucent override for the visual shell */
-.rt-ChatbarRoot:where([data-panel-background='translucent'], [data-material='translucent']) .rt-ChatbarBox {
+/* Theme-level translucent override for the visual shell (matches any ancestor) */
+:where([data-panel-background='translucent'], [data-material='translucent']) .rt-ChatbarBox {
   backdrop-filter: var(--backdrop-filter-components);
   --backdrop-filter-components: var(--backdrop-filter-components-enabled);
 }
@@ -188,8 +197,6 @@
     padding: var(--space-3);
   }
   .rt-ChatbarRoot:where(.rt-r-size-1) .rt-ChatbarInput {
-    --text-area-padding-y: calc(var(--space-3) - var(--text-area-border-width));
-    --text-area-padding-x: calc(var(--space-3) - var(--text-area-border-width));
     font-size: var(--font-size-1);
     line-height: var(--line-height-1);
     letter-spacing: var(--letter-spacing-1);
@@ -200,8 +207,6 @@
     padding: var(--space-4);
   }
   .rt-ChatbarRoot:where(.rt-r-size-2) .rt-ChatbarInput {
-    --text-area-padding-y: calc(var(--space-4) - var(--text-area-border-width));
-    --text-area-padding-x: calc(var(--space-4) - var(--text-area-border-width));
     font-size: var(--font-size-2);
     line-height: var(--line-height-2);
     letter-spacing: var(--letter-spacing-2);
@@ -212,8 +217,6 @@
     padding: var(--space-4);
   }
   .rt-ChatbarRoot:where(.rt-r-size-3) .rt-ChatbarInput {
-    --text-area-padding-y: calc(var(--space-5) - var(--text-area-border-width));
-    --text-area-padding-x: calc(var(--space-5) - var(--text-area-border-width));
     font-size: var(--font-size-3);
     line-height: var(--line-height-3);
     letter-spacing: var(--letter-spacing-3);
@@ -294,8 +297,6 @@
   --v-border-hover-a: var(--accent-a7);
   --v-border-focus: var(--accent-8);
   --v-border-focus-a: var(--accent-a8);
-  /* Outline uses a different transition */
-  transition: var(--transition-background-blur);
 }
 
 /* Surface variant palette */
@@ -336,13 +337,19 @@
 
   /* Hover state */
   @media (hover: hover) {
-    &:where(:hover:not(:focus-within)) {
+    &:where(:hover:not(:focus-within)):where(:not(.rt-ChatbarRoot:is([data-disabled], [data-readonly]) *)) {
       background-color: color-mix(
         in srgb,
         var(--v-bg-hover-a) calc(var(--material-alpha) * 100%),
         var(--v-bg-hover) var(--material-blend)
       );
     }
+  }
+
+  /* Focus state - outline ring (classic has its own box-shadow ring) */
+  &:where(:focus-within) {
+    outline: 2px solid var(--v-focus-color, var(--focus-8));
+    outline-offset: -1px;
   }
 }
 
@@ -357,7 +364,7 @@
 
   /* Hover state border */
   @media (hover: hover) {
-    &:where(:hover:not(:focus-within)) {
+    &:where(:hover:not(:focus-within)):where(:not(.rt-ChatbarRoot:is([data-disabled], [data-readonly]) *)) {
       box-shadow: inset 0 0 0 1px color-mix(
         in srgb,
         var(--v-border-hover-a) calc(var(--material-alpha) * 100%),
@@ -416,14 +423,19 @@
   box-shadow: var(--shadow-2);
   transition: var(--transition-text-field);
 
-  /* Translucent theme override */
-  .rt-ChatbarRoot:where([data-panel-background='translucent'], [data-material='translucent']) & {
+  /* Translucent theme override (ancestor match, zero added specificity so hover still wins) */
+  :where([data-panel-background='translucent'], [data-material='translucent']) & {
     background-color: var(--color-surface-translucent);
+  }
+
+  /* Explicit solid material on the component beats an inherited translucent theme */
+  :where(.rt-ChatbarRoot[data-panel-background='solid'], .rt-ChatbarRoot[data-material='solid']) & {
+    background-color: var(--color-surface-solid);
   }
 
   /* Hover effects */
   @media (hover: hover) {
-    &:where(:hover:not(:focus-within)) {
+    &:where(:hover:not(:focus-within)):where(:not(.rt-ChatbarRoot:is([data-disabled], [data-readonly]) *)) {
       background-color: color-mix(
         in srgb,
         var(--accent-a2) calc(var(--material-alpha) * 100%),
@@ -435,13 +447,62 @@
 
   /* Focus state - accent ring */
   &:where(:focus-within) {
-    box-shadow: var(--shadow-2), 0 0 0 2px var(--focus-8);
+    box-shadow: var(--shadow-2), 0 0 0 2px var(--v-focus-color, var(--focus-8));
+  }
+}
+
+/***************************************************************************************************
+ *                                                                                                 *
+ * DISABLED / READ-ONLY STATES                                                                     *
+ *                                                                                                 *
+ * Root carries data-disabled / data-readonly. Hover is suppressed in the hover selectors above.   *
+ *                                                                                                 *
+ ***************************************************************************************************/
+
+.rt-ChatbarRoot:where([data-disabled], [data-readonly]) {
+  & .rt-ChatbarBox {
+    --v-selection-color: var(--gray-a5);
+    --v-focus-color: var(--gray-8);
+  }
+
+  & .rt-ChatbarBox:where(.rt-variant-ghost, .rt-variant-outline, .rt-variant-surface) {
+    background-color: var(--gray-a2);
+  }
+
+  & .rt-ChatbarBox:where(.rt-variant-soft) {
+    background-color: var(--gray-a3);
+  }
+
+  & .rt-ChatbarBox:where(.rt-variant-outline, .rt-variant-surface) {
+    box-shadow: inset 0 0 0 var(--text-area-border-width) var(--gray-a6);
+  }
+
+  & .rt-ChatbarBox:where(.rt-variant-classic) {
+    background-image: linear-gradient(var(--gray-a2), var(--gray-a2));
+  }
+
+  & .rt-ChatbarInput {
+    color: var(--gray-a11);
+    /* Safari */
+    -webkit-text-fill-color: var(--gray-a11);
+
+    &::placeholder {
+      opacity: 0.5;
+    }
+  }
+}
+
+.rt-ChatbarRoot:where([data-disabled]) {
+  & .rt-ChatbarBox,
+  & .rt-ChatbarInput {
+    cursor: not-allowed;
   }
 }
 
 /* Dropzone states */
-.rt-ChatbarRoot {
-  transition: outline var(--motion-duration-small) var(--motion-spring-snappy);
+.rt-ChatbarRoot:where([data-drop-active]) .rt-ChatbarBox {
+  outline: 2px dashed var(--accent-8);
+  outline-offset: -1px;
 }
 
 /* Drop overlay */
@@ -465,12 +526,19 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-2);
-  color: var(--accent-11);
 }
 
-.rt-ChatbarDropIcon {
-  width: var(--space-6);
-  height: var(--space-6);
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .rt-ChatbarInput,
+  .rt-ChatbarBox,
+  .rt-ChatbarSend {
+    transition: none;
+  }
+
+  .rt-ChatbarDropOverlay {
+    animation: none;
+  }
 }
 
 /* Inline slot positioning */

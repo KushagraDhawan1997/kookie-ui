@@ -5,6 +5,11 @@ import { Flex, Chatbar, IconButton, Separator, Text } from '@kushagradhawan/kook
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Attachment01Icon, SmileIcon, Mic01Icon, SparklesIcon, AiBrain01Icon } from '@hugeicons/core-free-icons';
 
+// Submitted preview URLs belong to the consumer; revoke them once they are no longer shown
+const releasePreviews = (attachments: Chatbar.ChatbarAttachment[]) => {
+  attachments.forEach((a) => a.url && URL.revokeObjectURL(a.url));
+};
+
 export function ChatbarExamples() {
   return (
     <Flex direction="column" gap="9">
@@ -28,25 +33,54 @@ export function ChatbarExamples() {
             accept="image/*,.pdf,.doc,.docx"
             maxAttachments={5}
             maxFileSize={10 * 1024 * 1024}
-            style={{ width: '100%', maxWidth: 500 }}
-            onSubmit={({ value, attachments }) => console.log('Sent:', value, attachments)}
+            width="100%"
+            maxWidth="500px"
+            onSubmit={({ value, attachments }) => {
+              console.log('Sent:', value, attachments);
+              releasePreviews(attachments);
+            }}
           >
             <Chatbar.AttachmentsRow />
-            <Chatbar.Textarea aria-label="Message" placeholder="Type a message or drop files..." submitOnEnter />
+            <Chatbar.Textarea
+              aria-label="Message"
+              placeholder="Type a message or drop files..."
+              submitOnEnter
+            />
             <Chatbar.InlineEnd>
               <Chatbar.Send />
             </Chatbar.InlineEnd>
             <Chatbar.Row>
               <Chatbar.RowStart>
                 <Chatbar.AttachTrigger asChild>
-                  <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Attach file" tooltip="Attach file">
+                  <IconButton
+                    variant="ghost"
+                    size="2"
+                    color="gray"
+                    highContrast
+                    aria-label="Attach file"
+                    tooltip="Attach file"
+                  >
                     <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
                   </IconButton>
                 </Chatbar.AttachTrigger>
-                <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Add emoji" tooltip="Add emoji">
+                <IconButton
+                  variant="ghost"
+                  size="2"
+                  color="gray"
+                  highContrast
+                  aria-label="Add emoji"
+                  tooltip="Add emoji"
+                >
                   <HugeiconsIcon icon={SmileIcon} strokeWidth={1.75} />
                 </IconButton>
-                <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Voice message" tooltip="Voice message">
+                <IconButton
+                  variant="ghost"
+                  size="2"
+                  color="gray"
+                  highContrast
+                  aria-label="Voice message"
+                  tooltip="Voice message"
+                >
                   <HugeiconsIcon icon={Mic01Icon} strokeWidth={1.75} />
                 </IconButton>
               </Chatbar.RowStart>
@@ -69,7 +103,13 @@ export function ChatbarExamples() {
   accept="image/*,.pdf,.doc,.docx"
   maxAttachments={5}
   maxFileSize={10 * 1024 * 1024}
-  onSubmit={({ value, attachments }) => sendMessage({ text: value, files: attachments })}
+  width="100%"
+  maxWidth="500px"
+  onSubmit={async ({ value, attachments }) => {
+    await sendMessage({ text: value, files: attachments });
+    // Submitted preview URLs are yours to revoke
+    attachments.forEach((a) => a.url && URL.revokeObjectURL(a.url));
+  }}
 >
   <Chatbar.AttachmentsRow />
   <Chatbar.Textarea
@@ -104,6 +144,16 @@ export function ChatbarExamples() {
       >
         <HugeiconsIcon icon={SmileIcon} strokeWidth={1.75} />
       </IconButton>
+      <IconButton
+        variant="ghost"
+        size="2"
+        color="gray"
+        highContrast
+        aria-label="Voice message"
+        tooltip="Voice message"
+      >
+        <HugeiconsIcon icon={Mic01Icon} strokeWidth={1.75} />
+      </IconButton>
     </Chatbar.RowStart>
     <Chatbar.RowEnd>
       <Text size="1" color="gray">Shift+Enter for new line</Text>
@@ -125,12 +175,12 @@ export function ChatbarExamples() {
           <SectionHeader.Content>
             <SectionHeader.Title>AI Assistant Interface</SectionHeader.Title>
             <SectionHeader.Description>
-              Size 3 with accent color creates a prominent input for AI chat experiences. The surface variant provides subtle definition without competing with the conversation above.
+              An always-open soft chatbar under a hero heading gives AI chat a clear starting point. With sendMode="always" the Send button stays visible but disabled until there is text or an attachment.
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
         <PreviewBlock background="none" height="30rem">
-          <Hero.Root style={{ width: '100%', maxWidth: 600 }}>
+          <Hero.Root width="100%" maxWidth="600px">
             <Hero.Meta>
               <HugeiconsIcon icon={SparklesIcon} strokeWidth={1.75} />
             </Hero.Meta>
@@ -138,16 +188,46 @@ export function ChatbarExamples() {
               <Hero.Title size="8">What are you working on today?</Hero.Title>
               <Hero.Description color="gray">Ask me anything about your projects, code, or ideas.</Hero.Description>
             </Flex>
-            <Chatbar.Root open variant="soft" size="2" sendMode="always" minLines={3} maxLines={16} style={{ width: '100%' }} onSubmit={({ value }) => console.log('Ask:', value)}>
-              <Chatbar.Textarea aria-label="Ask anything" placeholder="Ask me anything..." submitOnEnter />
+            <Chatbar.Root
+              open
+              variant="soft"
+              size="2"
+              sendMode="always"
+              minLines={3}
+              maxLines={16}
+              width="100%"
+              onSubmit={({ value, attachments }) => {
+              console.log('Ask:', value);
+              releasePreviews(attachments);
+            }}
+            >
+              <Chatbar.Textarea
+                aria-label="Ask anything"
+                placeholder="Ask me anything..."
+                submitOnEnter
+              />
               <Chatbar.Row>
                 <Chatbar.RowStart>
                   <Chatbar.AttachTrigger asChild>
-                    <IconButton variant="ghost" size="2" highContrast aria-label="Attach file" tooltip="Attach file">
+                    <IconButton
+                      variant="ghost"
+                      size="2"
+                      color="gray"
+                      highContrast
+                      aria-label="Attach file"
+                      tooltip="Attach file"
+                    >
                       <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
                     </IconButton>
                   </Chatbar.AttachTrigger>
-                  <IconButton variant="ghost" size="2" highContrast aria-label="Select model" tooltip="Select model">
+                  <IconButton
+                    variant="ghost"
+                    size="2"
+                    color="gray"
+                    highContrast
+                    aria-label="Select model"
+                    tooltip="Select model"
+                  >
                     <HugeiconsIcon icon={AiBrain01Icon} strokeWidth={1.75} />
                   </IconButton>
                 </Chatbar.RowStart>
@@ -159,12 +239,12 @@ export function ChatbarExamples() {
           </Hero.Root>
         </PreviewBlock>
         <CodeBlock
-          code={`<Hero.Root>
+          code={`<Hero.Root width="100%" maxWidth="600px">
   <Hero.Meta>
     <HugeiconsIcon icon={SparklesIcon} strokeWidth={1.75} />
   </Hero.Meta>
-  <Flex direction="column" gap="4">
-    <Hero.Title>How can I help you today?</Hero.Title>
+  <Flex direction="column" gap="2">
+    <Hero.Title size="8">What are you working on today?</Hero.Title>
     <Hero.Description color="gray">
       Ask me anything about your projects, code, or ideas.
     </Hero.Description>
@@ -173,11 +253,10 @@ export function ChatbarExamples() {
     open
     variant="soft"
     size="2"
-    color="blue"
     sendMode="always"
     minLines={3}
     maxLines={16}
-    style={{ width: '100%' }}
+    width="100%"
     onSubmit={handleSubmit}
   >
     <Chatbar.Textarea
@@ -256,18 +335,40 @@ export function ChatbarExamples() {
             sendMode="always"
             minLines={3}
             maxLines={16}
-            style={{ width: '100%', maxWidth: 600 }}
-            onSubmit={({ value }) => console.log('Ask:', value)}
+            width="100%"
+            maxWidth="600px"
+            onSubmit={({ value, attachments }) => {
+              console.log('Ask:', value);
+              releasePreviews(attachments);
+            }}
           >
-            <Chatbar.Textarea aria-label="Ask anything" placeholder="Ask me anything..." submitOnEnter />
+            <Chatbar.Textarea
+              aria-label="Ask anything"
+              placeholder="Ask me anything..."
+              submitOnEnter
+            />
             <Chatbar.Row>
               <Chatbar.RowStart>
                 <Chatbar.AttachTrigger asChild>
-                  <IconButton variant="ghost" size="2" highContrast aria-label="Attach file" tooltip="Attach file">
+                  <IconButton
+                    variant="ghost"
+                    size="2"
+                    color="gray"
+                    highContrast
+                    aria-label="Attach file"
+                    tooltip="Attach file"
+                  >
                     <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
                   </IconButton>
                 </Chatbar.AttachTrigger>
-                <IconButton variant="ghost" size="2" highContrast aria-label="Select model" tooltip="Select model">
+                <IconButton
+                  variant="ghost"
+                  size="2"
+                  color="gray"
+                  highContrast
+                  aria-label="Select model"
+                  tooltip="Select model"
+                >
                   <HugeiconsIcon icon={AiBrain01Icon} strokeWidth={1.75} />
                 </IconButton>
               </Chatbar.RowStart>
@@ -283,10 +384,13 @@ export function ChatbarExamples() {
     open
     variant="classic"
     size="2"
+    color="gray"
     material="translucent"
     sendMode="always"
     minLines={3}
     maxLines={16}
+    width="100%"
+    maxWidth="600px"
     onSubmit={handleSubmit}
   >
     <Chatbar.Textarea
@@ -300,6 +404,7 @@ export function ChatbarExamples() {
           <IconButton
             variant="ghost"
             size="2"
+            color="gray"
             highContrast
             aria-label="Attach file"
             tooltip="Attach file"
@@ -310,6 +415,7 @@ export function ChatbarExamples() {
         <IconButton
           variant="ghost"
           size="2"
+          color="gray"
           highContrast
           aria-label="Select model"
           tooltip="Select model"
