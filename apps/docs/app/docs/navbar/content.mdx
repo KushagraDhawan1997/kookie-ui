@@ -175,7 +175,7 @@ Add icons to navigation items for visual clarity:
 
 ```tsx showLineNumbers
 import { HugeiconsIcon } from '@hugeicons/react';
-import { Home01Icon, Settings01Icon, Notification01Icon, User01Icon } from '@hugeicons/core-free-icons';
+import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugeicons/core-free-icons';
 import { Navbar, Button, IconButton, Text } from '@kushagradhawan/kookie-ui';
 
 export function IconNavbar() {
@@ -199,7 +199,7 @@ export function IconNavbar() {
           <HugeiconsIcon icon={Notification01Icon} />
         </IconButton>
         <IconButton variant="ghost" aria-label="Profile">
-          <HugeiconsIcon icon={User01Icon} />
+          <HugeiconsIcon icon={UserIcon} />
         </IconButton>
       </Navbar.Actions>
     </Navbar.Root>

@@ -74,7 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 | `accentColor` | `AccentColor` | Primary accent used for interactive components. Default: `'blue'` |
 | `grayColor` | `GrayColor` | Neutral gray scale for backgrounds and text. Default: `'slate'` |
 | `material` | `'solid' \| 'translucent'` | Background rendering: opaque or translucent. Default: `'translucent'` |
-| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Global corner radius scale. Default: `'medium'` |
+| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Global corner radius scale. Default: `'full'` |
 | `scaling` | `'90%' \| '95%' \| '100%' \| '105%' \| '110%'` | Global size scale for UI density. Default: `'100%'` |
 | `fontFamily` | `'sans' \| 'mono' \| 'serif'` | Font family for body text. Default: `'sans'` |
 | `headingFontFamily` | `'sans' \| 'mono' \| 'serif'` | Font family for `Heading`, set independently of body text. Follows `fontFamily` when unset |
@@ -164,7 +164,7 @@ Translucent backgrounds with blur effects for depth and separation (default).
 
 Set `radius` to control the global corner radius scale for all components. This affects buttons, cards, inputs, and other rounded elements.
 
-Available values: `none`, `small`, `medium` (default), `large`, `full`.
+Available values: `none`, `small`, `medium`, `large`, `full` (default).
 
 ```tsx
 <Theme radius="medium"><YourApp /></Theme>

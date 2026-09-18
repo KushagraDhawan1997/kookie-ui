@@ -1,7 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { PreviewBlock, CodeBlock, SectionHeader } from '@kushagradhawan/kookie-blocks';
+import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
+import { CodeBlock } from '@/components/blocks/code-block/code-block';
+import { SectionHeader } from '@/components/blocks/section-header/section-header';
 import { Flex, TextField, Text, Separator, Card, Heading, Button, Inset, Image } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Search01Icon, Mail01Icon, LockPasswordIcon, ViewIcon, ViewOffIcon, UserIcon, Link01Icon } from '@hugeicons/core-free-icons';

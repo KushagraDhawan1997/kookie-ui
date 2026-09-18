@@ -1,0 +1,101 @@
+---
+title: Markdown
+description: Render markdown and MDX with Kookie UI components
+source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/components/blocks/markdown
+---
+
+import ReactMarkdown from 'react-markdown';
+import { BlockInstallation } from '@/components/block-doc-page';
+import { createMarkdownComponents } from '@/components/blocks/markdown/markdown';
+import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
+import { Box } from '@kushagradhawan/kookie-ui';
+
+Markdown maps each markdown element to a Kookie UI component: headings to `Heading`, paragraphs to `Text`, tables to `Table`, fenced code to [Code Block](/docs/blocks/code-block). The same mapping works for react-markdown and for MDX, so articles, chat messages and docs all look alike.
+
+## Installation
+
+<BlockInstallation />
+
+`react-markdown` is only needed for its `Components` type if you use the mapping with MDX alone.
+
+## Usage
+
+```tsx
+import ReactMarkdown from 'react-markdown';
+import { createMarkdownComponents } from '@/components/blocks/markdown/markdown';
+
+const components = createMarkdownComponents();
+
+export function Article({ content }: { content: string }) {
+  return <ReactMarkdown components={components}>{content}</ReactMarkdown>;
+}
+```
+
+Create the mapping once, outside the component or in `useMemo`, so react-markdown doesn't see new renderers on every render.
+
+## Options
+
+`createMarkdownComponents(options)` takes:
+
+| Option | Type | Default | Description |
+| ------ | ---- | ------- | ----------- |
+| `spacing` | `'compact' \| 'spacious'` | `'spacious'` | `compact` for chat, `spacious` for articles and docs. |
+| `codeBlockCollapsible` | `boolean` | `false` | Collapse long fenced code. |
+| `inlineCodeHighContrast` | `boolean` | `true` | High-contrast inline code. |
+| `imageComponent` | `(props: { src, alt, width?, height? }) => ReactNode` | - | Render images with your own component, such as `next/image`. |
+
+It returns a react-markdown `Components` object. Spread it and override any element.
+
+## Examples
+
+### Chat Message
+
+Compact spacing keeps replies tight.
+
+export const reply = ['Sure. Run this from the project root:', '', '```bash', 'pnpm add @kushagradhawan/kookie-ui', '```', '', 'Then wrap your app in **Theme**. Things to check:', '', '- The stylesheet is imported once', '- `Theme` sits at the root'].join('\n');
+
+<PreviewBlock background="none" height="auto" showThemeToggle={false}>
+  <Box maxWidth="32rem" width="100%" p="4">
+    <ReactMarkdown components={createMarkdownComponents({ spacing: 'compact' })}>{reply}</ReactMarkdown>
+  </Box>
+</PreviewBlock>
+
+```tsx
+<ReactMarkdown components={createMarkdownComponents({ spacing: 'compact' })}>
+  {reply}
+</ReactMarkdown>
+```
+
+### MDX Pages
+
+Return the mapping from `useMDXComponents` and override what you need. This site does this, with its own `pre` so build-time highlighted code keeps its colors.
+
+```tsx showLineNumbers
+import type { MDXComponents } from 'mdx/types';
+import { createMarkdownComponents } from '@/components/blocks/markdown/markdown';
+
+const markdownComponents = createMarkdownComponents({ spacing: 'spacious' });
+
+export function useMDXComponents(components: MDXComponents): MDXComponents {
+  return {
+    ...markdownComponents,
+    ...components,
+  };
+}
+```
+
+### Next.js Images
+
+```tsx showLineNumbers
+import Image from 'next/image';
+
+const components = createMarkdownComponents({
+  imageComponent: ({ src, alt }) => (
+    <Image src={src} alt={alt} width={800} height={450} />
+  ),
+});
+```
+
+## Notes
+
+Newer react-markdown versions no longer tell the `code` renderer whether code is inline. Code counts as inline when it has no language, is on one line and is under 100 characters. Fenced code without a language that is short and single-line renders inline too; add a language to force a block.

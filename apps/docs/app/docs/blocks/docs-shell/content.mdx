@@ -1,0 +1,146 @@
+---
+title: Docs Shell
+description: Sidebar and content frame for a docs site
+source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/components/blocks/docs-shell
+---
+
+import { BlockInstallation } from '@/components/block-doc-page';
+
+Docs Shell is the frame of a documentation site: a searchable sidebar built from a navigation config, beside the page content. On small screens the sidebar becomes an overlay opened from a menu button. It is built on Kookie UI's `Shell` and `Sidebar`.
+
+This site runs on it. The sidebar to the left is a Docs Shell.
+
+## Installation
+
+<BlockInstallation />
+
+## Usage
+
+Describe the navigation once, then wrap your docs layout.
+
+```tsx showLineNumbers
+// navigation.ts
+import type { DocsNavigationConfig } from '@/components/blocks/docs-shell/types';
+
+export const navigation: DocsNavigationConfig = {
+  groups: [
+    {
+      label: 'Get Started',
+      items: [{ href: '/docs/installation', title: 'Installation' }],
+    },
+    {
+      label: 'Components',
+      items: [
+        { href: '/docs/button', title: 'Button', badge: 'New' },
+        { href: '/docs/card', title: 'Card' },
+      ],
+    },
+  ],
+};
+```
+
+```tsx showLineNumbers
+// app/docs/layout.tsx
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { DocsShell } from '@/components/blocks/docs-shell/docs-shell';
+import { navigation } from '@/navigation';
+
+export default function DocsLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <DocsShell
+      navigation={navigation}
+      logo={{ src: '/logo.png', alt: 'Acme' }}
+      pathname={usePathname()}
+      linkComponent={Link}
+    >
+      {children}
+    </DocsShell>
+  );
+}
+```
+
+## Anatomy
+
+| File | Contains |
+| ---- | -------- |
+| `docs-shell.tsx` | `DocsShell`: the `Shell` layout, mobile trigger and optional collapse toggle |
+| `docs-sidebar.tsx` | `DocsSidebar`: logo, search, grouped menu and footer. Usable on its own inside any `Shell.Sidebar` |
+| `types.ts` | Navigation, logo and link types |
+
+## Props
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `navigation` | `DocsNavigationConfig` | - | Groups and items for the sidebar. |
+| `pathname` | `string` | `''` | Current path. The matching item is marked active. |
+| `linkComponent` | `DocsLinkComponent` | `<a>` | Your router's link, such as `next/link`. |
+| `logo` | `DocsLogoConfig` | - | Logo in the sidebar header. |
+| `headerActions` | `ReactNode` | - | Beside the logo, e.g. a GitHub link or version badge. |
+| `sidebarFooter` | `ReactNode` | - | Bottom of the sidebar, e.g. a theme switch. |
+| `sidebarToggle` | `boolean` | `false` | Add a button that collapses the sidebar to icons. |
+| `sidebarThinSize` | `number` | `80` | Width of the collapsed sidebar, in pixels. |
+| `sidebarResizable` | `boolean` | `true` | Let people drag the sidebar edge. |
+| `mobileTriggerIcon` | `ReactNode` | Menu icon | Icon for the small-screen menu button. |
+| `height` | `Shell.Root` height | - | Height of the shell. |
+
+### Navigation Item
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `href` | `string` | Link target. Also the key, so keep it unique. |
+| `title` | `string` | Label. Search matches against it. |
+| `icon` | `IconSvgElement \| ComponentType \| ReactElement` | Optional. A HugeIcons icon, a component or an element. |
+| `badge` | `string \| Sidebar.BadgeConfig` | Optional text badge, or a config for color and variant. |
+| `items` | `DocsNavigationItem[]` | Optional nested pages, shown in a collapsible sub-menu that opens when one is active. |
+
+### Logo
+
+| Field | Type | Default | Description |
+| ----- | ---- | ------- | ----------- |
+| `src` | `string` | - | Image URL. Ignored when `label` is set. |
+| `label` | `string` | - | A text wordmark instead of an image. The collapsed sidebar shows its first letter. |
+| `alt` | `string` | - | Accessible name. Its first letter is the image fallback. |
+| `href` | `string` | `'/'` | Where the logo links. |
+| `size` | `'1'` – `'5'` | `'3'` | Image size. |
+
+## Examples
+
+### Status Badges
+
+```tsx
+{
+  href: '/docs/combobox',
+  title: 'Combobox',
+  badge: { content: 'Alpha', size: '1', color: 'gray', highContrast: true },
+}
+```
+
+### Nested Pages
+
+```tsx showLineNumbers
+{
+  href: '/docs/forms',
+  title: 'Forms',
+  items: [
+    { href: '/docs/forms/validation', title: 'Validation' },
+    { href: '/docs/forms/submission', title: 'Submission' },
+  ],
+}
+```
+
+### Collapsible Sidebar
+
+```tsx
+<DocsShell navigation={navigation} sidebarToggle sidebarFooter={<ThemeSwitch />}>
+  {children}
+</DocsShell>
+```
+
+Items show only their icon when collapsed, so give each one an `icon` if you enable this.
+
+## Accessibility
+
+Search filters the menu as you type and shows a flat list of matches. The logo link and the small-screen menu button have accessible names. Active items are marked through `Sidebar.MenuButton`, which sets `aria-current`.

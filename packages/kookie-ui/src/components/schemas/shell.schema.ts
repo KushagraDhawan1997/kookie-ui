@@ -74,15 +74,8 @@ const ResponsivePresentationSchema = z
 // Size persistence adapter
 const PaneSizePersistenceSchema = z
   .object({
-    load: z
-      .function()
-      .returns(z.union([z.number(), z.promise(z.number()), z.undefined()]))
-      .optional(),
-    save: z
-      .function()
-      .args(z.number())
-      .returns(z.union([z.void(), z.promise(z.void())]))
-      .optional(),
+    load: z.function({ output: z.union([z.number(), z.promise(z.number()), z.undefined()]) }).optional(),
+    save: z.function({ input: [z.number()], output: z.union([z.void(), z.promise(z.void())]) }).optional(),
   })
   .describe('Size persistence adapter');
 
@@ -92,18 +85,18 @@ const PanePropsSchema = z
     presentation: ResponsivePresentationSchema.optional(),
     mode: PaneModeSchema.optional(),
     defaultMode: ResponsiveModeSchema.optional(),
-    onModeChange: z.function().args(PaneModeSchema).returns(z.void()).optional(),
+    onModeChange: z.function({ input: [PaneModeSchema], output: z.void() }).optional(),
     expandedSize: z.number().optional(),
     minSize: z.number().optional(),
     maxSize: z.number().optional(),
     resizable: z.boolean().optional(),
     collapsible: z.boolean().optional(),
-    onExpand: z.function().returns(z.void()).optional(),
-    onCollapse: z.function().returns(z.void()).optional(),
-    onResize: z.function().args(z.number()).returns(z.void()).optional(),
+    onExpand: z.function({ output: z.void() }).optional(),
+    onCollapse: z.function({ output: z.void() }).optional(),
+    onResize: z.function({ input: [z.number()], output: z.void() }).optional(),
     resizer: z.any().optional(),
-    onResizeStart: z.function().args(z.number()).returns(z.void()).optional(),
-    onResizeEnd: z.function().args(z.number()).returns(z.void()).optional(),
+    onResizeStart: z.function({ input: [z.number()], output: z.void() }).optional(),
+    onResizeEnd: z.function({ input: [z.number()], output: z.void() }).optional(),
     snapPoints: z.array(z.number()).optional(),
     snapTolerance: z.number().optional(),
     collapseThreshold: z.number().optional(),
@@ -156,11 +149,11 @@ export const ShellRailSchema = z
     presentation: ResponsivePresentationSchema.optional(),
     mode: PaneModeSchema.optional(),
     defaultMode: ResponsiveModeSchema.optional(),
-    onModeChange: z.function().args(PaneModeSchema).returns(z.void()).optional(),
+    onModeChange: z.function({ input: [PaneModeSchema], output: z.void() }).optional(),
     expandedSize: z.number().default(64).describe('Default width in pixels'),
     collapsible: z.boolean().optional(),
-    onExpand: z.function().returns(z.void()).optional(),
-    onCollapse: z.function().returns(z.void()).optional(),
+    onExpand: z.function({ output: z.void() }).optional(),
+    onCollapse: z.function({ output: z.void() }).optional(),
     className: z.string().optional().describe('Additional CSS class name'),
     style: z
       .record(z.string(), z.union([z.string(), z.number()]))

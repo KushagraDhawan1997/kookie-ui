@@ -28,7 +28,7 @@ describe('Bottom defaultSize normalization', () => {
   it('normalizes rem to px', () => {
     renderWithProviders(<App defaultSize="10rem" />);
     const el = getEl();
-    const px = Number.parseFloat(getComputedStyle(document.documentElement).fontSize || '16') * 10;
+    const px = (Number.parseFloat(getComputedStyle(document.documentElement).fontSize) || 16) * 10;
     expect(Number.parseFloat(el.style.getPropertyValue('--bottom-size'))).toBeCloseTo(px, 1);
   });
 

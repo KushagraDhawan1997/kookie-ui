@@ -64,7 +64,7 @@ const themePropDefs = {
    * @link
    * https://www.radix-ui.com/themes/docs/theme/visual-style
    */
-  radius: { type: 'enum', values: radii, default: 'medium' },
+  radius: { type: 'enum', values: radii, default: 'full' },
   /**
    * Sets a scaling multiplier for values like spacing, font sizes, line heights, etc. are scaled.
    *

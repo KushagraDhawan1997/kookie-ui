@@ -1,0 +1,136 @@
+---
+title: Section Header
+description: Title and actions at the top of a section
+source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/components/blocks/section-header
+---
+
+import { BlockInstallation } from '@/components/block-doc-page';
+import { SectionHeader } from '@/components/blocks/section-header/section-header';
+import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
+import { Box, Button, SegmentedControl } from '@kushagradhawan/kookie-ui';
+
+Section Header introduces a section within a page: a title, an optional description, and actions to the right. On narrow screens it can stack. The examples on every component page here start with one.
+
+## Installation
+
+<BlockInstallation />
+
+## Usage
+
+```tsx showLineNumbers
+import { SectionHeader } from '@/components/blocks/section-header/section-header';
+
+<SectionHeader.Root>
+  <SectionHeader.Content>
+    <SectionHeader.Title>Members</SectionHeader.Title>
+    <SectionHeader.Description>People with access to this workspace.</SectionHeader.Description>
+  </SectionHeader.Content>
+  <SectionHeader.Actions>
+    <Button variant="classic" highContrast>Invite</Button>
+  </SectionHeader.Actions>
+</SectionHeader.Root>
+```
+
+## Anatomy
+
+```tsx
+<SectionHeader.Root>
+  <SectionHeader.Content>
+    <SectionHeader.Title />
+    <SectionHeader.Description />
+  </SectionHeader.Content>
+  <SectionHeader.Actions />
+  <SectionHeader.Tabs />
+</SectionHeader.Root>
+```
+
+## Props
+
+Every part accepts the props of the component it wraps. Only the additions and changed defaults are listed.
+
+| Part | Wraps | Adds or changes |
+| ---- | ----- | --------------- |
+| `Root` | `Flex` | `layout?: Responsive<'inline' \| 'stacked'>` (`'inline'`), `align?: Responsive<'start' \| 'center'>`, `separator?: boolean`. `gap="4"` |
+| `Content` | `Flex` | `direction="column"`, `gap="1"` |
+| `Title` | `Heading` | `as="h2"`, `size="6"`, `weight="medium"` |
+| `Description` | `Text` | `size="3"`, `color="gray"` |
+| `Actions` | `Flex` | `gap="2"`, `align="center"` |
+| `Tabs` | `Flex` | `width="100%"` |
+
+`inline` puts content and actions on one row, spaced apart and vertically centered. `stacked` puts actions below the content, aligned to the start. `align` overrides the vertical alignment either way.
+
+## Examples
+
+### Settings Section
+
+<PreviewBlock background="none" height="auto">
+  <Box width="100%" p="5">
+    <SectionHeader.Root separator>
+      <SectionHeader.Content>
+        <SectionHeader.Title as="h3" size="4">Notifications</SectionHeader.Title>
+        <SectionHeader.Description size="2">Choose what you hear about and where.</SectionHeader.Description>
+      </SectionHeader.Content>
+      <SectionHeader.Actions>
+        <Button variant="soft" color="gray" highContrast size="2">Reset</Button>
+        <Button variant="classic" highContrast size="2">Save</Button>
+      </SectionHeader.Actions>
+    </SectionHeader.Root>
+  </Box>
+</PreviewBlock>
+
+```tsx showLineNumbers
+<SectionHeader.Root separator>
+  <SectionHeader.Content>
+    <SectionHeader.Title as="h3" size="4">Notifications</SectionHeader.Title>
+    <SectionHeader.Description size="2">
+      Choose what you hear about and where.
+    </SectionHeader.Description>
+  </SectionHeader.Content>
+  <SectionHeader.Actions>
+    <Button variant="soft" color="gray" highContrast size="2">Reset</Button>
+    <Button variant="classic" highContrast size="2">Save</Button>
+  </SectionHeader.Actions>
+</SectionHeader.Root>
+```
+
+### Stacked on Mobile
+
+Stack below the `sm` breakpoint so long descriptions keep their width.
+
+<PreviewBlock background="none" height="auto">
+  <Box width="100%" p="5">
+    <SectionHeader.Root layout={{ initial: 'stacked', sm: 'inline' }}>
+      <SectionHeader.Content>
+        <SectionHeader.Title as="h3" size="4">Activity</SectionHeader.Title>
+        <SectionHeader.Description size="2">Everything that changed in the last 30 days.</SectionHeader.Description>
+      </SectionHeader.Content>
+      <SectionHeader.Actions>
+        <SegmentedControl.Root defaultValue="all" size="2">
+          <SegmentedControl.Item value="all">All</SegmentedControl.Item>
+          <SegmentedControl.Item value="mine">Mine</SegmentedControl.Item>
+        </SegmentedControl.Root>
+      </SectionHeader.Actions>
+    </SectionHeader.Root>
+  </Box>
+</PreviewBlock>
+
+```tsx showLineNumbers
+<SectionHeader.Root layout={{ initial: 'stacked', sm: 'inline' }}>
+  <SectionHeader.Content>
+    <SectionHeader.Title as="h3" size="4">Activity</SectionHeader.Title>
+    <SectionHeader.Description size="2">
+      Everything that changed in the last 30 days.
+    </SectionHeader.Description>
+  </SectionHeader.Content>
+  <SectionHeader.Actions>
+    <SegmentedControl.Root defaultValue="all" size="2">
+      <SegmentedControl.Item value="all">All</SegmentedControl.Item>
+      <SegmentedControl.Item value="mine">Mine</SegmentedControl.Item>
+    </SegmentedControl.Root>
+  </SectionHeader.Actions>
+</SectionHeader.Root>
+```
+
+## Accessibility
+
+`Title` renders an `h2`. Change `as` to keep heading levels in order, for example `as="h3"` inside a section that already has an `h2`.

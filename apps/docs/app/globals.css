@@ -1,13 +1,26 @@
-@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Code:wght@400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Code:wght@400..700&family=Inter+Tight:wght@400..700&display=swap');
 @import '@kushagradhawan/kookie-ui/styles.css';
-@import '@kushagradhawan/kookie-blocks/styles.css';
 @import 'tailwindcss/preflight.css';
 
-/* Kookie ships no webfonts, so the docs site picks its own. One request, for the one face
-   we actually use; the sans and serif roles ride the system stacks. */
+/* Kookie ships no webfonts, so the docs site picks its own: Inter Tight for headings, Google Sans
+   Code for code. The sans and serif roles ride the system stacks. */
 :root {
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI (Custom)', Roboto, sans-serif;
   --font-mono: 'Google Sans Code', 'Menlo', 'Consolas (Custom)', monospace;
+}
+
+/* The wordmark face. Inter Tight, the heading face, loaded by the import above. v1 is Womp's
+   system now, so it does not wear the Acma mark the canonical Kookie sites use. */
+.kd-wordmark {
+  font-family: 'Inter Tight', var(--font-sans);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Kookie sets --font-heading on .radix-themes, so the override has to live there too. */
+.radix-themes {
+  --font-heading: 'Inter Tight', var(--font-sans);
 }
 
 /* Minimal global styles for the documentation site */

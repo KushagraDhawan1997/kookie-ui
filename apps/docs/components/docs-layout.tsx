@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { DocsShell } from '@kushagradhawan/kookie-blocks';
+import { DocsShell } from '@/components/blocks/docs-shell/docs-shell';
 import { docsNavigation } from '../navigation-config';
 import { DarkModeToggle } from './dark-mode';
 import { IconButton, Flex, Badge } from '@kushagradhawan/kookie-ui';
@@ -16,16 +16,17 @@ export function DocsLayout({ children }: { children: React.ReactNode }) {
     <DocsShell
       navigation={docsNavigation}
       logo={{
-        src: '/logos/kookie-ui/kookie-ui.png',
-        alt: 'Kookie UI',
+        label: 'Womp Design',
+        alt: 'Womp Design',
         href: '/',
       }}
       pathname={pathname}
-      linkComponent={Link as any}
-      headerActions={
+      linkComponent={Link}
+      sidebarFooter={
         <Flex gap="2" align="center">
-          <IconButton asChild variant="ghost" highContrast>
-            <Link href="https://github.com/KushagraDhawan1997/kookie-ui" target="_blank">
+          <DarkModeToggle />
+          <IconButton asChild variant="ghost" highContrast aria-label="GitHub">
+            <Link href="https://github.com/KushagraDhawan1997/kookie-ui" target="_blank" rel="noopener noreferrer">
               <HugeiconsIcon icon={GithubIcon} strokeWidth={1.75} />
             </Link>
           </IconButton>
@@ -34,7 +35,6 @@ export function DocsLayout({ children }: { children: React.ReactNode }) {
           </Badge>
         </Flex>
       }
-      sidebarFooter={<DarkModeToggle />}
     >
       {children}
     </DocsShell>

@@ -1,0 +1,124 @@
+/* inline-size containment stops long lines from pushing the page wider. */
+.code-block {
+  contain: inline-size;
+}
+
+.code-block-content {
+  position: relative;
+}
+
+/* fit-content sizes to the code; min-width fills the card when the code is short. */
+.code-block-content pre {
+  margin: 0;
+  box-sizing: border-box;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2);
+  line-height: 1.75;
+  padding: var(--space-3);
+  width: fit-content;
+  min-width: 100%;
+}
+
+.code-block-content pre code {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2);
+  line-height: 1.75;
+  background: none !important;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  counter-reset: line;
+}
+
+.code-block-content pre code .line {
+  display: flex;
+  align-items: center;
+}
+
+.code-block-content pre code .line::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  min-width: 2ch;
+  text-align: right;
+  font-size: var(--font-size-1);
+  color: var(--gray-a9);
+  user-select: none;
+  flex-shrink: 0;
+  margin-right: var(--space-4);
+}
+
+.code-block-content.hide-line-numbers pre code .line::before {
+  display: none;
+}
+
+/* Shiki and rehype-pretty-code both emit dual-theme CSS variables (defaultColor: false).
+   Light is the default; any dark ancestor switches to the dark set. */
+.code-block-content pre.shiki span,
+pre[data-theme] code span {
+  color: var(--shiki-light);
+  font-style: var(--shiki-light-font-style);
+  font-weight: var(--shiki-light-font-weight);
+  text-decoration: var(--shiki-light-text-decoration);
+}
+
+pre[data-theme] code {
+  background: none !important;
+}
+
+:is(.dark, .dark-theme, [data-appearance='dark']) :is(.code-block-content pre.shiki span, pre[data-theme] code span) {
+  color: var(--shiki-dark);
+  font-style: var(--shiki-dark-font-style);
+  font-weight: var(--shiki-dark-font-weight);
+  text-decoration: var(--shiki-dark-text-decoration);
+}
+
+.code-block-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+}
+
+.code-block-skeleton-line {
+  height: 1em;
+  background: linear-gradient(90deg, var(--gray-a3) 0%, var(--gray-a4) 50%, var(--gray-a3) 100%);
+  background-size: 200% 100%;
+  animation: code-block-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-1);
+}
+
+@keyframes code-block-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .code-block-skeleton-line {
+    animation: none;
+  }
+}
+
+/* Fades the bottom of collapsed code into the card. */
+.code-block-shadow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to top, var(--color-panel-solid), transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.code-block-chevron {
+  transition: transform 0.2s ease-in-out;
+}
+
+.code-block-chevron[data-expanded] {
+  transform: rotate(180deg);
+}

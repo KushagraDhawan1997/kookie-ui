@@ -5,14 +5,16 @@
       "type": "object",
       "properties": {
         "as": {
-          "type": "string",
-          "description": "HTML element type to render as"
+          "description": "HTML element type to render as",
+          "type": "string"
         },
         "asChild": {
-          "type": "boolean",
-          "description": "Merge props with child element instead of rendering wrapper"
+          "description": "Merge props with child element instead of rendering wrapper",
+          "type": "boolean"
         },
         "size": {
+          "default": "2",
+          "description": "Button size for responsive design and interface density",
           "anyOf": [
             {
               "type": "string",
@@ -74,11 +76,11 @@
               },
               "additionalProperties": false
             }
-          ],
-          "default": "2",
-          "description": "Button size for responsive design and interface density"
+          ]
         },
         "variant": {
+          "default": "solid",
+          "description": "Visual variant that determines the button's appearance and context",
           "type": "string",
           "enum": [
             "classic",
@@ -88,11 +90,10 @@
             "outline",
             "ghost",
             "override"
-          ],
-          "default": "solid",
-          "description": "Visual variant that determines the button's appearance and context"
+          ]
         },
         "color": {
+          "description": "Accent color for the button",
           "type": "string",
           "enum": [
             "tomato",
@@ -121,15 +122,15 @@
             "gold",
             "bronze",
             "gray"
-          ],
-          "description": "Accent color for the button"
+          ]
         },
         "highContrast": {
-          "type": "boolean",
           "default": false,
-          "description": "High contrast mode for better accessibility"
+          "description": "High contrast mode for better accessibility",
+          "type": "boolean"
         },
         "radius": {
+          "description": "Border radius for the button",
           "type": "string",
           "enum": [
             "none",
@@ -137,93 +138,96 @@
             "medium",
             "large",
             "full"
-          ],
-          "description": "Border radius for the button"
+          ]
         },
         "loading": {
-          "type": "boolean",
           "default": false,
-          "description": "Loading state that shows a spinner and disables interaction"
+          "description": "Loading state that shows a spinner and disables interaction",
+          "type": "boolean"
         },
         "fullWidth": {
-          "type": "boolean",
           "default": false,
-          "description": "Full width mode that expands the button to fill its container"
+          "description": "Full width mode that expands the button to fill its container",
+          "type": "boolean"
         },
         "material": {
+          "description": "Material type for visual rendering and depth effects",
           "type": "string",
           "enum": [
             "solid",
             "translucent"
-          ],
-          "description": "Material type for visual rendering and depth effects"
+          ]
         },
         "panelBackground": {
+          "description": "Panel background type (deprecated - use material instead)",
           "type": "string",
           "enum": [
             "solid",
             "translucent"
-          ],
-          "description": "Panel background type (deprecated - use material instead)"
+          ]
         },
         "flush": {
-          "type": "boolean",
           "default": false,
-          "description": "Flush mode that removes visual padding for seamless text integration"
+          "description": "Flush mode that removes visual padding for seamless text integration",
+          "type": "boolean"
         },
         "disabled": {
-          "type": "boolean",
           "default": false,
-          "description": "Disabled state"
+          "description": "Disabled state",
+          "type": "boolean"
         },
         "type": {
+          "description": "Type attribute for form buttons",
           "type": "string",
           "enum": [
             "button",
             "submit",
             "reset"
-          ],
-          "description": "Type attribute for form buttons"
+          ]
         },
         "className": {
-          "type": "string",
-          "description": "Additional CSS class name"
+          "description": "Additional CSS class name",
+          "type": "string"
         },
         "style": {
+          "description": "Inline styles",
           "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
           "additionalProperties": {
             "type": [
               "string",
               "number"
             ]
-          },
-          "description": "Inline styles"
+          }
         },
         "tabIndex": {
-          "type": "number",
-          "description": "Tab index for keyboard navigation"
+          "description": "Tab index for keyboard navigation",
+          "type": "number"
         },
         "aria-label": {
-          "type": "string",
-          "description": "ARIA label for accessibility"
+          "description": "ARIA label for accessibility",
+          "type": "string"
         },
         "aria-labelledby": {
-          "type": "string",
-          "description": "ARIA labelled by reference"
+          "description": "ARIA labelled by reference",
+          "type": "string"
         },
         "aria-describedby": {
-          "type": "string",
-          "description": "ARIA described by reference"
+          "description": "ARIA described by reference",
+          "type": "string"
         },
         "aria-expanded": {
-          "type": "boolean",
-          "description": "ARIA expanded state"
+          "description": "ARIA expanded state",
+          "type": "boolean"
         },
         "aria-pressed": {
-          "type": "boolean",
-          "description": "ARIA pressed state"
+          "description": "ARIA pressed state",
+          "type": "boolean"
         },
         "aria-current": {
+          "description": "ARIA current state",
           "anyOf": [
             {
               "type": "boolean"
@@ -238,35 +242,37 @@
                 "time"
               ]
             }
-          ],
-          "description": "ARIA current state"
+          ]
         },
         "aria-controls": {
-          "type": "string",
-          "description": "ARIA controls reference"
+          "description": "ARIA controls reference",
+          "type": "string"
         },
         "aria-owns": {
-          "type": "string",
-          "description": "ARIA owns reference"
+          "description": "ARIA owns reference",
+          "type": "string"
         },
         "data-*": {
+          "description": "Data attributes",
           "type": "object",
-          "additionalProperties": {
+          "propertyNames": {
             "type": "string"
           },
-          "description": "Data attributes"
+          "additionalProperties": {
+            "type": "string"
+          }
         },
         "id": {
-          "type": "string",
-          "description": "ID attribute"
+          "description": "ID attribute",
+          "type": "string"
         },
         "title": {
-          "type": "string",
-          "description": "Title attribute for tooltip"
+          "description": "Title attribute for tooltip",
+          "type": "string"
         },
         "role": {
-          "type": "string",
-          "description": "Role attribute"
+          "description": "Role attribute",
+          "type": "string"
         },
         "children": {
           "description": "Children elements"

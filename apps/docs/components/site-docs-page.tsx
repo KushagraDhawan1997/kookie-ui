@@ -1,14 +1,14 @@
 'use client';
 
-import { DocsPage } from '@kushagradhawan/kookie-blocks';
-import type { DocsPageMeta } from '@kushagradhawan/kookie-blocks';
+import { DocsPage } from '@/components/blocks/docs-page/docs-page';
+import type { DocsPageMeta } from '@/components/blocks/docs-page/docs-page';
 import type { ReactNode } from 'react';
 
 interface SiteDocsPageProps {
   children: ReactNode;
   meta?: DocsPageMeta;
   tableOfContents?: ReactNode;
-  maxWidth?: string | number;
+  maxWidth?: string;
   padding?: '3' | '4' | '5' | '6' | '7' | '8' | '9';
   headerActions?: ReactNode;
   headerTabs?: ReactNode;

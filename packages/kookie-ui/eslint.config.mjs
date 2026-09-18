@@ -22,6 +22,13 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      // React Compiler rules added in react-hooks v7. Warn until existing violations are fixed.
+      'react-hooks/refs': 'warn',
+      'react-hooks/purity': 'warn',
+      'react-hooks/immutability': 'warn',
+      'react-hooks/preserve-manual-memoization': 'warn',
+      'react-hooks/error-boundaries': 'warn',
+      'react-hooks/set-state-in-effect': 'warn',
       ...jsxA11y.flatConfigs.recommended.rules,
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',

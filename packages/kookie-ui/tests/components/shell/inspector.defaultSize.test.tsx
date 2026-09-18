@@ -30,7 +30,7 @@ describe('Inspector defaultSize normalization', () => {
   it('normalizes rem to px', () => {
     renderWithProviders(<App defaultSize="24rem" />);
     const el = getEl();
-    const px = Number.parseFloat(getComputedStyle(document.documentElement).fontSize || '16') * 24;
+    const px = (Number.parseFloat(getComputedStyle(document.documentElement).fontSize) || 16) * 24;
     expect(Number.parseFloat(el.style.getPropertyValue('--inspector-size'))).toBeCloseTo(px, 1);
   });
 

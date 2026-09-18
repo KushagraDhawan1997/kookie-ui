@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { TableOfContents } from '@kushagradhawan/kookie-blocks';
+import { TableOfContents } from '@/components/blocks/table-of-contents/table-of-contents';
 import { Tabs } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { BookOpen01Icon, EyeIcon } from '@hugeicons/core-free-icons';

@@ -1,0 +1,145 @@
+---
+title: Hero
+description: The opening section of a landing page
+source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/components/blocks/hero
+---
+
+import { BlockInstallation } from '@/components/block-doc-page';
+import { Hero } from '@/components/blocks/hero/hero';
+import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
+import { Badge, Box, Button, Card, Flex, Text } from '@kushagradhawan/kookie-ui';
+
+Hero is the opening section of a landing page: an announcement, a headline, a line of supporting text and calls to action, optionally beside an image. Centered and stacked by default; split side by side on wider screens. The [home page](/) opens with one.
+
+## Installation
+
+<BlockInstallation />
+
+## Usage
+
+```tsx showLineNumbers
+import { Hero } from '@/components/blocks/hero/hero';
+
+<Hero.Root>
+  <Hero.Title>Ship interfaces faster</Hero.Title>
+  <Hero.Description>Accessible components with a design system built in.</Hero.Description>
+  <Hero.Actions>
+    <Button size="3" variant="classic" highContrast>Get started</Button>
+  </Hero.Actions>
+</Hero.Root>
+```
+
+## Anatomy
+
+```tsx
+<Hero.Root>
+  <Hero.Meta />
+  <Hero.Title />
+  <Hero.Description />
+  <Hero.Actions />
+  <Hero.Media />
+</Hero.Root>
+```
+
+## Props
+
+Every part accepts the props of the component it wraps. Only the additions and changed defaults are listed.
+
+| Part | Wraps | Adds or changes |
+| ---- | ----- | --------------- |
+| `Root` | `Flex` | `layout?: Responsive<'stacked' \| 'split'>` (`'stacked'`). `align="center"`, `gap="6"` |
+| `Meta` | `Flex` | `gap="2"`, `align="center"` |
+| `Title` | `Heading` | `size="9"`, `weight="medium"`, `align="center"` |
+| `Description` | `Text` | `size="4"`, `align="center"` |
+| `Actions` | `Flex` | `direction="row"`, `gap="2"`, `align="center"` |
+| `Media` | `Flex` | - |
+
+`stacked` sets `direction="column"`; `split` sets `direction="row"`. Pass `direction` to override either.
+
+`Title` renders an `h1` by default through `Heading`. Keep one per page.
+
+## Examples
+
+### Product Launch
+
+<PreviewBlock background="dots" height="auto">
+  <Box py="8" px="4">
+    <Hero.Root>
+      <Hero.Meta>
+        <Badge variant="soft" color="gray" highContrast>New in 2.0</Badge>
+      </Hero.Meta>
+      <Hero.Title as="h3" size={{ initial: '7', sm: '8' }}>Ship interfaces faster</Hero.Title>
+      <Hero.Description size="3" color="gray">Accessible components with a design system built in.</Hero.Description>
+      <Hero.Actions>
+        <Button size="3" variant="soft" color="gray" highContrast>Read the docs</Button>
+        <Button size="3" variant="classic" highContrast>Get started</Button>
+      </Hero.Actions>
+    </Hero.Root>
+  </Box>
+</PreviewBlock>
+
+```tsx showLineNumbers
+<Hero.Root>
+  <Hero.Meta>
+    <Badge variant="soft" color="gray" highContrast>New in 2.0</Badge>
+  </Hero.Meta>
+  <Hero.Title size={{ initial: '7', sm: '8' }}>Ship interfaces faster</Hero.Title>
+  <Hero.Description size="3" color="gray">
+    Accessible components with a design system built in.
+  </Hero.Description>
+  <Hero.Actions>
+    <Button size="3" variant="soft" color="gray" highContrast>Read the docs</Button>
+    <Button size="3" variant="classic" highContrast>Get started</Button>
+  </Hero.Actions>
+</Hero.Root>
+```
+
+### Split With Media
+
+Copy on the left, product shot on the right from `md` up. Align the text to the start when splitting.
+
+<PreviewBlock background="none" height="auto">
+  <Box p="5" width="100%">
+    <Hero.Root layout={{ initial: 'stacked', md: 'split' }} align={{ initial: 'start', md: 'center' }}>
+      <Flex direction="column" gap="4" flexGrow="1" flexBasis="0">
+        <Hero.Title as="h3" size="7" align="left">Plan less. Build more.</Hero.Title>
+        <Hero.Description size="3" color="gray" align="left">Roadmaps, issues and releases in one place.</Hero.Description>
+        <Hero.Actions>
+          <Button size="3" variant="classic" highContrast>Start free</Button>
+        </Hero.Actions>
+      </Flex>
+      <Hero.Media flexGrow="1" flexBasis="0" width="100%">
+        <Card variant="classic" size="3" style={{ width: '100%' }}>
+          <Flex direction="column" gap="2">
+            <Text size="2" weight="medium">Sprint 14</Text>
+            <Text size="2" color="gray">12 of 18 issues done</Text>
+          </Flex>
+        </Card>
+      </Hero.Media>
+    </Hero.Root>
+  </Box>
+</PreviewBlock>
+
+```tsx showLineNumbers
+<Hero.Root
+  layout={{ initial: 'stacked', md: 'split' }}
+  align={{ initial: 'start', md: 'center' }}
+>
+  <Flex direction="column" gap="4" flexGrow="1" flexBasis="0">
+    <Hero.Title size="7" align="left">Plan less. Build more.</Hero.Title>
+    <Hero.Description size="3" color="gray" align="left">
+      Roadmaps, issues and releases in one place.
+    </Hero.Description>
+    <Hero.Actions>
+      <Button size="3" variant="classic" highContrast>Start free</Button>
+    </Hero.Actions>
+  </Flex>
+  <Hero.Media flexGrow="1" flexBasis="0" width="100%">
+    <Image src="/product.png" alt="The sprint board" width={640} height={400} />
+  </Hero.Media>
+</Hero.Root>
+```
+
+## Accessibility
+
+Give `Media` images meaningful `alt` text, or an empty `alt` when they are decorative. Use links (`Button asChild` around your router link) for actions that navigate.

@@ -1,0 +1,151 @@
+---
+title: Empty State
+description: What to show when there is nothing to show
+source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/components/blocks/empty-state
+---
+
+import { BlockInstallation } from '@/components/block-doc-page';
+import { EmptyState } from '@/components/blocks/empty-state/empty-state';
+import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
+import { Button } from '@kushagradhawan/kookie-ui';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Folder01Icon, Search01Icon } from '@hugeicons/core-free-icons';
+
+Empty State fills the space where content will be: a muted icon, a title, a line of explanation and the action that fixes it. Use it for first runs, empty lists and searches with no results.
+
+## Installation
+
+<BlockInstallation />
+
+## Usage
+
+```tsx showLineNumbers
+import { EmptyState } from '@/components/blocks/empty-state/empty-state';
+
+<EmptyState.Root>
+  <EmptyState.Icon>
+    <HugeiconsIcon icon={Folder01Icon} strokeWidth={1.75} />
+  </EmptyState.Icon>
+  <EmptyState.Content>
+    <EmptyState.Title>No projects yet</EmptyState.Title>
+    <EmptyState.Description>Projects you create or join show up here.</EmptyState.Description>
+  </EmptyState.Content>
+  <EmptyState.Actions>
+    <Button variant="classic" highContrast>New project</Button>
+  </EmptyState.Actions>
+</EmptyState.Root>
+```
+
+## Anatomy
+
+```tsx
+<EmptyState.Root>
+  <EmptyState.Icon />
+  <EmptyState.Content>
+    <EmptyState.Title />
+    <EmptyState.Description />
+  </EmptyState.Content>
+  <EmptyState.Actions />
+</EmptyState.Root>
+```
+
+## Props
+
+Every part accepts the props of the component it wraps. Only the additions and changed defaults are listed.
+
+| Part | Wraps | Adds or changes |
+| ---- | ----- | --------------- |
+| `Root` | `Flex` | `align?: 'start' \| 'center'` (`'center'`). Always a column, `gap="4"` |
+| `Icon` | `Box` | Sizes a child `svg` to `--empty-state-icon-size` and tints it `--gray-a9` |
+| `Content` | `Flex` | `direction="column"`, `gap="1"` |
+| `Title` | `Heading` | `as="h3"`, `size="5"`, `weight="medium"`, `align="center"` |
+| `Description` | `Text` | `size="2"`, `color="gray"`, `align="center"` |
+| `Actions` | `Flex` | `gap="2"`, `align="center"`, `justify="center"` |
+
+### Icon Size
+
+The icon is `var(--space-6)` square. Override the variable to change it.
+
+```tsx
+<EmptyState.Icon style={{ '--empty-state-icon-size': 'var(--space-8)' } as React.CSSProperties}>
+  <HugeiconsIcon icon={Folder01Icon} strokeWidth={1.75} />
+</EmptyState.Icon>
+```
+
+## Examples
+
+### No Search Results
+
+<PreviewBlock background="none" height="18rem">
+  <EmptyState.Root>
+    <EmptyState.Icon>
+      <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
+    </EmptyState.Icon>
+    <EmptyState.Content>
+      <EmptyState.Title>No results for “invoice”</EmptyState.Title>
+      <EmptyState.Description>Check the spelling or try a broader term.</EmptyState.Description>
+    </EmptyState.Content>
+    <EmptyState.Actions>
+      <Button variant="soft" color="gray" highContrast size="2">Clear search</Button>
+    </EmptyState.Actions>
+  </EmptyState.Root>
+</PreviewBlock>
+
+```tsx showLineNumbers
+<EmptyState.Root>
+  <EmptyState.Icon>
+    <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
+  </EmptyState.Icon>
+  <EmptyState.Content>
+    <EmptyState.Title>No results for “{query}”</EmptyState.Title>
+    <EmptyState.Description>
+      Check the spelling or try a broader term.
+    </EmptyState.Description>
+  </EmptyState.Content>
+  <EmptyState.Actions>
+    <Button variant="soft" color="gray" highContrast size="2" onClick={clearSearch}>
+      Clear search
+    </Button>
+  </EmptyState.Actions>
+</EmptyState.Root>
+```
+
+### First Project
+
+<PreviewBlock background="none" height="18rem">
+  <EmptyState.Root>
+    <EmptyState.Icon>
+      <HugeiconsIcon icon={Folder01Icon} strokeWidth={1.75} />
+    </EmptyState.Icon>
+    <EmptyState.Content>
+      <EmptyState.Title>No projects yet</EmptyState.Title>
+      <EmptyState.Description>Projects you create or join show up here.</EmptyState.Description>
+    </EmptyState.Content>
+    <EmptyState.Actions>
+      <Button variant="soft" color="gray" highContrast size="2">Import</Button>
+      <Button variant="classic" highContrast size="2">New project</Button>
+    </EmptyState.Actions>
+  </EmptyState.Root>
+</PreviewBlock>
+
+```tsx showLineNumbers
+<EmptyState.Root>
+  <EmptyState.Icon>
+    <HugeiconsIcon icon={Folder01Icon} strokeWidth={1.75} />
+  </EmptyState.Icon>
+  <EmptyState.Content>
+    <EmptyState.Title>No projects yet</EmptyState.Title>
+    <EmptyState.Description>
+      Projects you create or join show up here.
+    </EmptyState.Description>
+  </EmptyState.Content>
+  <EmptyState.Actions>
+    <Button variant="soft" color="gray" highContrast size="2">Import</Button>
+    <Button variant="classic" highContrast size="2">New project</Button>
+  </EmptyState.Actions>
+</EmptyState.Root>
+```
+
+## Accessibility
+
+The icon is decorative; the title and description carry the meaning. `Title` is an `h3`; change `as` to fit the page's heading order. When an empty state replaces search results, announce it by placing the results area in an `aria-live="polite"` region.

@@ -57,7 +57,7 @@ Documented components:
 
 Plus theming documentation for colors, typography, radius, shadows, and material system.
 
-For higher-level patterns like documentation sites, marketing pages, and composed interfaces, see [Kookie Blocks](https://kookieblocks.com).
+For larger patterns such as code blocks, documentation layouts, and marketing sections, see [Blocks](https://hellokookie.com/docs/blocks). Blocks are copy-paste source, not a package: copy the files into your project and change them freely.
 
 ## Quick Start
 

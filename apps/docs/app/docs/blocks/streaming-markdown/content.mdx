@@ -1,0 +1,100 @@
+---
+title: Streaming Markdown
+description: Render AI responses as they stream in
+source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/components/blocks/streaming-markdown
+---
+
+import { BlockInstallation } from '@/components/block-doc-page';
+import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
+import { StreamingDemo } from './streaming-demo';
+
+Streaming Markdown renders a model's reply while it is still arriving. Half-written syntax, such as a code fence that hasn't closed or a bold phrase that hasn't ended, is closed before parsing, so the message doesn't flicker between states. Links and images are restricted to safe targets, and finished blocks can be memoized so only the growing tail re-renders.
+
+It renders with the [Markdown](/docs/blocks/markdown) mapping, so streamed replies look the same as static ones.
+
+<PreviewBlock background="none" height="auto" showThemeToggle={false}>
+  <StreamingDemo />
+</PreviewBlock>
+
+## Installation
+
+<BlockInstallation />
+
+## Usage
+
+Pass the text received so far. Re-render as more arrives.
+
+```tsx showLineNumbers
+import { StreamingMarkdown } from '@/components/blocks/streaming-markdown/streaming-markdown';
+
+export function AssistantMessage({ message }: { message: { id: string; text: string } }) {
+  return (
+    <StreamingMarkdown
+      id={message.id}
+      content={message.text}
+      options={{ spacing: 'compact' }}
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `content` | `string` | - | Markdown received so far. |
+| `id` | `string` | - | Stable id for the message, used in block keys. |
+| `options` | `StreamingMarkdownOptions` | `{}` | See below. |
+
+### Options
+
+Includes every [Markdown option](/docs/blocks/markdown#options), plus:
+
+| Option | Type | Default | Description |
+| ------ | ---- | ------- | ----------- |
+| `defaultOrigin` | `string` | Page origin | Origin used to resolve and check relative links and images. Set it when rendering on the server. |
+| `blockParser` | `(content: string) => { raw?: string }[]` | - | Splits content into top-level blocks, e.g. `marked.lexer`. |
+| `enableBlockMemoization` | `boolean` | `true` | Memoize each block. Only applies with `blockParser`. |
+| `components` | `Partial<Components>` | - | Override individual element renderers. |
+
+### Link and Image Safety
+
+Links may point to `https://`, `http://` or a path on your site. Images may also use `data:` URLs. Anything else, such as a `javascript:` link, renders as plain text marked `[blocked]`, and a blocked image renders as a placeholder.
+
+## Examples
+
+### Block Memoization
+
+Long replies re-parse from the top on every token. Split them into blocks with [marked](https://marked.js.org) and only the last block re-renders.
+
+```tsx showLineNumbers
+import { marked } from 'marked';
+
+const blockParser = (content: string) => marked.lexer(content, { gfm: true });
+
+<StreamingMarkdown
+  id={message.id}
+  content={message.text}
+  options={{ blockParser }}
+/>
+```
+
+Define `blockParser` outside the component so it keeps the same identity between renders.
+
+### Standalone Helpers
+
+`complete-markdown.ts` also exports the functions the block uses, for your own renderers.
+
+```tsx
+import {
+  completeUnterminatedMarkdown,
+  parseMarkdownIntoBlocks,
+} from '@/components/blocks/streaming-markdown/complete-markdown';
+
+completeUnterminatedMarkdown('Use **bold');
+// 'Use **bold**'
+```
+
+## Accessibility
+
+For chat interfaces, put the message list in a container with `aria-live="polite"` so screen readers announce new replies. Avoid putting `aria-live` on each streaming message, which would announce every token.

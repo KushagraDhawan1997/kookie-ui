@@ -1,0 +1,79 @@
+---
+title: Blocks
+description: Copy-paste patterns built on Kookie UI
+---
+
+Blocks are larger patterns built from Kookie UI components: code blocks, documentation layouts, markdown renderers and marketing sections. They are not a package. You copy the source into your project and own it from then on.
+
+## How It Works
+
+Every block page has an **Installation** section with three parts:
+
+1. The npm packages the block needs. Kookie UI is always one of them.
+2. Any other blocks it imports. Copy those first.
+3. The full source, read straight from this site. What you copy is exactly what these docs run on.
+
+Put each block in its own folder under `components/blocks`, named after the block:
+
+```text
+components/
+  blocks/
+    code-block/
+      code-block.tsx
+      code-block.css
+    markdown/
+      markdown.tsx
+```
+
+Blocks that use other blocks import them by relative path, such as `../code-block/code-block`. Keep the folder names and those imports work as-is.
+
+Once copied, the code is yours. Rename it, restyle it, delete the parts you don't need. There is nothing to upgrade and no version to keep in sync.
+
+## Requirements
+
+Blocks assume Kookie UI is set up: the stylesheet imported and a `Theme` at the root of your app. See [Installation](/docs/installation).
+
+A few blocks ship a CSS file next to the component. The component imports it, which works out of the box in the Next.js App Router, Vite and most modern bundlers.
+
+Blocks marked `'use client'` use state or effects. In the Next.js App Router they render as client components.
+
+## Available Blocks
+
+| Block | Use it for |
+| ----- | ---------- |
+| [Code Block](/docs/blocks/code-block) | Syntax-highlighted code with copy, collapse and an optional live preview |
+| [Preview Block](/docs/blocks/preview-block) | A framed stage for live component demos, with a light/dark switch |
+| [Markdown](/docs/blocks/markdown) | Mapping markdown and MDX elements to Kookie UI components |
+| [Streaming Markdown](/docs/blocks/streaming-markdown) | Rendering AI responses as they stream in |
+| [Docs Shell](/docs/blocks/docs-shell) | The frame of a docs site: searchable sidebar and content area |
+| [Docs Page](/docs/blocks/docs-page) | A docs page with header, content column and table of contents |
+| [Table of Contents](/docs/blocks/table-of-contents) | An "On this page" list that tracks the heading in view |
+| [Page Header](/docs/blocks/page-header) | Title, description, actions and tabs at the top of a page |
+| [Section Header](/docs/blocks/section-header) | Title and actions at the top of a section |
+| [Hero](/docs/blocks/hero) | The opening section of a landing page |
+| [Footer](/docs/blocks/footer) | Site footer with brand, link groups and legal line |
+| [Testimonial](/docs/blocks/testimonial) | A customer quote with author details |
+| [Empty State](/docs/blocks/empty-state) | What to show when there is nothing to show |
+
+## Migrating From Kookie Blocks
+
+These blocks replace the `@kushagradhawan/kookie-blocks` package. To move over:
+
+1. Copy the blocks you use into `components/blocks`.
+2. Change imports from `@kushagradhawan/kookie-blocks` to the block files, for example `@/components/blocks/code-block/code-block`.
+3. Remove `@import '@kushagradhawan/kookie-blocks/styles.css'`. Each block now imports its own CSS.
+4. Uninstall `@kushagradhawan/kookie-blocks`.
+
+What changed on the way over:
+
+| Before | Now |
+| ------ | --- |
+| `.docs-code-block`, `.code-content` and other code classes | Prefixed `code-block`, e.g. `.code-block`, `.code-block-content` |
+| `.kb-empty-state-icon` | `.empty-state-icon` |
+| `.kb-markdown` | Removed. Use `<Flex direction="column">` |
+| `useCodeCard`, `LanguageBadge`, `formatLanguageForDisplay`, `extractTextFromChildren` exports | Private to `code-block.tsx`. Export them yourself if you need them |
+| `ShikiConfig.langAlias` passed to Shiki | Resolved by `CodeBlock` before highlighting, as Shiki 4 no longer accepts it |
+| Shiki loaded with the page | Loaded the first time a runtime-highlighted `CodeBlock` renders |
+| `TableOfContents` rescanned on every render | Rescans when the content area's DOM changes |
+| `Hero.Media` `position` prop | Removed. It never did anything |
+| `DocsShell` `linkComponent` typed loosely | Typed as `DocsLinkComponent`. `next/link` fits without a cast |

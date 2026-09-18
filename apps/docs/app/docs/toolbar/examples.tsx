@@ -1,7 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import { PreviewBlock, CodeBlock, SectionHeader, EmptyState } from '@kushagradhawan/kookie-blocks';
+import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
+import { CodeBlock } from '@/components/blocks/code-block/code-block';
+import { SectionHeader } from '@/components/blocks/section-header/section-header';
+import { EmptyState } from '@/components/blocks/empty-state/empty-state';
 import { Flex, Card, Text, Heading, Separator, IconButton, Button, Toolbar, ScrollArea } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { PlusSignIcon, ArrowLeft01Icon, Cancel01Icon, Search01Icon, Settings01Icon, Home01Icon, Add01Icon, File02Icon, Folder02Icon } from '@hugeicons/core-free-icons';

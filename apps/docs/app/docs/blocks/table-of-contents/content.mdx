@@ -1,0 +1,75 @@
+---
+title: Table of Contents
+description: On-this-page links that follow your scroll
+source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/components/blocks/table-of-contents
+---
+
+import { BlockInstallation } from '@/components/block-doc-page';
+
+Table of Contents lists the headings on the page and highlights the one you're reading. It reads headings from the DOM, so it works with MDX, CMS content or hand-written JSX without a build step. The "On this page" list beside this text is one.
+
+## Installation
+
+<BlockInstallation />
+
+## Usage
+
+Mark the element that holds your content with `data-content-area`, then render the list anywhere.
+
+```tsx showLineNumbers
+import { TableOfContents } from '@/components/blocks/table-of-contents/table-of-contents';
+
+export function Article({ children }: { children: React.ReactNode }) {
+  return (
+    <Flex gap="6">
+      <Box data-content-area>{children}</Box>
+      <Box width="240px" position="sticky" top="8">
+        <TableOfContents />
+      </Box>
+    </Flex>
+  );
+}
+```
+
+[Docs Page](/docs/blocks/docs-page) sets up both for you.
+
+## Props
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `levels` | `number[]` | `[2]` | Heading levels to list. Deeper levels are indented. |
+| `title` | `string` | `'On this page'` | Label above the list. |
+| `contentSelector` | `string` | `'[data-content-area]'` | Where to look for headings. |
+| `renderContainer` | `(content: ReactNode) => ReactNode` | - | Wrap the list, e.g. in a card. Not called when there are no headings. |
+| `className` | `string` | - | Class on the list. |
+
+## Behavior
+
+- Headings without an `id` get one from their text, so links work without a slug plugin.
+- The list rescans when the content changes, such as when a page switches tabs. Changes that don't touch the headings are ignored.
+- The active heading is the one in the band between 20% from the top and 35% from the bottom of the viewport.
+- It renders nothing when there are no matching headings.
+
+## Examples
+
+### Two Levels
+
+```tsx
+<TableOfContents levels={[2, 3]} />
+```
+
+### In a Card
+
+```tsx showLineNumbers
+<TableOfContents
+  renderContainer={(content) => (
+    <Card variant="classic" size="2">
+      {content}
+    </Card>
+  )}
+/>
+```
+
+## Accessibility
+
+Entries are ordinary in-page links and work with the keyboard. Wrap the list in a `nav` with an `aria-label`, such as "On this page", if your layout has other navigation landmarks.

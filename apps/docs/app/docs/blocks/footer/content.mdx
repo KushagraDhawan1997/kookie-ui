@@ -1,0 +1,184 @@
+---
+title: Footer
+description: Site footer with brand, links and legal line
+source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/components/blocks/footer
+---
+
+import { BlockInstallation } from '@/components/block-doc-page';
+import { Footer } from '@/components/blocks/footer/footer';
+import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
+import { Box, Separator, Text } from '@kushagradhawan/kookie-ui';
+
+Footer closes a site: brand and tagline, columns of links, and a bottom bar for copyright, legal links and social icons. It renders a `footer` element, and simple sites can swap the columns for a single row of links. The [home page](/) ends with one.
+
+## Installation
+
+<BlockInstallation />
+
+## Usage
+
+```tsx showLineNumbers
+import { Footer } from '@/components/blocks/footer/footer';
+
+<Footer.Root>
+  <Footer.Main>
+    <Footer.Brand>
+      <Footer.BrandName>Acme</Footer.BrandName>
+      <Footer.Tagline>Tools for small teams.</Footer.Tagline>
+    </Footer.Brand>
+    <Footer.Links>
+      <Footer.LinkGroup title="Product">
+        <Footer.Link href="/pricing">Pricing</Footer.Link>
+        <Footer.Link href="/changelog">Changelog</Footer.Link>
+      </Footer.LinkGroup>
+    </Footer.Links>
+  </Footer.Main>
+  <Footer.Bottom>
+    <Footer.Legal>
+      <Text size="2" color="gray">© 2026 Acme</Text>
+    </Footer.Legal>
+  </Footer.Bottom>
+</Footer.Root>
+```
+
+## Anatomy
+
+```tsx showLineNumbers
+<Footer.Root>
+  <Footer.Main>
+    <Footer.Brand>
+      <Footer.BrandName />
+      <Footer.Tagline />
+    </Footer.Brand>
+    <Footer.Links>
+      <Footer.LinkGroup title="…">
+        <Footer.Link />
+      </Footer.LinkGroup>
+    </Footer.Links>
+  </Footer.Main>
+  <Footer.Nav>
+    <Footer.Link />
+  </Footer.Nav>
+  <Footer.Bottom>
+    <Footer.Legal />
+    <Footer.Social>
+      <Footer.SocialLink />
+    </Footer.Social>
+  </Footer.Bottom>
+</Footer.Root>
+```
+
+## Props
+
+Every part accepts the props of the component it wraps. Only the additions and changed defaults are listed.
+
+| Part | Wraps | Adds or changes |
+| ---- | ----- | --------------- |
+| `Root` | `Flex` as `footer` | `align?: 'left' \| 'center'` (`'left'`). `direction="column"`, `gap="6"` |
+| `Main` | `Flex` | `gap="8"`, `justify="between"`, `align="start"`, `wrap="wrap"` |
+| `Brand` | `Flex` | `direction="column"`, `gap="3"` |
+| `BrandName` | `Text` | `size="4"`, `weight="bold"` |
+| `Tagline` | `Text` | `size="2"`, `color="gray"` |
+| `Links` | `Flex` | `gap="8"`, `wrap="wrap"` |
+| `LinkGroup` | `Flex` | `title: string`, rendered as an `h3`. `direction="column"`, `gap="3"` |
+| `Nav` | `Flex` as `nav` | `gap="6"`, `align="center"`, `wrap="wrap"` |
+| `Link` | `Link` | `size="2"`, `color="gray"` |
+| `Bottom` | `Flex` | `gap="4"`, `justify="between"`, `align="center"`, `wrap="wrap"` |
+| `Legal` | `Flex` | `gap="4"`, `align="center"`, `wrap="wrap"` |
+| `Social` | `Flex` | `gap="4"`, `align="center"` |
+| `SocialLink` | `IconButton` | `icon: ComponentType`, `label: string`, `href: string`. `variant="ghost"`, `color="gray"`, `size="2"`. Opens in a new tab |
+
+## Examples
+
+### Product Footer
+
+<PreviewBlock background="none" height="auto" showThemeToggle={false}>
+  <Box width="100%" p="5">
+    <Footer.Root gap="6">
+      <Footer.Main>
+        <Footer.Brand>
+          <Footer.BrandName>Acme</Footer.BrandName>
+          <Footer.Tagline>Tools for small teams.</Footer.Tagline>
+        </Footer.Brand>
+        <Footer.Links>
+          <Footer.LinkGroup title="Product">
+            <Footer.Link href="#">Pricing</Footer.Link>
+            <Footer.Link href="#">Changelog</Footer.Link>
+          </Footer.LinkGroup>
+          <Footer.LinkGroup title="Company">
+            <Footer.Link href="#">About</Footer.Link>
+            <Footer.Link href="#">Careers</Footer.Link>
+          </Footer.LinkGroup>
+        </Footer.Links>
+      </Footer.Main>
+      <Separator size="4" />
+      <Footer.Bottom>
+        <Footer.Legal>
+          <Text size="2" color="gray">© 2026 Acme Inc.</Text>
+          <Footer.Link href="#">Privacy</Footer.Link>
+          <Footer.Link href="#">Terms</Footer.Link>
+        </Footer.Legal>
+      </Footer.Bottom>
+    </Footer.Root>
+  </Box>
+</PreviewBlock>
+
+```tsx showLineNumbers
+<Footer.Root>
+  <Footer.Main>
+    <Footer.Brand>
+      <Footer.BrandName>Acme</Footer.BrandName>
+      <Footer.Tagline>Tools for small teams.</Footer.Tagline>
+    </Footer.Brand>
+    <Footer.Links>
+      <Footer.LinkGroup title="Product">
+        <Footer.Link href="/pricing">Pricing</Footer.Link>
+        <Footer.Link href="/changelog">Changelog</Footer.Link>
+      </Footer.LinkGroup>
+      <Footer.LinkGroup title="Company">
+        <Footer.Link href="/about">About</Footer.Link>
+        <Footer.Link href="/careers">Careers</Footer.Link>
+      </Footer.LinkGroup>
+    </Footer.Links>
+  </Footer.Main>
+  <Separator size="4" />
+  <Footer.Bottom>
+    <Footer.Legal>
+      <Text size="2" color="gray">© 2026 Acme Inc.</Text>
+      <Footer.Link href="/privacy">Privacy</Footer.Link>
+      <Footer.Link href="/terms">Terms</Footer.Link>
+    </Footer.Legal>
+  </Footer.Bottom>
+</Footer.Root>
+```
+
+### Social Links
+
+`SocialLink` takes an icon component. With HugeIcons, wrap the icon so the button controls its size.
+
+```tsx showLineNumbers
+import { HugeiconsIcon } from '@hugeicons/react';
+import { GithubIcon, NewTwitterIcon } from '@hugeicons/core-free-icons';
+
+const GitHub = () => <HugeiconsIcon icon={GithubIcon} strokeWidth={1.75} />;
+const X = () => <HugeiconsIcon icon={NewTwitterIcon} strokeWidth={1.75} />;
+
+<Footer.Social>
+  <Footer.SocialLink icon={GitHub} label="GitHub" href="https://github.com/acme" />
+  <Footer.SocialLink icon={X} label="X" href="https://x.com/acme" />
+</Footer.Social>
+```
+
+### Router Links
+
+`Footer.Link` wraps Kookie's `Link`, so `asChild` works with your router.
+
+```tsx
+<Footer.Link asChild>
+  <NextLink href="/pricing">Pricing</NextLink>
+</Footer.Link>
+```
+
+## Accessibility
+
+`Root` is a `footer` landmark and `Nav` is a `nav` landmark. Give `Nav` an `aria-label`, such as "Footer", when the page has other navigation. Every `SocialLink` needs a `label`, which becomes its accessible name.

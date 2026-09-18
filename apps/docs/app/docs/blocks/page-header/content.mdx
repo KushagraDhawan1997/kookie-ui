@@ -1,0 +1,185 @@
+---
+title: Page Header
+description: Title, description, actions and tabs for a page
+source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/components/blocks/page-header
+---
+
+import { BlockInstallation } from '@/components/block-doc-page';
+import { PageHeader } from '@/components/blocks/page-header/page-header';
+import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
+import { Badge, Box, Button, Tabs, Text } from '@kushagradhawan/kookie-ui';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Add01Icon } from '@hugeicons/core-free-icons';
+
+Page Header is the top of a page: optional banner and avatar, a line of meta, the title, a description, actions and tabs. Each part is a thin wrapper over a Kookie UI primitive with sensible defaults, so any prop those primitives take still works.
+
+## Installation
+
+<BlockInstallation />
+
+## Usage
+
+```tsx showLineNumbers
+import { PageHeader } from '@/components/blocks/page-header/page-header';
+
+<PageHeader.Root separator>
+  <PageHeader.Main>
+    <PageHeader.Content>
+      <PageHeader.Title>Projects</PageHeader.Title>
+      <PageHeader.Description>Everything your team is working on.</PageHeader.Description>
+    </PageHeader.Content>
+    <PageHeader.Actions>
+      <Button variant="classic" highContrast>New project</Button>
+    </PageHeader.Actions>
+  </PageHeader.Main>
+</PageHeader.Root>
+```
+
+## Anatomy
+
+```tsx showLineNumbers
+<PageHeader.Root>
+  <PageHeader.Banner />
+  <PageHeader.Main>
+    <PageHeader.Media />
+    <PageHeader.Content>
+      <PageHeader.Meta />
+      <PageHeader.Title />
+      <PageHeader.Description />
+    </PageHeader.Content>
+    <PageHeader.Actions />
+  </PageHeader.Main>
+  <PageHeader.Tabs />
+</PageHeader.Root>
+```
+
+## Props
+
+Every part accepts the props of the component it wraps. Only the additions and changed defaults are listed.
+
+| Part | Wraps | Adds or changes |
+| ---- | ----- | --------------- |
+| `Root` | `Flex` | `separator?: boolean` draws a line underneath. `direction="column"`, `gap="4"` |
+| `Banner` | `Box` | `src: string`, `alt?: string`, `height?: string` (`'200px'`). A cover image with rounded corners |
+| `Main` | `Flex` | `layout?: Responsive<'inline' \| 'stacked'>` (`'inline'`). `align="center"`, `justify="between"`, `gap="4"` |
+| `Media` | `Avatar` | `type?: 'logo' \| 'avatar'` (`'avatar'`), `overlap?: boolean`. `size="6"` |
+| `Content` | `Flex` | `direction="column"`, `gap="2"`, `flexGrow="1"` |
+| `Meta` | `Flex` | `gap="2"`, `align="center"`, `wrap="wrap"` |
+| `Title` | `Heading` | `as="h1"`, `size="9"`, `weight="medium"` |
+| `Description` | `Text` | `size="4"`, `color="gray"` |
+| `Actions` | `Flex` | `gap="2"`, `align="center"` |
+| `Tabs` | `Flex` | `direction="column"`, `width="100%"` |
+
+`Media` with `type="logo"` is square-cornered; `avatar` is round. `overlap` pulls an avatar up over a `Banner`, and does nothing without one.
+
+## Examples
+
+### Project Overview
+
+<PreviewBlock background="none" height="auto">
+  <Box width="100%" p="5">
+    <PageHeader.Root>
+      <PageHeader.Main layout={{ initial: 'stacked', sm: 'inline' }} align={{ initial: 'start', sm: 'center' }}>
+        <PageHeader.Content>
+          <PageHeader.Meta>
+            <Badge color="green" variant="soft">Active</Badge>
+            <Text size="2" color="gray">Updated 2 hours ago</Text>
+          </PageHeader.Meta>
+          <PageHeader.Title as="h3" size="7">Website redesign</PageHeader.Title>
+          <PageHeader.Description size="3">New marketing site, docs and pricing page.</PageHeader.Description>
+        </PageHeader.Content>
+        <PageHeader.Actions>
+          <Button variant="soft" color="gray" highContrast>Share</Button>
+          <Button variant="classic" highContrast><HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />Add task</Button>
+        </PageHeader.Actions>
+      </PageHeader.Main>
+      <PageHeader.Tabs>
+        <Tabs.Root defaultValue="tasks">
+          <Tabs.List>
+            <Tabs.Trigger value="tasks">Tasks</Tabs.Trigger>
+            <Tabs.Trigger value="files">Files</Tabs.Trigger>
+            <Tabs.Trigger value="activity">Activity</Tabs.Trigger>
+          </Tabs.List>
+        </Tabs.Root>
+      </PageHeader.Tabs>
+    </PageHeader.Root>
+  </Box>
+</PreviewBlock>
+
+```tsx showLineNumbers
+<PageHeader.Root>
+  <PageHeader.Main
+    layout={{ initial: 'stacked', sm: 'inline' }}
+    align={{ initial: 'start', sm: 'center' }}
+  >
+    <PageHeader.Content>
+      <PageHeader.Meta>
+        <Badge color="green" variant="soft">Active</Badge>
+        <Text size="2" color="gray">Updated 2 hours ago</Text>
+      </PageHeader.Meta>
+      <PageHeader.Title as="h3" size="7">Website redesign</PageHeader.Title>
+      <PageHeader.Description size="3">
+        New marketing site, docs and pricing page.
+      </PageHeader.Description>
+    </PageHeader.Content>
+    <PageHeader.Actions>
+      <Button variant="soft" color="gray" highContrast>Share</Button>
+      <Button variant="classic" highContrast>
+        <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
+        Add task
+      </Button>
+    </PageHeader.Actions>
+  </PageHeader.Main>
+  <PageHeader.Tabs>
+    <Tabs.Root defaultValue="tasks">
+      <Tabs.List>
+        <Tabs.Trigger value="tasks">Tasks</Tabs.Trigger>
+        <Tabs.Trigger value="files">Files</Tabs.Trigger>
+        <Tabs.Trigger value="activity">Activity</Tabs.Trigger>
+      </Tabs.List>
+    </Tabs.Root>
+  </PageHeader.Tabs>
+</PageHeader.Root>
+```
+
+### Profile With Banner
+
+<PreviewBlock background="none" height="auto">
+  <Box width="100%" p="5">
+    <PageHeader.Root>
+      <PageHeader.Banner src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=1200&auto=format&fit=crop" alt="" height="140px" />
+      <PageHeader.Main align="end" px="4">
+        <PageHeader.Media overlap fallback="MR" size="7" />
+        <PageHeader.Content>
+          <PageHeader.Title as="h3" size="6">Maya Rao</PageHeader.Title>
+          <PageHeader.Description size="2">Product designer · Berlin</PageHeader.Description>
+        </PageHeader.Content>
+        <PageHeader.Actions>
+          <Button variant="classic" highContrast>Follow</Button>
+        </PageHeader.Actions>
+      </PageHeader.Main>
+    </PageHeader.Root>
+  </Box>
+</PreviewBlock>
+
+```tsx showLineNumbers
+<PageHeader.Root>
+  <PageHeader.Banner src="/cover.jpg" alt="" height="140px" />
+  <PageHeader.Main align="end" px="4">
+    <PageHeader.Media overlap fallback="MR" size="7" />
+    <PageHeader.Content>
+      <PageHeader.Title as="h3" size="6">Maya Rao</PageHeader.Title>
+      <PageHeader.Description size="2">
+        Product designer · Berlin
+      </PageHeader.Description>
+    </PageHeader.Content>
+    <PageHeader.Actions>
+      <Button variant="classic" highContrast>Follow</Button>
+    </PageHeader.Actions>
+  </PageHeader.Main>
+</PageHeader.Root>
+```
+
+## Accessibility
+
+`Title` renders an `h1` by default; pass `as="h2"` when the header sits below another `h1`. `Banner` has `role="img"` and uses `alt` as its label; pass an empty `alt` when the image is decorative.

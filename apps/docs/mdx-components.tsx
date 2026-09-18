@@ -1,7 +1,8 @@
 import type { MDXComponents } from 'mdx/types';
 import React from 'react';
 import { Code } from '@kushagradhawan/kookie-ui';
-import { CodeBlock, useCodeBlockContext, createMarkdownComponents } from '@kushagradhawan/kookie-blocks';
+import { CodeBlock, useCodeBlockContext } from '@/components/blocks/code-block/code-block';
+import { createMarkdownComponents } from '@/components/blocks/markdown/markdown';
 import { SpecsBlock } from './components/specs-block';
 
 // Component that can use hooks to check if already inside CodeBlock

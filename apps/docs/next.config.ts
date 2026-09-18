@@ -1,8 +1,4 @@
 import nextMDX from '@next/mdx'
-import remarkGfm from 'remark-gfm'
-import remarkFrontmatter from 'remark-frontmatter'
-import rehypePrettyCode from 'rehype-pretty-code'
-import rehypeSlug from 'rehype-slug'
 import packageJson from '../../packages/kookie-ui/package.json' with { type: 'json' }
 
 /** @type {import('rehype-pretty-code').Options} */
@@ -21,14 +17,15 @@ const rehypePrettyCodeOptions = {
 
 const withMDX = nextMDX({
   extension: /\.mdx?$/,
+  // Turbopack requires plugins as module names with serializable options
   options: {
     remarkPlugins: [
-      remarkGfm,
-      remarkFrontmatter,
+      'remark-gfm',
+      'remark-frontmatter',
     ],
     rehypePlugins: [
-      rehypeSlug, // Add this - generates IDs for headings
-      [rehypePrettyCode, rehypePrettyCodeOptions]
+      'rehype-slug', // Generates IDs for headings
+      ['rehype-pretty-code', rehypePrettyCodeOptions]
     ],
   },
 })

@@ -6,18 +6,18 @@
     "build": "turbo run build",
     "build:pkg": "pnpm --filter @kushagradhawan/kookie-ui build",
     "dev": "turbo run dev --no-cache --continue",
-    "docs": "pnpm --filter docs dev --turbo=false",
+    "docs": "pnpm --filter docs dev",
     "docs:build": "pnpm --filter docs build",
     "lint": "turbo run lint",
     "clean": "turbo run clean && rm -rf node_modules .turbo"
   },
   "devDependencies": {
-    "@types/node": "^20.19.27",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.2.3",
-    "prettier": "^3.7.4",
-    "turbo": "^2.7.2",
-    "typescript": "~5.8.0"
+    "@types/node": "^24.13.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "prettier": "^3.9.8",
+    "turbo": "^2.11.1",
+    "typescript": "~6.0.3"
   },
   "pnpm": {
     "overrides": {
@@ -27,7 +27,6 @@
     }
   },
   "dependencies": {
-    "@kushagradhawan/kookie-blocks": "^0.1.52",
     "@kushagradhawan/kookie-ui": "workspace:*"
   }
 }

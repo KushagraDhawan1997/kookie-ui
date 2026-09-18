@@ -1,6 +1,9 @@
 'use client';
 
-import { PreviewBlock, CodeBlock, SectionHeader, Hero } from '@kushagradhawan/kookie-blocks';
+import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
+import { CodeBlock } from '@/components/blocks/code-block/code-block';
+import { SectionHeader } from '@/components/blocks/section-header/section-header';
+import { Hero } from '@/components/blocks/hero/hero';
 import { Flex, Chatbar, IconButton, Separator, Text } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Attachment01Icon, SmileIcon, Mic01Icon, SparklesIcon, AiBrain01Icon } from '@hugeicons/core-free-icons';

@@ -12,7 +12,7 @@
  * Usage: node scripts/generate-json-schemas.cjs
  */
 
-const { zodToJsonSchema } = require('zod-to-json-schema');
+const { z } = require('zod');
 const { writeFileSync, mkdirSync } = require('fs');
 const { join, dirname } = require('path');
 
@@ -41,17 +41,57 @@ const schemas = {
   'toggle-icon-button': ToggleIconButtonSchema,
 };
 
+// Functions can't be expressed in JSON Schema. Mark them during conversion so
+// they can be dropped afterwards, matching the output of the old
+// zod-to-json-schema generator.
+const DROP = '__kookieDrop';
+
+function dropMarked(node) {
+  if (Array.isArray(node)) {
+    node.forEach(dropMarked);
+    return;
+  }
+  if (!node || typeof node !== 'object') return;
+  if (node.properties) {
+    for (const [key, value] of Object.entries(node.properties)) {
+      if (value && value[DROP]) {
+        delete node.properties[key];
+        if (Array.isArray(node.required)) {
+          node.required = node.required.filter((k) => k !== key);
+        }
+      }
+    }
+  }
+  Object.values(node).forEach(dropMarked);
+}
+
+// Wrap in `$ref` + `definitions`, the shape consumers of `schemas-json` already read
+function toJsonSchema(schema, definitionName) {
+  const body = z.toJSONSchema(schema, {
+    target: 'draft-7',
+    // Props with defaults are still optional for callers
+    io: 'input',
+    unrepresentable: 'any',
+    override: (ctx) => {
+      const { type } = ctx.zodSchema._zod.def;
+      if (type === 'function') ctx.jsonSchema[DROP] = true;
+      // Input mode leaves objects open; keep them closed like the previous output
+      if (type === 'object' && !('additionalProperties' in ctx.jsonSchema)) {
+        ctx.jsonSchema.additionalProperties = false;
+      }
+    },
+  });
+  delete body.$schema;
+  dropMarked(body);
+  return { $ref: `#/definitions/${definitionName}`, definitions: { [definitionName]: body } };
+}
+
 // Generate JSON schemas
 const generatedSchemas = {};
 
 for (const [name, schema] of Object.entries(schemas)) {
   try {
-    const jsonSchema = zodToJsonSchema(schema, {
-      name: `${name.charAt(0).toUpperCase() + name.slice(1)}Schema`,
-      description: `JSON Schema for ${name} component props`,
-      target: 'jsonSchema7',
-      strictUnions: false,
-    });
+    const jsonSchema = toJsonSchema(schema, `${name.charAt(0).toUpperCase() + name.slice(1)}Schema`);
 
     // Add metadata
     jsonSchema.$schema = 'https://json-schema.org/draft/2020-12/schema';

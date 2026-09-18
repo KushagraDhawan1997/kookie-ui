@@ -1,0 +1,117 @@
+---
+title: Testimonial
+description: A customer quote with author details
+source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/components/blocks/testimonial
+---
+
+import { BlockInstallation } from '@/components/block-doc-page';
+import { Testimonial } from '@/components/blocks/testimonial/testimonial';
+import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
+import { Box } from '@kushagradhawan/kookie-ui';
+
+Testimonial shows a quote large enough to carry a section, with the author's avatar, name and role underneath. Quotation marks are added for you. The [home page](/) has one.
+
+## Installation
+
+<BlockInstallation />
+
+## Usage
+
+```tsx showLineNumbers
+import { Testimonial } from '@/components/blocks/testimonial/testimonial';
+
+<Testimonial.Root>
+  <Testimonial.Quote>We shipped the redesign two weeks early.</Testimonial.Quote>
+  <Testimonial.Author>
+    <Testimonial.Avatar src="/people/sam.jpg" fallback="SK" />
+    <Testimonial.Details>
+      <Testimonial.Name>Sam Kim</Testimonial.Name>
+      <Testimonial.Role>Design lead, Acme</Testimonial.Role>
+    </Testimonial.Details>
+  </Testimonial.Author>
+</Testimonial.Root>
+```
+
+## Anatomy
+
+```tsx
+<Testimonial.Root>
+  <Testimonial.Quote />
+  <Testimonial.Author>
+    <Testimonial.Avatar />
+    <Testimonial.Details>
+      <Testimonial.Name />
+      <Testimonial.Role />
+    </Testimonial.Details>
+  </Testimonial.Author>
+</Testimonial.Root>
+```
+
+## Props
+
+Every part accepts the props of the component it wraps. Only changed defaults are listed.
+
+| Part | Wraps | Defaults |
+| ---- | ----- | -------- |
+| `Root` | `Flex` | `direction="column"`, `align="center"`, `justify="center"`, `gap="6"` |
+| `Quote` | `Heading` | `size="7"`, `weight="medium"`, `align="center"`. Wraps children in quotation marks |
+| `Author` | `Flex` | `direction="column"`, `align="center"`, `gap="2"` |
+| `Avatar` | `Avatar` | `size="4"`, `radius="full"` |
+| `Details` | `Flex` | `direction="column"`, `align="center"`, `gap="0"` |
+| `Name` | `Text` | `size="3"`, `weight="medium"` |
+| `Role` | `Text` | `size="2"`, `color="gray"` |
+
+## Examples
+
+### Centered Quote
+
+<PreviewBlock background="none" height="auto">
+  <Box py="8" px="5" maxWidth="36rem">
+    <Testimonial.Root>
+      <Testimonial.Quote as="h3" size="5">We shipped the redesign two weeks early, and nobody had to learn a new system.</Testimonial.Quote>
+      <Testimonial.Author>
+        <Testimonial.Avatar fallback="SK" color="gray" />
+        <Testimonial.Details>
+          <Testimonial.Name>Sam Kim</Testimonial.Name>
+          <Testimonial.Role>Design lead, Acme</Testimonial.Role>
+        </Testimonial.Details>
+      </Testimonial.Author>
+    </Testimonial.Root>
+  </Box>
+</PreviewBlock>
+
+```tsx showLineNumbers
+<Testimonial.Root>
+  <Testimonial.Quote size="5">
+    We shipped the redesign two weeks early, and nobody had to learn a new system.
+  </Testimonial.Quote>
+  <Testimonial.Author>
+    <Testimonial.Avatar fallback="SK" color="gray" />
+    <Testimonial.Details>
+      <Testimonial.Name>Sam Kim</Testimonial.Name>
+      <Testimonial.Role>Design lead, Acme</Testimonial.Role>
+    </Testimonial.Details>
+  </Testimonial.Author>
+</Testimonial.Root>
+```
+
+### Left Aligned
+
+Set `align="start"` on the root, author and details, and `align="left"` on the quote.
+
+```tsx showLineNumbers
+<Testimonial.Root align="start">
+  <Testimonial.Quote align="left">…</Testimonial.Quote>
+  <Testimonial.Author align="start">
+    <Testimonial.Avatar src="/people/sam.jpg" fallback="SK" />
+    <Testimonial.Details align="start">
+      <Testimonial.Name>Sam Kim</Testimonial.Name>
+      <Testimonial.Role>Design lead, Acme</Testimonial.Role>
+    </Testimonial.Details>
+  </Testimonial.Author>
+</Testimonial.Root>
+```
+
+## Accessibility
+
+`Quote` renders a heading, which suits a quote that leads a section. For a quote inside running content, wrap it in a `blockquote` or use Kookie's `Blockquote` instead. The avatar's `fallback` shows initials; give it an `alt` when you pass `src`.
