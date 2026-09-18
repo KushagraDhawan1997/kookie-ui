@@ -270,7 +270,7 @@
       --select-item-height: var(--space-5);
       --select-item-indicator-width: calc(var(--space-5) / var(--select-item-indicator-width-factor));
       --select-separator-margin-right: var(--space-2);
-      border-radius: var(--radius-3);
+      border-radius: var(--radius-surface-3);
 
       & :where(.rt-SelectLabel) {
         font-size: var(--font-size-1);
@@ -293,7 +293,7 @@
       --select-item-height: var(--space-6);
       --select-item-indicator-width: var(--space-5);
       --select-separator-margin-right: var(--space-3);
-      border-radius: var(--radius-4);
+      border-radius: var(--radius-surface-4);
 
       & :where(.rt-SelectLabel) {
         font-size: var(--font-size-2);

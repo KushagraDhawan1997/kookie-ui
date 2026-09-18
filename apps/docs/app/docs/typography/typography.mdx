@@ -157,82 +157,127 @@ Compose formatting components to add emphasis and structure:
 
 ## Font Family
 
-Kookie UI preserves the Radix typography tokens. Components read from these tokens, and their shape matches the structure described in the Radix Themes documentation.
+Every typeface decision lives in two tiers, and nowhere else.
+
+**Stacks** — which typefaces exist. Three of them, declared on `:root`:
 
 ```css
-/* Radix typography tokens (used by components) */
-var(--default-font-family)  /* Base text font stack */
-var(--code-font-family)     /* Monospace font stack for <Code> */
-var(--heading-font-family)  /* Heading font stack for <Heading> */
-var(--strong-font-family)   /* Font stack for <Strong> */
-var(--em-font-family)       /* Font stack for <Em> */
-var(--quote-font-family)    /* Font stack for <Quote> */
+--font-sans   /* backs font="sans", and body text by default */
+--font-mono   /* backs font="mono" and Code */
+--font-serif  /* backs font="serif", Em and Quote */
 ```
 
-## Font Customization
-
-Kookie UI makes font customization simple and flexible. Switch between font families instantly using theme props or customize with your own fonts.
-
-### Theme Font Family
-
-```tsx
-/* Sans-serif fonts (default) */
-<Theme fontFamily="sans"><Text>This uses Inter font</Text></Theme>
-
-/* Monospace fonts */
-<Theme fontFamily="mono"><Text>This uses JetBrains Mono font</Text></Theme>
-
-/* Serif fonts */
-<Theme fontFamily="serif"><Text>This uses Playfair Display font</Text></Theme>
-```
-
-### Custom Fonts
-
-Kookie UI uses two layers of font variables. Designers can stay at the Kookie layer, while developers who already know Radix can work directly with the Radix tokens. You can override either layer; the most common entry point is the Kookie design tokens.
-
-| Layer | Tokens | Use when… |
-| ----- | ------ | --------- |
-| Radix typography | `--default-font-family`, `--heading-font-family`, `--code-font-family`, `--strong-font-family`, `--em-font-family`, `--quote-font-family` | You want to follow the Radix Themes docs exactly or fine‑tune individual roles. |
-| Kookie design tokens | `--font-sans`, `--font-mono`, `--font-serif` | You want a single place to swap the main sans/mono/serif families for the whole theme. |
+**Roles** — which stack each kind of text uses. Declared on `.radix-themes`:
 
 ```css
-/* Import your preferred fonts (example) */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+--font-body     /* Text, inputs, buttons, and anything that does not opt out */
+--font-heading  /* Heading — follows --font-body unless you set it */
+--font-code     /* Code */
+--font-strong   /* Strong */
+--font-em       /* Em */
+--font-quote    /* Quote */
+```
 
-/* Option 1 – Radix-compatible overrides (fine‑grained) */
-.radix-themes {
-  --default-font-family: 'Poppins', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --heading-font-family: 'Poppins', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --code-font-family: 'Fira Code', 'Consolas', monospace;
+Change a stack and every role using it moves with it. Change a role and only that role moves.
+
+The Radix Themes names (`--default-font-family`, `--heading-font-family`, `--code-font-family`, `--strong-font-family`, `--em-font-family`, `--quote-font-family`) are aliases of the roles above, kept so Radix documentation still applies. Overriding either spelling works.
+
+## Loading Fonts
+
+Kookie's stylesheet loads no webfonts. The defaults are system stacks, so importing the library costs zero font requests.
+
+To use Kookie's own typefaces — Inter, JetBrains Mono, Playfair Display — import the opt-in stylesheet:
+
+```tsx showLineNumbers
+import '@kushagradhawan/kookie-ui/styles.css';
+import '@kushagradhawan/kookie-ui/fonts.css';
+```
+
+If you already load fonts yourself, skip that file and point the stacks at your faces instead. With `next/font`:
+
+```tsx showLineNumbers
+import { Inter } from 'next/font/google';
+
+const inter = Inter({ subsets: ['latin'], variable: '--app-sans' });
+
+export default function RootLayout({ children }) {
+  return (
+    <html className={inter.variable}>
+      <body>{children}</body>
+    </html>
+  );
 }
+```
 
-/* Option 2 – Kookie design tokens (recommended entry point) */
+```css
 :root {
-  --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --font-mono: 'Fira Code', 'Consolas', monospace;
+  --font-sans: var(--app-sans), system-ui, sans-serif;
+}
+```
+
+## Custom Fonts
+
+Swap a typeface everywhere it is used by overriding a stack at `:root`:
+
+```css showLineNumbers
+:root {
+  --font-sans: 'Poppins', system-ui, sans-serif;
+  --font-mono: 'Fira Code', 'Menlo', monospace;
   --font-serif: 'Georgia', 'Times New Roman', serif;
 }
 ```
 
-## Theme Override Variables
+Give a single role its own typeface by overriding it at `.radix-themes`:
 
-These are the main Kookie design tokens you override to customize fonts globally. They are wired into the Radix typography tokens shown above, so changing them updates the fonts used by components.
+```css showLineNumbers
+/* Serif headings over a sans body */
+.radix-themes {
+  --font-heading: var(--font-serif);
+}
+```
 
-| Variable | Default Value |
-| -------- | ------------- |
-| `--font-sans` | `var(--font-inter)` |
-| `--font-mono` | `var(--font-jetbrains-mono)` |
-| `--font-serif` | `var(--font-playfair-display)` |
+Roles are declared on `.radix-themes` rather than `:root` because `<Theme>` switches them per subtree — an override at `:root` sits on an ancestor and would be overruled. Stacks are the opposite: declare those at `:root`.
 
-## Base Font Stacks
+## Theme Props
 
-These are the actual font stacks used by the theme override variables. Override these only if you want to change Kookie's base fonts.
+`fontFamily` sets the body role for a subtree:
 
-| Variable | Font Stack |
-| -------- | ---------- |
-| `--font-inter` | `'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif` |
-| `--font-jetbrains-mono` | `'JetBrains Mono', 'Fira Code', 'Consolas', 'Liberation Mono', 'Courier New', monospace` |
-| `--font-playfair-display` | `'Playfair Display', 'Times New Roman', 'Times', 'Georgia', 'Cambria', serif` |
+```tsx
+<Theme fontFamily="sans"><YourApp /></Theme>
+```
+
+`headingFontFamily` sets the heading role independently:
+
+```tsx showLineNumbers
+<Theme fontFamily="sans" headingFontFamily="serif">
+  <Heading>Set in the serif stack</Heading>
+  <Text>Set in the sans stack</Text>
+</Theme>
+```
+
+Leave `headingFontFamily` off and headings follow the body font — including when `fontFamily` changes, and including when you have set `--font-heading` yourself.
+
+Individual pieces of text opt out with the `font` prop, which reads the stacks directly:
+
+```tsx
+<Text font="mono">v1.4.2</Text>
+```
+
+## Defaults
+
+| Variable | Default |
+| -------- | ------- |
+| `--font-sans` | System sans stack (`-apple-system`, `Segoe UI`, `Roboto`, …) |
+| `--font-mono` | System mono stack (`Menlo`, `Consolas`, …) |
+| `--font-serif` | System serif stack (`Times New Roman`, `Georgia`, …) |
+| `--font-body` | `var(--font-sans)` |
+| `--font-heading` | `var(--font-body)` |
+| `--font-code` | `var(--font-mono)` |
+| `--font-strong` | `var(--font-body)` |
+| `--font-em` | `var(--font-serif)` |
+| `--font-quote` | `var(--font-serif)` |
+
+With `@kushagradhawan/kookie-ui/fonts.css` imported, the three stacks become Inter, JetBrains Mono and Playfair Display.
 
 ## Credits
 

@@ -73,11 +73,22 @@ const themePropDefs = {
    */
   scaling: { type: 'enum', values: scalings, default: '100%' },
   /**
-   * Sets the font family for the theme.
+   * Sets the font family used for body text in the theme.
+   *
+   * Headings follow this unless `headingFontFamily` (or the `--font-heading`
+   * token) says otherwise.
    *
    * @default 'sans'
    */
   fontFamily: { type: 'enum', values: fontFamilies, default: 'sans' },
+  /**
+   * Sets the font family used for `Heading`, independently of body text.
+   *
+   * Deliberately has no default: when it is left unset no attribute is
+   * emitted and `--font-heading` keeps following `--font-body`, so a
+   * `--font-heading` override in your own CSS survives a `fontFamily` switch.
+   */
+  headingFontFamily: { type: 'enum', values: fontFamilies },
 } satisfies {
   hasBackground: PropDef<boolean>;
   appearance: PropDef<(typeof appearances)[number]>;
@@ -88,6 +99,7 @@ const themePropDefs = {
   radius: PropDef<(typeof radii)[number]>;
   scaling: PropDef<(typeof scalings)[number]>;
   fontFamily: PropDef<(typeof fontFamilies)[number]>;
+  headingFontFamily: PropDef<(typeof fontFamilies)[number]>;
 };
 
 type ThemeOwnProps = GetPropDefTypes<typeof themePropDefs & typeof asChildPropDef>;

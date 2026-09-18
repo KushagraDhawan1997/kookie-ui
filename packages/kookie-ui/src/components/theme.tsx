@@ -23,6 +23,9 @@ type ThemePanelBackground = (typeof themePropDefs.panelBackground.values)[number
 type ThemeRadius = (typeof themePropDefs.radius.values)[number];
 type ThemeScaling = (typeof themePropDefs.scaling.values)[number];
 type ThemeFontFamily = (typeof themePropDefs.fontFamily.values)[number];
+// Headings follow the body font until something sets this, so `undefined` is a
+// meaningful value here rather than a missing one.
+type ThemeHeadingFontFamily = ThemeFontFamily | undefined;
 
 interface ThemeChangeHandlers {
   onAppearanceChange: (appearance: ThemeAppearance) => void;
@@ -33,6 +36,7 @@ interface ThemeChangeHandlers {
   onRadiusChange: (radius: ThemeRadius) => void;
   onScalingChange: (scaling: ThemeScaling) => void;
   onFontFamilyChange: (fontFamily: ThemeFontFamily) => void;
+  onHeadingFontFamilyChange: (headingFontFamily: ThemeHeadingFontFamily) => void;
 }
 
 interface ThemeContextValue extends ThemeChangeHandlers {
@@ -45,6 +49,7 @@ interface ThemeContextValue extends ThemeChangeHandlers {
   radius: ThemeRadius;
   scaling: ThemeScaling;
   fontFamily: ThemeFontFamily;
+  headingFontFamily: ThemeHeadingFontFamily;
 }
 // Default theme values used when components render outside a Theme provider
 const defaultThemeContext: ThemeContextValue = {
@@ -57,6 +62,7 @@ const defaultThemeContext: ThemeContextValue = {
   radius: themePropDefs.radius.default,
   scaling: themePropDefs.scaling.default,
   fontFamily: themePropDefs.fontFamily.default,
+  headingFontFamily: undefined,
   onAppearanceChange: noop,
   onAccentColorChange: noop,
   onGrayColorChange: noop,
@@ -65,6 +71,7 @@ const defaultThemeContext: ThemeContextValue = {
   onRadiusChange: noop,
   onScalingChange: noop,
   onFontFamilyChange: noop,
+  onHeadingFontFamilyChange: noop,
 };
 
 const ThemeContext = React.createContext<ThemeContextValue | undefined>(undefined);
@@ -103,6 +110,7 @@ const ThemeRoot = React.forwardRef<ThemeImplElement, ThemeImplPublicProps>(
       radius: radiusProp = themePropDefs.radius.default,
       scaling: scalingProp = themePropDefs.scaling.default,
       fontFamily: fontFamilyProp = themePropDefs.fontFamily.default,
+      headingFontFamily: headingFontFamilyProp,
       hasBackground = themePropDefs.hasBackground.default,
       ...rootProps
     } = props;
@@ -128,6 +136,7 @@ const ThemeRoot = React.forwardRef<ThemeImplElement, ThemeImplPublicProps>(
     const [radius, setRadius] = usePropSyncedState(radiusProp);
     const [scaling, setScaling] = usePropSyncedState(scalingProp);
     const [fontFamily, setFontFamily] = usePropSyncedState(fontFamilyProp);
+    const [headingFontFamily, setHeadingFontFamily] = usePropSyncedState(headingFontFamilyProp);
 
     return (
       <ThemeImpl
@@ -144,6 +153,7 @@ const ThemeRoot = React.forwardRef<ThemeImplElement, ThemeImplPublicProps>(
         radius={radius}
         scaling={scaling}
         fontFamily={fontFamily}
+        headingFontFamily={headingFontFamily}
         //
         onAppearanceChange={setAppearance}
         onAccentColorChange={setAccentColor}
@@ -153,6 +163,7 @@ const ThemeRoot = React.forwardRef<ThemeImplElement, ThemeImplPublicProps>(
         onRadiusChange={setRadius}
         onScalingChange={setScaling}
         onFontFamilyChange={setFontFamily}
+        onHeadingFontFamilyChange={setHeadingFontFamily}
       />
     );
   },
@@ -193,6 +204,7 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
     radius = props.radius ?? context?.radius ?? themePropDefs.radius.default,
     scaling = props.scaling ?? context?.scaling ?? themePropDefs.scaling.default,
     fontFamily = props.fontFamily ?? context?.fontFamily ?? themePropDefs.fontFamily.default,
+    headingFontFamily = props.headingFontFamily ?? context?.headingFontFamily,
     //
     onAppearanceChange = noop,
     onAccentColorChange = noop,
@@ -202,6 +214,7 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
     onRadiusChange = noop,
     onScalingChange = noop,
     onFontFamilyChange = noop,
+    onHeadingFontFamilyChange = noop,
     //
     ...themeProps
   } = props;
@@ -243,6 +256,7 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
           radius,
           scaling,
           fontFamily,
+          headingFontFamily,
           //
           onAppearanceChange,
           onAccentColorChange,
@@ -252,6 +266,7 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
           onRadiusChange,
           onScalingChange,
           onFontFamilyChange,
+          onHeadingFontFamilyChange,
         }),
         [
           appearance,
@@ -263,6 +278,7 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
           radius,
           scaling,
           fontFamily,
+          headingFontFamily,
           //
           onAppearanceChange,
           onAccentColorChange,
@@ -272,6 +288,7 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
           onRadiusChange,
           onScalingChange,
           onFontFamilyChange,
+          onHeadingFontFamilyChange,
         ],
       )}
     >
@@ -286,6 +303,7 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
         data-radius={radius}
         data-scaling={scaling}
         data-font-family={fontFamily}
+        data-heading-font-family={headingFontFamily}
         ref={composedRef}
         {...themeProps}
         className={classNames(

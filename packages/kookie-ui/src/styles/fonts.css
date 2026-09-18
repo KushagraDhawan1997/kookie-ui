@@ -1,35 +1,30 @@
-/* Inter, JetBrains Mono, and Playfair Display from Google Fonts */
+/***************************************************************************************************
+ *                                                                                                 *
+ * KOOKIE UI WEBFONTS — OPT-IN                                                                     *
+ *                                                                                                 *
+ * Kookie UI's core stylesheet ships no webfonts; it defaults to system stacks so that importing   *
+ * the library costs zero network requests. Import this file alongside it to get Kookie's own      *
+ * typefaces:                                                                                      *
+ *                                                                                                 *
+ *   import '@kushagradhawan/kookie-ui/styles.css';                                                *
+ *   import '@kushagradhawan/kookie-ui/fonts.css';                                                 *
+ *                                                                                                 *
+ * This costs three render-blocking requests to Google Fonts. If you already load fonts yourself   *
+ * (`next/font`, a self-hosted @font-face, a CDN), skip this file and point the stacks at your     *
+ * own faces instead:                                                                              *
+ *                                                                                                 *
+ *   :root {                                                                                       *
+ *     --font-sans: var(--my-next-font), system-ui, sans-serif;                                    *
+ *   }                                                                                             *
+ *                                                                                                 *
+ ***************************************************************************************************/
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
-/* Font Variables - Customize these to change fonts throughout your app */
 :root {
-  /* Base font definitions - these are the actual font stacks */
-  --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-jetbrains-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
-  --font-playfair-display: 'Playfair Display', 'Times New Roman', 'Times', 'Georgia', 'Cambria', serif;
-
-  /* Theme font family overrides - change these to customize fonts globally */
-  --font-sans: var(--font-inter); /* Override this for custom sans-serif */
-  --font-mono: var(--font-jetbrains-mono); /* Override this for custom monospace */
-  --font-serif: var(--font-playfair-display); /* Override this for custom serif */
-
-  /* Force proper font weight rendering */
-  font-synthesis: none; /* Prevent browser from synthesizing weights */
-}
-
-/* Radix Themes font weight enforcement */
-.radix-themes {
-  font-synthesis: none;
-  font-family: var(--default-font-family);
-}
-
-/* System font fallback for critical loading scenarios */
-@font-face {
-  font-family: 'System Fallback';
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: block;
-  src: local('-apple-system'), local('BlinkMacSystemFont'), local('Segoe UI'), local('Roboto');
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI (Custom)', Roboto, 'Helvetica Neue', system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  --font-mono: 'JetBrains Mono', 'Menlo', 'Consolas (Custom)', 'Liberation Mono', monospace, 'Apple Color Emoji', 'Segoe UI Emoji';
+  --font-serif: 'Playfair Display', 'Times New Roman', 'Times', 'Georgia', 'Cambria', serif;
 }

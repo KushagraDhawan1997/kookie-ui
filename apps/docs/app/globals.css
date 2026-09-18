@@ -1,11 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Google+Sans+Code:wght@400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Code:wght@400..700&display=swap');
 @import '@kushagradhawan/kookie-ui/styles.css';
 @import '@kushagradhawan/kookie-blocks/styles.css';
 @import 'tailwindcss/preflight.css';
 
+/* Kookie ships no webfonts, so the docs site picks its own. One request, for the one face
+   we actually use; the sans and serif roles ride the system stacks. */
 :root {
-  --font-sans: 'system-ui';
-  --font-mono: 'Google Sans Code';
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI (Custom)', Roboto, sans-serif;
+  --font-mono: 'Google Sans Code', 'Menlo', 'Consolas (Custom)', monospace;
 }
 
 /* Minimal global styles for the documentation site */

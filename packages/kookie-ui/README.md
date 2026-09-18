@@ -38,6 +38,11 @@ export default function App() {
 }
 ```
 
+Kookie ships no webfonts: `styles.css` defaults to system stacks so the install costs zero font
+requests. Add `import '@kushagradhawan/kookie-ui/fonts.css';` for Kookie's own typefaces (Inter, JetBrains
+Mono, Playfair Display), or point `--font-sans` / `--font-mono` / `--font-serif` at fonts you
+already load.
+
 ## What is Kookie UI?
 
 Kookie UI is a fork of [Radix Themes](https://radix-ui.com/themes) that extends it into a full design system. While Radix provided excellent building blocks, Kookie UI codifies the patterns and rules that make interfaces feel consistent and systematic.

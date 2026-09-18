@@ -1,6 +1,6 @@
 {
   "name": "@kushagradhawan/kookie-ui",
-  "version": "0.3.23",
+  "version": "0.5.0",
   "description": "A modern React component library with beautiful design tokens, flexible theming, and comprehensive documentation",
   "keywords": [
     "react",
@@ -8,9 +8,13 @@
     "components",
     "design-system",
     "themes",
-    "radix"
+    "radix",
+    "kookie-ui"
   ],
-  "author": "Kushagra Dhawan",
+  "author": {
+    "name": "Kushagra Dhawan",
+    "url": "https://kushagradhawan.com"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=16"
@@ -101,8 +105,9 @@
     "build:js:cjs:types": "tsc --outdir dist/cjs",
     "build:js:esm": "node scripts/esbuild-esm.js",
     "build:js:esm:types": "tsc --outdir dist/esm",
-    "build:css": "pnpm build:css:index && pnpm build:css:tokens && pnpm build:css:components && pnpm build:css:utilities && pnpm build:css:layout",
+    "build:css": "pnpm build:css:index && pnpm build:css:fonts && pnpm build:css:tokens && pnpm build:css:components && pnpm build:css:utilities && pnpm build:css:layout",
     "build:css:index": "postcss src/styles/index.css -o styles.css",
+    "build:css:fonts": "postcss src/styles/fonts.css -o fonts.css",
     "build:css:components": "postcss src/components/index.css -o components.css",
     "build:css:utilities": "postcss src/styles/utilities/index.css -o utilities.css",
     "build:css:tokens": "pnpm build:css:tokens:index && pnpm build:css:tokens:base && pnpm build:css:tokens:colors",
@@ -115,12 +120,13 @@
     "build:css:layout:components": "postcss src/components/layout.css -o layout/components.css",
     "build:css:layout:utilities": "postcss src/styles/utilities/layout.css -o layout/utilities.css",
     "dev": "pnpm dev:js & pnpm dev:css",
+    "dev:css:fonts": "postcss src/styles/fonts.css -o fonts.css --watch",
     "dev:js": "pnpm dev:js:cjs & pnpm dev:js:esm & pnpm dev:js:cjs:types & pnpm dev:js:esm:types",
     "dev:js:cjs": "node scripts/esbuild-cjs.js watch=true",
     "dev:js:cjs:types": "tsc --watch --incremental --outdir dist/cjs",
     "dev:js:esm": "node scripts/esbuild-esm.js watch=true",
     "dev:js:esm:types": "tsc --watch --incremental --outdir dist/esm >/dev/null",
-    "dev:css": "postcss src/styles/index.css -o styles.css --watch",
+    "dev:css": "postcss src/styles/index.css -o styles.css --watch & pnpm dev:css:fonts",
     "lint": "pnpm lint:js && pnpm lint:css && pnpm lint:ts",
     "lint:js": "eslint \"src/**/*.ts*\"",
     "lint:ts": "tsc --noEmit",

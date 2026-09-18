@@ -1,8 +1,9 @@
 name: CI
 
-# The publish workflow ships to npm on every push to main that touches the
-# package, and it does not run the test suite. This is the gate that does, so a
-# change is checked before it can be published rather than after.
+# The publish workflow ships to npm from a `v*` tag, and the only check it runs
+# on the way is `prepublishOnly`, which is lint. Nothing runs the test suite.
+# This is the gate that does, so a change is checked before it can be tagged and
+# published rather than after.
 on:
   pull_request:
   push:
@@ -43,7 +44,7 @@ jobs:
         run: pnpm --filter @kushagradhawan/kookie-ui test
 
       # The publish workflow builds before publishing, so a build that fails
-      # here would otherwise fail during a release.
+      # here would otherwise fail during a release, after the tag is cut.
       - name: Build
         run: pnpm build:pkg
 

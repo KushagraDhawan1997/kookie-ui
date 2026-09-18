@@ -25,20 +25,20 @@
   }
 }
 
-/* Size-specific border radius to match button */
+/* Size-specific border radius — surface channel */
 @breakpoints {
   .rt-AccordionRoot {
     &:where(.rt-r-size-1) {
-      border-radius: var(--radius-1);
+      border-radius: var(--radius-surface-1);
     }
     &:where(.rt-r-size-2) {
-      border-radius: var(--radius-2);
+      border-radius: var(--radius-surface-2);
     }
     &:where(.rt-r-size-3) {
-      border-radius: var(--radius-3);
+      border-radius: var(--radius-surface-3);
     }
     &:where(.rt-r-size-4) {
-      border-radius: var(--radius-4);
+      border-radius: var(--radius-surface-4);
     }
   }
 }

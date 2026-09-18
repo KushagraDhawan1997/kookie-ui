@@ -15,6 +15,20 @@
   border-radius: var(--skeleton-radius);
   --skeleton-radius-override: var(--checkbox-border-radius);
 
+  /*
+   * Ceiling on the mark's corner, as a ratio of its own box.
+   *
+   * A checkbox is small and does not grow with the radius theme, so the
+   * radius ramp outruns it: at `full` the corner reaches half the box and
+   * the mark becomes a circle — geometrically identical to Radio, which is
+   * `border-radius: 100%`. That collapses the distinction between choosing
+   * many and choosing one, so the corner is clamped below a circle at every
+   * theme. 0.4 stays visibly square next to a Radio of the same size while
+   * leaving the ramp intact through `large`.
+   */
+  --checkbox-radius-ratio-max: 0.4;
+  --checkbox-radius-max: calc(var(--checkbox-size) * var(--checkbox-radius-ratio-max));
+
 
   /* Theme-level translucent override */
   :where([data-panel-background='translucent'], [data-material='translucent']) & {
@@ -77,17 +91,17 @@
     &:where(.rt-r-size-1) {
       --checkbox-size: calc(var(--space-4) * var(--spacing-multiplier-medium));
       --checkbox-indicator-size: var(--indicator-icon-size-1);
-      --checkbox-border-radius: calc(var(--radius-1) * var(--spacing-multiplier-small));
+      --checkbox-border-radius: min(calc(var(--radius-1) * var(--spacing-multiplier-small)), var(--checkbox-radius-max));
     }
     &:where(.rt-r-size-2) {
       --checkbox-size: var(--space-4);
       --checkbox-indicator-size: var(--indicator-icon-size-2);
-      --checkbox-border-radius: calc(var(--radius-1) * var(--spacing-multiplier-medium));
+      --checkbox-border-radius: min(calc(var(--radius-1) * var(--spacing-multiplier-medium)), var(--checkbox-radius-max));
     }
     &:where(.rt-r-size-3) {
       --checkbox-size: calc(var(--space-4) * var(--spacing-multiplier-large));
       --checkbox-indicator-size: var(--indicator-icon-size-3);
-      --checkbox-border-radius: calc(var(--radius-1) * var(--spacing-multiplier-medium));
+      --checkbox-border-radius: min(calc(var(--radius-1) * var(--spacing-multiplier-medium)), var(--checkbox-radius-max));
     }
   }
 }

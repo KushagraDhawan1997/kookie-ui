@@ -50,18 +50,8 @@
   --letter-spacing-11: -0.035em;
   --letter-spacing-12: -0.04em;
 
-  /* default values */
+  /* default values (typefaces live in font-family.css) */
 
-  --default-font-family:
-    var(--font-sans, var(--font-inter, 'Inter')), -apple-system, BlinkMacSystemFont, 'Segoe UI (Custom)', Roboto, 'Helvetica Neue', 'Open Sans (Custom)', system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji';
-
-  /* Font family overrides based on theme data attribute */
-  --default-font-family-sans:
-    var(--font-sans, var(--font-inter, 'Inter')), -apple-system, BlinkMacSystemFont, 'Segoe UI (Custom)', Roboto, 'Helvetica Neue', 'Open Sans (Custom)', system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji';
-  --default-font-family-mono: var(--font-mono);
-  --default-font-family-serif: var(--font-serif);
   --default-font-size: var(--font-size-3); /* Same size used for `<Text size="3">` */
   --default-font-style: normal;
   --default-font-weight: var(--font-weight-regular);
@@ -72,7 +62,6 @@
 
   /* Heading */
 
-  --heading-font-family: var(--default-font-family);
   --heading-font-size-adjust: 1;
   --heading-font-style: normal;
   --heading-leading-trim-start: var(--default-leading-trim-start);
@@ -95,7 +84,6 @@
 
   /* Code */
 
-  --code-font-family: var(--font-mono, var(--font-jetbrains-mono, 'JetBrains Mono')), 'Menlo', 'Consolas (Custom)', 'Bitstream Vera Sans Mono', monospace, 'Apple Color Emoji', 'Segoe UI Emoji';
   --code-font-size-adjust: 0.95;
   --code-font-style: normal;
   --code-font-weight: inherit;
@@ -107,7 +95,6 @@
 
   /* Strong */
 
-  --strong-font-family: var(--default-font-family);
   --strong-font-size-adjust: 1;
   --strong-font-style: inherit;
   --strong-font-weight: var(--font-weight-medium);
@@ -115,7 +102,6 @@
 
   /* Em */
 
-  --em-font-family: 'Times New Roman', 'Times', serif;
   --em-font-size-adjust: 1.18;
   --em-font-style: italic;
   --em-font-weight: inherit;
@@ -123,7 +109,6 @@
 
   /* Quote */
 
-  --quote-font-family: 'Times New Roman', 'Times', serif;
   --quote-font-size-adjust: 1.18;
   --quote-font-style: italic;
   --quote-font-weight: inherit;
@@ -140,6 +125,7 @@
 .radix-themes {
   overflow-wrap: break-word;
   font-family: var(--default-font-family);
+  font-synthesis: none;
   font-size: var(--default-font-size);
   font-weight: var(--default-font-weight);
   font-style: var(--default-font-style);
@@ -148,204 +134,4 @@
   text-size-adjust: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-@font-face {
-  font-family: 'Segoe UI (Custom)';
-  font-weight: 300;
-  size-adjust: 103%;
-  descent-override: 35%;
-  ascent-override: 105%;
-  src: local('Segoe UI Semilight'), local('Segoe UI');
-}
-
-@font-face {
-  font-family: 'Segoe UI (Custom)';
-  font-weight: 300;
-  font-style: italic;
-  size-adjust: 103%;
-  descent-override: 35%;
-  ascent-override: 105%;
-  src: local('Segoe UI Semilight Italic'), local('Segoe UI Italic');
-}
-
-@font-face {
-  font-family: 'Segoe UI (Custom)';
-  font-weight: 400;
-  size-adjust: 103%;
-  descent-override: 35%;
-  ascent-override: 105%;
-  src: local('Segoe UI');
-}
-
-@font-face {
-  font-family: 'Segoe UI (Custom)';
-  font-weight: 400;
-  font-style: italic;
-  size-adjust: 103%;
-  descent-override: 35%;
-  ascent-override: 105%;
-  src: local('Segoe UI Italic');
-}
-
-@font-face {
-  font-family: 'Segoe UI (Custom)';
-  font-weight: 500;
-  size-adjust: 103%;
-  descent-override: 35%;
-  ascent-override: 105%;
-  src: local('Segoe UI Semibold'), local('Segoe UI');
-}
-
-@font-face {
-  font-family: 'Segoe UI (Custom)';
-  font-weight: 500;
-  font-style: italic;
-  size-adjust: 103%;
-  descent-override: 35%;
-  ascent-override: 105%;
-  src: local('Segoe UI Semibold Italic'), local('Segoe UI Italic');
-}
-
-@font-face {
-  font-family: 'Segoe UI (Custom)';
-  font-weight: 700;
-  size-adjust: 103%;
-  descent-override: 35%;
-  ascent-override: 105%;
-  src: local('Segoe UI Bold');
-}
-
-@font-face {
-  font-family: 'Segoe UI (Custom)';
-  font-weight: 700;
-  font-style: italic;
-  size-adjust: 103%;
-  descent-override: 35%;
-  ascent-override: 105%;
-  src: local('Segoe UI Bold Italic');
-}
-
-@font-face {
-  font-family: 'Open Sans (Custom)';
-  font-weight: 300;
-  descent-override: 35%;
-  src: local('Open Sans Light'), local('Open Sans Regular');
-}
-
-@font-face {
-  font-family: 'Open Sans (Custom)';
-  font-weight: 300;
-  font-style: italic;
-  descent-override: 35%;
-  src: local('Open Sans Light Italic'), local('Open Sans Italic');
-}
-
-@font-face {
-  font-family: 'Open Sans (Custom)';
-  font-weight: 400;
-  descent-override: 35%;
-  src: local('Open Sans Regular');
-}
-
-@font-face {
-  font-family: 'Open Sans (Custom)';
-  font-weight: 400;
-  font-style: italic;
-  descent-override: 35%;
-  src: local('Open Sans Italic');
-}
-
-@font-face {
-  font-family: 'Open Sans (Custom)';
-  font-weight: 500;
-  descent-override: 35%;
-  src: local('Open Sans Medium'), local('Open Sans Regular');
-}
-
-@font-face {
-  font-family: 'Open Sans (Custom)';
-  font-weight: 500;
-  font-style: italic;
-  descent-override: 35%;
-  src: local('Open Sans Medium Italic'), local('Open Sans Italic');
-}
-
-@font-face {
-  font-family: 'Open Sans (Custom)';
-  font-weight: 700;
-  descent-override: 35%;
-  src: local('Open Sans Bold');
-}
-
-@font-face {
-  font-family: 'Open Sans (Custom)';
-  font-weight: 700;
-  font-style: italic;
-  descent-override: 35%;
-  src: local('Open Sans Bold Italic');
-}
-
-@font-face {
-  font-family: 'Consolas (Custom)';
-  font-weight: 400;
-  size-adjust: 110%;
-  ascent-override: 85%;
-  descent-override: 22%;
-  src: local('Consolas');
-}
-
-@font-face {
-  font-family: 'Consolas (Custom)';
-  font-weight: 400;
-  font-style: italic;
-  size-adjust: 110%;
-  ascent-override: 85%;
-  descent-override: 22%;
-  src: local('Consolas Italic');
-}
-
-@font-face {
-  font-family: 'Consolas (Custom)';
-  font-weight: 700;
-  size-adjust: 110%;
-  ascent-override: 85%;
-  descent-override: 22%;
-  src: local('Consolas Bold');
-}
-
-@font-face {
-  font-family: 'Consolas (Custom)';
-  font-weight: 700;
-  font-style: italic;
-  size-adjust: 110%;
-  ascent-override: 85%;
-  descent-override: 22%;
-  src: local('Consolas Bold Italic');
-}
-
-/* Font family data attribute support */
-[data-font-family='sans'] {
-  --default-font-family: var(--default-font-family-sans);
-  --heading-font-family: var(--default-font-family-sans);
-  --strong-font-family: var(--default-font-family-sans);
-}
-
-[data-font-family='mono'] {
-  --default-font-family: var(--default-font-family-mono);
-  --heading-font-family: var(--default-font-family-mono);
-  --strong-font-family: var(--default-font-family-mono);
-}
-
-[data-font-family='serif'] {
-  /* Map serif directly to --font-serif to avoid resolution issues */
-  --default-font-family: var(--font-serif);
-  --heading-font-family: var(--font-serif);
-  --strong-font-family: var(--font-serif);
-}
-
-/* Ensure serif font takes precedence over .radix-themes */
-/* stylelint-disable-next-line selector-max-specificity */
-.radix-themes[data-font-family='serif'] {
-  font-family: var(--font-serif) !important;
 }

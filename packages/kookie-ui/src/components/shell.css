@@ -672,7 +672,7 @@
 .rt-ShellBottom[data-inset] {
   --shell-inset-gap: var(--space-2);
   margin: var(--shell-inset-gap);
-  border-radius: var(--radius-3);
+  border-radius: var(--radius-surface-3);
   background: var(--color-background);
   box-shadow: var(--shadow-2);
   /* Override height: 100% so margin doesn't overflow */

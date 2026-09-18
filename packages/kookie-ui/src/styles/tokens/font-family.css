@@ -1,0 +1,263 @@
+/***************************************************************************************************
+ *                                                                                                 *
+ * TYPEFACES                                                                                       *
+ *                                                                                                 *
+ * This file is the single owner of every font-family decision in Kookie UI. Sizes, weights,       *
+ * line heights and letter spacing live in `typography.css`; nothing else declares a stack.        *
+ *                                                                                                 *
+ * There are exactly two tiers:                                                                    *
+ *                                                                                                 *
+ *   1. STACKS  — which typefaces exist. Three of them: --font-sans, --font-mono, --font-serif.    *
+ *                Declared on `:root`, because a typeface is an app-wide resource (and because     *
+ *                that is where `next/font` and friends put theirs). Override at `:root`.          *
+ *                                                                                                 *
+ *   2. ROLES   — which stack each piece of text uses: --font-body, --font-heading, --font-code,   *
+ *                --font-strong, --font-em, --font-quote. Declared on `.radix-themes`, because a   *
+ *                role is a per-theme decision that `<Theme fontFamily>` has to be able to switch  *
+ *                per subtree. Override at `.radix-themes`.                                        *
+ *                                                                                                 *
+ * No webfonts are loaded here. The defaults below are system stacks. To use Kookie's own          *
+ * typefaces (Inter / JetBrains Mono / Playfair Display), additionally import                      *
+ * '@kushagradhawan/kookie-ui/fonts.css'.                                                          *
+ *                                                                                                 *
+ ***************************************************************************************************/
+
+:root {
+  /* Tier 1: stacks. Override these to change every typeface in the system. */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI (Custom)', Roboto, 'Helvetica Neue', 'Open Sans (Custom)', system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji';
+  --font-mono: 'Menlo', 'Consolas (Custom)', 'Bitstream Vera Sans Mono', monospace, 'Apple Color Emoji', 'Segoe UI Emoji';
+  --font-serif: 'Times New Roman', 'Times', 'Georgia', 'Cambria', serif;
+}
+
+.radix-themes {
+  /* Tier 2: roles. Each one points at a stack. Override these to give a role its own typeface —
+     e.g. `--font-heading: var(--font-serif)` for serif headings over a sans body. */
+  --font-body: var(--font-sans);
+  --font-heading: var(--font-body); /* follows the body unless you say otherwise */
+  --font-code: var(--font-mono);
+  --font-strong: var(--font-body);
+  --font-em: var(--font-serif);
+  --font-quote: var(--font-serif);
+
+  /* Radix Themes names, kept as aliases of the roles above. Components read these, so overriding
+     either the Kookie role or the Radix name works — they are the same token, spelled twice. */
+  --default-font-family: var(--font-body);
+  --heading-font-family: var(--font-heading);
+  --code-font-family: var(--font-code);
+  --strong-font-family: var(--font-strong);
+  --em-font-family: var(--font-em);
+  --quote-font-family: var(--font-quote);
+
+  /* @deprecated Use --font-sans / --font-mono / --font-serif directly. */
+  --default-font-family-sans: var(--font-sans);
+  --default-font-family-mono: var(--font-mono);
+  --default-font-family-serif: var(--font-serif);
+}
+
+/* `<Theme fontFamily>` — sets the body role only. Heading follows it through --font-heading's
+   default, so a `--font-heading` override of yours survives a theme font switch. */
+[data-font-family='sans'] {
+  --font-body: var(--font-sans);
+}
+[data-font-family='mono'] {
+  --font-body: var(--font-mono);
+}
+[data-font-family='serif'] {
+  --font-body: var(--font-serif);
+}
+
+/* `<Theme headingFontFamily>` — sets the heading role independently of the body. */
+[data-heading-font-family='sans'] {
+  --font-heading: var(--font-sans);
+}
+[data-heading-font-family='mono'] {
+  --font-heading: var(--font-mono);
+}
+[data-heading-font-family='serif'] {
+  --font-heading: var(--font-serif);
+}
+
+/***************************************************************************************************
+ *                                                                                                 *
+ * METRIC OVERRIDES                                                                                *
+ *                                                                                                 *
+ * Fallback faces normalised to match the primary stack's metrics, so swapping a webfont for a    *
+ * system face does not reflow the page. Referenced by the default stacks above.                  *
+ *                                                                                                 *
+ ***************************************************************************************************/
+
+@font-face {
+  font-family: 'Segoe UI (Custom)';
+  font-weight: 300;
+  size-adjust: 103%;
+  descent-override: 35%;
+  ascent-override: 105%;
+  src: local('Segoe UI Semilight'), local('Segoe UI');
+}
+
+@font-face {
+  font-family: 'Segoe UI (Custom)';
+  font-weight: 300;
+  font-style: italic;
+  size-adjust: 103%;
+  descent-override: 35%;
+  ascent-override: 105%;
+  src: local('Segoe UI Semilight Italic'), local('Segoe UI Italic');
+}
+
+@font-face {
+  font-family: 'Segoe UI (Custom)';
+  font-weight: 400;
+  size-adjust: 103%;
+  descent-override: 35%;
+  ascent-override: 105%;
+  src: local('Segoe UI');
+}
+
+@font-face {
+  font-family: 'Segoe UI (Custom)';
+  font-weight: 400;
+  font-style: italic;
+  size-adjust: 103%;
+  descent-override: 35%;
+  ascent-override: 105%;
+  src: local('Segoe UI Italic');
+}
+
+@font-face {
+  font-family: 'Segoe UI (Custom)';
+  font-weight: 500;
+  size-adjust: 103%;
+  descent-override: 35%;
+  ascent-override: 105%;
+  src: local('Segoe UI Semibold'), local('Segoe UI');
+}
+
+@font-face {
+  font-family: 'Segoe UI (Custom)';
+  font-weight: 500;
+  font-style: italic;
+  size-adjust: 103%;
+  descent-override: 35%;
+  ascent-override: 105%;
+  src: local('Segoe UI Semibold Italic'), local('Segoe UI Italic');
+}
+
+@font-face {
+  font-family: 'Segoe UI (Custom)';
+  font-weight: 700;
+  size-adjust: 103%;
+  descent-override: 35%;
+  ascent-override: 105%;
+  src: local('Segoe UI Bold');
+}
+
+@font-face {
+  font-family: 'Segoe UI (Custom)';
+  font-weight: 700;
+  font-style: italic;
+  size-adjust: 103%;
+  descent-override: 35%;
+  ascent-override: 105%;
+  src: local('Segoe UI Bold Italic');
+}
+
+@font-face {
+  font-family: 'Open Sans (Custom)';
+  font-weight: 300;
+  descent-override: 35%;
+  src: local('Open Sans Light'), local('Open Sans Regular');
+}
+
+@font-face {
+  font-family: 'Open Sans (Custom)';
+  font-weight: 300;
+  font-style: italic;
+  descent-override: 35%;
+  src: local('Open Sans Light Italic'), local('Open Sans Italic');
+}
+
+@font-face {
+  font-family: 'Open Sans (Custom)';
+  font-weight: 400;
+  descent-override: 35%;
+  src: local('Open Sans Regular');
+}
+
+@font-face {
+  font-family: 'Open Sans (Custom)';
+  font-weight: 400;
+  font-style: italic;
+  descent-override: 35%;
+  src: local('Open Sans Italic');
+}
+
+@font-face {
+  font-family: 'Open Sans (Custom)';
+  font-weight: 500;
+  descent-override: 35%;
+  src: local('Open Sans Medium'), local('Open Sans Regular');
+}
+
+@font-face {
+  font-family: 'Open Sans (Custom)';
+  font-weight: 500;
+  font-style: italic;
+  descent-override: 35%;
+  src: local('Open Sans Medium Italic'), local('Open Sans Italic');
+}
+
+@font-face {
+  font-family: 'Open Sans (Custom)';
+  font-weight: 700;
+  descent-override: 35%;
+  src: local('Open Sans Bold');
+}
+
+@font-face {
+  font-family: 'Open Sans (Custom)';
+  font-weight: 700;
+  font-style: italic;
+  descent-override: 35%;
+  src: local('Open Sans Bold Italic');
+}
+
+@font-face {
+  font-family: 'Consolas (Custom)';
+  font-weight: 400;
+  size-adjust: 110%;
+  ascent-override: 85%;
+  descent-override: 22%;
+  src: local('Consolas');
+}
+
+@font-face {
+  font-family: 'Consolas (Custom)';
+  font-weight: 400;
+  font-style: italic;
+  size-adjust: 110%;
+  ascent-override: 85%;
+  descent-override: 22%;
+  src: local('Consolas Italic');
+}
+
+@font-face {
+  font-family: 'Consolas (Custom)';
+  font-weight: 700;
+  size-adjust: 110%;
+  ascent-override: 85%;
+  descent-override: 22%;
+  src: local('Consolas Bold');
+}
+
+@font-face {
+  font-family: 'Consolas (Custom)';
+  font-weight: 700;
+  font-style: italic;
+  size-adjust: 110%;
+  ascent-override: 85%;
+  descent-override: 22%;
+  src: local('Consolas Bold Italic');
+}

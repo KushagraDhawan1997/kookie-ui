@@ -1,45 +1,88 @@
+/*
+ * RADIUS
+ *
+ * Two channels, one theme.
+ *
+ * `--radius-*`         CONTROLS & MARKS — buttons, inputs, checkboxes, badges,
+ *                      switches, tabs. These scale aggressively with the theme
+ *                      and opt into `--radius-full` to become pills.
+ *
+ * `--radius-surface-*` SURFACES — cards, dialogs, popovers, menus, tables,
+ *                      callouts. These damp as the theme grows and never go
+ *                      pill. A surface at `full` is exactly as round as a
+ *                      surface at `medium`; `--radius-surface-factor` is
+ *                      capped at 1.
+ *
+ * The gap between the two channels is the point: round controls read as
+ * touchable, restrained surfaces read as architectural. Widening the theme
+ * widens that contrast instead of inflating everything at once.
+ */
+
 [data-radius] {
-  /*  */
+  /* Controls & marks */
   --radius-1: calc(6px * var(--scaling) * var(--radius-factor));
   --radius-2: calc(8px * var(--scaling) * var(--radius-factor));
   --radius-3: calc(10px * var(--scaling) * var(--radius-factor));
   --radius-4: calc(12px * var(--scaling) * var(--radius-factor));
-  
+
   /*  */
   --radius-5: calc(16px * var(--scaling) * var(--radius-factor));
   --radius-6: calc(20px * var(--scaling) * var(--radius-factor));
   --radius-7: calc(24px * var(--scaling) * var(--radius-factor));
   --radius-8: calc(28px * var(--scaling) * var(--radius-factor));
-  
+
   /*  */
   --radius-9: calc(32px * var(--scaling) * var(--radius-factor));
   --radius-10: calc(40px * var(--scaling) * var(--radius-factor));
   --radius-11: calc(48px * var(--scaling) * var(--radius-factor));
   --radius-12: calc(56px * var(--scaling) * var(--radius-factor));
+
+  /* Surfaces — same ramp, damped factor, no pill */
+  --radius-surface-1: calc(6px * var(--scaling) * var(--radius-surface-factor));
+  --radius-surface-2: calc(8px * var(--scaling) * var(--radius-surface-factor));
+  --radius-surface-3: calc(10px * var(--scaling) * var(--radius-surface-factor));
+  --radius-surface-4: calc(12px * var(--scaling) * var(--radius-surface-factor));
+
+  /*  */
+  --radius-surface-5: calc(16px * var(--scaling) * var(--radius-surface-factor));
+  --radius-surface-6: calc(20px * var(--scaling) * var(--radius-surface-factor));
+  --radius-surface-7: calc(24px * var(--scaling) * var(--radius-surface-factor));
+  --radius-surface-8: calc(28px * var(--scaling) * var(--radius-surface-factor));
+
+  /*  */
+  --radius-surface-9: calc(32px * var(--scaling) * var(--radius-surface-factor));
+  --radius-surface-10: calc(40px * var(--scaling) * var(--radius-surface-factor));
+  --radius-surface-11: calc(48px * var(--scaling) * var(--radius-surface-factor));
+  --radius-surface-12: calc(56px * var(--scaling) * var(--radius-surface-factor));
 }
 
 
 [data-radius='none'] {
   --radius-factor: 0;
+  --radius-surface-factor: 0;
   --radius-full: 0px;
 }
 
 [data-radius='small'] {
   --radius-factor: 0.75;
+  --radius-surface-factor: 0.5;
   --radius-full: 0px;
 }
 
 [data-radius='medium'] {
   --radius-factor: 1;
+  --radius-surface-factor: 0.75;
   --radius-full: 0px;
 }
 
 [data-radius='large'] {
   --radius-factor: 1.5;
+  --radius-surface-factor: 0.9;
   --radius-full: 0px;
 }
 
 [data-radius='full'] {
-  --radius-factor: 2.0;
+  --radius-factor: 2;
+  --radius-surface-factor: 1;
   --radius-full: 9999px;
 }

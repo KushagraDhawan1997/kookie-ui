@@ -76,7 +76,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 | `material` | `'solid' \| 'translucent'` | Background rendering: opaque or translucent. Default: `'translucent'` |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Global corner radius scale. Default: `'medium'` |
 | `scaling` | `'90%' \| '95%' \| '100%' \| '105%' \| '110%'` | Global size scale for UI density. Default: `'100%'` |
-| `fontFamily` | `'sans' \| 'mono' \| 'serif'` | Global font family. Default: `'sans'` |
+| `fontFamily` | `'sans' \| 'mono' \| 'serif'` | Font family for body text. Default: `'sans'` |
+| `headingFontFamily` | `'sans' \| 'mono' \| 'serif'` | Font family for `Heading`, set independently of body text. Follows `fontFamily` when unset |
 | `panelBackground` | `'solid' \| 'translucent'` | Deprecated: Use `material` prop instead. Controls panel background appearance |
 | `hasBackground` | `boolean` | Whether to apply background color to the Theme element. Default: `true` for root Theme |
 | `asChild` | `boolean` | Merges Theme props with child element using Radix Slot pattern |
@@ -189,9 +190,7 @@ Available values: `90%`, `95%`, `100%` (default), `105%`, `110%`.
 
 ## Font Family
 
-Set `fontFamily` to control the typography system for your app. Each option uses carefully selected font stacks with proper fallbacks.
-
-Available values: `sans` (default), `mono`, `serif`.
+Set `fontFamily` to choose the typeface for body text. Available values: `sans` (default), `mono`, `serif`.
 
 ```tsx
 <Theme fontFamily="sans"><YourApp /></Theme>
@@ -200,6 +199,19 @@ Available values: `sans` (default), `mono`, `serif`.
 ```tsx
 <Theme fontFamily="mono"><YourApp /></Theme>
 ```
+
+### Heading Font
+
+`headingFontFamily` sets the typeface for `Heading` on its own, so headings and body text can differ:
+
+```tsx showLineNumbers
+<Theme fontFamily="sans" headingFontFamily="serif">
+  <Heading>Set in the serif stack</Heading>
+  <Text>Set in the sans stack</Text>
+</Theme>
+```
+
+Leave it unset and headings follow `fontFamily`. The typefaces behind `sans`, `mono` and `serif` come from the `--font-sans`, `--font-mono` and `--font-serif` tokens — see [Typography](/docs/typography) for how to point those at your own fonts.
 
 ## Nested Themes
 

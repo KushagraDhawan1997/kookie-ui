@@ -184,7 +184,7 @@
 @breakpoints {
   .rt-ChatbarRoot:where(.rt-r-size-1) .rt-ChatbarBox {
     /* Map Chatbar size 1 to Card size 2 */
-    border-radius: min(var(--radius-6), calc(var(--radius-2) + var(--space-2)));
+    border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-2) + var(--space-2)));
     padding: var(--space-3);
   }
   .rt-ChatbarRoot:where(.rt-r-size-1) .rt-ChatbarInput {
@@ -196,7 +196,7 @@
   }
   .rt-ChatbarRoot:where(.rt-r-size-2) .rt-ChatbarBox {
     /* Map Chatbar size 2 to Card size 3 */
-    border-radius: min(var(--radius-7), calc(var(--radius-3) + var(--space-3)));
+    border-radius: min(var(--radius-surface-7), calc(var(--radius-surface-3) + var(--space-3)));
     padding: var(--space-4);
   }
   .rt-ChatbarRoot:where(.rt-r-size-2) .rt-ChatbarInput {
@@ -208,7 +208,7 @@
   }
   .rt-ChatbarRoot:where(.rt-r-size-3) .rt-ChatbarBox {
     /* Custom Chatbar size 3, different to Card size 4 */
-    border-radius: min(var(--radius-7), calc(var(--radius-3) + var(--space-3)));
+    border-radius: min(var(--radius-surface-7), calc(var(--radius-surface-3) + var(--space-3)));
     padding: var(--space-4);
   }
   .rt-ChatbarRoot:where(.rt-r-size-3) .rt-ChatbarInput {
@@ -236,13 +236,13 @@
 /* Reduced radius when collapsed (scale down by 1) */
 @breakpoints {
   .rt-ChatbarRoot:where([data-state='closed'].rt-r-size-1) .rt-ChatbarBox {
-    border-radius: min(var(--radius-5), calc(var(--radius-1) + var(--space-1)));
+    border-radius: min(var(--radius-surface-5), calc(var(--radius-surface-1) + var(--space-1)));
   }
   .rt-ChatbarRoot:where([data-state='closed'].rt-r-size-2) .rt-ChatbarBox {
-    border-radius: min(var(--radius-6), calc(var(--radius-2) + var(--space-2)));
+    border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-2) + var(--space-2)));
   }
   .rt-ChatbarRoot:where([data-state='closed'].rt-r-size-3) .rt-ChatbarBox {
-    border-radius: min(var(--radius-6), calc(var(--radius-2) + var(--space-2)));
+    border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-2) + var(--space-2)));
   }
 }
 

@@ -53,6 +53,27 @@ Import the complete stylesheet in your application entry point. The CSS import m
 import '@kushagradhawan/kookie-ui/styles.css';
 ```
 
+## Fonts
+
+`styles.css` loads no webfonts — it defaults to system stacks, so installing Kookie costs zero font requests. Choose one of:
+
+```tsx
+// Kookie's own typefaces: Inter, JetBrains Mono, Playfair Display.
+// Three requests to Google Fonts.
+import '@kushagradhawan/kookie-ui/fonts.css';
+```
+
+```css
+/* Or bring your own, from next/font, a self-hosted @font-face, anywhere. */
+:root {
+  --font-sans: 'Your Sans', system-ui, sans-serif;
+  --font-mono: 'Your Mono', monospace;
+  --font-serif: 'Your Serif', serif;
+}
+```
+
+See [Typography](/docs/typography) for the full font token model, including how to give headings their own typeface.
+
 ## Theme Provider
 
 Wrap your application with the `Theme` component to enable theming and design tokens. The Theme provider should be placed at the root of your application.
