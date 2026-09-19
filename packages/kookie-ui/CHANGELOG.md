@@ -1,4 +1,4 @@
-## Unreleased
+## [0.7.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.6.2...v0.7.0) (2026-09-20)
 
 
 ### ⚠ BREAKING CHANGES
@@ -11,7 +11,7 @@
 ### Features
 
 * **typography:** new `emphasis` prop (`'loud' | 'medium' | 'quiet'`) on Text, Heading, Blockquote, Code and `DataList.Label`. Loud reads the full ink, medium reads gray-a11 or the accent ink at 74%, quiet reads gray-a10 or the accent ink at 52%. Text and Heading with no `color` and no `emphasis` still inherit their colour. `DataList.Label` defaults to `medium`, which is its previous look.
-* **tokens:** new accent role tokens `--accent-ink`, `--accent-ink-muted`, `--accent-ink-faint`, `--accent-solid(-a)`, `--accent-solid-hover(-a)`, `--accent-solid-active(-a)`, `--accent-solid-contrast`, `--accent-solid-selection(-contrast)` and `--accent-solid-{hover,active,open}-filter`, plus `--gray-ink`, `--gray-ink-muted` and `--gray-ink-faint`.
+* **tokens:** new accent role tokens `--accent-ink`, `--accent-ink-muted`, `--accent-ink-faint`, `--accent-solid(-a)`, `--accent-solid-hover(-a)`, `--accent-solid-active(-a)`, `--accent-solid-contrast`, `--accent-solid-selection(-contrast)`, `--accent-solid-indicator`, `--accent-solid-thumb`, `--accent-solid-badge(-contrast)` and `--accent-solid-{hover,active,open}-filter`, plus `--gray-ink`, `--gray-ink-muted` and `--gray-ink-faint`.
 
 
 ### Migration
