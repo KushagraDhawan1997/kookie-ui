@@ -123,7 +123,7 @@ export function DocsSidebar({
             {logo && (
               <LinkComponent href={logo.href ?? '/'} aria-label={logo.alt ?? 'Home'}>
                 {logo.label ? (
-                  <Text size="6" className="kd-wordmark">
+                  <Text size="8" className="kd-wordmark">
                     {presentation === 'thin' ? logo.label[0] : logo.label}
                   </Text>
                 ) : (
