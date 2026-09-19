@@ -7,9 +7,11 @@
  *                                                                                                 *
  * There are exactly two tiers:                                                                    *
  *                                                                                                 *
- *   1. STACKS  — which typefaces exist. Three of them: --font-sans, --font-mono, --font-serif.    *
- *                Declared on `:root`, because a typeface is an app-wide resource (and because     *
- *                that is where `next/font` and friends put theirs). Override at `:root`.          *
+ *   1. STACKS  — which typefaces exist: --font-sans, --font-mono, --font-serif, plus the         *
+ *                optional --font-display for headings. Declared on `:root`, because a typeface    *
+ *                is an app-wide resource (and because that is where `next/font` and friends put   *
+ *                theirs). Override at `:root`. --font-display is unset by default; define it and  *
+ *                headings use it, leave it alone and they follow the body.                        *
  *                                                                                                 *
  *   2. ROLES   — which stack each piece of text uses: --font-body, --font-heading, --font-code,   *
  *                --font-strong, --font-em, --font-quote. Declared on `.radix-themes`, because a   *
@@ -17,7 +19,7 @@
  *                per subtree. Override at `.radix-themes`.                                        *
  *                                                                                                 *
  * No webfonts are loaded here. The defaults below are system stacks. To use Kookie's own          *
- * typefaces (Inter / JetBrains Mono / Playfair Display), additionally import                      *
+ * typefaces (Inter / Inter Tight / JetBrains Mono / Playfair Display), additionally import        *
  * '@kushagradhawan/kookie-ui/fonts.css'.                                                          *
  *                                                                                                 *
  ***************************************************************************************************/
@@ -29,13 +31,19 @@
     'Segoe UI Emoji';
   --font-mono: 'Menlo', 'Consolas (Custom)', 'Bitstream Vera Sans Mono', monospace, 'Apple Color Emoji', 'Segoe UI Emoji';
   --font-serif: 'Times New Roman', 'Times', 'Georgia', 'Cambria', serif;
+
+  /* --font-display, the heading typeface, is deliberately NOT declared here. It is left undefined
+     so that the fallback in --font-heading below stays live: define it and headings use it, leave
+     it alone and they follow the body. Declaring it here as `var(--font-body)` would not work —
+     --font-body only exists on `.radix-themes`, and a var() inside a custom property resolves
+     against the element the declaration sits on, which would make this guaranteed-invalid. */
 }
 
 .radix-themes {
   /* Tier 2: roles. Each one points at a stack. Override these to give a role its own typeface —
      e.g. `--font-heading: var(--font-serif)` for serif headings over a sans body. */
   --font-body: var(--font-sans);
-  --font-heading: var(--font-body); /* follows the body unless you say otherwise */
+  --font-heading: var(--font-display, var(--font-body)); /* a display face if one is defined, else the body */
   --font-code: var(--font-mono);
   --font-strong: var(--font-body);
   --font-em: var(--font-serif);

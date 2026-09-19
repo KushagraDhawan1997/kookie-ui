@@ -296,4 +296,43 @@ describe('Chatbar behaviors', () => {
       expect(getRoot()).toHaveAttribute('data-state', 'closed');
     });
   });
+
+  describe('auto-size measurement', () => {
+    // jsdom does no layout, so scrollHeight cannot be asserted directly. What
+    // the fix guarantees is observable though: the placeholder must not be in
+    // layout at the moment the height is read, and must be back afterwards.
+    it('reads the height with the placeholder out of layout and restores it', () => {
+      const placeholder = 'Type a message or drop files...';
+      const seenAtRead: string[] = [];
+      const scrollHeight = vi
+        .spyOn(HTMLElement.prototype, 'scrollHeight', 'get')
+        .mockImplementation(function (this: HTMLElement) {
+          if (this instanceof HTMLTextAreaElement) seenAtRead.push(this.placeholder);
+          return 0;
+        });
+
+      try {
+        renderWithProviders(
+          <Chatbar.Root expandOn="overflow">
+            <Chatbar.Textarea aria-label="Message" placeholder={placeholder} />
+          </Chatbar.Root>,
+        );
+
+        expect(seenAtRead.length).toBeGreaterThan(0);
+        expect(seenAtRead.every((value) => value === '')).toBe(true);
+        expect(getTextarea().placeholder).toBe(placeholder);
+      } finally {
+        scrollHeight.mockRestore();
+      }
+    });
+
+    it('leaves a textarea without a placeholder untouched', () => {
+      renderWithProviders(
+        <Chatbar.Root expandOn="overflow">
+          <Chatbar.Textarea aria-label="Message" />
+        </Chatbar.Root>,
+      );
+      expect(getTextarea().placeholder).toBe('');
+    });
+  });
 });

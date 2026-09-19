@@ -18,6 +18,38 @@ import type { radii } from '../props/radius.prop.js';
 // Avoid SSR warnings by using an isomorphic layout effect
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
 
+/**
+ * Runs `measure` with the placeholder taken out of layout, so a height read
+ * reflects the value alone.
+ *
+ * A textarea with an empty value lays its placeholder out as real text, so
+ * `scrollHeight` reports the placeholder wrapped at whatever width the field
+ * has at that instant. That sizes an empty bar to the suggestion showing in it
+ * rather than to `minLines`, and when the read lands before the field has its
+ * final width -- a panel still animating open, a flex parent whose basis is 0
+ * -- it wraps that text at a fraction of the real width and opens the bar at
+ * `maxLines`. The first keystroke takes the placeholder out of layout and the
+ * height snaps back, which is what made the bug look intermittent rather than
+ * simply wrong.
+ *
+ * The reset to 'auto' and the `scrollHeight` read sit in different functions
+ * here, so the whole measurement window is wrapped rather than a single read.
+ * Costs one extra style recalc on a path that is already forcing a reflow.
+ */
+function withoutPlaceholder(el: HTMLTextAreaElement, measure: () => void): void {
+  const { placeholder } = el;
+  if (!placeholder) {
+    measure();
+    return;
+  }
+  el.placeholder = '';
+  try {
+    measure();
+  } finally {
+    el.placeholder = placeholder;
+  }
+}
+
 // Shared layout spring; hoisted so every motion node receives the same object
 const LAYOUT_TRANSITION = { layout: { type: 'spring', visualDuration: 0.15, bounce: 0.1 } } as const;
 
@@ -803,16 +835,18 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>((props, fo
     const el = textareaRef.current;
     if (!el) return;
     if (lineHeightRef.current === 0) recomputeMetrics();
-    el.style.height = 'auto';
-    let isOpen = open;
-    if (!open && (expandOn === 'overflow' || expandOn === 'both')) {
-      const compactHeight = Math.ceil(lineHeightRef.current) + paddingRef.current;
-      if (el.scrollHeight > compactHeight + 1) {
-        isOpen = true;
-        setOpen(true);
+    withoutPlaceholder(el, () => {
+      el.style.height = 'auto';
+      let isOpen = open;
+      if (!open && (expandOn === 'overflow' || expandOn === 'both')) {
+        const compactHeight = Math.ceil(lineHeightRef.current) + paddingRef.current;
+        if (el.scrollHeight > compactHeight + 1) {
+          isOpen = true;
+          setOpen(true);
+        }
       }
-    }
-    applyHeight(el, isOpen);
+      applyHeight(el, isOpen);
+    });
   }, [value, open, expandOn, minLines, maxLines, size, setOpen, textareaRef, recomputeMetrics, applyHeight]);
 
   // Width changes re-wrap text; re-measure only when the width actually changes
@@ -827,8 +861,10 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>((props, fo
       prevWidth = width;
       if (first) return;
       recomputeMetrics();
-      el.style.height = 'auto';
-      applyHeight(el, sizingRef.current.open);
+      withoutPlaceholder(el, () => {
+        el.style.height = 'auto';
+        applyHeight(el, sizingRef.current.open);
+      });
     });
     ro.observe(el);
     return () => ro.disconnect();
