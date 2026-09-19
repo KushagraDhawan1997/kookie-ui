@@ -283,7 +283,7 @@
  *                                                                                                 *
  ***************************************************************************************************/
 .rt-BaseMenuItem:where([data-accent-color]) {
-  color: var(--accent-a11);
+  color: var(--accent-ink);
 }
 .rt-BaseMenuItem:where([data-disabled]) {
   color: var(--gray-a8);
@@ -292,10 +292,6 @@
   color: var(--gray-a11);
 }
 
-/* Ensure gray text appears muted in non-highlighted state */
-.rt-BaseMenuItem :where(.rt-Text[data-accent-color='gray'], [data-accent-color='gray']:not(.rt-Badge)) {
-  color: var(--gray-a11);
-}
 /* Kbd sets its own color and loads later, so a disabled item's shortcut needs the extra class to dim */
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-BaseMenuItem:where([data-disabled]) .rt-Kbd {
@@ -321,12 +317,13 @@
     background-color: var(--gray-a3);
   }
 
+  /* Gray fills with step 12 automatically; a coloured item re-resolves the solid tokens */
   & :where(.rt-BaseMenuItem[data-highlighted]) {
-    background-color: var(--accent-9);
-    color: var(--accent-contrast);
+    background-color: var(--accent-solid);
+    color: var(--accent-solid-contrast);
 
     & :where(.rt-BaseMenuSubTriggerIcon) {
-      color: var(--accent-contrast);
+      color: var(--accent-solid-contrast);
     }
 
     /* Force all text elements to inherit hover color, including those with color="gray" */
@@ -337,40 +334,6 @@
     /* Also target any element with data-accent-color="gray" */
     & :where([data-accent-color='gray']:not(.rt-Badge)) {
       color: inherit !important;
-    }
-  }
-
-  &:where(.rt-high-contrast) {
-    & :where(.rt-BaseMenuItem[data-highlighted]) {
-      background-color: var(--accent-12);
-      color: var(--accent-1);
-
-      & :where(.rt-BaseMenuSubTriggerIcon) {
-        color: var(--accent-1);
-      }
-
-      /* Force all text elements to inherit hover color in high contrast mode */
-      & :where(.rt-Text) {
-        color: inherit !important;
-      }
-
-      /* Also target any element with data-accent-color="gray" in high contrast */
-      & :where([data-accent-color='gray']:not(.rt-Badge)) {
-        color: inherit !important;
-      }
-
-      &:where([data-accent-color]) {
-        background-color: var(--accent-9);
-        color: var(--accent-contrast);
-
-        & :where(.rt-Text) {
-          color: inherit !important;
-        }
-
-        & :where([data-accent-color='gray']:not(.rt-Badge)) {
-          color: inherit !important;
-        }
-      }
     }
   }
 }
@@ -388,8 +351,8 @@
   & :where(.rt-BaseMenuItem[data-highlighted]) {
     background-color: var(--accent-4);
 
-    /* In soft variant, improve contrast for gray text while maintaining hierarchy */
-    & :where(.rt-Text[data-accent-color='gray'], [data-accent-color='gray']:not(.rt-Badge)) {
+    /* In soft variant, lift muted text a step while keeping the hierarchy */
+    & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
       color: var(--gray-11) !important;
     }
   }
@@ -401,21 +364,6 @@
   /* The soft fill is faint on its own; keyboard focus also gets a ring */
   & :where(.rt-BaseMenuItem[data-highlighted]:focus-visible) {
     box-shadow: inset 0 0 0 1px var(--accent-a8);
-  }
-
-  &:where(.rt-high-contrast) {
-    & :where(.rt-BaseMenuItem[data-highlighted]) {
-      background-color: var(--accent-5);
-      color: var(--accent-12);
-
-      & :where(.rt-BaseMenuSubTriggerIcon) {
-        color: var(--accent-12);
-      }
-    }
-
-    &:where([data-panel-background='translucent']) :where(.rt-BaseMenuItem[data-highlighted]) {
-      background-color: var(--accent-a5);
-    }
   }
 }
 

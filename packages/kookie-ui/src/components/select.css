@@ -33,12 +33,6 @@
     --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
 
-  &:where(.rt-high-contrast) {
-    & :where(.rt-SelectTriggerInner) {
-      color: var(--accent-12);
-    }
-  }
-
   /* Selected values use medium font weight */
   &:where(:not([data-placeholder])) {
     & :where(.rt-SelectTriggerInner) {
@@ -339,14 +333,10 @@
 .rt-SelectTrigger:where(.rt-variant-classic) {
   position: relative;
   top: var(--classic-elevation-offset);
-  color: var(--accent-a11);
+  color: var(--accent-ink);
   background-color: var(--color-surface);
   box-shadow: var(--shadow-2);
   transition: var(--transition-text-field);
-
-  &:where(.rt-high-contrast) {
-    color: var(--accent-12);
-  }
 
   /* Theme-level translucent override */
   :where([data-panel-background='translucent'], [data-material='translucent']) & {
@@ -360,24 +350,6 @@
 
   &:where([data-panel-background='translucent'], [data-material='translucent']) {
     background-color: var(--color-surface);
-  }
-
-  &:where(.rt-high-contrast) {
-    background-color: var(--color-surface);
-
-    /* Theme-level translucent override for high contrast */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: var(--color-surface);
-    }
-
-    /* Component-level overrides for high contrast */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--color-surface);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: var(--color-surface);
-    }
   }
 
   &:where(:focus-visible) {
@@ -464,11 +436,7 @@
 .rt-SelectTrigger:where(.rt-variant-soft) {
   /* Base state: solid accent for solid panels */
   background-color: var(--accent-3);
-  color: var(--accent-a11);
-
-  &:where(.rt-high-contrast) {
-    color: var(--accent-12);
-  }
+  color: var(--accent-ink);
 
   /* Theme-level translucent override */
   :where([data-panel-background='translucent'], [data-material='translucent']) & {
@@ -565,11 +533,7 @@
 
 .rt-SelectTrigger:where(.rt-variant-ghost) {
   background-color: transparent;
-  color: var(--accent-a11);
-
-  &:where(.rt-high-contrast) {
-    color: var(--accent-12);
-  }
+  color: var(--accent-ink);
 
   &:where([data-placeholder]) {
     & :where(.rt-SelectTriggerInner) {
@@ -670,28 +634,21 @@
 .rt-SelectTrigger:where(.rt-variant-outline) {
   /* Base state: solid colors for solid panels */
   box-shadow: inset 0 0 0 1px var(--accent-6);
-  color: var(--accent-11);
+  color: var(--accent-ink);
   transition: var(--transition-background-blur);
-
-  &:where(.rt-high-contrast) {
-    color: var(--accent-12);
-  }
 
   /* Theme-level translucent override */
   :where([data-panel-background='translucent'], [data-material='translucent']) & {
     box-shadow: inset 0 0 0 1px var(--accent-a6);
-    color: var(--accent-a11);
   }
 
   /* Component-level overrides (higher specificity) */
   &:where([data-panel-background='solid'], [data-material='solid']) {
     box-shadow: inset 0 0 0 1px var(--accent-6);
-    color: var(--accent-11);
   }
 
   &:where([data-panel-background='translucent'], [data-material='translucent']) {
     box-shadow: inset 0 0 0 1px var(--accent-a6);
-    color: var(--accent-a11);
   }
 
   @media (hover: hover) {
@@ -767,10 +724,6 @@
     outline-offset: -1px;
   }
 
-  &:where(.rt-high-contrast) {
-    color: var(--accent-12);
-  }
-
   &:where(:disabled) {
     color: var(--gray-a8);
     box-shadow: inset 0 0 0 1px var(--gray-a7);
@@ -793,11 +746,7 @@
   /* Base state: solid accent for solid panels */
   background-color: var(--accent-2);
   box-shadow: inset 0 0 0 1px var(--accent-6);
-  color: var(--accent-a11);
-
-  &:where(.rt-high-contrast) {
-    color: var(--accent-12);
-  }
+  color: var(--accent-ink);
 
   /* Theme-level translucent override */
   :where([data-panel-background='translucent'], [data-material='translucent']) & {
@@ -889,10 +838,6 @@
     outline-offset: -1px;
   }
 
-  &:where(.rt-high-contrast) {
-    color: var(--accent-12);
-  }
-
   &:where(:disabled) {
     color: var(--gray-a8);
     box-shadow: inset 0 0 0 1px var(--gray-a6);
@@ -978,7 +923,7 @@
  ***************************************************************************************************/
 
 .rt-SelectItem:where([data-accent-color]) {
-  color: var(--accent-a11);
+  color: var(--accent-ink);
 }
 .rt-SelectItem:where([data-disabled]) {
   color: var(--gray-a8);
@@ -988,17 +933,18 @@
   background-color: var(--gray-a6);
 }
 
-/* Ensure gray text appears muted in non-highlighted state */
-.rt-SelectItem :where(.rt-Text[data-accent-color='gray'], [data-accent-color='gray']) {
+/* Muted text sits a step lower inside items */
+.rt-SelectItem :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
   color: var(--gray-a10);
 }
 
 /* solid */
 
 .rt-SelectContent:where(.rt-variant-solid) {
+  /* Gray fills with step 12 through the solid tokens */
   & :where(.rt-SelectItem[data-highlighted]) {
-    background-color: var(--accent-9);
-    color: var(--accent-contrast);
+    background-color: var(--accent-solid);
+    color: var(--accent-solid-contrast);
 
     /* Force all text elements to inherit hover color, including those with color="gray" */
     & :where(.rt-Text) {
@@ -1010,35 +956,6 @@
       color: inherit !important;
     }
   }
-  &:where(.rt-high-contrast) {
-    & :where(.rt-SelectItem[data-highlighted]) {
-      background-color: var(--accent-12);
-      color: var(--accent-1);
-
-      /* Force all text elements to inherit hover color in high contrast mode */
-      & :where(.rt-Text) {
-        color: inherit !important;
-      }
-
-      /* Also target any element with data-accent-color="gray" in high contrast */
-      & :where([data-accent-color='gray']) {
-        color: inherit !important;
-      }
-
-      &:where([data-accent-color]) {
-        background-color: var(--accent-9);
-        color: var(--accent-contrast);
-
-        & :where(.rt-Text) {
-          color: inherit !important;
-        }
-
-        & :where([data-accent-color='gray']) {
-          color: inherit !important;
-        }
-      }
-    }
-  }
 }
 
 /* soft */
@@ -1047,8 +964,8 @@
   & :where(.rt-SelectItem[data-highlighted]) {
     background-color: var(--accent-a4);
 
-    /* In soft variant, improve contrast for gray text while maintaining hierarchy */
-    & :where(.rt-Text[data-accent-color='gray'], [data-accent-color='gray']) {
+    /* In soft variant, lift muted text a step while keeping the hierarchy */
+    & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
       color: var(--gray-11) !important;
     }
   }

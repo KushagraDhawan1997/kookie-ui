@@ -209,18 +209,12 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: var(--accent-indicator);
+    background-color: var(--accent-solid-indicator);
     transform-origin: center;
     transition: 
       transform var(--duration-3) var(--ease-3),
       opacity var(--duration-2) var(--ease-1),
       background-color var(--duration-2) var(--ease-1);
-  }
-
-  :where(.rt-BaseTabList.rt-high-contrast) & {
-    &:where([data-state='active'], [data-active])::before {
-      background-color: var(--accent-12);
-    }
   }
 }
 

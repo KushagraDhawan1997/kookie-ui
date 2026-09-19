@@ -239,8 +239,7 @@
 
 /* Soft variant palette */
 .rt-AvatarRoot:where(.rt-variant-soft) {
-  --v-color: var(--accent-11);
-  --v-color-high-contrast: var(--accent-12);
+  --v-color: var(--accent-ink);
   --v-bg: var(--accent-3);
   --v-bg-a: var(--accent-a3);
   --v-bg-hover: var(--accent-4);
@@ -252,9 +251,7 @@
 
 /* Outline variant palette */
 .rt-AvatarRoot:where(.rt-variant-outline) {
-  --v-color: var(--accent-11);
-  --v-color-a: var(--accent-a11);
-  --v-color-high-contrast: var(--accent-12);
+  --v-color: var(--accent-ink);
   --v-bg: transparent;
   --v-bg-a: transparent;
   --v-bg-hover: var(--accent-2);
@@ -273,8 +270,7 @@
 
 /* Surface variant palette */
 .rt-AvatarRoot:where(.rt-variant-surface) {
-  --v-color: var(--accent-a11);
-  --v-color-high-contrast: var(--accent-12);
+  --v-color: var(--accent-ink);
   --v-bg: var(--accent-2);
   --v-bg-a: var(--accent-a2);
   --v-bg-hover: var(--accent-3);
@@ -311,28 +307,9 @@
     );
   }
 
-  &:where(.rt-high-contrast) :where(.rt-AvatarFallback) {
-    color: var(--v-color-high-contrast);
-  }
-
   &:where([data-disabled]) :where(.rt-AvatarFallback) {
     color: var(--gray-a8);
     background-color: var(--v-bg-disabled, var(--gray-a3));
-  }
-}
-
-/* Outline uses alpha color in translucent mode */
-.rt-AvatarRoot:where(.rt-variant-outline) {
-  & :where(.rt-AvatarFallback) {
-    color: color-mix(
-      in srgb,
-      var(--v-color-a) calc(var(--material-alpha) * 100%),
-      var(--v-color) var(--material-blend)
-    );
-  }
-
-  &:where(.rt-high-contrast) :where(.rt-AvatarFallback) {
-    color: var(--v-color-high-contrast);
   }
 }
 
@@ -427,13 +404,8 @@
   --solid-blend: calc(100% - (var(--material-alpha) * 90%));
 
   & :where(.rt-AvatarFallback) {
-    background-color: color-mix(in srgb, var(--accent-a9) calc(var(--material-alpha) * 100%), var(--accent-9) var(--solid-blend));
-    color: var(--accent-contrast);
-  }
-
-  &:where(.rt-high-contrast) :where(.rt-AvatarFallback) {
-    background-color: color-mix(in srgb, var(--accent-a12) calc(var(--material-alpha) * 100%), var(--accent-12) var(--solid-blend));
-    color: var(--gray-1);
+    background-color: color-mix(in srgb, var(--accent-solid-a) calc(var(--material-alpha) * 100%), var(--accent-solid) var(--solid-blend));
+    color: var(--accent-solid-contrast);
   }
 
   &:where([data-disabled]) :where(.rt-AvatarFallback) {
@@ -447,39 +419,21 @@
 .rt-AvatarRoot:where(button, a, [role="button"]):where(.rt-variant-solid) {
   @media (hover: hover) {
     &:where(:hover:not(:disabled, [data-disabled])) {
-      background-color: color-mix(in srgb, var(--accent-a10) calc(var(--material-alpha) * 100%), var(--accent-10) var(--solid-blend));
+      background-color: color-mix(in srgb, var(--accent-solid-hover-a) calc(var(--material-alpha) * 100%), var(--accent-solid-hover) var(--solid-blend));
 
+      /* Filter the fallback, not the root, so the status dot and badge stay untouched */
       & :where(.rt-AvatarFallback) {
         background-color: inherit;
+        filter: var(--accent-solid-hover-filter);
       }
     }
   }
 
   &:where(:active:not(:disabled, [data-disabled])) {
-    background-color: color-mix(in srgb, var(--accent-a11) calc(var(--material-alpha) * 100%), var(--accent-11) var(--solid-blend));
+    background-color: color-mix(in srgb, var(--accent-solid-active-a) calc(var(--material-alpha) * 100%), var(--accent-solid-active) var(--solid-blend));
 
     & :where(.rt-AvatarFallback) {
       background-color: inherit;
-    }
-  }
-
-  &:where(.rt-high-contrast) {
-    @media (hover: hover) {
-      &:where(:hover:not(:disabled, [data-disabled])) {
-        background-color: color-mix(in srgb, var(--accent-a12) calc(var(--material-alpha) * 100%), var(--accent-12) var(--solid-blend));
-
-        & :where(.rt-AvatarFallback) {
-          background-color: inherit;
-        }
-      }
-    }
-
-    &:where(:active:not(:disabled, [data-disabled])) {
-      background-color: color-mix(in srgb, var(--accent-a12) calc(var(--material-alpha) * 100%), var(--accent-12) var(--solid-blend));
-
-      & :where(.rt-AvatarFallback) {
-        background-color: inherit;
-      }
     }
   }
 }
@@ -492,14 +446,9 @@
   & :where(.rt-AvatarFallback) {
     position: relative;
     top: 0;
-    color: var(--accent-a11);
+    color: var(--accent-ink);
     background-color: color-mix(in srgb, var(--color-surface-translucent) calc(var(--material-alpha) * 100%), var(--color-surface-solid) var(--material-blend));
     box-shadow: var(--shadow-2);
-  }
-
-  &:where(.rt-high-contrast) :where(.rt-AvatarFallback) {
-    color: var(--gray-12);
-    background-color: color-mix(in srgb, var(--color-surface-translucent) calc(var(--material-alpha) * 100%), var(--color-surface-solid) var(--material-blend));
   }
 
   &:where([data-disabled]) :where(.rt-AvatarFallback) {

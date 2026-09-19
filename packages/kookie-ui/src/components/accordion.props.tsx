@@ -1,6 +1,5 @@
 import { asChildPropDef } from '../props/as-child.prop.js';
 import { colorPropDef } from '../props/color.prop.js';
-import { highContrastPropDef } from '../props/high-contrast.prop.js';
 import { radiusPropDef } from '../props/radius.prop.js';
 
 import type { PropDef } from '../props/prop-def.js';
@@ -14,7 +13,6 @@ const accordionRootPropDefs = {
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
   variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'surface' },
   ...colorPropDef,
-  ...highContrastPropDef,
   ...radiusPropDef,
   material: { type: 'enum', values: panelBackgrounds, default: undefined },
   /**
@@ -66,7 +64,6 @@ export type AccordionRootOwnProps = {
   size?: (typeof sizes)[number];
   variant?: (typeof variants)[number];
   color?: string;
-  highContrast?: boolean;
   radius?: string;
   material?: (typeof panelBackgrounds)[number];
   panelBackground?: (typeof panelBackgrounds)[number];

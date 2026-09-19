@@ -59,7 +59,6 @@ type ContextMenuContentContextValue = {
   size?: ContextMenuSurfaceProps['size'];
   variant?: ContextMenuSurfaceProps['variant'];
   color?: ContextMenuSurfaceProps['color'];
-  highContrast?: ContextMenuSurfaceProps['highContrast'];
   material?: ContextMenuSurfaceProps['material'];
 };
 const ContextMenuContentContext = React.createContext<ContextMenuContentContextValue>({});
@@ -88,7 +87,6 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
     const {
       size = contextMenuContentPropDefs.size.default,
       variant = contextMenuContentPropDefs.variant.default,
-      highContrast = contextMenuContentPropDefs.highContrast.default,
     } = props;
     const {
       className,
@@ -107,8 +105,8 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
     const scalarSize = useResolvedResponsiveValue(size, contextMenuContentPropDefs.size.default);
 
     const contextValue = React.useMemo(
-      () => ({ size, variant, color: resolvedColor, highContrast, material }),
-      [size, variant, resolvedColor, highContrast, material],
+      () => ({ size, variant, color: resolvedColor, material }),
+      [size, variant, resolvedColor, material],
     );
 
     const body = (
@@ -368,7 +366,6 @@ const ContextMenuSubContent = React.forwardRef<
   const size = props.size ?? parent.size;
   const variant = props.variant ?? parent.variant;
   const color = props.color ?? parent.color;
-  const highContrast = props.highContrast ?? parent.highContrast;
   const material =
     props.material ?? props.panelBackground ?? parent.material ?? resolveMenuMaterial(undefined, undefined, themeContext);
 
@@ -382,13 +379,13 @@ const ContextMenuSubContent = React.forwardRef<
     panelBackground: _panelBackground,
     virtualized = false,
     ...subContentProps
-  } = extractProps({ ...props, size, variant, highContrast }, contextMenuSubContentPropDefs);
+  } = extractProps({ ...props, size, variant }, contextMenuSubContentPropDefs);
 
   const scalarSize = useResolvedResponsiveValue(size, contextMenuSubContentPropDefs.size.default);
 
   const contextValue = React.useMemo(
-    () => ({ size, variant, color, highContrast, material }),
-    [size, variant, color, highContrast, material],
+    () => ({ size, variant, color, material }),
+    [size, variant, color, material],
   );
 
   const body = (

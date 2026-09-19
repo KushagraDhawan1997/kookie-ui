@@ -112,7 +112,7 @@ describe('nothing warns on the ordinary path', () => {
 
     renderWithProviders(
       <>
-        <Button size="2" variant="classic" highContrast>
+        <Button size="2" variant="classic">
           Save
         </Button>
         <Badge size="2" variant="soft" color="gray">

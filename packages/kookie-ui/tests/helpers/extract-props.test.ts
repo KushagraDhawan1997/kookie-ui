@@ -47,8 +47,13 @@ describe('extractProps: class names', () => {
   });
 
   test('boolean props contribute a flag class only when true', () => {
-    expect(classesOf(extractProps({ highContrast: true } as never, textPropDefs as Defs))).toContain('rt-high-contrast');
-    expect(classesOf(extractProps({ highContrast: false } as never, textPropDefs as Defs))).not.toContain('rt-high-contrast');
+    expect(classesOf(extractProps({ truncate: true } as never, textPropDefs as Defs))).toContain('rt-truncate');
+    expect(classesOf(extractProps({ truncate: false } as never, textPropDefs as Defs))).not.toContain('rt-truncate');
+  });
+
+  test('emphasis contributes a non-responsive class and no class when unset', () => {
+    expect(classesOf(extractProps({ emphasis: 'quiet' } as never, textPropDefs as Defs))).toContain('rt-emphasis-quiet');
+    expect(classesOf(extractProps({ color: 'red' } as never, textPropDefs as Defs)).some((c) => c.startsWith('rt-emphasis'))).toBe(false);
   });
 
   test('an unset prop contributes nothing', () => {

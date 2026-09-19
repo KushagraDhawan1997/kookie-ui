@@ -106,21 +106,11 @@
     box-shadow: inset 0 0 0 1px var(--accent-9);
   }
   &:where(:checked, [data-state='checked'])::before {
-    background-color: var(--accent-9);
-    box-shadow: inset 0 0 0 1px var(--accent-9);
+    background-color: var(--accent-solid);
+    box-shadow: inset 0 0 0 1px var(--accent-solid);
   }
   &::after {
-    background-color: var(--accent-contrast);
-  }
-
-  &:where(.rt-high-contrast) {
-    &:where(:checked, [data-state='checked'])::before {
-      background-color: var(--accent-12);
-      box-shadow: inset 0 0 0 1px var(--accent-12);
-    }
-    &::after {
-      background-color: var(--gray-1);
-    }
+    background-color: var(--accent-solid-contrast);
   }
 
   &:where(:disabled, [data-disabled])::before {
@@ -139,7 +129,7 @@
   top: var(--classic-elevation-offset);
   
   &:where(:not(:checked), [data-state='unchecked'])::before {
-    color: var(--accent-a11);
+    color: var(--accent-ink);
     background-color: var(--color-surface-solid);
     box-shadow: var(--shadow-2);
 
@@ -176,13 +166,7 @@
     }
   }
   &::after {
-    background-color: var(--accent-a11);
-  }
-
-  &:where(.rt-high-contrast) {
-    &::after {
-      color: var(--accent-12);
-    }
+    background-color: var(--accent-ink);
   }
 
   &:where(:active:not(:disabled, [data-disabled])) {
@@ -241,13 +225,7 @@
     }
   }
   &::after {
-    background-color: var(--accent-a11);
-  }
-
-  &:where(.rt-high-contrast) {
-    &::after {
-      background-color: var(--accent-12);
-    }
+    background-color: var(--accent-ink);
   }
 
   &:where(:focus-visible)::before {
@@ -270,23 +248,20 @@
 .rt-BaseRadioRoot:where(.rt-variant-outline) {
   &:where(:not(:checked), [data-state='unchecked'])::before {
     box-shadow: inset 0 0 0 1px var(--accent-6);
-    color: var(--accent-11);
+    color: var(--accent-ink);
 
     /* Theme-level translucent override */
     :where([data-panel-background='translucent'], [data-material='translucent']) & {
       box-shadow: inset 0 0 0 1px var(--accent-a6);
-      color: var(--accent-a11);
     }
 
     /* Component-level overrides (higher specificity) */
     &:where([data-panel-background='solid'], [data-material='solid']) {
       box-shadow: inset 0 0 0 1px var(--accent-6);
-      color: var(--accent-11);
     }
 
     &:where([data-panel-background='translucent'], [data-material='translucent']) {
       box-shadow: inset 0 0 0 1px var(--accent-a6);
-      color: var(--accent-a11);
     }
   }
 
@@ -312,13 +287,7 @@
     }
   }
   &::after {
-    background-color: var(--accent-a11);
-  }
-
-  &:where(.rt-high-contrast) {
-    &::after {
-      background-color: var(--accent-12);
-    }
+    background-color: var(--accent-ink);
   }
 
   &:where(:disabled, [data-disabled])::before {
@@ -377,13 +346,7 @@
     }
   }
   &::after {
-    background-color: var(--accent-a11);
-  }
-
-  &:where(.rt-high-contrast) {
-    &::after {
-      background-color: var(--accent-12);
-    }
+    background-color: var(--accent-ink);
   }
 
   &:where(:disabled, [data-disabled])::before {

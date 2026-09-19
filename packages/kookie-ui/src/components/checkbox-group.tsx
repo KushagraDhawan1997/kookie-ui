@@ -42,7 +42,6 @@ const CheckboxGroupRoot = React.forwardRef<CheckboxGroupRootElement, CheckboxGro
   (
     {
       color = checkboxGroupRootPropDefs.color.default,
-      highContrast = checkboxGroupRootPropDefs.highContrast.default,
       size = checkboxGroupRootPropDefs.size.default,
       variant = checkboxGroupRootPropDefs.variant.default,
       ...props
@@ -56,7 +55,6 @@ const CheckboxGroupRoot = React.forwardRef<CheckboxGroupRootElement, CheckboxGro
         scope={__scopeCheckboxGroup}
         color={color}
         size={size}
-        highContrast={highContrast}
         variant={variant}
       >
         <CheckboxGroupPrimitive.Root

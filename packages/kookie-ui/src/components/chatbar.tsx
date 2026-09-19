@@ -721,7 +721,7 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
                   {dragActive && (
                     <div className="rt-ChatbarDropOverlay" aria-hidden>
                       <div className="rt-ChatbarDropContent">
-                        <Text color="gray" size={size} weight="medium">
+                        <Text emphasis="medium" size={size} weight="medium">
                           Drop files here to attach
                         </Text>
                       </div>
@@ -1088,7 +1088,11 @@ const Attachment = React.forwardRef<HTMLDivElement, AttachmentProps>((props, for
               <Text size={ctx.size} weight="medium" truncate>
                 {attachment.name}
               </Text>
-              <Text size="1" color={attachment.status === 'error' ? 'red' : 'gray'}>
+              <Text
+                size="1"
+                color={attachment.status === 'error' ? 'red' : undefined}
+                emphasis={attachment.status === 'error' ? undefined : 'medium'}
+              >
                 {sizeLabel}
                 {statusLabel ? ` · ${statusLabel}` : ''}
               </Text>
@@ -1100,7 +1104,6 @@ const Attachment = React.forwardRef<HTMLDivElement, AttachmentProps>((props, for
               aria-label={`Remove ${attachment.name}`}
               size="1"
               variant="classic"
-              highContrast
               color="gray"
               onClick={handleRemove}
             >

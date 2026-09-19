@@ -7,7 +7,6 @@ export * from './color.prop.js';
 export * from './emphasis.prop.js';
 export * from './gap.props.js';
 export * from './height.props.js';
-export * from './high-contrast.prop.js';
 export * from './layout.props.js';
 export * from './leading-trim.prop.js';
 export * from './margin.props.js';

@@ -476,7 +476,7 @@ const ThemePanelContent = React.forwardRef<ThemePanelContentElement, ThemePanelC
                     </Theme>
                   </label>
                   <Box asChild pt="2">
-                    <Text asChild size="1" color="gray">
+                    <Text asChild size="1" emphasis="medium">
                       <label htmlFor={`theme-panel-radius-${value}`}>{upperFirst(value)}</label>
                     </Text>
                   </Box>

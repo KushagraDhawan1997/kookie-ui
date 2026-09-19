@@ -253,49 +253,9 @@
   transition: var(--transition-accordion-trigger-active);
 }
 
-/* Soft variant trigger color support */
-:where(.rt-AccordionRoot:where(.rt-variant-soft)) .rt-AccordionTrigger {
-  color: var(--accent-a11);
-}
-
-:where(.rt-AccordionRoot:where(.rt-variant-soft.rt-high-contrast)) .rt-AccordionTrigger {
-  color: var(--accent-12);
-}
-
-/* Outline variant trigger color support */
-:where(.rt-AccordionRoot:where(.rt-variant-outline)) .rt-AccordionTrigger {
-  color: var(--accent-11);
-}
-
-:where(.rt-AccordionRoot:where(.rt-variant-outline.rt-high-contrast)) .rt-AccordionTrigger {
-  color: var(--accent-12);
-}
-
-/* Surface variant trigger color support */
-:where(.rt-AccordionRoot:where(.rt-variant-surface)) .rt-AccordionTrigger {
-  color: var(--accent-a11);
-}
-
-:where(.rt-AccordionRoot:where(.rt-variant-surface.rt-high-contrast)) .rt-AccordionTrigger {
-  color: var(--accent-12);
-}
-
-/* Ghost variant trigger color support */
-:where(.rt-AccordionRoot:where(.rt-variant-ghost)) .rt-AccordionTrigger {
-  color: var(--accent-a11);
-}
-
-:where(.rt-AccordionRoot:where(.rt-variant-ghost.rt-high-contrast)) .rt-AccordionTrigger {
-  color: var(--accent-12);
-}
-
-/* Classic variant trigger color support */
-:where(.rt-AccordionRoot:where(.rt-variant-classic)) .rt-AccordionTrigger {
-  color: var(--accent-a11);
-}
-
-:where(.rt-AccordionRoot:where(.rt-variant-classic.rt-high-contrast)) .rt-AccordionTrigger {
-  color: var(--accent-12);
+/* Trigger colour reads the loud ink in every variant; gray resolves to step 12 */
+:where(.rt-AccordionRoot:where(.rt-variant-soft, .rt-variant-outline, .rt-variant-surface, .rt-variant-ghost, .rt-variant-classic)) .rt-AccordionTrigger {
+  color: var(--accent-ink);
 }
 
 /* Classic variant shadow states */
@@ -442,7 +402,7 @@
   overflow: hidden;
   /* remove padding here */
   font-size: var(--font-size-2);
-  color: var(--accent-a11);
+  color: var(--accent-ink);
   line-height: var(--line-height-4);
   transform-origin: top;
   will-change: height, opacity, transform;
@@ -508,27 +468,9 @@
   }
 }
 
-/* High contrast mode */
-:where(.rt-AccordionRoot[data-high-contrast]) .rt-AccordionTrigger {
-  color: var(--accent-12);
-}
-
-:where(.rt-AccordionRoot[data-high-contrast]) .rt-AccordionContent {
-  color: var(--accent-12);
-}
-
 /* Color accent support */
 :where(.rt-AccordionRoot:where(.rt-variant-soft)[data-accent-color]) :where(.rt-AccordionTrigger:hover) {
   background-color: var(--accent-a4);
-}
-
-/* Color accent support for content */
-:where(.rt-AccordionRoot[data-accent-color]) .rt-AccordionContent {
-  color: var(--accent-a11);
-}
-
-:where(.rt-AccordionRoot[data-accent-color].rt-high-contrast) .rt-AccordionContent {
-  color: var(--accent-12);
 }
 
 /* Reduced motion */

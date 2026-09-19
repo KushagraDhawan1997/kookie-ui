@@ -1,6 +1,5 @@
 import { asChildPropDef } from '../props/as-child.prop.js';
 import { colorPropDef } from '../props/color.prop.js';
-import { highContrastPropDef } from '../props/high-contrast.prop.js';
 import { gridPropDefs } from './grid.props.js';
 
 import type { PropDef } from '../props/prop-def.js';
@@ -15,7 +14,6 @@ const radioCardsRootPropDefs = {
   variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'surface' },
   panelBackground: { type: 'enum', values: panelBackgrounds, default: undefined },
   ...colorPropDef,
-  ...highContrastPropDef,
   columns: { ...gridPropDefs.columns, default: 'repeat(auto-fit, minmax(160px, 1fr))' },
   gap: { ...gridPropDefs.gap, default: '4' },
 } satisfies {

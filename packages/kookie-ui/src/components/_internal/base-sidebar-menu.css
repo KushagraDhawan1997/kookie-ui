@@ -75,11 +75,11 @@
 
   /* Accent color support */
   &:where([data-accent-color]) {
-    color: var(--accent-a11);
+    color: var(--accent-ink);
   }
 
-  /* Gray text support - inherit from base menu */
-  & :where(.rt-Text[data-accent-color='gray'], [data-accent-color='gray']:not(.rt-Badge)) {
+  /* Muted text sits a step lower inside items */
+  & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
     color: var(--gray-a10);
   }
 

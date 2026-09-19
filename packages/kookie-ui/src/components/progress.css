@@ -173,7 +173,7 @@
   }
 
   & :where(.rt-ProgressIndicator) {
-    background-color: var(--accent-9);
+    background-color: var(--accent-solid);
   }
 }
 
@@ -203,7 +203,7 @@
   }
 
   & :where(.rt-ProgressIndicator) {
-    background-color: var(--accent-9);
+    background-color: var(--accent-solid);
   }
 }
 
@@ -228,18 +228,11 @@
   }
 
   & :where(.rt-ProgressIndicator) {
-    background-color: var(--accent-9);
+    background-color: var(--accent-solid);
   }
 }
 
 
 
-/* all high-contrast */
-.rt-ProgressRoot:where(.rt-high-contrast) {
-
-  & :where(.rt-ProgressIndicator) {
-    background-color: var(--accent-12);
-  }
-}
 
 

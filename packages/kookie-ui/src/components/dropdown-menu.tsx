@@ -92,7 +92,6 @@ type DropdownMenuContentContextValue = {
   size?: DropdownMenuSurfaceProps['size'];
   variant?: DropdownMenuSurfaceProps['variant'];
   color?: DropdownMenuSurfaceProps['color'];
-  highContrast?: DropdownMenuSurfaceProps['highContrast'];
   material?: DropdownMenuSurfaceProps['material'];
 };
 const DropdownMenuContentContext = React.createContext<DropdownMenuContentContextValue>({});
@@ -140,7 +139,6 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
     const {
       size = dropdownMenuContentPropDefs.size.default,
       variant = dropdownMenuContentPropDefs.variant.default,
-      highContrast = dropdownMenuContentPropDefs.highContrast.default,
     } = props;
     const {
       className,
@@ -182,8 +180,8 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
     };
 
     const contextValue = React.useMemo(
-      () => ({ size, variant, color: resolvedColor, highContrast, material }),
-      [size, variant, resolvedColor, highContrast, material],
+      () => ({ size, variant, color: resolvedColor, material }),
+      [size, variant, resolvedColor, material],
     );
 
     const contentBody = (
@@ -671,7 +669,6 @@ const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, Dropdo
     const size = props.size ?? parent.size;
     const variant = props.variant ?? parent.variant;
     const color = props.color ?? parent.color;
-    const highContrast = props.highContrast ?? parent.highContrast;
     const material =
       props.material ?? props.panelBackground ?? parent.material ?? resolveMenuMaterial(undefined, undefined, themeContext);
 
@@ -685,13 +682,13 @@ const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, Dropdo
       panelBackground: _panelBackground,
       virtualized = false,
       ...subContentProps
-    } = extractProps({ ...props, size, variant, highContrast }, dropdownMenuSubContentPropDefs);
+    } = extractProps({ ...props, size, variant }, dropdownMenuSubContentPropDefs);
 
     const scalarSize = useResolvedResponsiveValue(size, dropdownMenuSubContentPropDefs.size.default);
 
     const contextValue = React.useMemo(
-      () => ({ size, variant, color, highContrast, material }),
-      [size, variant, color, highContrast, material],
+      () => ({ size, variant, color, material }),
+      [size, variant, color, material],
     );
 
     const body = (
@@ -767,7 +764,6 @@ const DrillDownPanel = React.forwardRef<DropdownMenuSubContentElement, DrillDown
       size: _size,
       variant: _variant,
       color: _color,
-      highContrast: _highContrast,
       material: _material,
       panelBackground: _panelBackground,
       ...panelProps

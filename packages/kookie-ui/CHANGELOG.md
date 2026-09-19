@@ -1,3 +1,32 @@
+## Unreleased
+
+
+### ⚠ BREAKING CHANGES
+
+* **color:** the per-component `highContrast` prop is removed. Its prop def (`highContrastPropDef`), the `rt-high-contrast` class, the `data-high-contrast` attribute, the `--opacity-high-contrast` token and every CSS rule keyed on them are gone. There is no deprecation period and no theme-level replacement.
+* **color:** coloured text is stronger by default. Every coloured text role (Text, Heading, Code, Link, Callout, Badge, Button soft/surface/outline/ghost/classic, Select, Accordion, menus, Avatar fallback, checkbox and radio marks) now reads `--accent-ink`. Gray ink is step 12. Chromatic ink is step 11 mixed 45% toward step 12, so an error still reads red. `<Text color="gray">` now renders at step 12 instead of step 11.
+* **color:** gray fills with step 12 automatically. Solid Button, Badge, Avatar, Code, Switch, Slider, Progress, Checkbox, Radio, RadioCards, the Tabs indicator and the solid menu, Select, Combobox and Sidebar highlight read `--accent-solid` and `--accent-solid-contrast`. Gray uses step 12 with inverted text; chromatic colours keep step 9. This is keyed on the colour being gray, not on a prop.
+
+
+### Features
+
+* **typography:** new `emphasis` prop (`'loud' | 'medium' | 'quiet'`) on Text, Heading, Blockquote, Code and `DataList.Label`. Loud reads the full ink, medium reads gray-a11 or the accent ink at 74%, quiet reads gray-a10 or the accent ink at 52%. Text and Heading with no `color` and no `emphasis` still inherit their colour. `DataList.Label` defaults to `medium`, which is its previous look.
+* **tokens:** new accent role tokens `--accent-ink`, `--accent-ink-muted`, `--accent-ink-faint`, `--accent-solid(-a)`, `--accent-solid-hover(-a)`, `--accent-solid-active(-a)`, `--accent-solid-contrast`, `--accent-solid-selection(-contrast)` and `--accent-solid-{hover,active,open}-filter`, plus `--gray-ink`, `--gray-ink-muted` and `--gray-ink-faint`.
+
+
+### Migration
+
+| Before | After |
+| --- | --- |
+| `highContrast` on any component | Delete it |
+| `<Text color="gray">` (muted copy) | `<Text emphasis="medium">` |
+| `<Text color="gray" highContrast>` | `<Text>` |
+| `<Text color="red" highContrast>` | `<Text color="red">` |
+| `<Text color="red">` | Unchanged, now reads stronger |
+| `<DataList.Label highContrast>` | `<DataList.Label emphasis="loud">` |
+| `highContrastPropDef` import | Delete it; use `emphasisPropDef` for text-first components |
+| `var(--opacity-high-contrast)` | `var(--opacity-8)` |
+
 ## [1.0.3](https://github.com/KushagraDhawan1997/kookie-ui/compare/v1.0.2...v1.0.3) (2026-01-12)
 
 

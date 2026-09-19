@@ -1,6 +1,5 @@
 import { asChildPropDef } from '../../props/as-child.prop.js';
 import { colorPropDef } from '../../props/color.prop.js';
-import { highContrastPropDef } from '../../props/high-contrast.prop.js';
 
 import type { PropDef } from '../../props/prop-def.js';
 
@@ -39,7 +38,6 @@ const baseMenuSharedPropDefs = {
     default: undefined,
   },
   ...colorPropDef,
-  ...highContrastPropDef,
 } satisfies {
   size: PropDef<(typeof contentSizes)[number]>;
   variant: PropDef<(typeof contentVariants)[number]>;

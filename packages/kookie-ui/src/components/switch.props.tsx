@@ -1,5 +1,4 @@
 import { colorPropDef } from '../props/color.prop.js';
-import { highContrastPropDef } from '../props/high-contrast.prop.js';
 
 import type { PropDef } from '../props/prop-def.js';
 
@@ -12,7 +11,6 @@ const switchPropDefs = {
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
   variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'surface' },
   ...colorPropDef,
-  ...highContrastPropDef,
   /**
    * Material type for visual rendering and depth effects
    * Controls how the switch renders its visual elements

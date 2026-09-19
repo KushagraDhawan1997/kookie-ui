@@ -124,21 +124,11 @@
 
   &:where([data-state='checked'], [data-state='indeterminate']) {
     &::before {
-      background-color: var(--accent-9);
-      box-shadow: inset 0 0 0 1px var(--accent-9);
+      background-color: var(--accent-solid);
+      box-shadow: inset 0 0 0 1px var(--accent-solid);
     }
     & :where(.rt-BaseCheckboxIndicator) {
-      color: var(--accent-contrast);
-    }
-
-    &:where(.rt-high-contrast) {
-      &::before {
-        background-color: var(--accent-12);
-        box-shadow: inset 0 0 0 1px var(--accent-12);
-      }
-      & :where(.rt-BaseCheckboxIndicator) {
-        color: var(--gray-1);
-      }
+      color: var(--accent-solid-contrast);
     }
   }
 
@@ -161,7 +151,7 @@
   
   &:where([data-state='unchecked']) {
     &::before {
-      color: var(--accent-a11);
+      color: var(--accent-ink);
       background-color: var(--color-surface-solid);
       box-shadow: var(--shadow-2);
 
@@ -200,30 +190,7 @@
       }
     }
     & :where(.rt-BaseCheckboxIndicator) {
-      color: var(--accent-a11);
-    }
-
-    &:where(.rt-high-contrast) {
-      &::before {
-        background-color: var(--accent-3);
-
-        /* Theme-level translucent override for high contrast */
-        :where([data-panel-background='translucent'], [data-material='translucent']) & {
-          background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-        }
-
-        /* Component-level overrides for high contrast */
-        &:where([data-panel-background='solid'], [data-material='solid']) {
-          background-color: var(--accent-3);
-        }
-
-        &:where([data-panel-background='translucent'], [data-material='translucent']) {
-          background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-        }
-      }
-      & :where(.rt-BaseCheckboxIndicator) {
-        color: var(--accent-12);
-      }
+      color: var(--accent-ink);
     }
   }
 
@@ -285,13 +252,7 @@
 
   &:where([data-state='checked'], [data-state='indeterminate']) {
     & :where(.rt-BaseCheckboxIndicator) {
-      color: var(--accent-a11);
-    }
-
-    &:where(.rt-high-contrast) {
-      & :where(.rt-BaseCheckboxIndicator) {
-        color: var(--accent-12);
-      }
+      color: var(--accent-ink);
     }
   }
 
@@ -313,23 +274,20 @@
   &:where([data-state='unchecked']) {
     &::before {
       box-shadow: inset 0 0 0 1px var(--accent-6);
-      color: var(--accent-11);
+      color: var(--accent-ink);
 
       /* Theme-level translucent override */
       :where([data-panel-background='translucent'], [data-material='translucent']) & {
         box-shadow: inset 0 0 0 1px var(--accent-a6);
-        color: var(--accent-a11);
       }
 
       /* Component-level overrides (higher specificity) */
       &:where([data-panel-background='solid'], [data-material='solid']) {
         box-shadow: inset 0 0 0 1px var(--accent-6);
-        color: var(--accent-11);
       }
 
       &:where([data-panel-background='translucent'], [data-material='translucent']) {
         box-shadow: inset 0 0 0 1px var(--accent-a6);
-        color: var(--accent-a11);
       }
     }
   }
@@ -357,13 +315,7 @@
       }
     }
     & :where(.rt-BaseCheckboxIndicator) {
-      color: var(--accent-a11);
-    }
-
-    &:where(.rt-high-contrast) {
-      & :where(.rt-BaseCheckboxIndicator) {
-        color: var(--accent-12);
-      }
+      color: var(--accent-ink);
     }
   }
 
@@ -428,13 +380,7 @@
       }
     }
     & :where(.rt-BaseCheckboxIndicator) {
-      color: var(--accent-a11);
-    }
-
-    &:where(.rt-high-contrast) {
-      & :where(.rt-BaseCheckboxIndicator) {
-        color: var(--accent-12);
-      }
+      color: var(--accent-ink);
     }
   }
 

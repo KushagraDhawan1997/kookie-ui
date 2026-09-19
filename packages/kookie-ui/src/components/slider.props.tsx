@@ -1,5 +1,4 @@
 import { colorPropDef } from '../props/color.prop.js';
-import { highContrastPropDef } from '../props/high-contrast.prop.js';
 import { radiusPropDef } from '../props/radius.prop.js';
 
 import type { PropDef } from '../props/prop-def.js';
@@ -13,7 +12,6 @@ const sliderPropDefs = {
   showTickLabels: { type: 'boolean', className: 'rt-show-tick-labels' },
   snapToTicks: { type: 'boolean', className: 'rt-snap-to-ticks' },
   ...colorPropDef,
-  ...highContrastPropDef,
   ...radiusPropDef,
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;

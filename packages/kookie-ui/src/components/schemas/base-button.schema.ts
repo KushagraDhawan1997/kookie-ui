@@ -100,16 +100,6 @@ export const BaseButtonSchema = z
       .describe('Accent color for the button'),
 
     /**
-     * High contrast mode for better accessibility
-     * @default false
-     */
-    highContrast: z
-      .boolean()
-      .optional()
-      .default(false)
-      .describe('High contrast mode for better accessibility'),
-
-    /**
      * Border radius for the button
      */
     radius: z

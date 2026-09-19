@@ -28,10 +28,10 @@ function Row({ index }: { index: number }) {
           A description line that sits under the heading.
         </Text>
         <Flex gap="2" mt="2">
-          <Button size="2" variant="soft" color="gray" highContrast>
+          <Button size="2" variant="soft" color="gray">
             Cancel
           </Button>
-          <Button size="2" variant="classic" highContrast>
+          <Button size="2" variant="classic">
             Save
           </Button>
         </Flex>

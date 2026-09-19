@@ -1,6 +1,5 @@
 import { asChildPropDef } from '../props/as-child.prop.js';
 import { colorPropDef } from '../props/color.prop.js';
-import { highContrastPropDef } from '../props/high-contrast.prop.js';
 
 import type { PropDef } from '../props/prop-def.js';
 
@@ -42,7 +41,6 @@ const sidebarPropDefs = {
   layout: { type: 'enum', className: 'rt-layout', values: layouts, default: undefined },
   panelBackground: { type: 'enum', values: ['solid', 'translucent'], default: undefined },
   ...colorPropDef,
-  ...highContrastPropDef,
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;
   variant: PropDef<(typeof variants)[number]>;

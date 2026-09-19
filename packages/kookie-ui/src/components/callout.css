@@ -4,7 +4,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   text-align: left;
-  color: var(--accent-a11);
+  color: var(--accent-ink);
   transition: var(--transition-card);
   border-radius: var(--callout-border-radius);
 
@@ -36,10 +36,6 @@
     --material-alpha: 1;
     backdrop-filter: var(--backdrop-filter-components);
     --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
-
-  &:where(.rt-high-contrast) {
-    color: var(--accent-12);
   }
 
   /* Focus styles for accessibility */
@@ -139,11 +135,7 @@
 
 .rt-CalloutRoot:where(.rt-variant-soft) {
   background-color: color-mix(in srgb, var(--accent-a2) calc(var(--material-alpha) * 100%), var(--accent-2) var(--material-blend));
-  color: var(--accent-a11);
-
-  &:where(.rt-high-contrast) {
-    color: var(--accent-12);
-  }
+  color: var(--accent-ink);
 }
 
 /* surface */
@@ -151,22 +143,14 @@
 .rt-CalloutRoot:where(.rt-variant-surface) {
   background-color: color-mix(in srgb, var(--accent-a2) calc(var(--material-alpha) * 100%), var(--accent-2) var(--material-blend));
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-a6) calc(var(--material-alpha) * 100%), var(--accent-6) var(--material-blend));
-  color: var(--accent-a11);
-
-  &:where(.rt-high-contrast) {
-    color: var(--accent-12);
-  }
+  color: var(--accent-ink);
 }
 
 /* outline */
 
 .rt-CalloutRoot:where(.rt-variant-outline) {
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-a6) calc(var(--material-alpha) * 100%), var(--accent-6) var(--material-blend));
-  color: color-mix(in srgb, var(--accent-a11) calc(var(--material-alpha) * 100%), var(--accent-11) var(--material-blend));
-
-  &:where(.rt-high-contrast) {
-    color: var(--accent-12);
-  }
+  color: var(--accent-ink);
 }
 
 /* classic */
@@ -175,7 +159,7 @@
   --classic-surface: var(--color-surface-solid);
   background-color: var(--classic-surface);
   box-shadow: var(--shadow-2);
-  color: var(--accent-a11);
+  color: var(--accent-ink);
   transition: var(--transition-text-field);
 
   :where([data-panel-background='translucent'], [data-material='translucent']) & {
@@ -188,9 +172,5 @@
 
   &:where([data-panel-background='translucent'], [data-material='translucent']) {
     --classic-surface: var(--color-surface-translucent);
-  }
-
-  &:where(.rt-high-contrast) {
-    color: var(--accent-12);
   }
 }

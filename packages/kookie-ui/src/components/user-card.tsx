@@ -65,14 +65,13 @@ const UserCard = React.forwardRef<UserCardElement, UserCardProps>((props, forwar
         src={src}
         fallback={fallback!}
         color={color}
-        highContrast={props.highContrast}
       />
       <Flex direction="column" gap="0" style={{ minWidth: 0 }}>
         <Text size={sizes.name as any} weight="medium" truncate>
           {name}
         </Text>
         {description && (
-          <Text size={sizes.description as any} color="gray" truncate>
+          <Text size={sizes.description as any} emphasis="medium" truncate>
             {description}
           </Text>
         )}

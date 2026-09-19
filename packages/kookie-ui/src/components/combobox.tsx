@@ -44,7 +44,7 @@ type ComboboxValue = string | null;
 type CommandFilter = (value: string, search: string, keywords?: string[]) => number;
 
 // Hoisted so extractProps' compiled prop-def cache (keyed by object identity) hits.
-const triggerSizingPropDefs = { size: comboboxRootPropDefs.size, highContrast: comboboxRootPropDefs.highContrast };
+const triggerSizingPropDefs = { size: comboboxRootPropDefs.size };
 const contentSizePropDefs = { size: comboboxContentPropDefs.size };
 
 const warned = new Set<string>();
@@ -92,7 +92,6 @@ interface ComboboxContextValue {
   displayValue?: string;
   setOpen: (open: boolean) => void;
   size?: ComboboxRootOwnProps['size'];
-  highContrast?: boolean;
   placeholder?: string;
   searchPlaceholder?: string;
   disabled?: boolean;
@@ -210,7 +209,6 @@ const ComboboxRoot: React.FC<ComboboxRootProps> = (props) => {
   const {
     children,
     size = comboboxRootPropDefs.size.default,
-    highContrast = comboboxRootPropDefs.highContrast.default,
     value: valueProp,
     defaultValue = null,
     onValueChange,
@@ -283,7 +281,6 @@ const ComboboxRoot: React.FC<ComboboxRootProps> = (props) => {
       displayValue: resolvedDisplayValue,
       setOpen: handleOpenChange,
       size,
-      highContrast,
       placeholder,
       searchPlaceholder,
       disabled,
@@ -294,7 +291,7 @@ const ComboboxRoot: React.FC<ComboboxRootProps> = (props) => {
       triggerRef,
       getTriggerLabel,
     }),
-    [value, resolvedDisplayValue, handleOpenChange, size, highContrast, placeholder, searchPlaceholder, disabled, color, loop, shouldFilter, filter, getTriggerLabel],
+    [value, resolvedDisplayValue, handleOpenChange, size, placeholder, searchPlaceholder, disabled, color, loop, shouldFilter, filter, getTriggerLabel],
   );
 
   const searchContextValue = React.useMemo<ComboboxSearchContextValue>(() => ({ value: searchValue, setValue: setSearchValue }), [searchValue, setSearchValue]);
@@ -342,7 +339,7 @@ const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTrigger
     onKeyDown,
     type: buttonType,
     ...triggerProps
-  } = extractProps({ size: ctx.size, highContrast: ctx.highContrast, ...props }, triggerSizingPropDefs, comboboxTriggerPropDefs, marginPropDefs);
+  } = extractProps({ size: ctx.size, ...props }, triggerSizingPropDefs, comboboxTriggerPropDefs, marginPropDefs);
 
   // `panelBackground` has a className prop def, so extractProps strips it.
   const { panelBackground } = props;
@@ -500,7 +497,6 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
   const material = props.material ?? props.panelBackground ?? themeContext.material ?? themeContext.panelBackground;
   const size = props.size ?? ctx.size ?? comboboxContentPropDefs.size.default;
   const variant = props.variant ?? comboboxContentPropDefs.variant.default;
-  const highContrast = props.highContrast ?? ctx.highContrast ?? comboboxContentPropDefs.highContrast.default;
 
   const {
     className,
@@ -514,7 +510,7 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
     'aria-label': _ariaLabel,
     'aria-labelledby': ariaLabelledByProp,
     ...contentProps
-  } = extractProps({ ...props, size, variant, highContrast }, comboboxContentPropDefs);
+  } = extractProps({ ...props, size, variant }, comboboxContentPropDefs);
 
   const resolvedColor = color || ctx.color || themeContext.accentColor;
 

@@ -8,18 +8,23 @@
 
 .rt-DataListLabel {
   display: flex;
-  color: var(--gray-a11);
+  color: var(--gray-ink-muted);
 
-  &:where(.rt-high-contrast) {
-    color: var(--gray-12);
+  /* Emphasis ladder. The prop defaults to 'medium', which matches the base colour above. */
+  &:where(.rt-emphasis-loud) {
+    color: var(--gray-ink);
   }
-
+  &:where(.rt-emphasis-quiet) {
+    color: var(--gray-ink-faint);
+  }
   &:where([data-accent-color]) {
-    color: var(--accent-a11);
-
-    &:where(.rt-high-contrast) {
-      color: var(--accent-12);
-    }
+    color: var(--accent-ink);
+  }
+  &:where([data-accent-color].rt-emphasis-medium) {
+    color: var(--accent-ink-muted);
+  }
+  &:where([data-accent-color].rt-emphasis-quiet) {
+    color: var(--accent-ink-faint);
   }
 }
 

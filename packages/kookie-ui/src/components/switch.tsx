@@ -36,9 +36,7 @@ const Switch = React.forwardRef<SwitchElement, SwitchProps>((props, forwardedRef
       ref={forwardedRef}
       className={classNames('rt-reset', 'rt-SwitchRoot', className)}
     >
-      <SwitchPrimitive.Thumb
-        className={classNames('rt-SwitchThumb', { 'rt-high-contrast': props.highContrast })}
-      />
+      <SwitchPrimitive.Thumb className="rt-SwitchThumb" />
     </SwitchPrimitive.Root>
   );
 });

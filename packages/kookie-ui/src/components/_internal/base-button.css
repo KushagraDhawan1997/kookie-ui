@@ -208,8 +208,7 @@
 
 /* Soft variant palette */
 .rt-BaseButton:where(.rt-variant-soft) {
-  --v-color: var(--accent-a11);
-  --v-color-high-contrast: var(--accent-12);
+  --v-color: var(--accent-ink);
   --v-bg: var(--accent-3);
   --v-bg-a: var(--accent-a3);
   --v-bg-hover: var(--accent-4);
@@ -225,8 +224,7 @@
 
 /* Ghost variant palette */
 .rt-BaseButton:where(.rt-variant-ghost) {
-  --v-color: var(--accent-a11);
-  --v-color-high-contrast: var(--accent-12);
+  --v-color: var(--accent-ink);
   --v-bg: transparent;
   --v-bg-a: transparent;
   --v-bg-hover: var(--accent-3);
@@ -242,8 +240,7 @@
 
 /* Outline variant palette */
 .rt-BaseButton:where(.rt-variant-outline) {
-  --v-color: var(--accent-11);
-  --v-color-high-contrast: var(--accent-12);
+  --v-color: var(--accent-ink);
   --v-bg: transparent;
   --v-bg-a: transparent;
   --v-bg-hover: var(--accent-2);
@@ -268,8 +265,7 @@
 
 /* Surface variant palette */
 .rt-BaseButton:where(.rt-variant-surface) {
-  --v-color: var(--accent-a11);
-  --v-color-high-contrast: var(--accent-12);
+  --v-color: var(--accent-ink);
   --v-bg: var(--accent-2);
   --v-bg-a: var(--accent-a2);
   --v-bg-hover: var(--accent-3);
@@ -309,11 +305,6 @@
     var(--v-bg-a) calc(var(--material-alpha) * 100%),
     var(--v-bg) var(--material-blend)
   );
-
-  /* High contrast override */
-  &:where(.rt-high-contrast) {
-    color: var(--v-color-high-contrast);
-  }
 
   /* Focus visible */
   &:where(:focus-visible) {
@@ -454,17 +445,13 @@
 /* Classic variant - uses --color-surface and gray interactive states */
 .rt-BaseButton:where(.rt-variant-classic) {
   position: relative;
-  color: var(--accent-a11);
+  color: var(--accent-ink);
   background-color: var(--color-surface-solid);
   box-shadow: var(--shadow-2);
 
   /* Translucent theme override */
   &:where([data-material='translucent']) {
     background-color: var(--color-surface-translucent);
-  }
-
-  &:where(.rt-high-contrast) {
-    color: var(--gray-12);
   }
 
   &:where(:focus-visible) {
@@ -568,29 +555,13 @@
   }
 }
 
-/* Solid variant - uses filter for active state */
-:where(.radix-themes) {
-  --base-button-solid-high-contrast-hover-filter: contrast(0.88) saturate(1.1) brightness(1.1);
-  --base-button-solid-active-filter: brightness(0.9) contrast(1.03);
-  --base-button-solid-open-filter: brightness(0.96) contrast(1.02);
-  --base-button-solid-high-contrast-active-filter: brightness(0.92);
-  --base-button-solid-high-contrast-open-filter: brightness(0.96);
-}
-:is(.dark, .dark-theme),
-:is(.dark, .dark-theme) :where(.radix-themes:not(.light, .light-theme)) {
-  --base-button-solid-high-contrast-hover-filter: contrast(0.88) saturate(1.3) brightness(1.18);
-  --base-button-solid-active-filter: brightness(0.88) contrast(1.03);
-  --base-button-solid-open-filter: brightness(0.95) contrast(1.02);
-  --base-button-solid-high-contrast-active-filter: brightness(0.9);
-  --base-button-solid-high-contrast-open-filter: brightness(0.95);
-}
-
+/* Solid variant - fills with the accent solid tokens (gray resolves to step 12 automatically) */
 .rt-BaseButton:where(.rt-variant-solid) {
   /* Solid uses 10% blend for translucent (more opaque than other variants) */
   --solid-blend: calc(100% - (var(--material-alpha) * 90%));
 
-  background-color: color-mix(in srgb, var(--accent-a9) calc(var(--material-alpha) * 100%), var(--accent-9) var(--solid-blend));
-  color: var(--accent-contrast);
+  background-color: color-mix(in srgb, var(--accent-solid-a) calc(var(--material-alpha) * 100%), var(--accent-solid) var(--solid-blend));
+  color: var(--accent-solid-contrast);
 
   &:where(:focus-visible) {
     outline: 2px solid var(--focus-8);
@@ -599,22 +570,23 @@
 
   @media (hover: hover) {
     &:where(:hover) {
-      background-color: color-mix(in srgb, var(--accent-a10) calc(var(--material-alpha) * 100%), var(--accent-10) var(--solid-blend));
+      background-color: color-mix(in srgb, var(--accent-solid-hover-a) calc(var(--material-alpha) * 100%), var(--accent-solid-hover) var(--solid-blend));
+      filter: var(--accent-solid-hover-filter);
       box-shadow: var(--shadow-2);
     }
   }
 
   &:where([data-state='open']) {
-    background-color: color-mix(in srgb, var(--accent-a10) calc(var(--material-alpha) * 100%), var(--accent-10) var(--solid-blend));
-    filter: var(--base-button-solid-open-filter);
+    background-color: color-mix(in srgb, var(--accent-solid-hover-a) calc(var(--material-alpha) * 100%), var(--accent-solid-hover) var(--solid-blend));
+    filter: var(--accent-solid-open-filter);
   }
 
   &:where(:active:not([data-state='open'])) {
-    filter: var(--base-button-solid-active-filter);
+    filter: var(--accent-solid-active-filter);
   }
 
   &:where([data-state='on']) {
-    background-color: color-mix(in srgb, var(--accent-a10) calc(var(--material-alpha) * 100%), var(--accent-10) var(--solid-blend));
+    background-color: color-mix(in srgb, var(--accent-solid-hover-a) calc(var(--material-alpha) * 100%), var(--accent-solid-hover) var(--solid-blend));
     opacity: 0.9;
   }
 
@@ -622,33 +594,6 @@
     &:where(:active:not([data-state='open'])) {
       outline: var(--classic-shadow-blur-large) solid var(--accent-a4);
       outline-offset: 0;
-    }
-  }
-
-  &:where(.rt-high-contrast) {
-    background-color: color-mix(in srgb, var(--accent-a12) calc(var(--material-alpha) * 100%), var(--accent-12) var(--solid-blend));
-    color: var(--gray-1);
-
-    @media (hover: hover) {
-      &:where(:hover) {
-        background-color: color-mix(in srgb, var(--accent-a12) calc(var(--material-alpha) * 100%), var(--accent-12) var(--solid-blend));
-        filter: var(--base-button-solid-high-contrast-hover-filter);
-        box-shadow: var(--shadow-2);
-      }
-    }
-
-    &:where([data-state='open']) {
-      background-color: color-mix(in srgb, var(--accent-a12) calc(var(--material-alpha) * 100%), var(--accent-12) var(--solid-blend));
-      filter: var(--base-button-solid-high-contrast-open-filter);
-    }
-
-    &:where(:active:not([data-state='open'])) {
-      filter: var(--base-button-solid-high-contrast-active-filter);
-    }
-
-    &:where([data-state='on']) {
-      background-color: var(--accent-12);
-      opacity: 0.85;
     }
   }
 

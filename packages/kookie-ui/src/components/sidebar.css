@@ -261,13 +261,13 @@
 
 /* Active label gets accent color and medium weight */
 :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton[data-active] .rt-SidebarMenuLabel) {
-  color: var(--accent-11);
+  color: var(--accent-ink);
   font-weight: var(--font-weight-medium);
 }
 
 /* Highlighted label gets slightly darker color */
 :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuLabel) {
-  color: var(--accent-11);
+  color: var(--accent-ink);
 }
 
 /* Remove background from button itself in thin mode - styles are on icon wrapper */
@@ -296,24 +296,13 @@
 
 /* Solid variant icon wrapper states in thin mode */
 :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-solid .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
-  background-color: var(--accent-9);
-  color: var(--accent-contrast);
+  background-color: var(--accent-solid);
+  color: var(--accent-solid-contrast);
 }
 
 :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-solid .rt-SidebarMenuButton[data-active] .rt-SidebarMenuIconWrapper) {
-  background-color: var(--accent-9);
-  color: var(--accent-contrast);
-}
-
-/* High contrast solid variant in thin mode */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-solid[data-high-contrast] .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
-  background-color: var(--accent-12);
-  color: var(--accent-1);
-}
-
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-solid[data-high-contrast] .rt-SidebarMenuButton[data-active] .rt-SidebarMenuIconWrapper) {
-  background-color: var(--accent-12);
-  color: var(--accent-1);
+  background-color: var(--accent-solid);
+  color: var(--accent-solid-contrast);
 }
 
 :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuBadge),
@@ -854,11 +843,11 @@
 
   /* Hover/highlighted state for solid variant - EXACT match to base menu */
   & :where(.rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled])) {
-    background-color: var(--accent-9);
-    color: var(--accent-contrast);
+    background-color: var(--accent-solid);
+    color: var(--accent-solid-contrast);
 
     & :where(.rt-BaseMenuSubTriggerIcon) {
-      color: var(--accent-contrast);
+      color: var(--accent-solid-contrast);
     }
 
     /* Force all text elements to inherit hover color, including those with color="gray" */
@@ -873,15 +862,15 @@
 
     /* FIX: Ensure badges maintain their own styling and don't inherit hover colors */
     & :where(.rt-Badge) {
-      color: var(--accent-contrast) !important;
-      background-color: var(--accent-12) !important;
+      color: var(--accent-solid-badge-contrast) !important;
+      background-color: var(--accent-solid-badge) !important;
     }
   }
 
   /* Active navigation state for solid variant - same as highlighted */
   & :where(.rt-SidebarMenuButton[data-active]) {
-    background-color: var(--accent-9);
-    color: var(--accent-contrast);
+    background-color: var(--accent-solid);
+    color: var(--accent-solid-contrast);
     font-weight: var(--font-weight-medium);
 
     /* Force all text elements to inherit active color */
@@ -895,91 +884,8 @@
 
     /* FIX: Ensure badges maintain their own styling and don't inherit active colors */
     & :where(.rt-Badge) {
-      color: var(--accent-contrast) !important;
-      background-color: var(--accent-12) !important;
-    }
-  }
-
-  /* High contrast support for solid variant - EXACT match to base menu */
-  &:where(.rt-high-contrast) {
-    & :where(.rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled])) {
-      background-color: var(--accent-12);
-      color: var(--accent-1);
-
-      & :where(.rt-BaseMenuSubTriggerIcon) {
-        color: var(--accent-1);
-      }
-
-      /* Force all text elements to inherit hover color in high contrast mode */
-      & :where(.rt-Text) {
-        color: inherit !important;
-      }
-
-      /* Also target any element with data-accent-color="gray" in high contrast */
-      & :where([data-accent-color='gray']:not(.rt-Badge)) {
-        color: inherit !important;
-      }
-
-      /* FIX: High contrast badge styling */
-      & :where(.rt-Badge) {
-        color: var(--accent-1) !important;
-        background-color: var(--accent-9) !important;
-      }
-
-      &:where([data-accent-color]) {
-        background-color: var(--accent-9);
-        color: var(--accent-contrast);
-
-        & :where(.rt-Text) {
-          color: inherit !important;
-        }
-
-        & :where([data-accent-color='gray']:not(.rt-Badge)) {
-          color: inherit !important;
-        }
-
-        & :where(.rt-Badge) {
-          color: var(--accent-contrast) !important;
-          background-color: var(--accent-12) !important;
-        }
-      }
-    }
-
-    & :where(.rt-SidebarMenuButton[data-active]) {
-      background-color: var(--accent-12);
-      color: var(--accent-1);
-      font-weight: var(--font-weight-medium);
-
-      & :where(.rt-Text) {
-        color: inherit !important;
-      }
-
-      & :where([data-accent-color='gray']:not(.rt-Badge)) {
-        color: inherit !important;
-      }
-
-      & :where(.rt-Badge) {
-        color: var(--accent-1) !important;
-        background-color: var(--accent-9) !important;
-      }
-
-      &:where([data-accent-color]) {
-        background-color: var(--accent-9);
-        color: var(--accent-contrast);
-
-        & :where(.rt-Text) {
-          color: inherit !important;
-        }
-
-        & :where([data-accent-color='gray']:not(.rt-Badge)) {
-          color: inherit !important;
-        }
-
-        & :where(.rt-Badge) {
-          color: var(--accent-contrast) !important;
-          background-color: var(--accent-12) !important;
-        }
-      }
+      color: var(--accent-solid-badge-contrast) !important;
+      background-color: var(--accent-solid-badge) !important;
     }
   }
 }
@@ -1058,8 +964,8 @@
       background-color: var(--accent-a4);
     }
 
-    /* In soft variant, improve contrast for gray text while maintaining hierarchy */
-    & :where(.rt-Text[data-accent-color='gray'], [data-accent-color='gray']:not(.rt-Badge)) {
+    /* In soft variant, lift muted text a step while keeping the hierarchy */
+    & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
       color: var(--gray-11) !important;
     }
   }
@@ -1090,8 +996,8 @@
       color: var(--accent-a12);
     }
 
-    /* In soft variant, improve contrast for gray text while maintaining hierarchy */
-    & :where(.rt-Text[data-accent-color='gray'], [data-accent-color='gray']:not(.rt-Badge)) {
+    /* In soft variant, lift muted text a step while keeping the hierarchy */
+    & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
       color: var(--gray-11) !important;
     }
   }
@@ -1222,8 +1128,8 @@
 
 /* Search trigger icon wrapper hover (solid variant) */
 :where(.rt-SidebarContainer[data-presentation='thin'].rt-menu-variant-solid) :where(.rt-SidebarSearchTrigger:where(:hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
-  background-color: var(--accent-9);
-  color: var(--accent-contrast);
+  background-color: var(--accent-solid);
+  color: var(--accent-solid-contrast);
 }
 
 /* Popover inner wrapper - provide base menu tokens for portal-rendered items */

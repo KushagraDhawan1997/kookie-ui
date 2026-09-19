@@ -163,7 +163,6 @@
   /* Opacity constants - using new opacity tokens */
   --opacity-disabled: var(--opacity-5);
   --opacity-soft-variant: var(--opacity-8);
-  --opacity-high-contrast: var(--opacity-8);
 
   /* Positioning constants */
   --position-center: 50%;

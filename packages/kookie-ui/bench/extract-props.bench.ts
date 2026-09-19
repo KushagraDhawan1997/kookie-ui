@@ -11,9 +11,9 @@ import { layoutPropDefs } from '../src/props/layout.props.js';
 // Representative call shapes taken from the docs examples: the overwhelming
 // majority of real usage passes a handful of enum props and no responsive
 // objects, so that is the case worth optimising for.
-const buttonProps = { size: '2', variant: 'classic', highContrast: true, children: 'Save' };
+const buttonProps = { size: '2', variant: 'classic', children: 'Save' };
 const flexProps = { direction: 'column', gap: '3', align: 'center', p: '4' };
-const textProps = { size: '2', weight: 'medium', color: 'gray' };
+const textProps = { size: '2', weight: 'medium', emphasis: 'medium' };
 const responsiveFlexProps = {
   direction: { initial: 'column', md: 'row' },
   gap: { initial: '2', lg: '5' },

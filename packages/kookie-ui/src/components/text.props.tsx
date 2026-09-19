@@ -1,6 +1,6 @@
 import { asChildPropDef } from '../props/as-child.prop.js';
 import { colorPropDef } from '../props/color.prop.js';
-import { highContrastPropDef } from '../props/high-contrast.prop.js';
+import { emphasisPropDef } from '../props/emphasis.prop.js';
 import { leadingTrimPropDef } from '../props/leading-trim.prop.js';
 import { textAlignPropDef } from '../props/text-align.prop.js';
 import { textWrapPropDef } from '../props/text-wrap.prop.js';
@@ -29,7 +29,7 @@ const textPropDefs = {
   ...truncatePropDef,
   ...textWrapPropDef,
   ...colorPropDef,
-  ...highContrastPropDef,
+  ...emphasisPropDef,
 } satisfies {
   as: PropDef<(typeof as)[number]>;
   size: PropDef<(typeof sizes)[number]>;

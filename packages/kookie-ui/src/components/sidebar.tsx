@@ -27,7 +27,6 @@ type BadgeConfig = {
   variant?: BadgeProps['variant'];
   size?: BadgeProps['size'];
   color?: BadgeProps['color'];
-  highContrast?: BadgeProps['highContrast'];
   radius?: BadgeProps['radius'];
 };
 
@@ -70,7 +69,6 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>((props, forwarded
     // collapsible = sidebarPropDefs.collapsible.default,
     panelBackground,
     color,
-    highContrast = sidebarPropDefs.highContrast.default,
   } = props;
 
   const { className, children, ...rootProps } = extractProps(props, sidebarPropDefs);
@@ -93,7 +91,6 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>((props, forwarded
         <div
           className={classNames('rt-SidebarContainer', `rt-variant-${variant}`, `rt-r-size-${resolvedSize}`, `rt-menu-variant-${menuVariant}`, resolvedLayout && `rt-layout-${resolvedLayout}`)}
           data-accent-color={resolvedColor}
-          data-high-contrast={highContrast || undefined}
           data-panel-background={panelBackground}
           data-presentation={presentation}
           data-layout={resolvedLayout}
@@ -340,7 +337,7 @@ const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonP
                     {badge}
                   </Badge>
                 ) : (
-                  <Badge size={badge.size || sidebarSize} variant={badge.variant || 'soft'} color={badge.color} highContrast={badge.highContrast} radius={badge.radius}>
+                  <Badge size={badge.size || sidebarSize} variant={badge.variant || 'soft'} color={badge.color} radius={badge.radius}>
                     {badge.content}
                   </Badge>
                 )}
@@ -395,7 +392,7 @@ const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonP
                     {badge}
                   </Badge>
                 ) : (
-                  <Badge size={badge.size || sidebarSize} variant={badge.variant || 'soft'} color={badge.color} highContrast={badge.highContrast} radius={badge.radius}>
+                  <Badge size={badge.size || sidebarSize} variant={badge.variant || 'soft'} color={badge.color} radius={badge.radius}>
                     {badge.content}
                   </Badge>
                 )}

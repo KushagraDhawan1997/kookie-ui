@@ -78,11 +78,8 @@
 
 .rt-RadioCardsItem:where([data-state='checked']) {
   transition: var(--transition-fast);
-  outline: var(--focus-outline-width) solid var(--accent-indicator);
+  outline: var(--focus-outline-width) solid var(--accent-solid-indicator);
   outline-offset: -1px;
-  :where(.rt-RadioCardsRoot.rt-high-contrast) & {
-    outline-color: var(--accent-12);
-  }
 }
 
 /* * * * * * * * * * * * * * * * * * * */

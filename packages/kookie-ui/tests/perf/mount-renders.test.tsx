@@ -113,7 +113,7 @@ describe('mount render counts', () => {
     render(
       <Theme>
         <Flex direction="column" gap="3" p="4">
-          <Button size="2" variant="classic" highContrast>
+          <Button size="2" variant="classic">
             Save
           </Button>
           <RenderCounter counter={counter} />

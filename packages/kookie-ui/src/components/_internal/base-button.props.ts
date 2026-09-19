@@ -1,6 +1,5 @@
 import { asChildPropDef } from '../../props/as-child.prop.js';
 import { accentColorPropDef } from '../../props/color.prop.js';
-import { highContrastPropDef } from '../../props/high-contrast.prop.js';
 import { radiusPropDef } from '../../props/radius.prop.js';
 
 import type { PropDef } from '../../props/prop-def.js';
@@ -63,8 +62,8 @@ const materials = ['solid', 'translucent'] as const;
  * // Button with loading state
  * <BaseButton loading>Processing...</BaseButton>
  * 
- * // Button with material and high contrast
- * <BaseButton material="translucent" highContrast>Elevated Button</BaseButton>
+ * // Button with translucent material
+ * <BaseButton material="translucent">Elevated Button</BaseButton>
  * ```
  */
 const baseButtonPropDefs = {
@@ -79,7 +78,6 @@ const baseButtonPropDefs = {
    */
   variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'solid' },
   ...accentColorPropDef,
-  ...highContrastPropDef,
   ...radiusPropDef,
   /**
    * Loading state that shows a spinner and disables interaction

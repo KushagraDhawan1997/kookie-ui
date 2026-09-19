@@ -21,7 +21,7 @@ function Screen() {
           <Badge variant="soft" color="gray">
             Active
           </Badge>
-          <Button size="2" variant="classic" highContrast>
+          <Button size="2" variant="classic">
             Save
           </Button>
         </Flex>

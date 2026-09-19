@@ -280,9 +280,9 @@ type SheetDescriptionElement = React.ElementRef<typeof Text>;
 type SheetDescriptionProps = React.ComponentPropsWithoutRef<typeof Text>;
 /** Supplementary description text for Sheet content. Renders as Text with sensible defaults. */
 const Description = React.forwardRef<SheetDescriptionElement, SheetDescriptionProps>(
-  ({ size = '2', color = 'gray', ...rest }, ref) => (
+  ({ size = '2', emphasis = 'medium', ...rest }, ref) => (
     <DialogPrimitive.Description asChild>
-      <Text ref={ref} size={size} color={color} {...rest} />
+      <Text ref={ref} size={size} emphasis={emphasis} {...rest} />
     </DialogPrimitive.Description>
   ),
 );

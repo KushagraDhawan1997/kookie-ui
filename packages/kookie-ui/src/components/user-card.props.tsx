@@ -1,6 +1,5 @@
 import { asChildPropDef } from '../props/as-child.prop.js';
 import { accentColorPropDef } from '../props/color.prop.js';
-import { highContrastPropDef } from '../props/high-contrast.prop.js';
 import { radiusPropDef } from '../props/radius.prop.js';
 
 import type { PropDef } from '../props/prop-def.js';
@@ -27,7 +26,6 @@ const userCardPropDefs = {
 
   // Card styling
   ...accentColorPropDef,
-  ...highContrastPropDef,
   panelBackground: { type: 'enum', values: panelBackgrounds, default: undefined },
   flush: { type: 'boolean', default: false },
 } satisfies {

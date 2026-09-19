@@ -40,7 +40,6 @@ const RadioGroupRoot = React.forwardRef<RadioGroupRootElement, RadioGroupRootPro
   (
     {
       color = radioGroupRootPropDefs.color.default,
-      highContrast = radioGroupRootPropDefs.highContrast.default,
       size = radioGroupRootPropDefs.size.default,
       variant = radioGroupRootPropDefs.variant.default,
       ...props
@@ -53,7 +52,6 @@ const RadioGroupRoot = React.forwardRef<RadioGroupRootElement, RadioGroupRootPro
       <RadioGroupProvider
         scope={__scopeRadioGroup}
         color={color}
-        highContrast={highContrast}
         size={size}
         variant={variant}
       >

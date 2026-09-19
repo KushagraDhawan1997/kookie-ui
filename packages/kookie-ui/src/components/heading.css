@@ -21,13 +21,24 @@
     margin: 0;
   }
 
-  &:where([data-accent-color]) {
-    color: var(--accent-a11);
+  /* Emphasis ladder. No colour and no emphasis sets nothing, so the colour is inherited. */
+  &:where(.rt-emphasis-loud) {
+    color: var(--gray-ink);
   }
-
-  &:where([data-accent-color].rt-high-contrast),
-  :where([data-accent-color]:not(.radix-themes)) &:where(.rt-high-contrast) {
-    color: var(--accent-12);
+  &:where(.rt-emphasis-medium) {
+    color: var(--gray-ink-muted);
+  }
+  &:where(.rt-emphasis-quiet) {
+    color: var(--gray-ink-faint);
+  }
+  &:where([data-accent-color]) {
+    color: var(--accent-ink);
+  }
+  &:where([data-accent-color].rt-emphasis-medium) {
+    color: var(--accent-ink-muted);
+  }
+  &:where([data-accent-color].rt-emphasis-quiet) {
+    color: var(--accent-ink-faint);
   }
 }
 

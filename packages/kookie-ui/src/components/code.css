@@ -93,35 +93,37 @@
   --code-variant-font-size-adjust: var(--code-font-size-adjust);
   padding: 0;
 
-  &:where([data-accent-color]) {
-    color: var(--accent-a11);
+  /* Same ladder as Text. No colour and no emphasis inherits the surrounding colour. */
+  &:where(.rt-emphasis-loud) {
+    color: var(--gray-ink);
   }
-
-  &:where([data-accent-color].rt-high-contrast),
-  :where([data-accent-color]:not(.radix-themes)) &:where(.rt-high-contrast) {
-    color: var(--accent-12);
+  &:where(.rt-emphasis-medium) {
+    color: var(--gray-ink-muted);
+  }
+  &:where(.rt-emphasis-quiet) {
+    color: var(--gray-ink-faint);
+  }
+  &:where([data-accent-color]) {
+    color: var(--accent-ink);
+  }
+  &:where([data-accent-color].rt-emphasis-medium) {
+    color: var(--accent-ink-muted);
+  }
+  &:where([data-accent-color].rt-emphasis-quiet) {
+    color: var(--accent-ink-faint);
   }
 }
 
 /* solid */
 
 .rt-Code:where(.rt-variant-solid) {
-  background-color: var(--accent-a9);
-  color: var(--accent-contrast);
+  /* Text sits on a fill, so emphasis does not change it. Gray fills with step 12 via the tokens. */
+  background-color: var(--accent-solid-a);
+  color: var(--accent-solid-contrast);
 
   &::selection {
-    background-color: var(--accent-7);
-    color: var(--accent-12);
-  }
-
-  &:where(.rt-high-contrast) {
-    background-color: var(--accent-12);
-    color: var(--accent-1);
-
-    &::selection {
-      background-color: var(--accent-a11);
-      color: var(--accent-1);
-    }
+    background-color: var(--accent-solid-selection);
+    color: var(--accent-solid-selection-contrast);
   }
 
   :where(.rt-Link) &,
@@ -130,12 +132,8 @@
     isolation: isolate;
     @media (hover: hover) {
       &:where(:hover) {
-        background-color: var(--accent-10);
-      }
-      &:where(.rt-high-contrast:hover) {
-        background-color: var(--accent-12);
-        /* Re-use base button hover filter */
-        filter: var(--base-button-solid-high-contrast-hover-filter);
+        background-color: var(--accent-solid-hover);
+        filter: var(--accent-solid-hover-filter);
       }
     }
   }
@@ -145,11 +143,7 @@
 
 .rt-Code:where(.rt-variant-soft) {
   background-color: var(--accent-a2);
-  color: var(--accent-a11);
-
-  &:where(.rt-high-contrast) {
-    color: var(--accent-12);
-  }
+  color: var(--accent-ink);
 
   :where(.rt-Link) &,
   &:where(:any-link, button) {
@@ -166,12 +160,7 @@
 
 .rt-Code:where(.rt-variant-outline) {
   box-shadow: inset 0 0 0 max(1px, 0.033em) var(--accent-a8);
-  color: var(--accent-a11);
-
-  &:where(.rt-high-contrast) {
-    box-shadow: inset 0 0 0 max(1px, 0.033em) var(--accent-a7), inset 0 0 0 max(1px, 0.033em) var(--gray-a11);
-    color: var(--accent-12);
-  }
+  color: var(--accent-ink);
 
   :where(.rt-Link) &,
   &:where(:any-link, button) {
@@ -181,5 +170,16 @@
         background-color: var(--accent-a2);
       }
     }
+  }
+}
+
+/* soft and outline: emphasis fades the text along the accent ink ladder; the tint and border stay */
+
+.rt-Code:where(.rt-variant-soft, .rt-variant-outline) {
+  &:where(.rt-emphasis-medium) {
+    color: var(--accent-ink-muted);
+  }
+  &:where(.rt-emphasis-quiet) {
+    color: var(--accent-ink-faint);
   }
 }

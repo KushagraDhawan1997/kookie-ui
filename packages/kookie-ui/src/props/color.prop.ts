@@ -16,7 +16,7 @@ const colorPropDef = {
 };
 
 // 1. When used on components that compose Text, sets the color of the text to the current accent.
-// 2. Defines accent color for descendant text components with `highContrast={true}`.
+// 2. Re-declares the accent role tokens (`--accent-ink`, `--accent-solid`, ...) that descendants read.
 const accentColorPropDef = {
   color: {
     type: 'enum',

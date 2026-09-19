@@ -89,16 +89,10 @@
  * =============================================================================
  */
 
-/* Solid variant */
+/* Solid variant. Gray fills with step 12 through the solid tokens */
 .rt-BaseMenuContent:where(.rt-variant-solid) :where(.rt-ComboboxItem[data-selected='true']) {
-  background-color: var(--accent-9);
-  color: var(--accent-contrast);
-}
-
-/* Solid high contrast */
-.rt-BaseMenuContent:where(.rt-variant-solid.rt-high-contrast) :where(.rt-ComboboxItem[data-selected='true']) {
-  background-color: var(--accent-12);
-  color: var(--accent-1);
+  background-color: var(--accent-solid);
+  color: var(--accent-solid-contrast);
 }
 
 /* Muted text follows the highlight colour. Badges keep their own colours.
@@ -117,7 +111,7 @@
   background-color: var(--accent-a4);
 }
 
-:where(.rt-BaseMenuContent.rt-variant-soft) .rt-ComboboxItem:where([data-selected='true']) :where(.rt-Text[data-accent-color='gray'], [data-accent-color='gray']:not(.rt-Badge)) {
+:where(.rt-BaseMenuContent.rt-variant-soft) .rt-ComboboxItem:where([data-selected='true']) :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
   color: var(--gray-11);
 }
 

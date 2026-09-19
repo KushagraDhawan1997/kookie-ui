@@ -1,7 +1,6 @@
 import type React from 'react';
 
 import { colorPropDef } from '../props/color.prop.js';
-import { highContrastPropDef } from '../props/high-contrast.prop.js';
 import { radiusPropDef } from '../props/radius.prop.js';
 
 import type { PropDef } from '../props/prop-def.js';
@@ -45,7 +44,6 @@ const contentVariants = ['solid', 'soft'] as const;
 const selectContentPropDefs = {
   variant: { type: 'enum', className: 'rt-variant', values: contentVariants, default: 'solid' },
   ...colorPropDef,
-  ...highContrastPropDef,
 } satisfies {
   variant: PropDef<(typeof contentVariants)[number]>;
 };

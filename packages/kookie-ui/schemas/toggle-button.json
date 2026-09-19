@@ -124,11 +124,6 @@
             "gray"
           ]
         },
-        "highContrast": {
-          "default": false,
-          "description": "High contrast mode for better accessibility",
-          "type": "boolean"
-        },
         "radius": {
           "description": "Border radius for the button",
           "type": "string",

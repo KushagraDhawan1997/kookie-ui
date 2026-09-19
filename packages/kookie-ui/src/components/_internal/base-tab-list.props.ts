@@ -1,5 +1,4 @@
 import { colorPropDef } from '../../props/color.prop.js';
-import { highContrastPropDef } from '../../props/high-contrast.prop.js';
 
 import type { PropDef } from '../../props/prop-def.js';
 
@@ -23,7 +22,6 @@ const baseTabListPropDefs = {
     responsive: true,
   },
   ...colorPropDef,
-  ...highContrastPropDef,
   panelBackground: { type: 'enum', values: panelBackgrounds, default: undefined },
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;

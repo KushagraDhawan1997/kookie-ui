@@ -1,5 +1,5 @@
 import { colorPropDef } from '../props/color.prop.js';
-import { highContrastPropDef } from '../props/high-contrast.prop.js';
+import { emphasisPropDef, emphases } from '../props/emphasis.prop.js';
 import { leadingTrimPropDef } from '../props/leading-trim.prop.js';
 import { widthPropDefs } from '../props/width.props.js';
 
@@ -48,7 +48,10 @@ const dataListItemPropDefs = {
 const dataListLabelPropDefs = {
   ...widthPropDefs,
   ...colorPropDef,
-  ...highContrastPropDef,
+  // Labels read as secondary copy by default; 'loud' gives them full-strength ink.
+  emphasis: { ...emphasisPropDef.emphasis, default: 'medium' },
+} satisfies {
+  emphasis: PropDef<(typeof emphases)[number]>;
 };
 
 export { dataListRootPropDefs, dataListItemPropDefs, dataListLabelPropDefs };

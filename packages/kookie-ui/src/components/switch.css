@@ -71,6 +71,7 @@
   transition: transform var(--transition-standard), box-shadow var(--transition-standard);
 
   &:where([data-state='checked']) {
+    background-color: var(--accent-solid-thumb);
     transform: translateX(var(--switch-thumb-translate-x));
   }
 }
@@ -130,15 +131,8 @@
   }
   
   &:where([data-state='checked'])::before {
-    background-color: var(--accent-9);
+    background-color: var(--accent-solid);
     box-shadow: none;
-  }
-
-  &:where(.rt-high-contrast) {
-    &:where([data-state='checked'])::before {
-      background-color: var(--accent-12);
-      box-shadow: none;
-    }
   }
   
 
@@ -168,13 +162,7 @@
   }
   
   &:where([data-state='checked'])::before {
-    background-color: var(--accent-9);
-  }
-
-  &:where(.rt-high-contrast) {
-    &:where([data-state='checked'])::before {
-      background-color: var(--accent-12);
-    }
+    background-color: var(--accent-solid);
   }
 }
 
@@ -201,15 +189,8 @@
   }
   
   &:where([data-state='checked'])::before {
-    background-color: var(--accent-9);
+    background-color: var(--accent-solid);
     box-shadow: none;
-  }
-
-  &:where(.rt-high-contrast) {
-    &:where([data-state='checked'])::before {
-      background-color: var(--accent-12);
-      box-shadow: none;
-    }
   }
   
 

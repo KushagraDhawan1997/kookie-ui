@@ -62,10 +62,9 @@ describe('DropdownMenu', () => {
       variant: 'soft',
       material: 'solid',
       color: 'red',
-      highContrast: true,
     });
     const menu = await screen.findByRole('menu');
-    expect(menu).toHaveClass('rt-r-size-1', 'rt-variant-soft', 'rt-high-contrast');
+    expect(menu).toHaveClass('rt-r-size-1', 'rt-variant-soft');
     expect(menu).toHaveAttribute('data-material', 'solid');
     expect(menu).toHaveAttribute('data-panel-background', 'solid');
     expect(menu).toHaveAttribute('data-accent-color', 'red');
