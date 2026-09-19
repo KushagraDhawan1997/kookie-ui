@@ -108,7 +108,6 @@
  ***************************************************************************************************/
 
 .rt-ScrollAreaScrollbar {
-  background-color: var(--gray-a3);
   border-radius: var(--scrollarea-scrollbar-border-radius);
 
   animation-duration: var(--motion-duration-micro);
@@ -135,13 +134,13 @@
 }
 
 .rt-ScrollAreaThumb {
-  background-color: var(--gray-a8);
+  background-color: var(--gray-a6);
   border-radius: inherit;
   transition: background-color var(--motion-duration-micro) var(--motion-ease-standard);
 
   @media (hover: hover) {
     &:where(:hover) {
-      background-color: var(--gray-a9);
+      background-color: var(--gray-a8);
     }
   }
 }
