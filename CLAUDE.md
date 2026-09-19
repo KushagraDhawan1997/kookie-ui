@@ -132,11 +132,12 @@ Build UI by composing small primitives instead of monolithic components:
 
 - **Default size**: Use `size="2"` when no specific size is required
 - **Variant preference**: `classic` > `soft` > `surface` > `outline` > `ghost`
-- **Gray buttons**: Always use `highContrast` prop
+- **Gray**: Gray fills with step 12 automatically; no extra prop is needed
+- **Muted text**: Use `emphasis="medium"` or `"quiet"` on Text, Heading, Blockquote, Code, DataList.Label; not `color="gray"`
 
 ```tsx
-<Button size="2" variant="classic" highContrast>Primary</Button>
-<Button size="2" variant="soft" color="gray" highContrast>Secondary</Button>
+<Button size="2" variant="classic">Primary</Button>
+<Button size="2" variant="soft" color="gray">Secondary</Button>
 ```
 
 ## Button Hierarchy
@@ -146,8 +147,8 @@ Every button pairing needs clear visual hierarchy:
 ```tsx
 // ✅ Good - Clear hierarchy
 <Flex gap="2">
-  <Button variant="soft" color="gray" highContrast>Cancel</Button>
-  <Button variant="classic" highContrast>Save</Button>
+  <Button variant="soft" color="gray">Cancel</Button>
+  <Button variant="classic">Save</Button>
 </Flex>
 
 // ❌ Bad - Inside classic Card, don't use classic Button
@@ -187,7 +188,7 @@ Never hardcode colors. Use theme-aware props:
 Icon buttons require `aria-label`:
 
 ```tsx
-<IconButton variant="soft" size="2" color="gray" highContrast aria-label="Search">
+<IconButton variant="soft" size="2" color="gray" aria-label="Search">
   <HugeiconsIcon icon={SearchIcon} strokeWidth={1.75} />
 </IconButton>
 ```
@@ -284,14 +285,13 @@ Always use multi-line formatting for 3+ props:
 <Button
   variant="classic"
   size="2"
-  highContrast
   loading={isSubmitting}
 >
   Save Changes
 </Button>
 
 // ❌ Bad - Long single line
-<Button variant="classic" size="2" highContrast loading={isSubmitting}>Save Changes</Button>
+<Button variant="classic" size="2" loading={isSubmitting}>Save Changes</Button>
 ```
 
 ## Strategic Variant Usage
@@ -305,8 +305,8 @@ Don't create variant catalogs:
 
 // ✅ Good - Variants in context
 <Flex gap="2">
-  <Button variant="soft" color="gray" highContrast>Cancel</Button>
-  <Button variant="classic" highContrast>Save</Button>
+  <Button variant="soft" color="gray">Cancel</Button>
+  <Button variant="classic">Save</Button>
 </Flex>
 ```
 
@@ -320,7 +320,7 @@ Use `variant="classic"` for Cards providing UI context:
     <Text size="2" weight="medium">
       Dashboard
     </Text>
-    <IconButton variant="soft" size="2" color="gray" highContrast aria-label="Settings">
+    <IconButton variant="soft" size="2" color="gray" aria-label="Settings">
       <HugeiconsIcon icon={SettingsIcon} strokeWidth={1.75} />
     </IconButton>
   </Flex>
@@ -340,7 +340,7 @@ Use `variant="classic"` for Cards providing UI context:
   }}
   code={source}
 >
-  <Button variant="soft" highContrast material="translucent">
+  <Button variant="soft" material="translucent">
     Action
   </Button>
 </PreviewBlock>

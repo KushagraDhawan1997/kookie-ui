@@ -157,7 +157,7 @@ Internal/shared base components live in `src/components/_internal/` and are not 
 - Components use a typed prop definition system in `src/props/prop-def.ts`
 - Most visual props support **responsive objects** (e.g., `size={{ initial: '1', md: '3' }}`)
 - Breakpoints: `initial`, `xs` (520px), `sm` (768px), `md` (1024px), `lg` (1280px), `xl` (1640px)
-- Common shared props: `color`, `highContrast`, `radius`, `variant`, `size`, `weight`, `material`, `asChild`
+- Common shared props: `color`, `radius`, `variant`, `size`, `weight`, `material`, `asChild`; `emphasis` (`loud` | `medium` | `quiet`) on Text, Heading, Blockquote, Code, DataList.Label
 - Margin props (`m`, `mx`, `my`, `mt`, `mr`, `mb`, `ml`) are extracted via `extractMarginProps()`
 - Layout props (`p`, `width`, `height`, `position`, etc.) are extracted via `extractProps()`
 
