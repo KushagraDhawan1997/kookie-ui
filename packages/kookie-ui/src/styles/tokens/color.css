@@ -1024,6 +1024,115 @@
 
 /* * * * * * * * * * * * * * * * * * * */
 /*                                     */
+/*             Accent roles            */
+/*                                     */
+/* * * * * * * * * * * * * * * * * * * */
+
+/*
+ * Role tokens for accent text and solid fills. There is no per-component contrast prop.
+ *
+ * Text reads an INK, strong by default. Gray ink is step 12. Chromatic ink is step 11
+ * mixed toward step 12, so an error still reads red instead of near-black. The muted and
+ * faint rungs back the `emphasis` prop ('medium' and 'quiet').
+ *
+ * Fills read a SOLID. Gray always fills with step 12 and inverted text; chromatic colours
+ * keep step 9. This is keyed on the colour being gray, never on a prop.
+ *
+ * Why these are declared on every [data-accent-color] element: a custom property that
+ * holds var(--accent-11) resolves on the element that declares it, and children inherit
+ * the resolved colour. So each element that changes the accent must re-declare the roles.
+ * Elements with data-accent-color="" mean "inherit the parent's accent" and are skipped,
+ * so they inherit the parent's resolved roles (chroma stays chroma, gray stays gray).
+ * The gray rule comes last so it wins over `.radix-themes` at equal specificity.
+ */
+
+/* Mode-dependent filters for solid fills. Chromatic fills change colour on hover (step 10);
+ * gray is already at step 12, so it gets a filter instead. */
+:where(.radix-themes) {
+  --solid-chroma-hover-filter: none;
+  --solid-chroma-active-filter: brightness(0.9) contrast(1.03);
+  --solid-chroma-open-filter: brightness(0.96) contrast(1.02);
+  --solid-gray-hover-filter: contrast(0.88) saturate(1.1) brightness(1.1);
+  --solid-gray-active-filter: brightness(0.92);
+  --solid-gray-open-filter: brightness(0.96);
+}
+:is(.dark, .dark-theme),
+:is(.dark, .dark-theme) :where(.radix-themes:not(.light, .light-theme)) {
+  --solid-chroma-hover-filter: none;
+  --solid-chroma-active-filter: brightness(0.88) contrast(1.03);
+  --solid-chroma-open-filter: brightness(0.95) contrast(1.02);
+  --solid-gray-hover-filter: contrast(0.88) saturate(1.3) brightness(1.18);
+  --solid-gray-active-filter: brightness(0.9);
+  --solid-gray-open-filter: brightness(0.95);
+}
+
+/* Gray ink ladder, independent of the accent. Used by `emphasis` when no colour is set. */
+.radix-themes {
+  --gray-ink: var(--gray-12);
+  --gray-ink-muted: var(--gray-a11);
+  --gray-ink-faint: var(--gray-a10);
+}
+
+/* Chromatic accent */
+.radix-themes,
+[data-accent-color]:where(:not([data-accent-color=''], [data-accent-color='gray'])) {
+  /* How far chromatic ink moves from step 11 toward step 12. */
+  --accent-ink-mix: 45%;
+
+  --accent-ink: color-mix(in oklab, var(--accent-11), var(--accent-12) var(--accent-ink-mix));
+  --accent-ink-muted: color-mix(in oklab, var(--accent-ink) 74%, transparent);
+  --accent-ink-faint: color-mix(in oklab, var(--accent-ink) 52%, transparent);
+
+  --accent-solid: var(--accent-9);
+  --accent-solid-a: var(--accent-a9);
+  --accent-solid-hover: var(--accent-10);
+  --accent-solid-hover-a: var(--accent-a10);
+  --accent-solid-active: var(--accent-11);
+  --accent-solid-active-a: var(--accent-a11);
+  --accent-solid-contrast: var(--accent-contrast);
+  --accent-solid-selection: var(--accent-7);
+  --accent-solid-selection-contrast: var(--accent-12);
+  /* Thin marks (Tabs indicator, RadioCards outline): light yellow uses step 10 here */
+  --accent-solid-indicator: var(--accent-indicator);
+  /* Thumb that sits on a solid fill (Switch, Slider) */
+  --accent-solid-thumb: white;
+  /* Badge chip on a solid-highlighted row (Sidebar) */
+  --accent-solid-badge: var(--accent-12);
+  --accent-solid-badge-contrast: var(--accent-1);
+
+  --accent-solid-hover-filter: var(--solid-chroma-hover-filter);
+  --accent-solid-active-filter: var(--solid-chroma-active-filter);
+  --accent-solid-open-filter: var(--solid-chroma-open-filter);
+}
+
+/* Gray accent: ink is step 12, fills are step 12 with inverted text */
+[data-accent-color='gray'] {
+  --accent-ink: var(--gray-12);
+  --accent-ink-muted: var(--gray-a11);
+  --accent-ink-faint: var(--gray-a10);
+
+  --accent-solid: var(--gray-12);
+  --accent-solid-a: var(--gray-a12);
+  --accent-solid-hover: var(--gray-12);
+  --accent-solid-hover-a: var(--gray-a12);
+  --accent-solid-active: var(--gray-12);
+  --accent-solid-active-a: var(--gray-a12);
+  --accent-solid-contrast: var(--gray-1);
+  --accent-solid-selection: var(--gray-a11);
+  --accent-solid-selection-contrast: var(--gray-1);
+  --accent-solid-indicator: var(--gray-12);
+  /* gray-12 is near-white in dark mode, so the thumb flips with it */
+  --accent-solid-thumb: var(--gray-1);
+  --accent-solid-badge: var(--gray-1);
+  --accent-solid-badge-contrast: var(--gray-12);
+
+  --accent-solid-hover-filter: var(--solid-gray-hover-filter);
+  --accent-solid-active-filter: var(--solid-gray-active-filter);
+  --accent-solid-open-filter: var(--solid-gray-open-filter);
+}
+
+/* * * * * * * * * * * * * * * * * * * */
+/*                                     */
 /*             Gray color              */
 /*                                     */
 /* * * * * * * * * * * * * * * * * * * */
