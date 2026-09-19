@@ -47,141 +47,56 @@
 
 /***************************************************************************************************
  *                                                                                                 *
- * DRILL-DOWN MODE                                                                                  *
+ * DRILL-DOWN MODE                                                                                 *
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* Root container that holds the main menu items */
+/*
+ * Only the levels on the navigation stack are mounted, and only the top level
+ * mounts its items, so no display rules are needed to hide inactive levels.
+ */
+
+/* The root wrapper does not affect layout in cascade mode */
 .rt-DropdownMenuDrillDownRoot {
   display: contents;
 }
 
-/* When a submenu is active, hide the ROOT's direct children (but not nested panels) */
-.rt-DropdownMenuDrillDownRoot:where([data-drill-down-active]) > * {
-  display: none !important;
+/* The top level is one box, so a navigation step animates a single element */
+.rt-DropdownMenuDrillDownRoot:where([data-submenu-behavior='drill-down']:not([data-drill-down-active])),
+.rt-DropdownMenuDrillDownPanel:where([data-drill-down-active]) {
+  display: flex;
+  flex-direction: column;
 }
 
-/* Keep nested panels visible (they use display: contents) - uses descendant selector to work with groups */
-.rt-DropdownMenuDrillDownRoot:where([data-drill-down-active]) :where(.rt-DropdownMenuDrillDownPanel) {
-  display: contents !important;
-}
-
-/* Keep root-level groups visible so their children (panels) can be shown */
-.rt-DropdownMenuDrillDownRoot:where([data-drill-down-active]) > :where(.rt-BaseMenuGroup) {
-  display: contents !important;
-}
-
-/* When the root is hidden, groups must also hide their non-panel children */
-.rt-DropdownMenuDrillDownRoot:where([data-drill-down-active]) > :where(.rt-BaseMenuGroup) > :where(*:not(.rt-DropdownMenuDrillDownPanel)) {
-  display: none !important;
-}
-
-/* Submenu panel in drill-down mode */
-.rt-DropdownMenuDrillDownPanel {
+/* A level below the top only holds the path to the active panel */
+.rt-DropdownMenuDrillDownPanel:where(:not([data-drill-down-active])) {
   display: contents;
 }
 
-/* Hide children of INACTIVE drill-down panels */
-.rt-DropdownMenuDrillDownPanel:where(:not([data-drill-down-active])) > * {
-  display: none !important;
+/* Custom content (not menu parts) of a level below the top stays hidden */
+.rt-DropdownMenuDrillDownRoot:where([data-drill-down-active]),
+.rt-DropdownMenuDrillDownPanel:where(:not([data-drill-down-active])) {
+  & > :where(:not(.rt-DropdownMenuDrillDownPanel, .rt-BaseMenuGroup, .rt-BaseMenuRadioGroup)) {
+    display: none;
+  }
 }
 
-/* But keep nested panels visible (they use display: contents) - uses descendant selector to work with groups */
-.rt-DropdownMenuDrillDownPanel:where(:not([data-drill-down-active])) :where(.rt-DropdownMenuDrillDownPanel) {
-  display: contents !important;
+/* Groups on the path to the active panel lay out like the level they belong to */
+.rt-DropdownMenuDrillDownRoot:where([data-drill-down-active]),
+.rt-DropdownMenuDrillDownPanel:where(:not([data-drill-down-active])) {
+  & > :where(.rt-BaseMenuGroup, .rt-BaseMenuRadioGroup) {
+    display: contents;
+  }
 }
 
-/* Keep groups visible so their children (panels) can be shown */
-.rt-DropdownMenuDrillDownPanel:where(:not([data-drill-down-active])) > :where(.rt-BaseMenuGroup) {
-  display: contents !important;
-}
-
-/* When a panel is inactive, groups must also hide their non-panel children */
-.rt-DropdownMenuDrillDownPanel:where(:not([data-drill-down-active])) > :where(.rt-BaseMenuGroup) > :where(*:not(.rt-DropdownMenuDrillDownPanel)) {
-  display: none !important;
-}
-
-/* Back button item */
+/* Back row: a regular menu item with a medium-weight label */
 .rt-DropdownMenuDrillDownBackItem {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-height: var(--base-menu-item-height);
-  padding-top: var(--base-menu-item-padding-y);
-  padding-bottom: var(--base-menu-item-padding-y);
-  padding-inline-start: var(--base-menu-item-padding-left);
-  padding-inline-end: var(--base-menu-item-padding-right);
-  box-sizing: border-box;
-  outline: none;
-  cursor: var(--cursor-menu-item);
-  user-select: none;
-  transition: var(--transition-menu);
-  font-weight: 500;
-
-  &:where(:focus-visible) {
-    outline: 2px solid var(--focus-8);
-    outline-offset: -2px;
-  }
-
-  /* Enhanced reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
+  font-weight: var(--font-weight-medium);
 }
 
-/* Back icon */
 .rt-DropdownMenuDrillDownBackIcon {
-  width: var(--indicator-icon-size-2);
-  height: var(--indicator-icon-size-2);
-  flex-shrink: 0;
-  color: var(--gray-12);
-}
-
-/* Back label */
-.rt-DropdownMenuDrillDownBackLabel {
-  color: var(--gray-12);
-}
-
-/* Solid variant - drill-down items hover (matches menu item [data-highlighted]) */
-.rt-BaseMenuContent:where(.rt-variant-solid) {
-  & :where(.rt-DropdownMenuDrillDownBackItem:hover),
-  & :where(.rt-DropdownMenuDrillDownBackItem:focus-visible),
-  & :where(.rt-DropdownMenuDrillDownSubTrigger:hover),
-  & :where(.rt-DropdownMenuDrillDownSubTrigger:focus-visible) {
-    background-color: var(--accent-9);
-    color: var(--accent-contrast);
-
-    & :where(.rt-DropdownMenuDrillDownBackIcon),
-    & :where(.rt-DropdownMenuDrillDownBackLabel),
-    & :where(.rt-BaseMenuSubTriggerIcon) {
-      color: var(--accent-contrast);
-    }
-  }
-}
-
-/* Soft variant - drill-down items hover (matches menu item [data-highlighted]) */
-.rt-BaseMenuContent:where(.rt-variant-soft) {
-  & :where(.rt-DropdownMenuDrillDownBackItem:hover),
-  & :where(.rt-DropdownMenuDrillDownBackItem:focus-visible),
-  & :where(.rt-DropdownMenuDrillDownSubTrigger:hover),
-  & :where(.rt-DropdownMenuDrillDownSubTrigger:focus-visible) {
-    background-color: var(--accent-4);
-  }
-
-  :where([data-panel-background='translucent']) & :where(.rt-DropdownMenuDrillDownBackItem:hover),
-  :where([data-panel-background='translucent']) & :where(.rt-DropdownMenuDrillDownBackItem:focus-visible),
-  :where([data-panel-background='translucent']) & :where(.rt-DropdownMenuDrillDownSubTrigger:hover),
-  :where([data-panel-background='translucent']) & :where(.rt-DropdownMenuDrillDownSubTrigger:focus-visible) {
-    background-color: var(--accent-a4);
-  }
-}
-
-/* Forced colors support */
-@media (forced-colors: active) {
-  .rt-DropdownMenuDrillDownBackItem:where(:focus-visible) {
-    outline: 2px solid Highlight;
-    outline-offset: 2px;
-  }
+  margin-inline-start: calc(-2px * var(--scaling));
+  margin-inline-end: 0;
 }
 
 /***************************************************************************************************
@@ -191,17 +106,22 @@
  ***************************************************************************************************/
 
 @media (prefers-reduced-motion: no-preference) {
-  /* Active panel items animate in based on direction */
-  .rt-DropdownMenuDrillDownPanel:where([data-drill-down-active][data-animation-direction='forward']) > :where(*:not(.rt-DropdownMenuDrillDownPanel)) {
+  .rt-DropdownMenuDrillDownPanel:where([data-drill-down-active][data-animation-direction='forward']) {
     animation: rt-drill-down-enter-from-right var(--motion-duration-small) var(--motion-ease-smooth);
   }
 
-  .rt-DropdownMenuDrillDownPanel:where([data-drill-down-active][data-animation-direction='backward']) > :where(*:not(.rt-DropdownMenuDrillDownPanel)) {
+  .rt-DropdownMenuDrillDownPanel:where([data-drill-down-active][data-animation-direction='backward']),
+  .rt-DropdownMenuDrillDownRoot:where([data-submenu-behavior='drill-down']:not([data-drill-down-active])[data-animation-direction='backward']) {
     animation: rt-drill-down-enter-from-left var(--motion-duration-small) var(--motion-ease-smooth);
   }
 
-  /* Root items animate when returning from a submenu */
-  .rt-DropdownMenuDrillDownRoot:where(:not([data-drill-down-active])[data-animation-direction='backward']) > :where(*:not(.rt-DropdownMenuDrillDownPanel)) {
-    animation: rt-drill-down-enter-from-left var(--motion-duration-small) var(--motion-ease-smooth);
+  /* Mirror the slide direction in right-to-left layouts */
+  :where([dir='rtl']) .rt-DropdownMenuDrillDownPanel:where([data-drill-down-active][data-animation-direction='forward']) {
+    animation-name: rt-drill-down-enter-from-left;
+  }
+
+  :where([dir='rtl']) .rt-DropdownMenuDrillDownPanel:where([data-drill-down-active][data-animation-direction='backward']),
+  :where([dir='rtl']) .rt-DropdownMenuDrillDownRoot:where([data-submenu-behavior='drill-down']:not([data-drill-down-active])[data-animation-direction='backward']) {
+    animation-name: rt-drill-down-enter-from-right;
   }
 }

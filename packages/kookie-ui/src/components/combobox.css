@@ -1,19 +1,25 @@
-/* 
- * Combobox styles - optimized for performance.
- * Uses CSS :hover for visual feedback (disablePointerSelection enabled in JS).
+/*
+ * Combobox styles.
+ * The highlighted option is cmdk's [data-selected='true'], set by both pointer
+ * and keyboard. There is no separate :hover highlight.
  */
 @import './_internal/base-menu.css';
 @import './text-field.css';
 
-/* Reset Popover.Content padding - base-menu handles padding via BaseMenuViewport */
+/* The surface renders Radix Popover content directly with the BaseMenu classes
+ * only, so these are the popover behaviours it still needs. Padding lives on
+ * the search row and the viewport. */
 .rt-ComboboxContent {
-  padding: 0 !important;
+  --combobox-list-max-height: calc(300px * var(--scaling));
+
+  min-width: var(--radix-popover-trigger-width);
   max-height: var(--radix-popover-content-available-height);
-  display: flex;
-  flex-direction: column;
+  transform-origin: var(--radix-popover-content-transform-origin);
+  outline: 0;
 }
 
-/* Hide content when closed (forceMount keeps items mounted for label registration) */
+/* forceMount keeps closed content in the DOM (and its positioning and dismiss
+ * listeners running); hide it while closed. */
 .rt-ComboboxContent:where([data-state='closed']) {
   visibility: hidden;
   position: absolute;
@@ -25,59 +31,53 @@
   flex-direction: column;
   flex: 1;
   min-height: 0;
+  outline: 0;
 }
 
 .rt-ComboboxViewport {
-  padding-top: 0 !important;
+  padding-top: 0;
+  /* The outer .rt-ComboboxScrollArea is the only scroller. */
+  overflow: visible;
 }
 
-/* Simplified scroll area - native overflow */
+/* The search row owns the top padding, so without it the viewport needs it back. */
+:where(.rt-ComboboxCommand:not(:has(.rt-ComboboxSearch))) .rt-ComboboxViewport {
+  padding-top: var(--base-menu-content-padding);
+}
+
 .rt-ComboboxScrollArea {
   flex: 1;
   min-height: 0;
   overflow: auto;
-  max-height: 300px;
+  overscroll-behavior: contain;
+  max-height: var(--combobox-list-max-height);
+  scrollbar-width: thin;
+  scrollbar-color: var(--gray-a8) transparent;
 }
 
-/* Override base-menu disabled styles for cmdk compatibility.
- * cmdk adds data-disabled="false" to enabled items, but base-menu.css
- * applies disabled styles to any element with [data-disabled] attribute.
- * This override restores normal appearance for enabled items. */
-.rt-ComboboxItem:where([data-disabled="false"]) {
+.rt-ComboboxList {
+  outline: 0;
+}
+
+/* cmdk sets data-disabled="false" on enabled items, and base-menu.css styles any
+ * [data-disabled] as disabled. Restore the enabled look. */
+.rt-ComboboxItem:where([data-disabled='false']) {
   color: inherit;
   cursor: var(--cursor-menu-item);
 }
 
-/* Size adjustments for items */
-.rt-BaseMenuContent:where(.rt-r-size-1) :where(.rt-ComboboxItem) {
+/* Room for the check indicator on every size */
+.rt-BaseMenuContent:where(.rt-r-size-1) :where(.rt-ComboboxItem, .rt-ComboboxLabel) {
   --base-menu-item-padding-left: calc(var(--space-5) / 1.2);
 }
 
-.rt-BaseMenuContent:where(.rt-r-size-1) :where(.rt-ComboboxLabel) {
-  --base-menu-item-padding-left: calc(var(--space-5) / 1.2);
-}
-
-.rt-BaseMenuContent:where(.rt-r-size-2) :where(.rt-ComboboxItem),
-.rt-BaseMenuContent:where(.rt-r-size-3) :where(.rt-ComboboxItem) {
+.rt-BaseMenuContent:where(.rt-r-size-2, .rt-r-size-3) :where(.rt-ComboboxItem, .rt-ComboboxLabel) {
   --base-menu-item-padding-left: var(--space-5);
 }
 
-.rt-BaseMenuContent:where(.rt-r-size-2) :where(.rt-ComboboxLabel),
-.rt-BaseMenuContent:where(.rt-r-size-3) :where(.rt-ComboboxLabel) {
-  --base-menu-item-padding-left: var(--space-5);
-}
-
-/* Sticky search input */
+/* Search row: shares the surface background, no second panel */
 .rt-ComboboxSearch {
-  position: sticky;
-  top: 0;
-  z-index: 1;
   padding: var(--base-menu-content-padding);
-  background-color: var(--color-panel);
-}
-
-:where([data-panel-background='translucent']) .rt-ComboboxSearch {
-  background-color: var(--color-panel-translucent);
 }
 
 .rt-ComboboxSearch :where(.rt-ComboboxInputRoot) {
@@ -85,109 +85,48 @@
 }
 
 /* =============================================================================
- * HOVER STYLES - CSS-based hover for performance (disablePointerSelection)
- * These replace cmdk's React state-based [data-selected] on hover.
+ * HIGHLIGHT - [data-selected='true'] from cmdk (pointer and keyboard)
  * =============================================================================
  */
 
-/* Base hover state - applies to all variants
- * Note: cmdk adds data-disabled="false" to enabled items, so we exclude only truly disabled items
- * :hover is inside :where() to maintain low specificity */
-.rt-ComboboxItem:where(:not([data-disabled="true"], [data-disabled=""]):hover) {
-  cursor: var(--cursor-menu-item);
-}
-
-/* Solid variant - hover */
-:where(.rt-BaseMenuContent.rt-variant-solid) .rt-ComboboxItem:where(:not([data-disabled="true"], [data-disabled=""]):hover) {
-  background-color: var(--accent-9);
-  color: var(--accent-contrast);
-}
-
-:where(.rt-BaseMenuContent.rt-variant-solid) .rt-ComboboxItem:where(:not([data-disabled="true"], [data-disabled=""]):hover) * {
-  color: var(--accent-contrast) !important;
-}
-
-/* Soft variant - hover */
-:where(.rt-BaseMenuContent.rt-variant-soft) .rt-ComboboxItem:where(:not([data-disabled="true"], [data-disabled=""]):hover) {
-  background-color: var(--accent-4);
-}
-
-:where([data-panel-background='translucent'] .rt-BaseMenuContent.rt-variant-soft) .rt-ComboboxItem:where(:not([data-disabled="true"], [data-disabled=""]):hover) {
-  background-color: var(--accent-a4);
-}
-
-/* High contrast solid - hover */
-:where(.rt-BaseMenuContent.rt-variant-solid.rt-high-contrast) .rt-ComboboxItem:where(:not([data-disabled="true"], [data-disabled=""]):hover) {
-  background-color: var(--accent-12);
-  color: var(--accent-1);
-}
-
-:where(.rt-BaseMenuContent.rt-variant-solid.rt-high-contrast) .rt-ComboboxItem:where(:not([data-disabled="true"], [data-disabled=""]):hover) * {
-  color: var(--accent-1) !important;
-}
-
-/* High contrast solid with accent color - hover */
-:where(.rt-BaseMenuContent.rt-variant-solid.rt-high-contrast[data-accent-color]) .rt-ComboboxItem:where(:not([data-disabled="true"], [data-disabled=""]):hover) {
-  background-color: var(--accent-9);
-  color: var(--accent-contrast);
-}
-
-:where(.rt-BaseMenuContent.rt-variant-solid.rt-high-contrast[data-accent-color]) .rt-ComboboxItem:where(:not([data-disabled="true"], [data-disabled=""]):hover) * {
-  color: var(--accent-contrast) !important;
-}
-
-/* =============================================================================
- * KEYBOARD SELECTION STYLES - [data-selected] from cmdk keyboard navigation
- * These apply when using keyboard to navigate (arrow keys).
- * =============================================================================
- */
-
-/* Solid variant - keyboard selected */
+/* Solid variant */
 .rt-BaseMenuContent:where(.rt-variant-solid) :where(.rt-ComboboxItem[data-selected='true']) {
   background-color: var(--accent-9);
   color: var(--accent-contrast);
 }
 
-.rt-BaseMenuContent:where(.rt-variant-solid) :where(.rt-ComboboxItem[data-selected='true']) * {
-  color: var(--accent-contrast) !important;
-}
-
-/* Soft variant - keyboard selected */
-.rt-BaseMenuContent:where(.rt-variant-soft) :where(.rt-ComboboxItem[data-selected='true']) {
-  background-color: var(--accent-4);
-}
-
-:where([data-panel-background='translucent'], [data-material='translucent']) .rt-BaseMenuContent:where(.rt-variant-soft) :where(.rt-ComboboxItem[data-selected='true']) {
-  background-color: var(--accent-a4);
-}
-
-/* High contrast solid - keyboard selected */
+/* Solid high contrast */
 .rt-BaseMenuContent:where(.rt-variant-solid.rt-high-contrast) :where(.rt-ComboboxItem[data-selected='true']) {
   background-color: var(--accent-12);
   color: var(--accent-1);
 }
 
-.rt-BaseMenuContent:where(.rt-variant-solid.rt-high-contrast) :where(.rt-ComboboxItem[data-selected='true']) * {
-  color: var(--accent-1) !important;
+/* Muted text follows the highlight colour. Badges keep their own colours.
+ * Same specificity as the Text and base-menu colour rules; wins by coming later. */
+:where(.rt-BaseMenuContent.rt-variant-solid) .rt-ComboboxItem:where([data-selected='true']) :where(.rt-Text, [data-accent-color='gray']:not(.rt-Badge)) {
+  color: inherit;
 }
 
-/* High contrast solid with accent color - keyboard selected */
-.rt-BaseMenuContent:where(.rt-variant-solid.rt-high-contrast[data-accent-color]) :where(.rt-ComboboxItem[data-selected='true']) {
-  background-color: var(--accent-9);
-  color: var(--accent-contrast);
+/* Soft variant */
+.rt-BaseMenuContent:where(.rt-variant-soft) :where(.rt-ComboboxItem[data-selected='true']) {
+  background-color: var(--accent-4);
 }
 
-.rt-BaseMenuContent:where(.rt-variant-solid.rt-high-contrast[data-accent-color]) :where(.rt-ComboboxItem[data-selected='true']) * {
-  color: var(--accent-contrast) !important;
+.rt-BaseMenuContent:where(.rt-variant-soft):where([data-panel-background='translucent'], [data-material='translucent'])
+  :where(.rt-ComboboxItem[data-selected='true']) {
+  background-color: var(--accent-a4);
+}
+
+:where(.rt-BaseMenuContent.rt-variant-soft) .rt-ComboboxItem:where([data-selected='true']) :where(.rt-Text[data-accent-color='gray'], [data-accent-color='gray']:not(.rt-Badge)) {
+  color: var(--gray-11);
 }
 
 /* =============================================================================
- * DISABLED STYLES
+ * DISABLED
  * =============================================================================
  */
 
-/* Only match truly disabled items - cmdk sets data-disabled="false" for enabled items */
-.rt-ComboboxItem:where([data-disabled="true"], [data-disabled=""]) {
+.rt-ComboboxItem:where([data-disabled='true']) {
   color: var(--gray-a8);
   cursor: default;
   pointer-events: none;
@@ -199,4 +138,12 @@
   text-align: center;
   color: var(--gray-a11);
   font-size: var(--font-size-2);
+}
+
+/* Items never take DOM focus, so the base menu :focus-visible rule never matches. */
+@media (forced-colors: active) {
+  .rt-ComboboxItem:where([data-selected='true']) {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
 }

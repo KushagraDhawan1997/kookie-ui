@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { DropdownMenu, Button, Flex, Box, Text, Heading, Slider, VirtualMenu, type VirtualMenuRenderItemProps } from '@kushagradhawan/kookie-ui';
+import { DropdownMenu, ContextMenu, Button, Card, Flex, Box, Text, Heading, Slider, VirtualMenu, type VirtualMenuRenderItemProps } from '@kushagradhawan/kookie-ui';
 
 // Custom item component for variable height example
 type VariableHeightItem = { id: string; type: 'header' | 'item'; label: string };
@@ -39,6 +39,7 @@ export default function DropdownMenuTest() {
   const [collisionPadding, setCollisionPadding] = React.useState(10);
   const [sideOffset, setSideOffset] = React.useState(1);
   const [alignOffset, setAlignOffset] = React.useState(0);
+  const [lastSelected, setLastSelected] = React.useState('');
 
   const groupedDrilldownTree = (
     <>
@@ -115,7 +116,7 @@ export default function DropdownMenuTest() {
                 label: `Item ${i + 1}`
               }))}
               itemLabel={(item) => item.label}
-              onSelect={(item) => console.log('Selected:', item)}
+              onSelect={(item) => setLastSelected(item.label)}
               style={{ height: 300 }}
             />
           </DropdownMenu.Content>
@@ -138,7 +139,7 @@ export default function DropdownMenuTest() {
           </DropdownMenu.Trigger>
           <DropdownMenu.Content style={{ minWidth: 220, maxHeight: 300, overflowY: 'auto' }}>
             {Array.from({ length: 200 }, (_, i) => (
-              <DropdownMenu.Item key={i} onSelect={() => console.log('Selected:', i + 1)}>
+              <DropdownMenu.Item key={i} onSelect={() => setLastSelected(`Item ${i + 1}`)}>
                 Item {i + 1}
               </DropdownMenu.Item>
             ))}
@@ -168,7 +169,7 @@ export default function DropdownMenuTest() {
               }))}
               renderItem={VariableHeightMenuItem}
               estimatedItemSize={(index) => index % 10 === 0 ? 48 : 36}
-              onSelect={(item) => console.log('Selected:', item)}
+              onSelect={(item) => setLastSelected(item.label)}
               style={{ height: 300 }}
             />
           </DropdownMenu.Content>
@@ -532,6 +533,13 @@ export default function DropdownMenuTest() {
         </Box>
       </Flex>
 
+      <Text as="p" size="2" color="gray" mb="6">
+        Last selected: {lastSelected || 'nothing yet'}
+      </Text>
+
+      <DrillDownRegressionChecks />
+      <ContextMenuChecks />
+
       {/* Info Box */}
       <Box p="4" style={{ background: 'var(--gray-3)', borderRadius: 'var(--radius-3)' }}>
         <Heading size="3" mb="2">API Reference</Heading>
@@ -558,6 +566,141 @@ export default function DropdownMenuTest() {
           </Text>
         </Box>
       </Box>
+    </Box>
+  );
+}
+
+/**
+ * Manual checks for the drill-down rework. Each row names what to verify.
+ */
+function DrillDownRegressionChecks() {
+  const [shareOpen, setShareOpen] = React.useState(false);
+  const [format, setFormat] = React.useState('png');
+
+  return (
+    <Box mb="6" p="4" style={{ background: 'var(--amber-3)', borderRadius: 'var(--radius-3)', border: '2px solid var(--amber-6)' }}>
+      <Heading size="4" mb="2" color="amber">Drill-Down Regression Checks</Heading>
+      <Flex direction="column" gap="2" mb="4">
+        <Text size="2">1. Keyboard: open with Enter, ArrowDown to "Share", ArrowRight opens it with focus on "Email".</Text>
+        <Text size="2">2. ArrowLeft or Escape goes back one level and focuses "Share". Escape at the root closes.</Text>
+        <Text size="2">3. Typeahead "e" inside "Share" lands on "Email", never a hidden root item.</Text>
+        <Text size="2">4. "Export" sits inside a RadioGroup and still opens. "Archive" is disabled and never opens.</Text>
+        <Text size="2">5. Scroll down, open "Long list", go back: the scroll position returns. Close and reopen: the menu starts at the root.</Text>
+        <Text size="2">6. The external button opens "Share" through the controlled Sub open prop.</Text>
+      </Flex>
+      <Flex gap="3" align="center" wrap="wrap">
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger>
+            <Button variant="soft" color="amber">Drill-down checks</Button>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content submenuBehavior="drill-down" size={{ initial: '1', md: '2' }} style={{ minWidth: 240, maxHeight: 320 }}>
+            <DropdownMenu.Item shortcut="⌘ E">Edit</DropdownMenu.Item>
+            <DropdownMenu.Item shortcut="⌘ D">Duplicate</DropdownMenu.Item>
+            <DropdownMenu.Sub label="Share" open={shareOpen} onOpenChange={setShareOpen}>
+              <DropdownMenu.SubTrigger>Share</DropdownMenu.SubTrigger>
+              <DropdownMenu.SubContent>
+                <DropdownMenu.Item>Email</DropdownMenu.Item>
+                <DropdownMenu.Item>Messages</DropdownMenu.Item>
+                <DropdownMenu.Sub label="More">
+                  <DropdownMenu.SubTrigger>More</DropdownMenu.SubTrigger>
+                  <DropdownMenu.SubContent>
+                    <DropdownMenu.Item>Notes</DropdownMenu.Item>
+                    <DropdownMenu.Item>Reminders</DropdownMenu.Item>
+                  </DropdownMenu.SubContent>
+                </DropdownMenu.Sub>
+              </DropdownMenu.SubContent>
+            </DropdownMenu.Sub>
+            <DropdownMenu.Separator />
+            <DropdownMenu.RadioGroup value={format} onValueChange={setFormat}>
+              <DropdownMenu.RadioItem value="png">PNG</DropdownMenu.RadioItem>
+              <DropdownMenu.RadioItem value="svg">SVG</DropdownMenu.RadioItem>
+              <DropdownMenu.Sub label="Export">
+                <DropdownMenu.SubTrigger>Export</DropdownMenu.SubTrigger>
+                <DropdownMenu.SubContent>
+                  <DropdownMenu.Item>Current page</DropdownMenu.Item>
+                  <DropdownMenu.Item>All pages</DropdownMenu.Item>
+                </DropdownMenu.SubContent>
+              </DropdownMenu.Sub>
+            </DropdownMenu.RadioGroup>
+            <DropdownMenu.Sub>
+              <DropdownMenu.SubTrigger disabled>Archive</DropdownMenu.SubTrigger>
+              <DropdownMenu.SubContent>
+                <DropdownMenu.Item>Never shown</DropdownMenu.Item>
+              </DropdownMenu.SubContent>
+            </DropdownMenu.Sub>
+            <DropdownMenu.Separator />
+            {Array.from({ length: 12 }, (_, i) => (
+              <DropdownMenu.Item key={i}>Filler {i + 1}</DropdownMenu.Item>
+            ))}
+            <DropdownMenu.Sub label="Long list">
+              <DropdownMenu.SubTrigger>Long list</DropdownMenu.SubTrigger>
+              <DropdownMenu.SubContent>
+                {Array.from({ length: 20 }, (_, i) => (
+                  <DropdownMenu.Item key={i}>Entry {i + 1}</DropdownMenu.Item>
+                ))}
+              </DropdownMenu.SubContent>
+            </DropdownMenu.Sub>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
+        <Button variant="soft" color="gray" highContrast onClick={() => setShareOpen((open) => !open)}>
+          Toggle Share (controlled): {shareOpen ? 'open' : 'closed'}
+        </Button>
+      </Flex>
+    </Box>
+  );
+}
+
+/**
+ * Manual checks for ContextMenu: responsive size, submenu alignment and virtualization.
+ */
+function ContextMenuChecks() {
+  const [picked, setPicked] = React.useState('');
+
+  return (
+    <Box mb="6" p="4" style={{ background: 'var(--iris-3)', borderRadius: 'var(--radius-3)', border: '2px solid var(--iris-6)' }}>
+      <Heading size="4" mb="2" color="iris">ContextMenu Checks</Heading>
+      <Flex direction="column" gap="2" mb="4">
+        <Text size="2">1. The menu opens at the pointer with its first item on the pointer, at every width (responsive size).</Text>
+        <Text size="2">2. "Arrange" opens with its first item level with the trigger.</Text>
+        <Text size="2">3. The virtualized list scrolls once, with one menu role.</Text>
+      </Flex>
+      <Flex gap="3" wrap="wrap">
+        <ContextMenu.Root>
+          <ContextMenu.Trigger>
+            <Card variant="classic" size="2">
+              <Text size="2">Right-click: responsive size</Text>
+            </Card>
+          </ContextMenu.Trigger>
+          <ContextMenu.Content size={{ initial: '2', md: '1' }}>
+            <ContextMenu.Item shortcut="⌘ C">Copy</ContextMenu.Item>
+            <ContextMenu.Item shortcut="⌘ V" disabled>
+              Paste
+            </ContextMenu.Item>
+            <ContextMenu.Sub>
+              <ContextMenu.SubTrigger>Arrange</ContextMenu.SubTrigger>
+              <ContextMenu.SubContent>
+                <ContextMenu.Item>Bring forward</ContextMenu.Item>
+                <ContextMenu.Item>Send backward</ContextMenu.Item>
+              </ContextMenu.SubContent>
+            </ContextMenu.Sub>
+          </ContextMenu.Content>
+        </ContextMenu.Root>
+        <ContextMenu.Root>
+          <ContextMenu.Trigger>
+            <Card variant="classic" size="2">
+              <Text size="2">Right-click: virtualized {picked && `(${picked})`}</Text>
+            </Card>
+          </ContextMenu.Trigger>
+          <ContextMenu.Content virtualized size="1">
+            <VirtualMenu
+              items={Array.from({ length: 300 }, (_, i) => ({ id: String(i), label: `Layer ${i + 1}` }))}
+              itemLabel={(item) => item.label}
+              onSelect={(item) => setPicked(item.label)}
+              style={{ height: 200, width: 180 }}
+            />
+          </ContextMenu.Content>
+        </ContextMenu.Root>
+      </Flex>
     </Box>
   );
 }

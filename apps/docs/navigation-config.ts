@@ -51,6 +51,10 @@ export const docsNavigation: DocsNavigationConfig = {
           title: 'Combobox',
         },
         {
+          href: '/docs/context-menu',
+          title: 'Context Menu',
+        },
+        {
           href: '/docs/dropdown-menu',
           title: 'Dropdown Menu',
         },

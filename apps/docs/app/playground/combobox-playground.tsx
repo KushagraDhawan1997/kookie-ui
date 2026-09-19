@@ -95,34 +95,35 @@ export default function ComboBoxPlayground({
   const [loop, setLoop] = React.useState(true);
   const [value, setValue] = React.useState<string | null>('france');
   const resolvedContentWidth = triggerWidth === 'fit-content' ? '240px' : triggerWidth;
+  const triggerColor = color === 'theme' ? undefined : color;
 
   const generateCode = () => {
     const rootProps = [`size="${size}"`];
     if (highContrast) rootProps.push('highContrast');
     if (disabled) rootProps.push('disabled');
 
-    const triggerProps = [`variant="${variant}"`];
+    const triggerProps = ['aria-label="Country"', `variant="${variant}"`];
     if (color !== 'theme') triggerProps.push(`color="${color}"`);
     if (triggerWidth !== 'fit-content') triggerProps.push(`width="${triggerWidth}"`);
 
     const listMarkup = countriesByContinent
       .map(
-        (group) => `        <Combobox.Group>
-          <Combobox.Label>${group.continent}</Combobox.Label>
+        (group) => `          <Combobox.Group>
+            <Combobox.Label>${group.continent}</Combobox.Label>
 ${group.countries
   .map(
     (country) => {
       const iconName = iconNameMap.get(country.icon) || 'Location01Icon';
-      return `          <Combobox.Item value="${country.value}">
-            <Flex gap="2" align="center">
-              <HugeiconsIcon icon={${iconName}} size={16} strokeWidth={1.75} />
-              ${country.label}
-            </Flex>
-          </Combobox.Item>`;
+      return `            <Combobox.Item value="${country.value}">
+              <Flex gap="2" align="center">
+                <HugeiconsIcon icon={${iconName}} strokeWidth={1.75} />
+                ${country.label}
+              </Flex>
+            </Combobox.Item>`;
     },
   )
   .join('\n')}
-        </Combobox.Group>`,
+          </Combobox.Group>`,
       )
       .join('\n');
 
@@ -130,7 +131,8 @@ ${group.countries
     const allIcons = countriesByContinent.flatMap((g) => g.countries.map((c) => iconNameMap.get(c.icon) || 'Location01Icon'));
     const uniqueIcons = [...new Set(allIcons)];
 
-    return `import { Combobox, Flex } from '@kushagradhawan/kookie-ui';
+    return `import React from 'react';
+import { Combobox, Flex } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ${uniqueIcons.join(', ')} } from '@hugeicons/core-free-icons';
 
@@ -172,42 +174,58 @@ const countriesByContinent = [
   },
 ];
 
-// Flatten for quick lookup - displayValue function resolves labels from data
+// Flatten for quick lookup; module scope keeps displayValue stable
 const allCountries = countriesByContinent.flatMap((g) => g.countries);
-const getCountryLabel = (value: string | null) => 
+const getCountryLabel = (value: string | null) =>
   allCountries.find((c) => c.value === value)?.label;
 
-const [value, setValue] = React.useState<string | null>(${value ? `'${value}'` : 'null'});
+export function CountryPicker() {
+  const [value, setValue] = React.useState<string | null>(${value ? `'${value}'` : 'null'});
 
-return (
-  <Combobox.Root 
-    ${rootProps.join(' ')} 
-    value={value} 
-    onValueChange={setValue} 
-    loop={${loop}}
-    displayValue={getCountryLabel}
-  >
-    <Combobox.Trigger ${triggerProps.join(' ')}>
-      <Combobox.Value placeholder="Select a country" />
-    </Combobox.Trigger>
-    <Combobox.Content width="${resolvedContentWidth}" variant="${contentVariant}">
-      <Combobox.Input${inputVariant !== 'surface' ? ` variant="${inputVariant}"` : ''} placeholder="Search countries..." />
-      <Combobox.List>
+  return (
+    <Combobox.Root
+      ${rootProps.join('\n      ')}
+      value={value}
+      onValueChange={setValue}
+      loop={${loop}}
+      displayValue={getCountryLabel}
+    >
+      <Combobox.Trigger
+        ${triggerProps.join('\n        ')}
+      >
+        <Combobox.Value placeholder="Select a country" />
+      </Combobox.Trigger>
+      <Combobox.Content width="${resolvedContentWidth}" variant="${contentVariant}">
+        <Combobox.Input${inputVariant !== 'surface' ? ` variant="${inputVariant}"` : ''} placeholder="Search countries..." />
+        <Combobox.List>
 ${listMarkup}
-        <Combobox.Empty>No results found</Combobox.Empty>
-      </Combobox.List>
-    </Combobox.Content>
-  </Combobox.Root>
-);
+          <Combobox.Empty>No results found</Combobox.Empty>
+        </Combobox.List>
+      </Combobox.Content>
+    </Combobox.Root>
+  );
+}
 
-// Performance tip: Using displayValue with a lookup function is more performant
-// than forceMount, as items only mount when the dropdown opens.
-// The displayValue function receives the current value and returns the label.`;
+// displayValue resolves the trigger label from data, so items only mount when
+// the dropdown opens. Search matches each item's visible text.`;
   };
 
   const component = (
-    <Combobox.Root size={size} value={value} onValueChange={setValue} loop={loop} disabled={disabled} highContrast={highContrast} displayValue={getCountryLabel}>
-      <Combobox.Trigger variant={variant} color={color === 'theme' ? undefined : (color as any)} width={triggerWidth === 'fit-content' ? undefined : triggerWidth}>
+    <Combobox.Root
+      size={size}
+      value={value}
+      onValueChange={setValue}
+      loop={loop}
+      disabled={disabled}
+      highContrast={highContrast}
+      displayValue={getCountryLabel}
+    >
+      <Combobox.Trigger
+        aria-label="Country"
+        variant={variant}
+        color={triggerColor}
+        width={triggerWidth === 'fit-content' ? undefined : triggerWidth}
+      >
         <Combobox.Value placeholder="Select a country" />
       </Combobox.Trigger>
       <Combobox.Content width={resolvedContentWidth} variant={contentVariant}>
@@ -221,7 +239,7 @@ ${listMarkup}
                 return (
                   <Combobox.Item key={country.value} value={country.value}>
                     <Flex gap="2" align="center">
-                      <HugeiconsIcon icon={Icon} size={16} strokeWidth={1.75} />
+                      <HugeiconsIcon icon={Icon} strokeWidth={1.75} />
                       {country.label}
                     </Flex>
                   </Combobox.Item>

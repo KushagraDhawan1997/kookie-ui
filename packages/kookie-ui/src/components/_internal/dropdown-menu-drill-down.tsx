@@ -1,213 +1,319 @@
 'use client';
 
 import * as React from 'react';
-import type { Breakpoint, Responsive } from '../../props/prop-def.js';
+
 import type { submenuBehaviors } from './base-menu.props.js';
-import { useBreakpoint } from '../../hooks/use-breakpoint.js';
 
 type SubmenuBehavior = (typeof submenuBehaviors)[number];
 
-/**
- * Resolves a responsive value to its current value based on the breakpoint.
- * Falls back through smaller breakpoints if the current one isn't defined.
+/*
+ * Drill-down navigation for DropdownMenu.
+ *
+ * The stack of open submenus lives in a small external store rather than in
+ * React state, so each part subscribes only to the slice it renders from:
+ * a panel re-renders when it enters or leaves the stack, a Sub when its own
+ * open state changes, and nothing else on the path re-renders on navigation.
+ *
+ * Only the levels on the stack mount their children, and only the top level
+ * mounts its items (see `DrillDownLevelContext`). That keeps the Radix item
+ * collection limited to what is on screen, so roving focus and typeahead
+ * never land on a hidden item.
  */
-function resolveResponsiveValue<T>(
-  value: T | Partial<Record<Breakpoint, T>> | undefined,
-  currentBreakpoint: Breakpoint,
-  defaultValue: T
-): T {
-  if (value === undefined || value === null) {
-    return defaultValue;
-  }
-
-  // Non-object values are returned directly
-  if (typeof value !== 'object') {
-    return value;
-  }
-
-  const map = value as Partial<Record<Breakpoint, T>>;
-
-  // Check if current breakpoint has a value
-  if (map[currentBreakpoint] !== undefined) {
-    return map[currentBreakpoint] as T;
-  }
-
-  // Fall back through smaller breakpoints
-  const bpOrder: Breakpoint[] = ['xl', 'lg', 'md', 'sm', 'xs', 'initial'];
-  const startIdx = bpOrder.indexOf(currentBreakpoint);
-
-  for (let i = startIdx + 1; i < bpOrder.length; i++) {
-    const bp = bpOrder[i];
-    if (map[bp] !== undefined) {
-      return map[bp] as T;
-    }
-  }
-
-  return defaultValue;
-}
-
-// ============================================================================
-// DrillDown Context
-// ============================================================================
 
 type AnimationDirection = 'forward' | 'backward' | null;
+type Modality = 'keyboard' | 'pointer';
 
-/**
- * Stable actions context - callbacks that don't change identity.
- * Separated from state to prevent unnecessary re-renders of components
- * that only need to call push/pop/reset.
- */
-interface DrillDownActionsContextValue {
-  /** Navigate into a submenu */
-  push: (id: string) => void;
-  /** Navigate back to parent menu */
-  pop: () => void;
-  /** Reset to root menu */
-  reset: () => void;
+interface StackEntry {
+  id: string;
+  /** Accessible name of the submenu, taken from its trigger text */
+  name: string;
+  /** Scroll position of the parent level when this entry was pushed */
+  scrollTop: number;
 }
 
-/**
- * Mutable state context - values that change when navigation occurs.
- * Subscribers to this context will re-render on stack changes.
- */
-interface DrillDownStateContextValue {
-  /** Current submenu behavior mode */
-  behavior: SubmenuBehavior;
-  /** Whether the breakpoint has been resolved (client-side only) */
-  ready: boolean;
-  /** Stack of active submenu IDs. Empty means root menu is shown. */
-  stack: string[];
-  /** Check if a specific submenu is the currently active one */
-  isActive: (id: string) => boolean;
-  /** Check if we're at root level (no submenus open) */
-  isRoot: boolean;
-  /** The currently active submenu ID (or null if at root) */
-  currentId: string | null;
-  /** Current animation direction for transitions */
-  animationDirection: AnimationDirection;
+type LastChange =
+  | { type: 'push'; id: string; modality: Modality | null }
+  | { type: 'pop'; id: string; modality: Modality | null; scrollTop: number }
+  | { type: 'reset' };
+
+interface DrillDownState {
+  stack: StackEntry[];
+  direction: AnimationDirection;
+  lastChange: LastChange | null;
 }
 
-const DrillDownActionsContext = React.createContext<DrillDownActionsContextValue | null>(null);
-const DrillDownStateContext = React.createContext<DrillDownStateContextValue | null>(null);
+const INITIAL_STATE: DrillDownState = { stack: [], direction: null, lastChange: null };
 
-interface DrillDownProviderProps {
-  children: React.ReactNode;
-  submenuBehavior: Responsive<SubmenuBehavior> | undefined;
+const PANEL_ITEM_SELECTOR = '[role^="menuitem"]:not([data-disabled])';
+const BACK_ITEM_CLASS = 'rt-DropdownMenuDrillDownBackItem';
+
+function escapeAttributeValue(value: string) {
+  return value.replace(/["\\]/g, '\\$&');
 }
 
-function DrillDownProvider({ children, submenuBehavior }: DrillDownProviderProps) {
-  const { breakpoint, ready } = useBreakpoint();
-  const [stack, setStack] = React.useState<string[]>([]);
-  const [animationDirection, setAnimationDirection] = React.useState<AnimationDirection>(null);
+class DrillDownStore {
+  private state = INITIAL_STATE;
+  private listeners = new Set<() => void>();
+  private modality: Modality = 'keyboard';
+  /** The drill-down root element, set by the provider */
+  rootElement: HTMLElement | null = null;
 
-  // Resolve the current behavior based on breakpoint
-  const behavior = React.useMemo(
-    () => resolveResponsiveValue(submenuBehavior, breakpoint, 'cascade'),
-    [submenuBehavior, breakpoint]
-  );
+  setRootElement = (element: HTMLElement | null) => {
+    this.rootElement = element;
+  };
 
-  // Reset stack when behavior changes from drill-down to cascade
-  const prevBehaviorRef = React.useRef(behavior);
-  React.useEffect(() => {
-    if (prevBehaviorRef.current === 'drill-down' && behavior === 'cascade') {
-      setStack([]);
-      setAnimationDirection(null);
+  getState = () => this.state;
+
+  subscribe = (listener: () => void) => {
+    this.listeners.add(listener);
+    return () => {
+      this.listeners.delete(listener);
+    };
+  };
+
+  private setState(next: DrillDownState) {
+    this.state = next;
+    this.listeners.forEach((listener) => listener());
+  }
+
+  /** Records how the user is interacting, so focus can follow the same model as Radix. */
+  setModality = (modality: Modality) => {
+    this.modality = modality;
+  };
+
+  getModality = () => this.modality;
+
+  getDepth = () => this.state.stack.length;
+
+  isOpen = (id: string) => this.state.stack.some((entry) => entry.id === id);
+
+  private getScrollContainer() {
+    const root = this.rootElement;
+    if (!root) return null;
+    return (
+      root.closest<HTMLElement>('.rt-ScrollAreaViewport') ??
+      root.closest<HTMLElement>('.rt-BaseMenuViewport')
+    );
+  }
+
+  private getTrigger(id: string) {
+    return this.rootElement?.querySelector<HTMLElement>(
+      `[data-drill-down-trigger="${escapeAttributeValue(id)}"]`,
+    );
+  }
+
+  /**
+   * Opens a submenu. `modality` decides where focus goes: the first item for
+   * keyboard, the menu for pointer, and nowhere for a programmatic open
+   * (`null`) unless focus was lost.
+   */
+  push = (id: string, modality: Modality | null = this.modality) => {
+    const { stack } = this.state;
+    if (stack.some((entry) => entry.id === id)) return;
+    const trigger = this.getTrigger(id);
+    const name = (trigger?.dataset.drillDownName ?? trigger?.textContent ?? '').trim();
+    const scrollTop = this.getScrollContainer()?.scrollTop ?? 0;
+    this.setState({
+      stack: [...stack, { id, name, scrollTop }],
+      direction: 'forward',
+      lastChange: { type: 'push', id, modality },
+    });
+  };
+
+  pop = (modality: Modality = this.modality) => {
+    const { stack } = this.state;
+    const top = stack[stack.length - 1];
+    if (!top) return;
+    this.setState({
+      stack: stack.slice(0, -1),
+      direction: 'backward',
+      lastChange: { type: 'pop', id: top.id, modality, scrollTop: top.scrollTop },
+    });
+  };
+
+  /** Closes a submenu and everything opened from it, without moving focus to its trigger. */
+  close = (id: string) => {
+    const { stack } = this.state;
+    const index = stack.findIndex((entry) => entry.id === id);
+    if (index === -1) return;
+    this.setState({
+      stack: stack.slice(0, index),
+      direction: 'backward',
+      lastChange: { type: 'pop', id, modality: null, scrollTop: stack[index].scrollTop },
+    });
+  };
+
+  reset = () => {
+    if (this.state.stack.length === 0 && this.state.direction === null) return;
+    this.setState({ stack: [], direction: null, lastChange: { type: 'reset' } });
+  };
+
+  /**
+   * Moves focus and scroll after a navigation step has been committed. Runs in
+   * a layout effect, so the new level is already in the DOM and nothing paints
+   * with focus on `<body>` or at the old scroll position.
+   */
+  applyLastChange() {
+    const change = this.state.lastChange;
+    const root = this.rootElement;
+    if (!change || !root) return;
+    this.state = { ...this.state, lastChange: null };
+
+    const content = root.closest<HTMLElement>('[role="menu"]');
+    const scroller = this.getScrollContainer();
+    const focus = (element: HTMLElement | null | undefined) => element?.focus({ preventScroll: true });
+
+    if (change.type === 'push') {
+      if (scroller) scroller.scrollTop = 0;
+      const panel = root.querySelector<HTMLElement>(
+        `[data-drill-down-panel="${escapeAttributeValue(change.id)}"]`,
+      );
+      if (change.modality === 'keyboard') {
+        // Land on the first real option; the back row stays one ArrowUp away.
+        const items = panel ? Array.from(panel.querySelectorAll<HTMLElement>(PANEL_ITEM_SELECTOR)) : [];
+        focus(items.find((item) => !item.classList.contains(BACK_ITEM_CLASS)) ?? items[0] ?? content);
+      } else if (change.modality === 'pointer' || !root.contains(document.activeElement)) {
+        // Match Radix: pointer users get focus on the menu, not a highlighted item.
+        focus(content);
+      }
+      return;
     }
-    prevBehaviorRef.current = behavior;
-  }, [behavior]);
 
-  // Stable action callbacks - these never change identity
-  const push = React.useCallback((id: string) => {
-    setAnimationDirection('forward');
-    setStack((prev) => [...prev, id]);
-  }, []);
+    if (change.type === 'pop') {
+      if (scroller) scroller.scrollTop = change.scrollTop;
+      const trigger = this.getTrigger(change.id);
+      if (change.modality === 'keyboard') {
+        focus(trigger ?? content);
+      } else if (change.modality === 'pointer' || !root.contains(document.activeElement)) {
+        focus(content);
+      }
+      return;
+    }
 
-  const pop = React.useCallback(() => {
-    setAnimationDirection('backward');
-    setStack((prev) => prev.slice(0, -1));
-  }, []);
+    if (scroller) scroller.scrollTop = 0;
+  }
+}
 
-  const reset = React.useCallback(() => {
-    setStack([]);
-    setAnimationDirection(null);
-  }, []);
+const DrillDownStoreContext = React.createContext<DrillDownStore | null>(null);
 
-  // Memoize actions context value - completely stable, never changes
-  const actionsValue = React.useMemo(
-    (): DrillDownActionsContextValue => ({ push, pop, reset }),
-    [push, pop, reset]
+/**
+ * Whether the items of the current level are on screen. The root level and
+ * every panel provide it; menu parts render nothing when it is false.
+ */
+const DrillDownLevelContext = React.createContext(true);
+
+function useDrillDownStore() {
+  return React.useContext(DrillDownStoreContext);
+}
+
+function useCreateDrillDownStore() {
+  const [store] = React.useState(() => new DrillDownStore());
+  return store;
+}
+
+const selectDepth = (state: DrillDownState) => state.stack.length;
+const selectDirection = (state: DrillDownState) => state.direction;
+const getServerDepth = () => 0;
+const getServerDirection = (): AnimationDirection => null;
+
+interface DrillDownRootProps {
+  store: DrillDownStore;
+  behavior: SubmenuBehavior;
+  /** Open state of the menu; the stack resets every time the menu opens */
+  open: boolean;
+  children: React.ReactNode;
+}
+
+/**
+ * Provides the drill-down store and renders the root level. The wrapper is
+ * the same element in both behaviors, so crossing a breakpoint that switches
+ * between cascade and drill-down does not remount the items.
+ */
+function DrillDownRoot({ store, behavior, open, children }: DrillDownRootProps) {
+  const isDrillDown = behavior === 'drill-down';
+  const depth = React.useSyncExternalStore(
+    store.subscribe,
+    () => selectDepth(store.getState()),
+    getServerDepth,
   );
-
-  // isActive depends on stack - this is expected to change
-  const isActive = React.useCallback(
-    (id: string) => {
-      if (stack.length === 0) return false;
-      return stack[stack.length - 1] === id;
-    },
-    [stack]
+  const direction = React.useSyncExternalStore(
+    store.subscribe,
+    () => selectDirection(store.getState()),
+    getServerDirection,
   );
+  const isRoot = !isDrillDown || depth === 0;
 
-  // Memoize state context value - changes when stack/behavior changes
-  const stateValue = React.useMemo(
-    (): DrillDownStateContextValue => ({
-      behavior,
-      ready,
-      stack,
-      isActive,
-      isRoot: stack.length === 0,
-      currentId: stack.length > 0 ? stack[stack.length - 1] : null,
-      animationDirection,
-    }),
-    [behavior, ready, stack, isActive, animationDirection]
-  );
+  // Cascade mode has no stack. A reset while switching modes keeps the next
+  // switch back to drill-down from resuming a stale level.
+  React.useLayoutEffect(() => {
+    if (!isDrillDown) store.reset();
+  }, [isDrillDown, store]);
+
+  // Start every opening at the root. Content usually remounts on open anyway;
+  // this covers `forceMount`. Resetting on open rather than on close keeps the
+  // closing animation on the level the user was looking at.
+  const wasOpenRef = React.useRef(open);
+  React.useLayoutEffect(() => {
+    if (open && !wasOpenRef.current) store.reset();
+    wasOpenRef.current = open;
+  }, [open, store]);
+
+  // Focus and scroll follow each navigation step once it is in the DOM.
+  React.useLayoutEffect(() => {
+    store.applyLastChange();
+  }, [depth, store]);
+
+  const rootRef = React.useCallback((element: HTMLDivElement | null) => store.setRootElement(element), [store]);
+  const handleKeyDownCapture = React.useCallback(() => store.setModality('keyboard'), [store]);
+  const handlePointerDownCapture = React.useCallback(() => store.setModality('pointer'), [store]);
 
   return (
-    <DrillDownActionsContext.Provider value={actionsValue}>
-      <DrillDownStateContext.Provider value={stateValue}>
-        {children}
-      </DrillDownStateContext.Provider>
-    </DrillDownActionsContext.Provider>
+    <DrillDownStoreContext.Provider value={isDrillDown ? store : null}>
+      {/* Event capture only records the input modality; it does not handle interaction. */}
+      <div
+        ref={rootRef}
+        className="rt-DropdownMenuDrillDownRoot"
+        data-submenu-behavior={behavior}
+        data-drill-down-active={isRoot ? undefined : true}
+        data-animation-direction={isDrillDown ? (direction ?? undefined) : undefined}
+        onKeyDownCapture={isDrillDown ? handleKeyDownCapture : undefined}
+        onPointerDownCapture={isDrillDown ? handlePointerDownCapture : undefined}
+      >
+        <DrillDownLevelContext.Provider value={isRoot}>{children}</DrillDownLevelContext.Provider>
+      </div>
+    </DrillDownStoreContext.Provider>
   );
 }
 
-/**
- * Hook to access only the stable action callbacks (push, pop, reset).
- * Use this in components that only need to trigger navigation,
- * not react to state changes. Prevents unnecessary re-renders.
- */
-function useDrillDownActions() {
-  const ctx = React.useContext(DrillDownActionsContext);
-  if (!ctx) {
-    throw new Error('useDrillDownActions must be used within a DropdownMenu.Content');
-  }
-  return ctx;
+/** Where a submenu sits in the stack: not open, open under another level, or on top. */
+type PanelPosition = 'closed' | 'open' | 'top';
+
+function usePanelPosition(store: DrillDownStore | null, id: string): PanelPosition {
+  const getSnapshot = React.useCallback((): PanelPosition => {
+    if (!store) return 'closed';
+    const { stack } = store.getState();
+    if (stack.length > 0 && stack[stack.length - 1].id === id) return 'top';
+    return stack.some((entry) => entry.id === id) ? 'open' : 'closed';
+  }, [store, id]);
+  return React.useSyncExternalStore(store?.subscribe ?? noopSubscribe, getSnapshot, getClosed);
 }
 
-/**
- * Hook to access drill-down state (behavior, stack, isActive, etc.).
- * Components using this will re-render when navigation state changes.
- */
-function useDrillDownState() {
-  const ctx = React.useContext(DrillDownStateContext);
-  if (!ctx) {
-    throw new Error('useDrillDownState must be used within a DropdownMenu.Content');
-  }
-  return ctx;
+function useStackEntry(store: DrillDownStore | null, id: string): StackEntry | undefined {
+  const getSnapshot = React.useCallback(
+    () => store?.getState().stack.find((entry) => entry.id === id),
+    [store, id],
+  );
+  return React.useSyncExternalStore(store?.subscribe ?? noopSubscribe, getSnapshot, getUndefined);
 }
 
-/**
- * Optional version of useDrillDownActions for components that may be outside Content.
- */
-function useDrillDownActionsOptional() {
-  return React.useContext(DrillDownActionsContext);
+function useDrillDownDirection(store: DrillDownStore | null): AnimationDirection {
+  const getSnapshot = React.useCallback(() => store?.getState().direction ?? null, [store]);
+  return React.useSyncExternalStore(store?.subscribe ?? noopSubscribe, getSnapshot, getServerDirection);
 }
 
-/**
- * Optional version of useDrillDownState for components that may be outside Content.
- */
-function useDrillDownStateOptional() {
-  return React.useContext(DrillDownStateContext);
-}
+const noopSubscribe = () => () => {};
+const getClosed = (): PanelPosition => 'closed';
+const getUndefined = () => undefined;
 
 // ============================================================================
 // Sub Context (for individual submenu instances)
@@ -227,23 +333,15 @@ function useSubContext() {
 }
 
 export {
-  DrillDownProvider,
-  DrillDownActionsContext,
-  DrillDownStateContext,
+  DrillDownRoot,
+  DrillDownLevelContext,
   SubContext,
-  useDrillDownActions,
-  useDrillDownActionsOptional,
-  useDrillDownState,
-  useDrillDownStateOptional,
+  useCreateDrillDownStore,
+  useDrillDownStore,
+  useDrillDownDirection,
+  usePanelPosition,
+  useStackEntry,
   useSubContext,
-  useBreakpoint,
-  resolveResponsiveValue,
 };
 
-export type {
-  SubmenuBehavior,
-  DrillDownActionsContextValue,
-  DrillDownStateContextValue,
-  SubContextValue,
-  AnimationDirection,
-};
+export type { SubmenuBehavior, DrillDownStore, PanelPosition, SubContextValue, AnimationDirection };

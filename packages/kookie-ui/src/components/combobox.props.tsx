@@ -2,6 +2,7 @@ import { colorPropDef } from '../props/color.prop.js';
 import { highContrastPropDef } from '../props/high-contrast.prop.js';
 import { radiusPropDef } from '../props/radius.prop.js';
 import { widthPropDefs } from '../props/width.props.js';
+import { heightPropDefs } from '../props/height.props.js';
 
 import type { PropDef } from '../props/prop-def.js';
 
@@ -52,6 +53,7 @@ const comboboxTriggerPropDefs = {
 };
 
 const contentVariants = ['solid', 'soft'] as const;
+const materials = ['solid', 'translucent'] as const;
 
 /**
  * Styling props for the dropdown surface rendered by Combobox.Content.
@@ -61,9 +63,21 @@ const comboboxContentPropDefs = {
   variant: { type: 'enum', className: 'rt-variant', values: contentVariants, default: 'solid' },
   ...colorPropDef,
   ...highContrastPropDef,
+  material: { type: 'enum', values: materials, default: undefined },
+  /** @deprecated Use `material`. */
+  panelBackground: { type: 'enum', values: materials, default: undefined },
+  width: widthPropDefs.width,
+  minWidth: widthPropDefs.minWidth,
+  maxWidth: { ...widthPropDefs.maxWidth, default: '480px' },
+  ...heightPropDefs,
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;
   variant: PropDef<(typeof contentVariants)[number]>;
+  material: PropDef<(typeof materials)[number] | undefined>;
+  panelBackground: PropDef<(typeof materials)[number] | undefined>;
+  width: PropDef<string>;
+  minWidth: PropDef<string>;
+  maxWidth: PropDef<string>;
 };
 
 export { comboboxRootPropDefs, comboboxTriggerPropDefs, comboboxContentPropDefs };

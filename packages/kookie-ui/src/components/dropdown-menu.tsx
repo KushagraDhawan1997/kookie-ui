@@ -3,6 +3,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { DropdownMenu as DropdownMenuPrimitive, Slot } from 'radix-ui';
+import { useCallbackRef } from 'radix-ui/internal';
 
 import { ScrollArea } from './scroll-area.js';
 import {
@@ -16,27 +17,60 @@ import { Theme, useThemeContext } from './theme.js';
 import { ChevronDownIcon, ThickCheckIcon, ThickChevronLeftIcon, ThickChevronRightIcon, ThickDotIcon } from './icons.js';
 import { extractProps } from '../helpers/extract-props.js';
 import {
-  DrillDownProvider,
+  DrillDownLevelContext,
+  DrillDownRoot,
   SubContext,
-  useDrillDownActionsOptional,
-  useDrillDownStateOptional,
+  useCreateDrillDownStore,
+  useDrillDownDirection,
+  useDrillDownStore,
+  usePanelPosition,
+  useStackEntry,
   useSubContext,
 } from './_internal/dropdown-menu-drill-down.js';
 import { MenuProvider } from './_internal/menu-context.js';
-import type { SubmenuBehavior } from './_internal/dropdown-menu-drill-down.js';
+import {
+  MenuShortcut,
+  getMenuAlignOffset,
+  resolveMenuMaterial,
+  toAriaKeyShortcuts,
+  useResolvedResponsiveValue,
+} from './_internal/base-menu.utils.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
-import { Kbd } from './kbd.js';
+import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 
+import type { SubmenuBehavior } from './_internal/dropdown-menu-drill-down.js';
 import type { IconProps } from './icons.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes, Responsive } from '../props/prop-def.js';
-import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
+
+/**
+ * Open state of the menu, mirrored from Root so Content can reset drill-down
+ * navigation when a force-mounted menu opens again.
+ */
+const DropdownMenuOpenContext = React.createContext(false);
 
 interface DropdownMenuRootProps
   extends React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Root> {}
-const DropdownMenuRoot: React.FC<DropdownMenuRootProps> = (props) => (
-  <DropdownMenuPrimitive.Root {...props} />
-);
+const DropdownMenuRoot: React.FC<DropdownMenuRootProps> = (props) => {
+  const { open: openProp, defaultOpen = false, onOpenChange } = props;
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+  const open = openProp ?? uncontrolledOpen;
+
+  const handleOpenChangeProp = useCallbackRef(onOpenChange);
+  const handleOpenChange = React.useCallback(
+    (next: boolean) => {
+      setUncontrolledOpen(next);
+      handleOpenChangeProp(next);
+    },
+    [handleOpenChangeProp],
+  );
+
+  return (
+    <DropdownMenuOpenContext.Provider value={open}>
+      <DropdownMenuPrimitive.Root {...props} onOpenChange={handleOpenChange} />
+    </DropdownMenuOpenContext.Provider>
+  );
+};
 DropdownMenuRoot.displayName = 'DropdownMenu.Root';
 
 type DropdownMenuTriggerElement = React.ElementRef<typeof DropdownMenuPrimitive.Trigger>;
@@ -51,51 +85,37 @@ const DropdownMenuTrigger = React.forwardRef<DropdownMenuTriggerElement, Dropdow
 );
 DropdownMenuTrigger.displayName = 'DropdownMenu.Trigger';
 
-/**
- * Internal component that wraps root menu items and handles visibility in drill-down mode.
- * In drill-down mode, this hides when a submenu is active.
- * Uses state-only hook to subscribe only to state changes, not action changes.
- */
-function DrillDownRoot({ children }: { children: React.ReactNode }) {
-  const drillDownState = useDrillDownStateOptional();
+/** Visual props shared by Content and SubContent. */
+type DropdownMenuSurfaceProps = GetPropDefTypes<typeof dropdownMenuSubContentPropDefs>;
 
-  // In cascade mode or when no drill-down context, always show
-  if (!drillDownState || drillDownState.behavior === 'cascade') {
-    return <>{children}</>;
-  }
+type DropdownMenuContentContextValue = {
+  size?: DropdownMenuSurfaceProps['size'];
+  variant?: DropdownMenuSurfaceProps['variant'];
+  color?: DropdownMenuSurfaceProps['color'];
+  highContrast?: DropdownMenuSurfaceProps['highContrast'];
+  material?: DropdownMenuSurfaceProps['material'];
+};
+const DropdownMenuContentContext = React.createContext<DropdownMenuContentContextValue>({});
 
-  // In drill-down mode, hide root when a submenu is active
+/** Keys that navigate back one drill-down level, by writing direction. */
+const BACK_KEYS = { ltr: 'ArrowLeft', rtl: 'ArrowRight' } as const;
+const FORWARD_KEYS = { ltr: 'ArrowRight', rtl: 'ArrowLeft' } as const;
+
+function isTextEntryTarget(target: EventTarget | null) {
   return (
-    <div
-      className="rt-DropdownMenuDrillDownRoot"
-      data-drill-down-active={drillDownState.isRoot ? undefined : true}
-      data-animation-direction={drillDownState.animationDirection ?? undefined}
-    >
-      {children}
-    </div>
+    target instanceof HTMLElement &&
+    (target.isContentEditable || target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')
   );
 }
 
-type DropdownMenuContentOwnProps = GetPropDefTypes<typeof dropdownMenuContentPropDefs> & {
-  /**
-   * Controls how submenus behave.
-   * - `cascade`: Default cascading behavior where submenus open to the side (portal-based)
-   * - `drill-down`: Mobile-friendly behavior where submenus replace the content inline
-   * Supports responsive values: `{ initial: 'drill-down', md: 'cascade' }`
-   */
-  submenuBehavior?: Responsive<SubmenuBehavior>;
-  /**
-   * When true, skips the ScrollArea wrapper to allow VirtualMenu to handle its own scrolling.
-   * Use this when rendering virtualized lists inside the dropdown.
-   */
-  virtualized?: boolean;
-};
-type DropdownMenuContentContextValue = Omit<DropdownMenuContentOwnProps, 'submenuBehavior'>;
-const DropdownMenuContentContext = React.createContext<DropdownMenuContentContextValue>({});
+function getDirection(element: HTMLElement | null): 'ltr' | 'rtl' {
+  return element?.closest('[dir]')?.getAttribute('dir') === 'rtl' ? 'rtl' : 'ltr';
+}
+
 type DropdownMenuContentElement = React.ElementRef<typeof DropdownMenuPrimitive.Content>;
 interface DropdownMenuContentProps
   extends ComponentPropsWithout<typeof DropdownMenuPrimitive.Content, RemovedProps>,
-    DropdownMenuContentContextValue {
+    DropdownMenuSurfaceProps {
   container?: React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Portal>['container'];
   /**
    * Controls how submenus behave.
@@ -116,26 +136,11 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
 
     useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
-    // Material takes precedence over panelBackground
-    const effectiveMaterial =
-      props.material ?? props.panelBackground ?? themeContext.panelBackground;
-
-    // Memoize theme context values to prevent unnecessary re-renders
-    const memoizedThemeContext = React.useMemo(
-      () => ({
-        material: effectiveMaterial,
-        accentColor: themeContext.accentColor,
-      }),
-      [effectiveMaterial, themeContext.accentColor],
-    );
-
+    const material = resolveMenuMaterial(props.material, props.panelBackground, themeContext);
     const {
       size = dropdownMenuContentPropDefs.size.default,
       variant = dropdownMenuContentPropDefs.variant.default,
       highContrast = dropdownMenuContentPropDefs.highContrast.default,
-      material = memoizedThemeContext.material,
-      submenuBehavior,
-      virtualized = false,
     } = props;
     const {
       className,
@@ -143,29 +148,50 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
       color,
       container,
       forceMount,
-      material: _,
-      panelBackground: __,
-      submenuBehavior: ___,
-      virtualized: ____,
+      material: _material,
+      panelBackground: _panelBackground,
+      submenuBehavior,
+      virtualized = false,
+      onEscapeKeyDown,
+      onKeyDown,
       ...contentProps
     } = extractProps(props, dropdownMenuContentPropDefs);
 
-    // Memoize color resolution to prevent unnecessary re-renders
-    const resolvedColor = React.useMemo(
-      () => color || memoizedThemeContext.accentColor,
-      [color, memoizedThemeContext.accentColor],
+    const resolvedColor = color || themeContext.accentColor;
+    const behavior = useResolvedResponsiveValue<SubmenuBehavior>(submenuBehavior, 'cascade');
+    const isDrillDown = behavior === 'drill-down';
+    const open = React.useContext(DropdownMenuOpenContext);
+    const drillDownStore = useCreateDrillDownStore();
+
+    // Escape goes back one drill-down level before it closes the menu.
+    const handleEscapeKeyDown = (event: KeyboardEvent) => {
+      onEscapeKeyDown?.(event);
+      if (event.defaultPrevented || !isDrillDown || drillDownStore.getDepth() === 0) return;
+      event.preventDefault();
+      drillDownStore.pop('keyboard');
+    };
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+      onKeyDown?.(event);
+      if (event.defaultPrevented || !isDrillDown || drillDownStore.getDepth() === 0) return;
+      if (isTextEntryTarget(event.target)) return;
+      if (event.key === BACK_KEYS[getDirection(event.currentTarget)]) {
+        event.preventDefault();
+        drillDownStore.pop('keyboard');
+      }
+    };
+
+    const contextValue = React.useMemo(
+      () => ({ size, variant, color: resolvedColor, highContrast, material }),
+      [size, variant, resolvedColor, highContrast, material],
     );
+
     const contentBody = (
       <MenuProvider size={size}>
-        <DropdownMenuContentContext.Provider
-          value={React.useMemo(
-            () => ({ size, variant, color: resolvedColor, highContrast, material }),
-            [size, variant, resolvedColor, highContrast, material],
-          )}
-        >
-          <DrillDownProvider submenuBehavior={submenuBehavior}>
-            <DrillDownRoot>{children}</DrillDownRoot>
-          </DrillDownProvider>
+        <DropdownMenuContentContext.Provider value={contextValue}>
+          <DrillDownRoot store={drillDownStore} behavior={behavior} open={open}>
+            {children}
+          </DrillDownRoot>
         </DropdownMenuContentContext.Provider>
       </MenuProvider>
     );
@@ -181,6 +207,8 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
             sideOffset={4}
             collisionPadding={10}
             {...contentProps}
+            onEscapeKeyDown={handleEscapeKeyDown}
+            onKeyDown={handleKeyDown}
             asChild={false}
             ref={forwardedRef}
             className={classNames(
@@ -195,7 +223,7 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
                 {contentBody}
               </div>
             ) : (
-              <ScrollArea type="auto">
+              <ScrollArea type="auto" scrollbars="vertical">
                 <div className={classNames('rt-BaseMenuViewport', 'rt-DropdownMenuViewport')}>
                   {contentBody}
                 </div>
@@ -213,14 +241,17 @@ type DropdownMenuLabelElement = React.ElementRef<typeof DropdownMenuPrimitive.La
 interface DropdownMenuLabelProps
   extends ComponentPropsWithout<typeof DropdownMenuPrimitive.Label, RemovedProps> {}
 const DropdownMenuLabel = React.forwardRef<DropdownMenuLabelElement, DropdownMenuLabelProps>(
-  ({ className, ...props }, forwardedRef) => (
-    <DropdownMenuPrimitive.Label
-      {...props}
-      asChild={false}
-      ref={forwardedRef}
-      className={classNames('rt-BaseMenuLabel', 'rt-DropdownMenuLabel', className)}
-    />
-  ),
+  ({ className, ...props }, forwardedRef) => {
+    if (!React.useContext(DrillDownLevelContext)) return null;
+    return (
+      <DropdownMenuPrimitive.Label
+        {...props}
+        asChild={false}
+        ref={forwardedRef}
+        className={classNames('rt-BaseMenuLabel', 'rt-DropdownMenuLabel', className)}
+      />
+    );
+  },
 );
 DropdownMenuLabel.displayName = 'DropdownMenu.Label';
 
@@ -238,19 +269,18 @@ const DropdownMenuItem = React.forwardRef<DropdownMenuItemElement, DropdownMenuI
       shortcut,
       ...itemProps
     } = props;
+    // In drill-down mode, items of levels that are not on screen do not mount.
+    if (!React.useContext(DrillDownLevelContext)) return null;
     return (
       <DropdownMenuPrimitive.Item
         data-accent-color={color}
+        aria-keyshortcuts={shortcut ? toAriaKeyShortcuts(shortcut) : undefined}
         {...itemProps}
         ref={forwardedRef}
         className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-DropdownMenuItem', className)}
       >
         <Slot.Slottable>{children}</Slot.Slottable>
-        {shortcut && (
-          <div className="rt-BaseMenuShortcut rt-DropdownMenuShortcut">
-            <Kbd size="1">{shortcut}</Kbd>
-          </div>
-        )}
+        {shortcut && <MenuShortcut shortcut={shortcut} className="rt-DropdownMenuShortcut" />}
       </DropdownMenuPrimitive.Item>
     );
   },
@@ -303,6 +333,7 @@ const DropdownMenuRadioItem = React.forwardRef<
     color = dropdownMenuRadioItemPropDefs.color.default,
     ...itemProps
   } = props;
+  if (!React.useContext(DrillDownLevelContext)) return null;
   return (
     <DropdownMenuPrimitive.RadioItem
       {...itemProps}
@@ -342,8 +373,10 @@ const DropdownMenuCheckboxItem = React.forwardRef<
     color = dropdownMenuCheckboxItemPropDefs.color.default,
     ...itemProps
   } = props;
+  if (!React.useContext(DrillDownLevelContext)) return null;
   return (
     <DropdownMenuPrimitive.CheckboxItem
+      aria-keyshortcuts={shortcut ? toAriaKeyShortcuts(shortcut) : undefined}
       {...itemProps}
       asChild={false}
       ref={forwardedRef}
@@ -358,22 +391,13 @@ const DropdownMenuCheckboxItem = React.forwardRef<
     >
       {children}
       <DropdownMenuPrimitive.ItemIndicator className="rt-BaseMenuItemIndicator rt-DropdownMenuItemIndicator">
-        <ThickCheckIcon className="rt-BaseMenuItemIndicatorIcon rt-ContextMenuItemIndicatorIcon" />
+        <ThickCheckIcon className="rt-BaseMenuItemIndicatorIcon rt-DropdownMenuItemIndicatorIcon" />
       </DropdownMenuPrimitive.ItemIndicator>
-      {shortcut && (
-        <div className="rt-BaseMenuShortcut rt-DropdownMenuShortcut">
-          <Kbd size="1">{shortcut}</Kbd>
-        </div>
-      )}
+      {shortcut && <MenuShortcut shortcut={shortcut} className="rt-DropdownMenuShortcut" />}
     </DropdownMenuPrimitive.CheckboxItem>
   );
 });
 DropdownMenuCheckboxItem.displayName = 'DropdownMenu.CheckboxItem';
-
-// Generate unique submenu IDs using React 18's useId for SSR safety
-function useSubId() {
-  return React.useId();
-}
 
 interface DropdownMenuSubProps
   extends React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Sub> {
@@ -383,31 +407,53 @@ interface DropdownMenuSubProps
    */
   label?: React.ReactNode;
 }
-const DropdownMenuSub: React.FC<DropdownMenuSubProps> = ({ label = 'Back', ...props }) => {
-  // Use state-only hook since we only need behavior check
-  const drillDownState = useDrillDownStateOptional();
-  const subId = useSubId();
+const DropdownMenuSub: React.FC<DropdownMenuSubProps> = ({
+  label = 'Back',
+  open,
+  defaultOpen,
+  onOpenChange,
+  children,
+}) => {
+  const drillDownStore = useDrillDownStore();
+  const id = React.useId();
+  const subContextValue = React.useMemo(() => ({ id, label }), [id, label]);
+  const isOpenInDrillDown = usePanelPosition(drillDownStore, id) !== 'closed';
 
-  // Create context value for SubContent and SubTrigger
-  const subContextValue = React.useMemo(
-    () => ({ id: subId, label }),
-    [subId, label]
-  );
+  // Drill-down: `open` and `defaultOpen` drive the stack; the stack drives
+  // `onOpenChange`. A controlled `open` is applied when it changes.
+  React.useLayoutEffect(() => {
+    if (!drillDownStore || open === undefined) return;
+    if (open && !drillDownStore.isOpen(id)) drillDownStore.push(id, null);
+    else if (!open && drillDownStore.isOpen(id)) drillDownStore.close(id);
+  }, [drillDownStore, open, id]);
 
-  // In drill-down mode, we don't use Radix's Sub component
-  // We just provide the SubContext and render children
-  if (drillDownState?.behavior === 'drill-down') {
-    return (
-      <SubContext.Provider value={subContextValue}>
-        {props.children}
-      </SubContext.Provider>
-    );
-  }
+  const defaultOpenRef = React.useRef(defaultOpen);
+  React.useLayoutEffect(() => {
+    if (drillDownStore && defaultOpenRef.current && open === undefined) drillDownStore.push(id, null);
+    // Only on mount, like an uncontrolled default.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // In cascade mode, use Radix's Sub component normally
+  const handleOpenChange = useCallbackRef(onOpenChange);
+  const wasOpenRef = React.useRef(isOpenInDrillDown);
+  React.useEffect(() => {
+    if (!drillDownStore || wasOpenRef.current === isOpenInDrillDown) return;
+    wasOpenRef.current = isOpenInDrillDown;
+    handleOpenChange(isOpenInDrillDown);
+  }, [drillDownStore, isOpenInDrillDown, handleOpenChange]);
+
+  // Radix Sub stays mounted in both behaviors so switching behavior does not
+  // remount the subtree. It only renders context; in drill-down its trigger
+  // and content are never rendered, so it reports no open changes of its own.
   return (
     <SubContext.Provider value={subContextValue}>
-      <DropdownMenuPrimitive.Sub {...props} />
+      <DropdownMenuPrimitive.Sub
+        open={open}
+        defaultOpen={defaultOpen}
+        onOpenChange={drillDownStore ? undefined : onOpenChange}
+      >
+        {children}
+      </DropdownMenuPrimitive.Sub>
     </SubContext.Provider>
   );
 };
@@ -420,44 +466,38 @@ const DropdownMenuSubTrigger = React.forwardRef<
   DropdownMenuSubTriggerElement,
   DropdownMenuSubTriggerProps
 >((props, forwardedRef) => {
-  const { className, children, onClick, ...subTriggerProps } = props;
-  // Use split hooks: actions for stable push callback, state only for behavior check
-  const drillDownActions = useDrillDownActionsOptional();
-  const drillDownState = useDrillDownStateOptional();
+  const { className, children, onKeyDown, ...subTriggerProps } = props;
+  const drillDownStore = useDrillDownStore();
   const subContext = useSubContext();
+  const isLevelVisible = React.useContext(DrillDownLevelContext);
 
-  // Store onClick in ref to avoid recreating handlers when onClick changes
-  const onClickRef = React.useRef(onClick);
-  onClickRef.current = onClick;
+  if (drillDownStore && subContext) {
+    if (!isLevelVisible) return null;
 
-  // Stable click handler - only depends on stable refs
-  const handleClick = React.useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    if (subContext && drillDownActions) {
-      drillDownActions.push(subContext.id);
-    }
-    (onClickRef.current as React.MouseEventHandler<HTMLDivElement> | undefined)?.(e);
-  }, [subContext, drillDownActions]);
+    const handleSelect = (event: Event) => {
+      // Navigating does not close the menu.
+      event.preventDefault();
+      drillDownStore.push(subContext.id);
+    };
 
-  // Stable keydown handler
-  const handleKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      if (subContext && drillDownActions) {
-        drillDownActions.push(subContext.id);
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+      onKeyDown?.(event);
+      if (event.defaultPrevented || subTriggerProps.disabled) return;
+      if (event.key === FORWARD_KEYS[getDirection(event.currentTarget)]) {
+        event.preventDefault();
+        drillDownStore.push(subContext.id, 'keyboard');
       }
-    }
-  }, [subContext, drillDownActions]);
+    };
 
-  // In drill-down mode, render a button that navigates to the submenu
-  if (drillDownState?.behavior === 'drill-down' && subContext) {
     return (
-      <div
-        role="menuitem"
-        tabIndex={0}
-        ref={forwardedRef as React.Ref<HTMLDivElement>}
-        onClick={handleClick}
+      <DropdownMenuPrimitive.Item
+        aria-haspopup="menu"
+        {...subTriggerProps}
+        data-drill-down-trigger={subContext.id}
+        data-drill-down-name={subTriggerProps.textValue}
+        onSelect={handleSelect}
         onKeyDown={handleKeyDown}
+        ref={forwardedRef}
         className={classNames(
           'rt-reset',
           'rt-BaseMenuItem',
@@ -470,17 +510,16 @@ const DropdownMenuSubTrigger = React.forwardRef<
       >
         {children}
         <div className="rt-BaseMenuShortcut rt-DropdownMenuShortcut">
-          <ThickChevronRightIcon className="rt-BaseMenuSubTriggerIcon rt-DropdownMenuSubtriggerIcon" />
+          <ThickChevronRightIcon className="rt-BaseMenuSubTriggerIcon rt-DropdownMenuSubTriggerIcon" />
         </div>
-      </div>
+      </DropdownMenuPrimitive.Item>
     );
   }
 
-  // In cascade mode, use Radix's SubTrigger
   return (
     <DropdownMenuPrimitive.SubTrigger
       {...subTriggerProps}
-      onClick={onClick as React.MouseEventHandler<HTMLDivElement> | undefined}
+      onKeyDown={onKeyDown}
       asChild={false}
       ref={forwardedRef}
       className={classNames(
@@ -493,59 +532,55 @@ const DropdownMenuSubTrigger = React.forwardRef<
     >
       {children}
       <div className="rt-BaseMenuShortcut rt-DropdownMenuShortcut">
-        <ThickChevronRightIcon className="rt-BaseMenuSubTriggerIcon rt-DropdownMenuSubtriggerIcon" />
+        <ThickChevronRightIcon className="rt-BaseMenuSubTriggerIcon rt-DropdownMenuSubTriggerIcon" />
       </div>
     </DropdownMenuPrimitive.SubTrigger>
   );
 });
 DropdownMenuSubTrigger.displayName = 'DropdownMenu.SubTrigger';
 
-// Separator is defined here (before SubContent) because it's used in drill-down mode
 type DropdownMenuSeparatorElement = React.ElementRef<typeof DropdownMenuPrimitive.Separator>;
 interface DropdownMenuSeparatorProps
   extends ComponentPropsWithout<typeof DropdownMenuPrimitive.Separator, RemovedProps> {}
 const DropdownMenuSeparator = React.forwardRef<
   DropdownMenuSeparatorElement,
   DropdownMenuSeparatorProps
->(({ className, ...props }, forwardedRef) => (
-  <DropdownMenuPrimitive.Separator
-    {...props}
-    asChild={false}
-    ref={forwardedRef}
-    className={classNames('rt-BaseMenuSeparator', 'rt-DropdownMenuSeparator', className)}
-  />
-));
+>(({ className, ...props }, forwardedRef) => {
+  if (!React.useContext(DrillDownLevelContext)) return null;
+  return (
+    <DropdownMenuPrimitive.Separator
+      {...props}
+      asChild={false}
+      ref={forwardedRef}
+      className={classNames('rt-BaseMenuSeparator', 'rt-DropdownMenuSeparator', className)}
+    />
+  );
+});
 DropdownMenuSeparator.displayName = 'DropdownMenu.Separator';
 
-/**
- * Internal component for the drill-down back button.
- * Uses actions-only hook since it only needs to call pop(), never reads state.
- * This prevents re-renders when drill-down state changes.
- */
-function DrillDownBackItem({ label }: { label: React.ReactNode }) {
-  // Use actions-only hook for stable pop callback - prevents re-renders on stack changes
-  const { pop } = useDrillDownActionsOptional() ?? {};
+/** The row at the top of a drill-down panel that returns to the parent level. */
+function DrillDownBackItem({ label, name }: { label: React.ReactNode; name: string }) {
+  const drillDownStore = useDrillDownStore();
 
-  // Stable click handler
-  const handleClick = React.useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    pop?.();
-  }, [pop]);
+  const handleSelect = React.useCallback(
+    (event: Event) => {
+      // Navigating does not close the menu.
+      event.preventDefault();
+      drillDownStore?.pop();
+    },
+    [drillDownStore],
+  );
 
-  // Stable keydown handler
-  const handleKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      pop?.();
-    }
-  }, [pop]);
+  // The visible label is often the submenu title, so the accessible name says
+  // what the row does while still containing the visible text.
+  const labelText = typeof label === 'string' ? label : name;
+  const ariaLabel = labelText && labelText !== 'Back' ? `Back from ${labelText}` : undefined;
 
   return (
-    <div
-      role="menuitem"
-      tabIndex={0}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
+    <DropdownMenuPrimitive.Item
+      aria-label={ariaLabel}
+      textValue={labelText || 'Back'}
+      onSelect={handleSelect}
       className={classNames(
         'rt-reset',
         'rt-BaseMenuItem',
@@ -553,109 +588,229 @@ function DrillDownBackItem({ label }: { label: React.ReactNode }) {
         'rt-DropdownMenuDrillDownBackItem',
       )}
     >
-      <ThickChevronLeftIcon className="rt-DropdownMenuDrillDownBackIcon" />
+      <ThickChevronLeftIcon className="rt-BaseMenuSubTriggerIcon rt-DropdownMenuDrillDownBackIcon" />
       <span className="rt-DropdownMenuDrillDownBackLabel">{label}</span>
-    </div>
+    </DropdownMenuPrimitive.Item>
   );
+}
+
+/** Radix positioning and layer props that have no meaning for an inline drill-down panel. */
+type PopperOnlyProps =
+  | 'loop'
+  | 'onEscapeKeyDown'
+  | 'onPointerDownOutside'
+  | 'onFocusOutside'
+  | 'onInteractOutside'
+  | 'sideOffset'
+  | 'alignOffset'
+  | 'avoidCollisions'
+  | 'collisionBoundary'
+  | 'collisionPadding'
+  | 'arrowPadding'
+  | 'sticky'
+  | 'hideWhenDetached'
+  | 'updatePositionStrategy';
+
+function omitPopperProps<T extends Record<string, unknown>>(props: T): Omit<T, PopperOnlyProps> {
+  const {
+    loop: _loop,
+    onEscapeKeyDown: _onEscapeKeyDown,
+    onPointerDownOutside: _onPointerDownOutside,
+    onFocusOutside: _onFocusOutside,
+    onInteractOutside: _onInteractOutside,
+    sideOffset: _sideOffset,
+    alignOffset: _alignOffset,
+    avoidCollisions: _avoidCollisions,
+    collisionBoundary: _collisionBoundary,
+    collisionPadding: _collisionPadding,
+    arrowPadding: _arrowPadding,
+    sticky: _sticky,
+    hideWhenDetached: _hideWhenDetached,
+    updatePositionStrategy: _updatePositionStrategy,
+    ...rest
+  } = props;
+  return rest;
 }
 
 type DropdownMenuSubContentElement = React.ElementRef<typeof DropdownMenuPrimitive.SubContent>;
 interface DropdownMenuSubContentProps
   extends ComponentPropsWithout<typeof DropdownMenuPrimitive.SubContent, RemovedProps>,
-    DropdownMenuContentContextValue {
+    DropdownMenuSurfaceProps {
   container?: React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Portal>['container'];
+  /**
+   * When true, skips the ScrollArea wrapper so a VirtualMenu can handle its own
+   * scrolling. Applies to cascade submenus; a drill-down panel scrolls with the
+   * root content.
+   */
+  virtualized?: boolean;
 }
 const DropdownMenuSubContent = React.forwardRef<
   DropdownMenuSubContentElement,
   DropdownMenuSubContentProps
 >((props, forwardedRef) => {
-  // Get context values directly - memoization at provider level handles stability
-  const { size, variant, color, highContrast, material } = React.useContext(
-    DropdownMenuContentContext,
-  );
-  // Use state-only hook since we only need behavior and isActive (no actions)
-  const drillDownState = useDrillDownStateOptional();
+  const drillDownStore = useDrillDownStore();
   const subContext = useSubContext();
 
-  const {
-    className,
-    children,
-    container,
-    forceMount,
-    material: _,
-    panelBackground: __,
-    ...subContentProps
-  } = extractProps(
-    { size, variant, color, highContrast, material, ...props },
-    dropdownMenuSubContentPropDefs,
-  );
+  if (drillDownStore && subContext) {
+    return (
+      <DrillDownPanel {...props} ref={forwardedRef} store={drillDownStore} sub={subContext} />
+    );
+  }
+  return <CascadeSubContent {...props} ref={forwardedRef} />;
+});
+DropdownMenuSubContent.displayName = 'DropdownMenu.SubContent';
 
-  // In drill-down mode, render inline instead of in a portal
-  if (drillDownState?.behavior === 'drill-down' && subContext) {
-    const isActive = drillDownState.isActive(subContext.id);
+const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, DropdownMenuSubContentProps>(
+  (props, forwardedRef) => {
+    const parent = React.useContext(DropdownMenuContentContext);
+    const themeContext = useThemeContext();
+
+    useDeprecatedPanelBackgroundWarning(props.panelBackground);
+
+    // A submenu inherits the parent surface, and its own props win.
+    const size = props.size ?? parent.size;
+    const variant = props.variant ?? parent.variant;
+    const color = props.color ?? parent.color;
+    const highContrast = props.highContrast ?? parent.highContrast;
+    const material =
+      props.material ?? props.panelBackground ?? parent.material ?? resolveMenuMaterial(undefined, undefined, themeContext);
+
+    const {
+      className,
+      children,
+      container,
+      forceMount,
+      color: _color,
+      material: _material,
+      panelBackground: _panelBackground,
+      virtualized = false,
+      ...subContentProps
+    } = extractProps({ ...props, size, variant, highContrast }, dropdownMenuSubContentPropDefs);
+
+    const scalarSize = useResolvedResponsiveValue(size, dropdownMenuSubContentPropDefs.size.default);
+
+    const contextValue = React.useMemo(
+      () => ({ size, variant, color, highContrast, material }),
+      [size, variant, color, highContrast, material],
+    );
+
+    const body = (
+      <MenuProvider size={size}>
+        <DropdownMenuContentContext.Provider value={contextValue}>{children}</DropdownMenuContentContext.Provider>
+      </MenuProvider>
+    );
+
+    return (
+      <DropdownMenuPrimitive.Portal container={container} forceMount={forceMount}>
+        <Theme asChild>
+          <DropdownMenuPrimitive.SubContent
+            data-accent-color={color}
+            data-material={material}
+            data-panel-background={material}
+            alignOffset={getMenuAlignOffset(scalarSize, themeContext.scaling)}
+            // Side offset accounts for the outer solid box-shadow
+            sideOffset={1}
+            collisionPadding={10}
+            {...subContentProps}
+            asChild={false}
+            ref={forwardedRef}
+            className={classNames(
+              'rt-PopperContent',
+              'rt-BaseMenuContent',
+              'rt-BaseMenuSubContent',
+              'rt-DropdownMenuContent',
+              'rt-DropdownMenuSubContent',
+              className,
+            )}
+          >
+            {virtualized ? (
+              <div className={classNames('rt-BaseMenuViewport', 'rt-DropdownMenuViewport', 'rt-virtualized')}>
+                {body}
+              </div>
+            ) : (
+              <ScrollArea type="auto" scrollbars="vertical">
+                <div className={classNames('rt-BaseMenuViewport', 'rt-DropdownMenuViewport')}>{body}</div>
+              </ScrollArea>
+            )}
+          </DropdownMenuPrimitive.SubContent>
+        </Theme>
+      </DropdownMenuPrimitive.Portal>
+    );
+  },
+);
+CascadeSubContent.displayName = 'DropdownMenu.CascadeSubContent';
+
+interface DrillDownPanelProps extends DropdownMenuSubContentProps {
+  store: NonNullable<ReturnType<typeof useDrillDownStore>>;
+  sub: NonNullable<ReturnType<typeof useSubContext>>;
+}
+
+/**
+ * A submenu rendered inline in drill-down mode. It mounts its children only
+ * while it is on the navigation stack, and shows its own items only while it
+ * is the top level; deeper panels inside it stay mounted.
+ */
+const DrillDownPanel = React.forwardRef<DropdownMenuSubContentElement, DrillDownPanelProps>(
+  ({ store, sub, ...props }, forwardedRef) => {
+    const position = usePanelPosition(store, sub.id);
+    const entry = useStackEntry(store, sub.id);
+    const direction = useDrillDownDirection(position === 'top' ? store : null);
+
+    if (position === 'closed') return null;
+
+    const {
+      className,
+      children,
+      container: _container,
+      forceMount: _forceMount,
+      virtualized: _virtualized,
+      size: _size,
+      variant: _variant,
+      color: _color,
+      highContrast: _highContrast,
+      material: _material,
+      panelBackground: _panelBackground,
+      ...panelProps
+    } = omitPopperProps(props);
+
+    const isTop = position === 'top';
+    const name = entry?.name || (typeof sub.label === 'string' ? sub.label : '');
 
     return (
       <div
-        ref={forwardedRef as React.Ref<HTMLDivElement>}
-        role="menu"
-        aria-label={typeof subContext.label === 'string' ? subContext.label : undefined}
-        data-drill-down-active={isActive ? true : undefined}
-        data-animation-direction={drillDownState.animationDirection ?? undefined}
-        className={classNames(
-          'rt-DropdownMenuDrillDownPanel',
-          className,
-        )}
+        role="group"
+        aria-label={name || undefined}
+        {...panelProps}
+        ref={forwardedRef}
+        data-drill-down-panel={sub.id}
+        data-drill-down-active={isTop ? true : undefined}
+        data-animation-direction={isTop ? (direction ?? undefined) : undefined}
+        className={classNames('rt-DropdownMenuDrillDownPanel', className)}
       >
-        <DrillDownBackItem label={subContext.label} />
-        <DropdownMenuSeparator />
-        {children}
+        {isTop && (
+          <>
+            <DrillDownBackItem label={sub.label} name={name} />
+            <DropdownMenuPrimitive.Separator className="rt-BaseMenuSeparator rt-DropdownMenuSeparator" />
+          </>
+        )}
+        <DrillDownLevelContext.Provider value={isTop}>{children}</DrillDownLevelContext.Provider>
       </div>
     );
-  }
-
-  // In cascade mode, use Portal and Radix's SubContent
-  return (
-    <DropdownMenuPrimitive.Portal container={container} forceMount={forceMount}>
-      <Theme asChild>
-        <DropdownMenuPrimitive.SubContent
-          data-accent-color={color}
-          data-material={material}
-          data-panel-background={material}
-          alignOffset={-Number(size) * 4}
-          // Side offset accounts for the outer solid box-shadow
-          sideOffset={1}
-          collisionPadding={10}
-          {...subContentProps}
-          asChild={false}
-          ref={forwardedRef}
-          className={classNames(
-            'rt-PopperContent',
-            'rt-BaseMenuContent',
-            'rt-BaseMenuSubContent',
-            'rt-DropdownMenuContent',
-            'rt-DropdownMenuSubContent',
-            className,
-          )}
-        >
-          <ScrollArea type="auto">
-            <div className={classNames('rt-BaseMenuViewport', 'rt-DropdownMenuViewport')}>
-              {children}
-            </div>
-          </ScrollArea>
-        </DropdownMenuPrimitive.SubContent>
-      </Theme>
-    </DropdownMenuPrimitive.Portal>
-  );
-});
-DropdownMenuSubContent.displayName = 'DropdownMenu.SubContent';
+  },
+);
+DrillDownPanel.displayName = 'DropdownMenu.DrillDownPanel';
 
 type DropdownMenuTriggerIconElement = React.ElementRef<'svg'>;
 interface DropdownMenuTriggerIconProps extends IconProps {}
 const DropdownMenuTriggerIcon = React.forwardRef<
   DropdownMenuTriggerIconElement,
   DropdownMenuTriggerIconProps
->((props, forwardedRef) => (
-  <ChevronDownIcon {...props} ref={forwardedRef} className="rt-DropdownMenuTriggerIcon" />
+>(({ className, ...props }, forwardedRef) => (
+  <ChevronDownIcon
+    {...props}
+    ref={forwardedRef}
+    className={classNames('rt-DropdownMenuTriggerIcon', className)}
+  />
 ));
 DropdownMenuTriggerIcon.displayName = 'DropdownMenu.TriggerIcon';
 

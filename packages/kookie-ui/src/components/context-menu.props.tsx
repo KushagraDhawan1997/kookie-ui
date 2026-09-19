@@ -1,5 +1,8 @@
 export {
-  baseMenuContentPropDefs as contextMenuContentPropDefs,
+  // ContextMenu has no drill-down mode, so its content uses the shared
+  // surface props without `submenuBehavior`.
+  baseMenuSubContentPropDefs as contextMenuContentPropDefs,
+  baseMenuSubContentPropDefs as contextMenuSubContentPropDefs,
   baseMenuItemPropDefs as contextMenuItemPropDefs,
   baseMenuCheckboxItemPropDefs as contextMenuCheckboxItemPropDefs,
   baseMenuRadioItemPropDefs as contextMenuRadioItemPropDefs,

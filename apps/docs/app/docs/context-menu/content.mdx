@@ -1,0 +1,469 @@
+---
+title: Context Menu
+description: Menu of actions opened by right-click or long press
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/context-menu.tsx
+---
+
+Displays a menu of actions at the pointer when the user right-clicks, or long-presses on touch devices. Use context menus for shortcuts to actions that are also available elsewhere in the interface.
+
+This component is built on [Radix UI Context Menu](https://www.radix-ui.com/primitives/docs/components/context-menu). For the full primitive API reference, see the Radix documentation.
+
+## Installation
+
+```bash
+npm install @kushagradhawan/kookie-ui
+```
+
+## Usage
+
+```tsx showLineNumbers
+import { ContextMenu, Card, Text } from '@kushagradhawan/kookie-ui';
+
+export function MyComponent() {
+  return (
+    <ContextMenu.Root>
+      <ContextMenu.Trigger>
+        <Card variant="classic" size="2">
+          <Text size="2">Right-click here</Text>
+        </Card>
+      </ContextMenu.Trigger>
+      <ContextMenu.Content>
+        <ContextMenu.Item>Edit</ContextMenu.Item>
+        <ContextMenu.Item>Duplicate</ContextMenu.Item>
+        <ContextMenu.Separator />
+        <ContextMenu.Item color="red">Delete</ContextMenu.Item>
+      </ContextMenu.Content>
+    </ContextMenu.Root>
+  );
+}
+```
+
+## Anatomy
+
+The context menu is composed of several parts:
+
+```tsx showLineNumbers
+<ContextMenu.Root>
+  <ContextMenu.Trigger>
+    <Card>Area</Card>
+  </ContextMenu.Trigger>
+  <ContextMenu.Content>
+    <ContextMenu.Label>Label</ContextMenu.Label>
+    <ContextMenu.Item>Item</ContextMenu.Item>
+    <ContextMenu.Group>
+      <ContextMenu.Item>Grouped Item</ContextMenu.Item>
+    </ContextMenu.Group>
+    <ContextMenu.CheckboxItem>Checkbox Item</ContextMenu.CheckboxItem>
+    <ContextMenu.RadioGroup>
+      <ContextMenu.RadioItem value="1">Radio Item</ContextMenu.RadioItem>
+    </ContextMenu.RadioGroup>
+    <ContextMenu.Sub>
+      <ContextMenu.SubTrigger>Submenu</ContextMenu.SubTrigger>
+      <ContextMenu.SubContent>
+        <ContextMenu.Item>Submenu Item</ContextMenu.Item>
+      </ContextMenu.SubContent>
+    </ContextMenu.Sub>
+    <ContextMenu.Separator />
+  </ContextMenu.Content>
+</ContextMenu.Root>
+```
+
+## Props
+
+### Root
+
+| Prop           | Type                      | Description                                                              |
+| -------------- | ------------------------- | ------------------------------------------------------------------------ |
+| `onOpenChange` | `(open: boolean) => void` | Event handler called when the open state changes                         |
+| `modal`        | `boolean`                 | When `true`, interaction outside the menu is blocked. Defaults to `true` |
+| `dir`          | `'ltr' \| 'rtl'`          | Reading direction for submenus                                           |
+
+### Trigger
+
+| Prop       | Type        | Description                                                 |
+| ---------- | ----------- | ----------------------------------------------------------- |
+| `disabled` | `boolean`   | When `true`, right-click shows the browser's own menu       |
+| `children` | `ReactNode` | A single element that opens the menu, such as a Card or Box |
+
+### Content
+
+| Prop               | Type                         | Default         | Description                                                        |
+| ------------------ | ---------------------------- | --------------- | ------------------------------------------------------------------ |
+| `size`             | `'1' \| '2' \| Responsive`   | `'2'`           | Size of the menu items                                             |
+| `variant`          | `'solid' \| 'soft'`          | `'solid'`       | Visual style of the menu                                           |
+| `color`            | `AccentColor`                | —               | Accent color for highlighted items. Inherits from theme if not set |
+| `highContrast`     | `boolean`                    | `false`         | Increases contrast for better visibility                           |
+| `material`         | `'solid' \| 'translucent'`   | —               | Background appearance. Inherits from the nearest Theme if not set  |
+| `virtualized`      | `boolean`                    | `false`         | Skips the ScrollArea so a `VirtualMenu` scrolls itself             |
+| `container`        | `HTMLElement`                | —               | Custom container for the portal                                    |
+| `forceMount`       | `true`                       | —               | Keeps the content mounted when closed                              |
+| `alignOffset`      | `number`                     | Content padding | Lines the first item up with the pointer                           |
+| `collisionPadding` | `number`                     | `10`            | Padding from viewport edges                                        |
+| `loop`             | `boolean`                    | `false`         | Wraps keyboard focus from the last item to the first               |
+
+### Item
+
+| Prop        | Type                     | Default | Description                                                                          |
+| ----------- | ------------------------ | ------- | ------------------------------------------------------------------------------------ |
+| `color`     | `AccentColor`            | —       | Accent color for the item                                                            |
+| `shortcut`  | `string`                 | —       | Keyboard shortcut shown on the right and exposed as `aria-keyshortcuts`              |
+| `disabled`  | `boolean`                | `false` | Prevents interaction when `true`                                                     |
+| `textValue` | `string`                 | —       | Text used for typeahead when children are not plain text                             |
+| `onSelect`  | `(event: Event) => void` | —       | Called when the item is selected. Call `event.preventDefault()` to keep the menu open |
+
+### CheckboxItem
+
+| Prop              | Type                         | Default | Description                             |
+| ----------------- | ---------------------------- | ------- | --------------------------------------- |
+| `checked`         | `boolean \| 'indeterminate'` | —       | Controlled checked state                |
+| `onCheckedChange` | `(checked: boolean) => void` | —       | Event handler for checked state changes |
+| `shortcut`        | `string`                     | —       | Keyboard shortcut shown on the right    |
+| `color`           | `AccentColor`                | —       | Accent color for the item               |
+| `disabled`        | `boolean`                    | `false` | Prevents interaction when `true`        |
+
+### RadioGroup
+
+| Prop            | Type                      | Description                           |
+| --------------- | ------------------------- | ------------------------------------- |
+| `value`         | `string`                  | Controlled value of the selected item |
+| `onValueChange` | `(value: string) => void` | Event handler for value changes       |
+
+### RadioItem
+
+| Prop       | Type          | Default | Description                                |
+| ---------- | ------------- | ------- | ------------------------------------------ |
+| `value`    | `string`      | —       | Unique value for the radio item (required) |
+| `color`    | `AccentColor` | —       | Accent color for the item                  |
+| `disabled` | `boolean`     | `false` | Prevents interaction when `true`           |
+
+### Sub
+
+| Prop           | Type                      | Description                          |
+| -------------- | ------------------------- | ------------------------------------ |
+| `open`         | `boolean`                 | Controlled open state of the submenu |
+| `defaultOpen`  | `boolean`                 | Open state when initially rendered   |
+| `onOpenChange` | `(open: boolean) => void` | Called when the submenu opens or closes |
+
+### SubContent
+
+| Prop           | Type                        | Default   | Description                                              |
+| -------------- | --------------------------- | --------- | -------------------------------------------------------- |
+| `size`         | `'1' \| '2' \| Responsive`  | Inherited | Size of the submenu. Inherits from the parent content    |
+| `variant`      | `'solid' \| 'soft'`         | Inherited | Visual style of the submenu                              |
+| `color`        | `AccentColor`               | Inherited | Accent color for highlighted items                       |
+| `highContrast` | `boolean`                   | Inherited | Increases contrast for better visibility                 |
+| `material`     | `'solid' \| 'translucent'`  | Inherited | Background appearance                                    |
+| `virtualized`  | `boolean`                   | `false`   | Skips the ScrollArea so a `VirtualMenu` scrolls itself   |
+
+ContextMenu submenus always cascade. The `submenuBehavior` prop is accepted for backward compatibility and has no effect.
+
+## Variants
+
+### Solid Variant
+
+The default. Highlighted items use a solid accent fill.
+
+```tsx showLineNumbers
+<ContextMenu.Root>
+  <ContextMenu.Trigger>
+    <Card variant="classic" size="2">
+      <Text size="2">Right-click here</Text>
+    </Card>
+  </ContextMenu.Trigger>
+  <ContextMenu.Content variant="solid">
+    <ContextMenu.Item>Edit</ContextMenu.Item>
+    <ContextMenu.Item>Duplicate</ContextMenu.Item>
+  </ContextMenu.Content>
+</ContextMenu.Root>
+```
+
+### Soft Variant
+
+Highlighted items use a soft accent tint for content-heavy interfaces.
+
+```tsx showLineNumbers
+<ContextMenu.Root>
+  <ContextMenu.Trigger>
+    <Card variant="classic" size="2">
+      <Text size="2">Right-click here</Text>
+    </Card>
+  </ContextMenu.Trigger>
+  <ContextMenu.Content variant="soft">
+    <ContextMenu.Item>Edit</ContextMenu.Item>
+    <ContextMenu.Item>Duplicate</ContextMenu.Item>
+  </ContextMenu.Content>
+</ContextMenu.Root>
+```
+
+## Sizes
+
+### Size 1
+
+Compact size for dense editors and canvases.
+
+```tsx showLineNumbers
+<ContextMenu.Root>
+  <ContextMenu.Trigger>
+    <Card variant="classic" size="2">
+      <Text size="2">Right-click here</Text>
+    </Card>
+  </ContextMenu.Trigger>
+  <ContextMenu.Content size="1">
+    <ContextMenu.Item shortcut="⌘ C">Copy</ContextMenu.Item>
+    <ContextMenu.Item shortcut="⌘ V">Paste</ContextMenu.Item>
+  </ContextMenu.Content>
+</ContextMenu.Root>
+```
+
+### Size 2
+
+Standard size for most interfaces.
+
+```tsx showLineNumbers
+<ContextMenu.Root>
+  <ContextMenu.Trigger>
+    <Card variant="classic" size="2">
+      <Text size="2">Right-click here</Text>
+    </Card>
+  </ContextMenu.Trigger>
+  <ContextMenu.Content size="2">
+    <ContextMenu.Item shortcut="⌘ C">Copy</ContextMenu.Item>
+    <ContextMenu.Item shortcut="⌘ V">Paste</ContextMenu.Item>
+  </ContextMenu.Content>
+</ContextMenu.Root>
+```
+
+## Colors
+
+Use the `color` prop on items to communicate intent. Destructive actions should use `red` or `crimson`.
+
+```tsx showLineNumbers
+<ContextMenu.Root>
+  <ContextMenu.Trigger>
+    <Card variant="classic" size="2">
+      <Text size="2">Right-click here</Text>
+    </Card>
+  </ContextMenu.Trigger>
+  <ContextMenu.Content>
+    <ContextMenu.Item>Rename</ContextMenu.Item>
+    <ContextMenu.Separator />
+    <ContextMenu.Item color="red">Delete</ContextMenu.Item>
+  </ContextMenu.Content>
+</ContextMenu.Root>
+```
+
+## Material
+
+### Solid Material
+
+Opaque background for standard interfaces.
+
+```tsx showLineNumbers
+<ContextMenu.Root>
+  <ContextMenu.Trigger>
+    <Card variant="classic" size="2">
+      <Text size="2">Right-click here</Text>
+    </Card>
+  </ContextMenu.Trigger>
+  <ContextMenu.Content material="solid">
+    <ContextMenu.Item>Edit</ContextMenu.Item>
+  </ContextMenu.Content>
+</ContextMenu.Root>
+```
+
+### Translucent Material
+
+Frosted glass for menus over images or canvases. Use `highContrast` for readability.
+
+```tsx showLineNumbers
+<ContextMenu.Root>
+  <ContextMenu.Trigger>
+    <Card variant="classic" size="2">
+      <Text size="2">Right-click here</Text>
+    </Card>
+  </ContextMenu.Trigger>
+  <ContextMenu.Content material="translucent" highContrast>
+    <ContextMenu.Item>Edit</ContextMenu.Item>
+  </ContextMenu.Content>
+</ContextMenu.Root>
+```
+
+## States
+
+### Disabled Items
+
+Disabled items stay visible but cannot be focused or selected. Their shortcut dims with them.
+
+```tsx showLineNumbers
+<ContextMenu.Root>
+  <ContextMenu.Trigger>
+    <Card variant="classic" size="2">
+      <Text size="2">Right-click here</Text>
+    </Card>
+  </ContextMenu.Trigger>
+  <ContextMenu.Content>
+    <ContextMenu.Item shortcut="⌘ Z">Undo</ContextMenu.Item>
+    <ContextMenu.Item shortcut="⌘ ⇧ Z" disabled>
+      Redo
+    </ContextMenu.Item>
+  </ContextMenu.Content>
+</ContextMenu.Root>
+```
+
+## Examples
+
+### Toggle Options
+
+```tsx showLineNumbers
+import * as React from 'react';
+import { ContextMenu, Card, Text } from '@kushagradhawan/kookie-ui';
+
+export function CanvasMenu() {
+  const [showGrid, setShowGrid] = React.useState(true);
+  const [zoom, setZoom] = React.useState('fit');
+
+  return (
+    <ContextMenu.Root>
+      <ContextMenu.Trigger>
+        <Card variant="classic" size="2">
+          <Text size="2">Canvas</Text>
+        </Card>
+      </ContextMenu.Trigger>
+      <ContextMenu.Content>
+        <ContextMenu.CheckboxItem
+          checked={showGrid}
+          onCheckedChange={setShowGrid}
+          shortcut="⌘ '"
+        >
+          Show grid
+        </ContextMenu.CheckboxItem>
+        <ContextMenu.Separator />
+        <ContextMenu.Label>Zoom</ContextMenu.Label>
+        <ContextMenu.RadioGroup value={zoom} onValueChange={setZoom}>
+          <ContextMenu.RadioItem value="fit">Fit</ContextMenu.RadioItem>
+          <ContextMenu.RadioItem value="100">100%</ContextMenu.RadioItem>
+        </ContextMenu.RadioGroup>
+      </ContextMenu.Content>
+    </ContextMenu.Root>
+  );
+}
+```
+
+### Nested Actions
+
+Submenus open to the side and inherit the parent's size, variant, color and material. Pass props to `SubContent` to override them.
+
+```tsx showLineNumbers
+<ContextMenu.Root>
+  <ContextMenu.Trigger>
+    <Card variant="classic" size="2">
+      <Text size="2">Layer</Text>
+    </Card>
+  </ContextMenu.Trigger>
+  <ContextMenu.Content>
+    <ContextMenu.Item shortcut="⌘ D">Duplicate</ContextMenu.Item>
+    <ContextMenu.Sub>
+      <ContextMenu.SubTrigger>Arrange</ContextMenu.SubTrigger>
+      <ContextMenu.SubContent>
+        <ContextMenu.Item shortcut="⌘ ]">Bring forward</ContextMenu.Item>
+        <ContextMenu.Item shortcut="⌘ [">Send backward</ContextMenu.Item>
+      </ContextMenu.SubContent>
+    </ContextMenu.Sub>
+  </ContextMenu.Content>
+</ContextMenu.Root>
+```
+
+### Long Lists
+
+Set `virtualized` and render a `VirtualMenu` for hundreds of items. Row heights follow the menu size and theme scaling.
+
+```tsx showLineNumbers
+import { ContextMenu, Card, Text, VirtualMenu } from '@kushagradhawan/kookie-ui';
+
+const layers = Array.from({ length: 500 }, (_, i) => ({ id: String(i), label: `Layer ${i + 1}` }));
+
+export function LayerPicker({ onPick }: { onPick: (id: string) => void }) {
+  return (
+    <ContextMenu.Root>
+      <ContextMenu.Trigger>
+        <Card variant="classic" size="2">
+          <Text size="2">Right-click to jump to a layer</Text>
+        </Card>
+      </ContextMenu.Trigger>
+      <ContextMenu.Content virtualized size="1">
+        <VirtualMenu
+          items={layers}
+          itemLabel={(layer) => layer.label}
+          onSelect={(layer) => onPick(layer.id)}
+          style={{ height: 240, width: 200 }}
+        />
+      </ContextMenu.Content>
+    </ContextMenu.Root>
+  );
+}
+```
+
+## Responsive
+
+`size` accepts a responsive object. Submenus resolve it for the current breakpoint, so they stay aligned with their trigger.
+
+```tsx showLineNumbers
+<ContextMenu.Root>
+  <ContextMenu.Trigger>
+    <Card variant="classic" size="2">
+      <Text size="2">Right-click here</Text>
+    </Card>
+  </ContextMenu.Trigger>
+  <ContextMenu.Content size={{ initial: '2', md: '1' }}>
+    <ContextMenu.Item>Edit</ContextMenu.Item>
+  </ContextMenu.Content>
+</ContextMenu.Root>
+```
+
+## Accessibility
+
+Context Menu follows the [WAI-ARIA Menu pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/).
+
+### Keyboard Navigation
+
+| Key                      | Action                                           |
+| ------------------------ | ------------------------------------------------ |
+| `Shift` + `F10` / `Menu` | Opens the menu from a focused trigger            |
+| `Space` / `Enter`        | Selects the focused item                         |
+| `Arrow Down` / `Up`      | Moves focus between items                        |
+| `Arrow Right`            | Opens the submenu of the focused SubTrigger      |
+| `Arrow Left`             | Closes the submenu and returns to its SubTrigger |
+| `Escape`                 | Closes the menu                                  |
+| `Home` / `End`           | Moves focus to the first or last item            |
+| Type character           | Moves focus to the next item with that letter    |
+
+### Screen Readers
+
+- `role="menu"` on the content and `menuitem`, `menuitemcheckbox` and `menuitemradio` on items
+- `aria-checked` for checkbox and radio items, `aria-disabled` for disabled items
+- `aria-keyshortcuts` on items with a `shortcut`; the visual hint is hidden so it is not read as part of the item name
+
+### Trigger Content
+
+Context menus are hidden by default. Make every action also reachable from a visible control, such as a toolbar button or a `DropdownMenu`.
+
+## Changelog
+
+### Added
+
+- `virtualized` prop on `Content` and `SubContent` for `VirtualMenu`
+- `SubContent` accepts its own `size`, `variant`, `color`, `highContrast` and `material`
+- Shortcuts are exposed as `aria-keyshortcuts`
+
+### Fixed
+
+- `submenuBehavior` no longer leaks to the DOM
+- A responsive `size` no longer places the menu at the viewport origin
+- The first item lines up with the pointer at every size and scaling
+- Menus follow a nested `Theme` `material`
+- Radio items show a dot indicator, like DropdownMenu
+
+### Deprecated
+
+- `panelBackground` prop in favor of `material` prop
+- `submenuBehavior` on `Content`, which has no effect

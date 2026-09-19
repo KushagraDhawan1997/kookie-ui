@@ -84,6 +84,7 @@ export function DropdownMenuExamples() {
       variant="ghost"
       size="2"
       color="gray"
+      highContrast
       aria-label="More options"
     >
       <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
@@ -125,7 +126,7 @@ export function DropdownMenuExamples() {
               </Flex>
               <DropdownMenu.Root>
                 <DropdownMenu.Trigger>
-                  <IconButton variant="ghost" size="2" color="gray" aria-label="More options">
+                  <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="More options">
                     <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
                   </IconButton>
                 </DropdownMenu.Trigger>
@@ -605,44 +606,65 @@ const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
-          code={`<DropdownMenu.Root>
-  <DropdownMenu.Trigger>
-    <Button variant="soft" size="2" color="gray" highContrast>
-      <HugeiconsIcon icon={FilterIcon} strokeWidth={1.75} />
-      Select Country
-    </Button>
-  </DropdownMenu.Trigger>
-  <DropdownMenu.Content virtualized style={{ minWidth: 200, padding: 0 }}>
-    <VirtualMenu
-      items={countries}  // Array of { id, label }
-      itemLabel={(item) => item.label}
-      onSelect={(item) => console.log('Selected:', item.label)}
-      style={{ height: 240 }}
-    />
-  </DropdownMenu.Content>
-</DropdownMenu.Root>`}
+          code={`const countries = Array.from({ length: 200 }, (_, i) => ({
+  id: String(i),
+  label: \`Country \${i + 1}\`,
+}));
+
+function CountryPicker() {
+  const [country, setCountry] = React.useState<string | null>(null);
+
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>
+        <Button variant="soft" size="2" color="gray" highContrast>
+          <HugeiconsIcon icon={FilterIcon} strokeWidth={1.75} />
+          {country ?? 'Select country'}
+        </Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content virtualized style={{ minWidth: 200, padding: 0 }}>
+        <VirtualMenu
+          items={countries}
+          itemLabel={(item) => item.label}
+          onSelect={(item) => setCountry(item.label)}
+          style={{ height: 240 }}
+        />
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+}`}
         >
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger>
-              <Button variant="soft" size="2" color="gray" highContrast>
-                <HugeiconsIcon icon={FilterIcon} strokeWidth={1.75} />
-                Select Country
-              </Button>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Content virtualized style={{ minWidth: 200, padding: 0 }}>
-              <VirtualMenu
-                items={Array.from({ length: 200 }, (_, i) => ({
-                  id: String(i),
-                  label: `Country ${i + 1}`,
-                }))}
-                itemLabel={(item) => item.label}
-                onSelect={(item) => console.log('Selected:', item.label)}
-                style={{ height: 240 }}
-              />
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
+          <CountryPicker />
         </PreviewBlock>
       </Flex>
     </Flex>
+  );
+}
+
+const countries = Array.from({ length: 200 }, (_, i) => ({
+  id: String(i),
+  label: `Country ${i + 1}`,
+}));
+
+function CountryPicker() {
+  const [country, setCountry] = React.useState<string | null>(null);
+
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>
+        <Button variant="soft" size="2" color="gray" highContrast>
+          <HugeiconsIcon icon={FilterIcon} strokeWidth={1.75} />
+          {country ?? 'Select country'}
+        </Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content virtualized style={{ minWidth: 200, padding: 0 }}>
+        <VirtualMenu
+          items={countries}
+          itemLabel={(item) => item.label}
+          onSelect={(item) => setCountry(item.label)}
+          style={{ height: 240 }}
+        />
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
   );
 }

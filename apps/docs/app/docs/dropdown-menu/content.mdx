@@ -16,7 +16,7 @@ npm install @kushagradhawan/kookie-ui
 
 ## Usage
 
-```tsx
+```tsx showLineNumbers
 import { DropdownMenu, Button } from '@kushagradhawan/kookie-ui';
 
 export function MyComponent() {
@@ -26,10 +26,10 @@ export function MyComponent() {
         <Button variant="soft">Options</Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
-        <DropdownMenu.Item>Edit</DropdownMenu.Item>
-        <DropdownMenu.Item>Duplicate</DropdownMenu.Item>
-        <DropdownMenu.Separator />
-        <DropdownMenu.Item color="red">Delete</DropdownMenu.Item>
+          <DropdownMenu.Item>Edit</DropdownMenu.Item>
+          <DropdownMenu.Item>Duplicate</DropdownMenu.Item>
+          <DropdownMenu.Separator />
+          <DropdownMenu.Item color="red">Delete</DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   );
@@ -40,7 +40,7 @@ export function MyComponent() {
 
 The dropdown menu is composed of several parts:
 
-```tsx
+```tsx showLineNumbers
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>
     <Button>Trigger</Button>
@@ -89,7 +89,7 @@ The dropdown menu is composed of several parts:
 
 | Prop              | Type                        | Default   | Description                                                           |
 | ----------------- | --------------------------- | --------- | --------------------------------------------------------------------- |
-| `size`            | `'1' \| '2'`                | `'2'`     | Size of the menu items                                                |
+| `size`            | `'1' \| '2' \| Responsive`  | `'2'`     | Size of the menu items                                                |
 | `variant`         | `'solid' \| 'soft'`         | `'solid'` | Visual style of the menu                                              |
 | `color`           | `AccentColor`               | —         | Accent color for highlighted items. Inherits from theme if not set    |
 | `highContrast`    | `boolean`                   | `false`   | Increases contrast for better visibility                              |
@@ -111,7 +111,8 @@ The dropdown menu is composed of several parts:
 | `color`    | `AccentColor` | —       | Accent color for the item                           |
 | `shortcut` | `string`      | —       | Keyboard shortcut displayed on the right            |
 | `disabled` | `boolean`     | `false` | Prevents interaction when `true`                    |
-| `onSelect` | `() => void`  | —       | Event handler called when the item is selected      |
+| `textValue` | `string`     | —       | Text used for typeahead when children are not plain text |
+| `onSelect` | `(event: Event) => void` | — | Called when the item is selected. Call `event.preventDefault()` to keep the menu open |
 
 ### CheckboxItem
 
@@ -140,20 +141,38 @@ The dropdown menu is composed of several parts:
 
 ### Sub
 
-| Prop       | Type        | Default  | Description                                         |
-| ---------- | ----------- | -------- | --------------------------------------------------- |
-| `label`    | `ReactNode` | `'Back'` | Text for the back button in drill-down mode         |
+| Prop           | Type                      | Default  | Description                                                     |
+| -------------- | ------------------------- | -------- | --------------------------------------------------------------- |
+| `label`        | `ReactNode`               | `'Back'` | Text for the back row in drill-down mode, usually the submenu title |
+| `open`         | `boolean`                 | —        | Controlled open state of the submenu                            |
+| `defaultOpen`  | `boolean`                 | —        | Open state when initially rendered                              |
+| `onOpenChange` | `(open: boolean) => void` | —        | Called when the submenu opens or closes                         |
+
+In drill-down mode, `open` and `defaultOpen` push the submenu onto the navigation stack, and `onOpenChange` reports every push and pop. A controlled `open` is applied when it changes: the user can still navigate in and out, and your `onOpenChange` handler is where you keep `open` in sync.
 
 ### SubTrigger
 
-| Prop       | Type        | Description                                         |
-| ---------- | ----------- | --------------------------------------------------- |
-| `disabled` | `boolean`   | Prevents interaction when `true`                    |
-| `children` | `ReactNode` | Content of the submenu trigger                      |
+| Prop        | Type        | Description                                                     |
+| ----------- | ----------- | --------------------------------------------------------------- |
+| `disabled`  | `boolean`   | Prevents interaction when `true`. A disabled trigger never opens its submenu |
+| `textValue` | `string`    | Text used for typeahead and for the drill-down panel name       |
+| `children`  | `ReactNode` | Content of the submenu trigger                                  |
 
 ### SubContent
 
-Accepts the same props as `Content`.
+| Prop           | Type                       | Default          | Description                                                        |
+| -------------- | -------------------------- | ---------------- | ------------------------------------------------------------------ |
+| `size`         | `'1' \| '2' \| Responsive` | Inherited        | Size of the submenu. Inherits from the parent content              |
+| `variant`      | `'solid' \| 'soft'`        | Inherited        | Visual style of the submenu                                        |
+| `color`        | `AccentColor`              | Inherited        | Accent color for highlighted items                                 |
+| `highContrast` | `boolean`                  | Inherited        | Increases contrast for better visibility                           |
+| `material`     | `'solid' \| 'translucent'` | Inherited        | Background appearance                                              |
+| `virtualized`  | `boolean`                  | `false`          | Skips the ScrollArea so a `VirtualMenu` scrolls itself. Cascade mode only |
+| `container`    | `HTMLElement`              | —                | Custom container for the portal                                    |
+| `sideOffset`   | `number`                   | `1`              | Distance from the sub trigger in pixels                            |
+| `alignOffset`  | `number`                   | Content padding  | Lines the first item up with the sub trigger                       |
+
+`SubContent` has no `submenuBehavior`; the parent `Content` decides it. In drill-down mode the visual and positioning props do not apply, because the panel renders inline in the parent content.
 
 ## Variants
 
@@ -161,7 +180,7 @@ Accepts the same props as `Content`.
 
 Default variant with an opaque background for standard interfaces.
 
-```tsx
+```tsx showLineNumbers
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>
     <Button variant="soft">Options</Button>
@@ -177,7 +196,7 @@ Default variant with an opaque background for standard interfaces.
 
 Subtle background with reduced contrast for content-heavy interfaces.
 
-```tsx
+```tsx showLineNumbers
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>
     <Button variant="soft">Options</Button>
@@ -195,35 +214,56 @@ Subtle background with reduced contrast for content-heavy interfaces.
 
 Compact size for dense interfaces and toolbars.
 
-```tsx
-<DropdownMenu.Content size="1">
-  <DropdownMenu.Item>Edit</DropdownMenu.Item>
-  <DropdownMenu.Item>Duplicate</DropdownMenu.Item>
-</DropdownMenu.Content>
+```tsx showLineNumbers
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger>
+    <Button variant="soft" color="gray" highContrast>
+      Options
+    </Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content size="1">
+    <DropdownMenu.Item>Edit</DropdownMenu.Item>
+    <DropdownMenu.Item>Duplicate</DropdownMenu.Item>
+  </DropdownMenu.Content>
+</DropdownMenu.Root>
 ```
 
 ### Size 2
 
 Standard size for most interfaces.
 
-```tsx
-<DropdownMenu.Content size="2">
-  <DropdownMenu.Item>Edit</DropdownMenu.Item>
-  <DropdownMenu.Item>Duplicate</DropdownMenu.Item>
-</DropdownMenu.Content>
+```tsx showLineNumbers
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger>
+    <Button variant="soft" color="gray" highContrast>
+      Options
+    </Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content size="2">
+    <DropdownMenu.Item>Edit</DropdownMenu.Item>
+    <DropdownMenu.Item>Duplicate</DropdownMenu.Item>
+  </DropdownMenu.Content>
+</DropdownMenu.Root>
 ```
 
 ## Colors
 
 Use the `color` prop on items to communicate intent. Destructive actions should use `red` or `crimson`.
 
-```tsx
-<DropdownMenu.Content>
-  <DropdownMenu.Item>Edit</DropdownMenu.Item>
-  <DropdownMenu.Item>Duplicate</DropdownMenu.Item>
-  <DropdownMenu.Separator />
-  <DropdownMenu.Item color="red">Delete</DropdownMenu.Item>
-</DropdownMenu.Content>
+```tsx showLineNumbers
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger>
+    <Button variant="soft" color="gray" highContrast>
+      Options
+    </Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content>
+    <DropdownMenu.Item>Edit</DropdownMenu.Item>
+    <DropdownMenu.Item>Duplicate</DropdownMenu.Item>
+    <DropdownMenu.Separator />
+    <DropdownMenu.Item color="red">Delete</DropdownMenu.Item>
+  </DropdownMenu.Content>
+</DropdownMenu.Root>
 ```
 
 ## Material
@@ -232,92 +272,137 @@ Use the `color` prop on items to communicate intent. Destructive actions should 
 
 Opaque background for standard interfaces.
 
-```tsx
-<DropdownMenu.Content material="solid">
-  <DropdownMenu.Item>Edit</DropdownMenu.Item>
-</DropdownMenu.Content>
+```tsx showLineNumbers
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger>
+    <Button variant="soft" color="gray" highContrast>
+      Options
+    </Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content material="solid">
+    <DropdownMenu.Item>Edit</DropdownMenu.Item>
+  </DropdownMenu.Content>
+</DropdownMenu.Root>
 ```
 
 ### Translucent
 
 Frosted glass effect for depth over images or dynamic backgrounds. Use `highContrast` for readability.
 
-```tsx
-<DropdownMenu.Content material="translucent" highContrast>
-  <DropdownMenu.Item>Edit</DropdownMenu.Item>
-</DropdownMenu.Content>
+```tsx showLineNumbers
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger>
+    <Button variant="soft" color="gray" highContrast>
+      Options
+    </Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content material="translucent" highContrast>
+    <DropdownMenu.Item>Edit</DropdownMenu.Item>
+  </DropdownMenu.Content>
+</DropdownMenu.Root>
 ```
 
 ## Shortcuts
 
 Display keyboard shortcuts using the `shortcut` prop on items.
 
-```tsx
-<DropdownMenu.Content>
-  <DropdownMenu.Item shortcut="⌘ E">Edit</DropdownMenu.Item>
-  <DropdownMenu.Item shortcut="⌘ D">Duplicate</DropdownMenu.Item>
-  <DropdownMenu.Item shortcut="⌘ ⌫" color="red">Delete</DropdownMenu.Item>
-</DropdownMenu.Content>
+```tsx showLineNumbers
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger>
+    <Button variant="soft" color="gray" highContrast>
+      Options
+    </Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content>
+    <DropdownMenu.Item shortcut="⌘ E">Edit</DropdownMenu.Item>
+    <DropdownMenu.Item shortcut="⌘ D">Duplicate</DropdownMenu.Item>
+    <DropdownMenu.Item shortcut="⌘ ⌫" color="red">Delete</DropdownMenu.Item>
+  </DropdownMenu.Content>
+</DropdownMenu.Root>
 ```
 
 ## Labels
 
 Use `Label` to add section headings within the menu.
 
-```tsx
-<DropdownMenu.Content>
-  <DropdownMenu.Label>Actions</DropdownMenu.Label>
-  <DropdownMenu.Item>Edit</DropdownMenu.Item>
-  <DropdownMenu.Item>Duplicate</DropdownMenu.Item>
-  <DropdownMenu.Separator />
-  <DropdownMenu.Label>Danger Zone</DropdownMenu.Label>
-  <DropdownMenu.Item color="red">Delete</DropdownMenu.Item>
-</DropdownMenu.Content>
+```tsx showLineNumbers
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger>
+    <Button variant="soft" color="gray" highContrast>
+      Options
+    </Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content>
+    <DropdownMenu.Label>Actions</DropdownMenu.Label>
+    <DropdownMenu.Item>Edit</DropdownMenu.Item>
+    <DropdownMenu.Item>Duplicate</DropdownMenu.Item>
+    <DropdownMenu.Separator />
+    <DropdownMenu.Label>Danger Zone</DropdownMenu.Label>
+    <DropdownMenu.Item color="red">Delete</DropdownMenu.Item>
+  </DropdownMenu.Content>
+</DropdownMenu.Root>
 ```
 
 ## Groups
 
 Use `Group` to logically group related items.
 
-```tsx
-<DropdownMenu.Content>
-  <DropdownMenu.Group>
-    <DropdownMenu.Item>Cut</DropdownMenu.Item>
-    <DropdownMenu.Item>Copy</DropdownMenu.Item>
-    <DropdownMenu.Item>Paste</DropdownMenu.Item>
-  </DropdownMenu.Group>
-  <DropdownMenu.Separator />
-  <DropdownMenu.Group>
-    <DropdownMenu.Item>Select All</DropdownMenu.Item>
-  </DropdownMenu.Group>
-</DropdownMenu.Content>
+```tsx showLineNumbers
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger>
+    <Button variant="soft" color="gray" highContrast>
+      Options
+    </Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content>
+    <DropdownMenu.Group>
+      <DropdownMenu.Item>Cut</DropdownMenu.Item>
+      <DropdownMenu.Item>Copy</DropdownMenu.Item>
+      <DropdownMenu.Item>Paste</DropdownMenu.Item>
+    </DropdownMenu.Group>
+    <DropdownMenu.Separator />
+    <DropdownMenu.Group>
+      <DropdownMenu.Item>Select All</DropdownMenu.Item>
+    </DropdownMenu.Group>
+  </DropdownMenu.Content>
+</DropdownMenu.Root>
 ```
 
 ## Checkbox Items
 
 Use `CheckboxItem` for toggleable options within the menu.
 
-```tsx
-function CheckboxExample() {
+```tsx showLineNumbers
+import * as React from 'react';
+import { DropdownMenu, Button } from '@kushagradhawan/kookie-ui';
+
+export function CheckboxExample() {
   const [showToolbar, setShowToolbar] = React.useState(true);
   const [showSidebar, setShowSidebar] = React.useState(false);
 
   return (
-    <DropdownMenu.Content>
-      <DropdownMenu.Label>View</DropdownMenu.Label>
-      <DropdownMenu.CheckboxItem
-        checked={showToolbar}
-        onCheckedChange={setShowToolbar}
-      >
-        Show Toolbar
-      </DropdownMenu.CheckboxItem>
-      <DropdownMenu.CheckboxItem
-        checked={showSidebar}
-        onCheckedChange={setShowSidebar}
-      >
-        Show Sidebar
-      </DropdownMenu.CheckboxItem>
-    </DropdownMenu.Content>
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>
+        <Button variant="soft" color="gray" highContrast>
+          View
+        </Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content>
+        <DropdownMenu.Label>View</DropdownMenu.Label>
+        <DropdownMenu.CheckboxItem
+          checked={showToolbar}
+          onCheckedChange={setShowToolbar}
+        >
+          Show Toolbar
+        </DropdownMenu.CheckboxItem>
+        <DropdownMenu.CheckboxItem
+          checked={showSidebar}
+          onCheckedChange={setShowSidebar}
+        >
+          Show Sidebar
+        </DropdownMenu.CheckboxItem>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
   );
 }
 ```
@@ -326,19 +411,29 @@ function CheckboxExample() {
 
 Use `RadioGroup` and `RadioItem` for mutually exclusive options.
 
-```tsx
-function RadioExample() {
+```tsx showLineNumbers
+import * as React from 'react';
+import { DropdownMenu, Button } from '@kushagradhawan/kookie-ui';
+
+export function RadioExample() {
   const [view, setView] = React.useState('list');
 
   return (
-    <DropdownMenu.Content>
-      <DropdownMenu.Label>View Mode</DropdownMenu.Label>
-      <DropdownMenu.RadioGroup value={view} onValueChange={setView}>
-        <DropdownMenu.RadioItem value="list">List</DropdownMenu.RadioItem>
-        <DropdownMenu.RadioItem value="grid">Grid</DropdownMenu.RadioItem>
-        <DropdownMenu.RadioItem value="board">Board</DropdownMenu.RadioItem>
-      </DropdownMenu.RadioGroup>
-    </DropdownMenu.Content>
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>
+        <Button variant="soft" color="gray" highContrast>
+          View mode
+        </Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content>
+        <DropdownMenu.Label>View Mode</DropdownMenu.Label>
+        <DropdownMenu.RadioGroup value={view} onValueChange={setView}>
+          <DropdownMenu.RadioItem value="list">List</DropdownMenu.RadioItem>
+          <DropdownMenu.RadioItem value="grid">Grid</DropdownMenu.RadioItem>
+          <DropdownMenu.RadioItem value="board">Board</DropdownMenu.RadioItem>
+        </DropdownMenu.RadioGroup>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
   );
 }
 ```
@@ -347,20 +442,27 @@ function RadioExample() {
 
 Use `Sub`, `SubTrigger`, and `SubContent` for nested navigation.
 
-```tsx
-<DropdownMenu.Content>
-  <DropdownMenu.Item>New File</DropdownMenu.Item>
-  <DropdownMenu.Sub>
-    <DropdownMenu.SubTrigger>Share</DropdownMenu.SubTrigger>
-    <DropdownMenu.SubContent>
-      <DropdownMenu.Item>Email</DropdownMenu.Item>
-      <DropdownMenu.Item>Messages</DropdownMenu.Item>
-      <DropdownMenu.Item>Slack</DropdownMenu.Item>
-    </DropdownMenu.SubContent>
-  </DropdownMenu.Sub>
-  <DropdownMenu.Separator />
-  <DropdownMenu.Item>Settings</DropdownMenu.Item>
-</DropdownMenu.Content>
+```tsx showLineNumbers
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger>
+    <Button variant="soft" color="gray" highContrast>
+      Options
+    </Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content>
+    <DropdownMenu.Item>New File</DropdownMenu.Item>
+    <DropdownMenu.Sub>
+      <DropdownMenu.SubTrigger>Share</DropdownMenu.SubTrigger>
+      <DropdownMenu.SubContent>
+        <DropdownMenu.Item>Email</DropdownMenu.Item>
+        <DropdownMenu.Item>Messages</DropdownMenu.Item>
+        <DropdownMenu.Item>Slack</DropdownMenu.Item>
+      </DropdownMenu.SubContent>
+    </DropdownMenu.Sub>
+    <DropdownMenu.Separator />
+    <DropdownMenu.Item>Settings</DropdownMenu.Item>
+  </DropdownMenu.Content>
+</DropdownMenu.Root>
 ```
 
 ## Submenu Behavior
@@ -371,54 +473,77 @@ The `submenuBehavior` prop controls how submenus appear and interact. There are 
 
 Submenus open as floating panels to the side of the trigger, using portals. This is the standard desktop behavior.
 
-```tsx
-<DropdownMenu.Content submenuBehavior="cascade">
-  <DropdownMenu.Sub>
-    <DropdownMenu.SubTrigger>Share</DropdownMenu.SubTrigger>
-    <DropdownMenu.SubContent>
-      <DropdownMenu.Item>Email</DropdownMenu.Item>
-      <DropdownMenu.Item>Messages</DropdownMenu.Item>
-    </DropdownMenu.SubContent>
-  </DropdownMenu.Sub>
-</DropdownMenu.Content>
+```tsx showLineNumbers
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger>
+    <Button variant="soft" color="gray" highContrast>
+      Options
+    </Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content submenuBehavior="cascade">
+    <DropdownMenu.Sub>
+      <DropdownMenu.SubTrigger>Share</DropdownMenu.SubTrigger>
+      <DropdownMenu.SubContent>
+        <DropdownMenu.Item>Email</DropdownMenu.Item>
+        <DropdownMenu.Item>Messages</DropdownMenu.Item>
+      </DropdownMenu.SubContent>
+    </DropdownMenu.Sub>
+  </DropdownMenu.Content>
+</DropdownMenu.Root>
 ```
 
 ### Drill-Down
 
 Submenus replace the current menu content inline with a back button, similar to mobile navigation patterns. This prevents horizontal overflow on small screens.
 
-```tsx
-<DropdownMenu.Content submenuBehavior="drill-down">
-  <DropdownMenu.Item>Home</DropdownMenu.Item>
-  <DropdownMenu.Sub label="Settings">
-    <DropdownMenu.SubTrigger>Settings</DropdownMenu.SubTrigger>
-    <DropdownMenu.SubContent>
-      <DropdownMenu.Item>General</DropdownMenu.Item>
-      <DropdownMenu.Item>Privacy</DropdownMenu.Item>
-    </DropdownMenu.SubContent>
-  </DropdownMenu.Sub>
-</DropdownMenu.Content>
+```tsx showLineNumbers
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger>
+    <Button variant="soft" color="gray" highContrast>
+      Options
+    </Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content submenuBehavior="drill-down">
+    <DropdownMenu.Item>Home</DropdownMenu.Item>
+    <DropdownMenu.Sub label="Settings">
+      <DropdownMenu.SubTrigger>Settings</DropdownMenu.SubTrigger>
+      <DropdownMenu.SubContent>
+        <DropdownMenu.Item>General</DropdownMenu.Item>
+        <DropdownMenu.Item>Privacy</DropdownMenu.Item>
+      </DropdownMenu.SubContent>
+    </DropdownMenu.Sub>
+  </DropdownMenu.Content>
+</DropdownMenu.Root>
 ```
 
-The `label` prop on `Sub` sets the back button text. It defaults to "Back" if not provided.
+The `label` prop on `Sub` sets the text of the back row at the top of the panel. It defaults to "Back". Screen readers hear "Back from Settings" for `label="Settings"`, and the panel is a group named after its trigger.
+
+Only the levels you have navigated into are mounted, so a menu with many submenus opens as fast as a flat one. Arrow keys, typeahead and `Home`/`End` only reach the items on screen.
 
 ### Responsive
 
 Use a responsive object to switch between behaviors at different breakpoints. This provides the best experience on both mobile and desktop.
 
-```tsx
-<DropdownMenu.Content 
-  submenuBehavior={{ initial: 'drill-down', md: 'cascade' }}
->
-  <DropdownMenu.Item>Dashboard</DropdownMenu.Item>
-  <DropdownMenu.Sub label="Account">
-    <DropdownMenu.SubTrigger>Account</DropdownMenu.SubTrigger>
-    <DropdownMenu.SubContent>
-      <DropdownMenu.Item>Profile</DropdownMenu.Item>
-      <DropdownMenu.Item>Billing</DropdownMenu.Item>
-    </DropdownMenu.SubContent>
-  </DropdownMenu.Sub>
-</DropdownMenu.Content>
+```tsx showLineNumbers
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger>
+    <Button variant="soft" color="gray" highContrast>
+      Options
+    </Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content 
+    submenuBehavior={{ initial: 'drill-down', md: 'cascade' }}
+  >
+    <DropdownMenu.Item>Dashboard</DropdownMenu.Item>
+    <DropdownMenu.Sub label="Account">
+      <DropdownMenu.SubTrigger>Account</DropdownMenu.SubTrigger>
+      <DropdownMenu.SubContent>
+        <DropdownMenu.Item>Profile</DropdownMenu.Item>
+        <DropdownMenu.Item>Billing</DropdownMenu.Item>
+      </DropdownMenu.SubContent>
+    </DropdownMenu.Sub>
+  </DropdownMenu.Content>
+</DropdownMenu.Root>
 ```
 
 Breakpoint values: `initial` (default), `xs` (520px), `sm` (768px), `md` (1024px), `lg` (1280px), `xl` (1640px).
@@ -427,7 +552,7 @@ Breakpoint values: `initial` (default), `xs` (520px), `sm` (768px), `md` (1024px
 
 Use `TriggerIcon` to add a dropdown indicator to custom triggers.
 
-```tsx
+```tsx showLineNumbers
 <DropdownMenu.Trigger>
   <Button variant="soft">
     Options
@@ -444,7 +569,8 @@ For menus with many items (hundreds or thousands), use the `virtualized` prop wi
 
 Use `itemLabel` for basic text items:
 
-```tsx
+```tsx showLineNumbers
+import * as React from 'react';
 import { DropdownMenu, VirtualMenu, Button } from '@kushagradhawan/kookie-ui';
 
 const items = Array.from({ length: 1000 }, (_, i) => ({
@@ -453,16 +579,20 @@ const items = Array.from({ length: 1000 }, (_, i) => ({
 }));
 
 function VirtualizedExample() {
+  const [selected, setSelected] = React.useState<string | null>(null);
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
-        <Button variant="soft">Open Menu</Button>
+        <Button variant="soft" color="gray" highContrast>
+          {selected ?? 'Open menu'}
+        </Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content virtualized style={{ minWidth: 220, padding: 0 }}>
         <VirtualMenu
           items={items}
           itemLabel={(item) => item.label}
-          onSelect={(item) => console.log('Selected:', item)}
+          onSelect={(item) => setSelected(item.label)}
           style={{ height: 300 }}
         />
       </DropdownMenu.Content>
@@ -486,7 +616,7 @@ function VirtualizedExample() {
 | `itemLabel`         | `keyof T \| (item: T) => ReactNode`       | —       | Label accessor for simple text items             |
 | `renderItem`        | `React.ComponentType<RenderItemProps<T>>` | —       | Custom component for rendering items             |
 | `onSelect`          | `(item: T, index: number) => void`        | —       | Callback when an item is selected                |
-| `estimatedItemSize` | `number \| (index: number) => number`     | `36`    | Estimated height per item                        |
+| `estimatedItemSize` | `number \| (index: number) => number`     | From size | Row height. Defaults to the menu item height for the current size and theme scaling (24px or 32px at 100%) |
 | `overscan`          | `number`                                  | `5`     | Extra items to render above/below visible area   |
 | `style`             | `CSSProperties`                           | —       | Must include `height` for virtualization         |
 
@@ -496,7 +626,7 @@ You must provide either `itemLabel` or `renderItem`.
 
 For custom item layouts, pass a memoized component to `renderItem`:
 
-```tsx
+```tsx showLineNumbers
 import { VirtualMenu, type VirtualMenuRenderItemProps } from '@kushagradhawan/kookie-ui';
 
 type User = { id: string; name: string; email: string; avatar: string };
@@ -549,7 +679,7 @@ Props passed to your `renderItem` component:
 
 Use a function for `estimatedItemSize` when items have different heights:
 
-```tsx
+```tsx showLineNumbers
 type Item = { id: string; type: 'header' | 'item'; label: string };
 
 const SectionItem = React.memo(function SectionItem({
@@ -607,7 +737,7 @@ VirtualMenu supports full keyboard navigation:
 
 Control the open state for programmatic menu management.
 
-```tsx
+```tsx showLineNumbers
 function ControlledExample() {
   const [open, setOpen] = React.useState(false);
 
@@ -617,9 +747,9 @@ function ControlledExample() {
         <Button variant="soft">Options</Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
-        <DropdownMenu.Item onSelect={() => setOpen(false)}>
-          Done
-        </DropdownMenu.Item>
+          <DropdownMenu.Item onSelect={() => setOpen(false)}>
+            Done
+          </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   );
@@ -634,12 +764,12 @@ Dropdown Menu follows the [WAI-ARIA Menu Button pattern](https://www.w3.org/WAI/
 
 | Key                     | Action                                          |
 | ----------------------- | ----------------------------------------------- |
-| `Space` / `Enter`       | Opens menu from trigger, selects focused item. In drill-down mode, navigates into submenu or activates back button. |
+| `Space` / `Enter`       | Opens menu from trigger, selects focused item. In drill-down mode, opens the submenu or activates the back row |
 | `Arrow Down`            | Opens menu from trigger, moves focus down       |
-| `Arrow Up`              | Moves focus up, wraps from first to last        |
-| `Arrow Right`           | Opens submenu when focused on SubTrigger (cascade mode) |
-| `Arrow Left`            | Closes submenu, returns focus to SubTrigger (cascade mode) |
-| `Escape`                | Closes menu and returns focus to trigger        |
+| `Arrow Up`              | Moves focus up. Set `loop` on `Content` to wrap |
+| `Arrow Right`           | Opens the submenu of the focused SubTrigger and focuses its first item |
+| `Arrow Left`            | Closes the submenu (cascade) or goes back one level (drill-down), returning focus to the SubTrigger |
+| `Escape`                | In drill-down mode, goes back one level. At the root, closes the menu and returns focus to trigger |
 | `Home` / `End`          | Moves focus to first/last item                  |
 | Type character          | Moves focus to item starting with that letter   |
 
@@ -650,6 +780,8 @@ Dropdown Menu follows the [WAI-ARIA Menu Button pattern](https://www.w3.org/WAI/
 - `aria-expanded` reflects open state
 - `aria-checked` for checkbox and radio items
 - `aria-disabled` for disabled items
+- `aria-keyshortcuts` on items with a `shortcut`; the visual hint is hidden from screen readers so it is not read as part of the item name
+- Drill-down panels are groups named after their trigger, and the back row is named "Back from …"
 - Focus management returns to trigger on close
 
 ### Focus Management
@@ -657,6 +789,8 @@ Dropdown Menu follows the [WAI-ARIA Menu Button pattern](https://www.w3.org/WAI/
 - Focus is trapped within menu when open
 - Focus returns to trigger when menu closes
 - Submenus manage focus independently
+- In drill-down mode, keyboard navigation moves focus to the first item of the new panel and back to the SubTrigger on return. The scroll position of each level is restored
+- A drill-down menu always reopens at its root level
 
 ## Changelog
 
@@ -673,6 +807,22 @@ Dropdown Menu follows the [WAI-ARIA Menu Button pattern](https://www.w3.org/WAI/
 - **Drill-down animations** with direction-aware slide transitions (slides from right when entering submenu, from left when going back)
 - Respects `prefers-reduced-motion` for drill-down animations
 - **Virtualization support** via `virtualized` prop and `VirtualMenu` component for rendering large lists efficiently
+
+### Fixed
+
+- Drill-down SubTrigger and back row are real menu items: arrow keys, typeahead and `Home`/`End` reach them
+- Drill-down focus moves into the new panel and back to the SubTrigger instead of dropping to the page
+- `Escape` and `Arrow Left` go back one drill-down level; `Arrow Right` opens a submenu
+- Drill-down mounts only the levels on the navigation stack instead of every submenu
+- Drill-down panels nested in groups and radio groups now show
+- SubTrigger forwards its props and honors `disabled` in drill-down mode
+- `Sub` honors `open`, `defaultOpen` and `onOpenChange` in drill-down mode
+- Switching between cascade and drill-down no longer remounts the menu
+- A responsive `size` no longer places submenus at the viewport origin
+- `SubContent` uses its own `size`, `variant`, `color`, `material` and `highContrast`, and supports `virtualized`
+- Menus follow a nested `Theme` `material`
+- `TriggerIcon` keeps its `className`
+- Label and muted text meet AA contrast
 
 ### Deprecated
 

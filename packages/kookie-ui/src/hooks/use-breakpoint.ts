@@ -87,6 +87,9 @@ function getServerSnapshot(): Breakpoint {
 const getReadySnapshot = () => true;
 const getReadyServerSnapshot = () => false;
 
+const noopSubscribe = () => () => {};
+const getInitialSnapshot = (): Breakpoint => 'initial';
+
 /**
  * The current breakpoint, and whether it has been resolved against a real
  * viewport yet (`false` on the server and during hydration).
@@ -95,10 +98,23 @@ const getReadyServerSnapshot = () => false;
  * effect. On a client render the very first pass already has the real
  * breakpoint, instead of rendering the whole shell at `initial` and correcting
  * it after the browser has painted.
+ *
+ * Pass `enabled = false` to skip the subscription (the breakpoint then reads as
+ * `initial`).
  */
-export function useBreakpoint(): { breakpoint: Breakpoint; ready: boolean } {
-  const breakpoint = React.useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  const ready = React.useSyncExternalStore(subscribe, getReadySnapshot, getReadyServerSnapshot);
+export function useBreakpoint(enabled = true): { breakpoint: Breakpoint; ready: boolean } {
+  // Callers with a non-responsive value pass `enabled = false` so they neither
+  // subscribe to the media queries nor re-render when the viewport crosses one.
+  const breakpoint = React.useSyncExternalStore(
+    enabled ? subscribe : noopSubscribe,
+    enabled ? getSnapshot : getInitialSnapshot,
+    getServerSnapshot,
+  );
+  const ready = React.useSyncExternalStore(
+    enabled ? subscribe : noopSubscribe,
+    getReadySnapshot,
+    getReadyServerSnapshot,
+  );
 
   return React.useMemo(() => ({ breakpoint, ready }), [breakpoint, ready]);
 }

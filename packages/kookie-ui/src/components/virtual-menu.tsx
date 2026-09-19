@@ -3,7 +3,8 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { useMenuContext, menuSizeToItemHeight } from './_internal/menu-context.js';
+import { useMenuContext, getMenuItemHeight } from './_internal/menu-context.js';
+import { useThemeContext } from './theme.js';
 
 /**
  * VirtualMenu - A virtualized menu component for rendering large lists efficiently.
@@ -192,13 +193,16 @@ function VirtualMenuRoot<T>({
   const menuId = React.useId();
   const parentRef = React.useRef<HTMLDivElement>(null);
   const [highlightedIndex, setHighlightedIndex] = React.useState<number>(-1);
-  const { isInsideMenu, size: contextSize } = useMenuContext();
+  const { isInsideMenu, size: contextSize, itemHeight: contextItemHeight } = useMenuContext();
+  const { scaling } = useThemeContext();
 
-  // Resolve size: prop > context > default '2'
-  const resolvedSize = sizeProp ?? contextSize ?? '2';
-  
-  // Resolve item height: explicit prop > derived from size
-  const estimatedItemSize = estimatedItemSizeProp ?? menuSizeToItemHeight[resolvedSize];
+  // Resolve item height: explicit prop > own size > parent menu > default size '2'.
+  // Heights follow the theme scaling, like the --base-menu-item-height token.
+  const estimatedItemSize =
+    estimatedItemSizeProp ??
+    (sizeProp
+      ? getMenuItemHeight(sizeProp, scaling)
+      : (contextItemHeight ?? getMenuItemHeight(contextSize ?? '2', scaling)));
 
   // Validate props
   if (!itemLabel && !RenderItem) {
