@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Button, Container, Section, Link as KUILink, Callout, Flex, Grid, Heading, Text, Box } from '@kushagradhawan/kookie-ui';
+import { Button, Link as KUILink, Callout, Flex, Grid, Heading, Text, Box } from '@kushagradhawan/kookie-ui';
 import { Hero } from '@/components/blocks/hero/hero';
 import { Footer } from '@/components/blocks/footer/footer';
 import Link from 'next/link';
@@ -47,89 +47,81 @@ export default function HeroSection() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <>
-      <Section position="relative" size="4">
-        <Container size="4">
-          <Flex direction="column" align="start" gap={{ initial: '5', sm: '8' }} py={{ initial: '4', sm: '6' }} px={{ initial: '4', sm: '6' }}>
-            <Heading size="3" weight="medium">
-              Kookie UI v1
-            </Heading>
+    /* One centered reading column for the whole page: intro, playgrounds and footer share its edges. */
+    <Box px={{ initial: '4', sm: '6' }} pt={{ initial: '6', sm: '9' }}>
+      <Flex direction="column" gap={{ initial: '8', sm: '9' }} maxWidth="48rem" mx="auto">
+        <Flex direction="column" align="start" gap="5">
+          <Text size="2" weight="medium" color="gray">
+            Built on Kookie UI v1
+          </Text>
 
-            <Hero.Root align="start" gap={{ initial: '6', sm: '8' }}>
-              <Hero.Title size={{ initial: '8', sm: '9', lg: '10' }} weight="medium" align="left">
-                Womp&apos;s Design System
-              </Hero.Title>
+          <Hero.Root align="start" gap="6">
+            <Hero.Title size={{ initial: '8', sm: '9' }} weight="medium" align="left">
+              Womp&apos;s Design System
+            </Hero.Title>
 
-              <Hero.Description size={{ initial: '3', sm: '4' }} color="gray" align="left">
-                Kookie UI v1 is the design system behind{' '}
-                <KUILink target="_blank" href="https://womp.com" rel="noopener noreferrer" underline="always" color="blue">
-                  Womp
-                </KUILink>
-                . It started as an open-source fork of{' '}
-                <KUILink target="_blank" href="https://radix-ui.com/themes" rel="noopener noreferrer" underline="always" color="blue">
-                  Radix Themes
-                </KUILink>{' '}
-                and now powers every screen of the product. Built and maintained by{' '}
-                <KUILink target="_blank" href="https://www.kushagradhawan.com" rel="noopener noreferrer" underline="always" color="blue">
-                  Kushagra Dhawan
-                </KUILink>
-                , Head of Product and Design at Womp.
-              </Hero.Description>
+            <Hero.Description size="3" align="left">
+              Kookie UI v1 is the design system behind{' '}
+              <KUILink target="_blank" href="https://womp.com" rel="noopener noreferrer" underline="always" color="blue">
+                Womp
+              </KUILink>
+              . It started as an open-source fork of{' '}
+              <KUILink target="_blank" href="https://radix-ui.com/themes" rel="noopener noreferrer" underline="always" color="blue">
+                Radix Themes
+              </KUILink>{' '}
+              and now powers every screen of the product. Built and maintained by{' '}
+              <KUILink target="_blank" href="https://www.kushagradhawan.com" rel="noopener noreferrer" underline="always" color="blue">
+                Kushagra Dhawan
+              </KUILink>
+              , Head of Product and Design at Womp.
+            </Hero.Description>
 
-              <Hero.Actions gap="3">
-                <Button asChild variant="solid" size="3" highContrast>
-                  <Link href="/docs/installation">
-                    Get Started
-                    <HugeiconsIcon icon={ArrowUpRight01Icon} />
-                  </Link>
-                </Button>
-                <Button asChild variant="soft" highContrast size="3">
-                  <a href="https://github.com/KushagraDhawan1997/kookie-ui" target="_blank" rel="noopener noreferrer">
-                    GitHub
-                    <HugeiconsIcon icon={ArrowRight01Icon} />
-                  </a>
-                </Button>
-              </Hero.Actions>
-
-              <Flex justify="start">
-                <Link href="https://www.kushagradhawan.com/articles/kookie-chatbar-update" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-                  <Callout.Root highContrast variant="outline" color="gray" size="2" style={{ cursor: 'pointer' }}>
-                    <Callout.Text align="left">Read the latest → Chatbar component update</Callout.Text>
-                  </Callout.Root>
+            <Hero.Actions gap="3">
+              <Button asChild variant="solid" size="3" highContrast>
+                <Link href="/docs/installation">
+                  Get Started
+                  <HugeiconsIcon icon={ArrowUpRight01Icon} strokeWidth={1.75} />
                 </Link>
-              </Flex>
-            </Hero.Root>
-          </Flex>
-        </Container>
-      </Section>
+              </Button>
+              <Button asChild variant="soft" highContrast size="3">
+                <a href="https://github.com/KushagraDhawan1997/kookie-ui" target="_blank" rel="noopener noreferrer">
+                  GitHub
+                  <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={1.75} />
+                </a>
+              </Button>
+            </Hero.Actions>
 
-      <Section size="4">
-        <Container size="4">
-          <Flex direction="column" py={{ initial: '4', sm: '6' }} px={{ initial: '4', sm: '6' }}>
-            <Grid columns={{ initial: '1', sm: '2', lg: '2' }} gap="4">
-              {playgrounds.map(({ name, slug, Component }) => (
-                <Flex key={slug} direction="column">
-                  <Box px="1">
-                    <KUILink asChild size="2" weight="medium" color="gray" highContrast>
-                      <Link href={`/docs/${slug}`}>{name}</Link>
-                    </KUILink>
-                  </Box>
-                  <Component showControls={false} height="360px" />
-                </Flex>
-              ))}
-            </Grid>
-          </Flex>
-        </Container>
-      </Section>
+            <Link href="https://www.kushagradhawan.com/articles/kookie-chatbar-update" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+              <Callout.Root highContrast variant="outline" color="gray" size="2" style={{ cursor: 'pointer' }}>
+                <Callout.Text align="left">Read the latest → Chatbar component update</Callout.Text>
+              </Callout.Root>
+            </Link>
+          </Hero.Root>
+        </Flex>
 
-      <Box mb={{ initial: '6', sm: '9' }}>
-        <Container size="4">
-          <Footer.Root p={{ initial: '4', sm: '8' }} gap={{ initial: '6', sm: '8' }} px={{ initial: '4', sm: '6' }}>
+        <Grid columns={{ initial: '1', sm: '2' }} gapX="4" gapY="6">
+          {playgrounds.map(({ name, slug, Component }) => (
+            <Flex key={slug} direction="column" gap="2" minWidth="0">
+              <Box px="1">
+                <KUILink asChild size="2" weight="medium" color="gray" highContrast>
+                  <Link href={`/docs/${slug}`}>{name}</Link>
+                </KUILink>
+              </Box>
+              <Component showControls={false} height="18rem" />
+            </Flex>
+          ))}
+        </Grid>
+
+        <Box mb={{ initial: '6', sm: '9' }}>
+          <Footer.Root p={{ initial: '4', sm: '6' }} gap={{ initial: '6', sm: '8' }}>
             <Footer.Brand gap="6">
               <Flex direction="column" gap="4">
                 <Heading asChild size="8" weight="medium" className="kd-wordmark" style={{ whiteSpace: 'normal' }}>
-                  <p>Kookie UI - Womp&apos;s Design System</p>
+                  <p>Womp Design</p>
                 </Heading>
+                <Text size="2" color="gray">
+                  Built on Kookie UI v1.
+                </Text>
                 <Footer.Legal>
                   <Text size="2" color="gray">
                     © {currentYear} Kushagra Dhawan.
@@ -157,8 +149,8 @@ export default function HeroSection() {
               </Footer.LinkGroup>
             </Footer.Links>
           </Footer.Root>
-        </Container>
-      </Box>
-    </>
+        </Box>
+      </Flex>
+    </Box>
   );
 }

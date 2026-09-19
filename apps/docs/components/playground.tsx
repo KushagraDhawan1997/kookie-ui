@@ -128,7 +128,7 @@ export default function Playground({ component, code, items, showBackground = fa
               {showBackground && (
                 <Image as={NextImage} src="/playground/image.jpg" alt="" fill sizes="100vw" style={{ objectFit: 'cover' }} />
               )}
-              <Flex position="relative" align="center" justify="center">
+              <Flex position="relative" align="center" justify="center" width="100%" minWidth="0">
                 {component}
               </Flex>
             </div>

@@ -128,7 +128,7 @@ export default function ChatbarPlayground({
     if (sendMode !== 'whenDirty') props.push(`sendMode="${sendMode}"`);
     if (disabled) props.push('disabled');
     if (manualOpen) props.push('open={open}', 'onOpenChange={setOpen}');
-    props.push('value={value}', 'onValueChange={setValue}', 'width={400}', 'minLines={3}');
+    props.push('value={value}', 'onValueChange={setValue}', 'width="min(400px, 100%)"', 'minLines={3}');
 
     const imports = [
       `import { useState } from 'react';`,
@@ -200,7 +200,7 @@ export function ChatbarDemo() {
           onOpenChange={setOpen}
           value={textValue}
           onValueChange={setTextValue}
-          width={400}
+          width="min(400px, 100%)"
           minLines={3}
         >
           {showAttach && <Chatbar.AttachmentsRow />}
