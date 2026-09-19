@@ -3,6 +3,7 @@ import NextLink from 'next/link';
 import { CodeBlock } from '@/components/blocks/code-block/code-block';
 import { MarkdownContent, createMarkdownComponents } from '@/components/blocks/markdown/markdown';
 import { SpecsBlock } from './components/specs-block';
+import { GapNote } from './components/gap-note';
 
 // Built once: renderers created during render would remount the whole page on every update.
 const markdownComponents = createMarkdownComponents({ linkComponent: NextLink });
@@ -13,6 +14,7 @@ const siteComponents: MDXComponents = {
   wrapper: ({ children }) => <MarkdownContent>{children}</MarkdownContent>,
   CodeBlock,
   SpecsBlock,
+  GapNote,
 };
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {

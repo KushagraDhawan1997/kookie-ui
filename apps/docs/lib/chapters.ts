@@ -59,7 +59,7 @@ export const CHAPTERS: readonly Chapter[] = [
     title: 'Vocabulary',
     section: 'start',
     blurb:
-      "These are the words the system uses for the kinds of component. Once you know a component's kind, you know which props to expect.",
+      "These are the words the system uses for the kinds of component. Once you know a component's kind, you know which of its options your product should decide.",
   },
   {
     slug: 'start/installation',

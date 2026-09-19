@@ -1,1 +1,92 @@
-This chapter is not written yet.
+Kookie uses a small set of words for the kinds of component: a card, a control, a mark, a row, and
+a few more. The kind of a component tells you what it is for, and which of its options matter.
+
+If you're not sure how to use a component, find its kind. The kind usually tells you which
+choices are real and which options exist only because a decision is still open.
+
+## Cards and the page
+
+A screen has levels. The **page** is the bottom level. A **card** is an object with its own
+surface, such as `Card`. Anything behind a card stops at its edge.
+
+A card can be solid or translucent. `material` sets this, because a card is a surface, and a
+surface is made of something. Use one material for each kind of surface.
+
+Do not put a Card inside a Card to make a quieter region. A card is an object, not a tint.
+
+<GapNote>
+v1 has no component for a **ground**, a region that holds cards and sits on the page without a
+shadow. v2 calls it `Surface`. In v1, a layout component with a background does this job.
+</GapNote>
+
+## Controls
+
+A control is something that people operate. There are four kinds of control.
+
+**Buttons** do something, and they rank against each other. On a screen, one action matters most
+and the others are quieter. In v1, `variant` sets how loud a button is. Use the same variant for
+the main action everywhere, and the same one for quiet actions. `color` sets what the action
+means, such as danger. Use one loud button on each screen.
+
+**Fields** hold what people type: `TextField` and `TextArea`. Fields don't rank against each
+other. A form where one field is louder than the next says nothing. So use one field variant
+everywhere.
+
+**Marks** are small controls with no text inside them: `Checkbox`, `Radio` and `Switch`. A mark
+is next to its label and does not contain it. So a mark is exactly as tall as one line of the
+text next to it. A label is text, and `Text` gives it every size, weight and colour it needs.
+
+**Instruments** show a value on a track: `Slider` and `Progress`. An instrument has no surface of
+its own.
+
+<GapNote>
+Marks in v1 take options they may not need. `Checkbox`, `Radio` and `Switch` take a
+`material`, and `Checkbox` takes twelve sizes. A mark has no surface, and its size should follow
+the text beside it. How v1 settles this is not decided yet.
+</GapNote>
+
+## Rows
+
+A row is one interactive line in a list. Each item in a `DropdownMenu` is a row, and so is each
+item in a `Sidebar`.
+
+A row looks like a small button. But no option in a list is more important than the options near
+it. So rows don't rank. The selected row changes colour. It does not become louder.
+
+## Type, layout, and the frame
+
+**Type** components get their colour from the surface below them. `Text`, `Heading`,
+`Blockquote`, `Code` and `Kbd` have no fill of their own. So on a type component, `color` and
+`highContrast` choose a text colour, not a background.
+
+`Link` responds to a pointer, but it is type, not a control. A control is a box with a height,
+padding, a corner and a tap target. A link is a group of words in a sentence. It must stay
+selectable, wrap across lines and stay on the same line as its paragraph. So a link has the hover
+and focus states, but no box of its own.
+
+**Layout** components paint nothing. `Box`, `Flex`, `Grid`, `Container` and `Section` place
+things and set the space between them.
+
+**The frame** is `Shell`. It arranges the header, the sidebar and the content, and it doesn't own
+any of them. That makes it a pattern, not a component. The [Principles](/start/principles)
+chapter explains the difference.
+
+## Components that look alike
+
+The components in each pair below look almost the same, but they are different kinds. The
+[Principles](/start/principles) chapter explains why Kookie keeps look-alikes separate.
+
+- **Tabs or SegmentedControl.** A tab bar changes the content below it. A segmented control sets
+  a value in place.
+- **Dialog or AlertDialog.** A dialog holds work that you asked for. An alert stops you to ask one
+  question.
+- **DropdownMenu or Select.** A menu selects an action. A select selects a value and sends it with
+  a form.
+- **Link or Button.** A link goes somewhere, and a button does something. If a press goes to a
+  new address, use a `Link`. If a press runs a handler, use a `Button`.
+- **Popover or Dialog.** A popover keeps the page live behind it. A dialog dims the app and keeps
+  focus inside the dialog. Choose by whether the rest of the app must continue to work. Do not
+  choose by the quantity of content.
+- **Popover or Tooltip.** A popover opens when you press, and it holds any content. A tooltip
+  shows when the pointer stays on a control, and it holds one sentence. Keyboard and touch users
+  may never see a tooltip. So a tooltip can only repeat what its control already announces.

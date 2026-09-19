@@ -2,6 +2,13 @@
 
 Decisions about Kookie UI v1 and why they were made. Newest first. The docs site is the source of truth for what the system says. This file records how it got there.
 
+## 2026-09-19: Principles and Vocabulary
+
+The first two chapters are written. They follow v2's pages section by section, with two changes:
+
+- In place of v2's "The trade", Principles closes with "Why v1 has options". A first draft said v1 leaves decisions to the product. Kushagra corrected it: v1 has raw props because many decisions are not made yet. The options are the building blocks that let a real product try the choices and settle on one. When a decision settles, it moves into v1 and its options narrow. v1 and v2 also differ in how they look, not only in where decisions live.
+- Where v1 breaks a principle today, the page says so in a `GapNote` (`components/gap-note.tsx`, available in every chapter). The first notes, all confirmed by Kushagra as pending: `IconButton` split from `Button` by look; measured limits not enforced; no ground component; marks taking `material` and too many sizes (the fix is not decided yet). A gap note states the gap and does not prescribe a fix that has not been decided.
+
 ## 2026-09-19: the docs skeleton
 
 The docs now have v2's structure. `apps/docs/lib/chapters.ts` lists the sections and chapters, and the sidebar, the homepage and the chapter route all read from it. Chapter files live in `apps/docs/content/`. One route, `app/[section]/[chapter]`, renders every chapter, so no chapter gets a page of its own.
@@ -20,7 +27,7 @@ The docs now have v2's structure. `apps/docs/lib/chapters.ts` lists the sections
 
 **v1 and v2 must never disagree on what is right.** They are both Kushagra's systems. They may look different, and they may reach the same answer by different means, but a design question gets the same answer in both. The test for a real conflict: two approaches that give a different answer to the same question. Same answer by different code is fine. Responsiveness is the main example: v1 keeps responsive prop objects, v2 uses tiers, and both must agree on what responds to what.
 
-**The core difference is where decisions are made.** v2 is the system and its foundations in one package. The package makes the decisions and enforces them, which is why it refuses variants. v1 holds the foundations and a set of options, and the product that uses it makes the final decisions. For Womp, that product is Womp's own app. v1 is the low-level surface those decisions are carried out with. So:
+**The core difference is how many decisions are made.** v2 is the system and its foundations in one package. Most decisions are made, and the package enforces them, which is why it refuses variants. In v1 many decisions are still open. v1 holds the foundations plus raw options, and a real product (Womp's app) is where the choices get tried until they settle. Settled decisions move into v1. The two also look different. So:
 
 - v1 keeps variants. Their shape and names may change. They do not break "decide once", because the product decides once. They only break it if every screen picks freely.
 - Shared principles say what gets decided, never where. v2's Principles page mixes in v2's enforcement ("no variant prop", "refusals"), so it cannot be copied word for word.
