@@ -8,12 +8,14 @@ import { Analytics } from '@vercel/analytics/next';
 export const metadata: Metadata = {
   metadataBase: new URL('https://hellokookie.com'),
   title: {
-    default: 'Kookie UI – Open-Source React Component Library by Kushagra Dhawan',
-    template: '%s – Kookie UI',
+    default: 'Womp Design System',
+    template: '%s – Womp Design',
   },
   description:
-    'Kookie UI is an open-source React component library created by Kushagra Dhawan. Beautifully designed, accessible, and customizable components for building design systems.',
+    "Womp's design system: React components built on Kookie UI v1, an open-source fork of Radix Themes by Kushagra Dhawan.",
   keywords: [
+    'Womp Design',
+    'Womp',
     'Kookie UI',
     'React UI components',
     'Design system',
@@ -30,17 +32,17 @@ export const metadata: Metadata = {
   publisher: 'Kushagra Dhawan',
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'Kookie UI – Open-Source React Component Library by Kushagra Dhawan',
+    title: 'Womp Design System',
     description:
-      'Kookie UI is an open-source React component library created by Kushagra Dhawan. Beautiful, accessible components for building design systems.',
+      "Womp's design system: React components built on Kookie UI v1, an open-source fork of Radix Themes by Kushagra Dhawan.",
     url: 'https://hellokookie.com',
-    siteName: 'Kookie UI',
+    siteName: 'Womp Design',
     images: [
       {
         url: '/logos/kookie-ui/kookie-ui.png',
         width: 1200,
         height: 630,
-        alt: 'Kookie UI – Open-Source React Component Library',
+        alt: 'Womp Design System',
       },
     ],
     locale: 'en_US',
@@ -48,9 +50,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Kookie UI – Open-Source React Component Library by Kushagra Dhawan',
+    title: 'Womp Design System',
     description:
-      'Kookie UI is an open-source React component library created by Kushagra Dhawan. Beautiful, accessible components for building design systems.',
+      "Womp's design system: React components built on Kookie UI v1, an open-source fork of Radix Themes by Kushagra Dhawan.",
     images: ['/logos/kookie-ui/kookie-ui.png'],
     site: '@kookieui',
     creator: '@kushagradhawan',
@@ -117,18 +119,18 @@ export default function RootLayout({
                 '@type': 'WebSite',
                 '@id': 'https://hellokookie.com/#website',
                 url: 'https://hellokookie.com',
-                name: 'Kookie UI',
+                name: 'Womp Design',
                 description:
-                  'Kookie UI is an open-source React component library created by Kushagra Dhawan. Beautifully designed, accessible, and customizable components for building design systems.',
+                  "Womp's design system: React components built on Kookie UI v1, an open-source fork of Radix Themes by Kushagra Dhawan.",
                 publisher: { '@id': 'https://kushagradhawan.com/#person' },
                 inLanguage: 'en-US',
               },
               {
                 '@type': 'SoftwareApplication',
                 '@id': 'https://hellokookie.com/#software',
-                name: 'Kookie UI',
+                name: 'Womp Design',
                 description:
-                  'An open-source React component library for building design systems. A fork of Radix Themes focused on scalable, consistent UI components with a fresh visual style.',
+                  "Womp's design system, built on Kookie UI v1, an open-source fork of Radix Themes.",
                 url: 'https://hellokookie.com',
                 applicationCategory: 'DeveloperApplication',
                 operatingSystem: 'Cross-platform',
@@ -143,9 +145,9 @@ export default function RootLayout({
               {
                 '@type': 'SoftwareSourceCode',
                 '@id': 'https://hellokookie.com/#sourcecode',
-                name: 'Kookie UI',
+                name: 'Kookie UI v1',
                 description:
-                  'Source code for Kookie UI — an open-source React component library by Kushagra Dhawan.',
+                  'Source code for Kookie UI v1, the open-source library Womp Design is built on.',
                 url: 'https://hellokookie.com',
                 codeRepository: 'https://github.com/KushagraDhawan1997/kookie-ui',
                 programmingLanguage: ['TypeScript', 'React'],
@@ -157,11 +159,11 @@ export default function RootLayout({
                 '@type': 'WebPage',
                 '@id': 'https://hellokookie.com/#webpage',
                 url: 'https://hellokookie.com',
-                name: 'Kookie UI – Open-Source React Component Library by Kushagra Dhawan',
+                name: 'Womp Design System',
                 isPartOf: { '@id': 'https://hellokookie.com/#website' },
                 about: { '@id': 'https://hellokookie.com/#software' },
                 description:
-                  'Kookie UI is an open-source React component library created by Kushagra Dhawan. Beautifully designed, accessible, and customizable components for building design systems.',
+                  "Womp's design system: React components built on Kookie UI v1, an open-source fork of Radix Themes by Kushagra Dhawan.",
                 inLanguage: 'en-US',
               },
               {

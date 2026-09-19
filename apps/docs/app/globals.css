@@ -9,11 +9,20 @@
   --font-mono: 'Google Sans Code', 'Menlo', 'Consolas (Custom)', monospace;
 }
 
-/* The wordmark face. Inter Tight, the heading face, loaded by the import above. v1 is Womp's
-   system now, so it does not wear the Acma mark the canonical Kookie sites use. */
-.kd-wordmark {
-  font-family: 'Inter Tight', var(--font-sans);
+/* The wordmark face, PP Acma Semibold, as on the other Kookie sites. Pangram Pangram licence: the
+   file is gitignored under public/fonts, and a clone without it sets the mark in the sans stack. */
+@font-face {
+  font-family: 'PP Acma';
+  src: url('/fonts/PPAcma-Semibold.woff2') format('woff2');
   font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+.kd-wordmark {
+  font-family: 'PP Acma', var(--font-sans);
+  font-weight: 500;
+  font-feature-settings: 'liga', 'dlig';
   line-height: 1;
   white-space: nowrap;
 }

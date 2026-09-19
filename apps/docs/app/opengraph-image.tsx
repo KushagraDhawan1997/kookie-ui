@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Kookie UI – Modern React UI for Design Systems";
+export const alt = "Womp Design System";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -18,8 +18,8 @@ async function loadGoogleFont(font: string, weight: number, text: string) {
 }
 
 export default async function Image() {
-  const title = "Kookie UI";
-  const subtitle = "Your Design System";
+  const title = "Womp Design";
+  const subtitle = "Built on Kookie UI v1";
   const text = title + subtitle;
 
   const interMedium = await loadGoogleFont("Inter", 500, text);
@@ -49,7 +49,7 @@ export default async function Image() {
             letterSpacing: "-0.02em",
           }}
         >
-          Kookie UI
+          {title}
         </div>
         <div
           style={{
@@ -58,7 +58,7 @@ export default async function Image() {
             color: "#737373",
           }}
         >
-          Your Design System
+          Built on Kookie UI v1
         </div>
       </div>
     ),
