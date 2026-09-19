@@ -28,7 +28,7 @@ export default function Home() {
             <HugeiconsIcon icon={Wrench01Icon} strokeWidth={1.75} />
           </Callout.Icon>
           <Callout.Text>
-            <strong>Work in progress.</strong> Many design decisions in v1 are still open. Where v1 does not yet follow its own principles, these pages say so.
+            <Text weight="medium">Work in progress.</Text> Many design decisions in v1 are still open. Where v1 does not yet follow its own principles, these pages say so.
           </Callout.Text>
         </Callout.Root>
 

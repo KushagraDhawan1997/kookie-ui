@@ -12,7 +12,7 @@ export function GapNote({ children }: { children: ReactNode }) {
       {/* Text as a div, not Callout.Text (a paragraph), because MDX wraps the note's text in its
           own paragraphs. */}
       <Text as="div" size="2">
-        <strong>Not yet in v1.</strong>
+        <Text weight="medium">Not yet in v1.</Text>
         {children}
       </Text>
     </Callout.Root>
