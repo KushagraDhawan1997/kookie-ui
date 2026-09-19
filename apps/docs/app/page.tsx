@@ -9,7 +9,7 @@ import { docsNavigation } from '../navigation-config';
 const COMPONENT_COUNT = docsNavigation.groups.find((group) => group.label === 'Components')?.items.length ?? 0;
 
 const DESCRIPTION =
-  'Kookie UI v1 is the design system behind Womp. It gives a product its foundations and a set of options for every component. The product makes each design decision once, in one place, and every screen reads it from there.';
+  'Kookie UI v1 is the design system behind Womp. It is a work in progress. Many design decisions are still open, so it gives you the foundations and the building blocks to make them. Where v1 does not yet follow its own principles, these pages say so.';
 
 /**
  * The homepage has the same structure as v2's: a title, one paragraph on what the system is,
