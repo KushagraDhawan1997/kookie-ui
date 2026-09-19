@@ -292,16 +292,16 @@ export function CodeBlock({
       >
         {hasHeader && (
           <div className="code-block-header">
-            <Text size="1" color="gray" highContrast={Boolean(file)} truncate>
+            <Text size="2" color="gray" highContrast={Boolean(file)} truncate>
               {file ?? formatLanguage(language)}
             </Text>
             {file && showLanguage && (
-              <Text size="1" color="gray">
+              <Text size="2" color="gray">
                 {formatLanguage(language)}
               </Text>
             )}
             {showCopy && (
-              <Button size="1" variant="ghost" color="gray" onClick={copy} aria-label={copyLabel} className="code-block-copy">
+              <Button size="2" variant="ghost" color="gray" onClick={copy} aria-label={copyLabel} className="code-block-copy">
                 <HugeiconsIcon icon={copied ? Tick01Icon : Copy01Icon} strokeWidth={1.75} />
                 {copied ? 'Copied' : 'Copy'}
               </Button>
@@ -313,7 +313,7 @@ export function CodeBlock({
           {showCopy && !hasHeader && (
             <div className="code-block-floating-actions">
               <IconButton
-                size="1"
+                size="2"
                 variant="ghost"
                 color="gray"
                 onClick={copy}
@@ -334,7 +334,7 @@ export function CodeBlock({
 
         {collapsible && overflows && (
           <div className="code-block-footer">
-            <Button size="1" variant="soft" color="gray" highContrast onClick={() => setExpanded((value) => !value)}>
+            <Button size="2" variant="ghost" color="gray" highContrast onClick={() => setExpanded((value) => !value)}>
               {expanded ? 'Show less' : `Show all ${lineCount} lines`}
             </Button>
           </div>

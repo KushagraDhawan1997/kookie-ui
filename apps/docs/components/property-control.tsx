@@ -36,7 +36,7 @@ interface LabelProps extends React.ComponentPropsWithoutRef<typeof Label.Root> {
 function PropertyLabel({ children, ...props }: LabelProps) {
   return (
     <Label.Root {...props}>
-      <Text size="1" highContrast color="gray">
+      <Text size="2" highContrast color="gray">
         {children}
       </Text>
     </Label.Root>
@@ -105,7 +105,7 @@ function Group({ width, items, style }: { width?: string | number; items: Item[]
               {item.type === 'select' ? (
                 <DropdownMenu.Root>
                   <DropdownMenu.Trigger>
-                    <Button size="1" variant="soft" highContrast>
+                    <Button size="2" variant="soft" highContrast>
                       {item.appearance === 'swatch' && <Swatch value={item.value} />}
                       <span style={{ textTransform: 'capitalize' }}>{item.options.find((o) => o.value === item.value)?.label || item.placeholder || 'Select'}</span>
                     </Button>
@@ -117,12 +117,12 @@ function Group({ width, items, style }: { width?: string | number; items: Item[]
                           {item.appearance === 'swatch' ? (
                             <Flex align="center" gap="2">
                               <Swatch value={opt.value} />
-                              <Text size="1" style={{ textTransform: 'capitalize' }}>
+                              <Text size="2" style={{ textTransform: 'capitalize' }}>
                                 {opt.label}
                               </Text>
                             </Flex>
                           ) : (
-                            <Text size="1" style={{ textTransform: 'capitalize' }}>
+                            <Text size="2" style={{ textTransform: 'capitalize' }}>
                               {opt.label}
                             </Text>
                           )}
@@ -132,7 +132,7 @@ function Group({ width, items, style }: { width?: string | number; items: Item[]
                   </DropdownMenu.Content>
                 </DropdownMenu.Root>
               ) : (
-                <Switch size="1" highContrast id={item.id} checked={item.value} onCheckedChange={item.onChange} />
+                <Switch size="2" highContrast id={item.id} checked={item.value} onCheckedChange={item.onChange} />
               )}
             </Control>
           </Field>

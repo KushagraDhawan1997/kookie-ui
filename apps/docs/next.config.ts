@@ -40,6 +40,19 @@ const nextConfig = {
   env: {
     KOOKIE_UI_VERSION: packageJson.version,
   },
+  // The theme pages became chapters on 2026-09-19 (docs/LOG.md). Old links keep working.
+  async redirects() {
+    return [
+      ['/docs/installation', '/start/installation'],
+      ['/docs/theme', '/start/theming'],
+      ['/docs/colors', '/foundations/color'],
+      ['/docs/typography', '/foundations/typography'],
+      ['/docs/radius', '/foundations/radius'],
+      ['/docs/material', '/foundations/materials'],
+      ['/docs/shadows', '/foundations/depth'],
+      ['/docs/constants', '/foundations/constants'],
+    ].map(([source, destination]) => ({ source, destination, permanent: true }));
+  },
   images: {
     remotePatterns: [
       {

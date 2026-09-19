@@ -101,7 +101,7 @@ pre + figcaption {
   border: 1px solid var(--gray-a6);
   border-top: none;
   border-radius: 0 0 var(--radius-3) var(--radius-3);
-  font-size: var(--font-size-1);
+  font-size: var(--font-size-2);
   color: var(--gray-11);
 }
 

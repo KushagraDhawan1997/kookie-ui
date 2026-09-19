@@ -1,24 +1,14 @@
 import type { DocsNavigationConfig } from '@/components/blocks/docs-shell/types';
 import { blocksRegistry } from '@/lib/blocks-registry';
+import { SECTIONS, chaptersIn } from '@/lib/chapters';
 
+/** Chapters come from the registry in `lib/chapters.ts`. Components and Blocks are listed here. */
 export const docsNavigation: DocsNavigationConfig = {
   groups: [
-    {
-      label: 'Get Started',
-      items: [{ href: '/docs/installation', title: 'Installation' }],
-    },
-    {
-      label: 'Theme',
-      items: [
-        { href: '/docs/theme', title: 'Theme' },
-        { href: '/docs/colors', title: 'Colors' },
-        { href: '/docs/constants', title: 'Constants' },
-        { href: '/docs/shadows', title: 'Shadows' },
-        { href: '/docs/material', title: 'Material' },
-        { href: '/docs/radius', title: 'Radius' },
-        { href: '/docs/typography', title: 'Typography' },
-      ],
-    },
+    ...SECTIONS.map((section) => ({
+      label: section.title,
+      items: chaptersIn(section.id).map((chapter) => ({ href: `/${chapter.slug}`, title: chapter.title })),
+    })),
     {
       label: 'Components',
       items: [

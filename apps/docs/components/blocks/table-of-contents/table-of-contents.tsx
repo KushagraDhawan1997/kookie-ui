@@ -1,7 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { Flex, Link, Text } from '@kushagradhawan/kookie-ui';
+import { Flex, Text } from '@kushagradhawan/kookie-ui';
+import './table-of-contents.css';
 
 export interface TocItem {
   id: string;
@@ -108,24 +109,24 @@ export const TableOfContents = React.memo(function TableOfContents({
 
   const content = (
     <Flex direction="column" gap="3" className={className}>
-      <Text size="1" weight="medium" color="gray">
+      <Text size="2" color="gray">
         {title}
       </Text>
-      <Flex direction="column" gap="2">
-        {toc.map((item) => (
-          <Link
-            key={item.id}
-            href={`#${item.id}`}
-            size="1"
-            color="gray"
-            highContrast={activeId === item.id}
-            truncate
-            style={{ display: 'block', paddingLeft: item.level > 2 ? (item.level - 2) * 12 : 0 }}
-          >
-            {item.text}
-          </Link>
-        ))}
-      </Flex>
+      <Text asChild size="2">
+        <nav aria-label={title} className="kd-toc-list">
+          {toc.map((item) => (
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              className="kd-toc-link"
+              data-level={item.level}
+              aria-current={activeId === item.id ? 'location' : undefined}
+            >
+              {item.text}
+            </a>
+          ))}
+        </nav>
+      </Text>
     </Flex>
   );
 

@@ -14,8 +14,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const docPages: MetadataRoute.Sitemap = docsNavigation.groups.flatMap((group) =>
     group.items.map((item) => {
       let priority = 0.7;
-      if (group.label === 'Get Started') priority = 0.9;
-      else if (group.label === 'Theme') priority = 0.8;
+      if (group.label === 'Getting started') priority = 0.9;
+      else if (group.label === 'Foundations' || group.label === 'Patterns') priority = 0.8;
 
       return {
         url: `${BASE_URL}${item.href}`,

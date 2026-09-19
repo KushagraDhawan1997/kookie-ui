@@ -1,10 +1,11 @@
 'use client';
 
 import * as React from 'react';
-import { Button, Flex, Separator, Text } from '@kushagradhawan/kookie-ui';
+import { Button, Separator } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ArrowUpRight01Icon, Copy01Icon, Tick01Icon } from '@hugeicons/core-free-icons';
 import { PageHeader } from '../page-header/page-header';
+import { DocsShellPageActions } from '../docs-shell/docs-shell';
 import type { DocsPageMeta } from './docs-page';
 
 export interface DocsPageHeaderProps {
@@ -15,7 +16,7 @@ export interface DocsPageHeaderProps {
   showCopyButton?: boolean;
   /** Tabs under the header, e.g. Documentation and Examples. */
   tabs?: React.ReactNode;
-  /** Rule under the header. Ignored when there are tabs, which draw their own. @default true */
+  /** Rule under the header. Ignored when there are tabs, which draw their own. @default false */
   separator?: boolean;
 }
 
@@ -50,39 +51,37 @@ function useCopyPage(meta: DocsPageMeta) {
   return { copied, copy };
 }
 
-/** Category and actions on one row, then the title, the lead and optional tabs. */
-export function DocsPageHeader({ meta, actions, showCopyButton = true, tabs, separator = true }: DocsPageHeaderProps) {
+/**
+ * The title, the description and optional tabs. The page's actions go to the shell's top bar. There
+ * is no category line: the sidebar already shows which section the page is in.
+ */
+export function DocsPageHeader({ meta, actions, showCopyButton = true, tabs, separator = false }: DocsPageHeaderProps) {
   const { copied, copy } = useCopyPage(meta);
 
   return (
     <PageHeader.Root gap="0">
-      <Flex align="center" justify="between" gap="3" minHeight="var(--space-6)">
-        <Text size="2" color="gray" weight="medium">
-          {meta.category}
-        </Text>
-        <Flex align="center" gap="4">
-          {actions}
-          {meta.source && (
-            <Button asChild size="1" variant="ghost" color="gray" highContrast>
-              <a href={meta.source} target="_blank" rel="noreferrer">
-                Source
-                <HugeiconsIcon icon={ArrowUpRight01Icon} strokeWidth={1.75} />
-              </a>
-            </Button>
-          )}
-          {showCopyButton && (
-            <Button size="1" variant="ghost" color="gray" highContrast onClick={copy}>
-              <HugeiconsIcon icon={copied ? Tick01Icon : Copy01Icon} strokeWidth={1.75} />
-              {copied ? 'Copied' : 'Copy page'}
-            </Button>
-          )}
-        </Flex>
-      </Flex>
+      <DocsShellPageActions>
+        {actions}
+        {meta.source && (
+          <Button asChild size="2" variant="ghost" color="gray" highContrast>
+            <a href={meta.source} target="_blank" rel="noreferrer">
+              Source
+              <HugeiconsIcon icon={ArrowUpRight01Icon} strokeWidth={1.75} />
+            </a>
+          </Button>
+        )}
+        {showCopyButton && (
+          <Button size="2" variant="ghost" color="gray" highContrast onClick={copy}>
+            <HugeiconsIcon icon={copied ? Tick01Icon : Copy01Icon} strokeWidth={1.75} />
+            {copied ? 'Copied' : 'Copy page'}
+          </Button>
+        )}
+      </DocsShellPageActions>
 
-      <PageHeader.Content gap="3" mt="4">
+      <PageHeader.Content gap="5">
         <PageHeader.Title size={{ initial: '8', sm: '9' }}>{meta.title}</PageHeader.Title>
         {meta.description && (
-          <PageHeader.Description size={{ initial: '3', sm: '4' }}>{meta.description}</PageHeader.Description>
+          <PageHeader.Description size={{ initial: '3', sm: '4' }} highContrast>{meta.description}</PageHeader.Description>
         )}
       </PageHeader.Content>
 

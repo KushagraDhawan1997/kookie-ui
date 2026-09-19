@@ -94,12 +94,12 @@ export default function Playground({ component, code, items, showBackground = fa
         <div className="preview-block">
           {showToolbar && (
             <div className="preview-block-toolbar">
-              <Button size="1" variant="ghost" color="gray" highContrast onClick={handleCopy}>
+              <Button size="2" variant="ghost" color="gray" highContrast onClick={handleCopy}>
                 <HugeiconsIcon icon={copied ? Tick01Icon : Copy01Icon} strokeWidth={1.75} />
                 {copied ? 'Copied' : 'Copy code'}
               </Button>
               <Flex gap="2" align="center" ml="auto">
-                <SegmentedControl.Root size="1" value={appearance} onValueChange={(value) => setAppearance(value === 'dark' ? 'dark' : 'light')}>
+                <SegmentedControl.Root size="2" value={appearance} onValueChange={(value) => setAppearance(value === 'dark' ? 'dark' : 'light')}>
                   <SegmentedControl.Item value="light" iconOnly aria-label="Light preview">
                     <HugeiconsIcon icon={Sun01Icon} strokeWidth={1.75} />
                   </SegmentedControl.Item>
@@ -110,11 +110,11 @@ export default function Playground({ component, code, items, showBackground = fa
                 {!showControls && (
                   <Popover.Root>
                     <Popover.Trigger>
-                      <IconButton size="1" variant="ghost" highContrast color="gray" aria-label="Properties">
+                      <IconButton size="2" variant="ghost" highContrast color="gray" aria-label="Properties">
                         <HugeiconsIcon icon={SlidersHorizontalIcon} strokeWidth={1.75} />
                       </IconButton>
                     </Popover.Trigger>
-                    <Popover.Content size="1" side="bottom" align="end" width="280px">
+                    <Popover.Content size="2" side="bottom" align="end" width="280px">
                       <PropertyControl.Group width="100%" items={items} />
                     </Popover.Content>
                   </Popover.Root>
@@ -136,7 +136,7 @@ export default function Playground({ component, code, items, showBackground = fa
         </div>
 
         {hint && (
-          <Text size="1" color="gray">
+          <Text size="2" color="gray">
             {hint}
           </Text>
         )}

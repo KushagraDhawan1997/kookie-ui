@@ -1,0 +1,275 @@
+Control your app's visual appearance with seven configuration options. Kookie UI Theme is a fork of [Radix Themes](https://www.radix-ui.com/themes), offering the same foundation with custom enhancements for theming and accessibility.
+
+This is an enhanced version of the Theme component from [Radix Themes](https://www.radix-ui.com/themes). For the original API reference, see the [Radix Themes Theme documentation](https://www.radix-ui.com/themes/docs/theme/overview).
+
+## Installation
+
+```bash
+npm install @kushagradhawan/kookie-ui
+```
+
+## Usage
+
+Wrap your application with the `Theme` component at the root level:
+
+```tsx
+import { Theme } from '@kushagradhawan/kookie-ui';
+
+export default function App() {
+  return (
+    <Theme accentColor="blue" grayColor="gray">
+      {/* Your app */}
+    </Theme>
+  );
+}
+```
+
+## Next.js App Router
+
+When using Next.js App Router, `Theme` must be wrapped in a Client Component since it uses React Context. Create a `providers.tsx` file:
+
+```tsx
+// components/providers.tsx
+'use client';
+
+import { Theme } from '@kushagradhawan/kookie-ui';
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <Theme accentColor="blue" grayColor="slate">
+      {children}
+    </Theme>
+  );
+}
+```
+
+Then use it in your root layout:
+
+```tsx
+// app/layout.tsx
+import { Providers } from '@/components/providers';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Description |
+| ---- | ---- | ----------- |
+| `appearance` | `'light' \| 'dark' \| 'inherit'` | Color scheme; inherit follows system preference. Default: `'inherit'` |
+| `accentColor` | `AccentColor` | Primary accent used for interactive components. Default: `'blue'` |
+| `grayColor` | `GrayColor` | Neutral gray scale for backgrounds and text. Default: `'slate'` |
+| `material` | `'solid' \| 'translucent'` | Background rendering: opaque or translucent. Default: `'translucent'` |
+| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Global corner radius scale. Default: `'full'` |
+| `scaling` | `'90%' \| '95%' \| '100%' \| '105%' \| '110%'` | Global size scale for UI density. Default: `'100%'` |
+| `fontFamily` | `'sans' \| 'mono' \| 'serif'` | Font family for body text. Default: `'sans'` |
+| `headingFontFamily` | `'sans' \| 'mono' \| 'serif'` | Font family for `Heading`, set independently of body text. Follows `fontFamily` when unset |
+| `panelBackground` | `'solid' \| 'translucent'` | Deprecated: Use `material` prop instead. Controls panel background appearance |
+| `hasBackground` | `boolean` | Whether to apply background color to the Theme element. Default: `true` for root Theme |
+| `asChild` | `boolean` | Merges Theme props with child element using Radix Slot pattern |
+
+## Appearance
+
+Set `appearance` to control light, dark, or system preference mode.
+
+### Light
+
+Force light mode regardless of system preference.
+
+```tsx
+<Theme appearance="light"><YourApp /></Theme>
+```
+
+### Dark
+
+Force dark mode regardless of system preference.
+
+```tsx
+<Theme appearance="dark"><YourApp /></Theme>
+```
+
+### Inherit
+
+Follow system preference (default). Automatically switches between light and dark based on user's OS settings.
+
+```tsx
+<Theme appearance="inherit"><YourApp /></Theme>
+```
+
+## Accent Color
+
+Use `accentColor` to set the primary color for interactive elements like buttons, links, and focus indicators.
+
+Available colors: `gray`, `gold`, `bronze`, `brown`, `yellow`, `amber`, `orange`, `tomato`, `red`, `ruby`, `crimson`, `pink`, `plum`, `purple`, `violet`, `iris`, `indigo`, `blue`, `cyan`, `teal`, `jade`, `green`, `grass`, `lime`, `mint`, `sky`.
+
+```tsx
+<Theme accentColor="blue"><YourApp /></Theme>
+```
+
+```tsx
+<Theme accentColor="crimson"><YourApp /></Theme>
+```
+
+## Gray Color
+
+Use `grayColor` to set the neutral gray scale for backgrounds and text. The gray color affects the overall tone and contrast of your interface.
+
+Available grays: `auto`, `gray`, `mauve`, `slate`, `sage`, `olive`, `sand`.
+
+When set to `auto`, the gray color automatically matches your accent color for a cohesive look.
+
+```tsx
+<Theme grayColor="slate"><YourApp /></Theme>
+```
+
+```tsx
+<Theme grayColor="auto" accentColor="blue"><YourApp /></Theme>
+```
+
+## Material
+
+Set `material` to control panel transparency for depth and visual separation. Use `solid` for opaque backgrounds or `translucent` for depth over images or dynamic backgrounds.
+
+### Solid
+
+Opaque backgrounds for maximum contrast and clarity.
+
+```tsx
+<Theme material="solid"><YourApp /></Theme>
+```
+
+### Translucent
+
+Translucent backgrounds with blur effects for depth and separation (default).
+
+```tsx
+<Theme material="translucent"><YourApp /></Theme>
+```
+
+## Radius
+
+Set `radius` to control the global corner radius scale for all components. This affects buttons, cards, inputs, and other rounded elements.
+
+Available values: `none`, `small`, `medium`, `large`, `full` (default).
+
+```tsx
+<Theme radius="medium"><YourApp /></Theme>
+```
+
+```tsx
+<Theme radius="large"><YourApp /></Theme>
+```
+
+## Scaling
+
+Set `scaling` to control the global size scale for UI density. Use smaller values for compact interfaces or larger values for improved readability and touch targets.
+
+Available values: `90%`, `95%`, `100%` (default), `105%`, `110%`.
+
+```tsx
+<Theme scaling="100%"><YourApp /></Theme>
+```
+
+```tsx
+<Theme scaling="110%"><YourApp /></Theme>
+```
+
+## Font Family
+
+Set `fontFamily` to choose the typeface for body text. Available values: `sans` (default), `mono`, `serif`.
+
+```tsx
+<Theme fontFamily="sans"><YourApp /></Theme>
+```
+
+```tsx
+<Theme fontFamily="mono"><YourApp /></Theme>
+```
+
+### Heading Font
+
+`headingFontFamily` sets the typeface for `Heading` on its own, so headings and body text can differ:
+
+```tsx showLineNumbers
+<Theme fontFamily="sans" headingFontFamily="serif">
+  <Heading>Set in the serif stack</Heading>
+  <Text>Set in the sans stack</Text>
+</Theme>
+```
+
+Leave it unset and headings follow `fontFamily`. The typefaces behind `sans`, `mono` and `serif` come from the `--font-sans`, `--font-mono` and `--font-serif` tokens — see [Typography](/foundations/typography) for how to point those at your own fonts.
+
+## Nested Themes
+
+You can nest `Theme` components to override specific settings in parts of your application:
+
+```tsx
+<Theme accentColor="blue" grayColor="slate">
+  <MainContent />
+  <Theme accentColor="crimson" radius="large">
+    <SpecialSection />
+  </Theme>
+</Theme>
+```
+
+## Tokens
+
+Use CSS custom properties to access theme values in your styles:
+
+```css
+/* Color tokens */
+var(--accent-9)           /* Primary accent color */
+var(--gray-11)            /* High contrast text */
+var(--gray-1)              /* Subtle background */
+```
+
+```css
+/* Layout tokens */
+var(--space-4)             /* Standard spacing */
+var(--radius-3)            /* Component border radius */
+var(--font-size-3)         /* Base font size */
+```
+
+```css
+/* Material tokens */
+var(--blur-6)              /* Blur effect for translucent backgrounds */
+var(--opacity-6)            /* Opacity level */
+```
+
+## Enhancements
+
+Kookie UI extends Radix Themes with practical improvements:
+
+### Material Prop
+
+Use `material` instead of `panelBackground` for intuitive panel transparency control. Existing `panelBackground` usage works with migration warnings. All panels automatically respect your material setting.
+
+### Effects
+
+Extended blur tokens provide 12-step blur scale for precise backdrop effects. Granular opacity offers 9-step opacity scale for fine-tuned transparency. Specialized 3D button effects create realistic depth and elevation.
+
+### Typography
+
+Pre-configured Inter and JetBrains Mono fonts with proper fallbacks prevent browser font weight synthesis issues. Graceful degradation falls back to system fonts if custom fonts fail.
+
+## Changelog
+
+### Added
+
+- `material` prop as replacement for `panelBackground`
+- Extended blur token system (12 steps)
+- Granular opacity scale (9 steps)
+- Enhanced 3D button effects
+- Improved font fallback system
+
+### Deprecated
+
+- `panelBackground` prop in favor of `material` prop

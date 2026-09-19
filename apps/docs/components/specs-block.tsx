@@ -283,7 +283,7 @@ const SpecsSection = memo(function SpecsSection({
                       {column.label.charAt(0).toUpperCase() + column.label.slice(1)}
                     </Text>
                     {column.description && (
-                      <Text size="1" color="gray">
+                      <Text size="2" color="gray">
                         {column.description}
                       </Text>
                     )}

@@ -21,7 +21,9 @@ export interface DocsPageProps {
   headerActions?: React.ReactNode;
   /** Tabs under the header, e.g. Documentation and Examples. */
   headerTabs?: React.ReactNode;
-  /** Rendered in a sticky column from the `lg` breakpoint. */
+  /** Show the header's "Copy page" button. Off for pages that are an index, not a document. @default true */
+  showCopyButton?: boolean;
+  /** Rendered in a sticky column from the `lg` breakpoint. Without it, the column is centred. */
   tableOfContents?: React.ReactNode;
   /** Maximum width of the reading column. @default "44rem" */
   maxWidth?: string;
@@ -39,6 +41,7 @@ export function DocsPage({
   header,
   headerActions,
   headerTabs,
+  showCopyButton,
   tableOfContents,
   maxWidth = '44rem',
   footer,
@@ -49,12 +52,12 @@ export function DocsPage({
       align="start"
       gap="9"
       px={{ initial: '5', sm: '7', md: '9' }}
-      pt={{ initial: '8', sm: '9' }}
+      pt={{ initial: '6', sm: '7' }}
       pb="9"
     >
       <Box flexGrow="1" minWidth="0" maxWidth={maxWidth}>
         <Flex direction="column" gap={{ initial: '6', sm: '7' }} minWidth="0">
-          {header ?? (meta && <DocsPageHeader meta={meta} actions={headerActions} tabs={headerTabs} />)}
+          {header ?? (meta && <DocsPageHeader meta={meta} actions={headerActions} tabs={headerTabs} showCopyButton={showCopyButton} />)}
 
           <Box minWidth="0" data-content-area>
             {children}
@@ -85,6 +88,8 @@ export function DocsPage({
         </Flex>
       </Box>
 
+      {/* Chapters always pass one, so their column sits in the same place whether or not the
+          page has headings. A page without one, like the homepage, centres its column instead. */}
       {tableOfContents && (
         <Box
           display={{ initial: 'none', lg: 'block' }}

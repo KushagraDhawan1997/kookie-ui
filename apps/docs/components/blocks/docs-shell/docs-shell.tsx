@@ -3,7 +3,8 @@
 import * as React from 'react';
 import { Flex, IconButton, Shell } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { Menu01Icon, SidebarLeft01Icon, SidebarLeftIcon } from '@hugeicons/core-free-icons';
+import { SidebarLeft01Icon, SidebarLeftIcon } from '@hugeicons/core-free-icons';
+import { createPortal } from 'react-dom';
 import { DocsSidebar } from './docs-sidebar';
 import type { DocsLinkComponent, DocsLogoConfig, DocsNavigationConfig } from './types';
 
@@ -19,7 +20,7 @@ export interface DocsShellProps {
   sidebarThinSize?: number;
   /** @default true */
   sidebarResizable?: boolean;
-  /** Replaces the hamburger icon on small screens. */
+  /** Replaces the icon of the sidebar button in the top bar. */
   mobileTriggerIcon?: React.ReactNode;
   /** Current path, used to mark the active item. */
   pathname?: string;
@@ -27,6 +28,18 @@ export interface DocsShellProps {
   linkComponent?: DocsLinkComponent;
   /** Add a collapse/expand button to the sidebar footer. @default false */
   sidebarToggle?: boolean;
+}
+
+/** Where a page puts its own actions: the end of the shell's top bar. */
+const PageActionsSlot = React.createContext<HTMLElement | null>(null);
+
+/**
+ * Renders a page's actions (copy page, source and so on) in the shell's top bar, not in the page
+ * header, so the header holds only the title and the description. Renders nothing outside a shell.
+ */
+export function DocsShellPageActions({ children }: { children: React.ReactNode }) {
+  const slot = React.useContext(PageActionsSlot);
+  return slot ? createPortal(children, slot) : null;
 }
 
 function SidebarThinToggle() {
@@ -63,6 +76,7 @@ export function DocsShell({
   sidebarToggle = false,
 }: DocsShellProps) {
   const [presentation, setPresentation] = React.useState<'thin' | 'expanded'>('expanded');
+  const [actionsSlot, setActionsSlot] = React.useState<HTMLElement | null>(null);
 
   const footer = sidebarToggle ? (
     <Flex justify="between" align="center" width="100%" gap="1">
@@ -95,24 +109,17 @@ export function DocsShell({
       </Shell.Sidebar>
 
       <Shell.Content>
-        {/* Small screens: the sidebar is an overlay, opened from here. */}
-        <Flex
-          display={{ initial: 'flex', sm: 'none' }}
-          position="fixed"
-          top="4"
-          left="4"
-          align="center"
-          justify="center"
-          style={{ zIndex: 999 }}
-        >
-          <IconButton variant="ghost" size="3" color="gray" highContrast asChild aria-label="Open navigation">
+        {/* The top bar: the sidebar button at the start, the current page's actions at the end. */}
+        <Flex align="center" justify="between" gap="3" px={{ initial: '4', sm: '5' }} pt="4">
+          <IconButton variant="ghost" size="3" color="gray" highContrast asChild aria-label="Toggle navigation">
             <Shell.Trigger target="sidebar">
-              {mobileTriggerIcon ?? <HugeiconsIcon icon={Menu01Icon} strokeWidth={1.75} />}
+              {mobileTriggerIcon ?? <HugeiconsIcon icon={SidebarLeftIcon} strokeWidth={1.75} />}
             </Shell.Trigger>
           </IconButton>
+          <Flex ref={setActionsSlot} align="center" gap="4" />
         </Flex>
 
-        {children}
+        <PageActionsSlot.Provider value={actionsSlot}>{children}</PageActionsSlot.Provider>
       </Shell.Content>
     </Shell.Root>
   );

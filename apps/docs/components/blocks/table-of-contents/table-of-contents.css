@@ -1,0 +1,42 @@
+/* A rail with the current section lit, as in v2's table of contents. Each entry draws its own
+   segment of the rail, so there is no gap between entries: the space is the link's padding. */
+.kd-toc-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.kd-toc-link {
+  display: block;
+  padding-block: var(--space-2);
+  padding-inline-start: var(--space-4);
+  border-inline-start: 1px solid var(--gray-a5);
+  color: var(--gray-11);
+  text-decoration: none;
+  transition: color 120ms, border-color 120ms;
+}
+
+.kd-toc-link[data-level='3'] {
+  padding-inline-start: var(--space-6);
+}
+
+.kd-toc-link[aria-current] {
+  color: var(--gray-12);
+  border-inline-start-color: var(--accent-9);
+}
+
+@media (hover: hover) {
+  .kd-toc-link:hover {
+    color: var(--gray-12);
+  }
+}
+
+.kd-toc-link:focus-visible {
+  outline: 2px solid var(--focus-8);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kd-toc-link {
+    transition: none;
+  }
+}

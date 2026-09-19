@@ -2,6 +2,8 @@
 
 > Context file for AI agents working in this repository.
 
+Read `docs/LOG.md` first. It records how v1 relates to v2 and the docs restructure in progress. Where this file disagrees with it, the log wins.
+
 ## Project Overview
 
 **Kookie UI** (`@kushagradhawan/kookie-ui`) is a modern React component library built as a fork of [Radix Themes](https://www.radix-ui.com/themes). It extends Radix with a complete layout engine, universal material system, enhanced design tokens, and specialized components not available in upstream Radix.

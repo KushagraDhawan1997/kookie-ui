@@ -30,7 +30,7 @@ export function DocsLayout({ children }: { children: React.ReactNode }) {
               <HugeiconsIcon icon={GithubIcon} strokeWidth={1.75} />
             </Link>
           </IconButton>
-          <Badge variant="classic" highContrast color="gray" size="1">
+          <Badge variant="classic" highContrast color="gray" size="2">
             v{process.env.KOOKIE_UI_VERSION}
           </Badge>
         </Flex>

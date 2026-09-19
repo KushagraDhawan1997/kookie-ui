@@ -10,6 +10,7 @@ interface SiteDocsPageProps {
   headerActions?: ReactNode;
   headerTabs?: ReactNode;
   header?: ReactNode;
+  showCopyButton?: boolean;
 }
 
 const FOOTER = {

@@ -1,5 +1,7 @@
 # Claude Guidelines for kookie-ui
 
+Read `docs/LOG.md` first. It records how v1 relates to v2 and the docs restructure in progress. Where this file disagrees with it, the log wins.
+
 ## Performance > Everything
 
 **Performance is the best user experience.** Every decision—architecture, component design, data fetching, rendering—must prioritize performance. A fast, responsive UI beats a feature-rich slow one every time.

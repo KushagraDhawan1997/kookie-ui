@@ -88,7 +88,7 @@ export function PreviewBlock({
           {label !== undefined && <span className="preview-block-label">{label}</span>}
           {showThemeToggle && (
             <SegmentedControl.Root
-              size="1"
+              size="2"
               value={chosenAppearance ?? 'light'}
               onValueChange={(value) => setChosenAppearance(value === 'dark' ? 'dark' : 'light')}
               className="preview-block-theme-toggle"
