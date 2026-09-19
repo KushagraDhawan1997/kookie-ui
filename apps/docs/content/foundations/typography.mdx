@@ -132,6 +132,22 @@ Use `weight` prop to control text emphasis and hierarchy:
 
 Available weights: `thin`, `extralight`, `light`, `regular`, `medium`, `semibold`, `bold`, `extrabold`.
 
+## Emphasis
+
+Use `emphasis` to rank text by colour. `Text`, `Heading`, `Blockquote`, `Code` and `DataList.Label` take it.
+
+- `loud` is the strong ink, and the default once a colour is set.
+- `medium` is for secondary copy.
+- `quiet` is for the least important text, like hints and timestamps.
+
+```tsx
+<Text>Invoice #1042</Text>
+<Text emphasis="medium">Sent to finance on 12 March</Text>
+<Text emphasis="quiet">Edited 2 minutes ago</Text>
+```
+
+With no `color`, emphasis uses the gray scale. With a `color`, it fades that colour. Text with neither inherits its colour from its parent.
+
 ## Formatting Components
 
 Compose formatting components to add emphasis and structure:

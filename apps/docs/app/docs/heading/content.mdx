@@ -44,8 +44,8 @@ export function MyHeadings() {
 | `size` | `'0' \| '1' \| '2' \| '3' \| ... \| '12'` | `'6'` | The font size. Supports responsive values. |
 | `font` | `'sans' \| 'mono' \| 'serif'` | - | The font family. Overrides the theme font. |
 | `weight` | `'thin' \| 'extralight' \| 'light' \| 'regular' \| 'medium' \| 'semibold' \| 'bold' \| 'extrabold'` | - | The font weight. Supports responsive values. |
-| `color` | `AccentColor` | - | The text color. Uses theme color if not specified. |
-| `highContrast` | `boolean` | `false` | Increases color contrast. |
+| `color` | `AccentColor` | - | The text color. Inherits from the parent if not set. |
+| `emphasis` | `'loud' \| 'medium' \| 'quiet'` | `'loud'` with a color | How strongly the heading reads. Without a color it ranks gray text. |
 | `align` | `'left' \| 'center' \| 'right'` | - | Text alignment. Supports responsive values. |
 | `truncate` | `boolean` | `false` | Truncate text with ellipsis when it overflows. |
 | `wrap` | `'wrap' \| 'nowrap' \| 'pretty' \| 'balance'` | - | Text wrapping behavior. |
@@ -109,9 +109,29 @@ Use colors sparingly for headings to maintain hierarchy.
 ```tsx
 <Flex direction="column" gap="3">
   <Heading size="6">Default color</Heading>
-  <Heading size="6" color="gray">Gray heading</Heading>
   <Heading size="6" color="blue">Blue heading</Heading>
   <Heading size="6" color="violet">Violet heading</Heading>
+</Flex>
+```
+
+A colored heading reads the strong ink for its color: gray reads step 12, and other colors mix step 11 toward 12 so they still read as their color.
+
+## Emphasis
+
+Use `emphasis` to rank headings without picking a gray step. `loud` is the default when a color is set. `medium` and `quiet` fade the ink. Without a color, the levels use gray steps 12, 11 and 10.
+
+```tsx
+<Flex direction="column" gap="3">
+  <Heading size="6" emphasis="loud">Loud heading</Heading>
+  <Heading size="6" emphasis="medium">Medium heading</Heading>
+  <Heading size="6" emphasis="quiet">Quiet heading</Heading>
+  <Heading
+    size="6"
+    color="blue"
+    emphasis="medium"
+  >
+    Medium blue heading
+  </Heading>
 </Flex>
 ```
 
@@ -162,3 +182,13 @@ Control how headings wrap with the `wrap` prop.
   A heading with prettier line breaks for optimal reading
 </Heading>
 ```
+
+## Changelog
+
+### Added
+
+- `emphasis` prop with `loud`, `medium` and `quiet` levels
+
+### Removed
+
+- `highContrast` prop. A colored heading reads the strong ink by default. Use `emphasis="medium"` in place of `color="gray"` for muted headings.

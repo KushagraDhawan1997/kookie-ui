@@ -57,7 +57,7 @@ const SectionHeaderTitle = React.forwardRef<HTMLHeadingElement, HeadingProps>(
 SectionHeaderTitle.displayName = 'SectionHeader.Title';
 
 const SectionHeaderDescription = React.forwardRef<HTMLParagraphElement, TextProps>(
-  ({ size = '3', color = 'gray', ...props }, ref) => <Text ref={ref} size={size} color={color} {...props} />,
+  ({ size = '3', emphasis = 'medium', ...props }, ref) => <Text ref={ref} size={size} emphasis={emphasis} {...props} />,
 );
 SectionHeaderDescription.displayName = 'SectionHeader.Description';
 

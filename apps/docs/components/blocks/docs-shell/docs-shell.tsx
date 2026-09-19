@@ -51,7 +51,6 @@ function SidebarThinToggle() {
       variant="ghost"
       size="2"
       color="gray"
-      highContrast
       onClick={() => setSidebarMode(isThin ? 'expanded' : 'thin')}
       aria-label={isThin ? 'Expand sidebar' : 'Collapse sidebar'}
     >
@@ -111,7 +110,7 @@ export function DocsShell({
       <Shell.Content>
         {/* The top bar: the sidebar button at the start, the current page's actions at the end. */}
         <Flex align="center" justify="between" gap="3" px={{ initial: '4', sm: '5' }} pt="4">
-          <IconButton variant="ghost" size="3" color="gray" highContrast asChild aria-label="Toggle navigation">
+          <IconButton variant="ghost" size="3" color="gray" asChild aria-label="Toggle navigation">
             <Shell.Trigger target="sidebar">
               {mobileTriggerIcon ?? <HugeiconsIcon icon={SidebarLeftIcon} strokeWidth={1.75} />}
             </Shell.Trigger>

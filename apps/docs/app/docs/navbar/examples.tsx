@@ -77,7 +77,7 @@ export function NavbarExamples() {
 
   <Navbar.Actions gap="2">
     <Button variant="ghost" size="2">Sign In</Button>
-    <Button variant="solid" size="2" highContrast>Get Started</Button>
+    <Button variant="solid" size="2">Get Started</Button>
   </Navbar.Actions>
 </Navbar.Root>`}
         >
@@ -102,7 +102,7 @@ export function NavbarExamples() {
               <Button variant="ghost" size="2">
                 Sign In
               </Button>
-              <Button variant="solid" size="2" highContrast>
+              <Button variant="solid" size="2">
                 Get Started
               </Button>
             </Navbar.Actions>
@@ -131,19 +131,19 @@ export function NavbarExamples() {
 <Navbar.Root position="static">
   <Navbar.Logo>
     <Flex p="3" align="center" justify="center" style={slotStyle}>
-      <Text size="2" color="gray">Logo Slot</Text>
+      <Text size="2" emphasis="medium">Logo Slot</Text>
     </Flex>
   </Navbar.Logo>
 
   <Navbar.Navigation style={{ flex: 1 }}>
     <Flex py="3" px="6" align="center" justify="center" width="100%" style={slotStyle}>
-      <Text size="2" color="gray">Navigation Slot (expands)</Text>
+      <Text size="2" emphasis="medium">Navigation Slot (expands)</Text>
     </Flex>
   </Navbar.Navigation>
 
   <Navbar.Actions>
     <Flex p="3" align="center" justify="center" style={slotStyle}>
-      <Text size="2" color="gray">Actions Slot</Text>
+      <Text size="2" emphasis="medium">Actions Slot</Text>
     </Flex>
   </Navbar.Actions>
 </Navbar.Root>`}
@@ -159,7 +159,7 @@ export function NavbarExamples() {
                   background: 'repeating-linear-gradient(135deg, transparent, transparent 4px, var(--crimson-3) 4px, var(--crimson-3) 5px)',
                 }}
               >
-                <Text size="2" color="gray">
+                <Text size="2" emphasis="medium">
                   Logo Slot
                 </Text>
               </Flex>
@@ -177,7 +177,7 @@ export function NavbarExamples() {
                   background: 'repeating-linear-gradient(135deg, transparent, transparent 4px, var(--crimson-3) 4px, var(--crimson-3) 5px)',
                 }}
               >
-                <Text size="2" color="gray">
+                <Text size="2" emphasis="medium">
                   Navigation Slot (expands)
                 </Text>
               </Flex>
@@ -193,7 +193,7 @@ export function NavbarExamples() {
                   background: 'repeating-linear-gradient(135deg, transparent, transparent 4px, var(--crimson-3) 4px, var(--crimson-3) 5px)',
                 }}
               >
-                <Text size="2" color="gray">
+                <Text size="2" emphasis="medium">
                   Actions Slot
                 </Text>
               </Flex>
@@ -294,7 +294,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
         <IconButton variant="ghost" size="2">
-          <Avatar size="2" fallback="JD" highContrast />
+          <Avatar size="2" fallback="JD" />
         </IconButton>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content variant="soft">
@@ -326,7 +326,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
               <DropdownMenu.Root>
                 <DropdownMenu.Trigger>
                   <IconButton variant="ghost" size="2">
-                    <Avatar size="2" fallback="JD" highContrast />
+                    <Avatar size="2" fallback="JD" />
                   </IconButton>
                 </DropdownMenu.Trigger>
                 <DropdownMenu.Content variant="soft">
@@ -359,7 +359,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
     <Avatar src="/logo.png" fallback="B" size="2" />
   </Navbar.Logo>
   <Navbar.Actions>
-    <Button variant="soft" size="2" color="gray" highContrast>Contact</Button>
+    <Button variant="soft" size="2" color="gray">Contact</Button>
   </Navbar.Actions>
 </Navbar.Root>`}
         >
@@ -368,7 +368,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
               <Avatar src="/logos/kookie-ui/kookie-ui.png" fallback="K" size="2" />
             </Navbar.Logo>
             <Navbar.Actions>
-              <Button variant="soft" size="2" color="gray" highContrast>
+              <Button variant="soft" size="2" color="gray">
                 Contact
               </Button>
             </Navbar.Actions>
@@ -414,7 +414,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
             <Navbar.Root position="static" size="1">
               <Navbar.Logo>
                 <Avatar src="/logos/kookie-ui/kookie-ui.png" fallback="K" size="1" />
-                <Text size="1" color="gray">
+                <Text size="1" emphasis="medium">
                   size=&quot;1&quot;
                 </Text>
               </Navbar.Logo>
@@ -427,7 +427,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
             <Navbar.Root position="static" size="2">
               <Navbar.Logo>
                 <Avatar src="/logos/kookie-ui/kookie-ui.png" fallback="K" size="2" />
-                <Text size="2" color="gray">
+                <Text size="2" emphasis="medium">
                   size=&quot;2&quot; (default)
                 </Text>
               </Navbar.Logo>
@@ -440,7 +440,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
             <Navbar.Root position="static" size="3">
               <Navbar.Logo>
                 <Avatar src="/logos/kookie-ui/kookie-ui.png" fallback="K" size="3" />
-                <Text size="3" color="gray">
+                <Text size="3" emphasis="medium">
                   size=&quot;3&quot;
                 </Text>
               </Navbar.Logo>

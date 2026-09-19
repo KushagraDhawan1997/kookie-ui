@@ -37,7 +37,7 @@ export default function SegmentedControlTest() {
         {/* Header */}
         <Flex direction="column" gap="3">
           <Heading size="9" weight="medium">SegmentedControl</Heading>
-          <Text size="2" color="gray">
+          <Text size="2" emphasis="medium">
             Testing icon-only mode and vertical orientation
           </Text>
         </Flex>
@@ -48,7 +48,7 @@ export default function SegmentedControlTest() {
         <Flex direction="column" gap="5">
           <Box>
             <Heading size="6" weight="medium" mb="2">1. Text vs Icon-Only Comparison</Heading>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Compare standard text segments with icon-only fixed-width segments
             </Text>
           </Box>
@@ -80,7 +80,7 @@ export default function SegmentedControlTest() {
           </Flex>
 
           <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               <Code variant="soft">iconOnly</Code> applies fixed square width = height, with no horizontal padding
             </Text>
           </Box>
@@ -92,7 +92,7 @@ export default function SegmentedControlTest() {
         <Flex direction="column" gap="5">
           <Box>
             <Heading size="6" weight="medium" mb="2">2. Icon-Only Across All Sizes</Heading>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Each size maintains square aspect ratio
             </Text>
           </Box>
@@ -164,7 +164,7 @@ export default function SegmentedControlTest() {
           </Flex>
 
           <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Uses <Code variant="soft">--segmented-control-height</Code> for both width and height
             </Text>
           </Box>
@@ -176,7 +176,7 @@ export default function SegmentedControlTest() {
         <Flex direction="column" gap="5">
           <Box>
             <Heading size="6" weight="medium" mb="2">3. Real-World Use Cases</Heading>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Common icon-only segmented control patterns
             </Text>
           </Box>
@@ -235,7 +235,7 @@ export default function SegmentedControlTest() {
           </Flex>
 
           <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Always include <Code variant="soft">aria-label</Code> for accessibility when using icon-only segments
             </Text>
           </Box>
@@ -247,7 +247,7 @@ export default function SegmentedControlTest() {
         <Flex direction="column" gap="5">
           <Box>
             <Heading size="6" weight="medium" mb="2">4. Interactive Preview</Heading>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               See the selected values reflected in real-time
             </Text>
           </Box>
@@ -275,7 +275,7 @@ export default function SegmentedControlTest() {
         <Flex direction="column" gap="5">
           <Box>
             <Heading size="6" weight="medium" mb="2">5. Indicator Animation</Heading>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               The sliding indicator works correctly with equal-width icon-only items
             </Text>
           </Box>
@@ -301,7 +301,7 @@ export default function SegmentedControlTest() {
           </Flex>
 
           <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Click different segments to see the smooth sliding animation
             </Text>
           </Box>
@@ -313,7 +313,7 @@ export default function SegmentedControlTest() {
         <Flex direction="column" gap="5">
           <Box>
             <Heading size="6" weight="medium" mb="2">6. Full Width Icon-Only</Heading>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Icon-only items grow to fill available space while keeping icons centered
             </Text>
           </Box>
@@ -367,7 +367,7 @@ export default function SegmentedControlTest() {
           </Flex>
 
           <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Items maintain minimum square dimensions but grow equally to fill container. Icons stay perfectly centered using <Code variant="soft">minmax(height, 1fr)</Code> grid columns.
             </Text>
           </Box>
@@ -379,7 +379,7 @@ export default function SegmentedControlTest() {
         <Flex direction="column" gap="5">
           <Box>
             <Heading size="6" weight="medium" mb="2">7. Vertical Orientation - Icon-Only (Recommended)</Heading>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Vertical orientation works best with icon-only segments for compact toolbars and sidebars
             </Text>
           </Box>
@@ -450,7 +450,7 @@ export default function SegmentedControlTest() {
           </Flex>
 
           <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Selected: <Code variant="soft">{verticalView}</Code> - Perfect for sidebar tools and compact interfaces
             </Text>
           </Box>
@@ -462,7 +462,7 @@ export default function SegmentedControlTest() {
         <Flex direction="column" gap="5">
           <Box>
             <Heading size="6" weight="medium" mb="2">8. Orientation Comparison</Heading>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Same control in both orientations
             </Text>
           </Box>
@@ -500,7 +500,7 @@ export default function SegmentedControlTest() {
           </Flex>
 
           <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Both controls are synced: <Code variant="soft">{verticalTool}</Code>
             </Text>
           </Box>
@@ -512,7 +512,7 @@ export default function SegmentedControlTest() {
         <Flex direction="column" gap="5">
           <Box>
             <Heading size="6" weight="medium" mb="2">9. Vertical with Text (Less Ideal)</Heading>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Text labels work but are less recommended. Best with very short labels.
             </Text>
           </Box>
@@ -559,7 +559,7 @@ export default function SegmentedControlTest() {
         <Flex direction="column" gap="5">
           <Box>
             <Heading size="6" weight="medium" mb="2">10. Real-World Vertical Use Cases</Heading>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Common patterns for vertical segmented controls
             </Text>
           </Box>
@@ -615,7 +615,7 @@ export default function SegmentedControlTest() {
           </Flex>
 
           <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Vertical icon-only controls are perfect for sidebars, tool palettes, and compact navigation rails
             </Text>
           </Box>
@@ -627,7 +627,7 @@ export default function SegmentedControlTest() {
         <Flex direction="column" gap="5">
           <Box>
             <Heading size="6" weight="medium" mb="2">11. Vertical Indicator Animation</Heading>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               The sliding indicator animates smoothly in vertical orientation
             </Text>
           </Box>
@@ -665,7 +665,7 @@ export default function SegmentedControlTest() {
           </Flex>
 
           <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Click different segments to see the smooth vertical sliding animation with spring physics
             </Text>
           </Box>

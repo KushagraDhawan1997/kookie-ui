@@ -91,7 +91,7 @@ export function TextFieldExamples() {
     <Flex direction="column" gap="6" p="2">
       <Flex direction="column" gap="1">
         <Heading size="6" weight="medium">Welcome back</Heading>
-        <Text size="3" color="gray">
+        <Text size="3" emphasis="medium">
           Sign in to continue to your account.
         </Text>
       </Flex>
@@ -127,7 +127,7 @@ export function TextFieldExamples() {
           </TextField.Slot>
         </TextField.Root>
       </Flex>
-      <Button variant="solid" size="2" color="gray" highContrast>
+      <Button variant="solid" size="2" color="gray">
         Sign In
       </Button>
     </Flex>
@@ -149,7 +149,7 @@ export function TextFieldExamples() {
                   <Heading size="6" weight="medium">
                     Welcome back
                   </Heading>
-                  <Text size="3" color="gray">
+                  <Text size="3" emphasis="medium">
                     Sign in to continue to your account.
                   </Text>
                 </Flex>
@@ -192,7 +192,7 @@ export function TextFieldExamples() {
                     </TextField.Slot>
                   </TextField.Root>
                 </Flex>
-                <Button variant="solid" size="2" color="gray" highContrast>
+                <Button variant="solid" size="2" color="gray">
                   Sign In
                 </Button>
               </Flex>
@@ -240,7 +240,7 @@ const [height, setHeight] = React.useState(1080);
     </Text>
   </TextField.Slot>
   <TextField.Slot side="right">
-    <Text size="1" color="gray">
+    <Text size="1" emphasis="medium">
       px
     </Text>
   </TextField.Slot>
@@ -248,7 +248,7 @@ const [height, setHeight] = React.useState(1080);
         >
           <Card variant="classic" size="1" style={{ width: 200 }}>
             <Flex direction="column" gap="2" p="2">
-              <Text size="1" weight="medium" color="gray">
+              <Text size="1" weight="medium" emphasis="medium">
                 Dimensions
               </Text>
               <Flex direction="column" gap="1">
@@ -259,7 +259,7 @@ const [height, setHeight] = React.useState(1080);
                     </Text>
                   </TextField.Slot>
                   <TextField.Slot side="right">
-                    <Text size="1" color="gray">
+                    <Text size="1" emphasis="medium">
                       px
                     </Text>
                   </TextField.Slot>
@@ -271,7 +271,7 @@ const [height, setHeight] = React.useState(1080);
                     </Text>
                   </TextField.Slot>
                   <TextField.Slot side="right">
-                    <Text size="1" color="gray">
+                    <Text size="1" emphasis="medium">
                       px
                     </Text>
                   </TextField.Slot>

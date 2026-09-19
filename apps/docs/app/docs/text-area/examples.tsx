@@ -139,7 +139,7 @@ const handleSubmit = async () => {
                 <Heading size="5" weight="medium">
                   Send us your feedback
                 </Heading>
-                <Text size="2" color="gray">
+                <Text size="2" emphasis="medium">
                   We'd love to hear your thoughts about our product.
                 </Text>
               </Flex>
@@ -150,7 +150,7 @@ const handleSubmit = async () => {
                 <Button variant="soft" size="2" color="gray" disabled={isSubmitting} onClick={() => setFeedback('')}>
                   Clear
                 </Button>
-                <Button variant="classic" size="2" highContrast loading={isSubmitting} onClick={handleFeedbackSubmit} disabled={!feedback.trim()}>
+                <Button variant="classic" size="2" loading={isSubmitting} onClick={handleFeedbackSubmit} disabled={!feedback.trim()}>
                   Submit Feedback
                 </Button>
               </Flex>
@@ -185,14 +185,14 @@ const maxLength = 280;
   maxLength={maxLength}
   rows={3}
 />
-<Text size="1" color="gray">
+<Text size="1" emphasis="medium">
   {tweet.length} / {maxLength}
 </Text>`}
         >
           <Flex direction="column" gap="2" style={{ width: 480 }}>
             <TextArea size="2" variant="soft" placeholder="What's happening?" value={tweet} onChange={(e) => setTweet(e.target.value)} maxLength={maxLength} rows={3} />
             <Flex justify="between" align="center">
-              <Text size="1" color="gray">
+              <Text size="1" emphasis="medium">
                 {tweet.length} / {maxLength}
               </Text>
               <Button variant="classic" size="1" disabled={tweet.length === 0 || tweet.length > maxLength}>
@@ -235,7 +235,7 @@ const maxLength = 280;
               <Heading size="4" weight="medium">
                 Daily Notes
               </Heading>
-              <Text size="2" color="gray">
+              <Text size="2" emphasis="medium">
                 {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
               </Text>
             </Flex>
@@ -273,7 +273,7 @@ const maxLength = 280;
                 <Heading size="5" weight="medium">
                   Product Information
                 </Heading>
-                <Text size="2" color="gray">
+                <Text size="2" emphasis="medium">
                   Provide a detailed description of your product.
                 </Text>
               </Flex>
@@ -289,7 +289,7 @@ const maxLength = 280;
                 <Button variant="soft" size="2" color="gray">
                   Cancel
                 </Button>
-                <Button variant="classic" size="2" highContrast>
+                <Button variant="classic" size="2">
                   Save Product
                 </Button>
               </Flex>

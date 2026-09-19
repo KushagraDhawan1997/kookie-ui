@@ -41,8 +41,7 @@ export function MyComponent() {
 | -------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | `variant`      | `'classic' \| 'solid' \| 'soft' \| 'surface' \| 'outline' \| 'ghost'` | Button style variant: classic for elevated, solid for primary, outline for secondary, ghost for utility, soft/surface for content-heavy UIs |
 | `size`         | `'1' \| '2' \| '3' \| '4'`                                            | Button density: 1 (24px) for toolbars, 2 (32px) standard, 3 (40px) for important actions, 4 (48px) for hero sections. Supports responsive objects |
-| `color`        | `AccentColor`                                                         | Semantic color to communicate action intent. Use highContrast for maximum visibility on complex backgrounds |
-| `highContrast` | `boolean`                                                             | Maximum visibility mode, especially useful on complex or translucent backgrounds                |
+| `color`        | `AccentColor`                                                         | Semantic color to communicate action intent. Gray fills with step 12 on its own |
 | `radius`       | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'`                  | Corner radius scale: none for sharp edges, small/medium/large for progressive rounding, full for circular |
 | `material`     | `'solid' \| 'translucent'`                                            | Background appearance: solid for opaque backgrounds, translucent for depth over images or dynamic backgrounds |
 | `loading`      | `boolean`                                                             | Shows spinner and disables button automatically. No need to set disabled manually               |
@@ -390,6 +389,10 @@ Loading state automatically disables interaction and displays spinner with prope
 
 - Improved 3D shadow system for classic variant
 - Better contrast relationships in both light and dark themes
+
+### Removed
+
+- `highContrast` prop. Gray fills with step 12 on its own, and icons read the strong ink by default.
 
 ### Fixed
 

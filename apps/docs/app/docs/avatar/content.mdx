@@ -9,7 +9,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { Alert02Icon } from '@hugeicons/core-free-icons';
 
 <Box>
-  <Callout.Root color="gray" variant="outline" highContrast>
+  <Callout.Root color="gray" variant="outline">
     <Callout.Icon>
       <HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />
     </Callout.Icon>
@@ -59,7 +59,6 @@ export function MyAvatars() {
 | `variant` | `'classic' \| 'solid' \| 'soft' \| 'surface' \| 'outline'` | `'soft'` | The visual style of the fallback. |
 | `color` | `AccentColor` | - | The accent color for the fallback. |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | - | Override the border radius. |
-| `highContrast` | `boolean` | `false` | Increases fallback color contrast. |
 | `material` | `'solid' \| 'translucent'` | - | Material appearance for the fallback. |
 | `status` | `AccentColor` | - | Status indicator color. Renders a colored dot at bottom-right. |
 | `badge` | `React.ReactNode` | - | Custom badge content. Renders at bottom-right. |
@@ -302,7 +301,11 @@ When rendered as a `button`, `a`, or `[role="button"]` via `asChild`, avatars ga
 - Border-radius scale tightened to match size number (size 1 uses radius-1, etc.)
 - Two-letter fallback font sizes defined for all sizes (Radix only defined sizes 1-4)
 - Soft variant uses solid colors (`--accent-3`) instead of alpha (`--accent-a3`) for better consistency
-- Solid high-contrast fallback uses `--gray-1` instead of `--accent-1`
+- Solid gray fallback fills with step 12 and uses `--gray-1` text
+
+### Removed
+
+- `highContrast` prop. Gray fills with step 12 on its own, and fallback text reads the strong ink.
 
 ### Deprecated
 

@@ -36,7 +36,7 @@ interface LabelProps extends React.ComponentPropsWithoutRef<typeof Label.Root> {
 function PropertyLabel({ children, ...props }: LabelProps) {
   return (
     <Label.Root {...props}>
-      <Text size="2" highContrast color="gray">
+      <Text size="2">
         {children}
       </Text>
     </Label.Root>
@@ -105,12 +105,12 @@ function Group({ width, items, style }: { width?: string | number; items: Item[]
               {item.type === 'select' ? (
                 <DropdownMenu.Root>
                   <DropdownMenu.Trigger>
-                    <Button size="2" variant="soft" highContrast>
+                    <Button size="2" variant="soft">
                       {item.appearance === 'swatch' && <Swatch value={item.value} />}
                       <span style={{ textTransform: 'capitalize' }}>{item.options.find((o) => o.value === item.value)?.label || item.placeholder || 'Select'}</span>
                     </Button>
                   </DropdownMenu.Trigger>
-                  <DropdownMenu.Content variant="soft" highContrast>
+                  <DropdownMenu.Content variant="soft">
                     <DropdownMenu.RadioGroup value={item.value} onValueChange={item.onChange}>
                       {item.options.map((opt) => (
                         <DropdownMenu.RadioItem key={opt.value} value={opt.value}>
@@ -132,7 +132,7 @@ function Group({ width, items, style }: { width?: string | number; items: Item[]
                   </DropdownMenu.Content>
                 </DropdownMenu.Root>
               ) : (
-                <Switch size="2" highContrast id={item.id} checked={item.value} onCheckedChange={item.onChange} />
+                <Switch size="2" id={item.id} checked={item.value} onCheckedChange={item.onChange} />
               )}
             </Control>
           </Field>

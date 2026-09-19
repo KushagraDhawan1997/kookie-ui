@@ -20,8 +20,8 @@ Preview Block frames a live demo: a toolbar with a light/dark switch, a padded s
 ```tsx
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
 
-<PreviewBlock code={`<Button variant="classic" highContrast>Save</Button>`}>
-  <Button variant="classic" highContrast>Save</Button>
+<PreviewBlock code={`<Button variant="classic">Save</Button>`}>
+  <Button variant="classic">Save</Button>
 </PreviewBlock>
 ```
 
@@ -65,7 +65,7 @@ A grid suits layout demos, where alignment matters.
   <Card variant="classic" size="2">
     <Flex direction="column" gap="1" width="240px">
       <Text size="2" weight="medium">Storage</Text>
-      <Text size="2" color="gray">18.4 GB of 50 GB used</Text>
+      <Text size="2" emphasis="medium">18.4 GB of 50 GB used</Text>
     </Flex>
   </Card>
 </PreviewBlock>
@@ -90,7 +90,7 @@ Pass styles instead of a preset for gradients or images.
   background={{ backgroundImage: 'linear-gradient(135deg, var(--iris-4), var(--pink-4))' }}
   code={previewSources.gradient}
 >
-  <Button variant="soft" highContrast material="translucent">Action</Button>
+  <Button variant="soft" material="translucent">Action</Button>
 </PreviewBlock>
 
 ## Accessibility

@@ -283,7 +283,7 @@ const SpecsSection = memo(function SpecsSection({
                       {column.label.charAt(0).toUpperCase() + column.label.slice(1)}
                     </Text>
                     {column.description && (
-                      <Text size="2" color="gray">
+                      <Text size="2" emphasis="medium">
                         {column.description}
                       </Text>
                     )}
@@ -314,11 +314,11 @@ const SpecsSection = memo(function SpecsSection({
                     <Table.Cell key={column.key}>
                       <Tooltip content={tooltipValue}>
                         {column.key === 'value' ? (
-                          <Code size="2" color="gray" variant="soft" highContrast>
+                          <Code size="2" color="gray" variant="soft">
                             {displayValue}
                           </Code>
                         ) : (
-                          <Text size="2" color="gray">
+                          <Text size="2" emphasis="medium">
                             {displayValue}
                           </Text>
                         )}

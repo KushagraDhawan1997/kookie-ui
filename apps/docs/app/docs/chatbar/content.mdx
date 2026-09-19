@@ -9,7 +9,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { Alert02Icon } from '@hugeicons/core-free-icons';
 
 <Box>
-  <Callout.Root color="gray" variant="outline" highContrast>
+  <Callout.Root color="gray" variant="outline">
     <Callout.Icon>
       <HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />
     </Callout.Icon>
@@ -130,7 +130,6 @@ Textarea does not accept `rows`. Its height is driven by `minLines` and `maxLine
 | ---- | ---- | ------- | ----------- |
 | `clearOnSend` | `boolean` | Root's `clearOnSubmit` | Clear message and attachments after sending. Overrides Root `clearOnSubmit` for this button |
 | `aria-label` | `string` | `"Send"` | Accessible button name |
-| `highContrast` | `boolean` | - | Maximum visibility mode |
 
 ### AttachmentsRow
 
@@ -315,13 +314,13 @@ For prominent AI chat experiences and hero sections.
 
 ## Colors
 
-Use the `color` prop (any accent color) to set the accent color for focus states and the send button. Use `highContrast` on the Send button for maximum visibility.
+Use the `color` prop (any accent color) to set the accent color for focus states and the send button. With `color="gray"` the send button fills with step 12 on its own.
 
 ```tsx
 <Chatbar.Root color="blue">
   <Chatbar.Textarea aria-label="Message" />
   <Chatbar.InlineEnd>
-    <Chatbar.Send highContrast />
+    <Chatbar.Send />
   </Chatbar.InlineEnd>
 </Chatbar.Root>
 ```
@@ -441,7 +440,6 @@ Use `AttachTrigger` with `asChild` to create a custom file picker button. Its `a
           variant="ghost"
           size="2"
           color="gray"
-          highContrast
           aria-label="Attach file"
         >
           <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
@@ -494,7 +492,7 @@ Override the default attachment tile renderer:
       <Card size="1" variant="surface">
         <Flex align="center" gap="2" p="2">
           <Text size="1">{attachment.name}</Text>
-          <Text size="1" color="gray">{Math.ceil(attachment.size / 1024)} KB</Text>
+          <Text size="1" emphasis="medium">{Math.ceil(attachment.size / 1024)} KB</Text>
         </Flex>
       </Card>
     )}
@@ -560,7 +558,6 @@ export function ChatWithShortcuts() {
         <Button
           variant="soft"
           color="gray"
-          highContrast
           onClick={() => chatbarApi.current?.focusTextarea()}
         >
           Focus chat
@@ -568,7 +565,6 @@ export function ChatWithShortcuts() {
         <Button
           variant="soft"
           color="gray"
-          highContrast
           onClick={() => chatbarApi.current?.openFilePicker()}
         >
           Attach files
@@ -652,6 +648,10 @@ Chatbar provides accessibility through semantic markup, keyboard support and liv
 - `Send clearOnSend` defaults to Root `clearOnSubmit`
 - `pasteAccept` replaces `accept` for paste
 - `color` is typed as an accent color and `radius` as `'none' | 'small' | 'medium' | 'large' | 'full'`
+
+### Removed
+
+- `highContrast` on Send. Gray fills with step 12 on its own.
 
 ### Fixed
 

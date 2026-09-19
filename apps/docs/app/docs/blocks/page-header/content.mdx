@@ -29,7 +29,7 @@ import { PageHeader } from '@/components/blocks/page-header/page-header';
       <PageHeader.Description>Everything your team is working on.</PageHeader.Description>
     </PageHeader.Content>
     <PageHeader.Actions>
-      <Button variant="classic" highContrast>New project</Button>
+      <Button variant="classic">New project</Button>
     </PageHeader.Actions>
   </PageHeader.Main>
 </PageHeader.Root>
@@ -66,7 +66,7 @@ Every part accepts the props of the component it wraps. Only the additions and c
 | `Content` | `Flex` | `direction="column"`, `gap="2"`, `flexGrow="1"` |
 | `Meta` | `Flex` | `gap="2"`, `align="center"`, `wrap="wrap"` |
 | `Title` | `Heading` | `as="h1"`, `size="9"`, `weight="medium"` |
-| `Description` | `Text` | `size="4"`, `color="gray"` |
+| `Description` | `Text` | `size="4"`, `emphasis="medium"` |
 | `Actions` | `Flex` | `gap="2"`, `align="center"` |
 | `Tabs` | `Flex` | `direction="column"`, `width="100%"` |
 
@@ -83,14 +83,14 @@ Every part accepts the props of the component it wraps. Only the additions and c
         <PageHeader.Content>
           <PageHeader.Meta>
             <Badge color="green" variant="soft">Active</Badge>
-            <Text size="2" color="gray">Updated 2 hours ago</Text>
+            <Text size="2" emphasis="medium">Updated 2 hours ago</Text>
           </PageHeader.Meta>
           <PageHeader.Title as="h3" size="7">Website redesign</PageHeader.Title>
           <PageHeader.Description size="3">New marketing site, docs and pricing page.</PageHeader.Description>
         </PageHeader.Content>
         <PageHeader.Actions>
-          <Button variant="soft" color="gray" highContrast>Share</Button>
-          <Button variant="classic" highContrast><HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />Add task</Button>
+          <Button variant="soft" color="gray">Share</Button>
+          <Button variant="classic"><HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />Add task</Button>
         </PageHeader.Actions>
       </PageHeader.Main>
       <PageHeader.Tabs>
@@ -115,7 +115,7 @@ Every part accepts the props of the component it wraps. Only the additions and c
     <PageHeader.Content>
       <PageHeader.Meta>
         <Badge color="green" variant="soft">Active</Badge>
-        <Text size="2" color="gray">Updated 2 hours ago</Text>
+        <Text size="2" emphasis="medium">Updated 2 hours ago</Text>
       </PageHeader.Meta>
       <PageHeader.Title as="h3" size="7">Website redesign</PageHeader.Title>
       <PageHeader.Description size="3">
@@ -123,8 +123,8 @@ Every part accepts the props of the component it wraps. Only the additions and c
       </PageHeader.Description>
     </PageHeader.Content>
     <PageHeader.Actions>
-      <Button variant="soft" color="gray" highContrast>Share</Button>
-      <Button variant="classic" highContrast>
+      <Button variant="soft" color="gray">Share</Button>
+      <Button variant="classic">
         <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
         Add task
       </Button>
@@ -155,7 +155,7 @@ Every part accepts the props of the component it wraps. Only the additions and c
           <PageHeader.Description size="2">Product designer · Berlin</PageHeader.Description>
         </PageHeader.Content>
         <PageHeader.Actions>
-          <Button variant="classic" highContrast>Follow</Button>
+          <Button variant="classic">Follow</Button>
         </PageHeader.Actions>
       </PageHeader.Main>
     </PageHeader.Root>
@@ -174,7 +174,7 @@ Every part accepts the props of the component it wraps. Only the additions and c
       </PageHeader.Description>
     </PageHeader.Content>
     <PageHeader.Actions>
-      <Button variant="classic" highContrast>Follow</Button>
+      <Button variant="classic">Follow</Button>
     </PageHeader.Actions>
   </PageHeader.Main>
 </PageHeader.Root>

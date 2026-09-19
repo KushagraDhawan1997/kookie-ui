@@ -3,7 +3,7 @@ export const previewSources = {
   <Card variant="classic" size="2">
     <Flex direction="column" gap="1" width="240px">
       <Text size="2" weight="medium">Storage</Text>
-      <Text size="2" color="gray">18.4 GB of 50 GB used</Text>
+      <Text size="2" emphasis="medium">18.4 GB of 50 GB used</Text>
     </Flex>
   </Card>
 </PreviewBlock>`,
@@ -20,6 +20,6 @@ export const previewSources = {
   }}
   code={source}
 >
-  <Button variant="soft" highContrast material="translucent">Action</Button>
+  <Button variant="soft" material="translucent">Action</Button>
 </PreviewBlock>`,
 };

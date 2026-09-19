@@ -100,7 +100,6 @@ export function ToggleButtonExamples() {
   variant="ghost"
   size="2"
   color="gray"
-  highContrast
   pressed={notificationsOn}
   onPressedChange={setNotificationsOn}
 >
@@ -111,7 +110,7 @@ export function ToggleButtonExamples() {
   {notificationsOn ? 'Notifications On' : 'Notifications Off'}
 </ToggleButton>`}
         >
-          <ToggleButton variant="ghost" size="2" color="gray" highContrast pressed={notificationsOn} onPressedChange={setNotificationsOn}>
+          <ToggleButton variant="ghost" size="2" color="gray" pressed={notificationsOn} onPressedChange={setNotificationsOn}>
             <HugeiconsIcon icon={notificationsOn ? Notification01Icon : NotificationOff01Icon} strokeWidth={1.75} />
             {notificationsOn ? 'Notifications On' : 'Notifications Off'}
           </ToggleButton>

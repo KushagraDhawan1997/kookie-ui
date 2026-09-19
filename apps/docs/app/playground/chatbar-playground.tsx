@@ -152,7 +152,6 @@ export default function ChatbarPlayground({
               variant="ghost"
               size="${size}"
               color="gray"
-              highContrast
               aria-label="Attach file"
             >
               <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
@@ -216,7 +215,6 @@ export function ChatbarDemo() {
                     variant="ghost"
                     size={size as any}
                     color="gray"
-                    highContrast
                     aria-label="Attach file"
                   >
                     <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />

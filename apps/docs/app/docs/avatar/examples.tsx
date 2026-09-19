@@ -34,7 +34,7 @@ export function AvatarExamples() {
         />
         <Flex direction="column" gap="0">
           <Text size="2" weight="medium">Sarah Kim</Text>
-          <Text size="1" color="gray">Product Lead</Text>
+          <Text size="1" emphasis="medium">Product Lead</Text>
         </Flex>
       </Flex>
       <Badge size="1" color="violet" variant="soft">Admin</Badge>
@@ -51,7 +51,7 @@ export function AvatarExamples() {
                     <Text size="2" weight="medium">
                       Sarah Kim
                     </Text>
-                    <Text size="1" color="gray">
+                    <Text size="1" emphasis="medium">
                       Product Lead
                     </Text>
                   </Flex>
@@ -68,7 +68,7 @@ export function AvatarExamples() {
                     <Text size="2" weight="medium">
                       John Doe
                     </Text>
-                    <Text size="1" color="gray">
+                    <Text size="1" emphasis="medium">
                       Engineer
                     </Text>
                   </Flex>
@@ -85,7 +85,7 @@ export function AvatarExamples() {
                     <Text size="2" weight="medium">
                       Alex Lee
                     </Text>
-                    <Text size="1" color="gray">
+                    <Text size="1" emphasis="medium">
                       Designer
                     </Text>
                   </Flex>
@@ -124,7 +124,7 @@ export function AvatarExamples() {
     <Flex justify="between" align="center">
       <Flex gap="2" align="center">
         <Text size="2" weight="medium">Mike Johnson</Text>
-        <Text size="1" color="gray">2 hours ago</Text>
+        <Text size="1" emphasis="medium">2 hours ago</Text>
       </Flex>
       <IconButton variant="ghost" size="1" color="gray">
         <HugeiconsIcon icon={MoreHorizontalIcon} />
@@ -144,7 +144,7 @@ export function AvatarExamples() {
                       <Text size="2" weight="medium">
                         Mike Johnson
                       </Text>
-                      <Text size="1" color="gray">
+                      <Text size="1" emphasis="medium">
                         2 hours ago
                       </Text>
                     </Flex>
@@ -164,7 +164,7 @@ export function AvatarExamples() {
                       <Text size="2" weight="medium">
                         Emma Wilson
                       </Text>
-                      <Text size="1" color="gray">
+                      <Text size="1" emphasis="medium">
                         1 hour ago
                       </Text>
                     </Flex>
@@ -205,14 +205,14 @@ export function AvatarExamples() {
         <Heading size="4">Sarah Kim</Heading>
         <Badge size="1" color="violet">Pro</Badge>
       </Flex>
-      <Text size="2" color="gray">Senior Product Designer</Text>
+      <Text size="2" emphasis="medium">Senior Product Designer</Text>
     </Flex>
     <Flex gap="2">
       <Button variant="solid" size="2">
         <HugeiconsIcon icon={Mail01Icon} />
         Message
       </Button>
-      <Button variant="soft" size="2" color="gray" highContrast>
+      <Button variant="soft" size="2" color="gray">
         Follow
       </Button>
     </Flex>
@@ -229,12 +229,12 @@ export function AvatarExamples() {
                     Pro
                   </Badge>
                 </Flex>
-                <Text size="2" color="gray">
+                <Text size="2" emphasis="medium">
                   Senior Product Designer
                 </Text>
                 <Flex gap="1" align="center" justify="center">
                   <HugeiconsIcon icon={Clock01Icon} strokeWidth={1.75} size={14} />
-                  <Text size="1" color="gray">
+                  <Text size="1" emphasis="medium">
                     Joined March 2023
                   </Text>
                 </Flex>
@@ -244,7 +244,7 @@ export function AvatarExamples() {
                   <HugeiconsIcon icon={Mail01Icon} strokeWidth={1.75} />
                   Message
                 </Button>
-                <Button variant="soft" size="2" color="gray" highContrast>
+                <Button variant="soft" size="2" color="gray">
                   Follow
                 </Button>
               </Flex>
@@ -321,7 +321,7 @@ export function AvatarExamples() {
                     <Text size="2" weight="medium">
                       Chris Davis
                     </Text>
-                    <Text size="1" color="gray">
+                    <Text size="1" emphasis="medium">
                       Offline
                     </Text>
                   </Flex>
@@ -397,7 +397,7 @@ export function AvatarExamples() {
                     <Text size="2" weight="medium">
                       Amazon
                     </Text>
-                    <Text size="1" color="gray">
+                    <Text size="1" emphasis="medium">
                       E-commerce
                     </Text>
                   </Flex>
@@ -411,7 +411,7 @@ export function AvatarExamples() {
                     <Text size="2" weight="medium">
                       Google
                     </Text>
-                    <Text size="1" color="gray">
+                    <Text size="1" emphasis="medium">
                       Technology
                     </Text>
                   </Flex>
@@ -425,7 +425,7 @@ export function AvatarExamples() {
                     <Text size="2" weight="medium">
                       Apple
                     </Text>
-                    <Text size="1" color="gray">
+                    <Text size="1" emphasis="medium">
                       Consumer Electronics
                     </Text>
                   </Flex>

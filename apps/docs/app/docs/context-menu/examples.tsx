@@ -16,7 +16,7 @@ const fileActionsCode = `<ContextMenu.Root>
           <Text size="2" weight="medium">
             Q3 Report.pdf
           </Text>
-          <Text size="1" color="gray">
+          <Text size="1" emphasis="medium">
             Right-click for actions
           </Text>
         </Flex>
@@ -55,7 +55,7 @@ function FileActions() {
               <Text size="2" weight="medium">
                 Q3 Report.pdf
               </Text>
-              <Text size="1" color="gray">
+              <Text size="1" emphasis="medium">
                 Right-click for actions
               </Text>
             </Flex>
@@ -92,7 +92,7 @@ const [zoom, setZoom] = React.useState('fit');
 <ContextMenu.Root>
   <ContextMenu.Trigger>
     <Card variant="classic" size="2">
-      <Text size="2" color="gray">
+      <Text size="2" emphasis="medium">
         Canvas · zoom {zoom}
       </Text>
     </Card>
@@ -132,7 +132,7 @@ function CanvasOptions() {
     <ContextMenu.Root>
       <ContextMenu.Trigger>
         <Card variant="classic" size="2">
-          <Text size="2" color="gray">
+          <Text size="2" emphasis="medium">
             Canvas · zoom {zoom}
           </Text>
         </Card>

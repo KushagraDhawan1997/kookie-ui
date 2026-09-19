@@ -99,7 +99,7 @@ export function BadgeExamples() {
         <Heading size="4">Alex Lee</Heading>
         <Badge size="1" color="violet">Pro</Badge>
       </Flex>
-      <Text size="2" color="gray">Senior Engineer</Text>
+      <Text size="2" emphasis="medium">Senior Engineer</Text>
     </Flex>
     <Flex gap="2" wrap="wrap" justify="center">
       <Badge color="blue" variant="outline">React</Badge>
@@ -119,7 +119,7 @@ export function BadgeExamples() {
                     Pro
                   </Badge>
                 </Flex>
-                <Text size="2" color="gray">
+                <Text size="2" emphasis="medium">
                   Senior Engineer
                 </Text>
               </Flex>
@@ -157,7 +157,7 @@ export function BadgeExamples() {
           code={`<Flex justify="between" align="center">
   <Flex direction="column" gap="1">
     <Text size="2" weight="medium">AI Assistant</Text>
-    <Text size="2" color="gray">Intelligent code suggestions</Text>
+    <Text size="2" emphasis="medium">Intelligent code suggestions</Text>
   </Flex>
   <Badge
     color="violet"
@@ -175,7 +175,7 @@ export function BadgeExamples() {
                   <Text size="2" weight="medium">
                     AI Assistant
                   </Text>
-                  <Text size="2" color="gray">
+                  <Text size="2" emphasis="medium">
                     Intelligent code suggestions
                   </Text>
                 </Flex>
@@ -189,7 +189,7 @@ export function BadgeExamples() {
                   <Text size="2" weight="medium">
                     Real-time Sync
                   </Text>
-                  <Text size="2" color="gray">
+                  <Text size="2" emphasis="medium">
                     Collaborate in real-time
                   </Text>
                 </Flex>
@@ -225,7 +225,7 @@ export function BadgeExamples() {
     <Flex justify="between" align="center">
       <Flex gap="2" align="center">
         <Text size="2" weight="medium">John Doe</Text>
-        <Text size="1" color="gray">2 min ago</Text>
+        <Text size="1" emphasis="medium">2 min ago</Text>
       </Flex>
       <Badge size="1" color="blue" variant="solid">New</Badge>
     </Flex>
@@ -243,7 +243,7 @@ export function BadgeExamples() {
                       <Text size="2" weight="medium">
                         John Doe
                       </Text>
-                      <Text size="1" color="gray">
+                      <Text size="1" emphasis="medium">
                         2 min ago
                       </Text>
                     </Flex>
@@ -263,7 +263,7 @@ export function BadgeExamples() {
                       <Text size="2" weight="medium">
                         Sarah Kim
                       </Text>
-                      <Text size="1" color="gray">
+                      <Text size="1" emphasis="medium">
                         1 hour ago
                       </Text>
                     </Flex>

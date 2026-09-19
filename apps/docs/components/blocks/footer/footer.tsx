@@ -42,8 +42,8 @@ const FooterBrandName = React.forwardRef<HTMLSpanElement, TextProps>(({ size = '
 ));
 FooterBrandName.displayName = 'Footer.BrandName';
 
-const FooterTagline = React.forwardRef<HTMLSpanElement, TextProps>(({ size = '2', color = 'gray', ...props }, ref) => (
-  <Text ref={ref} size={size} color={color} {...props} />
+const FooterTagline = React.forwardRef<HTMLSpanElement, TextProps>(({ size = '2', emphasis = 'medium', ...props }, ref) => (
+  <Text ref={ref} size={size} emphasis={emphasis} {...props} />
 ));
 FooterTagline.displayName = 'Footer.Tagline';
 

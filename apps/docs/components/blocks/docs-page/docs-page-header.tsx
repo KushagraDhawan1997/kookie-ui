@@ -63,7 +63,7 @@ export function DocsPageHeader({ meta, actions, showCopyButton = true, tabs, sep
       <DocsShellPageActions>
         {actions}
         {meta.source && (
-          <Button asChild size="2" variant="ghost" color="gray" highContrast>
+          <Button asChild size="2" variant="ghost" color="gray">
             <a href={meta.source} target="_blank" rel="noreferrer">
               Source
               <HugeiconsIcon icon={ArrowUpRight01Icon} strokeWidth={1.75} />
@@ -71,7 +71,7 @@ export function DocsPageHeader({ meta, actions, showCopyButton = true, tabs, sep
           </Button>
         )}
         {showCopyButton && (
-          <Button size="2" variant="ghost" color="gray" highContrast onClick={copy}>
+          <Button size="2" variant="ghost" color="gray" onClick={copy}>
             <HugeiconsIcon icon={copied ? Tick01Icon : Copy01Icon} strokeWidth={1.75} />
             {copied ? 'Copied' : 'Copy page'}
           </Button>
@@ -81,7 +81,7 @@ export function DocsPageHeader({ meta, actions, showCopyButton = true, tabs, sep
       <PageHeader.Content gap="5">
         <PageHeader.Title size={{ initial: '8', sm: '9' }}>{meta.title}</PageHeader.Title>
         {meta.description && (
-          <PageHeader.Description size={{ initial: '3', sm: '4' }} highContrast>{meta.description}</PageHeader.Description>
+          <PageHeader.Description size={{ initial: '3', sm: '4' }} emphasis="loud">{meta.description}</PageHeader.Description>
         )}
       </PageHeader.Content>
 

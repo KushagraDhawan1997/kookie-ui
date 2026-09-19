@@ -56,7 +56,6 @@ export default function IconButtonPlayground({
   const [color, setColor] = React.useState<string>('theme');
   const [radius, setRadius] = React.useState<string>('theme');
   const [size, setSize] = React.useState<string>('2');
-  const [highContrast, setHighContrast] = React.useState<boolean>(true);
   const [material, setMaterial] = React.useState<string>('theme');
   const [state, setState] = React.useState<string>('default');
 
@@ -102,13 +101,6 @@ export default function IconButtonPlayground({
       placeholder: 'Select size',
     },
     {
-      id: 'high-contrast',
-      label: 'High Contrast',
-      type: 'switch' as const,
-      value: highContrast,
-      onChange: setHighContrast,
-    },
-    {
       id: 'material',
       label: 'Material',
       type: 'select' as const,
@@ -134,7 +126,6 @@ export default function IconButtonPlayground({
     if (color !== 'theme') props.push(`color="${color}"`);
     if (radius !== 'theme') props.push(`radius="${radius}"`);
     if (material !== 'theme') props.push(`material="${material}"`);
-    if (highContrast) props.push('highContrast');
     if (isDisabled) props.push('disabled');
     if (isLoading) props.push('loading');
 
@@ -153,7 +144,6 @@ export default function IconButtonPlayground({
           variant={variant as any}
           color={color === 'theme' ? undefined : (color as any)}
           radius={radius === 'theme' ? undefined : (radius as any)}
-          highContrast={highContrast || undefined}
           material={material === 'theme' ? undefined : (material as any)}
           disabled={isDisabled}
           loading={isLoading}

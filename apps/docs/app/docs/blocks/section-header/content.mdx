@@ -26,7 +26,7 @@ import { SectionHeader } from '@/components/blocks/section-header/section-header
     <SectionHeader.Description>People with access to this workspace.</SectionHeader.Description>
   </SectionHeader.Content>
   <SectionHeader.Actions>
-    <Button variant="classic" highContrast>Invite</Button>
+    <Button variant="classic">Invite</Button>
   </SectionHeader.Actions>
 </SectionHeader.Root>
 ```
@@ -53,7 +53,7 @@ Every part accepts the props of the component it wraps. Only the additions and c
 | `Root` | `Flex` | `layout?: Responsive<'inline' \| 'stacked'>` (`'inline'`), `align?: Responsive<'start' \| 'center'>`, `separator?: boolean`. `gap="4"` |
 | `Content` | `Flex` | `direction="column"`, `gap="1"` |
 | `Title` | `Heading` | `as="h2"`, `size="6"`, `weight="medium"` |
-| `Description` | `Text` | `size="3"`, `color="gray"` |
+| `Description` | `Text` | `size="3"`, `emphasis="medium"` |
 | `Actions` | `Flex` | `gap="2"`, `align="center"` |
 | `Tabs` | `Flex` | `width="100%"` |
 
@@ -71,8 +71,8 @@ Every part accepts the props of the component it wraps. Only the additions and c
         <SectionHeader.Description size="2">Choose what you hear about and where.</SectionHeader.Description>
       </SectionHeader.Content>
       <SectionHeader.Actions>
-        <Button variant="soft" color="gray" highContrast size="2">Reset</Button>
-        <Button variant="classic" highContrast size="2">Save</Button>
+        <Button variant="soft" color="gray" size="2">Reset</Button>
+        <Button variant="classic" size="2">Save</Button>
       </SectionHeader.Actions>
     </SectionHeader.Root>
   </Box>
@@ -87,8 +87,8 @@ Every part accepts the props of the component it wraps. Only the additions and c
     </SectionHeader.Description>
   </SectionHeader.Content>
   <SectionHeader.Actions>
-    <Button variant="soft" color="gray" highContrast size="2">Reset</Button>
-    <Button variant="classic" highContrast size="2">Save</Button>
+    <Button variant="soft" color="gray" size="2">Reset</Button>
+    <Button variant="classic" size="2">Save</Button>
   </SectionHeader.Actions>
 </SectionHeader.Root>
 ```

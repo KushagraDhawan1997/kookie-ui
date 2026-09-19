@@ -165,7 +165,7 @@ const PageHeaderTitle = React.forwardRef<HTMLHeadingElement, HeadingProps>(
 PageHeaderTitle.displayName = 'PageHeader.Title';
 
 const PageHeaderDescription = React.forwardRef<HTMLParagraphElement, TextProps>(
-  ({ size = '4', color = 'gray', ...props }, ref) => <Text ref={ref} size={size} color={color} {...props} />,
+  ({ size = '4', emphasis = 'medium', ...props }, ref) => <Text ref={ref} size={size} emphasis={emphasis} {...props} />,
 );
 PageHeaderDescription.displayName = 'PageHeader.Description';
 

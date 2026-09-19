@@ -33,8 +33,8 @@ const EmptyStateTitle = React.forwardRef<HTMLHeadingElement, HeadingProps>(
 EmptyStateTitle.displayName = 'EmptyState.Title';
 
 const EmptyStateDescription = React.forwardRef<HTMLParagraphElement, TextProps>(
-  ({ size = '2', color = 'gray', align = 'center', ...props }, ref) => (
-    <Text ref={ref} size={size} color={color} align={align} {...props} />
+  ({ size = '2', emphasis = 'medium', align = 'center', ...props }, ref) => (
+    <Text ref={ref} size={size} emphasis={emphasis} align={align} {...props} />
   ),
 );
 EmptyStateDescription.displayName = 'EmptyState.Description';

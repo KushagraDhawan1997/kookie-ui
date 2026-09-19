@@ -64,10 +64,10 @@ export function DocsPage({
           </Box>
 
           {footer && (
-            <Text as="p" size="2" color="gray" mt="9">
+            <Text as="p" size="2" emphasis="medium" mt="9">
               © {new Date().getFullYear()}{' '}
               {footer.url ? (
-                <Link href={footer.url} target="_blank" rel="noreferrer" color="gray" highContrast>
+                <Link href={footer.url} target="_blank" rel="noreferrer" color="gray">
                   {footer.name}
                 </Link>
               ) : (
@@ -77,7 +77,7 @@ export function DocsPage({
               {footer.githubUrl && (
                 <>
                   {' '}
-                  <Link href={footer.githubUrl} target="_blank" rel="noreferrer" color="gray" highContrast>
+                  <Link href={footer.githubUrl} target="_blank" rel="noreferrer" color="gray">
                     GitHub
                   </Link>
                   .

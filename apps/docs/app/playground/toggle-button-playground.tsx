@@ -53,7 +53,6 @@ export default function ToggleButtonPlayground({
   const [color, setColor] = React.useState<string>('theme');
   const [radius, setRadius] = React.useState<string>('theme');
   const [size, setSize] = React.useState<string>('2');
-  const [highContrast, setHighContrast] = React.useState<boolean>(true);
   const [material, setMaterial] = React.useState<string>('theme');
   const [pressed, setPressed] = React.useState<boolean>(false);
 
@@ -96,13 +95,6 @@ export default function ToggleButtonPlayground({
       placeholder: 'Select size',
     },
     {
-      id: 'high-contrast',
-      label: 'High Contrast',
-      type: 'switch' as const,
-      value: highContrast,
-      onChange: setHighContrast,
-    },
-    {
       id: 'pressed',
       label: 'Pressed',
       type: 'switch' as const,
@@ -126,7 +118,6 @@ export default function ToggleButtonPlayground({
     if (color !== 'theme') props.push(`color="${color}"`);
     if (radius !== 'theme') props.push(`radius="${radius}"`);
     if (material !== 'theme') props.push(`material="${material}"`);
-    if (highContrast) props.push('highContrast');
     if (pressed) props.push('pressed');
 
     const propsString = props.length > 0 ? `\n  ${props.join('\n  ')}` : '';
@@ -145,7 +136,6 @@ export default function ToggleButtonPlayground({
           color={color === 'theme' ? undefined : (color as any)}
           radius={radius === 'theme' ? undefined : (radius as any)}
           material={material === 'theme' ? undefined : (material as any)}
-          highContrast={highContrast || undefined}
           pressed={pressed}
           onPressedChange={setPressed}
         >

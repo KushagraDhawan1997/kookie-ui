@@ -39,7 +39,7 @@ export default function Home() {
                 <Heading asChild size="5" weight="medium">
                   <h2>{section.title}</h2>
                 </Heading>
-                <Text as="p" size="3" color="gray">
+                <Text as="p" size="3" emphasis="medium">
                   {section.blurb}
                 </Text>
               </Flex>
@@ -58,7 +58,7 @@ export default function Home() {
               <Heading asChild size="5" weight="medium">
                 <h2>Components</h2>
               </Heading>
-              <Text as="p" size="3" color="gray">
+              <Text as="p" size="3" emphasis="medium">
                 Every component in the package. Each page covers what the component is, which props it takes and how to use it.
               </Text>
             </Flex>

@@ -43,7 +43,6 @@ export function ToolbarExamples() {
         variant="soft"
         size="2"
         color="gray"
-        highContrast
         aria-label="Go back"
       >
         <ArrowLeftIcon />
@@ -61,7 +60,6 @@ export function ToolbarExamples() {
         variant="soft"
         size="2"
         color="gray"
-        highContrast
         aria-label="Close"
       >
         <CloseIcon />
@@ -81,7 +79,7 @@ export function ToolbarExamples() {
           <Card variant="classic" size="3" inset style={{ width: '100%', maxWidth: '400px', height: '22rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
             <Toolbar variant="ghost" size="1">
               <Toolbar.Left>
-                <IconButton radius="full" variant="soft" size="2" color="gray" highContrast aria-label="Go back">
+                <IconButton radius="full" variant="soft" size="2" color="gray" aria-label="Go back">
                   <HugeiconsIcon icon={ArrowLeft01Icon} strokeWidth={1.75} />
                 </IconButton>
               </Toolbar.Left>
@@ -92,7 +90,7 @@ export function ToolbarExamples() {
                 <IconButton radius="full" size="2" aria-label="Close">
                   <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.75} />
                 </IconButton>
-                <IconButton radius="full" variant="soft" size="2" color="gray" highContrast aria-label="Close">
+                <IconButton radius="full" variant="soft" size="2" color="gray" aria-label="Close">
                   <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
                 </IconButton>
               </Toolbar.Right>
@@ -103,7 +101,7 @@ export function ToolbarExamples() {
                   <Text size="2" weight="medium">
                     Notifications
                   </Text>
-                  <Text size="2" color="gray">
+                  <Text size="2" emphasis="medium">
                     Manage how you receive alerts and updates.
                   </Text>
                 </Flex>
@@ -112,7 +110,7 @@ export function ToolbarExamples() {
                   <Text size="2" weight="medium">
                     Privacy
                   </Text>
-                  <Text size="2" color="gray">
+                  <Text size="2" emphasis="medium">
                     Control who can see your activity.
                   </Text>
                 </Flex>
@@ -121,7 +119,7 @@ export function ToolbarExamples() {
                   <Text size="2" weight="medium">
                     Appearance
                   </Text>
-                  <Text size="2" color="gray">
+                  <Text size="2" emphasis="medium">
                     Customize theme and display options.
                   </Text>
                 </Flex>
@@ -130,7 +128,7 @@ export function ToolbarExamples() {
                   <Text size="2" weight="medium">
                     Language
                   </Text>
-                  <Text size="2" color="gray">
+                  <Text size="2" emphasis="medium">
                     Choose your preferred language.
                   </Text>
                 </Flex>
@@ -139,7 +137,7 @@ export function ToolbarExamples() {
                   <Text size="2" weight="medium">
                     Accessibility
                   </Text>
-                  <Text size="2" color="gray">
+                  <Text size="2" emphasis="medium">
                     Configure assistive features.
                   </Text>
                 </Flex>
@@ -148,7 +146,7 @@ export function ToolbarExamples() {
                   <Text size="2" weight="medium">
                     Storage
                   </Text>
-                  <Text size="2" color="gray">
+                  <Text size="2" emphasis="medium">
                     Manage your data and cache.
                   </Text>
                 </Flex>
@@ -200,7 +198,6 @@ export function ToolbarExamples() {
         variant="ghost"
         size="2"
         color="gray"
-        highContrast
         aria-label="Home"
       >
         <HomeIcon />
@@ -214,7 +211,6 @@ export function ToolbarExamples() {
         variant="ghost"
         size="2"
         color="gray"
-        highContrast
         aria-label="Search"
       >
         <SearchIcon />
@@ -235,7 +231,7 @@ export function ToolbarExamples() {
           <Card variant="classic" material="translucent" size="3" inset style={{ width: '100%', maxWidth: '400px', height: '24rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
             <Toolbar floating variant="surface" material="translucent" size="1">
               <Toolbar.Left>
-                <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Home">
+                <IconButton variant="ghost" size="2" color="gray" aria-label="Home">
                   <HugeiconsIcon icon={Home01Icon} strokeWidth={1.75} />
                 </IconButton>
               </Toolbar.Left>
@@ -243,7 +239,7 @@ export function ToolbarExamples() {
                 <Toolbar.Title>Explore</Toolbar.Title>
               </Toolbar.Center>
               <Toolbar.Right>
-                <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Search">
+                <IconButton variant="ghost" size="2" color="gray" aria-label="Search">
                   <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
                 </IconButton>
               </Toolbar.Right>
@@ -279,7 +275,7 @@ export function ToolbarExamples() {
           code={`<Card variant="classic" size="2" style={{ display: 'flex', flexDirection: 'column' }}>
   <Flex direction="column" gap="4" p="4" flexGrow="1" pb="var(--rt-toolbar-height)">
     <Heading size="4" weight="medium">Edit Profile</Heading>
-    <Text size="2" color="gray">Update your account information.</Text>
+    <Text size="2" emphasis="medium">Update your account information.</Text>
     {/* Form fields */}
   </Flex>
   <Toolbar anchor="bottom" variant="soft" size="2">
@@ -288,13 +284,12 @@ export function ToolbarExamples() {
         variant="ghost"
         size="2"
         color="gray"
-        highContrast
       >
         Cancel
       </Button>
     </Toolbar.Left>
     <Toolbar.Right>
-      <Button variant="solid" size="2" highContrast>
+      <Button variant="solid" size="2">
         Save Changes
       </Button>
     </Toolbar.Right>
@@ -318,7 +313,7 @@ export function ToolbarExamples() {
                 <Heading size="4" weight="medium">
                   Edit Profile
                 </Heading>
-                <Text size="2" color="gray">
+                <Text size="2" emphasis="medium">
                   Update your account information.
                 </Text>
               </Flex>
@@ -327,7 +322,7 @@ export function ToolbarExamples() {
                 <Text size="2" weight="medium">
                   Display Name
                 </Text>
-                <Text size="2" color="gray">
+                <Text size="2" emphasis="medium">
                   John Doe
                 </Text>
               </Flex>
@@ -335,19 +330,19 @@ export function ToolbarExamples() {
                 <Text size="2" weight="medium">
                   Email
                 </Text>
-                <Text size="2" color="gray">
+                <Text size="2" emphasis="medium">
                   john@example.com
                 </Text>
               </Flex>
             </Flex>
             <Toolbar anchor="bottom" variant="soft" size="2">
               <Toolbar.Left>
-                <Button variant="ghost" size="2" color="gray" highContrast>
+                <Button variant="ghost" size="2" color="gray">
                   Cancel
                 </Button>
               </Toolbar.Left>
               <Toolbar.Right>
-                <Button variant="solid" size="2" highContrast>
+                <Button variant="solid" size="2">
                   Save Changes
                 </Button>
               </Toolbar.Right>
@@ -381,7 +376,6 @@ export function ToolbarExamples() {
         variant="soft"
         size="2"
         color="gray"
-        highContrast
         aria-label="Search"
       >
         <SearchIcon />
@@ -390,12 +384,11 @@ export function ToolbarExamples() {
         variant="soft"
         size="2"
         color="gray"
-        highContrast
         aria-label="Settings"
       >
         <SettingsIcon />
       </IconButton>
-      <Button variant="solid" size="2" highContrast>
+      <Button variant="solid" size="2">
         <AddIcon />
         New
       </Button>
@@ -412,13 +405,13 @@ export function ToolbarExamples() {
                 <Toolbar.Title>Documents</Toolbar.Title>
               </Toolbar.Left>
               <Toolbar.Right gap="1">
-                <IconButton variant="soft" size="2" color="gray" highContrast aria-label="Search">
+                <IconButton variant="soft" size="2" color="gray" aria-label="Search">
                   <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
                 </IconButton>
-                <IconButton variant="soft" size="2" color="gray" highContrast aria-label="Settings">
+                <IconButton variant="soft" size="2" color="gray" aria-label="Settings">
                   <HugeiconsIcon icon={Settings01Icon} strokeWidth={1.75} />
                 </IconButton>
-                <Button variant="solid" size="2" highContrast>
+                <Button variant="solid" size="2">
                   <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
                   New
                 </Button>
@@ -431,7 +424,7 @@ export function ToolbarExamples() {
                   <Text size="2" weight="medium">
                     Projects
                   </Text>
-                  <Text size="1" color="gray">
+                  <Text size="1" emphasis="medium">
                     12 items
                   </Text>
                 </Flex>
@@ -442,7 +435,7 @@ export function ToolbarExamples() {
                   <Text size="2" weight="medium">
                     Report Q4.pdf
                   </Text>
-                  <Text size="1" color="gray">
+                  <Text size="1" emphasis="medium">
                     2.4 MB
                   </Text>
                 </Flex>
@@ -453,7 +446,7 @@ export function ToolbarExamples() {
                   <Text size="2" weight="medium">
                     Meeting Notes.md
                   </Text>
-                  <Text size="1" color="gray">
+                  <Text size="1" emphasis="medium">
                     12 KB
                   </Text>
                 </Flex>

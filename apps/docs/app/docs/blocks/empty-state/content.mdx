@@ -31,7 +31,7 @@ import { EmptyState } from '@/components/blocks/empty-state/empty-state';
     <EmptyState.Description>Projects you create or join show up here.</EmptyState.Description>
   </EmptyState.Content>
   <EmptyState.Actions>
-    <Button variant="classic" highContrast>New project</Button>
+    <Button variant="classic">New project</Button>
   </EmptyState.Actions>
 </EmptyState.Root>
 ```
@@ -59,7 +59,7 @@ Every part accepts the props of the component it wraps. Only the additions and c
 | `Icon` | `Box` | Sizes a child `svg` to `--empty-state-icon-size` and tints it `--gray-a9` |
 | `Content` | `Flex` | `direction="column"`, `gap="1"` |
 | `Title` | `Heading` | `as="h3"`, `size="5"`, `weight="medium"`, `align="center"` |
-| `Description` | `Text` | `size="2"`, `color="gray"`, `align="center"` |
+| `Description` | `Text` | `size="2"`, `emphasis="medium"`, `align="center"` |
 | `Actions` | `Flex` | `gap="2"`, `align="center"`, `justify="center"` |
 
 ### Icon Size
@@ -86,7 +86,7 @@ The icon is `var(--space-6)` square. Override the variable to change it.
       <EmptyState.Description>Check the spelling or try a broader term.</EmptyState.Description>
     </EmptyState.Content>
     <EmptyState.Actions>
-      <Button variant="soft" color="gray" highContrast size="2">Clear search</Button>
+      <Button variant="soft" color="gray" size="2">Clear search</Button>
     </EmptyState.Actions>
   </EmptyState.Root>
 </PreviewBlock>
@@ -103,7 +103,7 @@ The icon is `var(--space-6)` square. Override the variable to change it.
     </EmptyState.Description>
   </EmptyState.Content>
   <EmptyState.Actions>
-    <Button variant="soft" color="gray" highContrast size="2" onClick={clearSearch}>
+    <Button variant="soft" color="gray" size="2" onClick={clearSearch}>
       Clear search
     </Button>
   </EmptyState.Actions>
@@ -122,8 +122,8 @@ The icon is `var(--space-6)` square. Override the variable to change it.
       <EmptyState.Description>Projects you create or join show up here.</EmptyState.Description>
     </EmptyState.Content>
     <EmptyState.Actions>
-      <Button variant="soft" color="gray" highContrast size="2">Import</Button>
-      <Button variant="classic" highContrast size="2">New project</Button>
+      <Button variant="soft" color="gray" size="2">Import</Button>
+      <Button variant="classic" size="2">New project</Button>
     </EmptyState.Actions>
   </EmptyState.Root>
 </PreviewBlock>
@@ -140,8 +140,8 @@ The icon is `var(--space-6)` square. Override the variable to change it.
     </EmptyState.Description>
   </EmptyState.Content>
   <EmptyState.Actions>
-    <Button variant="soft" color="gray" highContrast size="2">Import</Button>
-    <Button variant="classic" highContrast size="2">New project</Button>
+    <Button variant="soft" color="gray" size="2">Import</Button>
+    <Button variant="classic" size="2">New project</Button>
   </EmptyState.Actions>
 </EmptyState.Root>
 ```

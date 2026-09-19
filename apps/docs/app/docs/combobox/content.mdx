@@ -9,7 +9,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { Alert02Icon } from '@hugeicons/core-free-icons';
 
 <Box>
-  <Callout.Root color="gray" variant="outline" highContrast>
+  <Callout.Root color="gray" variant="outline">
     <Callout.Icon>
       <HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />
     </Callout.Icon>
@@ -101,7 +101,6 @@ The Root component manages state and provides context to all child components.
 | Prop | Type | Description |
 | ---- | ---- | ----------- |
 | `size` | `'1' \| '2' \| '3'` | Combobox density: 1 (24px) for toolbars, 2 (32px) for standard forms, 3 (40px) for prominent selections. Supports responsive objects |
-| `highContrast` | `boolean` | Maximum visibility mode for trigger and items, especially useful on complex backgrounds |
 | `value` | `string \| null` | Controlled selection value |
 | `defaultValue` | `string \| null` | Initial selection value for uncontrolled usage |
 | `onValueChange` | `(value: string \| null) => void` | Callback fired when selection changes |
@@ -152,7 +151,6 @@ The Content component renders the dropdown surface containing the search input a
 | `variant` | `'solid' \| 'soft'` | Content surface style: solid for opaque standard background, soft for subtle content-heavy interfaces |
 | `size` | `'1' \| '2' \| '3'` | Override size from Root. Affects padding and item height |
 | `color` | `AccentColor` | Semantic color for items. Falls back to Root color, then theme accent |
-| `highContrast` | `boolean` | Override highContrast from Root |
 | `material` | `'solid' \| 'translucent'` | Surface background. Falls back to the Theme material |
 | `panelBackground` | `'solid' \| 'translucent'` | Deprecated: Use material instead |
 | `width`, `minWidth`, `maxWidth` | `string` | Surface width. `minWidth` defaults to the trigger width, `maxWidth` to 480px |
@@ -378,7 +376,7 @@ Set `size` on Root to control density across the entire combobox. Affects trigge
 
 ## Colors
 
-Use the `color` prop on Root to set semantic colors for the trigger and selected items. Use `highContrast` for maximum visibility on complex backgrounds.
+Use the `color` prop on Root to set semantic colors for the trigger and selected items. Chromatic colors highlight with step 9. Gray highlights with step 12 and inverts the text.
 
 ```tsx
 // Standard color
@@ -396,10 +394,10 @@ Use the `color` prop on Root to set semantic colors for the trigger and selected
   </Combobox.Content>
 </Combobox.Root>
 
-// High contrast mode for maximum visibility
-<Combobox.Root size="2" color="crimson" highContrast>
+// Gray highlights with step 12
+<Combobox.Root size="2" color="gray">
   <Combobox.Trigger variant="soft" aria-label="Priority">
-    <Combobox.Value placeholder="High contrast" />
+    <Combobox.Value placeholder="Select priority" />
   </Combobox.Trigger>
   <Combobox.Content>
     <Combobox.Input placeholder="Search..." />
@@ -854,10 +852,14 @@ When the dropdown opens, the highlight starts on the selected option. Without a 
 - `resetSearchOnSelect` and `resetSearchOnClose` options to control search clearing
 - `material` prop on Content
 - Result count announcements for screen readers
-- Color and highContrast props for semantic styling
+- Color prop for semantic styling
 - Margin props with responsive support
 - Windows High Contrast mode support
 - Reduced motion support for animations
+
+### Removed
+
+- `highContrast` prop. Gray highlights with step 12 on its own, and text reads the strong ink by default.
 
 ### Fixed
 
@@ -867,7 +869,6 @@ When the dropdown opens, the highlight starts on the selected option. Without a 
 - Hover and keyboard highlight use one source, so only one option is lit
 - Opening highlights the selected option
 - Responsive `size` builds valid class names for the search field
-- `highContrast` applies to the highlighted option
 - `readOnly` and `loading` keep the popup closed
 - Trigger ARIA matches the dialog popup and `aria-controls` points at it
 - Performance optimization with lazy mounting (forceMount control)

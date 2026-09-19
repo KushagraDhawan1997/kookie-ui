@@ -37,12 +37,12 @@ export function CardExamples() {
     <Flex direction="column" gap="4" p="2">
       <Flex direction="column" gap="2">
         <Heading size="6" weight="medium">Getting Started</Heading>
-        <Text size="3" color="gray">
+        <Text size="3" emphasis="medium">
           Learn the fundamentals of building modern interfaces
           with our comprehensive guide.
         </Text>
       </Flex>
-      <Button variant="solid" size="2" color="gray" highContrast>
+      <Button variant="solid" size="2" color="gray">
         Read More
         <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={1.75} />
       </Button>
@@ -68,11 +68,11 @@ export function CardExamples() {
                   <Heading size="6" weight="medium">
                     Getting Started
                   </Heading>
-                  <Text size="3" color="gray">
+                  <Text size="3" emphasis="medium">
                     Learn the fundamentals of building modern interfaces with our comprehensive guide.
                   </Text>
                 </Flex>
-                <Button variant="solid" size="2" color="gray" highContrast>
+                <Button variant="solid" size="2" color="gray">
                   Read More
                   <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={1.75} />
                 </Button>
@@ -90,7 +90,7 @@ export function CardExamples() {
           <SectionHeader.Content>
             <SectionHeader.Title>Translucent Material</SectionHeader.Title>
             <SectionHeader.Description>
-              The translucent material creates depth over images and dynamic backgrounds. Use soft variant buttons with highContrast for readability on complex surfaces.
+              The translucent material creates depth over images and dynamic backgrounds. Soft buttons keep their text on the strong ink, so they stay readable on complex surfaces.
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
@@ -107,18 +107,18 @@ export function CardExamples() {
     <Flex direction="column" gap="4">
       <HugeiconsIcon icon={Book02Icon} size={24} strokeWidth={1.75} />
       <Heading size="6" weight="medium">Getting Started</Heading>
-      <Text size="3" color="gray">
+      <Text size="3" emphasis="medium">
         Learn the fundamentals of building modern interfaces
         with our comprehensive guide. This tutorial covers
         components, layouts, and best practices for creating
         beautiful user experiences.
       </Text>
-      <Text size="3" color="gray">
+      <Text size="3" emphasis="medium">
         Whether you're new to design systems or looking to
         refine your skills, this guide has everything you need.
       </Text>
     </Flex>
-    <Button variant="solid" size="2" color="gray" highContrast>
+    <Button variant="solid" size="2" color="gray">
       Read More
       <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={1.75} />
     </Button>
@@ -132,15 +132,15 @@ export function CardExamples() {
                 <Heading size="6" weight="medium">
                   Getting Started
                 </Heading>
-                <Text size="3" color="gray">
+                <Text size="3" emphasis="medium">
                   Learn the fundamentals of building modern interfaces with our comprehensive guide. This tutorial covers components, layouts, and best practices for creating beautiful user
                   experiences.
                 </Text>
-                <Text size="3" color="gray">
+                <Text size="3" emphasis="medium">
                   Whether you're new to design systems or looking to refine your skills, this guide has everything you need.
                 </Text>
               </Flex>
-              <Button variant="solid" size="2" color="gray" highContrast>
+              <Button variant="solid" size="2" color="gray">
                 Read More
                 <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={1.75} />
               </Button>

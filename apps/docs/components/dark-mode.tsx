@@ -87,7 +87,6 @@ export function DarkModeToggle() {
     <IconButton
       variant="ghost"
       size="2"
-      highContrast
       color="gray"
       onClick={toggleTheme}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}

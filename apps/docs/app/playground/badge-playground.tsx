@@ -53,7 +53,6 @@ export default function BadgePlayground({
   const [color, setColor] = React.useState<string>('theme');
   const [radius, setRadius] = React.useState<string>('theme');
   const [size, setSize] = React.useState<string>('2');
-  const [highContrast, setHighContrast] = React.useState<boolean>(true);
   const [material, setMaterial] = React.useState<string>('theme');
 
   const items = [
@@ -95,13 +94,6 @@ export default function BadgePlayground({
       placeholder: 'Select size',
     },
     {
-      id: 'high-contrast',
-      label: 'High Contrast',
-      type: 'switch' as const,
-      value: highContrast,
-      onChange: setHighContrast,
-    },
-    {
       id: 'material',
       label: 'Material',
       type: 'select' as const,
@@ -118,7 +110,6 @@ export default function BadgePlayground({
     if (color !== 'theme') props.push(`color="${color}"`);
     if (radius !== 'theme') props.push(`radius="${radius}"`);
     if (material !== 'theme') props.push(`material="${material}"`);
-    if (highContrast) props.push('highContrast');
 
     const propsString = props.length > 0 ? `\n  ${props.join('\n  ')}` : '';
 
@@ -136,7 +127,6 @@ export default function BadgePlayground({
           color={color === 'theme' ? undefined : (color as any)}
           radius={radius === 'theme' ? undefined : (radius as any)}
           material={material === 'theme' ? undefined : (material as any)}
-          highContrast={highContrast || undefined}
         >
           Badge
         </Badge>

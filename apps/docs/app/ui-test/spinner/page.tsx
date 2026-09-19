@@ -12,7 +12,7 @@ export default function SpinnerTest() {
         {/* Header */}
         <Flex direction="column" gap="3">
           <Heading size="9" weight="medium">Spinner</Heading>
-          <Text size="2" color="gray">
+          <Text size="2" emphasis="medium">
             Testing spinner performance with single GPU-composited rotation animation
           </Text>
         </Flex>
@@ -23,7 +23,7 @@ export default function SpinnerTest() {
         <Flex direction="column" gap="5">
           <Box>
             <Heading size="6" weight="medium" mb="2">1. All Sizes</Heading>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Spinner scales correctly across all sizes
             </Text>
           </Box>
@@ -46,7 +46,7 @@ export default function SpinnerTest() {
           </Flex>
 
           <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               All sizes use the same <Code variant="soft">steps(8, end)</Code> rotation animation
             </Text>
           </Box>
@@ -58,7 +58,7 @@ export default function SpinnerTest() {
         <Flex direction="column" gap="5">
           <Box>
             <Heading size="6" weight="medium" mb="2">2. Color Inheritance</Heading>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Spinner inherits color from parent context
             </Text>
           </Box>
@@ -94,7 +94,7 @@ export default function SpinnerTest() {
           </Flex>
 
           <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Uses <Code variant="soft">currentColor</Code> for leaf backgrounds
             </Text>
           </Box>
@@ -106,7 +106,7 @@ export default function SpinnerTest() {
         <Flex direction="column" gap="5">
           <Box>
             <Heading size="6" weight="medium" mb="2">3. Loading State</Heading>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Spinner wrapping content shows/hides based on loading prop
             </Text>
           </Box>
@@ -122,7 +122,7 @@ export default function SpinnerTest() {
           </Flex>
 
           <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               When <Code variant="soft">loading=true</Code>, spinner replaces children
             </Text>
           </Box>
@@ -134,7 +134,7 @@ export default function SpinnerTest() {
         <Flex direction="column" gap="5">
           <Box>
             <Heading size="6" weight="medium" mb="2">4. Inside Buttons</Heading>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Spinner maintains proper sizing inside buttons
             </Text>
           </Box>
@@ -155,14 +155,14 @@ export default function SpinnerTest() {
               Loading
             </Button>
 
-            <Button size="2" variant="soft" color="gray" highContrast disabled>
+            <Button size="2" variant="soft" color="gray" disabled>
               <Spinner size="1" />
               Processing
             </Button>
           </Flex>
 
           <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Use smaller spinner sizes inside buttons for proper proportions
             </Text>
           </Box>
@@ -174,7 +174,7 @@ export default function SpinnerTest() {
         <Flex direction="column" gap="5">
           <Box>
             <Heading size="6" weight="medium" mb="2">5. Performance Stress Test</Heading>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Multiple spinners to test GPU-composited animation performance
             </Text>
           </Box>
@@ -183,7 +183,6 @@ export default function SpinnerTest() {
             <Button
               variant="soft"
               color="gray"
-              highContrast
               onClick={() => setShowMany(!showMany)}
             >
               {showMany ? 'Hide' : 'Show'} 50 Spinners
@@ -199,7 +198,7 @@ export default function SpinnerTest() {
           </Flex>
 
           <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Open DevTools → Performance tab to verify smooth 60fps with minimal CPU usage. Each spinner uses a single <Code variant="soft">transform: rotate()</Code> animation instead of 8 opacity animations.
             </Text>
           </Box>
@@ -211,7 +210,7 @@ export default function SpinnerTest() {
         <Flex direction="column" gap="5">
           <Box>
             <Heading size="6" weight="medium" mb="2">6. Animation Implementation</Heading>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Technical details of the optimized spinner
             </Text>
           </Box>
@@ -251,7 +250,7 @@ export default function SpinnerTest() {
         <Flex direction="column" gap="5">
           <Box>
             <Heading size="6" weight="medium" mb="2">7. Visual Consistency</Heading>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Spinner appearance matches the classic iOS-style spinner
             </Text>
           </Box>
@@ -261,7 +260,7 @@ export default function SpinnerTest() {
           </Flex>
 
           <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               8 leaves with static decreasing opacity (1.0 → 0.2), rotated with stepped animation
             </Text>
           </Box>

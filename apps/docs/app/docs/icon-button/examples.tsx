@@ -24,13 +24,13 @@ export function IconButtonExamples() {
   <Flex justify="between" align="center" p="1">
     <Skeleton width="80px" height="14px" />
     <Flex gap="1" align="center">
-      <IconButton variant="soft" size="2" color="gray" highContrast aria-label="Search" tooltip="Search">
+      <IconButton variant="soft" size="2" color="gray" aria-label="Search" tooltip="Search">
         <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
       </IconButton>
-      <IconButton variant="soft" size="2" color="gray" highContrast aria-label="Notifications" tooltip="Notifications">
+      <IconButton variant="soft" size="2" color="gray" aria-label="Notifications" tooltip="Notifications">
         <HugeiconsIcon icon={Notification01Icon} strokeWidth={1.75} />
       </IconButton>
-      <IconButton variant="soft" size="2" color="gray" highContrast aria-label="Settings" tooltip="Settings">
+      <IconButton variant="soft" size="2" color="gray" aria-label="Settings" tooltip="Settings">
         <HugeiconsIcon icon={Settings01Icon} strokeWidth={1.75} />
       </IconButton>
     </Flex>
@@ -41,13 +41,13 @@ export function IconButtonExamples() {
             <Flex justify="between" align="center" p="1">
               <Skeleton width="80px" height="14px" />
               <Flex gap="1" align="center">
-                <IconButton variant="soft" size="2" color="gray" highContrast aria-label="Search" tooltip="Search">
+                <IconButton variant="soft" size="2" color="gray" aria-label="Search" tooltip="Search">
                   <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
                 </IconButton>
-                <IconButton variant="soft" size="2" color="gray" highContrast aria-label="Notifications" tooltip="Notifications">
+                <IconButton variant="soft" size="2" color="gray" aria-label="Notifications" tooltip="Notifications">
                   <HugeiconsIcon icon={Notification01Icon} strokeWidth={1.75} />
                 </IconButton>
-                <IconButton variant="soft" size="2" color="gray" highContrast aria-label="Settings" tooltip="Settings">
+                <IconButton variant="soft" size="2" color="gray" aria-label="Settings" tooltip="Settings">
                   <HugeiconsIcon icon={Settings01Icon} strokeWidth={1.75} />
                 </IconButton>
               </Flex>
@@ -75,10 +75,10 @@ export function IconButtonExamples() {
       <Skeleton width="200px" height="10px" />
     </Flex>
     <Flex justify="end" gap="0">
-      <IconButton color="gray" highContrast variant="ghost" size="2" aria-label="Share" tooltip="Share">
+      <IconButton color="gray" variant="ghost" size="2" aria-label="Share" tooltip="Share">
         <HugeiconsIcon icon={Share05Icon} strokeWidth={1.75} />
       </IconButton>
-      <IconButton color="gray" highContrast variant="ghost" size="2" aria-label="More options" tooltip="More options">
+      <IconButton color="gray" variant="ghost" size="2" aria-label="More options" tooltip="More options">
         <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
       </IconButton>
     </Flex>
@@ -92,10 +92,10 @@ export function IconButtonExamples() {
                 <Skeleton width="200px" height="10px" />
               </Flex>
               <Flex justify="end" gap="0">
-                <IconButton color="gray" highContrast variant="ghost" size="2" aria-label="Share" tooltip="Share">
+                <IconButton color="gray" variant="ghost" size="2" aria-label="Share" tooltip="Share">
                   <HugeiconsIcon icon={Share05Icon} strokeWidth={1.75} />
                 </IconButton>
-                <IconButton color="gray" highContrast variant="ghost" size="2" aria-label="More options" tooltip="More options">
+                <IconButton color="gray" variant="ghost" size="2" aria-label="More options" tooltip="More options">
                   <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
                 </IconButton>
               </Flex>
@@ -120,13 +120,13 @@ export function IconButtonExamples() {
   <Flex justify="between" align="center" p="1">
     <Skeleton width="60px" height="12px" />
     <Flex gap="1" align="center">
-      <IconButton variant="soft" size="1" color="gray" highContrast aria-label="Add" tooltip="Add">
+      <IconButton variant="soft" size="1" color="gray" aria-label="Add" tooltip="Add">
         <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
       </IconButton>
-      <IconButton variant="soft" size="1" color="gray" highContrast aria-label="Filter" tooltip="Filter">
+      <IconButton variant="soft" size="1" color="gray" aria-label="Filter" tooltip="Filter">
         <HugeiconsIcon icon={FilterIcon} strokeWidth={1.75} />
       </IconButton>
-      <IconButton variant="soft" size="1" color="gray" highContrast aria-label="More" tooltip="More">
+      <IconButton variant="soft" size="1" color="gray" aria-label="More" tooltip="More">
         <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
       </IconButton>
     </Flex>
@@ -137,13 +137,13 @@ export function IconButtonExamples() {
             <Flex justify="between" align="center" p="1">
               <Skeleton width="60px" height="12px" />
               <Flex gap="1" align="center">
-                <IconButton variant="soft" size="1" color="gray" highContrast aria-label="Add" tooltip="Add">
+                <IconButton variant="soft" size="1" color="gray" aria-label="Add" tooltip="Add">
                   <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
                 </IconButton>
-                <IconButton variant="soft" size="1" color="gray" highContrast aria-label="Filter" tooltip="Filter">
+                <IconButton variant="soft" size="1" color="gray" aria-label="Filter" tooltip="Filter">
                   <HugeiconsIcon icon={FilterIcon} strokeWidth={1.75} />
                 </IconButton>
-                <IconButton variant="soft" size="1" color="gray" highContrast aria-label="More" tooltip="More">
+                <IconButton variant="soft" size="1" color="gray" aria-label="More" tooltip="More">
                   <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
                 </IconButton>
               </Flex>

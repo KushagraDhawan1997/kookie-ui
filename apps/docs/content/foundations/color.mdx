@@ -122,10 +122,15 @@ Radix Colors support the P3 color gamut for displays that can show a wider range
 
 ## Accessibility
 
-All color combinations meet WCAG AA contrast requirements, as designed by Radix Colors. Use `highContrast` prop on components for maximum visibility, especially on complex or translucent backgrounds.
+All color combinations meet WCAG AA contrast requirements, as designed by Radix Colors.
+
+Text reads the strong ink by default. For gray, that is step 12. For other colours, it is a mix of steps 11 and 12, so an error still reads red. Gray fills use step 12 with light text on top. Other colours fill with step 9. You don't set any of this. It follows from the colour.
+
+To rank text, use `emphasis` on `Text`, `Heading`, `Blockquote`, `Code` and `DataList.Label`. It takes `loud`, `medium` or `quiet`.
 
 ```tsx
-<Button color="crimson" highContrast>High Contrast</Button>
+<Text color="crimson">Payment failed</Text>
+<Text emphasis="medium">Last updated 2 hours ago</Text>
 ```
 
 ## Credits

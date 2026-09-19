@@ -94,7 +94,7 @@ export default function SheetPlayground({
 
     return `<Sheet.Root>
   <Sheet.Trigger>
-    <Button variant="soft" highContrast>Open Sheet</Button>
+    <Button variant="soft">Open Sheet</Button>
   </Sheet.Trigger>
   <Sheet.Content${contentPropsString}>
     <Sheet.Title>Sheet Title</Sheet.Title>
@@ -102,7 +102,7 @@ export default function SheetPlayground({
       Sheet content goes here.
     </Sheet.Description>
     <Sheet.Close>
-      <Button variant="soft" highContrast>Close</Button>
+      <Button variant="soft">Close</Button>
     </Sheet.Close>
   </Sheet.Content>
 </Sheet.Root>`;
@@ -113,7 +113,7 @@ export default function SheetPlayground({
       component={
         <Sheet.Root open={open} onOpenChange={setOpen}>
           <Sheet.Trigger>
-            <Button variant="soft" highContrast>Open Sheet</Button>
+            <Button variant="soft">Open Sheet</Button>
           </Sheet.Trigger>
           <Sheet.Content
             side={side as any}
@@ -140,18 +140,18 @@ export default function SheetPlayground({
                   minHeight: '200px',
                 }}
               >
-                <Text size="2" color="gray">
+                <Text size="2" emphasis="medium">
                   Sheet content area
                 </Text>
               </Flex>
               <Flex gap="2" justify="end">
                 <Sheet.Close>
-                  <Button variant="soft" color="gray" highContrast>
+                  <Button variant="soft" color="gray">
                     Cancel
                   </Button>
                 </Sheet.Close>
                 <Sheet.Close>
-                  <Button variant="soft" highContrast>Confirm</Button>
+                  <Button variant="soft">Confirm</Button>
                 </Sheet.Close>
               </Flex>
             </Flex>

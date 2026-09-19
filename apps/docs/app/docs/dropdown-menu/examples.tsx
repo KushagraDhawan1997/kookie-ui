@@ -38,7 +38,7 @@ const UserMenuItem = React.memo(function UserMenuItem({ item, style, isHighlight
           <Text size="2" weight="medium">
             {item.name}
           </Text>
-          <Text size="1" color="gray">
+          <Text size="1" emphasis="medium">
             {item.email}
           </Text>
         </Flex>
@@ -84,7 +84,6 @@ export function DropdownMenuExamples() {
       variant="ghost"
       size="2"
       color="gray"
-      highContrast
       aria-label="More options"
     >
       <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
@@ -119,14 +118,14 @@ export function DropdownMenuExamples() {
                   <Text size="2" weight="medium">
                     Design System
                   </Text>
-                  <Text size="1" color="gray">
+                  <Text size="1" emphasis="medium">
                     Updated 2 days ago
                   </Text>
                 </Flex>
               </Flex>
               <DropdownMenu.Root>
                 <DropdownMenu.Trigger>
-                  <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="More options">
+                  <IconButton variant="ghost" size="2" color="gray" aria-label="More options">
                     <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
                   </IconButton>
                 </DropdownMenu.Trigger>
@@ -171,7 +170,7 @@ export function DropdownMenuExamples() {
           background="none"
           code={`<DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="soft" size="2" color="gray" highContrast>
+    <Button variant="soft" size="2" color="gray">
       <Avatar fallback="JD" size="1" />
       John Doe
     </Button>
@@ -203,7 +202,7 @@ export function DropdownMenuExamples() {
         >
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>
-              <Button variant="soft" size="2" color="gray" highContrast>
+              <Button variant="soft" size="2" color="gray">
                 <Avatar fallback="JD" size="1" />
                 John Doe
               </Button>
@@ -255,7 +254,7 @@ const [theme, setTheme] = React.useState('system');
 
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="soft" size="2" color="gray" highContrast>
+    <Button variant="soft" size="2" color="gray">
       <HugeiconsIcon icon={Settings01Icon} strokeWidth={1.75} />
       Preferences
     </Button>
@@ -295,7 +294,7 @@ const [theme, setTheme] = React.useState('system');
         >
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>
-              <Button variant="soft" size="2" color="gray" highContrast>
+              <Button variant="soft" size="2" color="gray">
                 <HugeiconsIcon icon={Settings01Icon} strokeWidth={1.75} />
                 Preferences
               </Button>
@@ -346,7 +345,7 @@ const [theme, setTheme] = React.useState('system');
           background="none"
           code={`<DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="soft" size="2" color="gray" highContrast>
+    <Button variant="soft" size="2" color="gray">
       <HugeiconsIcon icon={Settings01Icon} strokeWidth={1.75} />
       Settings
     </Button>
@@ -389,7 +388,7 @@ const [theme, setTheme] = React.useState('system');
         >
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>
-              <Button variant="soft" size="2" color="gray" highContrast>
+              <Button variant="soft" size="2" color="gray">
                 <HugeiconsIcon icon={Settings01Icon} strokeWidth={1.75} />
                 Settings
               </Button>
@@ -445,7 +444,7 @@ const [theme, setTheme] = React.useState('system');
           background="none"
           code={`<DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="classic" size="2" highContrast>
+    <Button variant="classic" size="2">
       <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
       New
     </Button>
@@ -483,7 +482,7 @@ const [theme, setTheme] = React.useState('system');
         >
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>
-              <Button variant="classic" size="2" highContrast>
+              <Button variant="classic" size="2">
                 <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
                 New
               </Button>
@@ -543,7 +542,7 @@ const UserMenuItem = React.memo(function UserMenuItem({
         <Avatar size="1" fallback={item.name.charAt(0)} src={item.avatar} />
         <Flex direction="column" gap="0">
           <Text size="2" weight="medium">{item.name}</Text>
-          <Text size="1" color="gray">{item.email}</Text>
+          <Text size="1" emphasis="medium">{item.email}</Text>
         </Flex>
       </Flex>
     </VirtualMenu.Item>
@@ -555,7 +554,7 @@ const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
 
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="soft" size="2" color="gray" highContrast>
+    <Button variant="soft" size="2" color="gray">
       <HugeiconsIcon icon={UserIcon} strokeWidth={1.75} />
       {selectedUser ? selectedUser.name : 'Assign to...'}
     </Button>
@@ -574,7 +573,7 @@ const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
           <Flex gap="3" align="center">
             <DropdownMenu.Root>
               <DropdownMenu.Trigger>
-                <Button variant="soft" size="2" color="gray" highContrast>
+                <Button variant="soft" size="2" color="gray">
                   <HugeiconsIcon icon={UserIcon} strokeWidth={1.75} />
                   {selectedUser ? selectedUser.name : 'Assign to...'}
                 </Button>
@@ -584,7 +583,7 @@ const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
               </DropdownMenu.Content>
             </DropdownMenu.Root>
             {selectedUser && (
-              <Text size="2" color="gray">
+              <Text size="2" emphasis="medium">
                 Selected: {selectedUser.name}
               </Text>
             )}
@@ -617,7 +616,7 @@ function CountryPicker() {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
-        <Button variant="soft" size="2" color="gray" highContrast>
+        <Button variant="soft" size="2" color="gray">
           <HugeiconsIcon icon={FilterIcon} strokeWidth={1.75} />
           {country ?? 'Select country'}
         </Button>
@@ -652,7 +651,7 @@ function CountryPicker() {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
-        <Button variant="soft" size="2" color="gray" highContrast>
+        <Button variant="soft" size="2" color="gray">
           <HugeiconsIcon icon={FilterIcon} strokeWidth={1.75} />
           {country ?? 'Select country'}
         </Button>

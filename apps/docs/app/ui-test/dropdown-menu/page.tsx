@@ -94,14 +94,14 @@ export default function DropdownMenuTest() {
     <Box p="6" style={{ minHeight: '100vh' }}>
       <Heading size="6" mb="4">Dropdown Menu - Nested SubMenus Test</Heading>
 
-      <Text as="p" size="2" color="gray" mb="6">
+      <Text as="p" size="2" emphasis="medium" mb="6">
         Test collision behavior with deeply nested submenus. Resize window to mobile width to see the drill-down behavior.
       </Text>
 
       {/* Virtualized Menu Test */}
       <Box mb="6" p="4" style={{ background: 'var(--cyan-3)', borderRadius: 'var(--radius-3)', border: '2px solid var(--cyan-6)' }}>
         <Heading size="4" mb="2" color="cyan">⚡ Virtualized Menu (1000 items)</Heading>
-        <Text as="p" size="2" color="gray" mb="4">
+        <Text as="p" size="2" emphasis="medium" mb="4">
           Testing VirtualMenu inside DropdownMenu.Content with virtualized prop.
           Only ~15 DOM nodes rendered at any time. Use arrow keys to navigate.
         </Text>
@@ -121,7 +121,7 @@ export default function DropdownMenuTest() {
             />
           </DropdownMenu.Content>
         </DropdownMenu.Root>
-        <Text as="p" size="1" color="gray" mt="2">
+        <Text as="p" size="1" emphasis="medium" mt="2">
           Open DevTools → Elements → search for &quot;rt-VirtualMenuItem&quot; → only ~15 elements rendered.
         </Text>
       </Box>
@@ -129,7 +129,7 @@ export default function DropdownMenuTest() {
       {/* Non-Virtualized Menu (for comparison) */}
       <Box mb="6" p="4" style={{ background: 'var(--amber-3)', borderRadius: 'var(--radius-3)', border: '2px solid var(--amber-6)' }}>
         <Heading size="4" mb="2" color="amber">🐌 Non-Virtualized Menu (200 items)</Heading>
-        <Text as="p" size="2" color="gray" mb="4">
+        <Text as="p" size="2" emphasis="medium" mb="4">
           Standard DropdownMenu.Item elements without virtualization. Compare styling with the virtualized version above.
           All 200 DOM nodes are rendered immediately.
         </Text>
@@ -145,7 +145,7 @@ export default function DropdownMenuTest() {
             ))}
           </DropdownMenu.Content>
         </DropdownMenu.Root>
-        <Text as="p" size="1" color="gray" mt="2">
+        <Text as="p" size="1" emphasis="medium" mt="2">
           Open DevTools → Elements → search for &quot;rt-DropdownMenuItem&quot; → all 200 elements rendered.
         </Text>
       </Box>
@@ -153,7 +153,7 @@ export default function DropdownMenuTest() {
       {/* Virtualized Menu with Variable Heights */}
       <Box mb="6" p="4" style={{ background: 'var(--teal-3)', borderRadius: 'var(--radius-3)', border: '2px solid var(--teal-6)' }}>
         <Heading size="4" mb="2" color="teal">⚡ Variable Height Items</Heading>
-        <Text as="p" size="2" color="gray" mb="4">
+        <Text as="p" size="2" emphasis="medium" mb="4">
           Testing VirtualMenu with mixed item heights (headers = 48px, items = 36px).
         </Text>
         <DropdownMenu.Root>
@@ -174,7 +174,7 @@ export default function DropdownMenuTest() {
             />
           </DropdownMenu.Content>
         </DropdownMenu.Root>
-        <Text as="p" size="1" color="gray" mt="2">
+        <Text as="p" size="1" emphasis="medium" mt="2">
           Headers are taller (48px) than regular items (36px).
         </Text>
       </Box>
@@ -190,7 +190,7 @@ export default function DropdownMenuTest() {
         }}
       >
         <Heading size="4" mb="2" color="purple">🧪 Drill-Down with Groups (Variants)</Heading>
-        <Text as="p" size="2" color="gray" mb="4">
+        <Text as="p" size="2" emphasis="medium" mb="4">
           Same grouped drill-down tree rendered with different <code>variant</code>/<code>color</code> props.
         </Text>
 
@@ -225,13 +225,12 @@ export default function DropdownMenuTest() {
 
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>
-              <Button variant="outline" color="gray">High Contrast</Button>
+              <Button variant="outline" color="gray">Gray</Button>
             </DropdownMenu.Trigger>
             <DropdownMenu.Content
               submenuBehavior="drill-down"
               variant="soft"
               color="gray"
-              highContrast
               style={{ minWidth: 240 }}
             >
               {groupedDrilldownTree}
@@ -239,7 +238,7 @@ export default function DropdownMenuTest() {
           </DropdownMenu.Root>
         </Flex>
 
-        <Text as="p" size="1" color="gray" mt="2">
+        <Text as="p" size="1" emphasis="medium" mt="2">
           Test: open any menu → click “Recent Files” / “Preferences” → previous items should fully disappear (no sandwiching).
         </Text>
       </Box>
@@ -247,7 +246,7 @@ export default function DropdownMenuTest() {
       {/* Drill-Down with Groups (Regression Test) */}
       <Box mb="6" p="4" style={{ background: 'var(--purple-3)', borderRadius: 'var(--radius-3)', border: '2px solid var(--purple-6)' }}>
         <Heading size="4" mb="2" color="purple">🧪 Drill-Down with Groups</Heading>
-        <Text as="p" size="2" color="gray" mb="4">
+        <Text as="p" size="2" emphasis="medium" mb="4">
           Testing drill-down submenus inside <code>DropdownMenu.Group</code> - verifies nested panels work correctly.
         </Text>
         <DropdownMenu.Root>
@@ -258,7 +257,7 @@ export default function DropdownMenuTest() {
             {groupedDrilldownTree}
           </DropdownMenu.Content>
         </DropdownMenu.Root>
-        <Text as="p" size="1" color="gray" mt="2">
+        <Text as="p" size="1" emphasis="medium" mt="2">
           If submenus don't show when clicked, the CSS fix for groups is not working.
         </Text>
       </Box>
@@ -266,7 +265,7 @@ export default function DropdownMenuTest() {
       {/* Native Drill-Down Pattern */}
       <Box mb="6" p="4" style={{ background: 'var(--green-3)', borderRadius: 'var(--radius-3)', border: '2px solid var(--green-6)' }}>
         <Heading size="4" mb="2" color="green">✅ Native Drill-Down Mode</Heading>
-        <Text as="p" size="2" color="gray" mb="4">
+        <Text as="p" size="2" emphasis="medium" mb="4">
           Using <code>submenuBehavior="drill-down"</code> - submenus replace content inline with a back button.
         </Text>
         <DropdownMenu.Root>
@@ -314,7 +313,7 @@ export default function DropdownMenuTest() {
       {/* Responsive Pattern */}
       <Box mb="6" p="4" style={{ background: 'var(--blue-3)', borderRadius: 'var(--radius-3)', border: '2px solid var(--blue-6)' }}>
         <Heading size="4" mb="2" color="blue">📱 Responsive Mode</Heading>
-        <Text as="p" size="2" color="gray" mb="4">
+        <Text as="p" size="2" emphasis="medium" mb="4">
           Using <code>{'submenuBehavior={{ initial: "drill-down", md: "cascade" }}'}</code> - drill-down on mobile, cascade on desktop.
         </Text>
         <DropdownMenu.Root>
@@ -360,7 +359,7 @@ export default function DropdownMenuTest() {
             <DropdownMenu.Item>Sign out</DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Root>
-        <Text as="p" size="1" color="gray" mt="2">
+        <Text as="p" size="1" emphasis="medium" mt="2">
           Resize browser below 1024px to see drill-down behavior.
         </Text>
       </Box>
@@ -368,7 +367,7 @@ export default function DropdownMenuTest() {
       {/* Cascade Mode (Default) */}
       <Box mb="6" p="4" style={{ background: 'var(--orange-3)', borderRadius: 'var(--radius-3)', border: '2px solid var(--orange-6)' }}>
         <Heading size="4" mb="2" color="orange">⚡ Cascade Mode (Default)</Heading>
-        <Text as="p" size="2" color="gray" mb="4">
+        <Text as="p" size="2" emphasis="medium" mb="4">
           Default behavior with <code>submenuBehavior="cascade"</code> - submenus open as floating portals.
         </Text>
         <DropdownMenu.Root>
@@ -407,7 +406,7 @@ export default function DropdownMenuTest() {
             </DropdownMenu.Sub>
           </DropdownMenu.Content>
         </DropdownMenu.Root>
-        <Text as="p" size="1" color="gray" mt="2">
+        <Text as="p" size="1" emphasis="medium" mt="2">
           On mobile widths, this may overflow the viewport horizontally.
         </Text>
       </Box>
@@ -533,7 +532,7 @@ export default function DropdownMenuTest() {
         </Box>
       </Flex>
 
-      <Text as="p" size="2" color="gray" mb="6">
+      <Text as="p" size="2" emphasis="medium" mb="6">
         Last selected: {lastSelected || 'nothing yet'}
       </Text>
 
@@ -642,7 +641,7 @@ function DrillDownRegressionChecks() {
             </DropdownMenu.Sub>
           </DropdownMenu.Content>
         </DropdownMenu.Root>
-        <Button variant="soft" color="gray" highContrast onClick={() => setShareOpen((open) => !open)}>
+        <Button variant="soft" color="gray" onClick={() => setShareOpen((open) => !open)}>
           Toggle Share (controlled): {shareOpen ? 'open' : 'closed'}
         </Button>
       </Flex>

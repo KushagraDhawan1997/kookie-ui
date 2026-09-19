@@ -92,7 +92,6 @@ The dropdown menu is composed of several parts:
 | `size`            | `'1' \| '2' \| Responsive`  | `'2'`     | Size of the menu items                                                |
 | `variant`         | `'solid' \| 'soft'`         | `'solid'` | Visual style of the menu                                              |
 | `color`           | `AccentColor`               | —         | Accent color for highlighted items. Inherits from theme if not set    |
-| `highContrast`    | `boolean`                   | `false`   | Increases contrast for better visibility                              |
 | `material`        | `'solid' \| 'translucent'`  | —         | Background appearance. Inherits from theme if not set                 |
 | `submenuBehavior` | `'cascade' \| 'drill-down' \| Responsive` | `'cascade'` | How submenus behave. See [Submenu Behavior](#submenu-behavior) |
 | `virtualized`     | `boolean`                   | `false`   | Enables virtualization mode. See [Virtualization](#virtualization)    |
@@ -165,7 +164,6 @@ In drill-down mode, `open` and `defaultOpen` push the submenu onto the navigatio
 | `size`         | `'1' \| '2' \| Responsive` | Inherited        | Size of the submenu. Inherits from the parent content              |
 | `variant`      | `'solid' \| 'soft'`        | Inherited        | Visual style of the submenu                                        |
 | `color`        | `AccentColor`              | Inherited        | Accent color for highlighted items                                 |
-| `highContrast` | `boolean`                  | Inherited        | Increases contrast for better visibility                           |
 | `material`     | `'solid' \| 'translucent'` | Inherited        | Background appearance                                              |
 | `virtualized`  | `boolean`                  | `false`          | Skips the ScrollArea so a `VirtualMenu` scrolls itself. Cascade mode only |
 | `container`    | `HTMLElement`              | —                | Custom container for the portal                                    |
@@ -217,7 +215,7 @@ Compact size for dense interfaces and toolbars.
 ```tsx showLineNumbers
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="soft" color="gray" highContrast>
+    <Button variant="soft" color="gray">
       Options
     </Button>
   </DropdownMenu.Trigger>
@@ -235,7 +233,7 @@ Standard size for most interfaces.
 ```tsx showLineNumbers
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="soft" color="gray" highContrast>
+    <Button variant="soft" color="gray">
       Options
     </Button>
   </DropdownMenu.Trigger>
@@ -253,7 +251,7 @@ Use the `color` prop on items to communicate intent. Destructive actions should 
 ```tsx showLineNumbers
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="soft" color="gray" highContrast>
+    <Button variant="soft" color="gray">
       Options
     </Button>
   </DropdownMenu.Trigger>
@@ -275,7 +273,7 @@ Opaque background for standard interfaces.
 ```tsx showLineNumbers
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="soft" color="gray" highContrast>
+    <Button variant="soft" color="gray">
       Options
     </Button>
   </DropdownMenu.Trigger>
@@ -287,16 +285,16 @@ Opaque background for standard interfaces.
 
 ### Translucent
 
-Frosted glass effect for depth over images or dynamic backgrounds. Use `highContrast` for readability.
+Frosted glass effect for depth over images or dynamic backgrounds. Item text reads the strong ink by default.
 
 ```tsx showLineNumbers
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="soft" color="gray" highContrast>
+    <Button variant="soft" color="gray">
       Options
     </Button>
   </DropdownMenu.Trigger>
-  <DropdownMenu.Content material="translucent" highContrast>
+  <DropdownMenu.Content material="translucent">
     <DropdownMenu.Item>Edit</DropdownMenu.Item>
   </DropdownMenu.Content>
 </DropdownMenu.Root>
@@ -309,7 +307,7 @@ Display keyboard shortcuts using the `shortcut` prop on items.
 ```tsx showLineNumbers
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="soft" color="gray" highContrast>
+    <Button variant="soft" color="gray">
       Options
     </Button>
   </DropdownMenu.Trigger>
@@ -328,7 +326,7 @@ Use `Label` to add section headings within the menu.
 ```tsx showLineNumbers
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="soft" color="gray" highContrast>
+    <Button variant="soft" color="gray">
       Options
     </Button>
   </DropdownMenu.Trigger>
@@ -350,7 +348,7 @@ Use `Group` to logically group related items.
 ```tsx showLineNumbers
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="soft" color="gray" highContrast>
+    <Button variant="soft" color="gray">
       Options
     </Button>
   </DropdownMenu.Trigger>
@@ -383,7 +381,7 @@ export function CheckboxExample() {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
-        <Button variant="soft" color="gray" highContrast>
+        <Button variant="soft" color="gray">
           View
         </Button>
       </DropdownMenu.Trigger>
@@ -421,7 +419,7 @@ export function RadioExample() {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
-        <Button variant="soft" color="gray" highContrast>
+        <Button variant="soft" color="gray">
           View mode
         </Button>
       </DropdownMenu.Trigger>
@@ -445,7 +443,7 @@ Use `Sub`, `SubTrigger`, and `SubContent` for nested navigation.
 ```tsx showLineNumbers
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="soft" color="gray" highContrast>
+    <Button variant="soft" color="gray">
       Options
     </Button>
   </DropdownMenu.Trigger>
@@ -476,7 +474,7 @@ Submenus open as floating panels to the side of the trigger, using portals. This
 ```tsx showLineNumbers
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="soft" color="gray" highContrast>
+    <Button variant="soft" color="gray">
       Options
     </Button>
   </DropdownMenu.Trigger>
@@ -499,7 +497,7 @@ Submenus replace the current menu content inline with a back button, similar to 
 ```tsx showLineNumbers
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="soft" color="gray" highContrast>
+    <Button variant="soft" color="gray">
       Options
     </Button>
   </DropdownMenu.Trigger>
@@ -527,7 +525,7 @@ Use a responsive object to switch between behaviors at different breakpoints. Th
 ```tsx showLineNumbers
 <DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="soft" color="gray" highContrast>
+    <Button variant="soft" color="gray">
       Options
     </Button>
   </DropdownMenu.Trigger>
@@ -584,7 +582,7 @@ function VirtualizedExample() {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
-        <Button variant="soft" color="gray" highContrast>
+        <Button variant="soft" color="gray">
           {selected ?? 'Open menu'}
         </Button>
       </DropdownMenu.Trigger>
@@ -819,10 +817,14 @@ Dropdown Menu follows the [WAI-ARIA Menu Button pattern](https://www.w3.org/WAI/
 - `Sub` honors `open`, `defaultOpen` and `onOpenChange` in drill-down mode
 - Switching between cascade and drill-down no longer remounts the menu
 - A responsive `size` no longer places submenus at the viewport origin
-- `SubContent` uses its own `size`, `variant`, `color`, `material` and `highContrast`, and supports `virtualized`
+- `SubContent` uses its own `size`, `variant`, `color` and `material`, and supports `virtualized`
 - Menus follow a nested `Theme` `material`
 - `TriggerIcon` keeps its `className`
 - Label and muted text meet AA contrast
+
+### Removed
+
+- `highContrast` on `Content` and `SubContent`. A gray menu highlights with step 12 on its own, and item text reads the strong ink by default.
 
 ### Deprecated
 

@@ -109,7 +109,7 @@ export const TableOfContents = React.memo(function TableOfContents({
 
   const content = (
     <Flex direction="column" gap="3" className={className}>
-      <Text size="2" color="gray">
+      <Text size="2" emphasis="medium">
         {title}
       </Text>
       <Text asChild size="2">

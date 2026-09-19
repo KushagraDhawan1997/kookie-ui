@@ -292,11 +292,11 @@ export function CodeBlock({
       >
         {hasHeader && (
           <div className="code-block-header">
-            <Text size="2" color="gray" highContrast={Boolean(file)} truncate>
+            <Text size="2" emphasis={file ? 'loud' : 'medium'} truncate>
               {file ?? formatLanguage(language)}
             </Text>
             {file && showLanguage && (
-              <Text size="2" color="gray">
+              <Text size="2" emphasis="medium">
                 {formatLanguage(language)}
               </Text>
             )}
@@ -334,7 +334,7 @@ export function CodeBlock({
 
         {collapsible && overflows && (
           <div className="code-block-footer">
-            <Button size="2" variant="ghost" color="gray" highContrast onClick={() => setExpanded((value) => !value)}>
+            <Button size="2" variant="ghost" color="gray" onClick={() => setExpanded((value) => !value)}>
               {expanded ? 'Show less' : `Show all ${lineCount} lines`}
             </Button>
           </div>

@@ -94,7 +94,7 @@ export default function Playground({ component, code, items, showBackground = fa
         <div className="preview-block">
           {showToolbar && (
             <div className="preview-block-toolbar">
-              <Button size="2" variant="ghost" color="gray" highContrast onClick={handleCopy}>
+              <Button size="2" variant="ghost" color="gray" onClick={handleCopy}>
                 <HugeiconsIcon icon={copied ? Tick01Icon : Copy01Icon} strokeWidth={1.75} />
                 {copied ? 'Copied' : 'Copy code'}
               </Button>
@@ -110,7 +110,7 @@ export default function Playground({ component, code, items, showBackground = fa
                 {!showControls && (
                   <Popover.Root>
                     <Popover.Trigger>
-                      <IconButton size="2" variant="ghost" highContrast color="gray" aria-label="Properties">
+                      <IconButton size="2" variant="ghost" color="gray" aria-label="Properties">
                         <HugeiconsIcon icon={SlidersHorizontalIcon} strokeWidth={1.75} />
                       </IconButton>
                     </Popover.Trigger>
@@ -136,7 +136,7 @@ export default function Playground({ component, code, items, showBackground = fa
         </div>
 
         {hint && (
-          <Text size="2" color="gray">
+          <Text size="2" emphasis="medium">
             {hint}
           </Text>
         )}

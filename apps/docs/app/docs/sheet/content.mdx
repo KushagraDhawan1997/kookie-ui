@@ -9,7 +9,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { Alert02Icon } from '@hugeicons/core-free-icons';
 
 <Box>
-  <Callout.Root color="gray" variant="outline" highContrast>
+  <Callout.Root color="gray" variant="outline">
     <Callout.Icon>
       <HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />
     </Callout.Icon>
@@ -406,6 +406,7 @@ Always provide an accessible name via `Sheet.Title` or `aria-label` on `Sheet.Co
 
 ### Changed
 
+- `Sheet.Description` defaults to `emphasis="medium"` instead of `color="gray"`, keeping its muted look
 - `Sheet.Title` now renders as a Heading component with sensible defaults (`size="4"`, `weight="medium"`)
 - `Sheet.Description` now renders as a Text component with sensible defaults (`size="2"`, `color="gray"`)
 

@@ -72,7 +72,7 @@ Use solid material for low-end devices and high contrast interfaces. Use translu
 
 For best performance, set the theme to solid and override specific components to translucent as needed. Use translucent material selectively for maximum visual impact and only where backgrounds make it effective.
 
-<Callout.Root variant="soft" size="2" highContrast color="gray">
+<Callout.Root variant="soft" size="2" color="gray">
   <Callout.Icon>
     <HugeiconsIcon icon={AlertSquareIcon} />
   </Callout.Icon>
@@ -99,8 +99,8 @@ These blur values are automatically applied when using translucent material.
 
 ## Accessibility
 
-Solid material provides better contrast and readability, making it ideal for accessibility-focused designs. Translucent material can reduce contrast, especially on complex backgrounds. Use `highContrast` prop on components when using translucent material to maintain accessibility.
+Solid material provides better contrast and readability, making it ideal for accessibility-focused designs. Translucent material can reduce contrast, especially on complex backgrounds. Text reads the strong ink by default, so keep it that way on translucent surfaces rather than dropping to a quieter `emphasis`.
 
 ```tsx
-<Button material="translucent" highContrast>Accessible button</Button>
+<Button material="translucent">Accessible button</Button>
 ```

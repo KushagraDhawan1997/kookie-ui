@@ -24,7 +24,7 @@ import { Hero } from '@/components/blocks/hero/hero';
   <Hero.Title>Ship interfaces faster</Hero.Title>
   <Hero.Description>Accessible components with a design system built in.</Hero.Description>
   <Hero.Actions>
-    <Button size="3" variant="classic" highContrast>Get started</Button>
+    <Button size="3" variant="classic">Get started</Button>
   </Hero.Actions>
 </Hero.Root>
 ```
@@ -66,13 +66,13 @@ Every part accepts the props of the component it wraps. Only the additions and c
   <Box py="8" px="4">
     <Hero.Root>
       <Hero.Meta>
-        <Badge variant="soft" color="gray" highContrast>New in 2.0</Badge>
+        <Badge variant="soft" color="gray">New in 2.0</Badge>
       </Hero.Meta>
       <Hero.Title as="h3" size={{ initial: '7', sm: '8' }}>Ship interfaces faster</Hero.Title>
-      <Hero.Description size="3" color="gray">Accessible components with a design system built in.</Hero.Description>
+      <Hero.Description size="3" emphasis="medium">Accessible components with a design system built in.</Hero.Description>
       <Hero.Actions>
-        <Button size="3" variant="soft" color="gray" highContrast>Read the docs</Button>
-        <Button size="3" variant="classic" highContrast>Get started</Button>
+        <Button size="3" variant="soft" color="gray">Read the docs</Button>
+        <Button size="3" variant="classic">Get started</Button>
       </Hero.Actions>
     </Hero.Root>
   </Box>
@@ -81,15 +81,15 @@ Every part accepts the props of the component it wraps. Only the additions and c
 ```tsx showLineNumbers
 <Hero.Root>
   <Hero.Meta>
-    <Badge variant="soft" color="gray" highContrast>New in 2.0</Badge>
+    <Badge variant="soft" color="gray">New in 2.0</Badge>
   </Hero.Meta>
   <Hero.Title size={{ initial: '7', sm: '8' }}>Ship interfaces faster</Hero.Title>
-  <Hero.Description size="3" color="gray">
+  <Hero.Description size="3" emphasis="medium">
     Accessible components with a design system built in.
   </Hero.Description>
   <Hero.Actions>
-    <Button size="3" variant="soft" color="gray" highContrast>Read the docs</Button>
-    <Button size="3" variant="classic" highContrast>Get started</Button>
+    <Button size="3" variant="soft" color="gray">Read the docs</Button>
+    <Button size="3" variant="classic">Get started</Button>
   </Hero.Actions>
 </Hero.Root>
 ```
@@ -103,16 +103,16 @@ Copy on the left, product shot on the right from `md` up. Align the text to the 
     <Hero.Root layout={{ initial: 'stacked', md: 'split' }} align={{ initial: 'start', md: 'center' }}>
       <Flex direction="column" gap="4" flexGrow="1" flexBasis="0">
         <Hero.Title as="h3" size="7" align="left">Plan less. Build more.</Hero.Title>
-        <Hero.Description size="3" color="gray" align="left">Roadmaps, issues and releases in one place.</Hero.Description>
+        <Hero.Description size="3" emphasis="medium" align="left">Roadmaps, issues and releases in one place.</Hero.Description>
         <Hero.Actions>
-          <Button size="3" variant="classic" highContrast>Start free</Button>
+          <Button size="3" variant="classic">Start free</Button>
         </Hero.Actions>
       </Flex>
       <Hero.Media flexGrow="1" flexBasis="0" width="100%">
         <Card variant="classic" size="3" style={{ width: '100%' }}>
           <Flex direction="column" gap="2">
             <Text size="2" weight="medium">Sprint 14</Text>
-            <Text size="2" color="gray">12 of 18 issues done</Text>
+            <Text size="2" emphasis="medium">12 of 18 issues done</Text>
           </Flex>
         </Card>
       </Hero.Media>
@@ -127,11 +127,11 @@ Copy on the left, product shot on the right from `md` up. Align the text to the 
 >
   <Flex direction="column" gap="4" flexGrow="1" flexBasis="0">
     <Hero.Title size="7" align="left">Plan less. Build more.</Hero.Title>
-    <Hero.Description size="3" color="gray" align="left">
+    <Hero.Description size="3" emphasis="medium" align="left">
       Roadmaps, issues and releases in one place.
     </Hero.Description>
     <Hero.Actions>
-      <Button size="3" variant="classic" highContrast>Start free</Button>
+      <Button size="3" variant="classic">Start free</Button>
     </Hero.Actions>
   </Flex>
   <Hero.Media flexGrow="1" flexBasis="0" width="100%">

@@ -37,7 +37,7 @@ export function CalloutExamples() {
               <Text size="3" weight="medium">
                 Authentication
               </Text>
-              <Text size="2" color="gray">
+              <Text size="2" emphasis="medium">
                 All API requests require authentication using a bearer token in the Authorization header.
               </Text>
               <Callout.Root color="blue">
@@ -156,12 +156,12 @@ export function CalloutExamples() {
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Security Warning</SectionHeader.Title>
-            <SectionHeader.Description>Amber callouts signal caution without the severity of red. Use highContrast for critical warnings that require immediate attention.</SectionHeader.Description>
+            <SectionHeader.Description>Amber callouts signal caution without the severity of red. Their text reads the strong ink, so warnings stay legible.</SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
-          code={`<Callout.Root color="amber" highContrast>
+          code={`<Callout.Root color="amber">
   <Callout.Icon>
     <HugeiconsIcon icon={SecurityCheckIcon} />
   </Callout.Icon>
@@ -176,7 +176,7 @@ export function CalloutExamples() {
               <Text size="3" weight="medium">
                 Account Security
               </Text>
-              <Callout.Root color="amber" highContrast>
+              <Callout.Root color="amber">
                 <Callout.Icon>
                   <HugeiconsIcon icon={SecurityCheckIcon} strokeWidth={1.75} />
                 </Callout.Icon>
@@ -207,7 +207,7 @@ export function CalloutExamples() {
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
-          code={`<Callout.Root color="orange" size="2" highContrast>
+          code={`<Callout.Root color="orange" size="2">
   <Callout.Icon>
     <HugeiconsIcon icon={Alert02Icon} />
   </Callout.Icon>
@@ -219,13 +219,13 @@ export function CalloutExamples() {
         >
           <Card variant="classic" size="3" style={{ maxWidth: 520 }}>
             <Flex direction="column" gap="4" align="start">
-              <Code size="3" highContrast>
+              <Code size="3">
                 useOldHook()
               </Code>
-              <Text size="2" color="gray">
+              <Text size="2" emphasis="medium">
                 See the <Link href="#">migration guide</Link> for step-by-step instructions.
               </Text>
-              <Callout.Root color="orange" size="2" highContrast>
+              <Callout.Root color="orange" size="2">
                 <Callout.Icon>
                   <HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />
                 </Callout.Icon>
@@ -284,7 +284,7 @@ export function CalloutExamples() {
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
-          code={`<Callout.Root color="gray" variant="outline" size="2" highContrast>
+          code={`<Callout.Root color="gray" variant="outline" size="2">
   <Callout.Text>
     CSV exports are limited to 10,000 rows.
   </Callout.Text>
@@ -295,7 +295,7 @@ export function CalloutExamples() {
               <Text size="2" weight="medium">
                 Export Format
               </Text>
-              <Callout.Root color="gray" variant="outline" size="2" highContrast>
+              <Callout.Root color="gray" variant="outline" size="2">
                 <Callout.Text>CSV exports are limited to 10,000 rows. For larger datasets, use the API.</Callout.Text>
               </Callout.Root>
             </Flex>
@@ -310,7 +310,7 @@ export function CalloutExamples() {
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Translucent Callout</SectionHeader.Title>
-            <SectionHeader.Description>The translucent material creates depth over dynamic backgrounds. Use highContrast for maximum readability on complex surfaces.</SectionHeader.Description>
+            <SectionHeader.Description>The translucent material creates depth over dynamic backgrounds. Callout text reads the strong ink, so it stays readable on complex surfaces.</SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
         <PreviewBlock
@@ -323,7 +323,7 @@ export function CalloutExamples() {
             backgroundPosition: 'center',
           }}
           code={`<Theme appearance="dark">
-  <Callout.Root color="blue" material="translucent" highContrast>
+  <Callout.Root color="blue" material="translucent">
     <Callout.Icon>
       <HugeiconsIcon icon={InformationCircleIcon} />
     </Callout.Icon>
@@ -334,7 +334,7 @@ export function CalloutExamples() {
   </Callout.Root>
 </Theme>`}
         >
-          <Callout.Root color="blue" material="translucent" highContrast style={{ maxWidth: 440 }}>
+          <Callout.Root color="blue" material="translucent" style={{ maxWidth: 440 }}>
             <Callout.Icon>
               <HugeiconsIcon icon={InformationCircleIcon} strokeWidth={1.75} />
             </Callout.Icon>

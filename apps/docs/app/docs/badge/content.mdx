@@ -9,7 +9,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { Alert02Icon } from '@hugeicons/core-free-icons';
 
 <Box>
-  <Callout.Root color="gray" variant="outline" highContrast>
+  <Callout.Root color="gray" variant="outline">
     <Callout.Icon>
       <HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />
     </Callout.Icon>
@@ -58,7 +58,6 @@ export function MyBadges() {
 | `variant` | `'solid' \| 'soft' \| 'surface' \| 'outline' \| 'ghost' \| 'classic'` | `'soft'` | The visual style of the badge. |
 | `color` | `AccentColor` | - | The accent color. Uses theme accent if not specified. |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | - | Override the default border radius. |
-| `highContrast` | `boolean` | `false` | Increases color contrast for better visibility. |
 | `material` | `'solid' \| 'translucent'` | - | Controls material appearance with translucent adding blur. |
 | `tooltip` | `React.ReactNode` | - | Content to display in a tooltip on hover. |
 | `tooltipSide` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | Position of the tooltip. |
@@ -130,6 +129,17 @@ Badges support all accent colors for semantic meaning.
 </Flex>
 ```
 
+### Strong Ink
+
+Badge text always reads the strong ink for its color. Gray badges with a solid fill use step 12, so no extra prop is needed.
+
+```tsx
+<Flex gap="2">
+  <Badge color="gray" variant="solid">Draft</Badge>
+  <Badge color="red">Failed</Badge>
+</Flex>
+```
+
 ## Sizes
 
 Control badge size with the `size` prop.
@@ -140,17 +150,6 @@ Control badge size with the `size` prop.
   <Badge size="2">Size 2</Badge>
   <Badge size="3">Size 3</Badge>
   <Badge size="4">Size 4</Badge>
-</Flex>
-```
-
-## High Contrast
-
-Use `highContrast` for better visibility on complex backgrounds.
-
-```tsx
-<Flex gap="2">
-  <Badge color="blue">Normal</Badge>
-  <Badge color="blue" highContrast>High Contrast</Badge>
 </Flex>
 ```
 

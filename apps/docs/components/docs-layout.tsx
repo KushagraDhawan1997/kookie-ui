@@ -25,12 +25,12 @@ export function DocsLayout({ children }: { children: React.ReactNode }) {
       sidebarFooter={
         <Flex gap="2" align="center">
           <DarkModeToggle />
-          <IconButton asChild variant="ghost" highContrast aria-label="GitHub">
+          <IconButton asChild variant="ghost" aria-label="GitHub">
             <Link href="https://github.com/KushagraDhawan1997/kookie-ui" target="_blank" rel="noopener noreferrer">
               <HugeiconsIcon icon={GithubIcon} strokeWidth={1.75} />
             </Link>
           </IconButton>
-          <Badge variant="classic" highContrast color="gray" size="2">
+          <Badge variant="classic" color="gray" size="2">
             v{process.env.KOOKIE_UI_VERSION}
           </Badge>
         </Flex>

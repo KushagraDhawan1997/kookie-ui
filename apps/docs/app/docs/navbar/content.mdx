@@ -125,7 +125,7 @@ export function MarketingNavbar() {
 
       <Navbar.Actions gap="2">
         <Button variant="ghost">Sign In</Button>
-        <Button variant="solid" highContrast>Get Started</Button>
+        <Button variant="solid">Get Started</Button>
       </Navbar.Actions>
     </Navbar.Root>
   );
@@ -149,19 +149,19 @@ export function SlotVisualization() {
     <Navbar.Root position="static">
       <Navbar.Logo>
         <Flex p="3" align="center" justify="center" style={slotStyle}>
-          <Text size="2" color="gray">Logo Slot</Text>
+          <Text size="2" emphasis="medium">Logo Slot</Text>
         </Flex>
       </Navbar.Logo>
 
       <Navbar.Navigation style={{ flex: 1 }}>
         <Flex py="3" px="6" align="center" justify="center" width="100%" style={slotStyle}>
-          <Text size="2" color="gray">Navigation Slot (expands)</Text>
+          <Text size="2" emphasis="medium">Navigation Slot (expands)</Text>
         </Flex>
       </Navbar.Navigation>
 
       <Navbar.Actions>
         <Flex p="3" align="center" justify="center" style={slotStyle}>
-          <Text size="2" color="gray">Actions Slot</Text>
+          <Text size="2" emphasis="medium">Actions Slot</Text>
         </Flex>
       </Navbar.Actions>
     </Navbar.Root>
@@ -289,7 +289,7 @@ export function MinimalNavbar() {
         <Avatar src="/logo.png" fallback="B" size="2" />
       </Navbar.Logo>
       <Navbar.Actions>
-        <Button variant="soft" color="gray" highContrast>Contact</Button>
+        <Button variant="soft" color="gray">Contact</Button>
       </Navbar.Actions>
     </Navbar.Root>
   );

@@ -92,7 +92,6 @@ The context menu is composed of several parts:
 | `size`             | `'1' \| '2' \| Responsive`   | `'2'`           | Size of the menu items                                             |
 | `variant`          | `'solid' \| 'soft'`          | `'solid'`       | Visual style of the menu                                           |
 | `color`            | `AccentColor`                | —               | Accent color for highlighted items. Inherits from theme if not set |
-| `highContrast`     | `boolean`                    | `false`         | Increases contrast for better visibility                           |
 | `material`         | `'solid' \| 'translucent'`   | —               | Background appearance. Inherits from the nearest Theme if not set  |
 | `virtualized`      | `boolean`                    | `false`         | Skips the ScrollArea so a `VirtualMenu` scrolls itself             |
 | `container`        | `HTMLElement`                | —               | Custom container for the portal                                    |
@@ -151,7 +150,6 @@ The context menu is composed of several parts:
 | `size`         | `'1' \| '2' \| Responsive`  | Inherited | Size of the submenu. Inherits from the parent content    |
 | `variant`      | `'solid' \| 'soft'`         | Inherited | Visual style of the submenu                              |
 | `color`        | `AccentColor`               | Inherited | Accent color for highlighted items                       |
-| `highContrast` | `boolean`                   | Inherited | Increases contrast for better visibility                 |
 | `material`     | `'solid' \| 'translucent'`  | Inherited | Background appearance                                    |
 | `virtualized`  | `boolean`                   | `false`   | Skips the ScrollArea so a `VirtualMenu` scrolls itself   |
 
@@ -273,7 +271,7 @@ Opaque background for standard interfaces.
 
 ### Translucent Material
 
-Frosted glass for menus over images or canvases. Use `highContrast` for readability.
+Frosted glass for menus over images or canvases. Item text reads the strong ink by default.
 
 ```tsx showLineNumbers
 <ContextMenu.Root>
@@ -282,7 +280,7 @@ Frosted glass for menus over images or canvases. Use `highContrast` for readabil
       <Text size="2">Right-click here</Text>
     </Card>
   </ContextMenu.Trigger>
-  <ContextMenu.Content material="translucent" highContrast>
+  <ContextMenu.Content material="translucent">
     <ContextMenu.Item>Edit</ContextMenu.Item>
   </ContextMenu.Content>
 </ContextMenu.Root>
@@ -452,7 +450,7 @@ Context menus are hidden by default. Make every action also reachable from a vis
 ### Added
 
 - `virtualized` prop on `Content` and `SubContent` for `VirtualMenu`
-- `SubContent` accepts its own `size`, `variant`, `color`, `highContrast` and `material`
+- `SubContent` accepts its own `size`, `variant`, `color` and `material`
 - Shortcuts are exposed as `aria-keyshortcuts`
 
 ### Fixed
@@ -462,6 +460,10 @@ Context menus are hidden by default. Make every action also reachable from a vis
 - The first item lines up with the pointer at every size and scaling
 - Menus follow a nested `Theme` `material`
 - Radio items show a dot indicator, like DropdownMenu
+
+### Removed
+
+- `highContrast` on `Content` and `SubContent`. A gray menu highlights with step 12 on its own, and item text reads the strong ink by default.
 
 ### Deprecated
 

@@ -80,7 +80,6 @@ The Root component provides context and styling for all child components.
 | `presentation`    | `'thin' \| 'expanded'`                        | —           | Layout mode: thin for rail-style, expanded for panel-style                  |
 | `layout`          | `'rail' \| 'panel'`                           | `'panel'`   | Alternative to presentation. Use presentation for clearer intent            |
 | `color`           | `AccentColor`                                 | theme       | Accent color for active states and highlights                               |
-| `highContrast`    | `boolean`                                     | `false`     | Increases color saturation for better visibility                            |
 | `panelBackground` | `'solid' \| 'translucent'`                    | —           | Background appearance when used with translucent theme                      |
 
 ## Content Props
@@ -127,7 +126,6 @@ type BadgeConfig = {
   variant?: 'solid' | 'soft' | 'surface' | 'outline';
   size?: '1' | '2';
   color?: AccentColor;
-  highContrast?: boolean;
   radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
 };
 ```
@@ -311,10 +309,10 @@ Use the `color` prop to set the accent color for active states and highlights.
 </Sidebar.Root>
 ```
 
-Use `highContrast` for increased color saturation:
+With `menuVariant="solid"`, a gray sidebar fills its active items with step 12 on its own:
 
 ```tsx
-<Sidebar.Root color="iris" highContrast>
+<Sidebar.Root color="gray" menuVariant="solid">
   {/* content */}
 </Sidebar.Root>
 ```
@@ -408,7 +406,6 @@ Pass an object for full badge customization:
     content: 'New',
     variant: 'solid',
     color: 'crimson',
-    highContrast: true,
   }}
 >
   <SparklesIcon />
@@ -631,4 +628,9 @@ Sidebar provides comprehensive accessibility through semantic HTML and ARIA attr
 
 - Decoupled from Shell context for standalone usage
 - Simplified API focused on presentation rather than state management
+- Solid gray menu items fill with step 12 automatically, and labels read the strong ink
+
+### Removed
+
+- `highContrast` on `Sidebar.Root` and in `BadgeConfig`. Delete it; gray and text contrast are now automatic
 

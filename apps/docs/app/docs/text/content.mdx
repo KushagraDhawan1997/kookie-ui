@@ -29,7 +29,7 @@ export function MyText() {
   return (
     <Flex direction="column" gap="2">
       <Text size="3">Regular body text</Text>
-      <Text size="2" color="gray">Secondary text</Text>
+      <Text size="2" emphasis="medium">Secondary text</Text>
       <Text size="1" weight="medium">Small label</Text>
     </Flex>
   );
@@ -44,8 +44,8 @@ export function MyText() {
 | `size` | `'0' \| '1' \| '2' \| '3' \| ... \| '12'` | - | The font size. Supports responsive values. |
 | `font` | `'sans' \| 'mono' \| 'serif'` | - | The font family. Overrides the theme font. |
 | `weight` | `'thin' \| 'extralight' \| 'light' \| 'regular' \| 'medium' \| 'semibold' \| 'bold' \| 'extrabold'` | - | The font weight. Supports responsive values. |
-| `color` | `AccentColor` | - | The text color. Uses theme color if not specified. |
-| `highContrast` | `boolean` | `false` | Increases color contrast. |
+| `color` | `AccentColor` | - | The text color. Inherits the parent color if not set. |
+| `emphasis` | `'loud' \| 'medium' \| 'quiet'` | - | How strongly the text reads. With no `color`, it uses the gray ladder. |
 | `align` | `'left' \| 'center' \| 'right'` | - | Text alignment. Supports responsive values. |
 | `truncate` | `boolean` | `false` | Truncate text with ellipsis when it overflows. |
 | `wrap` | `'wrap' \| 'nowrap' \| 'pretty' \| 'balance'` | - | Text wrapping behavior. |
@@ -85,28 +85,31 @@ Control text weight with the `weight` prop.
 
 ## Colors
 
-Use semantic colors for different text purposes.
+Use semantic colors for different text purposes. Colored text reads a strong ink by default, so an error stays red and easy to read.
 
 ```tsx
 <Flex direction="column" gap="2">
   <Text>Default text color</Text>
-  <Text color="gray">Secondary text</Text>
   <Text color="blue">Link or info text</Text>
   <Text color="green">Success text</Text>
   <Text color="red">Error text</Text>
 </Flex>
 ```
 
-## High Contrast
+## Emphasis
 
-Use `highContrast` for better visibility.
+Use `emphasis` to rank text. `loud` is the strongest, `medium` is for secondary copy and `quiet` is for hints and metadata. Without `color`, the levels step down the gray scale. With `color`, they fade the same color.
 
 ```tsx
 <Flex direction="column" gap="2">
-  <Text color="gray">Normal gray text</Text>
-  <Text color="gray" highContrast>High contrast gray text</Text>
+  <Text emphasis="loud">Primary text</Text>
+  <Text emphasis="medium">Secondary text</Text>
+  <Text emphasis="quiet">Hint text</Text>
+  <Text color="red" emphasis="medium">Secondary error text</Text>
 </Flex>
 ```
+
+Text with no `color` and no `emphasis` inherits its color, so it matches the Button or Card it sits in.
 
 ## Semantic Elements
 

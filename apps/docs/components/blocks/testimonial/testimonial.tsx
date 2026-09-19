@@ -45,8 +45,8 @@ const TestimonialName = React.forwardRef<HTMLSpanElement, TextProps>(({ size = '
 ));
 TestimonialName.displayName = 'Testimonial.Name';
 
-const TestimonialRole = React.forwardRef<HTMLSpanElement, TextProps>(({ size = '2', color = 'gray', ...props }, ref) => (
-  <Text ref={ref} size={size} color={color} {...props} />
+const TestimonialRole = React.forwardRef<HTMLSpanElement, TextProps>(({ size = '2', emphasis = 'medium', ...props }, ref) => (
+  <Text ref={ref} size={size} emphasis={emphasis} {...props} />
 ));
 TestimonialRole.displayName = 'Testimonial.Role';
 

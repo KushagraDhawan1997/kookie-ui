@@ -37,10 +37,10 @@ export default function TextFieldScrubTest() {
         <Flex justify="between" align="center">
           <Heading size="9" weight="medium">TextField Scrubbing</Heading>
           {isScrubbing && (
-            <Badge variant="solid" size="2" highContrast>Scrubbing</Badge>
+            <Badge variant="solid" size="2">Scrubbing</Badge>
           )}
         </Flex>
-        <Text size="2" color="gray">
+        <Text size="2" emphasis="medium">
           Testing interactive value adjustment through structured scenarios
         </Text>
       </Flex>
@@ -51,7 +51,7 @@ export default function TextFieldScrubTest() {
       <Flex direction="column" gap="5">
         <Box>
           <Heading size="6" weight="medium" mb="2">1. Basic Scrubbing</Heading>
-          <Text size="2" color="gray">
+          <Text size="2" emphasis="medium">
             Core functionality: drag the label to adjust value
           </Text>
         </Box>
@@ -77,7 +77,7 @@ export default function TextFieldScrubTest() {
         </TextField.Root>
 
         <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-          <Text size="2" color="gray">
+          <Text size="2" emphasis="medium">
             <Code variant="soft">scrub</Code> enabled, <Code variant="soft">scrubStep={'{1}'}</Code>, no constraints
           </Text>
         </Box>
@@ -89,7 +89,7 @@ export default function TextFieldScrubTest() {
       <Flex direction="column" gap="5">
         <Box>
           <Heading size="6" weight="medium" mb="2">2. Min/Max Constraints</Heading>
-          <Text size="2" color="gray">
+          <Text size="2" emphasis="medium">
             Boundary behavior: value clamped between 0-100
           </Text>
         </Box>
@@ -112,7 +112,7 @@ export default function TextFieldScrubTest() {
             <Text size="2" weight="medium">Percentage</Text>
           </TextField.Slot>
           <TextField.Slot side="right">
-            <Text size="2" color="gray">%</Text>
+            <Text size="2" emphasis="medium">%</Text>
           </TextField.Slot>
         </TextField.Root>
 
@@ -127,7 +127,7 @@ export default function TextFieldScrubTest() {
         </Box>
 
         <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-          <Text size="2" color="gray">
+          <Text size="2" emphasis="medium">
             <Code variant="soft">scrubMin={'{0}'}</Code>, <Code variant="soft">scrubMax={'{100}'}</Code> — Delta becomes 0 at boundaries
           </Text>
         </Box>
@@ -139,7 +139,7 @@ export default function TextFieldScrubTest() {
       <Flex direction="column" gap="5">
         <Box>
           <Heading size="6" weight="medium" mb="2">3. Sensitivity Control</Heading>
-          <Text size="2" color="gray">
+          <Text size="2" emphasis="medium">
             Adjust how much mouse movement equals one step
           </Text>
         </Box>
@@ -189,7 +189,7 @@ export default function TextFieldScrubTest() {
         </Flex>
 
         <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-          <Text size="2" color="gray">
+          <Text size="2" emphasis="medium">
             <Code variant="soft">scrubSensitivity</Code> controls pixels per step. Higher = more movement required
           </Text>
         </Box>
@@ -201,7 +201,7 @@ export default function TextFieldScrubTest() {
       <Flex direction="column" gap="5">
         <Box>
           <Heading size="6" weight="medium" mb="2">4. Keyboard Modifiers</Heading>
-          <Text size="2" color="gray">
+          <Text size="2" emphasis="medium">
             Hold modifier keys while scrubbing for different speeds
           </Text>
         </Box>
@@ -228,20 +228,20 @@ export default function TextFieldScrubTest() {
         <Flex direction="column" gap="2">
           <Flex gap="2" align="center">
             <Code variant="soft">Drag</Code>
-            <Text size="2" color="gray">Normal speed (step × 1)</Text>
+            <Text size="2" emphasis="medium">Normal speed (step × 1)</Text>
           </Flex>
           <Flex gap="2" align="center">
             <Code variant="soft">Shift + Drag</Code>
-            <Text size="2" color="gray">Fast (step × 10)</Text>
+            <Text size="2" emphasis="medium">Fast (step × 10)</Text>
           </Flex>
           <Flex gap="2" align="center">
             <Code variant="soft">Alt + Drag</Code>
-            <Text size="2" color="gray">Slow (step × 0.1)</Text>
+            <Text size="2" emphasis="medium">Slow (step × 0.1)</Text>
           </Flex>
         </Flex>
 
         <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-          <Text size="2" color="gray">
+          <Text size="2" emphasis="medium">
             <Code variant="soft">scrubShiftMultiplier</Code> and <Code variant="soft">scrubAltMultiplier</Code> customize modifier behavior
           </Text>
         </Box>
@@ -253,7 +253,7 @@ export default function TextFieldScrubTest() {
       <Flex direction="column" gap="5">
         <Box>
           <Heading size="6" weight="medium" mb="2">5. Real-World: Property Panel</Heading>
-          <Text size="2" color="gray">
+          <Text size="2" emphasis="medium">
             Design tool-style interface combining all features
           </Text>
         </Box>
@@ -361,7 +361,7 @@ export default function TextFieldScrubTest() {
               <HugeiconsIcon strokeWidth={1.75} icon={Rotate01Icon} />
             </TextField.Slot>
             <TextField.Slot side="right">
-              <Text size="2" color="gray">°</Text>
+              <Text size="2" emphasis="medium">°</Text>
             </TextField.Slot>
           </TextField.Root>
 
@@ -383,7 +383,7 @@ export default function TextFieldScrubTest() {
               <HugeiconsIcon strokeWidth={1.75} icon={CircleIcon} />
             </TextField.Slot>
             <TextField.Slot side="right">
-              <Text size="2" color="gray">%</Text>
+              <Text size="2" emphasis="medium">%</Text>
             </TextField.Slot>
           </TextField.Root>
         </Flex>
@@ -400,7 +400,7 @@ export default function TextFieldScrubTest() {
         </Box>
 
         <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-          <Text size="2" color="gray">
+          <Text size="2" emphasis="medium">
             Combined implementation: compact size, constraints, modifiers, and visual feedback
           </Text>
         </Box>

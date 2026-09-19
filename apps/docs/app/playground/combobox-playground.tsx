@@ -90,7 +90,6 @@ export default function ComboBoxPlayground({
   const [inputVariant, setInputVariant] = React.useState<(typeof inputVariants)[number]>('soft');
   const [color, setColor] = React.useState<(typeof accentColors)[number]>('theme');
   const [disabled, setDisabled] = React.useState(false);
-  const [highContrast, setHighContrast] = React.useState(true);
   const [triggerWidth, setTriggerWidth] = React.useState<(typeof triggerWidths)[number]>('240px');
   const [loop, setLoop] = React.useState(true);
   const [value, setValue] = React.useState<string | null>('france');
@@ -99,7 +98,6 @@ export default function ComboBoxPlayground({
 
   const generateCode = () => {
     const rootProps = [`size="${size}"`];
-    if (highContrast) rootProps.push('highContrast');
     if (disabled) rootProps.push('disabled');
 
     const triggerProps = ['aria-label="Country"', `variant="${variant}"`];
@@ -217,7 +215,6 @@ ${listMarkup}
       onValueChange={setValue}
       loop={loop}
       disabled={disabled}
-      highContrast={highContrast}
       displayValue={getCountryLabel}
     >
       <Combobox.Trigger
@@ -322,13 +319,6 @@ ${listMarkup}
       type: 'switch' as const,
       value: disabled,
       onChange: setDisabled,
-    },
-    {
-      id: 'highContrast',
-      label: 'High Contrast',
-      type: 'switch' as const,
-      value: highContrast,
-      onChange: setHighContrast,
     },
   ];
 

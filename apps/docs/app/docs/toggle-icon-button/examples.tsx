@@ -84,7 +84,6 @@ const [pinned, setPinned] = React.useState(false);
         variant="ghost"
         size="2"
         color="gray"
-        highContrast
         pressed={pinned}
         onPressedChange={setPinned}
         aria-label={pinned ? 'Unpin' : 'Pin to top'}
@@ -118,7 +117,6 @@ const [pinned, setPinned] = React.useState(false);
                   variant="ghost"
                   size="2"
                   color="gray"
-                  highContrast
                   pressed={pinned}
                   onPressedChange={setPinned}
                   aria-label={pinned ? 'Unpin' : 'Pin to top'}

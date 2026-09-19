@@ -61,7 +61,6 @@ export function ChatbarExamples() {
           variant="ghost"
           size="2"
           color="gray"
-          highContrast
           aria-label="Attach file"
           tooltip="Attach file"
         >
@@ -72,7 +71,6 @@ export function ChatbarExamples() {
         variant="ghost"
         size="2"
         color="gray"
-        highContrast
         aria-label="Add emoji"
         tooltip="Add emoji"
       >
@@ -82,7 +80,6 @@ export function ChatbarExamples() {
         variant="ghost"
         size="2"
         color="gray"
-        highContrast
         aria-label="Voice message"
         tooltip="Voice message"
       >
@@ -90,7 +87,7 @@ export function ChatbarExamples() {
       </IconButton>
     </Chatbar.RowStart>
     <Chatbar.RowEnd>
-      <Text size="1" color="gray">Shift+Enter for new line</Text>
+      <Text size="1" emphasis="medium">Shift+Enter for new line</Text>
       <Chatbar.Send />
     </Chatbar.RowEnd>
   </Chatbar.Row>
@@ -120,19 +117,19 @@ export function ChatbarExamples() {
             <Chatbar.Row>
               <Chatbar.RowStart>
                 <Chatbar.AttachTrigger asChild>
-                  <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Attach file" tooltip="Attach file">
+                  <IconButton variant="ghost" size="2" color="gray" aria-label="Attach file" tooltip="Attach file">
                     <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
                   </IconButton>
                 </Chatbar.AttachTrigger>
-                <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Add emoji" tooltip="Add emoji">
+                <IconButton variant="ghost" size="2" color="gray" aria-label="Add emoji" tooltip="Add emoji">
                   <HugeiconsIcon icon={SmileIcon} strokeWidth={1.75} />
                 </IconButton>
-                <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Voice message" tooltip="Voice message">
+                <IconButton variant="ghost" size="2" color="gray" aria-label="Voice message" tooltip="Voice message">
                   <HugeiconsIcon icon={Mic01Icon} strokeWidth={1.75} />
                 </IconButton>
               </Chatbar.RowStart>
               <Chatbar.RowEnd>
-                <Text size="1" color="gray">
+                <Text size="1" emphasis="medium">
                   Shift+Enter for new line
                 </Text>
                 <Chatbar.Send />
@@ -164,7 +161,7 @@ export function ChatbarExamples() {
   </Hero.Meta>
   <Flex direction="column" gap="2">
     <Hero.Title size="8">What are you working on today?</Hero.Title>
-    <Hero.Description color="gray">
+    <Hero.Description emphasis="medium">
       Ask me anything about your projects, code, or ideas.
     </Hero.Description>
   </Flex>
@@ -190,7 +187,6 @@ export function ChatbarExamples() {
             variant="ghost"
             size="2"
             color="gray"
-            highContrast
             aria-label="Attach file"
             tooltip="Attach file"
           >
@@ -201,7 +197,6 @@ export function ChatbarExamples() {
           variant="ghost"
           size="2"
           color="gray"
-          highContrast
           aria-label="Select model"
           tooltip="Select model"
         >
@@ -209,7 +204,7 @@ export function ChatbarExamples() {
         </IconButton>
       </Chatbar.RowStart>
       <Chatbar.RowEnd>
-        <Chatbar.Send highContrast />
+        <Chatbar.Send />
       </Chatbar.RowEnd>
     </Chatbar.Row>
   </Chatbar.Root>
@@ -221,7 +216,7 @@ export function ChatbarExamples() {
             </Hero.Meta>
             <Flex direction="column" gap="2">
               <Hero.Title size="8">What are you working on today?</Hero.Title>
-              <Hero.Description color="gray">Ask me anything about your projects, code, or ideas.</Hero.Description>
+              <Hero.Description emphasis="medium">Ask me anything about your projects, code, or ideas.</Hero.Description>
             </Flex>
             <Chatbar.Root
               open
@@ -240,16 +235,16 @@ export function ChatbarExamples() {
               <Chatbar.Row>
                 <Chatbar.RowStart>
                   <Chatbar.AttachTrigger asChild>
-                    <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Attach file" tooltip="Attach file">
+                    <IconButton variant="ghost" size="2" color="gray" aria-label="Attach file" tooltip="Attach file">
                       <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
                     </IconButton>
                   </Chatbar.AttachTrigger>
-                  <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Select model" tooltip="Select model">
+                  <IconButton variant="ghost" size="2" color="gray" aria-label="Select model" tooltip="Select model">
                     <HugeiconsIcon icon={AiBrain01Icon} strokeWidth={1.75} />
                   </IconButton>
                 </Chatbar.RowStart>
                 <Chatbar.RowEnd>
-                  <Chatbar.Send highContrast />
+                  <Chatbar.Send />
                 </Chatbar.RowEnd>
               </Chatbar.Row>
             </Chatbar.Root>
@@ -265,7 +260,7 @@ export function ChatbarExamples() {
           <SectionHeader.Content>
             <SectionHeader.Title>Translucent Hero</SectionHeader.Title>
             <SectionHeader.Description>
-              The translucent material creates depth over dynamic backgrounds. Use classic variant with highContrast for maximum readability on complex surfaces.
+              The translucent material creates depth over dynamic backgrounds. The classic variant keeps text on the strong ink, so it stays readable on complex surfaces.
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
@@ -304,7 +299,6 @@ export function ChatbarExamples() {
             variant="ghost"
             size="2"
             color="gray"
-            highContrast
             aria-label="Attach file"
             tooltip="Attach file"
           >
@@ -315,7 +309,6 @@ export function ChatbarExamples() {
           variant="ghost"
           size="2"
           color="gray"
-          highContrast
           aria-label="Select model"
           tooltip="Select model"
         >
@@ -323,7 +316,7 @@ export function ChatbarExamples() {
         </IconButton>
       </Chatbar.RowStart>
       <Chatbar.RowEnd>
-        <Chatbar.Send highContrast />
+        <Chatbar.Send />
       </Chatbar.RowEnd>
     </Chatbar.Row>
   </Chatbar.Root>
@@ -349,16 +342,16 @@ export function ChatbarExamples() {
             <Chatbar.Row>
               <Chatbar.RowStart>
                 <Chatbar.AttachTrigger asChild>
-                  <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Attach file" tooltip="Attach file">
+                  <IconButton variant="ghost" size="2" color="gray" aria-label="Attach file" tooltip="Attach file">
                     <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
                   </IconButton>
                 </Chatbar.AttachTrigger>
-                <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Select model" tooltip="Select model">
+                <IconButton variant="ghost" size="2" color="gray" aria-label="Select model" tooltip="Select model">
                   <HugeiconsIcon icon={AiBrain01Icon} strokeWidth={1.75} />
                 </IconButton>
               </Chatbar.RowStart>
               <Chatbar.RowEnd>
-                <Chatbar.Send highContrast />
+                <Chatbar.Send />
               </Chatbar.RowEnd>
             </Chatbar.Row>
           </Chatbar.Root>

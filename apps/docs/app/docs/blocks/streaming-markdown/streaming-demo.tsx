@@ -54,7 +54,7 @@ export function StreamingDemo() {
         </Box>
       </Card>
       <Flex justify="end">
-        <Button variant="soft" color="gray" highContrast size="2" onClick={start} disabled={isStreaming}>
+        <Button variant="soft" color="gray" size="2" onClick={start} disabled={isStreaming}>
           <HugeiconsIcon icon={hasStarted ? RefreshIcon : PlayIcon} strokeWidth={1.75} />
           {hasStarted ? 'Replay' : 'Stream response'}
         </Button>

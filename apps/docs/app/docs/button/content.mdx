@@ -46,8 +46,7 @@ export function MyComponent() {
 | -------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | `variant`      | `'classic' \| 'solid' \| 'soft' \| 'surface' \| 'outline' \| 'ghost'` | Button style variant: classic for elevated, solid for primary, outline for secondary, ghost for utility, soft/surface for content-heavy UIs |
 | `size`         | `'1' \| '2' \| '3' \| '4'`                                            | Button density: 1 (24px) for toolbars, 2 (32px) standard, 3 (40px) for important actions, 4 (48px) for hero sections. Supports responsive objects |
-| `color`        | `AccentColor`                                                         | Semantic color to communicate action intent. Use highContrast for maximum visibility on complex backgrounds |
-| `highContrast` | `boolean`                                                             | Maximum visibility mode, especially useful on complex or translucent backgrounds                |
+| `color`        | `AccentColor`                                                         | Semantic color to communicate action intent. Gray fills with step 12 on its own |
 | `fullWidth`    | `boolean`                                                             | Makes button fill its container width. Useful for mobile layouts and form submissions          |
 | `flush`        | `boolean`                                                             | Removes padding for seamless text integration. Use with ghost variant to blend with text while staying interactive |
 | `radius`       | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'`                  | Corner radius scale: none for sharp edges, small/medium/large for progressive rounding, full for pill-shaped |
@@ -163,14 +162,14 @@ For hero sections and maximum impact.
 
 ## Colors
 
-Use the `color` prop with semantic colors to communicate the action's intent to users. Use `highContrast` for maximum visibility, especially on complex or translucent backgrounds.
+Use the `color` prop with semantic colors to communicate the action's intent to users. Chromatic colors fill with step 9. Gray fills with step 12 and inverts its text, so a gray button is the strongest neutral action.
 
 ```tsx
 <Button size="3" color="crimson" variant="solid">
-  Button
+  Delete
 </Button>
-<Button size="3" color="crimson" variant="solid" highContrast>
-  Button
+<Button size="3" color="gray" variant="solid">
+  Save
 </Button>
 ```
 
@@ -184,7 +183,7 @@ Buttons automatically inherit the theme's material setting. Wrap your interface 
 
 ```tsx
 <Theme material="translucent">
-  <Button size="3" color="gray" highContrast variant="soft">
+  <Button size="3" color="gray" variant="soft">
     Button
   </Button>
 </Theme>
@@ -192,7 +191,7 @@ Buttons automatically inherit the theme's material setting. Wrap your interface 
 
 ### Custom
 
-Override the theme's material for a button when you need a specific effect. Translucent effects only show over backgrounds—use `highContrast` for readability.
+Override the theme's material for a button when you need a specific effect. Translucent effects only show over backgrounds. Text on them reads the strong ink by default.
 
 ```tsx
 <Theme material="solid">
@@ -200,7 +199,6 @@ Override the theme's material for a button when you need a specific effect. Tran
     material="translucent"
     size="3"
     color="gray"
-    highContrast
     variant="soft"
   >
     Button
@@ -218,7 +216,6 @@ Set `loading` to `true` to replace all content with a centered spinner and disab
 <Button
   size="3"
   color="gray"
-  highContrast
   loading
 >
   Submit
@@ -271,7 +268,7 @@ Set the `fullWidth` prop to `true` to make the button fill its container. This i
 
 ```tsx
 <Flex direction="column" gap="2" width="300px">
-  <Button size="3" variant="soft" color="gray" highContrast fullWidth>
+  <Button size="3" variant="soft" color="gray" fullWidth>
     Complete
   </Button>
 </Flex>
@@ -457,6 +454,10 @@ Loading state replaces all button content with a centered spinner and disables i
 - Better contrast relationships in both light and dark themes
 - Comprehensive transition token system with duration and easing tokens
 - Automatic reduced motion support via `prefers-reduced-motion`
+
+### Removed
+
+- `highContrast` prop. Gray fills with step 12 on its own, and text reads the strong ink by default.
 
 ### Deprecated
 

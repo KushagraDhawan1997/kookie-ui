@@ -54,7 +54,6 @@ export default function AvatarPlayground({
   const [color, setColor] = React.useState<string>('theme');
   const [radius, setRadius] = React.useState<string>('theme');
   const [size, setSize] = React.useState<string>('3');
-  const [highContrast, setHighContrast] = React.useState<boolean>(true);
   const [material, setMaterial] = React.useState<string>('theme');
   const [fit, setFit] = React.useState<string>('cover');
   const [showImage, setShowImage] = React.useState<boolean>(false);
@@ -98,13 +97,6 @@ export default function AvatarPlayground({
       placeholder: 'Select size',
     },
     {
-      id: 'high-contrast',
-      label: 'High Contrast',
-      type: 'switch' as const,
-      value: highContrast,
-      onChange: setHighContrast,
-    },
-    {
       id: 'material',
       label: 'Material',
       type: 'select' as const,
@@ -138,7 +130,6 @@ export default function AvatarPlayground({
     if (radius !== 'theme') props.push(`radius="${radius}"`);
     if (material !== 'theme') props.push(`material="${material}"`);
     if (fit !== 'cover') props.push(`fit="${fit}"`);
-    if (highContrast) props.push('highContrast');
     if (showImage) props.push('src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"');
     props.push('fallback="JD"');
 
@@ -158,7 +149,6 @@ export default function AvatarPlayground({
           radius={radius === 'theme' ? undefined : (radius as any)}
           material={material === 'theme' ? undefined : (material as any)}
           fit={fit as any}
-          highContrast={highContrast || undefined}
           src={showImage ? 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' : undefined}
           fallback="JD"
         />

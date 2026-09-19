@@ -113,7 +113,7 @@ export default function ShellControlledTest() {
       <Shell.Header height={48}>
         <Flex align="center" justify="between" px="4" height="100%">
           <Flex align="center" gap="3">
-            <IconButton variant="ghost" size="2" color="gray" highContrast asChild>
+            <IconButton variant="ghost" size="2" color="gray" asChild>
               <Shell.Trigger target="rail">
                 <HugeiconsIcon icon={Menu01Icon} strokeWidth={1.75} />
               </Shell.Trigger>
@@ -138,23 +138,23 @@ export default function ShellControlledTest() {
         onCollapse={handleRailCollapse}
       >
         <Flex direction="column" gap="1" p="2" align="center" height="100%">
-          <IconButton variant="ghost" size="2" color="gray" highContrast asChild>
+          <IconButton variant="ghost" size="2" color="gray" asChild>
             <Shell.Trigger target="panel">
               <HugeiconsIcon icon={SidebarLeft01Icon} strokeWidth={1.75} />
             </Shell.Trigger>
           </IconButton>
           <Separator size="4" my="1" />
-          <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Home">
+          <IconButton variant="ghost" size="2" color="gray" aria-label="Home">
             <HugeiconsIcon icon={Home01Icon} strokeWidth={1.75} />
           </IconButton>
-          <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Search">
+          <IconButton variant="ghost" size="2" color="gray" aria-label="Search">
             <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
           </IconButton>
-          <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Notifications">
+          <IconButton variant="ghost" size="2" color="gray" aria-label="Notifications">
             <HugeiconsIcon icon={Notification01Icon} strokeWidth={1.75} />
           </IconButton>
           <Box style={{ flex: 1 }} />
-          <IconButton variant="ghost" size="2" color="gray" highContrast aria-label="Settings">
+          <IconButton variant="ghost" size="2" color="gray" aria-label="Settings">
             <HugeiconsIcon icon={Settings01Icon} strokeWidth={1.75} />
           </IconButton>
         </Flex>
@@ -176,7 +176,7 @@ export default function ShellControlledTest() {
         <Flex direction="column" p="3" gap="3" height="100%">
           <Flex align="center" justify="between">
             <Heading size="3">Panel</Heading>
-            <IconButton variant="ghost" size="1" color="gray" highContrast asChild>
+            <IconButton variant="ghost" size="1" color="gray" asChild>
               <Shell.Trigger target="panel" action="collapse">
                 <HugeiconsIcon icon={SidebarLeft01Icon} strokeWidth={1.75} />
               </Shell.Trigger>
@@ -185,13 +185,13 @@ export default function ShellControlledTest() {
           <Separator size="4" />
           <Flex direction="column" gap="1">
             {['Dashboard', 'Projects', 'Tasks', 'Calendar', 'Reports'].map((item) => (
-              <Button key={item} variant="ghost" size="2" color="gray" highContrast style={{ justifyContent: 'flex-start' }}>
+              <Button key={item} variant="ghost" size="2" color="gray" style={{ justifyContent: 'flex-start' }}>
                 {item}
               </Button>
             ))}
           </Flex>
           <Box style={{ flex: 1 }} />
-          <Text size="1" color="gray">Controlled: open={String(panelOpen)}</Text>
+          <Text size="1" emphasis="medium">Controlled: open={String(panelOpen)}</Text>
         </Flex>
       </Shell.Panel>
 
@@ -199,7 +199,7 @@ export default function ShellControlledTest() {
         <Box p="5" height="100%" style={{ overflow: 'auto' }}>
           <Heading size="5" mb="4">Controlled Shell Test</Heading>
 
-          <Text size="2" color="gray" mb="5">
+          <Text size="2" emphasis="medium" mb="5">
             All panes are fully controlled via <Code>open</Code> + <Code>onOpenChange</Code>.
             Every state change flows through React state and is logged below.
           </Text>
@@ -207,21 +207,21 @@ export default function ShellControlledTest() {
           {/* Controlled state toggles */}
           <Box mb="5" p="4" style={{ background: 'var(--gray-a3)', borderRadius: 'var(--radius-3)' }}>
             <Heading size="3" mb="3">Direct State Controls</Heading>
-            <Text size="2" color="gray" mb="3">
+            <Text size="2" emphasis="medium" mb="3">
               These buttons call setState directly, bypassing Shell.Trigger.
               The controlled <Code>open</Code> prop should sync the pane to the new state.
             </Text>
             <Flex gap="2" wrap="wrap">
-              <Button size="2" variant={railOpen ? 'solid' : 'outline'} color="blue" highContrast onClick={() => { setRailOpen((v) => !v); addLog('Rail', 'setState', `open=${!railOpen}`); }}>
+              <Button size="2" variant={railOpen ? 'solid' : 'outline'} color="blue" onClick={() => { setRailOpen((v) => !v); addLog('Rail', 'setState', `open=${!railOpen}`); }}>
                 Rail: {railOpen ? 'Close' : 'Open'}
               </Button>
-              <Button size="2" variant={panelOpen ? 'solid' : 'outline'} color="violet" highContrast onClick={() => { setPanelOpen((v) => !v); addLog('Panel', 'setState', `open=${!panelOpen}`); }}>
+              <Button size="2" variant={panelOpen ? 'solid' : 'outline'} color="violet" onClick={() => { setPanelOpen((v) => !v); addLog('Panel', 'setState', `open=${!panelOpen}`); }}>
                 Panel: {panelOpen ? 'Close' : 'Open'}
               </Button>
-              <Button size="2" variant={inspectorOpen ? 'solid' : 'outline'} color="orange" highContrast onClick={() => { setInspectorOpen((v) => !v); addLog('Inspector', 'setState', `open=${!inspectorOpen}`); }}>
+              <Button size="2" variant={inspectorOpen ? 'solid' : 'outline'} color="orange" onClick={() => { setInspectorOpen((v) => !v); addLog('Inspector', 'setState', `open=${!inspectorOpen}`); }}>
                 Inspector: {inspectorOpen ? 'Close' : 'Open'}
               </Button>
-              <Button size="2" variant={bottomOpen ? 'solid' : 'outline'} color="crimson" highContrast onClick={() => { setBottomOpen((v) => !v); addLog('Bottom', 'setState', `open=${!bottomOpen}`); }}>
+              <Button size="2" variant={bottomOpen ? 'solid' : 'outline'} color="crimson" onClick={() => { setBottomOpen((v) => !v); addLog('Bottom', 'setState', `open=${!bottomOpen}`); }}>
                 Bottom: {bottomOpen ? 'Close' : 'Open'}
               </Button>
             </Flex>
@@ -230,22 +230,22 @@ export default function ShellControlledTest() {
           {/* Shell.Trigger controls */}
           <Box mb="5" p="4" style={{ background: 'var(--blue-a3)', borderRadius: 'var(--radius-3)' }}>
             <Heading size="3" mb="3">Shell.Trigger Controls</Heading>
-            <Text size="2" color="gray" mb="3">
+            <Text size="2" emphasis="medium" mb="3">
               These use <Code>Shell.Trigger</Code> with various actions.
               In controlled mode, the trigger should call <Code>onOpenChange</Code> which updates state.
             </Text>
             <Flex gap="2" wrap="wrap" mb="3">
               <Text size="2" weight="medium" style={{ width: '100%' }}>Toggle:</Text>
-              <Button size="2" variant="soft" color="gray" highContrast asChild>
+              <Button size="2" variant="soft" color="gray" asChild>
                 <Shell.Trigger target="rail">Rail</Shell.Trigger>
               </Button>
-              <Button size="2" variant="soft" color="gray" highContrast asChild>
+              <Button size="2" variant="soft" color="gray" asChild>
                 <Shell.Trigger target="panel">Panel</Shell.Trigger>
               </Button>
-              <Button size="2" variant="soft" color="gray" highContrast asChild>
+              <Button size="2" variant="soft" color="gray" asChild>
                 <Shell.Trigger target="inspector">Inspector</Shell.Trigger>
               </Button>
-              <Button size="2" variant="soft" color="gray" highContrast asChild>
+              <Button size="2" variant="soft" color="gray" asChild>
                 <Shell.Trigger target="bottom">Bottom</Shell.Trigger>
               </Button>
             </Flex>
@@ -284,7 +284,7 @@ export default function ShellControlledTest() {
           {/* Cascade test */}
           <Box mb="5" p="4" style={{ background: 'var(--amber-a3)', borderRadius: 'var(--radius-3)' }}>
             <Heading size="3" mb="3">Cascade Tests</Heading>
-            <Text size="2" color="gray" mb="3">
+            <Text size="2" emphasis="medium" mb="3">
               Test Rail→Panel cascade behavior in controlled mode.
             </Text>
             <Flex gap="2" wrap="wrap">
@@ -292,7 +292,6 @@ export default function ShellControlledTest() {
                 size="2"
                 variant="classic"
                 color="amber"
-                highContrast
                 onClick={() => {
                   addLog('Test', 'cascade-close', 'Closing Rail — Panel should cascade close');
                   setRailOpen(false);
@@ -304,7 +303,6 @@ export default function ShellControlledTest() {
                 size="2"
                 variant="classic"
                 color="amber"
-                highContrast
                 onClick={() => {
                   addLog('Test', 'cascade-open', 'Opening Panel — Rail should auto-open');
                   setPanelOpen(true);
@@ -316,7 +314,6 @@ export default function ShellControlledTest() {
                 size="2"
                 variant="soft"
                 color="gray"
-                highContrast
                 onClick={() => {
                   addLog('Test', 'reset', 'Resetting all panes to initial state');
                   setRailOpen(true);
@@ -333,7 +330,7 @@ export default function ShellControlledTest() {
           {/* Rapid toggle test */}
           <Box mb="5" p="4" style={{ background: 'var(--green-a3)', borderRadius: 'var(--radius-3)' }}>
             <Heading size="3" mb="3">Stress Tests</Heading>
-            <Text size="2" color="gray" mb="3">
+            <Text size="2" emphasis="medium" mb="3">
               Rapid state changes to test for race conditions and stale closures.
             </Text>
             <Flex gap="2" wrap="wrap">
@@ -341,7 +338,6 @@ export default function ShellControlledTest() {
                 size="2"
                 variant="classic"
                 color="green"
-                highContrast
                 onClick={() => {
                   addLog('Test', 'rapid-toggle', 'Rapidly toggling all panes');
                   setRailOpen((v) => !v);
@@ -356,7 +352,6 @@ export default function ShellControlledTest() {
                 size="2"
                 variant="classic"
                 color="green"
-                highContrast
                 onClick={async () => {
                   addLog('Test', 'sequential', 'Sequential open: Rail → Panel → Inspector → Bottom');
                   setRailOpen(true);
@@ -374,7 +369,6 @@ export default function ShellControlledTest() {
                 size="2"
                 variant="soft"
                 color="gray"
-                highContrast
                 onClick={() => {
                   addLog('Test', 'close-all', 'Closing all panes');
                   setRailOpen(false);
@@ -389,7 +383,6 @@ export default function ShellControlledTest() {
                 size="2"
                 variant="soft"
                 color="gray"
-                highContrast
                 onClick={() => {
                   addLog('Test', 'open-all', 'Opening all panes');
                   setRailOpen(true);
@@ -407,7 +400,7 @@ export default function ShellControlledTest() {
           <Box p="4" style={{ background: 'var(--gray-a3)', borderRadius: 'var(--radius-3)' }}>
             <Flex align="center" justify="between" mb="3">
               <Heading size="3">Event Log ({logs.length})</Heading>
-              <Button size="1" variant="soft" color="gray" highContrast onClick={clearLogs}>
+              <Button size="1" variant="soft" color="gray" onClick={clearLogs}>
                 Clear
               </Button>
             </Flex>
@@ -424,11 +417,11 @@ export default function ShellControlledTest() {
               }}
             >
               {logs.length === 0 ? (
-                <Text size="1" color="gray">No events yet. Interact with the panes to see events.</Text>
+                <Text size="1" emphasis="medium">No events yet. Interact with the panes to see events.</Text>
               ) : (
                 logs.map((log) => (
                   <Flex key={log.id} gap="2" align="baseline">
-                    <Text size="1" color="gray" style={{ fontFamily: 'inherit', whiteSpace: 'nowrap' }}>
+                    <Text size="1" emphasis="medium" style={{ fontFamily: 'inherit', whiteSpace: 'nowrap' }}>
                       {log.timestamp}
                     </Text>
                     <Badge size="1" color={
@@ -444,7 +437,7 @@ export default function ShellControlledTest() {
                       {log.event}
                     </Text>
                     {log.detail && (
-                      <Text size="1" color="gray" style={{ fontFamily: 'inherit' }}>
+                      <Text size="1" emphasis="medium" style={{ fontFamily: 'inherit' }}>
                         {log.detail}
                       </Text>
                     )}
@@ -473,7 +466,7 @@ export default function ShellControlledTest() {
         <Flex direction="column" p="3" gap="3" height="100%">
           <Flex align="center" justify="between">
             <Heading size="3">Inspector</Heading>
-            <IconButton variant="ghost" size="1" color="gray" highContrast asChild>
+            <IconButton variant="ghost" size="1" color="gray" asChild>
               <Shell.Trigger target="inspector" action="collapse">
                 <HugeiconsIcon icon={SidebarRight01Icon} strokeWidth={1.75} />
               </Shell.Trigger>
@@ -483,7 +476,7 @@ export default function ShellControlledTest() {
           <Flex direction="column" gap="3">
             <Box>
               <Text size="2" weight="medium" mb="1">Properties</Text>
-              <Text size="1" color="gray">Selected item properties would appear here.</Text>
+              <Text size="1" emphasis="medium">Selected item properties would appear here.</Text>
             </Box>
             <Separator size="4" />
             <Box>
@@ -497,7 +490,7 @@ export default function ShellControlledTest() {
             </Box>
           </Flex>
           <Box style={{ flex: 1 }} />
-          <Text size="1" color="gray">Controlled: open={String(inspectorOpen)}</Text>
+          <Text size="1" emphasis="medium">Controlled: open={String(inspectorOpen)}</Text>
         </Flex>
       </Shell.Inspector>
 
@@ -520,7 +513,7 @@ export default function ShellControlledTest() {
               <Badge size="1" color="green">Active</Badge>
             </Flex>
             <Flex gap="1">
-              <IconButton variant="ghost" size="1" color="gray" highContrast asChild>
+              <IconButton variant="ghost" size="1" color="gray" asChild>
                 <Shell.Trigger target="bottom" action="collapse">
                   <HugeiconsIcon icon={ArrowDown01Icon} strokeWidth={1.75} />
                 </Shell.Trigger>

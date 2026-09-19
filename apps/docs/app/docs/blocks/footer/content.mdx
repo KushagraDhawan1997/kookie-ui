@@ -35,7 +35,7 @@ import { Footer } from '@/components/blocks/footer/footer';
   </Footer.Main>
   <Footer.Bottom>
     <Footer.Legal>
-      <Text size="2" color="gray">© 2026 Acme</Text>
+      <Text size="2" emphasis="medium">© 2026 Acme</Text>
     </Footer.Legal>
   </Footer.Bottom>
 </Footer.Root>
@@ -78,7 +78,7 @@ Every part accepts the props of the component it wraps. Only the additions and c
 | `Main` | `Flex` | `gap="8"`, `justify="between"`, `align="start"`, `wrap="wrap"` |
 | `Brand` | `Flex` | `direction="column"`, `gap="3"` |
 | `BrandName` | `Text` | `size="4"`, `weight="bold"` |
-| `Tagline` | `Text` | `size="2"`, `color="gray"` |
+| `Tagline` | `Text` | `size="2"`, `emphasis="medium"` |
 | `Links` | `Flex` | `gap="8"`, `wrap="wrap"` |
 | `LinkGroup` | `Flex` | `title: string`, rendered as an `h3`. `direction="column"`, `gap="3"` |
 | `Nav` | `Flex` as `nav` | `gap="6"`, `align="center"`, `wrap="wrap"` |
@@ -114,7 +114,7 @@ Every part accepts the props of the component it wraps. Only the additions and c
       <Separator size="4" />
       <Footer.Bottom>
         <Footer.Legal>
-          <Text size="2" color="gray">© 2026 Acme Inc.</Text>
+          <Text size="2" emphasis="medium">© 2026 Acme Inc.</Text>
           <Footer.Link href="#">Privacy</Footer.Link>
           <Footer.Link href="#">Terms</Footer.Link>
         </Footer.Legal>
@@ -144,7 +144,7 @@ Every part accepts the props of the component it wraps. Only the additions and c
   <Separator size="4" />
   <Footer.Bottom>
     <Footer.Legal>
-      <Text size="2" color="gray">© 2026 Acme Inc.</Text>
+      <Text size="2" emphasis="medium">© 2026 Acme Inc.</Text>
       <Footer.Link href="/privacy">Privacy</Footer.Link>
       <Footer.Link href="/terms">Terms</Footer.Link>
     </Footer.Legal>

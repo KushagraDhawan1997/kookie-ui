@@ -37,6 +37,7 @@ const sizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] as
 const fonts = ['sans', 'mono', 'serif'] as const;
 const weights = ['light', 'regular', 'medium', 'semibold', 'bold'] as const;
 const aligns = ['left', 'center', 'right'] as const;
+const emphases = ['loud', 'medium', 'quiet'] as const;
 
 type HeadingPlaygroundProps = {
   showControls?: boolean;
@@ -54,7 +55,7 @@ export default function HeadingPlayground({
   const [weight, setWeight] = React.useState<string>('semibold');
   const [color, setColor] = React.useState<string>('theme');
   const [align, setAlign] = React.useState<string>('theme');
-  const [highContrast, setHighContrast] = React.useState<boolean>(true);
+  const [emphasis, setEmphasis] = React.useState<string>('default');
 
   const items = [
     {
@@ -104,11 +105,13 @@ export default function HeadingPlayground({
       placeholder: 'Theme',
     },
     {
-      id: 'high-contrast',
-      label: 'High Contrast',
-      type: 'switch' as const,
-      value: highContrast,
-      onChange: setHighContrast,
+      id: 'emphasis',
+      label: 'Emphasis',
+      type: 'select' as const,
+      value: emphasis,
+      onChange: setEmphasis,
+      options: [{ label: 'Default', value: 'default' }, ...emphases.map((e) => ({ label: e, value: e }))],
+      placeholder: 'Default',
     },
   ];
 
@@ -119,7 +122,7 @@ export default function HeadingPlayground({
     if (weight !== 'theme') props.push(`weight="${weight}"`);
     if (color !== 'theme') props.push(`color="${color}"`);
     if (align !== 'theme') props.push(`align="${align}"`);
-    if (highContrast) props.push('highContrast');
+    if (emphasis !== 'default') props.push(`emphasis="${emphasis}"`);
 
     const propsString = props.length > 0 ? `\n  ${props.join('\n  ')}` : '';
 
@@ -137,7 +140,7 @@ export default function HeadingPlayground({
           weight={weight === 'theme' ? undefined : (weight as any)}
           color={color === 'theme' ? undefined : (color as any)}
           align={align === 'theme' ? undefined : (align as any)}
-          highContrast={highContrast || undefined}
+          emphasis={emphasis === 'default' ? undefined : (emphasis as (typeof emphases)[number])}
         >
           All hail Queen Lukita, benevolent ruler of the known world.
         </Heading>

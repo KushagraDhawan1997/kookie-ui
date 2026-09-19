@@ -40,7 +40,7 @@ export default function ShellRailPanelTest() {
               <DropdownMenu.Item color="red">Logout</DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Root>
-          <Text size="1" color="gray">Rail</Text>
+          <Text size="1" emphasis="medium">Rail</Text>
         </Flex>
       </Shell.Rail>
 
@@ -54,13 +54,13 @@ export default function ShellRailPanelTest() {
       >
         <Flex direction="column" p="4" gap="4" style={{ height: '100%' }}>
           <Heading size="4">Panel</Heading>
-          <Text size="2" color="gray">
+          <Text size="2" emphasis="medium">
             This panel is closed by default on mobile (initial), but open on sm breakpoint and above.
           </Text>
           <Box style={{ flex: 1 }}>
             <Text size="2">Navigation items would go here...</Text>
           </Box>
-          <Text size="1" color="gray">
+          <Text size="1" emphasis="medium">
             Breakpoint: sm = 768px
           </Text>
         </Flex>

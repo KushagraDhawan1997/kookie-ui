@@ -47,7 +47,7 @@ export default function ScrubTestPage() {
           <Heading size="7" weight="bold">
             TextField Scrubbing
           </Heading>
-          <Text size="3" color="gray">
+          <Text size="3" emphasis="medium">
             Drag on the label slot to adjust numeric values. Hold <Code>Shift</Code> for coarse
             adjustment or <Code>Alt/Option</Code> for fine adjustment.
           </Text>
@@ -62,7 +62,7 @@ export default function ScrubTestPage() {
               <Ruler size={18} />
               <Heading size="4">Basic Example</Heading>
             </Flex>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Drag on &quot;Width&quot; or &quot;Height&quot; labels to scrub the values.
             </Text>
 
@@ -89,7 +89,7 @@ export default function ScrubTestPage() {
                     </Text>
                   </TextField.Slot>
                   <TextField.Slot side="right">
-                    <Text size="1" color="gray">
+                    <Text size="1" emphasis="medium">
                       px
                     </Text>
                   </TextField.Slot>
@@ -118,7 +118,7 @@ export default function ScrubTestPage() {
                     </Text>
                   </TextField.Slot>
                   <TextField.Slot side="right">
-                    <Text size="1" color="gray">
+                    <Text size="1" emphasis="medium">
                       px
                     </Text>
                   </TextField.Slot>
@@ -158,7 +158,7 @@ export default function ScrubTestPage() {
               <Move size={18} />
               <Heading size="4">Transform Controls</Heading>
             </Flex>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Fine-grained control with different step values and bounds.
             </Text>
 
@@ -183,7 +183,7 @@ export default function ScrubTestPage() {
                     </Text>
                   </TextField.Slot>
                   <TextField.Slot side="right">
-                    <Text size="1" color="gray">
+                    <Text size="1" emphasis="medium">
                       %
                     </Text>
                   </TextField.Slot>
@@ -211,7 +211,7 @@ export default function ScrubTestPage() {
                     </Text>
                   </TextField.Slot>
                   <TextField.Slot side="right">
-                    <Text size="1" color="gray">
+                    <Text size="1" emphasis="medium">
                       °
                     </Text>
                   </TextField.Slot>
@@ -243,7 +243,7 @@ export default function ScrubTestPage() {
               <Settings2 size={18} />
               <Heading size="4">Configurable Demo</Heading>
             </Flex>
-            <Text size="2" color="gray">
+            <Text size="2" emphasis="medium">
               Adjust the scrubbing parameters to see how they affect the behavior.
             </Text>
 
@@ -277,7 +277,7 @@ export default function ScrubTestPage() {
 
                   <Flex align="center" gap="2">
                     <Zap size={14} />
-                    <Text size="1" color="gray">
+                    <Text size="1" emphasis="medium">
                       Current: <Code>{demoValue}</Code>
                     </Text>
                   </Flex>
@@ -292,7 +292,7 @@ export default function ScrubTestPage() {
                       <Text size="2" weight="medium">
                         Sensitivity
                       </Text>
-                      <Text size="1" color="gray">
+                      <Text size="1" emphasis="medium">
                         {sensitivity}px per step
                       </Text>
                     </Flex>
@@ -310,7 +310,7 @@ export default function ScrubTestPage() {
                       <Text size="2" weight="medium">
                         Step
                       </Text>
-                      <Text size="1" color="gray">
+                      <Text size="1" emphasis="medium">
                         {step}
                       </Text>
                     </Flex>
@@ -328,7 +328,7 @@ export default function ScrubTestPage() {
                       <Text size="2" weight="medium">
                         Shift Multiplier
                       </Text>
-                      <Text size="1" color="gray">
+                      <Text size="1" emphasis="medium">
                         {shiftMultiplier}x
                       </Text>
                     </Flex>
@@ -346,7 +346,7 @@ export default function ScrubTestPage() {
                       <Text size="2" weight="medium">
                         Alt Multiplier
                       </Text>
-                      <Text size="1" color="gray">
+                      <Text size="1" emphasis="medium">
                         {altMultiplier}x
                       </Text>
                     </Flex>

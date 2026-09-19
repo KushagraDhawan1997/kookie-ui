@@ -44,7 +44,7 @@ export default function ShellInsetTest() {
             <Heading size="4">Sidebar</Heading>
           </Flex>
           
-          <Text size="2" color="gray">
+          <Text size="2" emphasis="medium">
             {insetConfig.sidebar ? '✓ Inset enabled' : '✗ Inset disabled'}
           </Text>
           
@@ -59,7 +59,7 @@ export default function ShellInsetTest() {
         <Box p="6" style={{ height: '100%' }}>
           <Heading size="6" mb="4">Shell Inset Test</Heading>
           
-          <Text size="2" color="gray" mb="6">
+          <Text size="2" emphasis="medium" mb="6">
             The inset prop creates floating panes with a gray backdrop. Toggle each pane's inset below.
           </Text>
 
@@ -144,7 +144,7 @@ export default function ShellInsetTest() {
       >
         <Flex direction="column" gap="4" p="4" style={{ height: '100%' }}>
           <Heading size="4">Inspector</Heading>
-          <Text size="2" color="gray">
+          <Text size="2" emphasis="medium">
             {insetConfig.inspector ? '✓ Inset enabled' : '✗ Inset disabled'}
           </Text>
           <Text size="2">Property panel content...</Text>
@@ -159,7 +159,7 @@ export default function ShellInsetTest() {
       >
         <Flex direction="column" gap="2" p="4" style={{ height: '100%' }}>
           <Heading size="4">Bottom Panel</Heading>
-          <Text size="2" color="gray">
+          <Text size="2" emphasis="medium">
             {insetConfig.bottom ? '✓ Inset enabled' : '✗ Inset disabled'}
           </Text>
           <Text size="2">Terminal / logs content...</Text>

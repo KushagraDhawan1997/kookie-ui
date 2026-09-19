@@ -53,7 +53,6 @@ export default function CalloutPlayground({
   const [variant, setVariant] = React.useState<string>('soft');
   const [color, setColor] = React.useState<string>('theme');
   const [size, setSize] = React.useState<string>('2');
-  const [highContrast, setHighContrast] = React.useState<boolean>(true);
   const [material, setMaterial] = React.useState<string>('theme');
   const [showIcon, setShowIcon] = React.useState<boolean>(true);
 
@@ -87,13 +86,6 @@ export default function CalloutPlayground({
       placeholder: 'Select size',
     },
     {
-      id: 'high-contrast',
-      label: 'High Contrast',
-      type: 'switch' as const,
-      value: highContrast,
-      onChange: setHighContrast,
-    },
-    {
       id: 'material',
       label: 'Material',
       type: 'select' as const,
@@ -116,7 +108,6 @@ export default function CalloutPlayground({
 
     if (color !== 'theme') props.push(`color="${color}"`);
     if (material !== 'theme') props.push(`material="${material}"`);
-    if (highContrast) props.push('highContrast');
 
     const propsString = props.length > 0 ? `\n  ${props.join('\n  ')}` : '';
 
@@ -142,7 +133,6 @@ export default function CalloutPlayground({
           variant={variant as any}
           color={color === 'theme' ? undefined : (color as any)}
           material={material === 'theme' ? undefined : (material as any)}
-          highContrast={highContrast || undefined}
         >
           {showIcon && (
             <Callout.Icon>
