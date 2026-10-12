@@ -1,7 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { Avatar, Flex, Sidebar, Text } from '@kushagradhawan/kookie-ui';
+import { Avatar, Flex, Sidebar } from '@kushagradhawan/kookie-ui';
+import { Logo } from '@/components/logo';
 import { HugeiconsIcon, type IconSvgElement } from '@hugeicons/react';
 import type {
   DocsLinkComponent,
@@ -123,9 +124,9 @@ export function DocsSidebar({
             {logo && (
               <LinkComponent href={logo.href ?? '/'} aria-label={logo.alt ?? 'Home'}>
                 {logo.label ? (
-                  <Text size="7" className="kd-wordmark">
-                    {presentation === 'thin' ? logo.label[0] : logo.label}
-                  </Text>
+                  /* THE MARK ALONE (2026-09-27, Kushagra): the word said the name a second time
+                     in a row that is only ever glanced at. `label` stays the accessible name. */
+                  <Logo height="var(--line-height-7)" />
                 ) : (
                   <Avatar fallback={logo.alt?.[0] ?? 'K'} size={logo.size ?? '3'} src={logo.src} />
                 )}
