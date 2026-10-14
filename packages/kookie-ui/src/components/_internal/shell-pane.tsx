@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { useBreakpoint } from '../../hooks/use-breakpoint.js';
+import { readBreakpoint, useBreakpoint } from '../../hooks/use-breakpoint.js';
 import type { Breakpoint, PaneName, PresentationValue } from '../shell.types.js';
 import {
   constantOf,
@@ -78,21 +78,30 @@ export function usePane(options: UsePaneOptions) {
     );
   }
 
-  const defaultKey = useStableKey(options.defaultValue);
+  // A responsive controlled value is resolved the way a responsive default
+  // is: it becomes the table an untouched pane follows, so the stylesheet
+  // answers it at each breakpoint (right in the server HTML, with no
+  // callback on a crossing) and the app's prop is still the only writer.
+  const controlledMap = controlledIsMap ? (options.controlled as Partial<Record<Breakpoint, PaneValue>>) : undefined;
+  const autoSource = controlledMap ?? (isMap(options.defaultValue) ? options.defaultValue : undefined);
+  const autoKey = useStableKey(autoSource);
   const [inner, setInner] = React.useState<'auto' | PaneValue>(() => (typeof options.defaultValue === 'string' ? options.defaultValue : 'auto'));
 
   // What an untouched pane shows at each breakpoint: a responsive default
   // where it states one, the pane's own default where it does not.
   const autoTable = React.useMemo(
-    () => tableOf<PaneValue>(isMap(options.defaultValue) ? options.defaultValue : undefined, (bp) => builtIn(presentationTable[bp])),
-    // `defaultKey` stands for `options.defaultValue`, which is usually a new literal each render.
+    () => (controlledMap ? tableOf<PaneValue>(controlledMap, () => firstStated(controlledMap)) : tableOf<PaneValue>(autoSource, (bp) => builtIn(presentationTable[bp]))),
+    // `autoKey` stands for the responsive object, which is usually a new literal each render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [defaultKey, presentationTable, builtIn],
+    [autoKey, controlledIsMap, presentationTable, builtIn],
   );
+
+  let state: 'auto' | PaneValue = inner;
+  if (controlled) state = controlledMap ? 'auto' : (options.controlled as PaneValue);
 
   // Only a pane whose answer depends on the window subscribes to it, so a
   // pane with one presentation and one default never re-renders on a resize.
-  const needsBreakpoint = constantOf(presentationTable) === undefined || (inner === 'auto' && !controlled && constantOf(autoTable) === undefined) || controlledIsMap;
+  const needsBreakpoint = constantOf(presentationTable) === undefined || (state === 'auto' && constantOf(autoTable) === undefined);
   const { breakpoint, ready } = useBreakpoint(needsBreakpoint);
 
   /** A table's value now: known without the window when it holds one value, else once the breakpoint is known. */
@@ -102,43 +111,55 @@ export function usePane(options: UsePaneOptions) {
     return ready ? table[breakpoint] : undefined;
   };
 
-  let state: 'auto' | PaneValue = inner;
-  if (controlled) {
-    const raw = options.controlled!;
-    state = isMap(raw) ? tableOf<PaneValue>(raw, () => firstStated(raw))[ready ? breakpoint : 'initial'] : raw;
-  }
-
   const value: PaneValue | undefined = state === 'auto' ? now(autoTable) : state;
   const presentation = now(presentationTable);
   const overlaying = presentation === 'overlay';
   const shown = value === undefined ? undefined : value !== 'closed';
   const overlayLive = shown === true && overlaying;
 
-  // The default at this breakpoint, which a single-mode Sidebar toggles back to.
-  const defaultHere: PaneValue | undefined = typeof options.defaultValue === 'string' ? options.defaultValue : isMap(options.defaultValue) ? (now(autoTable) ?? undefined) : undefined;
-
   // Stable actions over the latest values, so the registry entry changes only
   // when a fact it carries changes.
-  const latest = React.useRef({ value, controlled, onChange: options.onChange, toggleNext: options.toggleNext, defaultHere });
+  const defaultValue = options.defaultValue;
+  const latest = React.useRef({ state, value, autoTable, defaultValue, controlled, onChange: options.onChange, toggleNext: options.toggleNext });
   React.useLayoutEffect(() => {
-    latest.current = { value, controlled, onChange: options.onChange, toggleNext: options.toggleNext, defaultHere };
+    latest.current = { state, value, autoTable, defaultValue, controlled, onChange: options.onChange, toggleNext: options.toggleNext };
   });
 
-  const setValue = React.useCallback((next: PaneValue, reason: OpenChangeReason) => {
+  /**
+   * What the pane shows, and its default, at the window's breakpoint right
+   * now. Asked at the moment of an action rather than taken from the last
+   * render: a touched pane no longer follows the window, and a click can land
+   * before the mirror has resolved after hydration.
+   */
+  const valueNow = React.useCallback((): PaneValue | undefined => {
     const current = latest.current;
-    if (current.value === next) return;
-    current.onChange?.(next, reason);
-    if (!current.controlled) setInner(next);
+    if (current.value !== undefined) return current.value;
+    return current.state === 'auto' ? current.autoTable[readBreakpoint()] : undefined;
   }, []);
+  const defaultHereNow = React.useCallback((): PaneValue | undefined => {
+    const current = latest.current;
+    if (typeof current.defaultValue === 'string') return current.defaultValue;
+    return isMap(current.defaultValue) ? current.autoTable[readBreakpoint()] : undefined;
+  }, []);
+
+  const setValue = React.useCallback(
+    (next: PaneValue, reason: OpenChangeReason) => {
+      const current = latest.current;
+      if (valueNow() === next) return;
+      current.onChange?.(next, reason);
+      if (!current.controlled) setInner(next);
+    },
+    [valueNow],
+  );
 
   const toggle = React.useCallback(
     (reason: OpenChangeReason) => {
       const current = latest.current;
-      const from = current.value ?? 'closed';
-      const next = current.toggleNext ? current.toggleNext(from, current.defaultHere) : from === 'closed' ? 'open' : 'closed';
+      const from = valueNow() ?? 'closed';
+      const next = current.toggleNext ? current.toggleNext(from, defaultHereNow()) : from === 'closed' ? 'open' : 'closed';
       setValue(next, reason);
     },
-    [setValue],
+    [setValue, valueNow, defaultHereNow],
   );
 
   // The pane's element, for the Root's containment and focus.
@@ -224,6 +245,7 @@ export function usePane(options: UsePaneOptions) {
     autoTable,
     setValue,
     toggle,
+    defaultHereNow,
     setElement,
   };
 }

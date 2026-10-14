@@ -141,7 +141,7 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
       style={
         {
           ...style,
-          '--inspector-size': `${expandedSize}px`,
+          '--inspector-expanded-size': `${expandedSize}px`,
           '--inspector-min-size': `${minSize}px`,
           '--inspector-max-size': `${maxSize}px`,
         } as CSSPropertiesWithVars

@@ -224,4 +224,20 @@ describe('Shell inset prop', () => {
       expect(body.hasAttribute('data-has-inset')).toBe(true);
     });
   });
+
+  describe('a floating Panel beside an inset Rail', () => {
+    it('starts after the Rail card and its margins, not on top of them', () => {
+      renderWithProviders(
+        <Shell.Root>
+          <Shell.Rail presentation="fixed" defaultOpen inset expandedSize={64} />
+          <Shell.Panel presentation="stacked" defaultOpen>
+            panel
+          </Shell.Panel>
+          <Shell.Content>content</Shell.Content>
+        </Shell.Root>,
+      );
+      const offset = (document.querySelector('.rt-ShellRoot') as HTMLElement).style.getPropertyValue('--shell-rail-offset');
+      expect(offset).toBe('calc(64px + 2 * var(--shell-inset-gap))');
+    });
+  });
 });

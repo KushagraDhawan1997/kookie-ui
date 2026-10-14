@@ -139,7 +139,7 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((props
       style={
         {
           ...style,
-          '--bottom-size': `${expandedSize}px`,
+          '--bottom-expanded-size': `${expandedSize}px`,
           '--bottom-min-size': `${minSize}px`,
           '--bottom-max-size': `${maxSize}px`,
         } as CSSPropertiesWithVars

@@ -78,6 +78,20 @@ describe('Shell callbacks are quiet until a user acts', () => {
     expect(calls(on)).toEqual({});
   });
 
+  // On a narrow window every untouched pane starts closed, so a pane that
+  // reported its resolved state on mount would report nothing there. On a
+  // wide window the Rail, the Sidebar and every responsive default start
+  // open, which is where 0.7's reason 'init' fired.
+  it('reports nothing on mount on a wide window', () => {
+    viewport.setWidth(1700);
+    const on = spies();
+    renderWithProviders(<Frame on={on} />);
+    renderWithProviders(<SidebarFrame on={on} />);
+    expect(document.querySelector('.rt-ShellRail')?.getAttribute('data-mode')).toBe('expanded');
+    expect(document.querySelector('.rt-ShellSidebar')?.getAttribute('data-mode')).toBe('expanded');
+    expect(calls(on)).toEqual({});
+  });
+
   it('reports nothing while the window crosses every breakpoint', () => {
     const on = spies();
     renderWithProviders(<Frame on={on} />);

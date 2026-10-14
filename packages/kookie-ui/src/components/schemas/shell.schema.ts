@@ -44,7 +44,7 @@ function responsive<T extends z.ZodTypeAny>(value: T) {
 }
 
 // Responsive schemas
-const ResponsiveModeSchema = responsive(PaneModeSchema).describe('Responsive pane mode configuration');
+const _ResponsiveModeSchema = responsive(PaneModeSchema).describe('Responsive pane mode configuration');
 const ResponsiveSidebarModeSchema = responsive(SidebarModeSchema).describe('Responsive sidebar state');
 const ResponsivePresentationSchema = responsive(PresentationValueSchema).describe('Responsive presentation configuration');
 const ResponsiveOpenSchema = responsive(z.boolean()).describe('Responsive open state');
@@ -92,11 +92,14 @@ const ResizeShape = {
   minSize: z.number().optional(),
   maxSize: z.number().optional().describe('The largest size. A drag also stops before the handle leaves the frame.'),
   resizable: z.boolean().optional(),
-  collapsible: z.boolean().optional().describe('A double-click on the handle opens and closes the pane'),
+  collapsible: z.boolean().optional().describe('A double-click on the handle closes the pane'),
   size: z.union([z.number(), z.string()]).optional().describe('The size, when controlled'),
   defaultSize: z.union([z.number(), z.string()]).optional().describe('The starting size'),
   onSizeChange: z.function({ input: [z.number(), z.object({ reason: SizeChangeReasonSchema })], output: z.void() }).optional(),
-  sizeUpdate: z.enum(['throttle', 'debounce']).optional(),
+  sizeUpdate: z
+    .enum(['throttle', 'debounce'])
+    .optional()
+    .describe('Rate-limits onSizeChange across repeated resize ends, such as key presses on the handle. A drag calls it once, when the drag ends; use onResize for live sizes.'),
   sizeUpdateMs: z.number().optional(),
   onResize: z
     .function({ input: [z.number()], output: z.void() })
@@ -164,7 +167,7 @@ export const ShellPanelSchema = z
     minSize: z.number().default(100).describe('Minimum width when resizing'),
     maxSize: z.number().default(800).describe('Maximum width when resizing'),
     resizable: z.boolean().default(false).describe('Whether the panel can be resized'),
-    collapsible: z.boolean().default(true).describe('Whether a double-click on the handle opens and closes the panel'),
+    collapsible: z.boolean().default(true).describe('Whether a double-click on the handle closes the panel'),
   })
   .strict();
 
@@ -188,7 +191,7 @@ export const ShellSidebarSchema = z
     thinSize: z.number().default(64).describe('Width in the thin state'),
     toggleModes: z.enum(['both', 'single']).default('both').describe('`both` goes collapsed, thin, expanded; `single` goes between collapsed and one open state'),
     resizable: z.boolean().default(false).describe('Whether the sidebar can be resized'),
-    collapsible: z.boolean().default(true).describe('Whether a double-click on the handle opens and closes the sidebar'),
+    collapsible: z.boolean().default(true).describe('Whether a double-click on the handle closes the sidebar'),
   })
   .strict();
 
@@ -217,7 +220,7 @@ export const ShellInspectorSchema = z
     minSize: z.number().default(200).describe('Minimum width when resizing'),
     maxSize: z.number().default(500).describe('Maximum width when resizing'),
     resizable: z.boolean().default(false).describe('Whether the inspector can be resized'),
-    collapsible: z.boolean().default(true).describe('Whether a double-click on the handle opens and closes the inspector'),
+    collapsible: z.boolean().default(true).describe('Whether a double-click on the handle closes the inspector'),
   })
   .strict();
 
@@ -234,7 +237,7 @@ export const ShellBottomSchema = z
     minSize: z.number().default(100).describe('Minimum height when resizing'),
     maxSize: z.number().default(400).describe('Maximum height when resizing'),
     resizable: z.boolean().default(false).describe('Whether the bottom panel can be resized'),
-    collapsible: z.boolean().default(true).describe('Whether a double-click on the handle opens and closes the panel'),
+    collapsible: z.boolean().default(true).describe('Whether a double-click on the handle closes the panel'),
   })
   .strict();
 
@@ -289,7 +292,7 @@ export type PresentationValue = z.infer<typeof PresentationValueSchema>;
 export type Breakpoint = z.infer<typeof _BreakpointSchema>;
 export type PaneTarget = z.infer<typeof PaneTargetSchema>;
 export type TriggerAction = z.infer<typeof TriggerActionSchema>;
-export type ResponsiveMode = z.infer<typeof ResponsiveModeSchema>;
+export type ResponsiveMode = z.infer<typeof _ResponsiveModeSchema>;
 export type ResponsiveSidebarMode = z.infer<typeof ResponsiveSidebarModeSchema>;
 export type ResponsivePresentation = z.infer<typeof ResponsivePresentationSchema>;
 export type PaneSizePersistence = z.infer<typeof PaneSizePersistenceSchema>;

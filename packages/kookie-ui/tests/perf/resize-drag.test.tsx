@@ -81,8 +81,13 @@ describe('pane resize drag', () => {
     const handle = screen.getByRole('separator');
 
     fireEvent.pointerDown(handle, { pointerId: 1, clientX: 100 });
-    // With pointer capture set, real browsers retarget moves to the handle.
+    // With pointer capture set, real browsers retarget moves to the handle,
+    // and the same move then reaches the document and the window. Only the
+    // first copy may do any work: one write of the size per move.
+    const writes = vi.spyOn(CSSStyleDeclaration.prototype, 'setProperty');
     fireEvent.pointerMove(handle, { clientX: 150 });
+    expect(writes.mock.calls.filter(([name]) => name === '--panel-size')).toHaveLength(1);
+    writes.mockRestore();
     vi.advanceTimersToNextFrame();
 
     expect(onResize).toHaveBeenCalledTimes(1);

@@ -69,7 +69,30 @@ function updatePageLock(delta: 1 | -1) {
   else doc.removeAttribute('data-rt-shell-lock');
 }
 
-const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, children, height = 'full', style, ...props }, ref) => {
+/** Marks a child the Root made inert, so closing removes only what the Root added. */
+const INERT_MARK = 'data-rt-shell-inert';
+
+/** How many frames a focus rescue watches after an overlay opens or closes. */
+const RESCUE_FRAMES = 30;
+
+/** Focus that is nowhere useful: the document, or nothing at all. */
+function isNowhere(doc: Document, el: Element | EventTarget | null): boolean {
+  return el === null || el === doc || el === doc.body || el === doc.documentElement;
+}
+
+/** A Trigger that drives the pane with this id and can take focus, optionally only inside `within`. */
+function triggerFor(doc: Document, id: string, within?: HTMLElement[]): HTMLElement | null {
+  for (const el of doc.querySelectorAll<HTMLElement>('[data-shell-trigger][aria-controls]')) {
+    if (el.getAttribute('aria-controls') !== id || el.closest('[inert]')) continue;
+    if (within && !within.some((pane) => pane.contains(el))) continue;
+    return el;
+  }
+  return null;
+}
+
+type LivePane = { name: PaneName; id: string; el: HTMLElement };
+
+const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, children, height = 'full', style, onKeyDown, onFocus, ...props }, ref) => {
   const [store] = React.useState(createShellStore);
   const subscribe = React.useCallback((listener: () => void) => subscribeShellStore(store, listener), [store]);
   // Subscribed for the re-render, not for a value: a pane opening or closing
@@ -104,7 +127,16 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
     }
   }, [store]);
 
+  const livePanes = React.useCallback(
+    (): LivePane[] => [...store.entries.values()].filter((entry) => entry.overlayLive && entry.el).map((entry) => ({ name: entry.name, id: entry.id, el: entry.el as HTMLElement })),
+    [store],
+  );
   const liveCount = [...store.entries.values()].filter((entry) => entry.overlayLive && entry.el).length;
+
+  // A Shell given a height of its own sits inside a page, and its overlays
+  // cover only its box: it holds no page lock. `full` is the page, and
+  // `auto` grows with its content, so its overlays are placed on the window.
+  const contained = height !== 'full' && height !== 'auto';
 
   /*
    * Containment is the Root's, not the pane's. Only the Root can see every live
@@ -112,118 +144,209 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
    * inerts the other live overlay and restores values the other effect wrote,
    * which can leave the whole frame inert for good.
    *
-   * One pass, one snapshot filled lazily per element:
-   * - exempt are the scrim and each root child that CONTAINS a live overlay,
-   *   so a pane wrapped in a plain element is not inerted with its wrapper;
-   * - a child is snapshotted the first time it is inerted, so a child mounted
-   *   during an overlay is contained and restored correctly;
-   * - focus is captured before inerting, because inerting the subtree that
-   *   holds the trigger blurs it.
-   *
-   * No dependency array, on purpose: a child mounted behind the scrim notifies
-   * nothing, but a child appearing is a render of this component.
+   * Exempt are the scrim and each root child that CONTAINS a live overlay, so
+   * a pane wrapped in a plain element is not inerted with its wrapper. A child
+   * the Root inerts is marked, and closing clears only marked children, so
+   * `inert` the app sets on a child is the app's before, during and after.
    */
-  const [inertSnapshot] = React.useState(() => new Map<HTMLElement, boolean>());
+  const contain = React.useCallback(() => {
+    const rootEl = rootRef.current;
+    if (!rootEl) return;
+    const liveEls = livePanes().map((pane) => pane.el);
+    for (const child of rootEl.children) {
+      if (!(child instanceof HTMLElement) || child.classList.contains('rt-ShellScrim')) continue;
+      const holdsLive = liveEls.some((el) => child === el || child.contains(el));
+      if (liveEls.length === 0 || holdsLive) {
+        if (child.hasAttribute(INERT_MARK)) {
+          child.removeAttribute(INERT_MARK);
+          child.inert = false;
+        }
+      } else if (!child.inert) {
+        child.setAttribute(INERT_MARK, '');
+        child.inert = true;
+      }
+    }
+  }, [livePanes]);
+
   const returnFocusTo = React.useRef<HTMLElement | null>(null);
-  const lastLive = React.useRef<HTMLElement[]>([]);
+  const lastLive = React.useRef<LivePane[]>([]);
+  const lastFocusInRoot = React.useRef<HTMLElement | null>(null);
   const holdsLock = React.useRef(false);
+
+  /*
+   * Focus can be taken away after the commit that moved it: a menu that
+   * opened or closed a pane restores focus to its own trigger when it
+   * finishes closing, which may be inert or hidden by then. For a few frames
+   * after an overlay opens or closes, focus that ends up nowhere useful is
+   * put back where it belongs.
+   */
+  const rescueFrame = React.useRef(0);
+  const cancelRescue = React.useCallback(() => {
+    if (rescueFrame.current) cancelAnimationFrame(rescueFrame.current);
+    rescueFrame.current = 0;
+  }, []);
+  const rescueFocus = React.useCallback(
+    (target: HTMLElement, lost: (active: Element | null) => boolean) => {
+      cancelRescue();
+      let frames = 0;
+      const tick = () => {
+        rescueFrame.current = 0;
+        if (!target.isConnected) return;
+        if (lost(target.ownerDocument.activeElement)) {
+          target.focus({ preventScroll: true });
+          return;
+        }
+        frames += 1;
+        if (frames < RESCUE_FRAMES) rescueFrame.current = requestAnimationFrame(tick);
+      };
+      rescueFrame.current = requestAnimationFrame(tick);
+    },
+    [cancelRescue],
+  );
 
   React.useEffect(
     () => () => {
+      cancelRescue();
       if (holdsLock.current) {
         holdsLock.current = false;
         updatePageLock(-1);
       }
     },
-    [],
+    [cancelRescue],
   );
 
+  // No dependency array, on purpose: a pane opening or closing is a render
+  // of this component, and so is a child appearing through the Root.
   React.useEffect(() => {
     const rootEl = rootRef.current;
     if (!rootEl) return;
-    const liveEls = [...store.entries.values()].filter((entry) => entry.overlayLive && entry.el).map((entry) => entry.el as HTMLElement);
+    const doc = rootEl.ownerDocument;
+    const live = livePanes();
+    const liveEls = live.map((pane) => pane.el);
 
-    const wantsLock = liveEls.length > 0;
+    const wantsLock = !contained && live.length > 0;
     if (wantsLock !== holdsLock.current) {
       holdsLock.current = wantsLock;
       updatePageLock(wantsLock ? 1 : -1);
     }
 
-    if (liveEls.length === 0) {
-      for (const [el, previous] of inertSnapshot) {
-        if (el.isConnected) el.inert = previous;
+    const previous = lastLive.current;
+    lastLive.current = live;
+    // A pane that left the live set because it closed, as opposed to one
+    // that is still open but stopped being an overlay at a breakpoint.
+    const closed = previous.filter((pane) => {
+      if (liveEls.includes(pane.el)) return false;
+      const entry = store.entries.get(pane.name);
+      return !pane.el.isConnected || !entry || entry.el !== pane.el || entry.value === 'closed';
+    });
+    const inClosed = (active: Element | null) => active !== null && closed.some((pane) => pane.el.contains(active));
+
+    // The return target is taken on the opening edge, before inerting: inerting
+    // the subtree that holds the trigger blurs it. Focus already inside the
+    // overlay (a pane that became one at a breakpoint) is no place to return
+    // to, and an opener in a portal (a menu item) goes away with its menu, so
+    // the last place focus held inside the frame stands in for it.
+    if (previous.length === 0 && live.length > 0) {
+      const active = doc.activeElement;
+      let target = active instanceof HTMLElement && !isNowhere(doc, active) && !liveEls.some((el) => el.contains(active)) ? active : null;
+      if (target && !rootEl.contains(target)) {
+        const inRoot = lastFocusInRoot.current;
+        if (inRoot && inRoot.isConnected && !liveEls.some((el) => el.contains(inRoot))) target = inRoot;
       }
-      inertSnapshot.clear();
+      returnFocusTo.current = target;
+    }
+
+    contain();
+
+    if (live.length === 0) {
       const before = returnFocusTo.current;
-      const leaving = lastLive.current;
       returnFocusTo.current = null;
-      lastLive.current = [];
-      // Focus goes back if it is nowhere useful, or still inside the pane
-      // that just closed: the browser has not always blurred it yet.
-      const active = document.activeElement;
-      const stranded = active === null || active === document.body || leaving.some((el) => el.contains(active));
-      if (before && before.isConnected && stranded) before.focus({ preventScroll: true });
+      // Every overlay that left only stopped being one: focus stays where it is.
+      if (closed.length === 0) return;
+      const usable = (el: HTMLElement | null) => el !== null && el.isConnected && !el.closest('[inert]') && !inClosed(el);
+      let target = usable(before) ? before : null;
+      for (const pane of closed) target ??= triggerFor(doc, pane.id);
+      if (!target) return;
+      const lost = (active: Element | null) => isNowhere(doc, active) || inClosed(active);
+      if (lost(doc.activeElement)) target.focus({ preventScroll: true });
+      else rescueFocus(target, lost);
       return;
     }
 
-    if (returnFocusTo.current === null) {
-      returnFocusTo.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    }
-
-    const exempt = new Set<Element>();
-    for (const el of liveEls) {
-      for (const child of rootEl.children) {
-        if (child === el || child.contains(el)) exempt.add(child);
+    // Some overlays closed while others stay: focus left in a closed one goes
+    // to the Trigger that opened it, if a live pane holds it, or to the pane
+    // on top.
+    if (closed.length > 0) {
+      const active = doc.activeElement;
+      if (isNowhere(doc, active) || inClosed(active)) {
+        let target: HTMLElement | null = null;
+        for (const pane of closed) target ??= triggerFor(doc, pane.id, liveEls);
+        (target ?? liveEls[liveEls.length - 1]).focus({ preventScroll: true });
       }
-    }
-
-    for (const child of rootEl.children) {
-      if (!(child instanceof HTMLElement)) continue;
-      if (child.classList.contains('rt-ShellScrim')) continue;
-      if (exempt.has(child)) {
-        if (inertSnapshot.has(child)) {
-          child.inert = inertSnapshot.get(child) ?? false;
-          inertSnapshot.delete(child);
-        }
-        continue;
-      }
-      if (!inertSnapshot.has(child)) inertSnapshot.set(child, child.inert);
-      child.inert = true;
     }
 
     // Focus moves in on the opening edge and nowhere else, and only when it
     // is not already somewhere the user put it inside the live set.
-    const previous = lastLive.current;
-    lastLive.current = liveEls;
-    const opened = liveEls.filter((el) => !previous.includes(el));
-    const active = document.activeElement;
+    const opened = liveEls.filter((el) => !previous.some((pane) => pane.el === el));
+    const active = doc.activeElement;
     if (opened.length > 0 && !liveEls.some((el) => el.contains(active))) {
       opened[0].focus({ preventScroll: true });
+      rescueFocus(opened[0], (now) => isNowhere(doc, now) || (now instanceof Element && now.closest('[inert]') !== null));
     }
   });
 
+  // A child that appears through its own state while an overlay is live does
+  // not render the Root, so the Root watches its children while one is.
+  React.useEffect(() => {
+    const rootEl = rootRef.current;
+    if (!rootEl || liveCount === 0 || typeof MutationObserver === 'undefined') return;
+    const observer = new MutationObserver(contain);
+    observer.observe(rootEl, { childList: true, subtree: true, attributes: true, attributeFilter: ['inert'] });
+    return () => observer.disconnect();
+  }, [liveCount, contain]);
+
   /*
-   * Escape closes the overlays. Listened on the Root rather than the document,
-   * so a dialog opened from inside a pane keeps its own Escape. It stops here
-   * when it closes something, so a Shell placed inside a dialog does not close
-   * the dialog too. It does not call preventDefault: a dismissal is not a
-   * cancelled default.
+   * Escape closes the overlays. It is handled as a React event on the Root, so
+   * a component inside a pane that answers Escape in its own onKeyDown runs
+   * first, and its preventDefault() or stopPropagation() keeps the pane open.
+   * When the Root closes something it stops the event there, so a React
+   * Escape handler above the Shell does not act on it too. A layer that
+   * listens on the document in the capture phase (Radix dialogs, menus and
+   * popovers) answers first and calls preventDefault() when it closes, so an
+   * enclosing Kookie Dialog closes before a Shell inside it is asked.
    */
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    onKeyDown?.(event);
+    if (event.key !== 'Escape' || event.defaultPrevented || liveCount === 0) return;
+    closeOverlays();
+    event.stopPropagation();
+  };
+
+  // With focus on the document itself (a pane closed under it, or a menu that
+  // closed and took focus with it), the Root never sees the key. While an
+  // overlay is live the document answers that one case.
   React.useEffect(() => {
     const rootEl = rootRef.current;
     if (!rootEl || liveCount === 0) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape' || event.defaultPrevented) return;
+    const doc = rootEl.ownerDocument;
+    const onDocumentKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape' || event.defaultPrevented || !isNowhere(doc, event.target)) return;
       closeOverlays();
-      event.stopPropagation();
     };
-    rootEl.addEventListener('keydown', onKeyDown);
-    return () => rootEl.removeEventListener('keydown', onKeyDown);
+    doc.addEventListener('keydown', onDocumentKeyDown);
+    return () => doc.removeEventListener('keydown', onDocumentKeyDown);
   }, [liveCount, closeOverlays]);
 
-  // A floating Panel sits beside the Rail when the Rail is showing.
+  const handleFocus = (event: React.FocusEvent<HTMLDivElement>) => {
+    onFocus?.(event);
+    if (event.target instanceof HTMLElement && rootRef.current?.contains(event.target)) lastFocusInRoot.current = event.target;
+  };
+
+  // A floating Panel sits beside the Rail when the Rail is showing, and
+  // beside its card when the Rail is inset.
   const rail = store.entries.get('rail');
-  const railOffset = rail && rail.value !== undefined && rail.value !== 'closed' ? rail.size : 0;
+  const railShown = rail !== undefined && rail.value !== undefined && rail.value !== 'closed';
+  const railOffset = railShown ? (insetPanes.has('rail') ? `calc(${rail.size}px + 2 * var(--shell-inset-gap))` : `${rail.size}px`) : undefined;
 
   // `full` writes no inline height: the stylesheet states it as 100vh with a
   // 100dvh override where supported, and an inline value would beat both.
@@ -232,13 +355,19 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
   return (
     <ShellStoreContext.Provider value={store}>
       <ShellInsetContext.Provider value={insetContext}>
+        {/* The Root is not a widget: it hears Escape bubbling up from the panes,
+            after their own handlers, to close the overlays. */}
+        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <div
           {...props}
           ref={composedRef}
           className={classNames('rt-ShellRoot', className)}
+          data-height={height === 'auto' ? 'auto' : undefined}
           data-has-inset={insetPanes.size > 0 || undefined}
           data-overlay-live={liveCount > 0 || undefined}
-          style={{ ...heightStyle, ...(railOffset ? ({ '--shell-rail-offset': `${railOffset}px` } as CSSPropertiesWithVars) : {}), ...style }}
+          onKeyDown={handleKeyDown}
+          onFocus={handleFocus}
+          style={{ ...heightStyle, ...(railOffset ? ({ '--shell-rail-offset': railOffset } as CSSPropertiesWithVars) : {}), ...style }}
         >
           {children}
           {/* Root-owned and always mounted. The stylesheet shows it while an
@@ -507,7 +636,6 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
       style={
         {
           ...style,
-          '--panel-size': `${expandedSize}px`,
           '--panel-expanded-size': `${expandedSize}px`,
         } as CSSPropertiesWithVars
       }

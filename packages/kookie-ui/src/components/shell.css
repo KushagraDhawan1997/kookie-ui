@@ -28,6 +28,8 @@
 .rt-ShellRoot {
   /* Read by inset panes. Declared here, so the documented override on the Root works. */
   --shell-inset-gap: var(--space-2);
+  /* Written inline by the Root while a Rail shows; stated here so a nested Shell never inherits its parent's. */
+  --shell-rail-offset: 0px;
 
   display: grid;
   grid-template-areas:
@@ -82,10 +84,7 @@
   padding-bottom: env(safe-area-inset-bottom, 0px);
   /* Prevent overscroll bounce from triggering parent scroll */
   overscroll-behavior: contain;
-}
-
-/* While an overlay is live, nothing positioned inside the content can paint over it. */
-.rt-ShellRoot[data-overlay-live] > .rt-ShellContent {
+  /* Nothing positioned inside the content, whatever its z-index, paints over a pane. */
   isolation: isolate;
 }
 
@@ -106,6 +105,8 @@
   --rt-shell-cap: initial;
   --rt-shell-offset: initial;
   --rt-shell-handle: initial;
+  --rt-shell-start: initial;
+  --rt-shell-thin: initial;
 
   display: flex;
   flex-direction: column;
@@ -118,6 +119,11 @@
   z-index: var(--rt-shell-z, 1);
   background-color: var(--rt-shell-surface);
   box-shadow: var(--rt-shell-shadow, none);
+}
+
+.rt-ShellPane:has(> .rt-ShellResizer) {
+  /* Above the pane beside it too, so the half of the handle that straddles into it can be grabbed. */
+  z-index: var(--rt-shell-z, 2);
 }
 
 .rt-ShellPane:focus {
@@ -134,13 +140,19 @@
   max-inline-size: var(--rt-shell-cap, none);
 }
 
+.rt-ShellPanel,
+.rt-ShellSidebar {
+  /* Where a floating Panel or Sidebar starts: beside the Rail. The cap subtracts it. */
+  --rt-shell-start: var(--rt-shell-offset, 0px);
+}
+
 .rt-ShellPanel {
   grid-row: var(--rt-shell-row, panel);
   grid-column: var(--rt-shell-col, panel);
   inset-block: 0;
   /* Beside the Rail when floating; zero in the frame. */
   inset-inline-start: var(--rt-shell-offset, 0px);
-  inline-size: var(--panel-size, 288px);
+  inline-size: var(--panel-size, var(--panel-expanded-size, 288px));
   max-inline-size: var(--rt-shell-cap, none);
 }
 
@@ -148,13 +160,15 @@
   grid-row: var(--rt-shell-row, sidebar);
   grid-column: var(--rt-shell-col, sidebar);
   inset-block: 0;
-  inset-inline-start: 0;
-  inline-size: var(--sidebar-size, 288px);
+  /* Beside the Rail when floating; zero in the frame. */
+  inset-inline-start: var(--rt-shell-offset, 0px);
+  inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
   max-inline-size: var(--rt-shell-cap, none);
 }
 
 .rt-ShellSidebar[data-thin] {
   inline-size: var(--sidebar-thin-size, 64px);
+  --rt-shell-thin: none;
 }
 
 .rt-ShellInspector {
@@ -162,7 +176,7 @@
   grid-column: var(--rt-shell-col, inspector);
   inset-block: 0;
   inset-inline-end: 0;
-  inline-size: var(--inspector-size, 320px);
+  inline-size: var(--inspector-size, var(--inspector-expanded-size, 320px));
   max-inline-size: var(--rt-shell-cap, none);
 }
 
@@ -171,7 +185,7 @@
   grid-column: var(--rt-shell-col, bottom);
   inset-inline: 0;
   inset-block-end: 0;
-  block-size: var(--bottom-size, 200px);
+  block-size: var(--bottom-size, var(--bottom-expanded-size, 200px));
   max-block-size: var(--rt-shell-cap, none);
 }
 
@@ -209,7 +223,7 @@
   --rt-shell-col: 1 / -1;
   --rt-shell-surface: var(--color-panel-solid);
   --rt-shell-shadow: var(--shadow-5);
-  --rt-shell-cap: calc(100% - var(--space-8));
+  --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
   --rt-shell-offset: var(--shell-rail-offset, 0px);
   --rt-shell-handle: none;
 }
@@ -233,6 +247,7 @@
 
 .rt-ShellSidebar[data-state='auto'][data-auto='thin'] {
   inline-size: var(--sidebar-thin-size, 64px);
+  --rt-shell-thin: none;
 }
 
 /* initial: below 520px, and the base every larger breakpoint overrides. */
@@ -257,7 +272,7 @@
   --rt-shell-col: 1 / -1;
   --rt-shell-surface: var(--color-panel-solid);
   --rt-shell-shadow: var(--shadow-5);
-  --rt-shell-cap: calc(100% - var(--space-8));
+  --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
   --rt-shell-offset: var(--shell-rail-offset, 0px);
   --rt-shell-handle: none;
 }
@@ -285,11 +300,13 @@
 }
 
 .rt-ShellSidebar[data-state='auto'][data-auto-initial='open'] {
-  inline-size: var(--sidebar-size, 288px);
+  inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
+  --rt-shell-thin: initial;
 }
 
 .rt-ShellSidebar[data-state='auto'][data-auto-initial='thin'] {
   inline-size: var(--sidebar-thin-size, 64px);
+  --rt-shell-thin: none;
 }
 
 @media (min-width: 520px) {
@@ -314,7 +331,7 @@
     --rt-shell-col: 1 / -1;
     --rt-shell-surface: var(--color-panel-solid);
     --rt-shell-shadow: var(--shadow-5);
-    --rt-shell-cap: calc(100% - var(--space-8));
+    --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
     --rt-shell-offset: var(--shell-rail-offset, 0px);
     --rt-shell-handle: none;
   }
@@ -342,11 +359,13 @@
   }
 
   .rt-ShellSidebar[data-state='auto'][data-auto-xs='open'] {
-    inline-size: var(--sidebar-size, 288px);
+    inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
+    --rt-shell-thin: initial;
   }
 
   .rt-ShellSidebar[data-state='auto'][data-auto-xs='thin'] {
     inline-size: var(--sidebar-thin-size, 64px);
+    --rt-shell-thin: none;
   }
 }
 
@@ -372,7 +391,7 @@
     --rt-shell-col: 1 / -1;
     --rt-shell-surface: var(--color-panel-solid);
     --rt-shell-shadow: var(--shadow-5);
-    --rt-shell-cap: calc(100% - var(--space-8));
+    --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
     --rt-shell-offset: var(--shell-rail-offset, 0px);
     --rt-shell-handle: none;
   }
@@ -400,11 +419,13 @@
   }
 
   .rt-ShellSidebar[data-state='auto'][data-auto-sm='open'] {
-    inline-size: var(--sidebar-size, 288px);
+    inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
+    --rt-shell-thin: initial;
   }
 
   .rt-ShellSidebar[data-state='auto'][data-auto-sm='thin'] {
     inline-size: var(--sidebar-thin-size, 64px);
+    --rt-shell-thin: none;
   }
 }
 
@@ -430,7 +451,7 @@
     --rt-shell-col: 1 / -1;
     --rt-shell-surface: var(--color-panel-solid);
     --rt-shell-shadow: var(--shadow-5);
-    --rt-shell-cap: calc(100% - var(--space-8));
+    --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
     --rt-shell-offset: var(--shell-rail-offset, 0px);
     --rt-shell-handle: none;
   }
@@ -458,11 +479,13 @@
   }
 
   .rt-ShellSidebar[data-state='auto'][data-auto-md='open'] {
-    inline-size: var(--sidebar-size, 288px);
+    inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
+    --rt-shell-thin: initial;
   }
 
   .rt-ShellSidebar[data-state='auto'][data-auto-md='thin'] {
     inline-size: var(--sidebar-thin-size, 64px);
+    --rt-shell-thin: none;
   }
 }
 
@@ -488,7 +511,7 @@
     --rt-shell-col: 1 / -1;
     --rt-shell-surface: var(--color-panel-solid);
     --rt-shell-shadow: var(--shadow-5);
-    --rt-shell-cap: calc(100% - var(--space-8));
+    --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
     --rt-shell-offset: var(--shell-rail-offset, 0px);
     --rt-shell-handle: none;
   }
@@ -516,11 +539,13 @@
   }
 
   .rt-ShellSidebar[data-state='auto'][data-auto-lg='open'] {
-    inline-size: var(--sidebar-size, 288px);
+    inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
+    --rt-shell-thin: initial;
   }
 
   .rt-ShellSidebar[data-state='auto'][data-auto-lg='thin'] {
     inline-size: var(--sidebar-thin-size, 64px);
+    --rt-shell-thin: none;
   }
 }
 
@@ -546,7 +571,7 @@
     --rt-shell-col: 1 / -1;
     --rt-shell-surface: var(--color-panel-solid);
     --rt-shell-shadow: var(--shadow-5);
-    --rt-shell-cap: calc(100% - var(--space-8));
+    --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
     --rt-shell-offset: var(--shell-rail-offset, 0px);
     --rt-shell-handle: none;
   }
@@ -574,11 +599,13 @@
   }
 
   .rt-ShellSidebar[data-state='auto'][data-auto-xl='open'] {
-    inline-size: var(--sidebar-size, 288px);
+    inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
+    --rt-shell-thin: initial;
   }
 
   .rt-ShellSidebar[data-state='auto'][data-auto-xl='thin'] {
     inline-size: var(--sidebar-thin-size, 64px);
+    --rt-shell-thin: none;
   }
 }
 
@@ -589,7 +616,8 @@
  * it. The pane shows, floating above the content at its edge. After every
  * breakpoint block, so it wins over a closed state at any width.
  */
-.rt-ShellPane[data-peek][data-state] {
+.rt-ShellPane[data-peek][data-state],
+.rt-ShellRail ~ .rt-ShellPanel[data-presentation-follows][data-peek][data-state] {
   --rt-shell-position: absolute;
   --rt-shell-z: 4;
   --rt-shell-row: 2 / 3;
@@ -603,7 +631,7 @@
 }
 
 .rt-ShellSidebar[data-peek][data-state] {
-  inline-size: var(--peek-sidebar-width, var(--sidebar-size, 288px));
+  inline-size: var(--peek-sidebar-width, var(--sidebar-size, var(--sidebar-expanded-size, 288px)));
 }
 
 /* ── Scrim ─────────────────────────────────────────────────────────────────── */
@@ -619,6 +647,16 @@
 
 .rt-ShellRoot[data-overlay-live] > .rt-ShellScrim {
   display: block;
+}
+
+/*
+ * A Shell with height="auto" grows with its page, so the page scrolls and the
+ * frame can be taller than the window. Its overlays and scrim are placed on
+ * the window, so an open drawer is on screen wherever the page is scrolled.
+ */
+.rt-ShellRoot[data-height='auto'] > .rt-ShellScrim,
+.rt-ShellRoot[data-height='auto'] > .rt-ShellPane[data-presentation='overlay'] {
+  position: fixed;
 }
 
 /* ── Inset ─────────────────────────────────────────────────────────────────── */
@@ -648,16 +686,38 @@
 /*
  * Two inset panes side by side share one gap rather than doubling it: the
  * later pane in the row drops the margin on the side that meets the earlier
- * one. A closed neighbour does not count.
+ * one. Only the pane right beside it counts, and only while it is shown in
+ * the frame (the JS mirror's data-presentation and data-mode), so a closed,
+ * hidden or floating pane never takes the gap away. Before hydration the
+ * gap is doubled.
  */
-.rt-ShellRoot:has(> .rt-ShellRail[data-inset]:not([data-state='closed'])) > .rt-ShellPanel[data-inset],
-.rt-ShellRoot:has(> :is(.rt-ShellRail, .rt-ShellPanel)[data-inset]:not([data-state='closed'])) > .rt-ShellSidebar[data-inset],
-.rt-ShellRoot:has(> :is(.rt-ShellRail, .rt-ShellPanel, .rt-ShellSidebar)[data-inset]:not([data-state='closed'])) > .rt-ShellContent[data-inset],
-.rt-ShellRoot:has(> :is(.rt-ShellRail, .rt-ShellPanel, .rt-ShellSidebar, .rt-ShellContent)[data-inset]:not([data-state='closed'])) > .rt-ShellInspector[data-inset] {
+.rt-ShellRoot:has(> .rt-ShellRail[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .rt-ShellPanel[data-inset][data-presentation='fixed'],
+.rt-ShellRoot:has(> .rt-ShellPanel[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .rt-ShellSidebar[data-inset][data-presentation='fixed'],
+.rt-ShellRoot:has(> .rt-ShellRail[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])):not(
+    :has(> .rt-ShellPanel[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))
+  )
+  > .rt-ShellSidebar[data-inset][data-presentation='fixed'],
+.rt-ShellRoot:has(> .rt-ShellSidebar[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .rt-ShellContent[data-inset],
+.rt-ShellRoot:has(> .rt-ShellPanel[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])):not(
+    :has(> .rt-ShellSidebar[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))
+  )
+  > .rt-ShellContent[data-inset],
+.rt-ShellRoot:has(> .rt-ShellRail[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])):not(
+    :has(> .rt-ShellPanel[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']), > .rt-ShellSidebar[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))
+  )
+  > .rt-ShellContent[data-inset],
+.rt-ShellRoot:has(> .rt-ShellContent[data-inset]) > .rt-ShellInspector[data-inset][data-presentation='fixed'] {
   margin-inline-start: 0;
 }
 
-.rt-ShellRoot:has(> :is(.rt-ShellRail, .rt-ShellPanel, .rt-ShellSidebar, .rt-ShellContent, .rt-ShellInspector)[data-inset]:not([data-state='closed'])) > .rt-ShellBottom[data-inset] {
+.rt-ShellRoot:has(
+    > .rt-ShellRail[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed']),
+    > .rt-ShellPanel[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed']),
+    > .rt-ShellSidebar[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed']),
+    > .rt-ShellContent[data-inset],
+    > .rt-ShellInspector[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])
+  )
+  > .rt-ShellBottom[data-inset] {
   margin-block-start: 0;
 }
 
@@ -670,7 +730,7 @@
   background: transparent;
   /* hit target size, adjustable per media */
   --resizer-hit: var(--space-3);
-  display: var(--rt-shell-handle, flex);
+  display: var(--rt-shell-thin, var(--rt-shell-handle, flex));
   align-items: center;
   justify-content: center;
   overflow: visible;
@@ -686,7 +746,7 @@
   transform: translateX(50%);
 }
 
-:where([dir='rtl']) .rt-ShellResizer[data-orientation='vertical'][data-edge='end'] {
+.rt-ShellResizer[data-orientation='vertical'][data-edge='end']:dir(rtl) {
   transform: translateX(-50%);
 }
 
@@ -699,7 +759,7 @@
   transform: translateX(-50%);
 }
 
-:where([dir='rtl']) .rt-ShellResizer[data-orientation='vertical'][data-edge='start'] {
+.rt-ShellResizer[data-orientation='vertical'][data-edge='start']:dir(rtl) {
   transform: translateX(50%);
 }
 

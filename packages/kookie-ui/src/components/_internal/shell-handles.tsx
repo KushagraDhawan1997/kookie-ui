@@ -62,20 +62,33 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
   }, [containerRef, cssVarName, defaultSize]);
 
   /**
-   * The largest size a drag may reach: the stated maximum, and never so large
-   * that the handle leaves the frame. Without the frame cap a pane with a
-   * generous `maxSize` could be dragged until its own handle was off screen.
+   * The largest size a resize may reach: the stated maximum, and never so
+   * large that the handle leaves the frame. The room is measured from the
+   * pane's anchored edge, which does not move, to the far edge of the frame,
+   * so a pane that starts after a Rail has less room than the frame's width.
+   * Without the cap a pane with a generous `maxSize` could be resized until
+   * its own handle was off screen.
    */
   const ceiling = React.useCallback(() => {
     const container = containerRef.current;
     const handle = handleRef.current;
     const frame = container?.closest('.rt-ShellRoot')?.getBoundingClientRect();
-    if (!frame || !handle) return maxSize;
-    const room = orientation === 'vertical' ? frame.width : frame.height;
-    const hit = orientation === 'vertical' ? handle.getBoundingClientRect().width : handle.getBoundingClientRect().height;
-    if (!(room > 0)) return maxSize;
+    if (!container || !frame || !handle) return maxSize;
+    const pane = container.getBoundingClientRect();
+    const hitBox = handle.getBoundingClientRect();
+    const sign = growth(getComputedStyle(container).direction === 'rtl');
+    let room: number;
+    if (orientation === 'vertical') room = sign > 0 ? frame.right - pane.left : pane.right - frame.left;
+    else room = sign > 0 ? frame.bottom - pane.top : pane.bottom - frame.top;
+    const hit = orientation === 'vertical' ? hitBox.width : hitBox.height;
+    if (!(frame.width > 0 && frame.height > 0) || !Number.isFinite(room)) return maxSize;
     return Math.max(minSize, Math.min(maxSize, Math.round(room - hit)));
-  }, [containerRef, maxSize, minSize, orientation]);
+  }, [containerRef, growth, maxSize, minSize, orientation]);
+
+  // The announced maximum is what a resize can reach now, not only the prop.
+  const announceCeiling = () => {
+    handleRef.current?.setAttribute('aria-valuemax', String(ceiling()));
+  };
 
   // The announced value is seeded from the real size once the pane has a box.
   React.useLayoutEffect(() => {
@@ -128,6 +141,7 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
         const startClient = orientation === 'vertical' ? e.clientX : e.clientY;
         const sign = growth(startStyle.direction === 'rtl');
         const cap = ceiling();
+        handleEl.setAttribute('aria-valuemax', String(cap));
         const clamp = (v: number) => Math.min(Math.max(v, minSize), cap);
 
         container.setAttribute('data-resizing', '');
@@ -216,11 +230,14 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
 
           if (collapsible && typeof collapseThreshold === 'number' && raw <= collapseThreshold) {
             // A drag past the threshold closes the pane and keeps no size: the
-            // pane opens again at the size it had before the drag.
+            // pane opens again at the size it had before the drag. The drag
+            // still ends, at that size, so a consumer that started something
+            // in onResizeStart can stop it.
             write(container, startSize);
             onResize?.(startSize);
             cleanup();
             requestCollapse?.();
+            onResizeEnd?.(startSize);
             return;
           }
 
@@ -268,15 +285,21 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
         props.onDoubleClick?.(e);
         if (!e.defaultPrevented && collapsible) requestToggle?.();
       }}
+      onFocus={(e) => {
+        props.onFocus?.(e);
+        announceCeiling();
+      }}
       onKeyDown={(e) => {
         props.onKeyDown?.(e);
         const container = containerRef.current;
         if (!container || e.defaultPrevented) return;
         const current = readSize();
-        const clamp = (v: number) => Math.min(Math.max(v, minSize), maxSize);
+        // The keys reach as far as a drag does: the frame caps both.
+        const cap = ceiling();
+        const clamp = (v: number) => Math.min(Math.max(v, minSize), cap);
         let next: number | undefined;
         if (e.key === 'Home') next = clamp(minSize);
-        else if (e.key === 'End') next = clamp(maxSize);
+        else if (e.key === 'End') next = clamp(cap);
         else {
           // The key moves the boundary along its axis; the pane grows or
           // shrinks the way a drag in that direction would, so Bottom's

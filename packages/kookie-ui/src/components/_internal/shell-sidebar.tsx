@@ -159,7 +159,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
 
   // A peek previews the width the next toggle would open to.
   const peekWidth = pane.peeking
-    ? (toggleModes === 'single' ? toggleSingle : toggleBoth)('closed', typeof defaultState === 'string' ? toValue(defaultState) : undefined) === 'thin'
+    ? (toggleModes === 'single' ? toggleSingle : toggleBoth)('closed', pane.defaultHereNow()) === 'thin'
       ? `${thinSize}px`
       : `var(--sidebar-size, ${expandedSize}px)`
     : undefined;
@@ -176,7 +176,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
       style={
         {
           ...style,
-          '--sidebar-size': `${expandedSize}px`,
+          '--sidebar-expanded-size': `${expandedSize}px`,
           '--sidebar-thin-size': `${thinSize}px`,
           '--sidebar-min-size': `${minSize}px`,
           '--sidebar-max-size': `${maxSize}px`,

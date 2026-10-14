@@ -42,7 +42,12 @@ export type ResizableOptions = {
   requestToggle: () => void;
 };
 
-const clampTo = (value: number, min: number | undefined, max: number | undefined) => Math.min(max ?? value, Math.max(min ?? value, value));
+/**
+ * Clamps to [min, max]. When the two cross (an app passing a maximum computed
+ * from a narrow window below its fixed minimum), the minimum wins, as it did
+ * in 0.7.
+ */
+const clampTo = (value: number, min: number | undefined, max: number | undefined) => Math.max(min ?? value, Math.min(max ?? value, value));
 
 /** Everything a resizable pane shares: size props, persistence, and the handle's context. */
 export function useResizablePane(options: ResizableOptions): PaneResizeContextValue {
@@ -85,29 +90,55 @@ export function useResizablePane(options: ResizableOptions): PaneResizeContextVa
 
   const toPx = React.useCallback((value: number | string | undefined) => normalizeToPx(value, orientation === 'vertical' ? 'horizontal' : 'vertical'), [orientation]);
 
+  /**
+   * The one way a size reaches the pane: the size variable, and the value
+   * every handle of this pane announces. Once anything but `expandedSize` has
+   * written a size (a default, a controlled value, a persisted value or a
+   * resize), the pane owns that size and a new `expandedSize` leaves it alone.
+   */
+  const ownedRef = React.useRef(false);
+  const writeSize = React.useCallback(
+    (value: number, own: boolean) => {
+      const el = elementRef.current;
+      if (!el) return;
+      el.style.setProperty(cssVarName, `${value}px`);
+      for (const handle of el.querySelectorAll(':scope > .rt-ShellResizer')) handle.setAttribute('aria-valuenow', String(Math.round(value)));
+      if (own) ownedRef.current = true;
+    },
+    [elementRef, cssVarName],
+  );
+
+  // expandedSize: the size until something else sets one. Declared first, so
+  // the effects below win on mount.
+  React.useLayoutEffect(() => {
+    if (!ownedRef.current) writeSize(options.expandedSize, false);
+  }, [options.expandedSize, writeSize]);
+
   // defaultSize: applied once, on mount.
   React.useLayoutEffect(() => {
-    const el = elementRef.current;
-    if (!el || size !== undefined || defaultSize === undefined) return;
+    if (size !== undefined || defaultSize === undefined) return;
     const px = toPx(defaultSize);
     if (typeof px !== 'number' || !Number.isFinite(px)) return;
     const clamped = clampTo(px, minSize, maxSize);
-    el.style.setProperty(cssVarName, `${clamped}px`);
+    writeSize(clamped, true);
     emitSizeChange(clamped, { reason: 'init' });
     // An uncontrolled initial value: applied on mount and never re-applied.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Controlled size. A drag stands until the app passes a different value.
+  // Not while the pane is an overlay: an overlay keeps its designed size, and
+  // an app's frame-sized limits (a maximum taken from the window) would
+  // otherwise squeeze the drawer and report the squeezed size back. The size
+  // is applied again when the pane returns to the frame.
   React.useLayoutEffect(() => {
-    const el = elementRef.current;
-    if (!el || size === undefined) return;
+    if (size === undefined || latest.current.overlayingNow()) return;
     const px = toPx(size);
     if (typeof px !== 'number' || !Number.isFinite(px)) return;
     const clamped = clampTo(px, minSize, maxSize);
-    el.style.setProperty(cssVarName, `${clamped}px`);
+    writeSize(clamped, true);
     emitSizeChange(clamped, { reason: 'controlled' });
-  }, [size, minSize, maxSize, cssVarName, elementRef, toPx, emitSizeChange]);
+  }, [size, minSize, maxSize, options.overlaying, toPx, writeSize, emitSizeChange]);
 
   // A persistence adapter from `paneId` when none is given.
   const adapter = React.useMemo<PaneSizePersistence | undefined>(() => {
@@ -142,10 +173,9 @@ export function useResizablePane(options: ResizableOptions): PaneResizeContextVa
     if (!resizable || !adapter?.load || latest.current.overlayingNow()) return undefined;
     let mounted = true;
     const apply = (value: number | undefined) => {
-      const el = elementRef.current;
-      if (!mounted || typeof value !== 'number' || !Number.isFinite(value) || !el) return;
+      if (!mounted || typeof value !== 'number' || !Number.isFinite(value)) return;
       const clamped = clampTo(value, minSize, maxSize);
-      el.style.setProperty(cssVarName, `${clamped}px`);
+      writeSize(clamped, true);
       latest.current.onResize?.(clamped);
     };
     const loaded = adapter.load();
@@ -159,10 +189,14 @@ export function useResizablePane(options: ResizableOptions): PaneResizeContextVa
     return () => {
       mounted = false;
     };
-  }, [resizable, adapter, options.overlaying, cssVarName, elementRef, minSize, maxSize, name]);
+  }, [resizable, adapter, options.overlaying, writeSize, minSize, maxSize, name]);
 
   const onResize = React.useCallback((value: number) => latest.current.onResize?.(value), []);
-  const onResizeStart = React.useCallback((value: number) => latest.current.onResizeStart?.(value), []);
+  const onResizeStart = React.useCallback((value: number) => {
+    // A resize makes the size the user's: a new expandedSize no longer moves it.
+    ownedRef.current = true;
+    latest.current.onResizeStart?.(value);
+  }, []);
   const onResizeEnd = React.useCallback(
     (value: number) => {
       latest.current.onResizeEnd?.(value);

@@ -15,9 +15,9 @@ export function toPaneValue(value: ResponsiveBoolean | undefined): PaneValue | P
 }
 
 /**
- * Where an untouched navigation column rests: open where it sits in the
- * frame, closed where it would cover it. An overlay is summoned, never
- * ambient.
+ * Where an untouched navigation column rests: open in the frame or stacked
+ * over it, closed where it would be an overlay. An overlay is summoned,
+ * never ambient.
  */
 export const navigationRest = (presentation: PresentationValue): PaneValue => (presentation === 'overlay' ? 'closed' : 'open');
 

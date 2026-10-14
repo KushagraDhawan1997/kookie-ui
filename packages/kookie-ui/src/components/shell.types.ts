@@ -34,9 +34,9 @@ export interface PaneBaseProps extends React.ComponentPropsWithoutRef<'div'> {
   maxSize?: number;
   resizable?: boolean;
   collapsible?: boolean;
-  /** @deprecated Use `onOpenChange`. Still called on every change to whether the pane is shown. */
+  /** @deprecated Use `onOpenChange`. Still called when a user's toggle or a controlled prop changes whether the pane is shown; never on mount or when the window crosses a breakpoint. */
   onExpand?: () => void;
-  /** @deprecated Use `onOpenChange`. Still called on every change to whether the pane is shown. */
+  /** @deprecated Use `onOpenChange`. Still called when a user's toggle or a controlled prop changes whether the pane is shown; never on mount or when the window crosses a breakpoint. */
   onCollapse?: () => void;
   onResize?: (size: number) => void;
   onResizeStart?: (size: number) => void;

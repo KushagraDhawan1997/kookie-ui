@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ShellInspectorSchema, ShellPanelSchema, ShellRailSchema, ShellSidebarSchema, ShellTriggerSchema } from '../../../src/components/schemas/shell.schema';
+import { ShellBottomSchema, ShellInspectorSchema, ShellPanelSchema, ShellRailSchema, ShellSidebarSchema, ShellTriggerSchema } from '../../../src/components/schemas/shell.schema';
 
 /**
  * The schema is read by tools rather than by the Shell, so nothing fails when
@@ -13,9 +13,12 @@ describe('Shell schema', () => {
     expect(ShellSidebarSchema.safeParse({ defaultState: { initial: 'collapsed', md: 'expanded' }, onStateChange: () => {} }).success).toBe(true);
   });
 
-  it('refuses props no pane takes', () => {
-    for (const prop of ['mode', 'defaultMode', 'onModeChange', 'resizer', 'height']) {
-      expect(ShellPanelSchema.safeParse({ [prop]: 'expanded' }).success, prop).toBe(false);
+  it('names no prop that no pane takes, on any pane', () => {
+    const panes = { ShellRailSchema, ShellPanelSchema, ShellSidebarSchema, ShellInspectorSchema, ShellBottomSchema };
+    for (const [name, schema] of Object.entries(panes)) {
+      for (const prop of ['mode', 'defaultMode', 'onModeChange', 'resizer', 'height']) {
+        expect(prop in schema.shape, `${name}.${prop}`).toBe(false);
+      }
     }
   });
 
