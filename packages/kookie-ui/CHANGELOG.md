@@ -1,4 +1,4 @@
-## [Unreleased](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.7.0...main): the Shell rebuild
+## [0.8.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.7.0...v0.8.0) (2026-10-14)
 
 The Shell is rebuilt on kookie-ui-v2's model, behind 0.7's API. Every prop and export from 0.7 still exists. What changes is behaviour, listed in full below, because each item is something an app could have depended on.
 
@@ -56,9 +56,9 @@ Marked `@deprecated` in the types only, with no warning: `onExpand` and `onColla
 
 `height` and `resizer` are removed from the pane props. No pane ever read them; a call site that still passes them compiles with an error and has them dropped at runtime, so they no longer reach the DOM.
 
-## [Unreleased](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.7.0...main): Shell bug fixes
+### Shell bug fixes
 
-Shell bug fixes. No API change and no behaviour a consumer relied on changes; each item is something that was documented or implied and did not work.
+No API change and no behaviour a consumer relied on changes; each item is something that was documented or implied and did not work.
 
 ### Bug Fixes
 
