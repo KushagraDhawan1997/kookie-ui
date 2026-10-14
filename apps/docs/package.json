@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@10.0.0",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "prebuild": "pnpm -w build:pkg",
     "dev": "next dev --webpack --port 2509",
@@ -11,7 +14,7 @@
     "optimize:icons": "node ./scripts/optimize-icons.cjs"
   },
   "dependencies": {
-    "@hugeicons/core-free-icons": "^4.3.4",
+    "@hugeicons/core-free-icons": "^4.3.5",
     "@hugeicons/react": "^1.1.10",
     "@kushagradhawan/kookie-ui": "workspace:*",
     "@mdx-js/loader": "^3.1.1",
