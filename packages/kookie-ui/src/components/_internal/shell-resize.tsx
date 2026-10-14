@@ -8,7 +8,11 @@ export interface PaneResizeContextValue {
   defaultSize: number;
   orientation: 'vertical' | 'horizontal';
   edge: 'start' | 'end';
-  computeNext: (clientPos: number, startClientPos: number, startSize: number) => number;
+  /**
+   * The size the pointer is asking for. `isRtl` is read once when the drag
+   * starts and passed in, so no move pays for a style recalculation.
+   */
+  computeNext: (clientPos: number, startClientPos: number, startSize: number, isRtl: boolean) => number;
   onResize?: (size: number) => void;
   onResizeStart?: (size: number) => void;
   onResizeEnd?: (size: number) => void;

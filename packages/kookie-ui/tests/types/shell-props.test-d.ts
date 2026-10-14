@@ -1,4 +1,4 @@
-import { expectAssignable } from 'tsd';
+import { expectAssignable, expectNotAssignable } from 'tsd';
 import type { ComponentProps } from 'react';
 import { Shell } from '../../dist/esm/components/index.js';
 
@@ -36,3 +36,11 @@ expectAssignable<InspectorProps>({ defaultOpen: true });
 expectAssignable<InspectorProps>({ open: true });
 // @ts-expect-error
 const invalidInspectorBoth: InspectorProps = { open: true, defaultOpen: true };
+
+// Root was cast to the Panel's component type, so TypeScript offered Panel's
+// props on Root and refused Root's own height values.
+type RootProps = ComponentProps<typeof Shell.Root>;
+expectAssignable<RootProps>({ children: null, height: 'full' });
+expectAssignable<RootProps>({ children: null, height: 480 });
+expectNotAssignable<RootProps>({ children: null, defaultOpen: true });
+expectNotAssignable<RootProps>({ children: null, onSizeChange: () => {} });

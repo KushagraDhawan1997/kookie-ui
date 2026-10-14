@@ -80,4 +80,22 @@ describe('pane resize drag', () => {
     fireEvent.pointerMove(window, { clientX: 280 });
     expect(onResize).not.toHaveBeenCalled();
   });
+
+  // Reading the text direction inside every move forced a style
+  // recalculation right after the previous move had written the size. The
+  // direction is read once when the drag starts.
+  it('reads no computed style while the pointer moves', () => {
+    renderWithProviders(<App />);
+    const slider = screen.getByRole('slider');
+
+    fireEvent.pointerDown(slider, { pointerId: 1, clientX: 0 });
+    const spy = vi.spyOn(window, 'getComputedStyle');
+    try {
+      for (let x = 210; x <= 290; x += 10) fireEvent.pointerMove(window, { clientX: x });
+      expect(spy).not.toHaveBeenCalled();
+    } finally {
+      spy.mockRestore();
+      fireEvent.pointerUp(window);
+    }
+  });
 });

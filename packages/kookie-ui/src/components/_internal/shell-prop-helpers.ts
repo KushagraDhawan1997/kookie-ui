@@ -15,6 +15,9 @@ export function omitPaneProps<T extends object, K extends KeyList<T>>(source: T,
 
 const PANE_BASE_INTERNAL_PROPS = [
   'presentation',
+  // `height` is declared on PaneBaseProps but read by no pane; without this it
+  // reached the DOM as an invalid attribute on the pane's div.
+  'height',
   'expandedSize',
   'minSize',
   'maxSize',

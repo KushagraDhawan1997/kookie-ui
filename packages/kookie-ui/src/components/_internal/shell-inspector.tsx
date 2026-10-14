@@ -2,7 +2,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import * as Sheet from '../sheet.js';
 import { VisuallyHidden } from '../visually-hidden.js';
-import { useInspectorMode, usePresentation, usePeek, useShellActions, useInset } from '../shell.context.js';
+import { useInspectorMode, usePresentation, usePeek, useShellActions, useInset, usePaneId } from '../shell.context.js';
 import { useResponsivePresentation, useResponsiveInitialState } from '../shell.hooks.js';
 import { PaneResizeContext } from './shell-resize.js';
 import { InspectorHandle, PaneHandle } from './shell-handles.js';
@@ -76,6 +76,7 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
     inset,
   } = initialProps;
   const inspectorDomProps = extractPaneDomProps(initialProps, INSPECTOR_DOM_PROP_KEYS);
+  const elementId = usePaneId('inspector', initialProps.id);
   const { inspectorMode, setInspectorMode } = useInspectorMode();
   const { currentBreakpointReady } = usePresentation();
   const { peekTarget } = usePeek();
@@ -321,8 +322,7 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
           defaultSize: expandedSize,
           orientation: 'vertical',
           edge: 'start',
-          computeNext: (client, startClient, startSize) => {
-            const isRtl = getComputedStyle(localRef.current!).direction === 'rtl';
+          computeNext: (client, startClient, startSize, isRtl) => {
             const delta = client - startClient;
             return startSize + (isRtl ? delta : -delta);
           },
@@ -384,7 +384,7 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
     const open = inspectorMode === 'expanded';
     return (
       <Sheet.Root open={open} onOpenChange={(o) => setInspectorMode(o ? 'expanded' : 'collapsed')}>
-        <Sheet.Content side="end" style={{ padding: 0 }} aria-label="Inspector" aria-describedby={undefined} width={{ initial: `${expandedSize}px` }}>
+        <Sheet.Content id={elementId} side="end" style={{ padding: 0 }} aria-label="Inspector" aria-describedby={undefined} width={{ initial: `${expandedSize}px` }}>
           <VisuallyHidden>
             <Sheet.Title>Inspector</Sheet.Title>
           </VisuallyHidden>
@@ -398,6 +398,7 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
   return (
     <div
       {...inspectorDomProps}
+      id={elementId}
       ref={setRef}
       className={classNames('rt-ShellInspector', className)}
       data-mode={inspectorMode}
@@ -405,12 +406,14 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
       data-presentation={currentBreakpointReady ? resolvedPresentation : undefined}
       data-open={(currentBreakpointReady && isStacked && isExpanded) || undefined}
       data-inset={inset || undefined}
-      style={{
-        ...style,
-        '--inspector-size': `${expandedSize}px`,
-        '--inspector-min-size': `${minSize}px`,
-        '--inspector-max-size': `${maxSize}px`,
-      } as CSSPropertiesWithVars}
+      style={
+        {
+          ...style,
+          '--inspector-size': `${expandedSize}px`,
+          '--inspector-min-size': `${minSize}px`,
+          '--inspector-max-size': `${maxSize}px`,
+        } as CSSPropertiesWithVars
+      }
     >
       <div className="rt-ShellInspectorContent" data-visible={isExpanded || undefined}>
         {contentChildren}

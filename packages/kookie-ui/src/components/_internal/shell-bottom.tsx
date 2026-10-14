@@ -2,7 +2,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import * as Sheet from '../sheet.js';
 import { VisuallyHidden } from '../visually-hidden.js';
-import { useBottomMode, usePresentation, usePeek, useShellActions, useInset } from '../shell.context.js';
+import { useBottomMode, usePresentation, usePeek, useShellActions, useInset, usePaneId } from '../shell.context.js';
 import { useResponsivePresentation, useResponsiveInitialState } from '../shell.hooks.js';
 import { PaneResizeContext } from './shell-resize.js';
 import { BottomHandle, PaneHandle } from './shell-handles.js';
@@ -76,6 +76,7 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((initi
     inset,
   } = initialProps;
   const bottomDomProps = extractPaneDomProps(initialProps, BOTTOM_DOM_PROP_KEYS);
+  const elementId = usePaneId('bottom', initialProps.id);
   const { bottomMode, setBottomMode } = useBottomMode();
   const { currentBreakpointReady } = usePresentation();
   const { peekTarget } = usePeek();
@@ -386,7 +387,7 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((initi
     const open = bottomMode === 'expanded';
     return (
       <Sheet.Root open={open} onOpenChange={(o) => setBottomMode(o ? 'expanded' : 'collapsed')}>
-        <Sheet.Content side="bottom" style={{ padding: 0 }} aria-label="Bottom panel" aria-describedby={undefined} height={{ initial: `${expandedSize}px` }}>
+        <Sheet.Content id={elementId} side="bottom" style={{ padding: 0 }} aria-label="Bottom panel" aria-describedby={undefined} height={{ initial: `${expandedSize}px` }}>
           <VisuallyHidden>
             <Sheet.Title>Bottom panel</Sheet.Title>
           </VisuallyHidden>
@@ -399,6 +400,7 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((initi
   return (
     <div
       {...bottomDomProps}
+      id={elementId}
       ref={setRef}
       className={classNames('rt-ShellBottom', className)}
       data-mode={bottomMode}
@@ -406,12 +408,14 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((initi
       data-presentation={currentBreakpointReady ? resolvedPresentation : undefined}
       data-open={(currentBreakpointReady && isStacked && isExpanded) || undefined}
       data-inset={inset || undefined}
-      style={{
-        ...style,
-        '--bottom-size': `${expandedSize}px`,
-        '--bottom-min-size': `${minSize}px`,
-        '--bottom-max-size': `${maxSize}px`,
-      } as CSSPropertiesWithVars}
+      style={
+        {
+          ...style,
+          '--bottom-size': `${expandedSize}px`,
+          '--bottom-min-size': `${minSize}px`,
+          '--bottom-max-size': `${maxSize}px`,
+        } as CSSPropertiesWithVars
+      }
     >
       <div className="rt-ShellBottomContent" data-visible={isExpanded || undefined}>
         {contentChildren}

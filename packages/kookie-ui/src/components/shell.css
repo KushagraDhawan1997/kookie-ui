@@ -19,13 +19,18 @@
   position: relative;
 }
 
-/* Default height when no height prop is provided */
-.rt-ShellRoot:not([style*='height']) {
+/*
+ * Default height. `height="full"` writes no inline style, so these apply;
+ * any other `height` is written inline and wins. The old selector keyed on
+ * `:not([style*='height'])` never matched, because Root wrote an inline
+ * `100vh` for the default, so the `100dvh` override could not apply.
+ */
+.rt-ShellRoot {
   height: 100vh;
 }
 
 @supports (height: 100dvh) {
-  .rt-ShellRoot:not([style*='height']) {
+  .rt-ShellRoot {
     height: 100dvh;
   }
 }
@@ -579,6 +584,39 @@
   .rt-ShellResizer {
     --resizer-hit: var(--space-6);
   }
+}
+
+/*
+ * Focus. The handle is a transparent hit area straddling the pane's edge, so
+ * an outline would draw a box around nothing in particular. It draws the
+ * system's focus value as a 2px line on the edge itself, which is the thing
+ * being moved. Before this the handle took focus and showed nothing.
+ */
+.rt-ShellResizer::before {
+  content: '';
+  position: absolute;
+  background-color: transparent;
+  pointer-events: none;
+}
+
+.rt-ShellResizer[data-orientation='vertical']::before {
+  inset-block: 0;
+  inset-inline-start: calc(50% - 1px);
+  inline-size: 2px;
+}
+
+.rt-ShellResizer[data-orientation='horizontal']::before {
+  inset-inline: 0;
+  inset-block-start: calc(50% - 1px);
+  block-size: 2px;
+}
+
+.rt-ShellResizer:focus-visible {
+  outline: none;
+}
+
+.rt-ShellResizer:focus-visible::before {
+  background-color: var(--focus-8);
 }
 
 /* --- Peek overlays (override after pane rules) --- */

@@ -109,9 +109,7 @@ export function usePresentation() {
 }
 
 // Peek slice
-export const PeekContext = React.createContext<{ peekTarget: PaneTarget | null; setPeekTarget: (t: PaneTarget | null) => void; peekPane: (t: PaneTarget) => void; clearPeek: () => void } | null>(
-  null,
-);
+export const PeekContext = React.createContext<{ peekTarget: PaneTarget | null; setPeekTarget: (t: PaneTarget | null) => void; peekPane: (t: PaneTarget) => void; clearPeek: () => void } | null>(null);
 export function usePeek() {
   const ctx = React.useContext(PeekContext);
   if (!ctx) throw new Error('usePeek must be used within Shell.Root');
@@ -124,11 +122,31 @@ export const ActionsContext = React.createContext<{
   expandPane: (t: PaneTarget) => void;
   collapsePane: (t: PaneTarget) => void;
   setSidebarToggleComputer?: (fn: (current: SidebarMode) => SidebarMode) => void;
+  /** The id a pane renders when the consumer gives it none. */
+  defaultPaneId: (t: PaneTarget) => string;
+  /** The id a pane actually renders: the consumer's, else the default. */
+  getPaneId: (t: PaneTarget) => string;
+  /** A pane reports a consumer-supplied id, or `undefined` to clear it. */
+  registerPaneId: (t: PaneTarget, id: string | undefined) => void;
 } | null>(null);
 export function useShellActions() {
   const ctx = React.useContext(ActionsContext);
   if (!ctx) throw new Error('useShellActions must be used within Shell.Root');
   return ctx;
+}
+
+/**
+ * The id a pane renders: the consumer's `id` if given, else one the Root
+ * minted. A consumer id is reported to the Root so a Trigger's
+ * `aria-controls` names the element that is actually there.
+ */
+export function usePaneId(target: PaneTarget, idProp: string | undefined): string {
+  const { defaultPaneId, registerPaneId } = useShellActions();
+  React.useLayoutEffect(() => {
+    registerPaneId(target, idProp);
+    return () => registerPaneId(target, undefined);
+  }, [target, idProp, registerPaneId]);
+  return idProp ?? defaultPaneId(target);
 }
 
 // Composition slice

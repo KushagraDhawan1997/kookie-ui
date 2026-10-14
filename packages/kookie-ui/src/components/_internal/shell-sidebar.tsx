@@ -2,7 +2,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import * as Sheet from '../sheet.js';
 import { VisuallyHidden } from '../visually-hidden.js';
-import { useSidebarMode, usePresentation, usePeek, useShellActions, useComposition, useInset } from '../shell.context.js';
+import { useSidebarMode, usePresentation, usePeek, useShellActions, useComposition, useInset, usePaneId } from '../shell.context.js';
 import { useResponsivePresentation, useResponsiveInitialState } from '../shell.hooks.js';
 import { PaneResizeContext } from './shell-resize.js';
 import { extractPaneDomProps } from './shell-prop-helpers.js';
@@ -87,6 +87,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
     inset,
   } = initialProps;
   const sidebarDomProps = extractPaneDomProps(initialProps, SIDEBAR_DOM_PROP_KEYS);
+  const elementId = usePaneId('sidebar', initialProps.id);
   const { sidebarMode, setSidebarMode } = useSidebarMode();
   const { currentBreakpointReady } = usePresentation();
   const { peekTarget } = usePeek();
@@ -374,8 +375,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
           defaultSize: expandedSize,
           orientation: 'vertical',
           edge: 'end',
-          computeNext: (client, startClient, startSize) => {
-            const isRtl = getComputedStyle(localRef.current!).direction === 'rtl';
+          computeNext: (client, startClient, startSize, isRtl) => {
             const delta = client - startClient;
             return startSize + (isRtl ? -delta : delta);
           },
@@ -458,6 +458,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
     return (
       <Sheet.Root open={open} onOpenChange={(o) => setSidebarMode(o ? 'expanded' : 'collapsed')}>
         <Sheet.Content
+          id={elementId}
           side="start"
           style={{ padding: 0 }}
           aria-label="Navigation"
@@ -477,6 +478,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
   return (
     <div
       {...sidebarDomProps}
+      id={elementId}
       ref={setRef}
       className={classNames('rt-ShellSidebar', className)}
       data-mode={sidebarMode}
@@ -484,14 +486,16 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((ini
       data-presentation={currentBreakpointReady ? resolvedPresentation : undefined}
       data-open={(currentBreakpointReady && isStacked && isContentVisible) || undefined}
       data-inset={inset || undefined}
-      style={{
-        ...style,
-        '--sidebar-size': `${expandedSize}px`,
-        '--sidebar-thin-size': `${thinSize}px`,
-        '--sidebar-min-size': `${minSize}px`,
-        '--sidebar-max-size': `${maxSize}px`,
-        ...peekStyles,
-      } as CSSPropertiesWithVars}
+      style={
+        {
+          ...style,
+          '--sidebar-size': `${expandedSize}px`,
+          '--sidebar-thin-size': `${thinSize}px`,
+          '--sidebar-min-size': `${minSize}px`,
+          '--sidebar-max-size': `${maxSize}px`,
+          ...peekStyles,
+        } as CSSPropertiesWithVars
+      }
     >
       <div className="rt-ShellSidebarContent" data-visible={isContentVisible || undefined}>
         {contentChildren}

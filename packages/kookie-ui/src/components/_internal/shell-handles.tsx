@@ -69,7 +69,12 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
           handleEl.setPointerCapture(pointerId);
         } catch {}
         const startClient = orientation === 'vertical' ? e.clientX : e.clientY;
-        const startSize = parseFloat(getComputedStyle(container).getPropertyValue(cssVarName) || `${defaultSize}`);
+        const startStyle = getComputedStyle(container);
+        const startSize = parseFloat(startStyle.getPropertyValue(cssVarName) || `${defaultSize}`);
+        // Direction cannot change mid-drag, so it is read here once. Reading it
+        // inside computeNext forced a style recalculation on every move, right
+        // after the previous move had written the size variable.
+        const isRtl = startStyle.direction === 'rtl';
         const clamp = (v: number) => Math.min(Math.max(v, minSize), maxSize);
         const body = document.body;
         const prevCursor = body.style.cursor;
@@ -102,7 +107,7 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
           lastHandledMove = ev;
 
           const client = orientation === 'vertical' ? ev.clientX : ev.clientY;
-          const next = clamp(computeNext(client, startClient, startSize));
+          const next = clamp(computeNext(client, startClient, startSize, isRtl));
           container.style.setProperty(cssVarName, `${next}px`);
           handleEl.setAttribute('aria-valuenow', String(next));
           onResize?.(next);
@@ -222,7 +227,10 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
         if (delta !== 0) {
           e.preventDefault();
           onResizeStart?.(current);
-          const signedDelta = orientation === 'vertical' ? (edge === 'start' ? -delta : delta) : delta;
+          // A handle on the pane's start edge grows the pane by moving toward
+          // the start, on either axis. Applying that only to the vertical axis
+          // inverted Bottom's keys: ArrowUp shrank a pane that dragging up grows.
+          const signedDelta = edge === 'start' ? -delta : delta;
           const next = clamp(current + signedDelta);
           container.style.setProperty(cssVarName, `${next}px`);
           (e.currentTarget as HTMLElement).setAttribute('aria-valuenow', String(next));
