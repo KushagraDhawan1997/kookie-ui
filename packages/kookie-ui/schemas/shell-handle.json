@@ -5,18 +5,21 @@
       "type": "object",
       "properties": {
         "className": {
-          "type": "string",
-          "description": "Additional CSS class name"
+          "description": "Additional CSS class name",
+          "type": "string"
         },
         "style": {
+          "description": "Inline styles",
           "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
           "additionalProperties": {
             "type": [
               "string",
               "number"
             ]
-          },
-          "description": "Inline styles"
+          }
         },
         "children": {
           "description": "Handle content"
@@ -29,6 +32,5 @@
   "title": "Shell-handle Component Props",
   "description": "Props schema for the shell-handle component in Kookie UI",
   "version": "1.0.0",
-  "generatedAt": "2025-09-10T19:04:45.609Z",
   "source": "Zod schema"
 }

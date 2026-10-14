@@ -2010,6 +2010,1661 @@
       "description": "Props schema for the toggle-icon-button component in Kookie UI",
       "version": "1.0.0",
       "source": "Zod schema"
+    },
+    "shell-root": {
+      "$ref": "#/definitions/Shell-rootSchema",
+      "definitions": {
+        "Shell-rootSchema": {
+          "type": "object",
+          "properties": {
+            "height": {
+              "default": "full",
+              "description": "Height of the frame. `full` is 100dvh, with 100vh where dvh is not supported.",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "full"
+                },
+                {
+                  "type": "string",
+                  "const": "auto"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            },
+            "className": {
+              "description": "Additional CSS class name",
+              "type": "string"
+            },
+            "style": {
+              "description": "Inline styles",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              }
+            },
+            "children": {
+              "description": "The Shell parts, and anything else, rendered in order"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-root Component Props",
+      "description": "Props schema for the shell-root component in Kookie UI",
+      "version": "1.0.0",
+      "source": "Zod schema"
+    },
+    "shell-header": {
+      "$ref": "#/definitions/Shell-headerSchema",
+      "definitions": {
+        "Shell-headerSchema": {
+          "type": "object",
+          "properties": {
+            "height": {
+              "default": 64,
+              "description": "Height of the header, in pixels",
+              "type": "number"
+            },
+            "className": {
+              "description": "Additional CSS class name",
+              "type": "string"
+            },
+            "style": {
+              "description": "Inline styles",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              }
+            },
+            "children": {
+              "description": "Header content"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-header Component Props",
+      "description": "Props schema for the shell-header component in Kookie UI",
+      "version": "1.0.0",
+      "source": "Zod schema"
+    },
+    "shell-rail": {
+      "$ref": "#/definitions/Shell-railSchema",
+      "definitions": {
+        "Shell-railSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "description": "The pane id. A Trigger points `aria-controls` at it.",
+              "type": "string"
+            },
+            "presentation": {
+              "default": "fixed",
+              "description": "Presentation mode",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "fixed",
+                    "overlay",
+                    "stacked"
+                  ],
+                  "description": "Presentation mode"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "initial": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "xs": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "sm": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "md": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "lg": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "xl": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "expandedSize": {
+              "default": 64,
+              "description": "Width in pixels",
+              "type": "number"
+            },
+            "inset": {
+              "description": "Lifts the pane off the frame and paints the backdrop behind it",
+              "type": "boolean"
+            },
+            "className": {
+              "description": "Additional CSS class name",
+              "type": "string"
+            },
+            "style": {
+              "description": "Inline styles",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              }
+            },
+            "children": {},
+            "open": {
+              "description": "The open state, when controlled. A responsive object is deprecated.",
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "initial": {
+                          "type": "boolean"
+                        },
+                        "xs": {
+                          "type": "boolean"
+                        },
+                        "sm": {
+                          "type": "boolean"
+                        },
+                        "md": {
+                          "type": "boolean"
+                        },
+                        "lg": {
+                          "type": "boolean"
+                        },
+                        "xl": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "Responsive open state"
+                }
+              ]
+            },
+            "defaultOpen": {
+              "description": "The starting state. A responsive object leaves the pane untouched, with that object as the answer at each breakpoint.",
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "initial": {
+                          "type": "boolean"
+                        },
+                        "xs": {
+                          "type": "boolean"
+                        },
+                        "sm": {
+                          "type": "boolean"
+                        },
+                        "md": {
+                          "type": "boolean"
+                        },
+                        "lg": {
+                          "type": "boolean"
+                        },
+                        "xl": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "Responsive open state"
+                }
+              ]
+            },
+            "collapsible": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-rail Component Props",
+      "description": "Props schema for the shell-rail component in Kookie UI",
+      "version": "1.0.0",
+      "source": "Zod schema"
+    },
+    "shell-panel": {
+      "$ref": "#/definitions/Shell-panelSchema",
+      "definitions": {
+        "Shell-panelSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "description": "The pane id. A Trigger points `aria-controls` at it.",
+              "type": "string"
+            },
+            "presentation": {
+              "description": "Presentation mode. With no value the panel follows the Rail's.",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "fixed",
+                    "overlay",
+                    "stacked"
+                  ],
+                  "description": "Presentation mode"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "initial": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "xs": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "sm": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "md": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "lg": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "xl": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "expandedSize": {
+              "default": 288,
+              "description": "Open width in pixels",
+              "type": "number"
+            },
+            "inset": {
+              "description": "Lifts the pane off the frame and paints the backdrop behind it",
+              "type": "boolean"
+            },
+            "className": {
+              "description": "Additional CSS class name",
+              "type": "string"
+            },
+            "style": {
+              "description": "Inline styles",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              }
+            },
+            "children": {},
+            "open": {
+              "description": "The open state, when controlled. A responsive object is deprecated.",
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "initial": {
+                          "type": "boolean"
+                        },
+                        "xs": {
+                          "type": "boolean"
+                        },
+                        "sm": {
+                          "type": "boolean"
+                        },
+                        "md": {
+                          "type": "boolean"
+                        },
+                        "lg": {
+                          "type": "boolean"
+                        },
+                        "xl": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "Responsive open state"
+                }
+              ]
+            },
+            "defaultOpen": {
+              "description": "The starting state. A responsive object leaves the pane untouched, with that object as the answer at each breakpoint.",
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "initial": {
+                          "type": "boolean"
+                        },
+                        "xs": {
+                          "type": "boolean"
+                        },
+                        "sm": {
+                          "type": "boolean"
+                        },
+                        "md": {
+                          "type": "boolean"
+                        },
+                        "lg": {
+                          "type": "boolean"
+                        },
+                        "xl": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "Responsive open state"
+                }
+              ]
+            },
+            "minSize": {
+              "default": 100,
+              "description": "Minimum width when resizing",
+              "type": "number"
+            },
+            "maxSize": {
+              "default": 800,
+              "description": "Maximum width when resizing",
+              "type": "number"
+            },
+            "resizable": {
+              "default": false,
+              "description": "Whether the panel can be resized",
+              "type": "boolean"
+            },
+            "collapsible": {
+              "default": true,
+              "description": "Whether a double-click on the handle closes the panel",
+              "type": "boolean"
+            },
+            "size": {
+              "description": "The size, when controlled",
+              "type": [
+                "number",
+                "string"
+              ]
+            },
+            "defaultSize": {
+              "description": "The starting size",
+              "type": [
+                "number",
+                "string"
+              ]
+            },
+            "sizeUpdate": {
+              "description": "Rate-limits onSizeChange across repeated resize ends, such as key presses on the handle. A drag calls it once, when the drag ends; use onResize for live sizes.",
+              "type": "string",
+              "enum": [
+                "throttle",
+                "debounce"
+              ]
+            },
+            "sizeUpdateMs": {
+              "type": "number"
+            },
+            "snapPoints": {
+              "description": "Deprecated, removed in 1.0",
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "snapTolerance": {
+              "description": "Deprecated, removed in 1.0",
+              "type": "number"
+            },
+            "collapseThreshold": {
+              "description": "Deprecated, removed in 1.0",
+              "type": "number"
+            },
+            "paneId": {
+              "description": "Deprecated, removed in 1.0",
+              "type": "string"
+            },
+            "persistence": {
+              "type": "object",
+              "properties": {},
+              "description": "Deprecated, removed in 1.0. Keep the size in your own state with `size`/`onSizeChange`.",
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-panel Component Props",
+      "description": "Props schema for the shell-panel component in Kookie UI",
+      "version": "1.0.0",
+      "source": "Zod schema"
+    },
+    "shell-sidebar": {
+      "$ref": "#/definitions/Shell-sidebarSchema",
+      "definitions": {
+        "Shell-sidebarSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "description": "The pane id. A Trigger points `aria-controls` at it.",
+              "type": "string"
+            },
+            "presentation": {
+              "default": {
+                "initial": "overlay",
+                "sm": "fixed"
+              },
+              "description": "Presentation mode",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "fixed",
+                    "overlay",
+                    "stacked"
+                  ],
+                  "description": "Presentation mode"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "initial": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "xs": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "sm": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "md": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "lg": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "xl": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "expandedSize": {
+              "default": 288,
+              "description": "Open width in pixels",
+              "type": "number"
+            },
+            "inset": {
+              "description": "Lifts the pane off the frame and paints the backdrop behind it",
+              "type": "boolean"
+            },
+            "className": {
+              "description": "Additional CSS class name",
+              "type": "string"
+            },
+            "style": {
+              "description": "Inline styles",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              }
+            },
+            "children": {},
+            "minSize": {
+              "default": 200,
+              "description": "Minimum width when resizing",
+              "type": "number"
+            },
+            "maxSize": {
+              "default": 400,
+              "description": "Maximum width when resizing",
+              "type": "number"
+            },
+            "resizable": {
+              "default": false,
+              "description": "Whether the sidebar can be resized",
+              "type": "boolean"
+            },
+            "collapsible": {
+              "default": true,
+              "description": "Whether a double-click on the handle closes the sidebar",
+              "type": "boolean"
+            },
+            "size": {
+              "description": "The size, when controlled",
+              "type": [
+                "number",
+                "string"
+              ]
+            },
+            "defaultSize": {
+              "description": "The starting size",
+              "type": [
+                "number",
+                "string"
+              ]
+            },
+            "sizeUpdate": {
+              "description": "Rate-limits onSizeChange across repeated resize ends, such as key presses on the handle. A drag calls it once, when the drag ends; use onResize for live sizes.",
+              "type": "string",
+              "enum": [
+                "throttle",
+                "debounce"
+              ]
+            },
+            "sizeUpdateMs": {
+              "type": "number"
+            },
+            "snapPoints": {
+              "description": "Deprecated, removed in 1.0",
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "snapTolerance": {
+              "description": "Deprecated, removed in 1.0",
+              "type": "number"
+            },
+            "collapseThreshold": {
+              "description": "Deprecated, removed in 1.0",
+              "type": "number"
+            },
+            "paneId": {
+              "description": "Deprecated, removed in 1.0",
+              "type": "string"
+            },
+            "persistence": {
+              "type": "object",
+              "properties": {},
+              "description": "Deprecated, removed in 1.0. Keep the size in your own state with `size`/`onSizeChange`.",
+              "additionalProperties": false
+            },
+            "state": {
+              "description": "The state, when controlled. A responsive object is deprecated.",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "collapsed",
+                    "thin",
+                    "expanded"
+                  ],
+                  "description": "Sidebar state"
+                },
+                {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "collapsed",
+                        "thin",
+                        "expanded"
+                      ],
+                      "description": "Sidebar state"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "initial": {
+                          "type": "string",
+                          "enum": [
+                            "collapsed",
+                            "thin",
+                            "expanded"
+                          ],
+                          "description": "Sidebar state"
+                        },
+                        "xs": {
+                          "type": "string",
+                          "enum": [
+                            "collapsed",
+                            "thin",
+                            "expanded"
+                          ],
+                          "description": "Sidebar state"
+                        },
+                        "sm": {
+                          "type": "string",
+                          "enum": [
+                            "collapsed",
+                            "thin",
+                            "expanded"
+                          ],
+                          "description": "Sidebar state"
+                        },
+                        "md": {
+                          "type": "string",
+                          "enum": [
+                            "collapsed",
+                            "thin",
+                            "expanded"
+                          ],
+                          "description": "Sidebar state"
+                        },
+                        "lg": {
+                          "type": "string",
+                          "enum": [
+                            "collapsed",
+                            "thin",
+                            "expanded"
+                          ],
+                          "description": "Sidebar state"
+                        },
+                        "xl": {
+                          "type": "string",
+                          "enum": [
+                            "collapsed",
+                            "thin",
+                            "expanded"
+                          ],
+                          "description": "Sidebar state"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "Responsive sidebar state"
+                }
+              ]
+            },
+            "defaultState": {
+              "description": "The starting state. With no value the sidebar is open where it is in the frame and closed where it is an overlay.",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "collapsed",
+                    "thin",
+                    "expanded"
+                  ],
+                  "description": "Sidebar state"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "initial": {
+                      "type": "string",
+                      "enum": [
+                        "collapsed",
+                        "thin",
+                        "expanded"
+                      ],
+                      "description": "Sidebar state"
+                    },
+                    "xs": {
+                      "type": "string",
+                      "enum": [
+                        "collapsed",
+                        "thin",
+                        "expanded"
+                      ],
+                      "description": "Sidebar state"
+                    },
+                    "sm": {
+                      "type": "string",
+                      "enum": [
+                        "collapsed",
+                        "thin",
+                        "expanded"
+                      ],
+                      "description": "Sidebar state"
+                    },
+                    "md": {
+                      "type": "string",
+                      "enum": [
+                        "collapsed",
+                        "thin",
+                        "expanded"
+                      ],
+                      "description": "Sidebar state"
+                    },
+                    "lg": {
+                      "type": "string",
+                      "enum": [
+                        "collapsed",
+                        "thin",
+                        "expanded"
+                      ],
+                      "description": "Sidebar state"
+                    },
+                    "xl": {
+                      "type": "string",
+                      "enum": [
+                        "collapsed",
+                        "thin",
+                        "expanded"
+                      ],
+                      "description": "Sidebar state"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "thinSize": {
+              "default": 64,
+              "description": "Width in the thin state",
+              "type": "number"
+            },
+            "toggleModes": {
+              "default": "both",
+              "description": "`both` goes collapsed, thin, expanded; `single` goes between collapsed and one open state",
+              "type": "string",
+              "enum": [
+                "both",
+                "single"
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-sidebar Component Props",
+      "description": "Props schema for the shell-sidebar component in Kookie UI",
+      "version": "1.0.0",
+      "source": "Zod schema"
+    },
+    "shell-content": {
+      "$ref": "#/definitions/Shell-contentSchema",
+      "definitions": {
+        "Shell-contentSchema": {
+          "type": "object",
+          "properties": {
+            "inset": {
+              "description": "Lifts the pane off the frame and paints the backdrop behind it",
+              "type": "boolean"
+            },
+            "className": {
+              "description": "Additional CSS class name",
+              "type": "string"
+            },
+            "style": {
+              "description": "Inline styles",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              }
+            },
+            "children": {
+              "description": "Main content"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-content Component Props",
+      "description": "Props schema for the shell-content component in Kookie UI",
+      "version": "1.0.0",
+      "source": "Zod schema"
+    },
+    "shell-inspector": {
+      "$ref": "#/definitions/Shell-inspectorSchema",
+      "definitions": {
+        "Shell-inspectorSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "description": "The pane id. A Trigger points `aria-controls` at it.",
+              "type": "string"
+            },
+            "presentation": {
+              "default": {
+                "initial": "overlay",
+                "sm": "fixed"
+              },
+              "description": "Presentation mode",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "fixed",
+                    "overlay",
+                    "stacked"
+                  ],
+                  "description": "Presentation mode"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "initial": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "xs": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "sm": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "md": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "lg": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "xl": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "expandedSize": {
+              "default": 320,
+              "description": "Open width in pixels",
+              "type": "number"
+            },
+            "inset": {
+              "description": "Lifts the pane off the frame and paints the backdrop behind it",
+              "type": "boolean"
+            },
+            "className": {
+              "description": "Additional CSS class name",
+              "type": "string"
+            },
+            "style": {
+              "description": "Inline styles",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              }
+            },
+            "children": {},
+            "open": {
+              "description": "The open state, when controlled. A responsive object is deprecated.",
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "initial": {
+                          "type": "boolean"
+                        },
+                        "xs": {
+                          "type": "boolean"
+                        },
+                        "sm": {
+                          "type": "boolean"
+                        },
+                        "md": {
+                          "type": "boolean"
+                        },
+                        "lg": {
+                          "type": "boolean"
+                        },
+                        "xl": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "Responsive open state"
+                }
+              ]
+            },
+            "defaultOpen": {
+              "description": "The starting state. A responsive object leaves the pane untouched, with that object as the answer at each breakpoint.",
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "initial": {
+                          "type": "boolean"
+                        },
+                        "xs": {
+                          "type": "boolean"
+                        },
+                        "sm": {
+                          "type": "boolean"
+                        },
+                        "md": {
+                          "type": "boolean"
+                        },
+                        "lg": {
+                          "type": "boolean"
+                        },
+                        "xl": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "Responsive open state"
+                }
+              ]
+            },
+            "minSize": {
+              "default": 200,
+              "description": "Minimum width when resizing",
+              "type": "number"
+            },
+            "maxSize": {
+              "default": 500,
+              "description": "Maximum width when resizing",
+              "type": "number"
+            },
+            "resizable": {
+              "default": false,
+              "description": "Whether the inspector can be resized",
+              "type": "boolean"
+            },
+            "collapsible": {
+              "default": true,
+              "description": "Whether a double-click on the handle closes the inspector",
+              "type": "boolean"
+            },
+            "size": {
+              "description": "The size, when controlled",
+              "type": [
+                "number",
+                "string"
+              ]
+            },
+            "defaultSize": {
+              "description": "The starting size",
+              "type": [
+                "number",
+                "string"
+              ]
+            },
+            "sizeUpdate": {
+              "description": "Rate-limits onSizeChange across repeated resize ends, such as key presses on the handle. A drag calls it once, when the drag ends; use onResize for live sizes.",
+              "type": "string",
+              "enum": [
+                "throttle",
+                "debounce"
+              ]
+            },
+            "sizeUpdateMs": {
+              "type": "number"
+            },
+            "snapPoints": {
+              "description": "Deprecated, removed in 1.0",
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "snapTolerance": {
+              "description": "Deprecated, removed in 1.0",
+              "type": "number"
+            },
+            "collapseThreshold": {
+              "description": "Deprecated, removed in 1.0",
+              "type": "number"
+            },
+            "paneId": {
+              "description": "Deprecated, removed in 1.0",
+              "type": "string"
+            },
+            "persistence": {
+              "type": "object",
+              "properties": {},
+              "description": "Deprecated, removed in 1.0. Keep the size in your own state with `size`/`onSizeChange`.",
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-inspector Component Props",
+      "description": "Props schema for the shell-inspector component in Kookie UI",
+      "version": "1.0.0",
+      "source": "Zod schema"
+    },
+    "shell-bottom": {
+      "$ref": "#/definitions/Shell-bottomSchema",
+      "definitions": {
+        "Shell-bottomSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "description": "The pane id. A Trigger points `aria-controls` at it.",
+              "type": "string"
+            },
+            "presentation": {
+              "default": "fixed",
+              "description": "Presentation mode",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "fixed",
+                    "overlay",
+                    "stacked"
+                  ],
+                  "description": "Presentation mode"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "initial": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "xs": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "sm": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "md": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "lg": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    },
+                    "xl": {
+                      "type": "string",
+                      "enum": [
+                        "fixed",
+                        "overlay",
+                        "stacked"
+                      ],
+                      "description": "Presentation mode"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "expandedSize": {
+              "default": 200,
+              "description": "Open height in pixels",
+              "type": "number"
+            },
+            "inset": {
+              "description": "Lifts the pane off the frame and paints the backdrop behind it",
+              "type": "boolean"
+            },
+            "className": {
+              "description": "Additional CSS class name",
+              "type": "string"
+            },
+            "style": {
+              "description": "Inline styles",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              }
+            },
+            "children": {},
+            "open": {
+              "description": "The open state, when controlled. A responsive object is deprecated.",
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "initial": {
+                          "type": "boolean"
+                        },
+                        "xs": {
+                          "type": "boolean"
+                        },
+                        "sm": {
+                          "type": "boolean"
+                        },
+                        "md": {
+                          "type": "boolean"
+                        },
+                        "lg": {
+                          "type": "boolean"
+                        },
+                        "xl": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "Responsive open state"
+                }
+              ]
+            },
+            "defaultOpen": {
+              "description": "The starting state. A responsive object leaves the pane untouched, with that object as the answer at each breakpoint.",
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "initial": {
+                          "type": "boolean"
+                        },
+                        "xs": {
+                          "type": "boolean"
+                        },
+                        "sm": {
+                          "type": "boolean"
+                        },
+                        "md": {
+                          "type": "boolean"
+                        },
+                        "lg": {
+                          "type": "boolean"
+                        },
+                        "xl": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "Responsive open state"
+                }
+              ]
+            },
+            "minSize": {
+              "default": 100,
+              "description": "Minimum height when resizing",
+              "type": "number"
+            },
+            "maxSize": {
+              "default": 400,
+              "description": "Maximum height when resizing",
+              "type": "number"
+            },
+            "resizable": {
+              "default": false,
+              "description": "Whether the bottom panel can be resized",
+              "type": "boolean"
+            },
+            "collapsible": {
+              "default": true,
+              "description": "Whether a double-click on the handle closes the panel",
+              "type": "boolean"
+            },
+            "size": {
+              "description": "The size, when controlled",
+              "type": [
+                "number",
+                "string"
+              ]
+            },
+            "defaultSize": {
+              "description": "The starting size",
+              "type": [
+                "number",
+                "string"
+              ]
+            },
+            "sizeUpdate": {
+              "description": "Rate-limits onSizeChange across repeated resize ends, such as key presses on the handle. A drag calls it once, when the drag ends; use onResize for live sizes.",
+              "type": "string",
+              "enum": [
+                "throttle",
+                "debounce"
+              ]
+            },
+            "sizeUpdateMs": {
+              "type": "number"
+            },
+            "snapPoints": {
+              "description": "Deprecated, removed in 1.0",
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "snapTolerance": {
+              "description": "Deprecated, removed in 1.0",
+              "type": "number"
+            },
+            "collapseThreshold": {
+              "description": "Deprecated, removed in 1.0",
+              "type": "number"
+            },
+            "paneId": {
+              "description": "Deprecated, removed in 1.0",
+              "type": "string"
+            },
+            "persistence": {
+              "type": "object",
+              "properties": {},
+              "description": "Deprecated, removed in 1.0. Keep the size in your own state with `size`/`onSizeChange`.",
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-bottom Component Props",
+      "description": "Props schema for the shell-bottom component in Kookie UI",
+      "version": "1.0.0",
+      "source": "Zod schema"
+    },
+    "shell-trigger": {
+      "$ref": "#/definitions/Shell-triggerSchema",
+      "definitions": {
+        "Shell-triggerSchema": {
+          "type": "object",
+          "properties": {
+            "target": {
+              "type": "string",
+              "enum": [
+                "left",
+                "rail",
+                "panel",
+                "sidebar",
+                "inspector",
+                "bottom"
+              ],
+              "description": "Which pane to drive"
+            },
+            "action": {
+              "default": "toggle",
+              "description": "Action to perform",
+              "type": "string",
+              "enum": [
+                "toggle",
+                "expand",
+                "collapse"
+              ]
+            },
+            "peekOnHover": {
+              "default": false,
+              "description": "Deprecated, removed in 1.0. Shows a preview of a closed pane on hover.",
+              "type": "boolean"
+            },
+            "type": {
+              "default": "button",
+              "description": "The button type",
+              "type": "string",
+              "enum": [
+                "button",
+                "submit",
+                "reset"
+              ]
+            },
+            "className": {
+              "description": "Additional CSS class name",
+              "type": "string"
+            },
+            "style": {
+              "description": "Inline styles",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              }
+            },
+            "children": {
+              "description": "Trigger content"
+            },
+            "aria-label": {
+              "description": "ARIA label for accessibility",
+              "type": "string"
+            },
+            "aria-labelledby": {
+              "description": "ARIA labelled by reference",
+              "type": "string"
+            },
+            "aria-describedby": {
+              "description": "ARIA described by reference",
+              "type": "string"
+            }
+          },
+          "required": [
+            "target"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-trigger Component Props",
+      "description": "Props schema for the shell-trigger component in Kookie UI",
+      "version": "1.0.0",
+      "source": "Zod schema"
+    },
+    "shell-handle": {
+      "$ref": "#/definitions/Shell-handleSchema",
+      "definitions": {
+        "Shell-handleSchema": {
+          "type": "object",
+          "properties": {
+            "className": {
+              "description": "Additional CSS class name",
+              "type": "string"
+            },
+            "style": {
+              "description": "Inline styles",
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              }
+            },
+            "children": {
+              "description": "Handle content"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Shell-handle Component Props",
+      "description": "Props schema for the shell-handle component in Kookie UI",
+      "version": "1.0.0",
+      "source": "Zod schema"
     }
   }
 }

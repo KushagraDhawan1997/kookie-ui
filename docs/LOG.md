@@ -2,9 +2,21 @@
 
 Decisions about Kookie UI v1 and why they were made. Newest first. The docs site is the source of truth for what the system says. This file records how it got there.
 
+## 2026-10-14: the Shell audit
+
+A multi-agent audit of the 0.8.0 branch confirmed 49 defects, each reproduced and argued against independently. Four exist only in the 0.7.1 code (fixed in 0.8.0 already), so the recommendation is to publish 0.8.0 and not 0.7.1 on its own. The rest are fixed in 0.8.0. The ones that changed a decision:
+
+- **Escape is handled as it bubbles to the Root**, after the panes' own handlers, not by a native listener on the Root. The native listener ran before every React handler inside the panes and stopped the event, so an input that answers Escape itself (Kookie's own `Sidebar.Search`) could never keep its pane open. With focus on the document, a document listener answers instead.
+- **The page lock belongs to a full-page Shell.** A Shell given its own height covers only its box and leaves the page alone. An `auto`-height Shell grows with its page, so its overlays and scrim are placed on the window.
+- **The Root marks what it inerts**, and clears only that. Snapshotting the app's own `inert` and restoring it overwrote changes the app made while the overlay was open.
+- **Focus return follows the pane, not only the element.** A pane that stops being an overlay at a breakpoint keeps focus; a pane closed from a menu gets focus back once the menu lets go; a pane that became an overlay with focus inside returns focus to its Trigger.
+- **A responsive controlled `open` is folded into the untouched table.** It is deprecated; this way it is right in the server HTML and fires nothing on a breakpoint crossing.
+- **`expandedSize` is the size only until something else sets one.** The React-owned default moved to `--<pane>-expanded-size`, so a re-render no longer overwrites a size the user dragged or the app set.
+- **A part must be a direct child of `Shell.Root`** (or sit in a `display: contents` wrapper) to take its place on the grid. The docs had said any wrapper was fine.
+
 ## 2026-10-12: the Shell rebuild (0.7.1 and 0.8.0)
 
-The Shell is rebuilt on v2's model behind v1's API, as `shell-plan.md` and swan-frontend's `shell-execution-plan.md` lay out. It ships in two releases, following the 2026-09-19 rule that internals and API changes ship apart: 0.7.1 fixes eight bugs on the old code, and 0.8.0 replaces the internals and adds the deprecation warnings. No working prop is removed until 1.0; only `height` and `resizer`, which no pane ever read, leave the pane types. Neither release is tagged or published yet.
+The Shell is rebuilt on v2's model behind v1's API, as `shell-plan.md` and the execution plan in Womp's app lay out. It ships in two releases, following the 2026-09-19 rule that internals and API changes ship apart: 0.7.1 fixes eight bugs on the old code, and 0.8.0 replaces the internals and adds the deprecation warnings. No working prop is removed until 1.0; only `height` and `resizer`, which no pane ever read, leave the pane types. Neither release is tagged or published yet.
 
 **What v2 decided, and v1 now agrees with:**
 
@@ -20,7 +32,7 @@ The Shell is rebuilt on v2's model behind v1's API, as `shell-plan.md` and swan-
 
 **Decisions the plan left open, taken provisionally.** Kushagra said to build it without answering §7 decisions 1, 2 and 6. These are the choices made, each the smallest change, and each can still be reversed before the tag:
 
-1. Sidebar `thin`: option (a). `state`/`defaultState`/`onStateChange` stay the Sidebar's API, and `thin` is a value the pane holds. swan recommended (b), deprecating the three values for `open` plus a `thin` boolean. That is a deprecation, so it can follow in a later minor.
+1. Sidebar `thin`: option (a). `state`/`defaultState`/`onStateChange` stay the Sidebar's API, and `thin` is a value the pane holds. Womp's app recommended (b), deprecating the three values for `open` plus a `thin` boolean. That is a deprecation, so it can follow in a later minor.
 2. Rail and Panel: kept as two parts. A Panel with no `presentation` of its own follows the Rail's.
 3. Peek: deprecated with a warning (§7 decision 3 closed as "remove").
 4. Snap points, `collapseThreshold`, `paneId` and persistence: deprecated with a warning (decision 4 closed as "remove"). Womp uses none of them.

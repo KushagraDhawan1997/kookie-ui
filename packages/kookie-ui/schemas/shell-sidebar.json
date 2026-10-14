@@ -4,7 +4,16 @@
     "Shell-sidebarSchema": {
       "type": "object",
       "properties": {
+        "id": {
+          "description": "The pane id. A Trigger points `aria-controls` at it.",
+          "type": "string"
+        },
         "presentation": {
+          "default": {
+            "initial": "overlay",
+            "sm": "fixed"
+          },
+          "description": "Presentation mode",
           "anyOf": [
             {
               "type": "string",
@@ -19,135 +28,83 @@
               "type": "object",
               "properties": {
                 "initial": {
-                  "$ref": "#/definitions/Shell-sidebarSchema/properties/presentation/anyOf/0",
+                  "type": "string",
+                  "enum": [
+                    "fixed",
+                    "overlay",
+                    "stacked"
+                  ],
                   "description": "Presentation mode"
                 },
                 "xs": {
-                  "$ref": "#/definitions/Shell-sidebarSchema/properties/presentation/anyOf/0",
+                  "type": "string",
+                  "enum": [
+                    "fixed",
+                    "overlay",
+                    "stacked"
+                  ],
                   "description": "Presentation mode"
                 },
                 "sm": {
-                  "$ref": "#/definitions/Shell-sidebarSchema/properties/presentation/anyOf/0",
+                  "type": "string",
+                  "enum": [
+                    "fixed",
+                    "overlay",
+                    "stacked"
+                  ],
                   "description": "Presentation mode"
                 },
                 "md": {
-                  "$ref": "#/definitions/Shell-sidebarSchema/properties/presentation/anyOf/0",
+                  "type": "string",
+                  "enum": [
+                    "fixed",
+                    "overlay",
+                    "stacked"
+                  ],
                   "description": "Presentation mode"
                 },
                 "lg": {
-                  "$ref": "#/definitions/Shell-sidebarSchema/properties/presentation/anyOf/0",
+                  "type": "string",
+                  "enum": [
+                    "fixed",
+                    "overlay",
+                    "stacked"
+                  ],
                   "description": "Presentation mode"
                 },
                 "xl": {
-                  "$ref": "#/definitions/Shell-sidebarSchema/properties/presentation/anyOf/0",
+                  "type": "string",
+                  "enum": [
+                    "fixed",
+                    "overlay",
+                    "stacked"
+                  ],
                   "description": "Presentation mode"
                 }
               },
               "additionalProperties": false
             }
-          ],
-          "description": "Responsive presentation configuration"
-        },
-        "mode": {
-          "type": "string",
-          "enum": [
-            "collapsed",
-            "thin",
-            "expanded"
-          ],
-          "description": "Sidebar state mode"
-        },
-        "defaultMode": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Shell-sidebarSchema/properties/mode"
-            },
-            {
-              "type": "object",
-              "properties": {
-                "initial": {
-                  "$ref": "#/definitions/Shell-sidebarSchema/properties/mode",
-                  "description": "Sidebar state mode"
-                },
-                "xs": {
-                  "$ref": "#/definitions/Shell-sidebarSchema/properties/mode",
-                  "description": "Sidebar state mode"
-                },
-                "sm": {
-                  "$ref": "#/definitions/Shell-sidebarSchema/properties/mode",
-                  "description": "Sidebar state mode"
-                },
-                "md": {
-                  "$ref": "#/definitions/Shell-sidebarSchema/properties/mode",
-                  "description": "Sidebar state mode"
-                },
-                "lg": {
-                  "$ref": "#/definitions/Shell-sidebarSchema/properties/mode",
-                  "description": "Sidebar state mode"
-                },
-                "xl": {
-                  "$ref": "#/definitions/Shell-sidebarSchema/properties/mode",
-                  "description": "Sidebar state mode"
-                }
-              },
-              "additionalProperties": false
-            }
-          ],
-          "description": "Initial sidebar mode",
-          "default": "expanded"
+          ]
         },
         "expandedSize": {
-          "type": "number",
           "default": 288,
-          "description": "Default width in pixels"
-        },
-        "minSize": {
-          "type": "number",
-          "default": 200,
-          "description": "Minimum width when resizing"
-        },
-        "maxSize": {
-          "type": "number",
-          "default": 400,
-          "description": "Maximum width when resizing"
-        },
-        "resizable": {
-          "type": "boolean",
-          "default": false,
-          "description": "Whether the sidebar can be resized"
-        },
-        "collapsible": {
-          "type": "boolean",
-          "default": true,
-          "description": "Whether the sidebar can be collapsed via resize handle"
-        },
-        "resizer": {},
-        "snapPoints": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          }
-        },
-        "snapTolerance": {
+          "description": "Open width in pixels",
           "type": "number"
         },
-        "collapseThreshold": {
-          "type": "number"
-        },
-        "paneId": {
-          "type": "string"
-        },
-        "persistence": {
-          "type": "object",
-          "properties": {},
-          "additionalProperties": false,
-          "description": "Size persistence adapter"
+        "inset": {
+          "description": "Lifts the pane off the frame and paints the backdrop behind it",
+          "type": "boolean"
         },
         "className": {
+          "description": "Additional CSS class name",
           "type": "string"
         },
         "style": {
+          "description": "Inline styles",
           "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
           "additionalProperties": {
             "type": [
               "string",
@@ -156,18 +113,251 @@
           }
         },
         "children": {},
+        "minSize": {
+          "default": 200,
+          "description": "Minimum width when resizing",
+          "type": "number"
+        },
+        "maxSize": {
+          "default": 400,
+          "description": "Maximum width when resizing",
+          "type": "number"
+        },
+        "resizable": {
+          "default": false,
+          "description": "Whether the sidebar can be resized",
+          "type": "boolean"
+        },
+        "collapsible": {
+          "default": true,
+          "description": "Whether a double-click on the handle closes the sidebar",
+          "type": "boolean"
+        },
+        "size": {
+          "description": "The size, when controlled",
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "defaultSize": {
+          "description": "The starting size",
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "sizeUpdate": {
+          "description": "Rate-limits onSizeChange across repeated resize ends, such as key presses on the handle. A drag calls it once, when the drag ends; use onResize for live sizes.",
+          "type": "string",
+          "enum": [
+            "throttle",
+            "debounce"
+          ]
+        },
+        "sizeUpdateMs": {
+          "type": "number"
+        },
+        "snapPoints": {
+          "description": "Deprecated, removed in 1.0",
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "snapTolerance": {
+          "description": "Deprecated, removed in 1.0",
+          "type": "number"
+        },
+        "collapseThreshold": {
+          "description": "Deprecated, removed in 1.0",
+          "type": "number"
+        },
+        "paneId": {
+          "description": "Deprecated, removed in 1.0",
+          "type": "string"
+        },
+        "persistence": {
+          "type": "object",
+          "properties": {},
+          "description": "Deprecated, removed in 1.0. Keep the size in your own state with `size`/`onSizeChange`.",
+          "additionalProperties": false
+        },
+        "state": {
+          "description": "The state, when controlled. A responsive object is deprecated.",
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "collapsed",
+                "thin",
+                "expanded"
+              ],
+              "description": "Sidebar state"
+            },
+            {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "collapsed",
+                    "thin",
+                    "expanded"
+                  ],
+                  "description": "Sidebar state"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "initial": {
+                      "type": "string",
+                      "enum": [
+                        "collapsed",
+                        "thin",
+                        "expanded"
+                      ],
+                      "description": "Sidebar state"
+                    },
+                    "xs": {
+                      "type": "string",
+                      "enum": [
+                        "collapsed",
+                        "thin",
+                        "expanded"
+                      ],
+                      "description": "Sidebar state"
+                    },
+                    "sm": {
+                      "type": "string",
+                      "enum": [
+                        "collapsed",
+                        "thin",
+                        "expanded"
+                      ],
+                      "description": "Sidebar state"
+                    },
+                    "md": {
+                      "type": "string",
+                      "enum": [
+                        "collapsed",
+                        "thin",
+                        "expanded"
+                      ],
+                      "description": "Sidebar state"
+                    },
+                    "lg": {
+                      "type": "string",
+                      "enum": [
+                        "collapsed",
+                        "thin",
+                        "expanded"
+                      ],
+                      "description": "Sidebar state"
+                    },
+                    "xl": {
+                      "type": "string",
+                      "enum": [
+                        "collapsed",
+                        "thin",
+                        "expanded"
+                      ],
+                      "description": "Sidebar state"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              ],
+              "description": "Responsive sidebar state"
+            }
+          ]
+        },
+        "defaultState": {
+          "description": "The starting state. With no value the sidebar is open where it is in the frame and closed where it is an overlay.",
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "collapsed",
+                "thin",
+                "expanded"
+              ],
+              "description": "Sidebar state"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "initial": {
+                  "type": "string",
+                  "enum": [
+                    "collapsed",
+                    "thin",
+                    "expanded"
+                  ],
+                  "description": "Sidebar state"
+                },
+                "xs": {
+                  "type": "string",
+                  "enum": [
+                    "collapsed",
+                    "thin",
+                    "expanded"
+                  ],
+                  "description": "Sidebar state"
+                },
+                "sm": {
+                  "type": "string",
+                  "enum": [
+                    "collapsed",
+                    "thin",
+                    "expanded"
+                  ],
+                  "description": "Sidebar state"
+                },
+                "md": {
+                  "type": "string",
+                  "enum": [
+                    "collapsed",
+                    "thin",
+                    "expanded"
+                  ],
+                  "description": "Sidebar state"
+                },
+                "lg": {
+                  "type": "string",
+                  "enum": [
+                    "collapsed",
+                    "thin",
+                    "expanded"
+                  ],
+                  "description": "Sidebar state"
+                },
+                "xl": {
+                  "type": "string",
+                  "enum": [
+                    "collapsed",
+                    "thin",
+                    "expanded"
+                  ],
+                  "description": "Sidebar state"
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
         "thinSize": {
-          "type": "number",
           "default": 64,
-          "description": "Width in thin mode"
+          "description": "Width in the thin state",
+          "type": "number"
         },
         "toggleModes": {
+          "default": "both",
+          "description": "`both` goes collapsed, thin, expanded; `single` goes between collapsed and one open state",
           "type": "string",
           "enum": [
             "both",
             "single"
-          ],
-          "description": "Available modes in toggle sequence"
+          ]
         }
       },
       "additionalProperties": false
@@ -177,6 +367,5 @@
   "title": "Shell-sidebar Component Props",
   "description": "Props schema for the shell-sidebar component in Kookie UI",
   "version": "1.0.0",
-  "generatedAt": "2025-09-10T19:04:45.608Z",
   "source": "Zod schema"
 }

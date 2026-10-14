@@ -46,7 +46,9 @@ On a window 768px or wider the sidebar sits in the frame and is open. Below 768p
 </Shell.Root>
 ```
 
-Every part is optional except `Shell.Content`. The Root renders its children in the order you write them, so other elements can sit between the parts, and a pane can be wrapped in another element. Each pane takes its own place on the grid.
+Every part is optional except `Shell.Content`. The Root renders every child in the order you write it, and each part takes its own place on the Root's grid. A part must therefore be a direct child of `Shell.Root`, or sit in a wrapper with `display: contents`; inside any other wrapper the wrapper takes the grid cell. Any other child is a grid item too: give it a place (`grid-area` or `position`), or it takes the first free cell.
+
+A Panel with no `presentation` of its own takes the Rail's. In the server HTML it does so only when it comes after the Rail in the same parent; otherwise it follows the Rail once the page is hydrated.
 
 ## Props
 
@@ -155,11 +157,11 @@ Panel, Sidebar, Inspector and Bottom take these props.
 | `size` | `number \| string` | | The size, when you control it. |
 | `defaultSize` | `number \| string` | | The starting size. |
 | `onSizeChange` | `(size, { reason }) => void` | | Called with the new size. `reason` is `'init'`, `'resize'` or `'controlled'`. |
-| `sizeUpdate` | `'throttle' \| 'debounce'` | | How often `onSizeChange` is called during a drag. |
+| `sizeUpdate` | `'throttle' \| 'debounce'` | | Rate-limits `onSizeChange` across repeated resize ends, such as key presses on the handle. A drag calls `onSizeChange` once, when it ends. Use `onResize` for live sizes. |
 | `sizeUpdateMs` | `number` | `50` | The interval for `sizeUpdate`. |
 | `minSize` | `number` | per pane | The smallest size, in pixels. |
-| `maxSize` | `number` | per pane | The largest size, in pixels. A drag also stops before the handle leaves the frame. |
-| `collapsible` | `boolean` | `true` | A double-click on the handle opens and closes the pane. |
+| `maxSize` | `number` | per pane | The largest size, in pixels. A drag or a key press also stops before the handle leaves the frame. |
+| `collapsible` | `boolean` | `true` | A double-click on the handle closes the pane. Reopen it with a Trigger. |
 | `onResizeStart` | `(size) => void` | | Called when a drag starts. |
 | `onResize` | `(size) => void` | | Called during a drag, at most once per animation frame, and once more with the final size. |
 | `onResizeEnd` | `(size) => void` | | Called when a drag ends. |
@@ -174,7 +176,13 @@ The pane takes its own column or row, and the content is narrower by its size.
 
 ### Overlay
 
-The pane covers the frame. A scrim covers everything else, the rest of the frame is `inert`, focus moves into the pane, and the page does not scroll. Escape or a press on the scrim closes it. An overlay that nobody has opened stays closed.
+The pane covers the frame. A scrim covers everything else, the rest of the frame is `inert`, and focus moves into the pane. Escape or a press on the scrim closes it, and focus goes back where it was. An overlay that nobody has opened stays closed.
+
+How far an overlay reaches depends on the Root's `height`:
+
+- `'full'` (the default): the overlay covers the window, and the page does not scroll while it is open.
+- `'auto'`: the frame grows with its content and the page scrolls, so the overlay and the scrim are placed on the window.
+- A number or a length: the Shell sits inside a page, and the overlay and the scrim cover only the Shell's box. The page still scrolls.
 
 ### Stacked
 
@@ -212,7 +220,7 @@ Pass `open` (or `state` on the Sidebar) with its change handler. The pane shows 
 - `'toggle'` for a Trigger, a double-click on the handle, or a drag past `collapseThreshold`.
 - `'dismiss'` for Escape or a press on the scrim.
 
-They are not called on mount, and not called when the window crosses a breakpoint.
+They are not called on mount, and not called when the window crosses a breakpoint. The deprecated `onExpand` and `onCollapse` follow the same rule, and also fire when a controlled `open` or `state` changes whether the pane is shown.
 
 ### Sidebar thin
 
@@ -342,7 +350,7 @@ The values are written to the pane as `data-presentation-<bp>` and `data-auto-<b
 - `Shell.Header` renders `<header>` and `Shell.Content` renders `<main>`.
 - `Shell.Trigger` sets `aria-controls` and `aria-expanded`.
 - An open overlay makes the rest of the frame `inert`, moves focus into the pane, and returns focus when the pane closes.
-- Escape closes open overlays. It is handled on the Root, so a dialog opened from inside a pane keeps its own Escape.
+- Escape closes open overlays. It is handled as the key bubbles up to the Root, after the panes' own handlers: a component inside a pane that answers Escape itself, and calls `preventDefault()` or `stopPropagation()`, keeps the pane open. A dialog or menu opened from a pane closes first.
 - The resize handle is a focusable `role="separator"` with `aria-controls`, `aria-valuenow`, `aria-valuemin` and `aria-valuemax`. The arrow keys move it by 8px (32px with Shift), and Home and End go to the limits. It shows a focus line on `:focus-visible`.
 
 ## Changelog

@@ -443,26 +443,29 @@ import Link from 'next/link';
 
 ## With Shell
 
-When used inside `Shell.Sidebar`, the sidebar inherits the shell's state. Control the `presentation` prop based on shell mode:
+`Sidebar` does not read the Shell's state by itself. Inside `Shell.Sidebar`, read the Shell's sidebar mode with `Shell.useSidebarMode()` in a small wrapper, and pass it to `presentation`:
 
-```tsx
+```tsx showLineNumbers
 import { Shell, Sidebar } from '@kushagradhawan/kookie-ui';
+
+function Nav() {
+  const { sidebarMode } = Shell.useSidebarMode();
+  return (
+    <Sidebar.Root presentation={sidebarMode === 'thin' ? 'thin' : 'expanded'}>
+      <Sidebar.Content>{/* Navigation items */}</Sidebar.Content>
+    </Sidebar.Root>
+  );
+}
 
 <Shell.Root>
   <Shell.Sidebar>
-    <Sidebar.Root presentation={sidebarMode === 'thin' ? 'thin' : 'expanded'}>
-      <Sidebar.Content>
-        {/* Navigation items */}
-      </Sidebar.Content>
-    </Sidebar.Root>
+    <Nav />
   </Shell.Sidebar>
-  <Shell.Content>
-    {/* Main content */}
-  </Shell.Content>
+  <Shell.Content>{/* Main content */}</Shell.Content>
 </Shell.Root>
 ```
 
-Note: The standalone `Sidebar` component does not automatically consume Shell context. Pass the presentation mode explicitly or use `useShell()` hook in a wrapper component.
+`Shell.useSidebarMode()` returns `sidebarMode` (`'collapsed'`, `'thin'` or `'expanded'`) and `setSidebarMode`. The setter acts like a Trigger: it calls the Shell Sidebar's `onStateChange` with `reason: 'toggle'`, and a controlled Sidebar changes only when you pass the new `state`. It must be called inside `Shell.Root`.
 
 ## Examples
 

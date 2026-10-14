@@ -1,3 +1,76 @@
+## [Unreleased](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.7.0...main): the Shell rebuild
+
+The Shell is rebuilt on kookie-ui-v2's model, behind 0.7's API. Every prop and export from 0.7 still exists. What changes is behaviour, listed in full below, because each item is something an app could have depended on.
+
+### ⚠ BREAKING CHANGES
+
+* **shell:** `onOpenChange` and `onStateChange` report what a user did, and nothing else. They, and the deprecated `onExpand` and `onCollapse`, no longer fire on mount or when the window crosses a breakpoint. `onExpand` and `onCollapse` still fire when a controlled `open` or `state` changes whether the pane is shown. `meta.reason` is `'toggle'` (a Trigger, a handle double-click, a drag past `collapseThreshold`) or the new `'dismiss'` (Escape, the scrim). `'init'`, `'responsive'`, `'panel'` and `'left'` stay in the types and are never sent. Code that read the starting state from `reason: 'init'` reads its own prop instead.
+* **shell:** a pane nobody has touched follows the window by itself. It renders `data-state="auto"` and the stylesheet shows or hides it at each breakpoint. Once a user opens or closes it, it keeps that state at every width.
+* **shell:** Sidebar and Inspector are overlays below 768px and in the frame from 768px. In 0.7 the Sidebar changed at 1024px and the Inspector at 1280px. To keep the old boundary, pass `presentation={{ initial: 'overlay', md: 'fixed' }}` (Sidebar) or `presentation={{ initial: 'overlay', lg: 'fixed' }}` (Inspector).
+* **shell:** an untouched Sidebar that is open on a wide window closes when the window narrows to an overlay, and opens again when it widens. In 0.7 it became an open drawer. A Sidebar the user opened stays open, as an overlay.
+* **shell:** the Rail and the Panel no longer drive each other. Closing the Rail leaves the Panel open, and opening the Panel leaves the Rail as it is. An app that wants the old behaviour writes it:
+  ```tsx
+  <Shell.Rail open={railOpen} onOpenChange={(open) => { setRailOpen(open); if (!open) setPanelOpen(false); }} />
+  ```
+  A Panel with no `presentation` of its own takes the Rail's.
+* **shell:** a pane is one element at every width. An overlay pane is no longer a Sheet in a portal: `.rt-Sheet*` selectors no longer match inside a Shell, overlay panes stay inside `Shell.Root`, and `Shell.Root` is its own stacking context (`isolation: isolate`), so a `z-index` inside the frame no longer competes with portals outside it. Crossing a breakpoint keeps a pane's children mounted, with their state and scroll position.
+* **shell:** `Shell.Root` renders its children as given, in JSX order. Children that are not Shell parts render (0.7 dropped them), a pane mounted later works, and a Sidebar renders beside a Rail and a Panel (0.7 dropped the Rail and the Panel). Each part takes its own place on the Root's grid, so a part must be a direct child of `Shell.Root` or sit in a `display: contents` wrapper, and any other child takes the first free grid cell unless it is given a place. The `.rt-ShellLeft` and `.rt-ShellBody` wrappers are gone, and `data-has-inset` is on `.rt-ShellRoot`.
+* **shell:** while an overlay is open, `Shell.Root` contains it. The Root's other children are `inert`, focus moves into the overlay and goes back where it was when the overlay closes, and Escape and a press on the scrim close every open overlay. A full-height Shell (the default `height="full"`) also stops the page scrolling (`data-rt-shell-lock` on `<html>`); with `height="auto"` the overlay and scrim are placed on the window; a Shell given its own height covers only its own box and leaves the page alone. Escape is handled as it bubbles up to the Root, after the panes' own handlers, so a component inside a pane that answers Escape itself keeps the pane open.
+* **shell:** the resize handle is `role="separator"` (it was `slider`) and names its pane with `aria-controls`. During a drag `onResize` is called at most once per animation frame, and once more with the final size when the drag ends.
+* **shell:** the Shell has no motion. A pane opens, closes and changes presentation in one frame. Every transition and animation in the Shell's stylesheet is removed.
+* **shell:** `data-visible` and `data-phase` are gone, and CSS written against them no longer matches. `data-mode`, `data-presentation` and the stacked `data-open` remain.
+* **shell:** the `meta.reason` union in the callback types gains `'dismiss'`. A handler whose parameter is annotated with the 0.7 union no longer type-checks; widen the annotation or drop it.
+* **shell:** a pane's size is written to `--<pane>-size` by the Shell, and the React-owned default moved to `--<pane>-expanded-size`. A changed `expandedSize` no longer overwrites a size the user dragged or the app set.
+
+### Features
+
+* **shell:** the first paint needs no script. A pane's presentation and its responsive defaults are written as data attributes (`data-presentation-<bp>`, `data-auto-<bp>`), and `@media` blocks at the same widths as `useBreakpoint` resolve them. The server HTML is the right layout, and nothing waits for hydration. Two things do wait: a floating Panel takes its place beside an open Rail, and the scrim, containment and page lock of an overlay that is open in the server HTML begin, once the page is hydrated.
+* **shell:** a pane re-renders when its own state changes, and a Trigger when the pane it names changes. Nothing else re-renders. The eleven contexts are now one registry.
+* **shell:** `Shell.Trigger` sets `aria-expanded`, and the consumer's `onClick` runs first: `event.preventDefault()` there cancels the trigger's action.
+
+### Bug Fixes
+
+* **shell:** a responsive `defaultOpen` on the Panel and the Inspector is honoured at each breakpoint. 0.7 coerced the object with `Boolean()`, so `{ initial: false, lg: true }` started open on every screen, and on a phone the overlay opened for one commit and took focus.
+* **shell:** a controlled, responsive value no longer fires `reason: 'responsive'` on every render.
+* **shell:** a responsive `open` on the Rail is resolved at the current breakpoint. 0.7 coerced it to open.
+* **shell:** a pane mounted after `Shell.Root` registers and honours its `defaultOpen`.
+* **shell:** focus returns to the trigger after an overlay closes.
+* **shell:** `collapseThreshold` is compared before the size is clamped to `minSize`, so a threshold below `minSize` collapses the pane.
+* **shell:** a drag stops before the pane's own handle leaves the frame, whatever `maxSize` allows.
+
+### Deprecations
+
+These are removed in 1.0. Each one in the first group warns once in development.
+
+| Deprecated | Use instead |
+| --- | --- |
+| `Shell.Left` | Render `Shell.Rail` and `Shell.Panel` directly in `Shell.Root` |
+| `<Shell.Trigger target="left">` | `target="rail"` |
+| `<Shell.Trigger peekOnHover>` | Open the pane |
+| A responsive object on a controlled `open` or `state` | A boolean from your own state, or a responsive `defaultOpen` / `defaultState` |
+| `snapPoints`, `collapseThreshold`, `paneId`, `persistence` | `size` and `onSizeChange`, kept in your own state |
+| `useShell()` | `Shell.Trigger`, or each pane's `open` / `onOpenChange` |
+| `useResponsivePresentation()` | Your own `presentation` value |
+
+Marked `@deprecated` in the types only, with no warning: `onExpand` and `onCollapse` (use `onOpenChange`; both still fire) and `snapTolerance`.
+
+`height` and `resizer` are removed from the pane props. No pane ever read them; a call site that still passes them compiles with an error and has them dropped at runtime, so they no longer reach the DOM.
+
+## [Unreleased](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.7.0...main): Shell bug fixes
+
+Shell bug fixes. No API change and no behaviour a consumer relied on changes; each item is something that was documented or implied and did not work.
+
+### Bug Fixes
+
+* **shell:** `Shell.Root` is typed as itself. It was cast to the Panel's component type, so TypeScript offered Panel's props on Root.
+* **shell:** `Shell.Panel` fires `onExpand` and `onCollapse`. The props were accepted and dropped; the panel now fires them on the same terms as the other panes, on any change to whether it is shown and never on mount.
+* **shell:** `Shell.Trigger` renders `type="button"`, so it no longer submits a form it sits in, and sets `aria-controls` to the id of the pane it controls. Panes render an id when given none; a pane's own `id` is honoured and the trigger follows it.
+* **shell:** the arrow keys on `Shell.Bottom`'s resize handle move the same way as a drag. ArrowUp grows the pane and ArrowDown shrinks it; they were inverted.
+* **shell:** the `100dvh` default height applies. Root wrote an inline `100vh` for `height="full"`, which beat the stylesheet's `100dvh` override, so mobile browsers sized the shell to the larger viewport. The default is now stated only in the stylesheet.
+* **shell:** the resize handle shows keyboard focus, as a 2px line in the focus colour along the pane edge. It took focus and drew nothing.
+* **shell:** a resize drag reads the text direction once, when it starts, instead of calling `getComputedStyle` on every pointer move.
+* **shell:** the `height` prop on a pane no longer reaches the DOM as an invalid attribute.
+
 ## [0.7.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.6.2...v0.7.0) (2026-09-20)
 
 
