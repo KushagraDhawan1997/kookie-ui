@@ -1,50 +1,38 @@
+'use client';
+
 import * as React from 'react';
 import classNames from 'classnames';
-import * as Sheet from '../sheet.js';
-import { VisuallyHidden } from '../visually-hidden.js';
-import { useBottomMode, usePresentation, usePeek, useShellActions, useInset, usePaneId } from '../shell.context.js';
-import { useResponsivePresentation, useResponsiveInitialState } from '../shell.hooks.js';
+import { useComposedRefs } from 'radix-ui/internal';
 import { PaneResizeContext } from './shell-resize.js';
 import { BottomHandle, PaneHandle } from './shell-handles.js';
-import { _BREAKPOINTS } from '../shell.types.js';
-import type { Breakpoint, PaneMode, PaneSizePersistence, PaneBaseProps, CSSPropertiesWithVars } from '../shell.types.js';
-import { extractPaneDomProps, mapResponsiveBooleanToPaneMode } from './shell-prop-helpers.js';
-import { normalizeToPx } from '../../helpers/normalize-to-px.js';
+import { usePane, paneAttributes, usePresentationTable } from './shell-pane.js';
+import { splitHandles, useResizablePane, type SizeChangeMeta } from './shell-resizable.js';
+import { useInsetRegistration, warnOnce } from './shell-store.js';
+import { bottomAnchoredGrowth, detailRest, toPaneValue, withoutRemovedPaneProps } from './shell-rest.js';
+import { readBreakpoint } from '../../hooks/use-breakpoint.js';
+import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps } from '../shell.types.js';
 
-type BottomOpenChangeMeta = { reason: 'init' | 'toggle' | 'responsive' };
+type BottomOpenChangeMeta = { reason: 'init' | 'toggle' | 'responsive' | 'dismiss' };
 type BottomControlledProps = { open: boolean | Partial<Record<Breakpoint, boolean>>; onOpenChange?: (open: boolean, meta: BottomOpenChangeMeta) => void; defaultOpen?: never };
-type BottomUncontrolledProps = { defaultOpen?: boolean; onOpenChange?: (open: boolean, meta: BottomOpenChangeMeta) => void; open?: never };
+/** Since 0.8.0 `defaultOpen` takes a responsive object here too, as the docs already said it did. */
+type BottomUncontrolledProps = { defaultOpen?: boolean | Partial<Record<Breakpoint, boolean>>; onOpenChange?: (open: boolean, meta: BottomOpenChangeMeta) => void; open?: never };
 type BottomSizeControlledProps = { size: number | string; defaultSize?: never };
 type BottomSizeUncontrolledProps = { defaultSize?: number | string; size?: never };
-type BottomSizeChangeMeta = { reason: 'init' | 'resize' | 'controlled' };
 type BottomPublicProps = PaneBaseProps &
   (BottomControlledProps | BottomUncontrolledProps) &
   (BottomSizeControlledProps | BottomSizeUncontrolledProps) & {
-    onSizeChange?: (size: number, meta: BottomSizeChangeMeta) => void;
+    onSizeChange?: (size: number, meta: SizeChangeMeta) => void;
     sizeUpdate?: 'throttle' | 'debounce';
     sizeUpdateMs?: number;
-    /** When true, adds margin and triggers gray backdrop on Shell. */
+    /** When true, adds margin and triggers the gray backdrop on the Shell. */
     inset?: boolean;
   };
 
 type BottomComponent = React.ForwardRefExoticComponent<BottomPublicProps & React.RefAttributes<HTMLDivElement>> & { Handle: typeof BottomHandle };
 
-const BOTTOM_DOM_PROP_KEYS = [
-  'className',
-  'children',
-  'defaultOpen',
-  'open',
-  'onOpenChange',
-  'size',
-  'defaultSize',
-  'onSizeChange',
-  'sizeUpdate',
-  'sizeUpdateMs',
-  'style',
-  'inset',
-] as const satisfies readonly (keyof BottomPublicProps)[];
+const BOTTOM_PROP_NAMES = { controlled: 'open', default: 'defaultOpen' };
 
-export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((initialProps, ref) => {
+export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((props, ref) => {
   const {
     className,
     presentation = 'fixed',
@@ -74,340 +62,80 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((initi
     sizeUpdate,
     sizeUpdateMs = 50,
     inset,
-  } = initialProps;
-  const bottomDomProps = extractPaneDomProps(initialProps, BOTTOM_DOM_PROP_KEYS);
-  const elementId = usePaneId('bottom', initialProps.id);
-  const { bottomMode, setBottomMode } = useBottomMode();
-  const { currentBreakpointReady } = usePresentation();
-  const { peekTarget } = usePeek();
-  const { togglePane } = useShellActions();
-  const { registerInset, unregisterInset } = useInset();
+    id,
+    ...domProps
+  } = props;
 
-  // Register/unregister inset
-  React.useLayoutEffect(() => {
-    if (inset) {
-      registerInset('bottom');
-      return () => unregisterInset('bottom');
+  const { table, attributes } = usePresentationTable(presentation, 'fixed');
+  const pane = usePane({
+    name: 'bottom',
+    label: 'Bottom',
+    propNames: BOTTOM_PROP_NAMES,
+    id,
+    controlled: toPaneValue(open),
+    defaultValue: toPaneValue(defaultOpen),
+    presentationTable: table,
+    builtIn: detailRest,
+    onChange: (value, reason) => onOpenChange?.(value !== 'closed', { reason }),
+    onExpand,
+    onCollapse,
+    size: expandedSize,
+  });
+  useInsetRegistration('bottom', inset);
+
+  React.useEffect(() => {
+    if (snapPoints !== undefined || collapseThreshold !== undefined || paneId !== undefined || persistence !== undefined) {
+      warnOnce('Shell.Bottom: `snapPoints`, `collapseThreshold`, `paneId` and `persistence` are deprecated and are removed in 1.0. Keep the size in your own state with `size`/`onSizeChange`.');
     }
-  }, [inset, registerInset, unregisterInset]);
-  const resolvedPresentation = useResponsivePresentation(presentation);
-  const isOverlay = resolvedPresentation === 'overlay';
-  const isStacked = resolvedPresentation === 'stacked';
-  const localRef = React.useRef<HTMLDivElement | null>(null);
-  const setRef = React.useCallback(
-    (node: HTMLDivElement | null) => {
-      localRef.current = node;
-      if (typeof ref === 'function') ref(node);
-      else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
-    },
-    [ref],
-  );
-  const childArray = React.Children.toArray(children) as React.ReactElement[];
-  const handleChildren = childArray.filter((el: React.ReactElement) => React.isValidElement(el) && el.type === BottomHandle);
-  const contentChildren = childArray.filter((el: React.ReactElement) => !(React.isValidElement(el) && el.type === BottomHandle));
+  }, [snapPoints, collapseThreshold, paneId, persistence]);
 
-  // Stable ref for onOpenChange to avoid effect dep churn
-  const onOpenChangeRef = React.useRef(onOpenChange);
-  const openRef = React.useRef(open);
-  React.useLayoutEffect(() => {
-    onOpenChangeRef.current = onOpenChange;
-    openRef.current = open;
+  const elementRef = React.useRef<HTMLElement | null>(null);
+  const composedRef = useComposedRefs(ref, pane.setElement, elementRef);
+
+  const resize = useResizablePane({
+    name: 'bottom',
+    elementId: pane.id,
+    elementRef,
+    cssVarName: '--bottom-size',
+    orientation: 'horizontal',
+    edge: 'start',
+    growth: bottomAnchoredGrowth,
+    expandedSize,
+    minSize,
+    maxSize,
+    resizable,
+    collapsible,
+    size,
+    defaultSize,
+    onSizeChange,
+    sizeUpdate,
+    sizeUpdateMs,
+    onResize,
+    onResizeStart,
+    onResizeEnd,
+    snapPoints,
+    snapTolerance,
+    collapseThreshold,
+    paneId,
+    persistence,
+    overlaying: pane.overlaying,
+    overlayingNow: () => table[readBreakpoint()] === 'overlay',
+    requestCollapse: () => pane.setValue('closed', 'toggle'),
+    requestToggle: () => pane.toggle('toggle'),
   });
 
-  const normalizedControlledOpen = React.useMemo(() => mapResponsiveBooleanToPaneMode(open), [open]);
-  const normalizedDefaultOpen = React.useMemo(() => mapResponsiveBooleanToPaneMode(defaultOpen), [defaultOpen]);
-  const openIsResponsive = typeof open === 'object' && open !== null;
-  const { resolvedControlled: resolvedBottomControlled } = useResponsiveInitialState<PaneMode>({
-    controlledValue: normalizedControlledOpen,
-    defaultValue: normalizedDefaultOpen,
-    currentValue: bottomMode,
-    setValue: setBottomMode,
-    breakpointReady: currentBreakpointReady,
-    controlledIsResponsive: openIsResponsive,
-    onResponsiveChange: (next) => onOpenChangeRef.current?.(next === 'expanded', { reason: 'responsive' }),
-    onInit: (initial) => {
-      if (typeof openRef.current === 'undefined') {
-        onOpenChangeRef.current?.(initial === 'expanded', { reason: 'init' });
-      }
-    },
-  });
-
-  // Ref for debounce cleanup
-  const debounceTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  // Cleanup debounce timeout on unmount or when dependencies change
-  React.useEffect(() => {
-    return () => {
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
-        debounceTimeoutRef.current = null;
-      }
-    };
-  }, [onSizeChange, sizeUpdate, sizeUpdateMs]);
-  // Throttled/debounced emitter for onSizeChange
-  const emitSizeChange = React.useMemo(() => {
-    const cb = onSizeChange as undefined | ((s: number, meta: BottomSizeChangeMeta) => void);
-    const strategy = sizeUpdate as undefined | 'throttle' | 'debounce';
-    const ms = sizeUpdateMs ?? 50;
-    if (!cb) return () => {};
-    if (strategy === 'debounce') {
-      return (s: number, meta: BottomSizeChangeMeta) => {
-        if (debounceTimeoutRef.current) clearTimeout(debounceTimeoutRef.current);
-        debounceTimeoutRef.current = setTimeout(() => {
-          cb(s, meta);
-          debounceTimeoutRef.current = null;
-        }, ms);
-      };
-    }
-    if (strategy === 'throttle') {
-      let last = 0;
-      return (s: number, meta: BottomSizeChangeMeta) => {
-        const now = Date.now();
-        if (now - last >= ms) {
-          last = now;
-          cb(s, meta);
-        }
-      };
-    }
-    return (s: number, meta: BottomSizeChangeMeta) => cb(s, meta);
-  }, [onSizeChange, sizeUpdate, sizeUpdateMs]);
-
-  // Dev guards
-  const wasControlledRef = React.useRef<boolean | null>(null);
-  if (process.env.NODE_ENV !== 'production') {
-    if (typeof open !== 'undefined' && typeof defaultOpen !== 'undefined') {
-      console.error('Shell.Bottom: Do not pass both `open` and `defaultOpen`. Choose one.');
-    }
-    if (typeof size !== 'undefined' && typeof defaultSize !== 'undefined') {
-      console.error('Shell.Bottom: Do not pass both `size` and `defaultSize`. Choose one.');
-    }
-  }
-
-  React.useEffect(() => {
-    const isControlled = typeof open !== 'undefined';
-    if (wasControlledRef.current === null) {
-      wasControlledRef.current = isControlled;
-      return;
-    }
-    if (wasControlledRef.current !== isControlled) {
-      console.warn('Shell.Bottom: Switching between controlled and uncontrolled `open` is not supported.');
-      wasControlledRef.current = isControlled;
-    }
-  }, [open]);
-
-  // Emit mode changes. In controlled mode, skip when mode matches the controlled prop.
-  const lastBottomModeRef = React.useRef<PaneMode | null>(null);
-  const lastResolvedBottomControlledRef = React.useRef<PaneMode | undefined>(undefined);
-  React.useEffect(() => {
-    const prevMode = lastBottomModeRef.current;
-    const prevResolvedControlled = lastResolvedBottomControlledRef.current;
-    const controlledChanged = prevResolvedControlled !== resolvedBottomControlled;
-
-    if (prevMode !== null && prevMode !== bottomMode) {
-      const nextOpen = bottomMode === 'expanded';
-      const isControlled = typeof openRef.current !== 'undefined';
-      const controlledTarget = resolvedBottomControlled === undefined ? undefined : resolvedBottomControlled === 'expanded';
-
-      if (!isControlled || (!controlledChanged && nextOpen !== controlledTarget)) {
-        onOpenChangeRef.current?.(nextOpen, { reason: 'toggle' });
-      }
-    }
-
-    lastBottomModeRef.current = bottomMode;
-    lastResolvedBottomControlledRef.current = resolvedBottomControlled;
-  }, [bottomMode, resolvedBottomControlled]);
-
-  // Track previous mode to only fire callbacks on actual user-initiated state transitions.
-  // We wait for breakpointReady to ensure the initial state sync from useResponsiveInitialState
-  // is complete before enabling callbacks. This avoids spurious callbacks during initialization.
-  // Use callback refs to avoid re-running effect when inline callbacks change.
-  const onExpandRef = React.useRef(onExpand);
-  const onCollapseRef = React.useRef(onCollapse);
-  React.useLayoutEffect(() => {
-    onExpandRef.current = onExpand;
-    onCollapseRef.current = onCollapse;
-  });
-
-  const prevBottomModeRef = React.useRef<PaneMode | null>(null);
-  const hasInitializedRef = React.useRef(false);
-  React.useEffect(() => {
-    const currentMode = bottomMode;
-
-    // Wait for breakpoint to be ready before enabling callbacks
-    if (!currentBreakpointReady) {
-      prevBottomModeRef.current = currentMode;
-      return;
-    }
-
-    // Skip the first run after breakpoint is ready - this captures the post-sync state
-    if (!hasInitializedRef.current) {
-      hasInitializedRef.current = true;
-      prevBottomModeRef.current = currentMode;
-      return;
-    }
-
-    const prevMode = prevBottomModeRef.current;
-
-    // Only fire on actual state transitions
-    if (prevMode !== null && prevMode !== currentMode) {
-      if (currentMode === 'expanded') {
-        onExpandRef.current?.();
-      } else if (currentMode === 'collapsed') {
-        onCollapseRef.current?.();
-      }
-      prevBottomModeRef.current = currentMode;
-    }
-  }, [bottomMode, currentBreakpointReady]);
-
-  const isExpanded = bottomMode === 'expanded';
-
-  const persistenceAdapter = React.useMemo(() => {
-    if (!paneId || persistence) return persistence;
-    const key = `kookie-ui:shell:bottom:${paneId}`;
-    const adapter: PaneSizePersistence = {
-      load: () => {
-        if (typeof window === 'undefined') return undefined;
-        try {
-          const v = window.localStorage.getItem(key);
-          return v ? Number(v) : undefined;
-        } catch (err) {
-          if (process.env.NODE_ENV !== 'production') {
-            console.warn('Shell.Bottom: failed to load persisted size', err);
-          }
-          return undefined;
-        }
-      },
-      save: (size: number) => {
-        if (typeof window === 'undefined') return;
-        try {
-          window.localStorage.setItem(key, String(size));
-        } catch (err) {
-          if (process.env.NODE_ENV !== 'production') {
-            console.warn('Shell.Bottom: failed to save persisted size', err);
-          }
-        }
-      },
-    };
-    return adapter;
-  }, [paneId, persistence]);
-
-  React.useEffect(() => {
-    let mounted = true;
-    if (!resizable || !persistenceAdapter?.load || isOverlay) return undefined;
-    const loaded = persistenceAdapter.load();
-    const applyLoaded = (value?: number) => {
-      if (!mounted || typeof value !== 'number' || !localRef.current) return;
-      localRef.current.style.setProperty('--bottom-size', `${value}px`);
-      onResize?.(value);
-    };
-    if (loaded instanceof Promise) {
-      loaded.then(applyLoaded).catch((err) => {
-        if (process.env.NODE_ENV !== 'production') {
-          console.warn('Shell.Bottom: failed to load persisted size', err);
-        }
-      });
-    } else {
-      applyLoaded(loaded);
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [resizable, persistenceAdapter, onResize, isOverlay]);
-
-  const handleEl =
-    resizable && !isOverlay && isExpanded ? (
-      <PaneResizeContext.Provider
-        value={{
-          containerRef: localRef,
-          cssVarName: '--bottom-size',
-          minSize,
-          maxSize,
-          defaultSize: expandedSize,
-          orientation: 'horizontal',
-          edge: 'start',
-          computeNext: (client, startClient, startSize) => {
-            const delta = client - startClient;
-            return startSize - delta;
-          },
-          onResize,
-          onResizeStart,
-          onResizeEnd: (size) => {
-            onResizeEnd?.(size);
-            emitSizeChange(size, { reason: 'resize' });
-            persistenceAdapter?.save?.(size);
-          },
-          target: 'bottom',
-          collapsible,
-          snapPoints,
-          snapTolerance: snapTolerance ?? 8,
-          collapseThreshold,
-          requestCollapse: () => setBottomMode('collapsed'),
-          requestToggle: () => togglePane('bottom'),
-        }}
-      >
-        {handleChildren.length > 0 ? handleChildren.map((el, i) => React.cloneElement(el, { key: el.key ?? i })) : <PaneHandle />}
-      </PaneResizeContext.Provider>
-    ) : null;
-
-  // Strip control/size props from DOM spread (moved above overlay return to keep hook order consistent)
-  // Normalize CSS lengths to px helper
-  const normalizeSizeToPx = React.useCallback((value: number | string | undefined) => normalizeToPx(value, 'vertical'), []);
-
-  // Apply defaultSize on mount when uncontrolled (moved above overlay return)
-  React.useEffect(() => {
-    if (!localRef.current) return;
-    if (typeof size === 'undefined' && typeof defaultSize !== 'undefined') {
-      const px = normalizeSizeToPx(defaultSize);
-      if (typeof px === 'number' && Number.isFinite(px)) {
-        const minPx = typeof minSize === 'number' ? minSize : undefined;
-        const maxPx = typeof maxSize === 'number' ? maxSize : undefined;
-        const clamped = Math.min(maxPx ?? px, Math.max(minPx ?? px, px));
-        localRef.current.style.setProperty('--bottom-size', `${clamped}px`);
-        emitSizeChange(clamped, { reason: 'init' });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Controlled size sync (moved above overlay return)
-  const controlledSize = size;
-  React.useEffect(() => {
-    if (!localRef.current) return;
-    if (typeof controlledSize === 'undefined') return;
-    const px = normalizeSizeToPx(controlledSize);
-    if (typeof px === 'number' && Number.isFinite(px)) {
-      const minPx = typeof minSize === 'number' ? minSize : undefined;
-      const maxPx = typeof maxSize === 'number' ? maxSize : undefined;
-      const clamped = Math.min(maxPx ?? px, Math.max(minPx ?? px, px));
-      localRef.current.style.setProperty('--bottom-size', `${clamped}px`);
-      emitSizeChange(clamped, { reason: 'controlled' });
-    }
-  }, [controlledSize, minSize, maxSize, normalizeSizeToPx, emitSizeChange]);
-
-  if (isOverlay) {
-    const open = bottomMode === 'expanded';
-    return (
-      <Sheet.Root open={open} onOpenChange={(o) => setBottomMode(o ? 'expanded' : 'collapsed')}>
-        <Sheet.Content id={elementId} side="bottom" style={{ padding: 0 }} aria-label="Bottom panel" aria-describedby={undefined} height={{ initial: `${expandedSize}px` }}>
-          <VisuallyHidden>
-            <Sheet.Title>Bottom panel</Sheet.Title>
-          </VisuallyHidden>
-          {contentChildren}
-        </Sheet.Content>
-      </Sheet.Root>
-    );
-  }
+  const { handles, content } = splitHandles(children, BottomHandle);
+  const handle = resizable && pane.shown !== false && !pane.overlaying ? <PaneResizeContext.Provider value={resize}>{handles.length > 0 ? handles : <PaneHandle />}</PaneResizeContext.Provider> : null;
 
   return (
     <div
-      {...bottomDomProps}
-      id={elementId}
-      ref={setRef}
-      className={classNames('rt-ShellBottom', className)}
-      data-mode={bottomMode}
-      data-peek={peekTarget === 'bottom' || undefined}
-      data-presentation={currentBreakpointReady ? resolvedPresentation : undefined}
-      data-open={(currentBreakpointReady && isStacked && isExpanded) || undefined}
+      {...withoutRemovedPaneProps(domProps)}
+      id={pane.id}
+      ref={composedRef}
+      className={classNames('rt-ShellPane', 'rt-ShellBottom', className)}
+      {...paneAttributes(pane, attributes)}
       data-inset={inset || undefined}
+      tabIndex={pane.overlaying ? -1 : domProps.tabIndex}
       style={
         {
           ...style,
@@ -417,12 +145,11 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((initi
         } as CSSPropertiesWithVars
       }
     >
-      <div className="rt-ShellBottomContent" data-visible={isExpanded || undefined}>
-        {contentChildren}
-      </div>
-      {handleEl}
+      <div className="rt-ShellBottomContent">{content}</div>
+      {handle}
     </div>
   );
 }) as BottomComponent;
+
 Bottom.displayName = 'Shell.Bottom';
 Bottom.Handle = BottomHandle;

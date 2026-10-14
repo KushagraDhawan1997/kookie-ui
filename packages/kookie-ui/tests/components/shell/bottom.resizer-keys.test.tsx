@@ -17,7 +17,7 @@ describe('Bottom resizer keys', () => {
       </Shell.Root>,
     );
 
-    const handle = screen.getByRole('slider');
+    const handle = screen.getByRole('separator');
     const pane = handle.parentElement as HTMLElement;
     const size = () => parseFloat(getComputedStyle(pane).getPropertyValue('--bottom-size'));
 

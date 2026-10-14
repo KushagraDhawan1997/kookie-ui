@@ -38,7 +38,7 @@ function AppInspectorRTL({ dir = 'rtl' as 'rtl' | 'ltr' }) {
 describe('RTL logical resizer keys', () => {
   it('Panel vertical resizer: ArrowLeft grows, ArrowRight shrinks in RTL', () => {
     renderWithProviders(<AppPanelRTL dir="rtl" />);
-    const slider = screen.getByRole('slider');
+    const slider = screen.getByRole('separator');
     const style = getComputedStyle(slider.parentElement as HTMLElement);
     const before = parseFloat(style.getPropertyValue('--panel-size')) || 200;
     fireEvent.keyDown(slider, { key: 'ArrowLeft' });
@@ -51,7 +51,7 @@ describe('RTL logical resizer keys', () => {
 
   it('Inspector vertical resizer: ArrowLeft shrinks, ArrowRight grows in RTL (edge=start)', () => {
     renderWithProviders(<AppInspectorRTL dir="rtl" />);
-    const inspectorSlider = screen.getByRole('slider');
+    const inspectorSlider = screen.getByRole('separator');
     const style = getComputedStyle(inspectorSlider.parentElement as HTMLElement);
     const before = parseFloat(style.getPropertyValue('--inspector-size')) || 320;
     fireEvent.keyDown(inspectorSlider, { key: 'ArrowLeft' });

@@ -1,7 +1,10 @@
 import * as React from 'react';
+import type { PaneName } from '../shell.types.js';
 
 export interface PaneResizeContextValue {
-  containerRef: React.RefObject<HTMLDivElement | null>;
+  containerRef: React.RefObject<HTMLElement | null>;
+  /** The pane the handle resizes, for `aria-controls`. */
+  controls: string;
   cssVarName: string;
   minSize: number;
   maxSize: number;
@@ -9,14 +12,15 @@ export interface PaneResizeContextValue {
   orientation: 'vertical' | 'horizontal';
   edge: 'start' | 'end';
   /**
-   * The size the pointer is asking for. `isRtl` is read once when the drag
-   * starts and passed in, so no move pays for a style recalculation.
+   * +1 when moving the pointer toward the end of its axis grows the pane, -1
+   * when it shrinks it. Read once when a drag starts, with the pane's
+   * resolved direction, so no move pays for a style read.
    */
-  computeNext: (clientPos: number, startClientPos: number, startSize: number, isRtl: boolean) => number;
+  growth: (isRtl: boolean) => 1 | -1;
   onResize?: (size: number) => void;
   onResizeStart?: (size: number) => void;
   onResizeEnd?: (size: number) => void;
-  target: 'left' | 'rail' | 'panel' | 'sidebar' | 'inspector' | 'bottom';
+  target: PaneName;
   collapsible: boolean;
   snapPoints?: number[];
   snapTolerance: number;

@@ -15,7 +15,7 @@ function ToggleBottom() {
 }
 
 describe('Bottom onOpenChange (uncontrolled notify only)', () => {
-  it('fires with reason=init when defaultOpen=true on mount', () => {
+  it('does not fire on mount, whatever the default (0.8.0: only a user action is reported)', () => {
     const spy = vi.fn();
     renderWithProviders(
       <Shell.Root>
@@ -25,7 +25,7 @@ describe('Bottom onOpenChange (uncontrolled notify only)', () => {
         </Shell.Bottom>
       </Shell.Root>,
     );
-    expect(spy).toHaveBeenCalledWith(true, { reason: 'init' });
+    expect(spy).not.toHaveBeenCalled();
   });
 
   it('fires with reason=toggle on internal toggle', async () => {

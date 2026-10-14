@@ -84,6 +84,15 @@ function getServerSnapshot(): Breakpoint {
   return 'initial';
 }
 
+/**
+ * The breakpoint right now, outside React's render. For an effect that needs
+ * the answer at the moment it runs rather than the one its render saw.
+ */
+export function readBreakpoint(): Breakpoint {
+  if (typeof window === 'undefined') return 'initial';
+  return computeBreakpoint();
+}
+
 const getReadySnapshot = () => true;
 const getReadyServerSnapshot = () => false;
 

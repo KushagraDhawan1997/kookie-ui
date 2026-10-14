@@ -15,7 +15,7 @@ function ToggleLeft() {
 }
 
 describe('Rail onOpenChange notify', () => {
-  it('fires with reason=init when defaultOpen', () => {
+  it('does not fire on mount, whatever the default (0.8.0: only a user action is reported)', () => {
     const spy = vi.fn();
     renderWithProviders(
       <Shell.Root>
@@ -24,7 +24,7 @@ describe('Rail onOpenChange notify', () => {
         <Shell.Content>content</Shell.Content>
       </Shell.Root>,
     );
-    expect(spy).toHaveBeenCalledWith(true, { reason: 'init' });
+    expect(spy).not.toHaveBeenCalled();
   });
 
   it('fires with reason=toggle when toggled internally', async () => {

@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { renderWithProviders, screen, act } from '../../test-utils';
 import { waitFor } from '@testing-library/react';
 import { Shell } from '../../../src/components/index';
-import { usePresentation } from '../../../src/components/shell.context';
+import { useBreakpoint } from '../../../src/hooks/use-breakpoint';
 import { _BREAKPOINTS as BREAKPOINTS } from '../../../src/components/shell.types';
 
 type Listener = (e: MediaQueryListEvent) => void;
@@ -56,7 +56,7 @@ function setupMatchMediaFallbackMock() {
 }
 
 function BreakpointProbe() {
-  const { currentBreakpoint, currentBreakpointReady } = usePresentation();
+  const { breakpoint: currentBreakpoint, ready: currentBreakpointReady } = useBreakpoint();
   return (
     <div data-testid="bp" data-ready={currentBreakpointReady || undefined}>
       {currentBreakpoint}
@@ -70,6 +70,10 @@ function App() {
       <Shell.Content>
         <BreakpointProbe />
       </Shell.Content>
+      {/* The pane's JS mirror rides the same subscription. */}
+      <Shell.Inspector presentation={{ initial: 'overlay', md: 'fixed' }} defaultOpen>
+        inspector
+      </Shell.Inspector>
     </Shell.Root>
   );
 }
@@ -92,11 +96,15 @@ describe('useBreakpoint fallback to addListener/removeListener', () => {
     const el = await screen.findByTestId('bp');
     expect(el.textContent).toBe('initial');
 
+    const inspector = document.querySelector('.rt-ShellInspector') as HTMLElement;
+    expect(inspector.getAttribute('data-presentation')).toBe('overlay');
+
     // Set md true and wait for update
     act(() => {
       mock.setMatches('md', true);
     });
     await waitFor(() => expect(el.textContent).toBe('md'));
+    await waitFor(() => expect(inspector.getAttribute('data-presentation')).toBe('fixed'));
 
     // Set lg true as well (higher)
     act(() => {

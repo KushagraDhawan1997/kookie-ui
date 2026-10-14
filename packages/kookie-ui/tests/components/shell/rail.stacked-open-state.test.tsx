@@ -3,7 +3,9 @@ import { describe, it, expect } from 'vitest';
 import { renderWithProviders } from '../../test-utils';
 import { Shell } from '../../../src/components/index';
 
-describe('Left (stacked) data-open', () => {
+// 0.8.0: the Rail is its own pane. The Left wrapper that used to carry
+// `data-open` for Rail+Panel no longer exists.
+describe('Rail (stacked) data-open', () => {
   it('has data-open when stacked and expanded (via Rail defaultOpen)', async () => {
     renderWithProviders(
       <Shell.Root>
@@ -13,7 +15,7 @@ describe('Left (stacked) data-open', () => {
       </Shell.Root>,
     );
 
-    const left = document.querySelector('.rt-ShellLeft') as HTMLElement;
+    const left = document.querySelector('.rt-ShellRail') as HTMLElement;
     expect(left).toBeTruthy();
     expect(left.hasAttribute('data-open')).toBe(true);
   });
@@ -28,7 +30,7 @@ describe('Left (stacked) data-open', () => {
       </Shell.Root>,
     );
 
-    const left = document.querySelector('.rt-ShellLeft') as HTMLElement;
+    const left = document.querySelector('.rt-ShellRail') as HTMLElement;
     expect(left).toBeTruthy();
     expect(left.hasAttribute('data-open')).toBe(false);
   });

@@ -79,37 +79,26 @@ describe('animations avoid layout properties', () => {
   });
 
   /**
-   * The shell panes are the worst case for this: they sit beside the content
-   * area, so animating their size re-lays-out the whole application on every
-   * frame of a collapse.
+   * Since 0.8.0 the Shell does not move. A pane opens, closes and changes its
+   * presentation in one layout pass: no transition, no animation, no
+   * keyframes. The panes sit beside the content area, so any motion of theirs
+   * either re-lays-out the application per frame (size) or forces the shell to
+   * keep closed panes in the tree to slide them out (transform).
    */
-  it('shell panes do not animate their size over time', () => {
-    const shell = fs.readFileSync(path.join(SRC, 'components/shell.css'), 'utf8');
+  it('the shell stylesheet has no motion', () => {
+    const shell = fs
+      .readFileSync(path.join(SRC, 'components/shell.css'), 'utf8')
+      // Comments are blanked, not removed, so line numbers stay true.
+      .replace(/\/\*[\s\S]*?\*\//g, (comment) => comment.replace(/[^\n]/g, ' '));
     const violations: { line: number; content: string }[] = [];
 
-    // A `0s` duration is the point: the pane steps to its size in one layout
-    // pass, after a delay that lets the contents finish sliding.
-    const pattern = new RegExp(`^\\s*transition:\\s*(${LAYOUT_PROPERTIES})\\s+(?!0s\\b)`);
-
     shell.split(/\r?\n/).forEach((content, i) => {
-      if (pattern.test(content)) violations.push({ line: i + 1, content: content.trim() });
+      if (/(^|[\s;{])(transition|transition-[a-z-]+|animation|animation-[a-z-]+)\s*:|@keyframes|will-change\s*:/.test(content)) {
+        violations.push({ line: i + 1, content: content.trim() });
+      }
     });
 
-    expect(violations, violations.map((v) => `components/shell.css:${v.line} ${v.content}\n  animating a pane's size re-lays-out .rt-ShellContent on every frame`).join('\n')).toEqual([]);
-  });
-
-  it('shell pane contents slide on transform', () => {
-    const shell = fs.readFileSync(path.join(SRC, 'components/shell.css'), 'utf8');
-
-    for (const pane of ['Rail', 'Panel', 'Sidebar', 'Inspector', 'Bottom']) {
-      const selector = `.rt-Shell${pane}Content {`;
-      const start = shell.indexOf(selector);
-      expect(start, `${selector} should exist`).toBeGreaterThan(-1);
-      const block = shell.slice(start, shell.indexOf('}', start));
-
-      expect(block, `${pane} content should be taken out of flow to slide`).toContain('position: absolute');
-      expect(block, `${pane} content should slide on transform`).toMatch(/transform: translate[XY]\(/);
-    }
+    expect(violations, violations.map((v) => `components/shell.css:${v.line} ${v.content}\n  the Shell has no motion since 0.8.0`).join('\n')).toEqual([]);
   });
 
   it('the progress indicator is positioned by transform, not width', () => {

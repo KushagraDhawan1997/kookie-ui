@@ -3,151 +3,109 @@ import { describe, it, expect } from 'vitest';
 import { renderWithProviders, screen } from '../../test-utils';
 import { fireEvent } from '@testing-library/react';
 import { Shell } from '../../../src/components/index';
-import { useLeftMode, usePanelMode, useSidebarMode, useInspectorMode, useBottomMode, useShellActions, usePeek } from '../../../src/components/shell.context';
 
-function Counter({ id, useSlice }: { id: string; useSlice: () => { label: string; value: string } }) {
-  const rendersRef = React.useRef(0);
-  rendersRef.current += 1;
-  const slice = useSlice();
-  return <div data-testid={`counter-${id}`} data-value={`${slice.label}:${slice.value}`} data-renders={rendersRef.current} />;
-}
+/**
+ * Since 0.8.0 the Shell has one registry instead of eleven contexts. What
+ * crosses the frame is a pane's own registry entry: a pane re-renders when
+ * its own state changes, and a Trigger re-renders when the pane it names
+ * changes. Nothing else does.
+ *
+ * Each part is wrapped in a Profiler, which renders no element, so every pane
+ * is still a direct child of the Root's grid.
+ */
+type Renders = Record<string, number>;
 
-const MemoCounter = React.memo(Counter);
-
-function useLeftSlice() {
-  const { leftMode } = useLeftMode();
-  return { label: 'left', value: leftMode } as const;
-}
-function usePanelSlice() {
-  const { panelMode } = usePanelMode();
-  return { label: 'panel', value: panelMode } as const;
-}
-function useSidebarSlice() {
-  const { sidebarMode } = useSidebarMode();
-  return { label: 'sidebar', value: sidebarMode } as const;
-}
-function useInspectorSlice() {
-  const { inspectorMode } = useInspectorMode();
-  return { label: 'inspector', value: inspectorMode } as const;
-}
-function useBottomSlice() {
-  const { bottomMode } = useBottomMode();
-  return { label: 'bottom', value: bottomMode } as const;
-}
-
-function Controls() {
-  const actions = useShellActions();
-  const { peekPane, clearPeek } = usePeek();
-  return (
-    <>
-      <button onClick={() => actions.expandPane('panel')} data-testid="expand-panel" />
-      <button onClick={() => actions.collapsePane('panel')} data-testid="collapse-panel" />
-      <button onClick={() => actions.expandPane('inspector')} data-testid="expand-inspector" />
-      <button onClick={() => actions.collapsePane('inspector')} data-testid="collapse-inspector" />
-      <button onClick={() => actions.expandPane('bottom')} data-testid="expand-bottom" />
-      <button onClick={() => actions.collapsePane('bottom')} data-testid="collapse-bottom" />
-      <button onMouseEnter={() => peekPane('panel')} onMouseLeave={() => clearPeek()} data-testid="peek-panel" />
-      <button onMouseEnter={() => peekPane('sidebar')} onMouseLeave={() => clearPeek()} data-testid="peek-sidebar" />
-      <button onMouseEnter={() => peekPane('inspector')} onMouseLeave={() => clearPeek()} data-testid="peek-inspector" />
-      <button onMouseEnter={() => peekPane('bottom')} onMouseLeave={() => clearPeek()} data-testid="peek-bottom" />
-    </>
-  );
-}
-
-function App() {
+function App({ renders }: { renders: Renders }) {
+  const onRender = (id: string) => {
+    renders[id] = (renders[id] ?? 0) + 1;
+  };
   return (
     <Shell.Root>
-      <Shell.Rail presentation="fixed" />
-      <Shell.Panel>panel</Shell.Panel>
-      <Shell.Sidebar presentation={{ initial: 'fixed' }}>sidebar</Shell.Sidebar>
-      <Shell.Content>
-        <Controls />
-        <MemoCounter id="left" useSlice={useLeftSlice} />
-        <MemoCounter id="panel" useSlice={usePanelSlice} />
-        <MemoCounter id="sidebar" useSlice={useSidebarSlice} />
-        <MemoCounter id="inspector" useSlice={useInspectorSlice} />
-        <MemoCounter id="bottom" useSlice={useBottomSlice} />
-      </Shell.Content>
-      <Shell.Inspector>inspector</Shell.Inspector>
-      <Shell.Bottom>bottom</Shell.Bottom>
+      <Shell.Header>
+        <React.Profiler id="trigger-panel" onRender={onRender}>
+          <Shell.Trigger target="panel" peekOnHover>
+            panel
+          </Shell.Trigger>
+        </React.Profiler>
+        <React.Profiler id="trigger-inspector" onRender={onRender}>
+          <Shell.Trigger target="inspector" peekOnHover>
+            inspector
+          </Shell.Trigger>
+        </React.Profiler>
+        <React.Profiler id="trigger-bottom" onRender={onRender}>
+          <Shell.Trigger target="bottom">bottom</Shell.Trigger>
+        </React.Profiler>
+      </Shell.Header>
+      <React.Profiler id="rail" onRender={onRender}>
+        <Shell.Rail presentation="fixed">rail</Shell.Rail>
+      </React.Profiler>
+      <React.Profiler id="panel" onRender={onRender}>
+        <Shell.Panel>panel content</Shell.Panel>
+      </React.Profiler>
+      <React.Profiler id="content" onRender={onRender}>
+        <Shell.Content>content</Shell.Content>
+      </React.Profiler>
+      <React.Profiler id="inspector" onRender={onRender}>
+        <Shell.Inspector presentation="fixed">inspector content</Shell.Inspector>
+      </React.Profiler>
+      <React.Profiler id="bottom" onRender={onRender}>
+        <Shell.Bottom presentation="fixed">bottom content</Shell.Bottom>
+      </React.Profiler>
     </Shell.Root>
   );
 }
 
-describe('Selector hooks rerender guards', () => {
-  it('panel updates do not rerender sidebar/inspector/bottom counters', () => {
-    renderWithProviders(<App />);
-    const panel = screen.getByTestId('counter-panel');
-    const sidebar = screen.getByTestId('counter-sidebar');
-    const inspector = screen.getByTestId('counter-inspector');
-    const bottom = screen.getByTestId('counter-bottom');
+function snapshot(renders: Renders): Renders {
+  return { ...renders };
+}
 
-    const sidebarR1 = Number(sidebar.getAttribute('data-renders'));
-    const inspectorR1 = Number(inspector.getAttribute('data-renders'));
-    const bottomR1 = Number(bottom.getAttribute('data-renders'));
+function changed(before: Renders, after: Renders) {
+  return Object.keys(after)
+    .filter((id) => (after[id] ?? 0) !== (before[id] ?? 0))
+    .sort();
+}
 
-    fireEvent.click(screen.getByTestId('expand-panel'));
+describe('Shell registry render isolation', () => {
+  it('opening the inspector re-renders the inspector and its trigger, nothing else', () => {
+    const renders: Renders = {};
+    renderWithProviders(<App renders={renders} />);
+    const before = snapshot(renders);
 
-    // panel changes
-    const panelAfter = Number(panel.getAttribute('data-renders'));
-    expect(panelAfter).toBeGreaterThanOrEqual(1);
+    fireEvent.click(screen.getByRole('button', { name: 'inspector' }));
 
-    // unrelated counters stable
-    const sidebarR2 = Number(sidebar.getAttribute('data-renders'));
-    const inspectorR2 = Number(inspector.getAttribute('data-renders'));
-    const bottomR2 = Number(bottom.getAttribute('data-renders'));
-    expect(sidebarR2).toBe(sidebarR1);
-    expect(inspectorR2).toBe(inspectorR1);
-    expect(bottomR2).toBe(bottomR1);
+    expect(changed(before, renders)).toEqual(['inspector', 'trigger-inspector']);
   });
 
-  it('inspector/bottom updates do not rerender panel/sidebar counters', () => {
-    renderWithProviders(<App />);
-    const panel = screen.getByTestId('counter-panel');
-    const sidebar = screen.getByTestId('counter-sidebar');
+  it('opening the panel re-renders the panel and its trigger, nothing else', () => {
+    const renders: Renders = {};
+    renderWithProviders(<App renders={renders} />);
+    const before = snapshot(renders);
 
-    const panelR1 = Number(panel.getAttribute('data-renders'));
-    const sidebarR1 = Number(sidebar.getAttribute('data-renders'));
+    fireEvent.click(screen.getByRole('button', { name: 'panel' }));
 
-    fireEvent.click(screen.getByTestId('expand-inspector'));
-    fireEvent.click(screen.getByTestId('expand-bottom'));
-
-    const panelR2 = Number(panel.getAttribute('data-renders'));
-    const sidebarR2 = Number(sidebar.getAttribute('data-renders'));
-
-    expect(panelR2).toBe(panelR1);
-    expect(sidebarR2).toBe(sidebarR1);
+    expect(changed(before, renders)).toEqual(['panel', 'trigger-panel']);
   });
 
-  it('peek interactions do not rerender unrelated slice counters', () => {
-    renderWithProviders(<App />);
-    const panel = screen.getByTestId('counter-panel');
-    const sidebar = screen.getByTestId('counter-sidebar');
-    const inspector = screen.getByTestId('counter-inspector');
-    const bottom = screen.getByTestId('counter-bottom');
+  it('a peek re-renders only the pane being previewed', () => {
+    const renders: Renders = {};
+    renderWithProviders(<App renders={renders} />);
+    const before = snapshot(renders);
 
-    const panelR1 = Number(panel.getAttribute('data-renders'));
-    const sidebarR1 = Number(sidebar.getAttribute('data-renders'));
-    const inspectorR1 = Number(inspector.getAttribute('data-renders'));
-    const bottomR1 = Number(bottom.getAttribute('data-renders'));
+    fireEvent.mouseEnter(screen.getByRole('button', { name: 'inspector' }));
+    fireEvent.mouseLeave(screen.getByRole('button', { name: 'inspector' }));
 
-    fireEvent.mouseEnter(screen.getByTestId('peek-panel'));
-    fireEvent.mouseLeave(screen.getByTestId('peek-panel'));
-    fireEvent.mouseEnter(screen.getByTestId('peek-sidebar'));
-    fireEvent.mouseLeave(screen.getByTestId('peek-sidebar'));
-    fireEvent.mouseEnter(screen.getByTestId('peek-inspector'));
-    fireEvent.mouseLeave(screen.getByTestId('peek-inspector'));
-    fireEvent.mouseEnter(screen.getByTestId('peek-bottom'));
-    fireEvent.mouseLeave(screen.getByTestId('peek-bottom'));
+    expect(changed(before, renders)).toEqual(['inspector']);
+  });
 
-    const panelR2 = Number(panel.getAttribute('data-renders'));
-    const sidebarR2 = Number(sidebar.getAttribute('data-renders'));
-    const inspectorR2 = Number(inspector.getAttribute('data-renders'));
-    const bottomR2 = Number(bottom.getAttribute('data-renders'));
+  it('the content never re-renders for a pane change', () => {
+    const renders: Renders = {};
+    renderWithProviders(<App renders={renders} />);
+    const before = renders.content;
 
-    expect(panelR2).toBe(panelR1);
-    expect(sidebarR2).toBe(sidebarR1);
-    expect(inspectorR2).toBe(inspectorR1);
-    expect(bottomR2).toBe(bottomR1);
+    fireEvent.click(screen.getByRole('button', { name: 'inspector' }));
+    fireEvent.click(screen.getByRole('button', { name: 'panel' }));
+    fireEvent.click(screen.getByRole('button', { name: 'bottom' }));
+
+    expect(renders.content).toBe(before);
   });
 });

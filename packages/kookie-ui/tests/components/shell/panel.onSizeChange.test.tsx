@@ -33,7 +33,7 @@ describe('Panel onSizeChange', () => {
   it('emits px on drag end (reason=resize)', () => {
     const spy = vi.fn();
     renderWithProviders(<App onSizeChange={spy} />);
-    const slider = screen.getByRole('slider');
+    const slider = screen.getByRole('separator');
     // Start drag
     fireEvent.pointerDown(slider, { pointerId: 1, clientX: 0 });
     fireEvent.pointerMove(window, { clientX: 250 });
@@ -47,7 +47,7 @@ describe('Panel onSizeChange', () => {
   it('Arrow/Home/End adjust and emit onSizeChange at end of key action', () => {
     const spy = vi.fn();
     renderWithProviders(<App onSizeChange={spy} min={120} max={300} />);
-    const slider = screen.getByRole('slider');
+    const slider = screen.getByRole('separator');
     // End -> max
     fireEvent.keyDown(slider, { key: 'End' });
     expect(spy).toHaveBeenCalled();
@@ -65,7 +65,7 @@ describe('Panel onSizeChange', () => {
     vi.useFakeTimers();
     const spy = vi.fn();
     renderWithProviders(<App onSizeChange={spy} sizeUpdate="throttle" sizeUpdateMs={50} />);
-    const slider = screen.getByRole('slider');
+    const slider = screen.getByRole('separator');
     for (let i = 0; i < 10; i++) fireEvent.keyDown(slider, { key: 'End' });
     // Advance less than the threshold
     vi.advanceTimersByTime(40);

@@ -110,7 +110,8 @@ describe('Shell inset prop', () => {
     });
   });
 
-  describe('Shell.Left (Rail + Panel)', () => {
+  // 0.8.0: Rail and Panel are separate panes, each with its own data-inset.
+  describe('Shell.Rail and Shell.Panel', () => {
     it('does not have data-inset when inset is not provided', () => {
       renderWithProviders(
         <Shell.Root>
@@ -119,11 +120,11 @@ describe('Shell inset prop', () => {
           <Shell.Content>content</Shell.Content>
         </Shell.Root>,
       );
-      const left = screen.getByText('panel').closest('.rt-ShellLeft') as HTMLElement;
-      expect(left.hasAttribute('data-inset')).toBe(false);
+      expect((document.querySelector('.rt-ShellRail') as HTMLElement).hasAttribute('data-inset')).toBe(false);
+      expect((document.querySelector('.rt-ShellPanel') as HTMLElement).hasAttribute('data-inset')).toBe(false);
     });
 
-    it('has data-inset when Rail has inset', () => {
+    it('has data-inset on the Rail when Rail has inset', () => {
       renderWithProviders(
         <Shell.Root>
           <Shell.Rail inset />
@@ -131,11 +132,11 @@ describe('Shell inset prop', () => {
           <Shell.Content>content</Shell.Content>
         </Shell.Root>,
       );
-      const left = screen.getByText('panel').closest('.rt-ShellLeft') as HTMLElement;
-      expect(left.hasAttribute('data-inset')).toBe(true);
+      expect((document.querySelector('.rt-ShellRail') as HTMLElement).hasAttribute('data-inset')).toBe(true);
+      expect((document.querySelector('.rt-ShellPanel') as HTMLElement).hasAttribute('data-inset')).toBe(false);
     });
 
-    it('has data-inset when Panel has inset', () => {
+    it('has data-inset on the Panel when Panel has inset', () => {
       renderWithProviders(
         <Shell.Root>
           <Shell.Rail />
@@ -143,19 +144,19 @@ describe('Shell inset prop', () => {
           <Shell.Content>content</Shell.Content>
         </Shell.Root>,
       );
-      const left = screen.getByText('panel').closest('.rt-ShellLeft') as HTMLElement;
-      expect(left.hasAttribute('data-inset')).toBe(true);
+      expect((document.querySelector('.rt-ShellPanel') as HTMLElement).hasAttribute('data-inset')).toBe(true);
     });
   });
 
-  describe('data-has-inset on Shell.Body', () => {
+  // 0.8.0: the Root is the grid; there is no Body element, so the flag is on the Root.
+  describe('data-has-inset on Shell.Root', () => {
     it('does not have data-has-inset when no panes have inset', () => {
       renderWithProviders(
         <Shell.Root>
           <Shell.Content>content</Shell.Content>
         </Shell.Root>,
       );
-      const body = document.querySelector('.rt-ShellBody') as HTMLElement;
+      const body = document.querySelector('.rt-ShellRoot') as HTMLElement;
       expect(body.hasAttribute('data-has-inset')).toBe(false);
     });
 
@@ -165,7 +166,7 @@ describe('Shell inset prop', () => {
           <Shell.Content inset>content</Shell.Content>
         </Shell.Root>,
       );
-      const body = document.querySelector('.rt-ShellBody') as HTMLElement;
+      const body = document.querySelector('.rt-ShellRoot') as HTMLElement;
       expect(body.hasAttribute('data-has-inset')).toBe(true);
     });
 
@@ -178,7 +179,7 @@ describe('Shell inset prop', () => {
           <Shell.Content>content</Shell.Content>
         </Shell.Root>,
       );
-      const body = document.querySelector('.rt-ShellBody') as HTMLElement;
+      const body = document.querySelector('.rt-ShellRoot') as HTMLElement;
       expect(body.hasAttribute('data-has-inset')).toBe(true);
     });
 
@@ -191,7 +192,7 @@ describe('Shell inset prop', () => {
           </Shell.Inspector>
         </Shell.Root>,
       );
-      const body = document.querySelector('.rt-ShellBody') as HTMLElement;
+      const body = document.querySelector('.rt-ShellRoot') as HTMLElement;
       expect(body.hasAttribute('data-has-inset')).toBe(true);
     });
 
@@ -203,7 +204,7 @@ describe('Shell inset prop', () => {
           <Shell.Content>content</Shell.Content>
         </Shell.Root>,
       );
-      const body = document.querySelector('.rt-ShellBody') as HTMLElement;
+      const body = document.querySelector('.rt-ShellRoot') as HTMLElement;
       expect(body.hasAttribute('data-has-inset')).toBe(true);
     });
 
@@ -219,7 +220,7 @@ describe('Shell inset prop', () => {
           </Shell.Inspector>
         </Shell.Root>,
       );
-      const body = document.querySelector('.rt-ShellBody') as HTMLElement;
+      const body = document.querySelector('.rt-ShellRoot') as HTMLElement;
       expect(body.hasAttribute('data-has-inset')).toBe(true);
     });
   });

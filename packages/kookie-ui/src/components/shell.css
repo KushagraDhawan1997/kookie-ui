@@ -1,312 +1,80 @@
 /* stylelint-disable selector-max-specificity */
 /*
-  Shell Layout System
-  - Slot-based layout with 7 slots: Header, Rail, Panel, Sidebar, Content, Inspector, Bottom
-  - Responsive presentation: fixed vs overlay per breakpoint
-  - Animation principle: collapse -> fade content, then collapse container; expand -> expand container, then fade content
-  - Composition rules: Rail+Panel OR Sidebar (exclusive)
+  Shell Layout System (0.8.0)
+
+  The Root is a CSS grid. Each pane claims its own area, so DOM order is free
+  and the Root never rearranges its children.
+
+  Every pane is one element at every width. What a pane shows and how it is
+  placed are two separate questions, resolved per breakpoint from data
+  attributes the pane writes from its props:
+
+  - Visibility. `data-state` is `auto` (untouched), `open` or `closed`. An
+    untouched pane writes `data-auto` (or `data-auto-<bp>`), what it shows at
+    each breakpoint. Closed is `display: none` in every posture.
+  - Posture. `data-presentation` (or `data-presentation-<bp>`) is `fixed`,
+    `overlay` or `stacked`. Posture is written into private `--rt-shell-*`
+    properties, which each pane reads with its own fallbacks for the frame.
+
+  The breakpoint blocks follow `_BREAKPOINTS` in shell.types.ts, smallest
+  first, so the largest matching breakpoint wins. A test holds the two equal.
+
+  Nothing moves. A pane opens and closes in one step, the way kookie-ui-v2's
+  Shell does since motion was removed there (LOG 2026-10-12).
 */
 
-/* Root container - vertical layout */
+/* ── Frame ─────────────────────────────────────────────────────────────────── */
+
 .rt-ShellRoot {
-  display: flex;
-  flex-direction: column;
+  /* Read by inset panes. Declared here, so the documented override on the Root works. */
+  --shell-inset-gap: var(--space-2);
+
+  display: grid;
+  grid-template-areas:
+    'header header header header header'
+    'rail panel sidebar content inspector'
+    'bottom bottom bottom bottom bottom';
+  grid-template-columns: auto auto auto minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   width: 100%;
+  height: 100vh;
   overflow: hidden;
-  /* Prevent scroll chaining to parent/body on iOS */
+  /* Prevent scroll chaining to the page on iOS. */
   overscroll-behavior: none;
-  /* Ensure Shell is the scroll boundary */
   position: relative;
+  /* Panes, the scrim and overlays stack inside the frame, not against the page. */
+  isolation: isolate;
 }
 
 /*
- * Default height. `height="full"` writes no inline style, so these apply;
- * any other `height` is written inline and wins. The old selector keyed on
- * `:not([style*='height'])` never matched, because Root wrote an inline
- * `100vh` for the default, so the `100dvh` override could not apply.
+ * `height="full"` writes no inline style, so this applies; any other `height`
+ * is written inline and wins.
  */
-.rt-ShellRoot {
-  height: 100vh;
-}
-
 @supports (height: 100dvh) {
   .rt-ShellRoot {
     height: 100dvh;
   }
 }
 
-/* Header - fixed at top */
+/* While an overlay is live the page holds still. Counted across Shells by the Root. */
+:root[data-rt-shell-lock] {
+  overflow: hidden;
+}
+
 .rt-ShellHeader {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  height: var(--shell-header-height, 64px);
-  min-height: var(--shell-header-height, 64px);
+  grid-area: header;
   display: flex;
   align-items: center;
-  flex-shrink: 0;
-}
-
-/* Body - main horizontal layout container */
-.rt-ShellBody {
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  position: relative; /* enable absolute positioning for peek overlays */
-  /* Prevent scroll chaining on iOS */
-  overscroll-behavior: contain;
-}
-
-/* Left container - holds Rail, Panel, or Sidebar */
-.rt-ShellLeft {
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  flex-shrink: 0;
-  height: 100%;
-}
-
-/* Rail - slim navigation strip */
-.rt-ShellRail {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden;
-
-  /* Above the panel, so a collapsing panel tucks behind it rather than across it. */
+  height: var(--shell-header-height, 64px);
+  min-height: var(--shell-header-height, 64px);
   position: relative;
   z-index: 2;
 }
 
-/* Steps to its width in one layout pass — see .rt-ShellPanel for why. */
-.rt-ShellRail[data-mode='expanded'] {
-  width: var(--rail-size, 64px);
-}
-
-.rt-ShellRail[data-mode='collapsed'] {
-  width: 0px;
-  transition: width 0s var(--motion-duration-small);
-}
-
-/* Peek overlay rules consolidated later to avoid duplication */
-
-.rt-ShellRailContent {
-  position: absolute;
-  inset-block: 0;
-  inset-inline-start: 0;
-
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  gap: var(--space-2);
-
-  /* Content animation */
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(-100%);
-  transition:
-    transform var(--motion-duration-small) var(--motion-ease-standard),
-    opacity var(--motion-duration-small) var(--motion-ease-standard);
-}
-
-:where([dir='rtl']) .rt-ShellRailContent {
-  transform: translateX(100%);
-}
-
-.rt-ShellRailContent[data-visible] {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(0);
-}
-
-/* Panel - sidebar content next to Rail */
-.rt-ShellPanel {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  /* Allow handle to bleed across boundary */
-  overflow: visible;
-  position: relative;
-  z-index: 1;
-}
-
-/*
- * The pane takes its width in one step rather than animating it. `width` is a
- * layout property, so animating it re-lays-out everything in `.rt-ShellContent`
- * on every frame of a collapse: measured on this stylesheet, that is 11 layout
- * passes per toggle and 5.3ms per frame with 100 rows of content beside it,
- * 10.1ms with 300 and 17.2ms with 800. Stepping to the final width costs one
- * layout pass, and the pane's contents slide on `transform`, which the
- * compositor handles without laying anything out.
- *
- * Expanding applies the width immediately, so the contents have somewhere to
- * slide into. Collapsing holds the width until the slide has finished — a `0s`
- * transition with a delay — so the contents are never sliding across
- * `.rt-ShellContent`, and the content area widens once, at the end.
- */
-.rt-ShellPanel[data-visible] {
-  width: var(--panel-size, 288px);
-}
-
-.rt-ShellPanel:not([data-visible]) {
-  width: 0px;
-  transition: width 0s var(--motion-duration-small);
-}
-
-.rt-ShellPanelContent {
-  /*
-   * Taken out of flow so it can slide across the space the pane no longer
-   * occupies. `.rt-ShellBody` clips it at the edge of the shell.
-   */
-  position: absolute;
-  inset-block: 0;
-  inset-inline-start: 0;
-
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-
-  /* Content animation */
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(-100%);
-  transition:
-    transform var(--motion-duration-small) var(--motion-ease-standard),
-    opacity var(--motion-duration-small) var(--motion-ease-standard);
-}
-
-:where([dir='rtl']) .rt-ShellPanelContent {
-  transform: translateX(100%);
-}
-
-.rt-ShellPanelContent[data-visible] {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(0);
-}
-
-:where([dir='rtl']) .rt-ShellPanelContent[data-visible] {
-  transform: translateX(0);
-}
-
-/* Sidebar - alternative to Rail+Panel */
-.rt-ShellSidebar {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  /* Allow handle to bleed across boundary */
-  overflow: visible;
-  position: relative;
-  z-index: 1;
-
-}
-
-/*
- * Steps to its width in one layout pass — see .rt-ShellPanel for why.
- *
- * Sidebar has two open sizes, so expanded and thin both apply immediately and
- * the switch between them is a step rather than a slide: there is no composited
- * way to move a pane between two widths that both take space in the flow. The
- * phase rules below already fade the contents out across that switch, so the
- * step lands while they are not visible.
- */
-.rt-ShellSidebar[data-mode='expanded'] {
-  width: var(--sidebar-size, 288px);
-}
-
-.rt-ShellSidebar[data-mode='thin'] {
-  width: var(--sidebar-thin-size, 64px);
-}
-
-.rt-ShellSidebar[data-mode='collapsed'] {
-  width: 0px;
-  transition: width 0s var(--motion-duration-small);
-}
-
-.rt-ShellSidebarContent {
-  position: absolute;
-  inset-block: 0;
-  inset-inline-start: 0;
-
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-
-  /* Content animation */
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(-100%);
-  transition:
-    transform var(--motion-duration-small) var(--motion-ease-standard),
-    opacity var(--motion-duration-small) var(--motion-ease-standard);
-}
-
-:where([dir='rtl']) .rt-ShellSidebarContent {
-  transform: translateX(100%);
-}
-
-/* Hide resizer in thin mode */
-.rt-ShellSidebar[data-mode='thin'] .rt-ShellResizer {
-  display: none;
-}
-
-.rt-ShellSidebarContent[data-visible] {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(0);
-}
-
-/* Sidebar presentation switch sequencing (thin ↔ expanded) */
-.rt-ShellSidebarContent[data-phase='hiding'] {
-  /* Immediately fade out */
-  opacity: 0;
-  transition: opacity var(--motion-duration-small) var(--motion-ease-standard);
-}
-.rt-ShellSidebarContent[data-phase='resizing'] {
-  /* Keep hidden during width transition */
-  opacity: 0;
-}
-.rt-ShellSidebarContent[data-phase='showing'] {
-  /* Fade back in after width settles */
-  opacity: 1;
-  transition: opacity var(--motion-duration-small) var(--motion-ease-standard);
-}
-
-
-/* Stacked Sidebar: left side, floating without reflow */
-.rt-ShellSidebar[data-presentation='stacked'] {
-  position: absolute;
-  inset-block: 0;
-  inset-inline-start: 0;
-  z-index: 31; /* between left and inspector; above content */
-  transform: translateX(-100%);
-  will-change: transform;
-  transition:
-    transform var(--motion-duration-small) var(--motion-ease-standard),
-    box-shadow var(--motion-duration-small) var(--motion-ease-standard);
-  box-shadow: 4px 0 12px -6px rgba(0, 0, 0, 0.2);
-}
-
-.rt-ShellSidebar[data-presentation='stacked'][data-open] {
-  transform: translateX(0);
-}
-
-.rt-ShellSidebar[data-presentation='stacked'][data-peek] {
-  transform: translateX(0);
-}
-
-/* Content - main work area (always required) */
 .rt-ShellContent {
-  flex: 1;
+  grid-area: content;
   min-width: 0;
-  height: 100%;
+  min-height: 0;
   overflow: auto;
   /* iOS momentum scrolling */
   -webkit-overflow-scrolling: touch;
@@ -316,241 +84,591 @@
   overscroll-behavior: contain;
 }
 
-/* Inspector - right-side panel */
-.rt-ShellInspector {
+/* While an overlay is live, nothing positioned inside the content can paint over it. */
+.rt-ShellRoot[data-overlay-live] > .rt-ShellContent {
+  isolation: isolate;
+}
+
+/* ── Panes ─────────────────────────────────────────────────────────────────── */
+
+/*
+ * Every pane declares every posture property, so a pane inside another pane
+ * (a nested Shell) never inherits its ancestor's posture. `initial` makes the
+ * property guaranteed-invalid, so the readers below fall back to the frame.
+ */
+.rt-ShellPane {
+  --rt-shell-position: initial;
+  --rt-shell-z: initial;
+  --rt-shell-row: initial;
+  --rt-shell-col: initial;
+  --rt-shell-surface: initial;
+  --rt-shell-shadow: initial;
+  --rt-shell-cap: initial;
+  --rt-shell-offset: initial;
+  --rt-shell-handle: initial;
+
   display: flex;
   flex-direction: column;
-  height: 100%;
-  /* Allow handle to bleed across boundary */
+  min-width: 0;
+  min-height: 0;
+  /* The resize handle straddles the pane's edge. */
   overflow: visible;
-  position: relative;
-  z-index: 1;
-
+  position: var(--rt-shell-position, relative);
+  /* Above the content, so a handle straddling the boundary can be grabbed from either side. */
+  z-index: var(--rt-shell-z, 1);
+  background-color: var(--rt-shell-surface);
+  box-shadow: var(--rt-shell-shadow, none);
 }
 
-/* Steps to its width in one layout pass — see .rt-ShellPanel for why. */
-.rt-ShellInspector[data-mode='expanded'] {
-  width: var(--inspector-size, 320px);
+.rt-ShellPane:focus {
+  /* A pane takes focus only programmatically, when it opens as an overlay. */
+  outline: none;
 }
 
-/* Collapsed inspector: stay in flow during transition, then hide */
-.rt-ShellInspector[data-mode='collapsed'] {
-  width: 0px;
-  transition: width 0s var(--motion-duration-small);
-}
-
-.rt-ShellInspectorContent {
-  position: absolute;
-  inset-block: 0;
-  inset-inline-end: 0;
-
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-
-  /* Content animation */
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(100%);
-  transition:
-    transform var(--motion-duration-small) var(--motion-ease-standard),
-    opacity var(--motion-duration-small) var(--motion-ease-standard);
-}
-
-:where([dir='rtl']) .rt-ShellInspectorContent {
-  transform: translateX(-100%);
-}
-
-.rt-ShellInspectorContent[data-visible] {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(0);
-}
-
-/* Bottom - bottom panel */
-.rt-ShellBottom {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  /* Allow handle to bleed across boundary */
-  overflow: visible;
-  flex-shrink: 0;
-  position: relative;
-
-}
-
-/* Steps to its height in one layout pass — see .rt-ShellPanel for why. */
-.rt-ShellBottom[data-mode='expanded'] {
-  height: var(--bottom-size, 200px);
-}
-
-.rt-ShellBottom[data-mode='collapsed'] {
-  height: 0px;
-  transition: height 0s var(--motion-duration-small);
-}
-
-.rt-ShellBottomContent {
-  position: absolute;
-  inset-inline: 0;
-  inset-block-end: 0;
-
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-
-  /* Content animation */
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(100%);
-  transition:
-    transform var(--motion-duration-small) var(--motion-ease-standard),
-    opacity var(--motion-duration-small) var(--motion-ease-standard);
-}
-
-.rt-ShellBottomContent[data-visible] {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-
-/* Disable transitions during active resize */
-.rt-ShellPanel[data-resizing],
-.rt-ShellSidebar[data-resizing],
-.rt-ShellInspector[data-resizing],
-.rt-ShellBottom[data-resizing] {
-  transition: none !important;
-}
-
-/* Hide resizer when panel isn't visible or is peeking */
-.rt-ShellPanel:not([data-visible]) .rt-ShellResizer,
-.rt-ShellPanel[data-peek] .rt-ShellResizer {
-  display: none;
-}
-
-/* Hide resizer for other panes when hidden or peeking */
-.rt-ShellInspector[data-mode='collapsed'] .rt-ShellResizer,
-.rt-ShellInspector[data-peek] .rt-ShellResizer,
-.rt-ShellBottom[data-mode='collapsed'] .rt-ShellResizer,
-.rt-ShellBottom[data-peek] .rt-ShellResizer,
-.rt-ShellSidebar[data-mode='collapsed'] .rt-ShellResizer,
-.rt-ShellSidebar[data-peek] .rt-ShellResizer {
-  display: none;
-}
-
-.rt-ShellBottom[data-mode='collapsed'] .rt-ShellBottomContent {
-  /* Exit animation: fade out content first, then collapse */
-  opacity: 0;
-  height: 0;
-  visibility: hidden;
-  transition: opacity var(--motion-duration-small) var(--motion-ease-standard);
-}
-
-/* Overlay mode handling */
-[data-presentation='overlay'] {
-  /* Overlay handled by JS/Sheet; no extra CSS needed */
-  contain: style;
-}
-
-/* Stacked mode handling: panes float above content without reflow */
-.rt-ShellLeft[data-presentation='stacked'] {
-  position: absolute;
+.rt-ShellRail {
+  grid-row: var(--rt-shell-row, rail);
+  grid-column: var(--rt-shell-col, rail);
   inset-block: 0;
   inset-inline-start: 0;
-  z-index: 30; /* below overlay sheets, above content/fixed */
-  transform: translateX(-100%);
-  will-change: transform;
-  transition:
-    transform var(--motion-duration-small) var(--motion-ease-standard),
-    box-shadow var(--motion-duration-small) var(--motion-ease-standard);
-  box-shadow: 4px 0 12px -6px rgba(0, 0, 0, 0.2);
+  inline-size: var(--rail-size, 64px);
+  max-inline-size: var(--rt-shell-cap, none);
 }
 
-.rt-ShellLeft[data-presentation='stacked'][data-open] {
-  transform: translateX(0);
+.rt-ShellPanel {
+  grid-row: var(--rt-shell-row, panel);
+  grid-column: var(--rt-shell-col, panel);
+  inset-block: 0;
+  /* Beside the Rail when floating; zero in the frame. */
+  inset-inline-start: var(--rt-shell-offset, 0px);
+  inline-size: var(--panel-size, 288px);
+  max-inline-size: var(--rt-shell-cap, none);
 }
 
-/* Ensure peek forces visibility in stacked mode */
-.rt-ShellLeft[data-presentation='stacked'][data-peek] {
-  transform: translateX(0);
+.rt-ShellSidebar {
+  grid-row: var(--rt-shell-row, sidebar);
+  grid-column: var(--rt-shell-col, sidebar);
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: var(--sidebar-size, 288px);
+  max-inline-size: var(--rt-shell-cap, none);
 }
 
-/* Stacked Inspector: right side */
-.rt-ShellInspector[data-presentation='stacked'] {
-  position: absolute;
+.rt-ShellSidebar[data-thin] {
+  inline-size: var(--sidebar-thin-size, 64px);
+}
+
+.rt-ShellInspector {
+  grid-row: var(--rt-shell-row, inspector);
+  grid-column: var(--rt-shell-col, inspector);
   inset-block: 0;
   inset-inline-end: 0;
-  z-index: 32; /* above left and bottom stacked */
-  width: var(--inspector-size, 320px);
-  transform: translateX(100%);
-  transition:
-    transform var(--motion-duration-small) var(--motion-ease-standard),
-    box-shadow var(--motion-duration-small) var(--motion-ease-standard);
-  box-shadow: -4px 0 12px -6px rgba(0, 0, 0, 0.2);
+  inline-size: var(--inspector-size, 320px);
+  max-inline-size: var(--rt-shell-cap, none);
 }
 
-.rt-ShellInspector[data-presentation='stacked'][data-open] {
-  transform: translateX(0);
-}
-
-.rt-ShellInspector[data-presentation='stacked'][data-peek] {
-  transform: translateX(0);
-}
-
-/* Stacked Bottom: bottom edge */
-.rt-ShellBottom[data-presentation='stacked'] {
-  position: absolute;
+.rt-ShellBottom {
+  grid-row: var(--rt-shell-row, bottom);
+  grid-column: var(--rt-shell-col, bottom);
   inset-inline: 0;
   inset-block-end: 0;
-  z-index: 31; /* between left and inspector */
-  height: var(--bottom-size, 200px);
-  transform: translateY(100%);
-  transition:
-    transform var(--motion-duration-small) var(--motion-ease-standard),
-    box-shadow var(--motion-duration-small) var(--motion-ease-standard);
-  box-shadow: 0 -4px 12px -6px rgba(0, 0, 0, 0.2);
+  block-size: var(--bottom-size, 200px);
+  max-block-size: var(--rt-shell-cap, none);
 }
 
-.rt-ShellBottom[data-presentation='stacked'][data-open] {
-  transform: translateY(0);
+/* A pane's content fills it. Kept as its own element so stylesheets written against 0.7 still find it. */
+.rt-ShellRailContent,
+.rt-ShellPanelContent,
+.rt-ShellSidebarContent,
+.rt-ShellInspectorContent,
+.rt-ShellBottomContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
 }
 
-.rt-ShellBottom[data-presentation='stacked'][data-peek] {
-  transform: translateY(0);
+.rt-ShellRailContent {
+  gap: var(--space-2);
 }
 
-/* Accessibility - reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .rt-ShellRail,
-  .rt-ShellPanel,
-  .rt-ShellSidebar,
-  .rt-ShellInspector,
-  .rt-ShellBottom,
-  .rt-ShellRailContent,
-  .rt-ShellPanelContent,
-  .rt-ShellSidebarContent,
-  .rt-ShellInspectorContent,
-  .rt-ShellBottomContent {
-    transition: none;
+/* Closed is closed, in every posture: out of the layout, the tab order and the accessibility tree. */
+.rt-ShellPane[data-state='closed'] {
+  display: none;
+}
+
+/* ── Visibility and posture, per breakpoint ────────────────────────────────── */
+
+/* Plain attributes: a pane whose presentation is one value, and the JS mirror. */
+.rt-ShellPane[data-presentation='overlay'],
+.rt-ShellRail[data-presentation='overlay'] ~ .rt-ShellPanel[data-presentation-follows] {
+  --rt-shell-position: absolute;
+  --rt-shell-z: 6;
+  --rt-shell-row: 1 / -1;
+  --rt-shell-col: 1 / -1;
+  --rt-shell-surface: var(--color-panel-solid);
+  --rt-shell-shadow: var(--shadow-5);
+  --rt-shell-cap: calc(100% - var(--space-8));
+  --rt-shell-offset: var(--shell-rail-offset, 0px);
+  --rt-shell-handle: none;
+}
+
+.rt-ShellPane[data-presentation='stacked'],
+.rt-ShellRail[data-presentation='stacked'] ~ .rt-ShellPanel[data-presentation-follows] {
+  --rt-shell-position: absolute;
+  --rt-shell-z: 3;
+  --rt-shell-row: 2 / 3;
+  --rt-shell-col: 1 / -1;
+  --rt-shell-surface: var(--color-panel-solid);
+  --rt-shell-shadow: var(--shadow-4);
+  --rt-shell-cap: initial;
+  --rt-shell-offset: var(--shell-rail-offset, 0px);
+  --rt-shell-handle: initial;
+}
+
+.rt-ShellPane[data-state='auto'][data-auto='closed'] {
+  display: none;
+}
+
+.rt-ShellSidebar[data-state='auto'][data-auto='thin'] {
+  inline-size: var(--sidebar-thin-size, 64px);
+}
+
+/* initial: below 520px, and the base every larger breakpoint overrides. */
+.rt-ShellPane[data-presentation-initial='fixed'],
+.rt-ShellRail[data-presentation-initial='fixed'] ~ .rt-ShellPanel[data-presentation-follows] {
+  --rt-shell-position: initial;
+  --rt-shell-z: initial;
+  --rt-shell-row: initial;
+  --rt-shell-col: initial;
+  --rt-shell-surface: initial;
+  --rt-shell-shadow: initial;
+  --rt-shell-cap: initial;
+  --rt-shell-offset: initial;
+  --rt-shell-handle: initial;
+}
+
+.rt-ShellPane[data-presentation-initial='overlay'],
+.rt-ShellRail[data-presentation-initial='overlay'] ~ .rt-ShellPanel[data-presentation-follows] {
+  --rt-shell-position: absolute;
+  --rt-shell-z: 6;
+  --rt-shell-row: 1 / -1;
+  --rt-shell-col: 1 / -1;
+  --rt-shell-surface: var(--color-panel-solid);
+  --rt-shell-shadow: var(--shadow-5);
+  --rt-shell-cap: calc(100% - var(--space-8));
+  --rt-shell-offset: var(--shell-rail-offset, 0px);
+  --rt-shell-handle: none;
+}
+
+.rt-ShellPane[data-presentation-initial='stacked'],
+.rt-ShellRail[data-presentation-initial='stacked'] ~ .rt-ShellPanel[data-presentation-follows] {
+  --rt-shell-position: absolute;
+  --rt-shell-z: 3;
+  --rt-shell-row: 2 / 3;
+  --rt-shell-col: 1 / -1;
+  --rt-shell-surface: var(--color-panel-solid);
+  --rt-shell-shadow: var(--shadow-4);
+  --rt-shell-cap: initial;
+  --rt-shell-offset: var(--shell-rail-offset, 0px);
+  --rt-shell-handle: initial;
+}
+
+.rt-ShellPane[data-state='auto'][data-auto-initial='closed'] {
+  display: none;
+}
+
+.rt-ShellPane[data-state='auto'][data-auto-initial='open'],
+.rt-ShellPane[data-state='auto'][data-auto-initial='thin'] {
+  display: flex;
+}
+
+.rt-ShellSidebar[data-state='auto'][data-auto-initial='open'] {
+  inline-size: var(--sidebar-size, 288px);
+}
+
+.rt-ShellSidebar[data-state='auto'][data-auto-initial='thin'] {
+  inline-size: var(--sidebar-thin-size, 64px);
+}
+
+@media (min-width: 520px) {
+  .rt-ShellPane[data-presentation-xs='fixed'],
+  .rt-ShellRail[data-presentation-xs='fixed'] ~ .rt-ShellPanel[data-presentation-follows] {
+    --rt-shell-position: initial;
+    --rt-shell-z: initial;
+    --rt-shell-row: initial;
+    --rt-shell-col: initial;
+    --rt-shell-surface: initial;
+    --rt-shell-shadow: initial;
+    --rt-shell-cap: initial;
+    --rt-shell-offset: initial;
+    --rt-shell-handle: initial;
+  }
+
+  .rt-ShellPane[data-presentation-xs='overlay'],
+  .rt-ShellRail[data-presentation-xs='overlay'] ~ .rt-ShellPanel[data-presentation-follows] {
+    --rt-shell-position: absolute;
+    --rt-shell-z: 6;
+    --rt-shell-row: 1 / -1;
+    --rt-shell-col: 1 / -1;
+    --rt-shell-surface: var(--color-panel-solid);
+    --rt-shell-shadow: var(--shadow-5);
+    --rt-shell-cap: calc(100% - var(--space-8));
+    --rt-shell-offset: var(--shell-rail-offset, 0px);
+    --rt-shell-handle: none;
+  }
+
+  .rt-ShellPane[data-presentation-xs='stacked'],
+  .rt-ShellRail[data-presentation-xs='stacked'] ~ .rt-ShellPanel[data-presentation-follows] {
+    --rt-shell-position: absolute;
+    --rt-shell-z: 3;
+    --rt-shell-row: 2 / 3;
+    --rt-shell-col: 1 / -1;
+    --rt-shell-surface: var(--color-panel-solid);
+    --rt-shell-shadow: var(--shadow-4);
+    --rt-shell-cap: initial;
+    --rt-shell-offset: var(--shell-rail-offset, 0px);
+    --rt-shell-handle: initial;
+  }
+
+  .rt-ShellPane[data-state='auto'][data-auto-xs='closed'] {
+    display: none;
+  }
+
+  .rt-ShellPane[data-state='auto'][data-auto-xs='open'],
+  .rt-ShellPane[data-state='auto'][data-auto-xs='thin'] {
+    display: flex;
+  }
+
+  .rt-ShellSidebar[data-state='auto'][data-auto-xs='open'] {
+    inline-size: var(--sidebar-size, 288px);
+  }
+
+  .rt-ShellSidebar[data-state='auto'][data-auto-xs='thin'] {
+    inline-size: var(--sidebar-thin-size, 64px);
   }
 }
 
-/* Trigger styling intentionally omitted */
+@media (min-width: 768px) {
+  .rt-ShellPane[data-presentation-sm='fixed'],
+  .rt-ShellRail[data-presentation-sm='fixed'] ~ .rt-ShellPanel[data-presentation-follows] {
+    --rt-shell-position: initial;
+    --rt-shell-z: initial;
+    --rt-shell-row: initial;
+    --rt-shell-col: initial;
+    --rt-shell-surface: initial;
+    --rt-shell-shadow: initial;
+    --rt-shell-cap: initial;
+    --rt-shell-offset: initial;
+    --rt-shell-handle: initial;
+  }
 
-/* Resizer handle (unstyled, full-edge overlay) */
+  .rt-ShellPane[data-presentation-sm='overlay'],
+  .rt-ShellRail[data-presentation-sm='overlay'] ~ .rt-ShellPanel[data-presentation-follows] {
+    --rt-shell-position: absolute;
+    --rt-shell-z: 6;
+    --rt-shell-row: 1 / -1;
+    --rt-shell-col: 1 / -1;
+    --rt-shell-surface: var(--color-panel-solid);
+    --rt-shell-shadow: var(--shadow-5);
+    --rt-shell-cap: calc(100% - var(--space-8));
+    --rt-shell-offset: var(--shell-rail-offset, 0px);
+    --rt-shell-handle: none;
+  }
+
+  .rt-ShellPane[data-presentation-sm='stacked'],
+  .rt-ShellRail[data-presentation-sm='stacked'] ~ .rt-ShellPanel[data-presentation-follows] {
+    --rt-shell-position: absolute;
+    --rt-shell-z: 3;
+    --rt-shell-row: 2 / 3;
+    --rt-shell-col: 1 / -1;
+    --rt-shell-surface: var(--color-panel-solid);
+    --rt-shell-shadow: var(--shadow-4);
+    --rt-shell-cap: initial;
+    --rt-shell-offset: var(--shell-rail-offset, 0px);
+    --rt-shell-handle: initial;
+  }
+
+  .rt-ShellPane[data-state='auto'][data-auto-sm='closed'] {
+    display: none;
+  }
+
+  .rt-ShellPane[data-state='auto'][data-auto-sm='open'],
+  .rt-ShellPane[data-state='auto'][data-auto-sm='thin'] {
+    display: flex;
+  }
+
+  .rt-ShellSidebar[data-state='auto'][data-auto-sm='open'] {
+    inline-size: var(--sidebar-size, 288px);
+  }
+
+  .rt-ShellSidebar[data-state='auto'][data-auto-sm='thin'] {
+    inline-size: var(--sidebar-thin-size, 64px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .rt-ShellPane[data-presentation-md='fixed'],
+  .rt-ShellRail[data-presentation-md='fixed'] ~ .rt-ShellPanel[data-presentation-follows] {
+    --rt-shell-position: initial;
+    --rt-shell-z: initial;
+    --rt-shell-row: initial;
+    --rt-shell-col: initial;
+    --rt-shell-surface: initial;
+    --rt-shell-shadow: initial;
+    --rt-shell-cap: initial;
+    --rt-shell-offset: initial;
+    --rt-shell-handle: initial;
+  }
+
+  .rt-ShellPane[data-presentation-md='overlay'],
+  .rt-ShellRail[data-presentation-md='overlay'] ~ .rt-ShellPanel[data-presentation-follows] {
+    --rt-shell-position: absolute;
+    --rt-shell-z: 6;
+    --rt-shell-row: 1 / -1;
+    --rt-shell-col: 1 / -1;
+    --rt-shell-surface: var(--color-panel-solid);
+    --rt-shell-shadow: var(--shadow-5);
+    --rt-shell-cap: calc(100% - var(--space-8));
+    --rt-shell-offset: var(--shell-rail-offset, 0px);
+    --rt-shell-handle: none;
+  }
+
+  .rt-ShellPane[data-presentation-md='stacked'],
+  .rt-ShellRail[data-presentation-md='stacked'] ~ .rt-ShellPanel[data-presentation-follows] {
+    --rt-shell-position: absolute;
+    --rt-shell-z: 3;
+    --rt-shell-row: 2 / 3;
+    --rt-shell-col: 1 / -1;
+    --rt-shell-surface: var(--color-panel-solid);
+    --rt-shell-shadow: var(--shadow-4);
+    --rt-shell-cap: initial;
+    --rt-shell-offset: var(--shell-rail-offset, 0px);
+    --rt-shell-handle: initial;
+  }
+
+  .rt-ShellPane[data-state='auto'][data-auto-md='closed'] {
+    display: none;
+  }
+
+  .rt-ShellPane[data-state='auto'][data-auto-md='open'],
+  .rt-ShellPane[data-state='auto'][data-auto-md='thin'] {
+    display: flex;
+  }
+
+  .rt-ShellSidebar[data-state='auto'][data-auto-md='open'] {
+    inline-size: var(--sidebar-size, 288px);
+  }
+
+  .rt-ShellSidebar[data-state='auto'][data-auto-md='thin'] {
+    inline-size: var(--sidebar-thin-size, 64px);
+  }
+}
+
+@media (min-width: 1280px) {
+  .rt-ShellPane[data-presentation-lg='fixed'],
+  .rt-ShellRail[data-presentation-lg='fixed'] ~ .rt-ShellPanel[data-presentation-follows] {
+    --rt-shell-position: initial;
+    --rt-shell-z: initial;
+    --rt-shell-row: initial;
+    --rt-shell-col: initial;
+    --rt-shell-surface: initial;
+    --rt-shell-shadow: initial;
+    --rt-shell-cap: initial;
+    --rt-shell-offset: initial;
+    --rt-shell-handle: initial;
+  }
+
+  .rt-ShellPane[data-presentation-lg='overlay'],
+  .rt-ShellRail[data-presentation-lg='overlay'] ~ .rt-ShellPanel[data-presentation-follows] {
+    --rt-shell-position: absolute;
+    --rt-shell-z: 6;
+    --rt-shell-row: 1 / -1;
+    --rt-shell-col: 1 / -1;
+    --rt-shell-surface: var(--color-panel-solid);
+    --rt-shell-shadow: var(--shadow-5);
+    --rt-shell-cap: calc(100% - var(--space-8));
+    --rt-shell-offset: var(--shell-rail-offset, 0px);
+    --rt-shell-handle: none;
+  }
+
+  .rt-ShellPane[data-presentation-lg='stacked'],
+  .rt-ShellRail[data-presentation-lg='stacked'] ~ .rt-ShellPanel[data-presentation-follows] {
+    --rt-shell-position: absolute;
+    --rt-shell-z: 3;
+    --rt-shell-row: 2 / 3;
+    --rt-shell-col: 1 / -1;
+    --rt-shell-surface: var(--color-panel-solid);
+    --rt-shell-shadow: var(--shadow-4);
+    --rt-shell-cap: initial;
+    --rt-shell-offset: var(--shell-rail-offset, 0px);
+    --rt-shell-handle: initial;
+  }
+
+  .rt-ShellPane[data-state='auto'][data-auto-lg='closed'] {
+    display: none;
+  }
+
+  .rt-ShellPane[data-state='auto'][data-auto-lg='open'],
+  .rt-ShellPane[data-state='auto'][data-auto-lg='thin'] {
+    display: flex;
+  }
+
+  .rt-ShellSidebar[data-state='auto'][data-auto-lg='open'] {
+    inline-size: var(--sidebar-size, 288px);
+  }
+
+  .rt-ShellSidebar[data-state='auto'][data-auto-lg='thin'] {
+    inline-size: var(--sidebar-thin-size, 64px);
+  }
+}
+
+@media (min-width: 1640px) {
+  .rt-ShellPane[data-presentation-xl='fixed'],
+  .rt-ShellRail[data-presentation-xl='fixed'] ~ .rt-ShellPanel[data-presentation-follows] {
+    --rt-shell-position: initial;
+    --rt-shell-z: initial;
+    --rt-shell-row: initial;
+    --rt-shell-col: initial;
+    --rt-shell-surface: initial;
+    --rt-shell-shadow: initial;
+    --rt-shell-cap: initial;
+    --rt-shell-offset: initial;
+    --rt-shell-handle: initial;
+  }
+
+  .rt-ShellPane[data-presentation-xl='overlay'],
+  .rt-ShellRail[data-presentation-xl='overlay'] ~ .rt-ShellPanel[data-presentation-follows] {
+    --rt-shell-position: absolute;
+    --rt-shell-z: 6;
+    --rt-shell-row: 1 / -1;
+    --rt-shell-col: 1 / -1;
+    --rt-shell-surface: var(--color-panel-solid);
+    --rt-shell-shadow: var(--shadow-5);
+    --rt-shell-cap: calc(100% - var(--space-8));
+    --rt-shell-offset: var(--shell-rail-offset, 0px);
+    --rt-shell-handle: none;
+  }
+
+  .rt-ShellPane[data-presentation-xl='stacked'],
+  .rt-ShellRail[data-presentation-xl='stacked'] ~ .rt-ShellPanel[data-presentation-follows] {
+    --rt-shell-position: absolute;
+    --rt-shell-z: 3;
+    --rt-shell-row: 2 / 3;
+    --rt-shell-col: 1 / -1;
+    --rt-shell-surface: var(--color-panel-solid);
+    --rt-shell-shadow: var(--shadow-4);
+    --rt-shell-cap: initial;
+    --rt-shell-offset: var(--shell-rail-offset, 0px);
+    --rt-shell-handle: initial;
+  }
+
+  .rt-ShellPane[data-state='auto'][data-auto-xl='closed'] {
+    display: none;
+  }
+
+  .rt-ShellPane[data-state='auto'][data-auto-xl='open'],
+  .rt-ShellPane[data-state='auto'][data-auto-xl='thin'] {
+    display: flex;
+  }
+
+  .rt-ShellSidebar[data-state='auto'][data-auto-xl='open'] {
+    inline-size: var(--sidebar-size, 288px);
+  }
+
+  .rt-ShellSidebar[data-state='auto'][data-auto-xl='thin'] {
+    inline-size: var(--sidebar-thin-size, 64px);
+  }
+}
+
+/* ── Peek ──────────────────────────────────────────────────────────────────── */
+
+/*
+ * A Trigger with `peekOnHover` previews a closed pane while the pointer is on
+ * it. The pane shows, floating above the content at its edge. After every
+ * breakpoint block, so it wins over a closed state at any width.
+ */
+.rt-ShellPane[data-peek][data-state] {
+  --rt-shell-position: absolute;
+  --rt-shell-z: 4;
+  --rt-shell-row: 2 / 3;
+  --rt-shell-col: 1 / -1;
+  --rt-shell-surface: var(--color-panel-solid);
+  --rt-shell-shadow: var(--shadow-4);
+  --rt-shell-offset: var(--shell-rail-offset, 0px);
+  --rt-shell-handle: none;
+
+  display: flex;
+}
+
+.rt-ShellSidebar[data-peek][data-state] {
+  inline-size: var(--peek-sidebar-width, var(--sidebar-size, 288px));
+}
+
+/* ── Scrim ─────────────────────────────────────────────────────────────────── */
+
+/* Root-owned and always mounted; shown while an overlay is live. Under the overlay panes, over everything else. */
+.rt-ShellScrim {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background-color: var(--color-overlay);
+}
+
+.rt-ShellRoot[data-overlay-live] > .rt-ShellScrim {
+  display: block;
+}
+
+/* ── Inset ─────────────────────────────────────────────────────────────────── */
+
+/* The backdrop behind the middle row while any pane is inset. A grid item of its own, so the header and the bottom row keep the page. */
+.rt-ShellRoot[data-has-inset]::before {
+  content: '';
+  grid-row: 2;
+  grid-column: 1 / -1;
+  background: var(--gray-2);
+}
+
+.rt-ShellPane[data-inset],
+.rt-ShellContent[data-inset] {
+  margin: var(--shell-inset-gap);
+  border-radius: var(--radius-surface-3);
+  background: var(--color-background);
+  box-shadow: var(--shadow-2);
+}
+
+/*
+ * Two inset panes side by side share one gap rather than doubling it: the
+ * later pane in the row drops the margin on the side that meets the earlier
+ * one. A closed neighbour does not count.
+ */
+.rt-ShellRoot:has(> .rt-ShellRail[data-inset]:not([data-state='closed'])) > .rt-ShellPanel[data-inset],
+.rt-ShellRoot:has(> :is(.rt-ShellRail, .rt-ShellPanel)[data-inset]:not([data-state='closed'])) > .rt-ShellSidebar[data-inset],
+.rt-ShellRoot:has(> :is(.rt-ShellRail, .rt-ShellPanel, .rt-ShellSidebar)[data-inset]:not([data-state='closed'])) > .rt-ShellContent[data-inset],
+.rt-ShellRoot:has(> :is(.rt-ShellRail, .rt-ShellPanel, .rt-ShellSidebar, .rt-ShellContent)[data-inset]:not([data-state='closed'])) > .rt-ShellInspector[data-inset] {
+  margin-inline-start: 0;
+}
+
+.rt-ShellRoot:has(> :is(.rt-ShellRail, .rt-ShellPanel, .rt-ShellSidebar, .rt-ShellContent, .rt-ShellInspector)[data-inset]:not([data-state='closed'])) > .rt-ShellBottom[data-inset] {
+  margin-block-start: 0;
+}
+
+/* ── Resize handle ─────────────────────────────────────────────────────────── */
+
+/* A transparent hit area straddling the pane's edge. */
 .rt-ShellResizer {
   position: absolute;
   z-index: 1;
   background: transparent;
   /* hit target size, adjustable per media */
   --resizer-hit: var(--space-3);
-  display: flex;
+  display: var(--rt-shell-handle, flex);
   align-items: center;
   justify-content: center;
   overflow: visible;
+  touch-action: none;
 }
 
 .rt-ShellResizer[data-orientation='vertical'][data-edge='end'] {
@@ -562,6 +680,10 @@
   transform: translateX(50%);
 }
 
+:where([dir='rtl']) .rt-ShellResizer[data-orientation='vertical'][data-edge='end'] {
+  transform: translateX(-50%);
+}
+
 .rt-ShellResizer[data-orientation='vertical'][data-edge='start'] {
   inset-block: 0;
   inset-inline-start: 0;
@@ -569,6 +691,10 @@
   block-size: 100%;
   cursor: col-resize;
   transform: translateX(-50%);
+}
+
+:where([dir='rtl']) .rt-ShellResizer[data-orientation='vertical'][data-edge='start'] {
+  transform: translateX(50%);
 }
 
 .rt-ShellResizer[data-orientation='horizontal'][data-edge='start'] {
@@ -587,10 +713,9 @@
 }
 
 /*
- * Focus. The handle is a transparent hit area straddling the pane's edge, so
- * an outline would draw a box around nothing in particular. It draws the
- * system's focus value as a 2px line on the edge itself, which is the thing
- * being moved. Before this the handle took focus and showed nothing.
+ * The boundary as a line on the pane's edge: shown on hover, on keyboard
+ * focus and while dragging, so the handle is visible when it matters and the
+ * frame carries no rule otherwise.
  */
 .rt-ShellResizer::before {
   content: '';
@@ -611,6 +736,11 @@
   block-size: 2px;
 }
 
+.rt-ShellResizer:hover::before,
+.rt-ShellResizer[data-dragging]::before {
+  background-color: var(--gray-a6);
+}
+
 .rt-ShellResizer:focus-visible {
   outline: none;
 }
@@ -619,100 +749,7 @@
   background-color: var(--focus-8);
 }
 
-/* --- Peek overlays (override after pane rules) --- */
-.rt-ShellRail[data-peek],
-.rt-ShellPanel[data-peek],
-.rt-ShellSidebar[data-peek],
-.rt-ShellInspector[data-peek],
-.rt-ShellBottom[data-peek] {
-  position: absolute;
-  z-index: 40;
-}
-
-/* Directional shadows for peeks */
-.rt-ShellRail[data-peek],
-.rt-ShellPanel[data-peek],
-.rt-ShellSidebar[data-peek] {
-  box-shadow: 4px 0 8px -4px rgba(0, 0, 0, 0.15);
-}
-
-.rt-ShellInspector[data-peek] {
-  box-shadow: -4px 0 8px -4px rgba(0, 0, 0, 0.15);
-}
-
-.rt-ShellBottom[data-peek] {
-  box-shadow: 0 -4px 8px -4px rgba(0, 0, 0, 0.15);
-}
-
-/* Peek: expand container first, then fade content in */
-.rt-ShellRail[data-peek] .rt-ShellRailContent,
-.rt-ShellPanel[data-peek] .rt-ShellPanelContent,
-.rt-ShellSidebar[data-peek] .rt-ShellSidebarContent,
-.rt-ShellInspector[data-peek] .rt-ShellInspectorContent,
-.rt-ShellBottom[data-peek] .rt-ShellBottomContent {
-  opacity: 1;
-  transition-delay: var(--motion-duration-small);
-}
-
-/* Rail peek: left edge */
-.rt-ShellRail[data-peek] {
-  inset-block: 0;
-  inset-inline-start: 0;
-  width: var(--rail-size, 64px);
-}
-
-/* Panel peek: offset by rail width; override hidden width */
-.rt-ShellPanel[data-peek] {
-  inset-block: 0;
-  inset-inline-start: var(--peek-rail-width, var(--rail-size, 64px));
-  width: var(--panel-size, 288px);
-}
-
-/* Sidebar peek: left edge; preview next width (thin or expanded) */
-.rt-ShellSidebar[data-peek] {
-  inset-block: 0;
-  inset-inline-start: 0;
-  width: var(--peek-sidebar-width, var(--sidebar-size, 288px));
-}
-
-/* Inspector peek: right edge; ensure width even when collapsed */
-.rt-ShellInspector[data-peek] {
-  inset-block: 0;
-  inset-inline-end: 0;
-  width: var(--inspector-size, 320px);
-}
-.rt-ShellInspector[data-peek][data-mode='collapsed'] {
-  width: var(--inspector-size, 320px);
-}
-
-/* Bottom peek: bottom edge; ensure height when collapsed */
-.rt-ShellBottom[data-peek] {
-  inset-inline: 0;
-  inset-block-end: 0;
-  height: var(--bottom-size, 200px);
-}
-.rt-ShellBottom[data-peek][data-mode='collapsed'] {
-  height: var(--bottom-size, 200px);
-}
-
-/* --- Inset mode: floating panes with gray backdrop --- */
-
-/* Shell body gets gray backdrop when any pane has inset */
-.rt-ShellBody[data-has-inset] {
-  background: var(--gray-2);
-}
-
-/* Inset pane shared styles */
-.rt-ShellLeft[data-inset],
-.rt-ShellSidebar[data-inset],
-.rt-ShellContent[data-inset],
-.rt-ShellInspector[data-inset],
-.rt-ShellBottom[data-inset] {
-  --shell-inset-gap: var(--space-2);
-  margin: var(--shell-inset-gap);
-  border-radius: var(--radius-surface-3);
-  background: var(--color-background);
-  box-shadow: var(--shadow-2);
-  /* Override height: 100% so margin doesn't overflow */
-  height: auto;
+/* Hide the handle while its pane is a thin sidebar. */
+.rt-ShellSidebar[data-thin] .rt-ShellResizer {
+  display: none;
 }

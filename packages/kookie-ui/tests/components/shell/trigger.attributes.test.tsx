@@ -2,6 +2,7 @@ import * as React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { renderWithProviders, screen } from '../../test-utils';
 import userEvent from '@testing-library/user-event';
+import { fireEvent } from '@testing-library/react';
 import { Shell } from '../../../src/components/index';
 
 function Frame({ children, inspectorId }: { children: React.ReactNode; inspectorId?: string }) {
@@ -94,5 +95,68 @@ describe('Shell.Trigger attributes', () => {
     );
     const controls = screen.getByRole('button', { name: 'sidebar' }).getAttribute('aria-controls');
     expect(document.getElementById(controls!)?.classList.contains('rt-ShellSidebar')).toBe(true);
+  });
+
+  it('reports whether its pane is open with aria-expanded', () => {
+    renderWithProviders(
+      <Frame>
+        <Shell.Trigger target="inspector">inspector</Shell.Trigger>
+      </Frame>,
+    );
+    const trigger = screen.getByRole('button', { name: 'inspector' });
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+
+    fireEvent.click(trigger);
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+
+    fireEvent.click(trigger);
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('runs the consumer onClick first, and preventDefault there cancels it', () => {
+    const onOpenChange = vi.fn();
+    renderWithProviders(
+      <Shell.Root>
+        <Shell.Header>
+          <Shell.Trigger target="inspector" onClick={(event) => event.preventDefault()}>
+            inspector
+          </Shell.Trigger>
+        </Shell.Header>
+        <Shell.Content>content</Shell.Content>
+        <Shell.Inspector presentation="fixed" onOpenChange={onOpenChange}>
+          inspector
+        </Shell.Inspector>
+      </Shell.Root>,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'inspector' }));
+
+    expect(onOpenChange).not.toHaveBeenCalled();
+    // Still untouched, and still showing nothing.
+    const inspector = document.querySelector('.rt-ShellInspector');
+    expect(inspector?.getAttribute('data-state')).toBe('auto');
+    expect(inspector?.getAttribute('data-mode')).toBe('collapsed');
+  });
+
+  it('expand and collapse only ever move one way', () => {
+    renderWithProviders(
+      <Frame>
+        <Shell.Trigger target="inspector" action="expand">
+          expand
+        </Shell.Trigger>
+        <Shell.Trigger target="inspector" action="collapse">
+          collapse
+        </Shell.Trigger>
+      </Frame>,
+    );
+    const inspector = document.querySelector('.rt-ShellInspector') as HTMLElement;
+
+    fireEvent.click(screen.getByRole('button', { name: 'expand' }));
+    fireEvent.click(screen.getByRole('button', { name: 'expand' }));
+    expect(inspector.getAttribute('data-state')).toBe('open');
+
+    fireEvent.click(screen.getByRole('button', { name: 'collapse' }));
+    fireEvent.click(screen.getByRole('button', { name: 'collapse' }));
+    expect(inspector.getAttribute('data-state')).toBe('closed');
   });
 });
