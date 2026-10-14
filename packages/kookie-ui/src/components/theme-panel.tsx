@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { useCallbackRef } from 'radix-ui/internal';
+import { useCallbackRef } from '../helpers/react-utils.js';
 import { flushSync } from 'react-dom';
 
 import { AccessibleIcon } from './accessible-icon.js';

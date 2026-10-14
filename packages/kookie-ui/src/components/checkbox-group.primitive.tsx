@@ -2,13 +2,9 @@
 
 import * as React from 'react';
 import { Checkbox as CheckboxPrimitive, Direction } from 'radix-ui';
-import {
-  Context,
-  Primitive,
-  useComposedRefs,
-  RovingFocus,
-  useControllableState,
-} from 'radix-ui/internal';
+import { Context, Primitive, RovingFocus } from 'radix-ui/internal';
+
+import { useComposedRefs, useControllableState } from '../helpers/react-utils.js';
 
 const { useDirection } = Direction;
 

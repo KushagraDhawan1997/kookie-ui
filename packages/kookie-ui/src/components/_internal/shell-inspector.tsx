@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import classNames from 'classnames';
-import { useComposedRefs } from 'radix-ui/internal';
+import { useComposedRefs } from '../../helpers/react-utils.js';
 import { PaneResizeContext } from './shell-resize.js';
 import { InspectorHandle, PaneHandle } from './shell-handles.js';
 import { usePane, paneAttributes, usePresentationTable } from './shell-pane.js';

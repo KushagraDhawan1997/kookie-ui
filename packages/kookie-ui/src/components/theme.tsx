@@ -3,7 +3,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { Direction, Slot, Tooltip as TooltipPrimitive } from 'radix-ui';
-import { useComposedRefs, useLayoutEffect } from 'radix-ui/internal';
+import { useComposedRefs, useLayoutEffect } from '../helpers/react-utils.js';
 
 import { getMatchingGrayColor } from '../helpers/get-matching-gray-color.js';
 import { usePropSyncedState } from '../hooks/use-prop-synced-state.js';

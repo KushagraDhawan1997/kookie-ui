@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import classNames from 'classnames';
-import { composeEventHandlers } from 'radix-ui/internal';
+import { composeEventHandlers } from '../helpers/react-utils.js';
 
 import { radioPropDefs } from './radio.props.js';
 import { marginPropDefs } from '../props/margin.props.js';

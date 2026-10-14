@@ -22,7 +22,7 @@
 
 import * as React from 'react';
 import classNames from 'classnames';
-import { useComposedRefs } from 'radix-ui/internal';
+import { useComposedRefs } from '../helpers/react-utils.js';
 import { PaneResizeContext } from './_internal/shell-resize.js';
 import { PaneHandle, PanelHandle } from './_internal/shell-handles.js';
 import { Sidebar } from './_internal/shell-sidebar.js';

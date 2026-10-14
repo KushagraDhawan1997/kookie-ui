@@ -1,7 +1,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { LazyMotion, MotionConfig, domAnimation, m } from 'motion/react';
-import { useComposedRefs } from 'radix-ui/internal';
+import { useComposedRefs } from '../helpers/react-utils.js';
 import { useDropzone } from 'react-dropzone';
 
 import { IconButton, type IconButtonProps } from './icon-button.js';

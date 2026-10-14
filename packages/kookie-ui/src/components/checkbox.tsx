@@ -3,7 +3,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { Checkbox as CheckboxPrimitive } from 'radix-ui';
-import { useControllableState } from 'radix-ui/internal';
+import { useControllableState } from '../helpers/react-utils.js';
 
 import { checkboxPropDefs } from './checkbox.props.js';
 import { ThickCheckIcon, ThickDividerHorizontalIcon } from './icons.js';

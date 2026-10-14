@@ -3,7 +3,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { ToggleGroup as ToggleGroupPrimitive } from 'radix-ui';
-import { useControllableState } from 'radix-ui/internal';
+import { useControllableState } from '../helpers/react-utils.js';
 
 import { segmentedControlRootPropDefs } from './segmented-control.props.js';
 import { extractProps } from '../helpers/extract-props.js';

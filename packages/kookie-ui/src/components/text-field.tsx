@@ -3,7 +3,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import classNames from 'classnames';
-import { composeRefs } from 'radix-ui/internal';
+import { composeRefs } from '../helpers/react-utils.js';
 
 import { textFieldRootPropDefs, textFieldSlotPropDefs, type TextFieldSlotScrubProps } from './text-field.props.js';
 import { extractProps } from '../helpers/extract-props.js';

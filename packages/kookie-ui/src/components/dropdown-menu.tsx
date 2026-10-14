@@ -3,7 +3,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { DropdownMenu as DropdownMenuPrimitive, Slot } from 'radix-ui';
-import { useCallbackRef } from 'radix-ui/internal';
+import { useCallbackRef } from '../helpers/react-utils.js';
 
 import { ScrollArea } from './scroll-area.js';
 import {
