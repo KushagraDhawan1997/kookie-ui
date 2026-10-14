@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@10.0.0",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "prebuild": "pnpm -w build:pkg",
     "dev": "next dev --webpack --port 2509",
