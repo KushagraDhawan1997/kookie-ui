@@ -120,16 +120,16 @@ export default function ShellInsetTest() {
           <Box p="4" style={{ background: 'var(--gray-a3)', borderRadius: 'var(--radius-3)' }}>
             <Heading size="3" mb="2">How Inset Works</Heading>
             <Text as="div" size="2" mb="2">
-              • Shell body gets <code>background: var(--gray-2)</code> when any pane has inset
+              • The Shell root paints <code>var(--gray-2)</code> behind the middle row when any pane has inset
             </Text>
             <Text as="div" size="2" mb="2">
-              • Each inset pane gets <code>margin</code> and <code>border-radius</code>
+              • Each inset pane gets a margin, rounded corners, a background and a shadow
             </Text>
             <Text as="div" size="2" mb="2">
-              • Visual styling (shadow, bg) is handled by child components
+              • The backdrop is painted from the server HTML, before hydration
             </Text>
             <Text as="div" size="2">
-              • Adjacent inset panes have 2x gap between them
+              • Adjacent inset panes share one gap
             </Text>
           </Box>
         </Box>

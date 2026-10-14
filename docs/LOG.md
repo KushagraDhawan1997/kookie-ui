@@ -2,6 +2,34 @@
 
 Decisions about Kookie UI v1 and why they were made. Newest first. The docs site is the source of truth for what the system says. This file records how it got there.
 
+## 2026-10-12: the Shell rebuild (0.7.1 and 0.8.0)
+
+The Shell is rebuilt on v2's model behind v1's API, as `shell-plan.md` and swan-frontend's `shell-execution-plan.md` lay out. It ships in two releases, following the 2026-09-19 rule that internals and API changes ship apart: 0.7.1 fixes eight bugs on the old code, and 0.8.0 replaces the internals and adds the deprecation warnings. No working prop is removed until 1.0; only `height` and `resizer`, which no pane ever read, leave the pane types. Neither release is tagged or published yet.
+
+**What v2 decided, and v1 now agrees with:**
+
+- State lives on each pane: `auto` (untouched), `open` or `closed`. `auto` is resolved by the stylesheet, so the first paint is right without a script and no callback fires on mount or on a resize.
+- Callbacks report what a user did. `reason` is `toggle` or `dismiss`.
+- A pane is one element at every width. Overlay is how that element is placed, not a second component.
+- The Root contains an open overlay: one scrim, `inert` on everything else, focus moved in and returned, Escape, and a page lock.
+- Panes do not drive each other. The Rail/Panel cascade is gone; an app writes it in `onOpenChange` if it wants it.
+
+**How v1 differs from v2, on purpose.** v1 keeps responsive prop objects. They are resolved into one value per breakpoint, written to the DOM as `data-presentation-<bp>` and `data-auto-<bp>`, and read by `@media` blocks at the same widths as `useBreakpoint`. A test holds the stylesheet's widths to `_BREAKPOINTS`, so the two readers cannot disagree.
+
+**Motion is removed from the Shell** (Kushagra, 2026-10-12). This matches v2, which removed all motion on 2026-09-20. A test fails on any transition, animation or keyframes in `shell.css`.
+
+**Decisions the plan left open, taken provisionally.** Kushagra said to build it without answering §7 decisions 1, 2 and 6. These are the choices made, each the smallest change, and each can still be reversed before the tag:
+
+1. Sidebar `thin`: option (a). `state`/`defaultState`/`onStateChange` stay the Sidebar's API, and `thin` is a value the pane holds. swan recommended (b), deprecating the three values for `open` plus a `thin` boolean. That is a deprecation, so it can follow in a later minor.
+2. Rail and Panel: kept as two parts. A Panel with no `presentation` of its own follows the Rail's.
+3. Peek: deprecated with a warning (§7 decision 3 closed as "remove").
+4. Snap points, `collapseThreshold`, `paneId` and persistence: deprecated with a warning (decision 4 closed as "remove"). Womp uses none of them.
+5. The overlay boundary is 768px for Sidebar and Inspector, as in v2 (decision 5).
+6. Page-scroll on narrow touch: not adopted. The inner scroller stays.
+7. "Open when there is room" stays app-owned: v1 answers it with a responsive `defaultOpen`.
+
+**Found while checking it in a browser:** the inset backdrop waited for hydration, because the Root sets `data-has-inset` from an effect. A `:has(> [data-inset])` rule now paints it from the server markup. The scrim still appears only after hydration, since a correct CSS-only scrim would need a negation rule at every breakpoint.
+
 ## 2026-09-19: Principles and Vocabulary
 
 The first two chapters are written. They follow v2's pages section by section, with two changes:

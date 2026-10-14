@@ -65,9 +65,6 @@ export default function ShellControlledTest() {
     (open: boolean, meta: { reason: string }) => {
       addLog('Panel', 'onOpenChange', `open=${open}, reason=${meta.reason}`);
       setPanelOpen(open);
-      if (!open && meta.reason === 'left') {
-        addLog('Panel', 'cascade', 'Panel closed because Rail was collapsed');
-      }
     },
     [addLog],
   );
@@ -281,11 +278,11 @@ export default function ShellControlledTest() {
             </Flex>
           </Box>
 
-          {/* Cascade test */}
+          {/* Independence test: since 0.8.0 the Rail and the Panel do not drive each other */}
           <Box mb="5" p="4" style={{ background: 'var(--amber-a3)', borderRadius: 'var(--radius-3)' }}>
-            <Heading size="3" mb="3">Cascade Tests</Heading>
+            <Heading size="3" mb="3">Rail and Panel</Heading>
             <Text size="2" emphasis="medium" mb="3">
-              Test Rail→Panel cascade behavior in controlled mode.
+              The Rail and the Panel are independent. Neither button below should change the other pane, and the log should show no callback.
             </Text>
             <Flex gap="2" wrap="wrap">
               <Button
@@ -293,22 +290,22 @@ export default function ShellControlledTest() {
                 variant="classic"
                 color="amber"
                 onClick={() => {
-                  addLog('Test', 'cascade-close', 'Closing Rail — Panel should cascade close');
+                  addLog('Test', 'rail-close', 'Closing Rail — Panel should stay as it is');
                   setRailOpen(false);
                 }}
               >
-                Close Rail (should cascade Panel)
+                Close Rail (Panel stays)
               </Button>
               <Button
                 size="2"
                 variant="classic"
                 color="amber"
                 onClick={() => {
-                  addLog('Test', 'cascade-open', 'Opening Panel — Rail should auto-open');
+                  addLog('Test', 'panel-open', 'Opening Panel — Rail should stay as it is');
                   setPanelOpen(true);
                 }}
               >
-                Open Panel (should auto-open Rail)
+                Open Panel (Rail stays)
               </Button>
               <Button
                 size="2"

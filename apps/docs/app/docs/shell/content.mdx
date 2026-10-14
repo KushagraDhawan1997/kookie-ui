@@ -1,10 +1,10 @@
 ---
 title: Shell
-description: The Shell component is a complete layout engine for building application interfaces. It manages layout state, composition rules, and responsive behavior across seven core slots.
+description: The app frame, with panes that open, close and resize
 source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/shell.tsx
 ---
 
-The Shell component is a complete layout engine for building application interfaces. It manages layout state, composition rules, and responsive behavior across seven core slots: Header, Rail, Panel, Sidebar, Content, Inspector, and Bottom.
+Shell is the frame of an application. It places a header, navigation, the main content, an inspector and a bottom panel on a CSS grid. Each pane holds its own open state, follows the window when nobody has touched it, and becomes an overlay where there is no room for it.
 
 ## Installation
 
@@ -17,712 +17,347 @@ npm install @kushagradhawan/kookie-ui
 ```tsx
 import { Shell } from '@kushagradhawan/kookie-ui';
 
-export function MyApp() {
+export function App() {
   return (
     <Shell.Root>
-      <Shell.Sidebar defaultState="expanded">
+      <Shell.Sidebar>
         <nav>Navigation</nav>
       </Shell.Sidebar>
-      <Shell.Content>
-        <main>Main content</main>
-      </Shell.Content>
+      <Shell.Content>Main content</Shell.Content>
     </Shell.Root>
   );
 }
 ```
+
+On a window 768px or wider the sidebar sits in the frame and is open. Below 768px it is an overlay and is closed until a `Shell.Trigger` opens it.
 
 ## Anatomy
 
-Shell is a compound component with the following parts:
-
-```tsx
+```tsx showLineNumbers
 <Shell.Root>
-  <Shell.Header>{/* Global navigation */}</Shell.Header>
-  <Shell.Rail>{/* Icon strip */}</Shell.Rail>
-  <Shell.Panel>{/* Expanded navigation */}</Shell.Panel>
-  <Shell.Sidebar>{/* Unified sidebar (alternative to Rail+Panel) */}</Shell.Sidebar>
-  <Shell.Content>{/* Main content area (required) */}</Shell.Content>
-  <Shell.Inspector>{/* Right-side panel */}</Shell.Inspector>
-  <Shell.Bottom>{/* Bottom panel */}</Shell.Bottom>
-  <Shell.Trigger target="sidebar">{/* Toggle button */}</Shell.Trigger>
+  <Shell.Header>{/* the top row */}</Shell.Header>
+  <Shell.Rail>{/* a narrow column of icons */}</Shell.Rail>
+  <Shell.Panel>{/* the navigation the rail opens */}</Shell.Panel>
+  <Shell.Sidebar>{/* one navigation column, in place of Rail and Panel */}</Shell.Sidebar>
+  <Shell.Content>{/* the work area */}</Shell.Content>
+  <Shell.Inspector>{/* details at the inline end */}</Shell.Inspector>
+  <Shell.Bottom>{/* a panel along the bottom */}</Shell.Bottom>
+  <Shell.Trigger target="sidebar">{/* a button that drives a pane */}</Shell.Trigger>
 </Shell.Root>
 ```
 
-## Root Props
-
-The Root component manages the overall shell layout and provides context to child components.
-
-| Prop | Type | Description |
-| ---- | ---- | ----------- |
-| `height` | `'full' \| 'auto' \| string \| number` | Height of the shell container. Default: `'full'` |
-| `children` | `React.ReactNode` | Shell components (Header, Sidebar, Content, etc.) |
-
-## Header Props
-
-Fixed header at the top of the shell for global navigation and branding.
-
-| Prop | Type | Description |
-| ---- | ---- | ----------- |
-| `height` | `number` | Header height in pixels. Default: `64` |
-| `children` | `React.ReactNode` | Header content |
-
-## Sidebar Props
-
-Unified navigation sidebar with three states: collapsed, thin, and expanded. Cannot coexist with Rail or Panel.
-
-| Prop | Type | Description |
-| ---- | ---- | ----------- |
-| `state` | `'collapsed' \| 'thin' \| 'expanded' \| Responsive<SidebarMode>` | Controlled sidebar state |
-| `defaultState` | `'collapsed' \| 'thin' \| 'expanded' \| Responsive<SidebarMode>` | Initial sidebar state. Default: `'expanded'` |
-| `onStateChange` | `(state: SidebarMode, meta: { reason: 'init' \| 'toggle' \| 'responsive' }) => void` | Callback fired when state changes |
-| `presentation` | `'fixed' \| 'overlay' \| 'stacked' \| ResponsivePresentation` | How sidebar interacts with layout. Default: `{ initial: 'overlay', md: 'fixed' }` |
-| `expandedSize` | `number` | Width when expanded in pixels. Default: `288` |
-| `thinSize` | `number` | Width when thin in pixels. Default: `64` |
-| `toggleModes` | `'both' \| 'single'` | Toggle sequence: `'both'` cycles through all states, `'single'` toggles between collapsed and expanded |
-| `size` | `number \| string` | Controlled size (width when expanded) |
-| `defaultSize` | `number \| string` | Initial size |
-| `onSizeChange` | `(size: number, meta: { reason: 'init' \| 'resize' \| 'controlled' }) => void` | Callback fired when size changes |
-| `sizeUpdate` | `'throttle' \| 'debounce'` | Strategy for size change callbacks |
-| `sizeUpdateMs` | `number` | Milliseconds for throttle/debounce. Default: `50` |
-| `resizable` | `boolean` | Enable drag-to-resize. Default: `false` |
-| `collapsible` | `boolean` | Allow collapsing. Default: `true` |
-| `minSize` | `number` | Minimum width in pixels. Default: `200` |
-| `maxSize` | `number` | Maximum width in pixels. Default: `400` |
-| `onExpand` | `() => void` | Callback fired when sidebar expands |
-| `onCollapse` | `() => void` | Callback fired when sidebar collapses |
-| `onResize` | `(size: number) => void` | Callback fired during resize |
-| `onResizeStart` | `(size: number) => void` | Callback fired when resize starts |
-| `onResizeEnd` | `(size: number) => void` | Callback fired when resize ends |
-| `snapPoints` | `number[]` | Array of sizes to snap to during resize |
-| `snapTolerance` | `number` | Distance in pixels to trigger snap |
-| `collapseThreshold` | `number` | Size below which sidebar auto-collapses |
-| `paneId` | `string` | Unique identifier for persistence |
-| `persistence` | `PaneSizePersistence` | Adapter for saving/loading size |
-| `inset` | `boolean` | When true, adds margin and triggers gray backdrop on Shell |
-| `children` | `React.ReactNode` | Sidebar content |
-
-## Rail Props
-
-Slim navigation strip (icon bar). Use with Panel for a two-part navigation layout. Cannot coexist with Sidebar.
-
-| Prop | Type | Description |
-| ---- | ---- | ----------- |
-| `open` | `boolean \| Responsive<boolean>` | Controlled open state |
-| `defaultOpen` | `boolean \| Responsive<boolean>` | Initial open state. Supports responsive objects. Default: `true` |
-| `onOpenChange` | `(open: boolean, meta: { reason: 'init' \| 'toggle' \| 'responsive' \| 'panel' }) => void` | Callback fired when open state changes |
-| `presentation` | `'fixed' \| 'overlay' \| 'stacked' \| ResponsivePresentation` | How rail interacts with layout. Default: `{ initial: 'fixed', sm: 'fixed' }` |
-| `expandedSize` | `number` | Width in pixels. Default: `64` |
-| `collapsible` | `boolean` | Allow collapsing. Default: `true` |
-| `onExpand` | `() => void` | Callback fired when rail expands |
-| `onCollapse` | `() => void` | Callback fired when rail collapses |
-| `inset` | `boolean` | When true, adds margin to Rail+Panel and triggers gray backdrop on Shell |
-| `children` | `React.ReactNode` | Rail content (typically icons) |
-
-## Panel Props
-
-Expanded navigation panel that works alongside Rail. Collapses when Rail collapses. Cannot coexist with Sidebar.
-
-| Prop | Type | Description |
-| ---- | ---- | ----------- |
-| `open` | `boolean \| Responsive<boolean>` | Controlled open state |
-| `defaultOpen` | `boolean \| Responsive<boolean>` | Initial open state. Supports responsive objects. Default: `false` |
-| `onOpenChange` | `(open: boolean, meta: { reason: 'init' \| 'toggle' \| 'left' \| 'responsive' }) => void` | Callback fired when open state changes |
-| `expandedSize` | `number` | Width when expanded in pixels. Default: `288` |
-| `size` | `number \| string` | Controlled size (width) |
-| `defaultSize` | `number \| string` | Initial size |
-| `onSizeChange` | `(size: number, meta: { reason: 'init' \| 'resize' \| 'controlled' }) => void` | Callback fired when size changes |
-| `sizeUpdate` | `'throttle' \| 'debounce'` | Strategy for size change callbacks |
-| `sizeUpdateMs` | `number` | Milliseconds for throttle/debounce. Default: `50` |
-| `minSize` | `number` | Minimum width in pixels. Default: `100` |
-| `maxSize` | `number` | Maximum width in pixels. Default: `800` |
-| `resizable` | `boolean` | Enable drag-to-resize. Default: `false` |
-| `collapsible` | `boolean` | Allow collapsing. Default: `true` |
-| `onExpand` | `() => void` | Callback fired when panel expands |
-| `onCollapse` | `() => void` | Callback fired when panel collapses |
-| `onResize` | `(size: number) => void` | Callback fired during resize |
-| `onResizeStart` | `(size: number) => void` | Callback fired when resize starts |
-| `onResizeEnd` | `(size: number) => void` | Callback fired when resize ends |
-| `snapPoints` | `number[]` | Array of sizes to snap to during resize |
-| `snapTolerance` | `number` | Distance in pixels to trigger snap |
-| `collapseThreshold` | `number` | Size below which panel auto-collapses |
-| `paneId` | `string` | Unique identifier for persistence |
-| `persistence` | `PaneSizePersistence` | Adapter for saving/loading size |
-| `inset` | `boolean` | When true, adds margin to Rail+Panel and triggers gray backdrop on Shell |
-| `children` | `React.ReactNode` | Panel content |
-
-## Content Props
-
-Main content area. Always required in shell layouts.
-
-| Prop | Type | Description |
-| ---- | ---- | ----------- |
-| `inset` | `boolean` | When true, adds margin and triggers gray backdrop on Shell |
-| `children` | `React.ReactNode` | Content to display |
-
-## Inspector Props
-
-Right-side panel for inspectors, property panels, or contextual information.
-
-| Prop | Type | Description |
-| ---- | ---- | ----------- |
-| `open` | `boolean \| Responsive<boolean>` | Controlled open state |
-| `defaultOpen` | `boolean \| Responsive<boolean>` | Initial open state. Default: `false` |
-| `onOpenChange` | `(open: boolean, meta: { reason: 'init' \| 'toggle' \| 'responsive' }) => void` | Callback fired when open state changes |
-| `presentation` | `'fixed' \| 'overlay' \| 'stacked' \| ResponsivePresentation` | How inspector interacts with layout. Default: `{ initial: 'overlay', lg: 'fixed' }` |
-| `size` | `number \| string` | Controlled size (width when expanded) |
-| `defaultSize` | `number \| string` | Initial size |
-| `onSizeChange` | `(size: number, meta: { reason: 'init' \| 'resize' \| 'controlled' }) => void` | Callback fired when size changes |
-| `sizeUpdate` | `'throttle' \| 'debounce'` | Strategy for size change callbacks |
-| `sizeUpdateMs` | `number` | Milliseconds for throttle/debounce. Default: `50` |
-| `expandedSize` | `number` | Width when expanded in pixels. Default: `320` |
-| `minSize` | `number` | Minimum width in pixels. Default: `200` |
-| `maxSize` | `number` | Maximum width in pixels. Default: `500` |
-| `resizable` | `boolean` | Enable drag-to-resize. Default: `false` |
-| `collapsible` | `boolean` | Allow collapsing. Default: `true` |
-| `onExpand` | `() => void` | Callback fired when inspector expands |
-| `onCollapse` | `() => void` | Callback fired when inspector collapses |
-| `onResize` | `(size: number) => void` | Callback fired during resize |
-| `onResizeStart` | `(size: number) => void` | Callback fired when resize starts |
-| `onResizeEnd` | `(size: number) => void` | Callback fired when resize ends |
-| `snapPoints` | `number[]` | Array of sizes to snap to during resize |
-| `snapTolerance` | `number` | Distance in pixels to trigger snap |
-| `collapseThreshold` | `number` | Size below which inspector auto-collapses |
-| `paneId` | `string` | Unique identifier for persistence |
-| `persistence` | `PaneSizePersistence` | Adapter for saving/loading size |
-| `inset` | `boolean` | When true, adds margin and triggers gray backdrop on Shell |
-| `children` | `React.ReactNode` | Inspector content |
-
-## Bottom Props
-
-Bottom panel for terminals, logs, or contextual information.
-
-| Prop | Type | Description |
-| ---- | ---- | ----------- |
-| `open` | `boolean \| Responsive<boolean>` | Controlled open state |
-| `defaultOpen` | `boolean \| Responsive<boolean>` | Initial open state. Default: `false` |
-| `onOpenChange` | `(open: boolean, meta: { reason: 'init' \| 'toggle' \| 'responsive' }) => void` | Callback fired when open state changes |
-| `presentation` | `'fixed' \| 'overlay' \| 'stacked' \| ResponsivePresentation` | How bottom panel interacts with layout. Default: `'fixed'` |
-| `size` | `number \| string` | Controlled size (height when expanded) |
-| `defaultSize` | `number \| string` | Initial size |
-| `onSizeChange` | `(size: number, meta: { reason: 'init' \| 'resize' \| 'controlled' }) => void` | Callback fired when size changes |
-| `sizeUpdate` | `'throttle' \| 'debounce'` | Strategy for size change callbacks |
-| `sizeUpdateMs` | `number` | Milliseconds for throttle/debounce. Default: `50` |
-| `expandedSize` | `number` | Height when expanded in pixels. Default: `200` |
-| `minSize` | `number` | Minimum height in pixels. Default: `100` |
-| `maxSize` | `number` | Maximum height in pixels. Default: `400` |
-| `resizable` | `boolean` | Enable drag-to-resize. Default: `false` |
-| `collapsible` | `boolean` | Allow collapsing. Default: `true` |
-| `onExpand` | `() => void` | Callback fired when bottom panel expands |
-| `onCollapse` | `() => void` | Callback fired when bottom panel collapses |
-| `onResize` | `(size: number) => void` | Callback fired during resize |
-| `onResizeStart` | `(size: number) => void` | Callback fired when resize starts |
-| `onResizeEnd` | `(size: number) => void` | Callback fired when resize ends |
-| `snapPoints` | `number[]` | Array of sizes to snap to during resize |
-| `snapTolerance` | `number` | Distance in pixels to trigger snap |
-| `collapseThreshold` | `number` | Size below which bottom panel auto-collapses |
-| `paneId` | `string` | Unique identifier for persistence |
-| `persistence` | `PaneSizePersistence` | Adapter for saving/loading size |
-| `inset` | `boolean` | When true, adds margin and triggers gray backdrop on Shell |
-| `children` | `React.ReactNode` | Bottom panel content |
-
-## Trigger Props
-
-Button trigger for controlling shell panes. Renders as an unstyled button—wrap with IconButton for styling.
-
-| Prop | Type | Description |
-| ---- | ---- | ----------- |
-| `target` | `'sidebar' \| 'inspector' \| 'bottom' \| 'rail' \| 'panel'` | Which pane to control |
-| `action` | `'toggle' \| 'expand' \| 'collapse'` | Action to perform. Default: `'toggle'` |
-| `peekOnHover` | `boolean` | Temporarily show pane on hover without changing state. Default: `false` |
-| `children` | `React.ReactNode` | Trigger content (typically an icon) |
-
-## Controlled Behavior
-
-Use controlled props (`open` / `state`) with their matching change handlers. Do not pass both controlled and default props.
-
-### Controlled vs Default
-
-- `open` + `defaultOpen` is invalid for Rail/Panel/Inspector/Bottom
-- `state` + `defaultState` is invalid for Sidebar
-- When controlled, always pass `onOpenChange` / `onStateChange`
-
-### Rail + Panel Conflicts
-
-When both Rail and Panel are controlled, Shell resolves conflicts through callbacks:
-
-- If Panel is opened while Rail is closed, Shell calls `Rail.onOpenChange(true, { reason: 'panel' })`
-- If Rail is closed while Panel is open, Shell calls `Panel.onOpenChange(false, { reason: 'left' })`
-
-```tsx
-function App() {
-  const [railOpen, setRailOpen] = React.useState(true);
-  const [panelOpen, setPanelOpen] = React.useState(true);
-
-  return (
-    <Shell.Root>
-      <Shell.Rail
-        open={railOpen}
-        onOpenChange={setRailOpen}
-        presentation="fixed"
-      >
-        <nav>Rail</nav>
-      </Shell.Rail>
-      <Shell.Panel
-        open={panelOpen}
-        onOpenChange={setPanelOpen}
-      >
-        <nav>Panel</nav>
-      </Shell.Panel>
-      <Shell.Content>
-        <Button onClick={() => setRailOpen(false)}>Close Rail</Button>
-        <Button onClick={() => setPanelOpen(true)}>Open Panel</Button>
-      </Shell.Content>
-    </Shell.Root>
-  );
-}
-```
-
-## Examples
-
-### Basic Sidebar Layout
-
-The most common layout pattern with a collapsible sidebar.
-
-```tsx
-<Shell.Root>
-  <Shell.Sidebar defaultState="expanded" presentation={{ initial: 'overlay', md: 'fixed' }}>
-    <nav>Navigation content</nav>
-  </Shell.Sidebar>
-  <Shell.Content>
-    <main>Main application content</main>
-  </Shell.Content>
-</Shell.Root>
-```
-
-### With Header
-
-Add a fixed header for global navigation.
-
-```tsx
-<Shell.Root>
-  <Shell.Header height={56}>
-    <Flex align="center" justify="between" px="4" height="100%">
-      <span>Logo</span>
-      <nav>Header actions</nav>
-    </Flex>
-  </Shell.Header>
-  <Shell.Sidebar defaultState="expanded">
-    <nav>Sidebar</nav>
-  </Shell.Sidebar>
-  <Shell.Content>
-    <main>Content</main>
-  </Shell.Content>
-</Shell.Root>
-```
-
-### With Inspector
-
-Add a right-side panel for properties or details.
-
-```tsx
-<Shell.Root>
-  <Shell.Sidebar defaultState="expanded">
-    <nav>Navigation</nav>
-  </Shell.Sidebar>
-  <Shell.Content>
-    <main>Content</main>
-  </Shell.Content>
-  <Shell.Inspector defaultOpen expandedSize={320}>
-    <aside>Inspector panel</aside>
-  </Shell.Inspector>
-</Shell.Root>
-```
-
-### With Bottom Panel
-
-Add a bottom panel for terminals or logs.
-
-```tsx
-<Shell.Root>
-  <Shell.Sidebar defaultState="expanded">
-    <nav>Navigation</nav>
-  </Shell.Sidebar>
-  <Shell.Content>
-    <main>Content</main>
-  </Shell.Content>
-  <Shell.Bottom defaultOpen expandedSize={200}>
-    <div>Terminal output</div>
-  </Shell.Bottom>
-</Shell.Root>
-```
-
-### Rail + Panel Layout
-
-Use Rail and Panel for a two-part navigation with icon strip and expanded panel.
-
-```tsx
-<Shell.Root>
-  <Shell.Rail defaultOpen expandedSize={64}>
-    <nav>Icon strip</nav>
-  </Shell.Rail>
-  <Shell.Panel defaultOpen expandedSize={280}>
-    <nav>Expanded navigation</nav>
-  </Shell.Panel>
-  <Shell.Content>
-    <main>Content</main>
-  </Shell.Content>
-</Shell.Root>
-```
-
-### Inset Layout
-
-Use `inset` prop to create floating panes with a gray backdrop.
-
-```tsx
-<Shell.Root>
-  <Shell.Sidebar defaultState="expanded" inset>
-    <Sidebar variant="surface">
-      <nav>Floating navigation</nav>
-    </Sidebar>
-  </Shell.Sidebar>
-  <Shell.Content inset>
-    <main>Floating content</main>
-  </Shell.Content>
-  <Shell.Inspector defaultOpen inset>
-    <aside>Floating inspector</aside>
-  </Shell.Inspector>
-</Shell.Root>
-```
-
-### Controlled Sidebar
-
-Control the sidebar state programmatically.
-
-```tsx
-function App() {
-  const [sidebarState, setSidebarState] = React.useState<'collapsed' | 'thin' | 'expanded'>('expanded');
-
-  return (
-    <Shell.Root>
-      <Shell.Sidebar state={sidebarState} onStateChange={setSidebarState} toggleModes="single">
-        <nav>Navigation</nav>
-      </Shell.Sidebar>
-      <Shell.Content>
-        <Button onClick={() => setSidebarState('collapsed')}>Collapse</Button>
-        <Button onClick={() => setSidebarState('expanded')}>Expand</Button>
-      </Shell.Content>
-    </Shell.Root>
-  );
-}
-```
-
-### Resizable Sidebar
-
-Enable drag-to-resize functionality.
-
-```tsx
-<Shell.Root>
-  <Shell.Sidebar defaultState="expanded" resizable minSize={200} maxSize={500} expandedSize={300}>
-    <nav>Resizable sidebar</nav>
-  </Shell.Sidebar>
-  <Shell.Content>
-    <main>Content</main>
-  </Shell.Content>
-</Shell.Root>
-```
-
-### Toggle Trigger
-
-Use Shell.Trigger to create toggle buttons for panes.
-
-```tsx
-<Shell.Root>
-  <Shell.Sidebar defaultState="expanded">
-    <nav>Navigation</nav>
-  </Shell.Sidebar>
-  <Shell.Content>
-    <IconButton asChild variant="ghost">
-      <Shell.Trigger target="sidebar">
-        <MenuIcon />
-      </Shell.Trigger>
-    </IconButton>
-    <main>Content</main>
-  </Shell.Content>
-</Shell.Root>
-```
-
-## Presentation Modes
-
-The `presentation` prop controls how panes interact with the layout. Supports responsive values.
+Every part is optional except `Shell.Content`. The Root renders its children in the order you write them, so other elements can sit between the parts, and a pane can be wrapped in another element. Each pane takes its own place on the grid.
+
+## Props
+
+### Root
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `height` | `'full' \| 'auto' \| string \| number` | `'full'` | The height of the frame. `'full'` is `100dvh`, with `100vh` where `dvh` is not supported. |
+| `children` | `ReactNode` | | The parts, and anything else. |
+
+### Header
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `height` | `number` | `64` | The height of the row, in pixels. |
+
+### Sidebar
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `state` | `'collapsed' \| 'thin' \| 'expanded'` | | The state, when you control it. |
+| `defaultState` | `SidebarMode \| Responsive<SidebarMode>` | | The starting state. With no value the sidebar is untouched and follows the window. |
+| `onStateChange` | `(state, { reason }) => void` | | Called when a user changes the state. `reason` is `'toggle'` or `'dismiss'`. |
+| `presentation` | `'fixed' \| 'overlay' \| 'stacked' \| Responsive<…>` | `{ initial: 'overlay', sm: 'fixed' }` | How the sidebar sits in the frame. |
+| `toggleModes` | `'both' \| 'single'` | `'both'` | `'both'` goes collapsed, thin, expanded. `'single'` goes between collapsed and one open state. |
+| `expandedSize` | `number` | `288` | The open width, in pixels. |
+| `thinSize` | `number` | `64` | The thin width, in pixels. |
+| `inset` | `boolean` | | Lifts the pane off the frame. See [Inset](#inset). |
+
+The sidebar also takes the [resize props](#resize).
+
+### Rail
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `open` | `boolean` | | The open state, when you control it. |
+| `defaultOpen` | `boolean \| Responsive<boolean>` | | The starting state. With no value the rail is untouched: open where it is in the frame, closed where it is an overlay. |
+| `onOpenChange` | `(open, { reason }) => void` | | Called when a user opens or closes the rail. |
+| `presentation` | `'fixed' \| 'overlay' \| 'stacked' \| Responsive<…>` | `'fixed'` | How the rail sits in the frame. |
+| `expandedSize` | `number` | `64` | The width, in pixels. |
+| `inset` | `boolean` | | Lifts the pane off the frame. |
+
+### Panel
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `open` | `boolean` | | The open state, when you control it. |
+| `defaultOpen` | `boolean \| Responsive<boolean>` | | The starting state. With no value the panel is closed. |
+| `onOpenChange` | `(open, { reason }) => void` | | Called when a user opens or closes the panel. |
+| `presentation` | `'fixed' \| 'overlay' \| 'stacked' \| Responsive<…>` | the Rail's | With no value, the panel takes the rail's presentation. |
+| `expandedSize` | `number` | `288` | The open width, in pixels. |
+| `inset` | `boolean` | | Lifts the pane off the frame. |
+
+The panel also takes the [resize props](#resize).
+
+### Content
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `inset` | `boolean` | | Lifts the pane off the frame. |
+
+### Inspector
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `open` | `boolean` | | The open state, when you control it. |
+| `defaultOpen` | `boolean \| Responsive<boolean>` | | The starting state. With no value the inspector is closed. |
+| `onOpenChange` | `(open, { reason }) => void` | | Called when a user opens or closes the inspector. |
+| `presentation` | `'fixed' \| 'overlay' \| 'stacked' \| Responsive<…>` | `{ initial: 'overlay', sm: 'fixed' }` | How the inspector sits in the frame. |
+| `expandedSize` | `number` | `320` | The open width, in pixels. |
+| `inset` | `boolean` | | Lifts the pane off the frame. |
+
+The inspector also takes the [resize props](#resize).
+
+### Bottom
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `open` | `boolean` | | The open state, when you control it. |
+| `defaultOpen` | `boolean \| Responsive<boolean>` | | The starting state. With no value the panel is closed. |
+| `onOpenChange` | `(open, { reason }) => void` | | Called when a user opens or closes the panel. |
+| `presentation` | `'fixed' \| 'overlay' \| 'stacked' \| Responsive<…>` | `'fixed'` | How the panel sits in the frame. |
+| `expandedSize` | `number` | `200` | The open height, in pixels. |
+| `inset` | `boolean` | | Lifts the pane off the frame. |
+
+The bottom panel also takes the [resize props](#resize).
+
+### Trigger
+
+`Shell.Trigger` is a `<button>`. Wrap it with `IconButton` or `Button` through `asChild` to style it.
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `target` | `'rail' \| 'panel' \| 'sidebar' \| 'inspector' \| 'bottom'` | | The pane it drives. |
+| `action` | `'toggle' \| 'expand' \| 'collapse'` | `'toggle'` | What a press does. |
+
+The trigger renders `type="button"`, `aria-controls` (the pane's id) and `aria-expanded`. Your `onClick` runs first. Call `event.preventDefault()` in it to cancel the trigger's action.
+
+### Resize
+
+Panel, Sidebar, Inspector and Bottom take these props.
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `resizable` | `boolean` | `false` | Shows a handle on the pane's inner edge. |
+| `size` | `number \| string` | | The size, when you control it. |
+| `defaultSize` | `number \| string` | | The starting size. |
+| `onSizeChange` | `(size, { reason }) => void` | | Called with the new size. `reason` is `'init'`, `'resize'` or `'controlled'`. |
+| `sizeUpdate` | `'throttle' \| 'debounce'` | | How often `onSizeChange` is called during a drag. |
+| `sizeUpdateMs` | `number` | `50` | The interval for `sizeUpdate`. |
+| `minSize` | `number` | per pane | The smallest size, in pixels. |
+| `maxSize` | `number` | per pane | The largest size, in pixels. A drag also stops before the handle leaves the frame. |
+| `collapsible` | `boolean` | `true` | A double-click on the handle opens and closes the pane. |
+| `onResizeStart` | `(size) => void` | | Called when a drag starts. |
+| `onResize` | `(size) => void` | | Called during a drag, at most once per animation frame, and once more with the final size. |
+| `onResizeEnd` | `(size) => void` | | Called when a drag ends. |
+
+## Presentation
+
+`presentation` says how a pane sits in the frame. It takes one value or a responsive object.
 
 ### Fixed
 
-Pane takes space in the layout flow. Content adjusts around it.
-
-```tsx
-<Shell.Sidebar presentation="fixed" defaultState="expanded">
-  <nav>Fixed sidebar</nav>
-</Shell.Sidebar>
-```
+The pane takes its own column or row, and the content is narrower by its size.
 
 ### Overlay
 
-Pane floats above content as a modal sheet. Common for mobile layouts.
-
-```tsx
-<Shell.Sidebar presentation="overlay" defaultState="collapsed">
-  <nav>Overlay sidebar</nav>
-</Shell.Sidebar>
-```
+The pane covers the frame. A scrim covers everything else, the rest of the frame is `inert`, focus moves into the pane, and the page does not scroll. Escape or a press on the scrim closes it. An overlay that nobody has opened stays closed.
 
 ### Stacked
 
-Pane positions above content without displacing it. For floating panels.
+The pane sits over the content without a scrim and without taking space from it.
+
+## States
+
+### Untouched
+
+A pane with no `open`, `defaultOpen`, `state` or `defaultState` is untouched. It renders `data-state="auto"`, and the stylesheet shows or hides it at each breakpoint:
+
+- Rail and Sidebar are open where they are in the frame and closed where they are an overlay.
+- Panel, Inspector and Bottom are closed.
+
+A responsive `defaultOpen` or `defaultState` also leaves the pane untouched, with your object as the answer at each breakpoint:
 
 ```tsx
-<Shell.Sidebar presentation="stacked" defaultState="expanded">
-  <nav>Stacked sidebar</nav>
-</Shell.Sidebar>
+<Shell.Inspector defaultOpen={{ initial: false, lg: true }}>…</Shell.Inspector>
 ```
 
-### Responsive Presentation
+The server HTML already carries the answer for every breakpoint, so the first paint is right before any script runs.
 
-Change presentation based on viewport size.
+### Touched
 
-```tsx
-<Shell.Sidebar presentation={{ initial: 'overlay', md: 'fixed' }} defaultState={{ initial: 'collapsed', md: 'expanded' }}>
-  <nav>Responsive sidebar</nav>
-</Shell.Sidebar>
-```
+When a user opens or closes a pane, it keeps that state at every width. A single-value `defaultOpen` or `defaultState` starts the pane in that state in the same way.
 
-## Sidebar States
+### Controlled
 
-The sidebar supports three states: `collapsed`, `thin`, and `expanded`.
+Pass `open` (or `state` on the Sidebar) with its change handler. The pane shows what you pass. Do not pass both the controlled prop and its default.
 
-### Collapsed
+### Callbacks
 
-Sidebar is hidden. Use trigger buttons to expand.
+`onOpenChange` and `onStateChange` are called only when a user acts. `reason` is:
 
-```tsx
-<Shell.Sidebar defaultState="collapsed">
-  <nav>Will start hidden</nav>
-</Shell.Sidebar>
-```
+- `'toggle'` for a Trigger, a double-click on the handle, or a drag past `collapseThreshold`.
+- `'dismiss'` for Escape or a press on the scrim.
 
-### Thin
+They are not called on mount, and not called when the window crosses a breakpoint.
 
-Sidebar shows at `thinSize` width (default 64px). Useful for icon-only navigation.
+### Sidebar thin
 
-```tsx
-<Shell.Sidebar defaultState="thin" thinSize={72}>
-  <nav>Icon navigation</nav>
-</Shell.Sidebar>
-```
+`thin` shows the sidebar at `thinSize`. With `toggleModes="both"` a trigger goes collapsed, thin, expanded. With `toggleModes="single"` it goes between collapsed and the sidebar's open state (thin if `defaultState` is `"thin"`, else expanded).
 
-### Expanded
+## Examples
 
-Sidebar shows at full `expandedSize` width (default 288px).
+### Header and Sidebar
 
-```tsx
-<Shell.Sidebar defaultState="expanded" expandedSize={320}>
-  <nav>Full navigation</nav>
-</Shell.Sidebar>
-```
-
-### Toggle Modes
-
-Control the toggle sequence with `toggleModes`.
-
-```tsx
-{/* Cycles: collapsed → thin → expanded → collapsed */}
-<Shell.Sidebar toggleModes="both" defaultState="collapsed">
-  <nav>Three-state toggle</nav>
-</Shell.Sidebar>
-
-{/* Toggles: collapsed ↔ expanded (or thin if defaultState="thin") */}
-<Shell.Sidebar toggleModes="single" defaultState="expanded">
-  <nav>Two-state toggle</nav>
-</Shell.Sidebar>
-```
-
-## Responsive
-
-Use responsive objects for breakpoint-specific behavior. Shell uses a mobile-first approach.
-
-```tsx
-<Shell.Sidebar
-  presentation={{ initial: 'overlay', sm: 'fixed' }}
-  defaultState={{ initial: 'collapsed', sm: 'expanded' }}
->
-  <nav>Responsive sidebar</nav>
-</Shell.Sidebar>
-```
-
-### Breakpoints
-
-| Breakpoint | Value | Description |
-| ---------- | ----- | ----------- |
-| `initial` | - | Base styles (mobile-first) |
-| `xs` | 520px | Extra small screens |
-| `sm` | 768px | Small screens (tablets) |
-| `md` | 1024px | Medium screens (laptops) |
-| `lg` | 1280px | Large screens (desktops) |
-| `xl` | 1640px | Extra large screens |
-
-## Inset Mode
-
-The `inset` prop creates floating panes with visual separation from the shell background.
-
-### How It Works
-
-When any pane has `inset`:
-1. Shell body gets a gray backdrop (`var(--gray-2)`)
-2. The inset pane gets margin, creating gaps from edges and other panes
-3. The pane gets rounded corners for the floating appearance
-
-### Visual Treatment
-
-The `inset` prop handles spatial positioning only. For visual styling (background, shadow, border), use the child component's `variant` prop:
-
-```tsx
-<Shell.Sidebar inset>
-  <Sidebar variant="surface">  {/* surface variant adds bg + shadow */}
+```tsx showLineNumbers
+<Shell.Root>
+  <Shell.Header>
+    <Flex align="center" gap="2" px="3" height="100%">
+      <IconButton variant="ghost" color="gray" aria-label="Toggle navigation" asChild>
+        <Shell.Trigger target="sidebar">
+          <HugeiconsIcon icon={SidebarLeft01Icon} strokeWidth={1.75} />
+        </Shell.Trigger>
+      </IconButton>
+      <Text weight="medium">Projects</Text>
+    </Flex>
+  </Shell.Header>
+  <Shell.Sidebar>
     <nav>Navigation</nav>
-  </Sidebar>
+  </Shell.Sidebar>
+  <Shell.Content>Main content</Shell.Content>
+</Shell.Root>
+```
+
+### Rail and Panel
+
+```tsx showLineNumbers
+<Shell.Root>
+  <Shell.Rail>
+    <IconButton variant="ghost" color="gray" aria-label="Toggle panel" asChild>
+      <Shell.Trigger target="panel">
+        <HugeiconsIcon icon={SidebarLeft01Icon} strokeWidth={1.75} />
+      </Shell.Trigger>
+    </IconButton>
+  </Shell.Rail>
+  <Shell.Panel defaultOpen={{ initial: false, md: true }}>
+    <nav>Navigation</nav>
+  </Shell.Panel>
+  <Shell.Content>Main content</Shell.Content>
+</Shell.Root>
+```
+
+The rail and the panel do not drive each other. To close the panel when the rail closes, write it:
+
+```tsx showLineNumbers
+const [railOpen, setRailOpen] = React.useState(true);
+const [panelOpen, setPanelOpen] = React.useState(true);
+
+<Shell.Rail
+  open={railOpen}
+  onOpenChange={(open) => {
+    setRailOpen(open);
+    if (!open) setPanelOpen(false);
+  }}
+/>
+<Shell.Panel open={panelOpen} onOpenChange={setPanelOpen} />
+```
+
+### Resizable Inspector
+
+```tsx showLineNumbers
+const [width, setWidth] = React.useState(320);
+
+<Shell.Inspector
+  resizable
+  size={width}
+  onSizeChange={setWidth}
+  minSize={240}
+  maxSize={480}
+>
+  Properties
+</Shell.Inspector>
+```
+
+Keep the size in your own state to save it between visits.
+
+### Controlled Sidebar
+
+```tsx showLineNumbers
+const [state, setState] = React.useState<'collapsed' | 'thin' | 'expanded'>('expanded');
+
+<Shell.Sidebar state={state} onStateChange={setState}>
+  <nav>Navigation</nav>
 </Shell.Sidebar>
 ```
 
-| Variant | Background | Shadow | Best for |
-| ------- | ---------- | ------ | -------- |
-| `surface` | Solid | Yes | Primary floating panels |
-| `soft` | Tinted | Subtle | Secondary panels |
-| `outline` | Transparent | No | Bordered panels |
-| `ghost` | Transparent | No | Minimal visual treatment |
+## Inset
 
-### Customizing Gap
+`inset` lifts a pane off the frame. The pane gets a margin, rounded corners and a shadow, and the frame paints a gray backdrop behind the middle row. Two inset panes side by side share one gap.
 
-Override the inset gap with CSS variables:
+```tsx
+<Shell.Root>
+  <Shell.Sidebar inset>…</Shell.Sidebar>
+  <Shell.Content inset>…</Shell.Content>
+</Shell.Root>
+```
+
+Change the gap on the Root:
 
 ```css
-.rt-ShellBody[data-has-inset] {
+.rt-ShellRoot {
   --shell-inset-gap: var(--space-3);
 }
 ```
 
-## Composition Rules
+## Responsive
 
-Shell enforces composition rules to prevent conflicting layouts.
+`presentation`, `defaultOpen` and `defaultState` take responsive objects. A breakpoint takes the value of the largest key at or below it.
 
-### Valid: Sidebar Only
+| Breakpoint | Width |
+| ---------- | ----- |
+| `initial` | below 520px |
+| `xs` | 520px |
+| `sm` | 768px |
+| `md` | 1024px |
+| `lg` | 1280px |
+| `xl` | 1640px |
 
-Sidebar is a unified component that handles both icon strip and expanded navigation.
-
-```tsx
-<Shell.Root>
-  <Shell.Sidebar>...</Shell.Sidebar>
-  <Shell.Content>...</Shell.Content>
-</Shell.Root>
-```
-
-### Valid: Rail + Panel
-
-Rail provides an icon strip; Panel provides the expanded navigation. Panel collapses when Rail collapses.
-
-```tsx
-<Shell.Root>
-  <Shell.Rail>...</Shell.Rail>
-  <Shell.Panel>...</Shell.Panel>
-  <Shell.Content>...</Shell.Content>
-</Shell.Root>
-```
-
-### Invalid: Mixed
-
-Sidebar cannot coexist with Rail or Panel. This triggers a console warning.
-
-```tsx
-{/* ❌ Invalid */}
-<Shell.Root>
-  <Shell.Sidebar>...</Shell.Sidebar>
-  <Shell.Rail>...</Shell.Rail>
-  <Shell.Content>...</Shell.Content>
-</Shell.Root>
-```
-
-## Hooks
-
-### useShell
-
-Access shell context for programmatic control.
-
-```tsx
-import { useShell } from '@kushagradhawan/kookie-ui';
-
-function MyComponent() {
-  const shell = useShell();
-
-  return (
-    <Button onClick={() => shell.togglePane('sidebar')}>Toggle Sidebar</Button>
-  );
-}
-```
-
-Available methods:
-- `togglePane(target)` — Toggle a pane's state
-- `expandPane(target)` — Expand a pane
-- `collapsePane(target)` — Collapse a pane
-- `sidebarMode` — Current sidebar state
-- `inspectorMode` — Current inspector state
-- `bottomMode` — Current bottom panel state
+The values are written to the pane as `data-presentation-<bp>` and `data-auto-<bp>`, and the stylesheet reads them at these widths.
 
 ## Accessibility
 
-Shell provides comprehensive accessibility through semantic HTML and ARIA attributes.
-
-### Semantic Structure
-
-- `Shell.Header` renders as `<header>`
-- `Shell.Content` renders as `<main>`
-- Proper landmark structure for screen readers
-
-### Keyboard Navigation
-
-- Tab navigation through all interactive elements
-- Escape key closes overlay presentations
-- Arrow keys for resize handle adjustment
-- Enter/Space for trigger activation
-
-### Screen Reader Support
-
-- State announcements for panel open/close
-- Resize operations announce current dimensions
-- ARIA attributes: `aria-expanded`, `aria-hidden`, `aria-label`
-
-### High Contrast
-
-- Enhanced focus indicators
-- Windows High Contrast mode compatibility
-- Proper contrast ratios for resize handles
+- `Shell.Header` renders `<header>` and `Shell.Content` renders `<main>`.
+- `Shell.Trigger` sets `aria-controls` and `aria-expanded`.
+- An open overlay makes the rest of the frame `inert`, moves focus into the pane, and returns focus when the pane closes.
+- Escape closes open overlays. It is handled on the Root, so a dialog opened from inside a pane keeps its own Escape.
+- The resize handle is a focusable `role="separator"` with `aria-controls`, `aria-valuenow`, `aria-valuemin` and `aria-valuemax`. The arrow keys move it by 8px (32px with Shift), and Home and End go to the limits. It shows a focus line on `:focus-visible`.
 
 ## Changelog
 
-### Added
+### 0.8.0
 
-- Complete Shell component with seven core slots
-- Responsive presentation modes: fixed, overlay, stacked
-- Advanced resize system with keyboard navigation
-- Composition rule enforcement
-- Breakpoint system with mobile-first approach
-- Size persistence API
-- Peek functionality for temporary previews
-- `useShell()` hook for context access
-- ARIA slider implementation for resize handles
-- Focus management for overlay presentations
-- `inset` prop for floating pane layouts with gray backdrop
+- The Shell is rebuilt on kookie-ui-v2's model. See the package changelog for the full list.
+- Untouched panes follow the window through the stylesheet. Callbacks fire only when a user acts.
+- Sidebar and Inspector are overlays below 768px.
+- The Rail and the Panel do not drive each other.
+- An overlay is the same element as the pane, not a portalled sheet.
+- The resize handle is `role="separator"`.
+- No motion.
+- Deprecated: `Shell.Left`, `target="left"`, `peekOnHover`, `snapPoints`, `snapTolerance`, `collapseThreshold`, `paneId`, `persistence`, a responsive controlled `open` or `state`, `useShell()` and `useResponsivePresentation()`.
 
-### Technical
+### 0.7.1
 
-- Context splitting for performance
-- TypeScript types for all configurations
-- Six breakpoints: initial, xs, sm, md, lg, xl
-- Mobile-first approach with overlay defaults
+- Bug fixes: Root typing, Panel `onExpand`/`onCollapse`, Trigger `type` and `aria-controls`, Bottom arrow keys, the `100dvh` height, the handle's focus line, and the `height` prop on panes.
