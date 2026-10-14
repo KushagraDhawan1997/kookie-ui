@@ -32,7 +32,7 @@ describe('Bottom onSizeChange', () => {
   it('emits px on boundary keys (Home/End), clamped to min/max', () => {
     const spy = vi.fn();
     renderWithProviders(<App onSizeChange={spy} min={100} max={400} />);
-    const slider = screen.getByRole('slider');
+    const slider = screen.getByRole('separator');
     fireEvent.keyDown(slider, { key: 'End' });
     expect(spy).toHaveBeenCalled();
     let [size, meta] = spy.mock.calls.at(-1)!;
@@ -48,7 +48,7 @@ describe('Bottom onSizeChange', () => {
     vi.useFakeTimers();
     const spy = vi.fn();
     renderWithProviders(<App onSizeChange={spy} sizeUpdate="throttle" sizeUpdateMs={50} />);
-    const slider = screen.getByRole('slider');
+    const slider = screen.getByRole('separator');
     for (let i = 0; i < 10; i++) fireEvent.keyDown(slider, { key: 'End' });
     vi.advanceTimersByTime(40);
     const calls40 = spy.mock.calls.length;

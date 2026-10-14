@@ -30,20 +30,20 @@ function App({ defaultOpen }: { defaultOpen?: boolean }) {
 describe('Rail defaultOpen (uncontrolled)', () => {
   it('is open by default when defaultOpen not provided', () => {
     renderWithProviders(<App />);
-    const left = screen.getByText('panel').closest('.rt-ShellLeft') as HTMLElement;
+    const left = document.querySelector('.rt-ShellRail') as HTMLElement;
     expect(left).toHaveAttribute('data-mode', 'expanded');
   });
 
   it('is open on mount when defaultOpen is true', () => {
     renderWithProviders(<App defaultOpen />);
-    const left = screen.getByText('panel').closest('.rt-ShellLeft') as HTMLElement;
+    const left = document.querySelector('.rt-ShellRail') as HTMLElement;
     expect(left).toHaveAttribute('data-mode', 'expanded');
   });
 
   it('toggles internally via shell.togglePane("left") without props', async () => {
     renderWithProviders(<App />);
     const btn = screen.getByRole('button', { name: /toggle left/i });
-    const left = () => screen.getByText('panel').closest('.rt-ShellLeft') as HTMLElement;
+    const left = () => document.querySelector('.rt-ShellRail') as HTMLElement;
     // Rail defaults to open
     expect(left()).toHaveAttribute('data-mode', 'expanded');
     await userEvent.click(btn);

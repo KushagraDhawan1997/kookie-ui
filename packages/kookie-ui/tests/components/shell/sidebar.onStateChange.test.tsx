@@ -15,7 +15,7 @@ function ToggleSidebar() {
 }
 
 describe('Sidebar onStateChange notify', () => {
-  it('fires with reason=init when defaultState is provided', () => {
+  it('does not fire on mount, whatever the default (0.8.0: only a user action is reported)', () => {
     const spy = vi.fn();
     renderWithProviders(
       <Shell.Root>
@@ -23,7 +23,7 @@ describe('Sidebar onStateChange notify', () => {
         <Shell.Content>content</Shell.Content>
       </Shell.Root>,
     );
-    expect(spy).toHaveBeenCalledWith('expanded', { reason: 'init' });
+    expect(spy).not.toHaveBeenCalled();
   });
 
   it('fires with reason=toggle when toggled internally', async () => {

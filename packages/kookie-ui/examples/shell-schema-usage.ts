@@ -1,200 +1,93 @@
 /**
- * Shell Schema Usage Examples
+ * Shell schema usage examples
  *
- * This file demonstrates how to use the Shell component schemas for:
- * - Type-safe prop validation
- * - Development-time validation
- * - JSON schema generation for AI/Copilot integration
+ * The Shell schemas describe the Shell's props for tools that read a schema:
+ * prop validation in development, and JSON schema generation for editors and
+ * assistants.
  */
 
+import type { z } from 'zod';
 import {
   ShellRootSchema,
   ShellSidebarSchema,
-  ShellPanelSchema,
+  ShellInspectorSchema,
   ShellTriggerSchema,
   parseShellRootProps,
   parseShellSidebarProps,
-  parseShellPanelProps,
+  parseShellInspectorProps,
   parseShellTriggerProps,
-  type ShellRootProps,
-  type ShellSidebarProps,
-  type ShellPanelProps,
-  type ShellTriggerProps,
 } from '../src/components/schemas/shell.schema.js';
 
-// Example 1: Basic Shell Root validation
-const basicShellProps: ShellRootProps = {
+// The props a caller writes are the schema's INPUT: a defaulted field is
+// optional there. The `Shell*Props` types the schema module exports are the
+// parsed OUTPUT, where every default has been filled in.
+type ShellRootProps = z.input<typeof ShellRootSchema>;
+type ShellSidebarProps = z.input<typeof ShellSidebarSchema>;
+type ShellInspectorProps = z.input<typeof ShellInspectorSchema>;
+type ShellTriggerProps = z.input<typeof ShellTriggerSchema>;
+
+// Example 1: the Root
+const rootProps: ShellRootProps = {
   height: 'full',
   className: 'my-shell',
   children: 'Shell content',
 };
 
-// Validate props in development
-const validatedRootProps = parseShellRootProps(basicShellProps);
+const validatedRootProps = parseShellRootProps(rootProps);
 
-// Example 2: Responsive Sidebar configuration
-const responsiveSidebarProps: ShellSidebarProps = {
-  defaultMode: {
-    initial: 'collapsed',
-    sm: 'thin',
-    lg: 'expanded',
-  },
-  presentation: {
-    initial: 'overlay',
-    md: 'fixed',
-  },
-  expandedSize: 320,
-  thinSize: 80,
-  resizable: true,
-  collapsible: true,
-  snapPoints: [200, 320, 400],
-  snapTolerance: 12,
-  collapseThreshold: 150,
-  paneId: 'main-sidebar',
-  onModeChange: (mode) => console.log('Sidebar mode changed:', mode),
-  onResize: (size) => console.log('Sidebar resized to:', size),
-};
-
-const validatedSidebarProps = parseShellSidebarProps(responsiveSidebarProps);
-
-// Example 3: Panel with persistence
-const panelProps: ShellPanelProps = {
+// Example 2: a Sidebar nobody has touched. It follows the window: open where
+// it is in the frame, closed where it is an overlay.
+const untouchedSidebarProps: ShellSidebarProps = {
+  presentation: { initial: 'overlay', sm: 'fixed' },
   expandedSize: 288,
-  minSize: 200,
-  maxSize: 600,
-  resizable: true,
-  collapsible: true,
-  snapPoints: [200, 288, 400, 600],
-  collapseThreshold: 180,
-  paneId: 'navigation-panel',
-  persistence: {
-    load: () => {
-      const saved = localStorage.getItem('nav-panel-size');
-      return saved ? Number(saved) : undefined;
-    },
-    save: (size) => {
-      localStorage.setItem('nav-panel-size', String(size));
-    },
-  },
-  onResizeStart: (size) => console.log('Resize started at:', size),
-  onResize: (size) => console.log('Resizing to:', size),
-  onResizeEnd: (size) => console.log('Resize ended at:', size),
+  thinSize: 64,
 };
 
-const validatedPanelProps = parseShellPanelProps(panelProps);
+const validatedUntouchedSidebar = parseShellSidebarProps(untouchedSidebarProps);
 
-// Example 4: Trigger with accessibility
+// Example 3: a Sidebar with a responsive starting state. The object is the
+// answer at each breakpoint until a user changes the state.
+const responsiveSidebarProps: ShellSidebarProps = {
+  defaultState: { initial: 'collapsed', sm: 'thin', lg: 'expanded' },
+  presentation: { initial: 'overlay', sm: 'fixed' },
+  toggleModes: 'both',
+  onStateChange: (state, { reason }) => console.log('Sidebar state:', state, reason),
+};
+
+const validatedResponsiveSidebar = parseShellSidebarProps(responsiveSidebarProps);
+
+// Example 4: a resizable Inspector whose size the app keeps. Save the size in
+// your own storage from onSizeChange, and pass it back as `size`.
+let inspectorWidth = 320;
+const inspectorProps: ShellInspectorProps = {
+  defaultOpen: { initial: false, lg: true },
+  resizable: true,
+  size: inspectorWidth,
+  minSize: 240,
+  maxSize: 480,
+  onSizeChange: (size) => {
+    inspectorWidth = size;
+  },
+  onOpenChange: (open, { reason }) => console.log('Inspector open:', open, reason),
+};
+
+const validatedInspectorProps = parseShellInspectorProps(inspectorProps);
+
+// Example 5: a Trigger. It renders type="button", aria-controls and
+// aria-expanded; onClick runs first and preventDefault() cancels it.
 const triggerProps: ShellTriggerProps = {
   target: 'sidebar',
   action: 'toggle',
-  peekOnHover: true,
-  'aria-label': 'Toggle navigation sidebar',
-  'aria-describedby': 'sidebar-description',
+  'aria-label': 'Toggle navigation',
   onClick: () => console.log('Sidebar toggled'),
-  onMouseEnter: () => console.log('Hovering trigger'),
-  onMouseLeave: () => console.log('Left trigger'),
 };
 
 const validatedTriggerProps = parseShellTriggerProps(triggerProps);
 
-// Example 5: Schema validation with error handling
-function validateShellProps<T>(schema: any, props: unknown): T | null {
-  try {
-    return schema.parse(props);
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error('Schema validation failed:', error.message);
-    }
-    return null;
-  }
+// Example 6: validation with error handling
+const result = ShellRootSchema.safeParse({ height: true });
+if (!result.success) {
+  console.error('Schema validation failed:', result.error.message);
 }
 
-// Example usage with error handling
-const invalidProps = {
-  height: 'invalid-height', // This should fail validation
-  expandedSize: 'not-a-number', // This should also fail
-};
-
-const result = validateShellProps(ShellRootSchema, invalidProps);
-if (!result) {
-  console.log('Props validation failed - using defaults');
-}
-
-// Example 6: Type-safe prop building
-function createSidebarConfig(
-  mode: 'collapsed' | 'thin' | 'expanded' = 'expanded',
-  resizable: boolean = false,
-): ShellSidebarProps {
-  return {
-    defaultMode: mode,
-    expandedSize: 288,
-    thinSize: 64,
-    resizable,
-    collapsible: true,
-    presentation: {
-      initial: 'overlay',
-      md: 'fixed',
-    },
-  };
-}
-
-const sidebarConfig = createSidebarConfig('expanded', true);
-const validatedConfig = parseShellSidebarProps(sidebarConfig);
-
-// Example 7: Responsive configuration builder
-function createResponsiveShellConfig() {
-  return {
-    root: {
-      height: 'full' as const,
-      className: 'app-shell',
-    },
-    sidebar: {
-      defaultMode: {
-        initial: 'collapsed' as const,
-        sm: 'thin' as const,
-        lg: 'expanded' as const,
-      },
-      presentation: {
-        initial: 'overlay' as const,
-        md: 'fixed' as const,
-      },
-      expandedSize: 320,
-      thinSize: 80,
-      resizable: true,
-      collapsible: true,
-    },
-    panel: {
-      expandedSize: 288,
-      resizable: true,
-      collapsible: true,
-      snapPoints: [200, 288, 400],
-    },
-    trigger: {
-      target: 'sidebar' as const,
-      action: 'toggle' as const,
-      peekOnHover: true,
-      'aria-label': 'Toggle navigation',
-    },
-  };
-}
-
-const responsiveConfig = createResponsiveShellConfig();
-
-// Validate all configurations
-const validatedRoot = parseShellRootProps(responsiveConfig.root);
-const validatedSidebar = parseShellSidebarProps(responsiveConfig.sidebar);
-const validatedPanel = parseShellPanelProps(responsiveConfig.panel);
-const validatedTrigger = parseShellTriggerProps(responsiveConfig.trigger);
-
-console.log('All configurations validated successfully!');
-
-export {
-  validatedRootProps,
-  validatedSidebarProps,
-  validatedPanelProps,
-  validatedTriggerProps,
-  validatedRoot,
-  validatedSidebar,
-  validatedPanel,
-  validatedTrigger,
-};
+export { validatedRootProps, validatedUntouchedSidebar, validatedResponsiveSidebar, validatedInspectorProps, validatedTriggerProps };

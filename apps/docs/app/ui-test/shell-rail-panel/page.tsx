@@ -109,7 +109,7 @@ export default function ShellRailPanelTest() {
               • On sm+ (≥768px): Rail open fixed, Panel open fixed
             </Text>
             <Text as="div" size="2" mb="2">
-              • Closing Rail cascades to close Panel
+              • Closing Rail leaves Panel as it is (the panes are independent since 0.8.0)
             </Text>
             <Text as="div" size="2">
               • Panel can be resized by dragging the edge

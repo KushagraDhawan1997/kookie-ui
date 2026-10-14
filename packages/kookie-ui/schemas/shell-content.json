@@ -4,19 +4,26 @@
     "Shell-contentSchema": {
       "type": "object",
       "properties": {
+        "inset": {
+          "description": "Lifts the pane off the frame and paints the backdrop behind it",
+          "type": "boolean"
+        },
         "className": {
-          "type": "string",
-          "description": "Additional CSS class name"
+          "description": "Additional CSS class name",
+          "type": "string"
         },
         "style": {
+          "description": "Inline styles",
           "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
           "additionalProperties": {
             "type": [
               "string",
               "number"
             ]
-          },
-          "description": "Inline styles"
+          }
         },
         "children": {
           "description": "Main content"
@@ -29,6 +36,5 @@
   "title": "Shell-content Component Props",
   "description": "Props schema for the shell-content component in Kookie UI",
   "version": "1.0.0",
-  "generatedAt": "2025-09-10T19:04:45.609Z",
   "source": "Zod schema"
 }

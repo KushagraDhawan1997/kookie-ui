@@ -14,51 +14,64 @@
             "inspector",
             "bottom"
           ],
-          "description": "Which pane to control"
+          "description": "Which pane to drive"
         },
         "action": {
+          "default": "toggle",
+          "description": "Action to perform",
           "type": "string",
           "enum": [
             "toggle",
             "expand",
             "collapse"
-          ],
-          "description": "Action to perform",
-          "default": "toggle"
+          ]
         },
         "peekOnHover": {
-          "type": "boolean",
           "default": false,
-          "description": "Whether to show peek preview on hover when collapsed"
+          "description": "Deprecated, removed in 1.0. Shows a preview of a closed pane on hover.",
+          "type": "boolean"
+        },
+        "type": {
+          "default": "button",
+          "description": "The button type",
+          "type": "string",
+          "enum": [
+            "button",
+            "submit",
+            "reset"
+          ]
         },
         "className": {
-          "type": "string",
-          "description": "Additional CSS class name"
+          "description": "Additional CSS class name",
+          "type": "string"
         },
         "style": {
+          "description": "Inline styles",
           "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
           "additionalProperties": {
             "type": [
               "string",
               "number"
             ]
-          },
-          "description": "Inline styles"
+          }
         },
         "children": {
           "description": "Trigger content"
         },
         "aria-label": {
-          "type": "string",
-          "description": "ARIA label for accessibility"
+          "description": "ARIA label for accessibility",
+          "type": "string"
         },
         "aria-labelledby": {
-          "type": "string",
-          "description": "ARIA labelled by reference"
+          "description": "ARIA labelled by reference",
+          "type": "string"
         },
         "aria-describedby": {
-          "type": "string",
-          "description": "ARIA described by reference"
+          "description": "ARIA described by reference",
+          "type": "string"
         }
       },
       "required": [
@@ -71,6 +84,5 @@
   "title": "Shell-trigger Component Props",
   "description": "Props schema for the shell-trigger component in Kookie UI",
   "version": "1.0.0",
-  "generatedAt": "2025-09-10T19:04:45.609Z",
   "source": "Zod schema"
 }

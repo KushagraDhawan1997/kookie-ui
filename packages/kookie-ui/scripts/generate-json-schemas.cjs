@@ -30,6 +30,16 @@ const {
   IconButtonSchema,
   ToggleButtonSchema,
   ToggleIconButtonSchema,
+  ShellRootSchema,
+  ShellHeaderSchema,
+  ShellRailSchema,
+  ShellPanelSchema,
+  ShellSidebarSchema,
+  ShellContentSchema,
+  ShellInspectorSchema,
+  ShellBottomSchema,
+  ShellTriggerSchema,
+  ShellHandleSchema,
 } = require('../dist/cjs/components/schemas/index.js');
 
 // Schema mapping
@@ -39,6 +49,16 @@ const schemas = {
   'icon-button': IconButtonSchema,
   'toggle-button': ToggleButtonSchema,
   'toggle-icon-button': ToggleIconButtonSchema,
+  'shell-root': ShellRootSchema,
+  'shell-header': ShellHeaderSchema,
+  'shell-rail': ShellRailSchema,
+  'shell-panel': ShellPanelSchema,
+  'shell-sidebar': ShellSidebarSchema,
+  'shell-content': ShellContentSchema,
+  'shell-inspector': ShellInspectorSchema,
+  'shell-bottom': ShellBottomSchema,
+  'shell-trigger': ShellTriggerSchema,
+  'shell-handle': ShellHandleSchema,
 };
 
 // Functions can't be expressed in JSON Schema. Mark them during conversion so

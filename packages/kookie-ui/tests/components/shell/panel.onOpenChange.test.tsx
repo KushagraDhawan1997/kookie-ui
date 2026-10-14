@@ -30,10 +30,10 @@ function App({ defaultOpen = false, onOpenChange }: { defaultOpen?: boolean; onO
 }
 
 describe('Panel onOpenChange (uncontrolled notify only)', () => {
-  it('fires with reason=init when defaultOpen=true on mount', () => {
+  it('does not fire on mount, whatever the default (0.8.0: only a user action is reported)', () => {
     const spy = vi.fn();
     renderWithProviders(<App defaultOpen onOpenChange={spy} />);
-    expect(spy).toHaveBeenCalledWith(true, { reason: 'init' });
+    expect(spy).not.toHaveBeenCalled();
   });
 
   it('fires with reason=toggle on internal toggle', async () => {
