@@ -623,7 +623,13 @@
 
 /* ── Inset ─────────────────────────────────────────────────────────────────── */
 
-/* The backdrop behind the middle row while any pane is inset. A grid item of its own, so the header and the bottom row keep the page. */
+/*
+ * The backdrop behind the middle row while any pane is inset. A grid item of
+ * its own, so the header and the bottom row keep the page. `:has()` paints it
+ * from the server markup, before any script; `data-has-inset` is the Root's
+ * own record, which also covers a pane wrapped in another element.
+ */
+.rt-ShellRoot:has(> [data-inset])::before,
 .rt-ShellRoot[data-has-inset]::before {
   content: '';
   grid-row: 2;
