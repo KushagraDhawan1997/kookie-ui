@@ -141,7 +141,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
-    "test:types": "pnpm build:js:esm:types && tsd --typings tests/types/typings.d.ts --files \"tests/types/**/*.test-d.ts\""
+    "test:types": "pnpm build:js:esm:types && tsd --typings dist/esm/components/index.d.ts --files \"tests/types/**/*.test-d.ts\""
   },
   "dependencies": {
     "@radix-ui/colors": "^3.0.0",
@@ -213,5 +213,10 @@
   "funding": {
     "type": "github",
     "url": "https://github.com/sponsors/KushagraDhawan1997"
+  },
+  "tsd": {
+    "compilerOptions": {
+      "module": "nodenext"
+    }
   }
 }

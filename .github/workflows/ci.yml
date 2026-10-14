@@ -48,8 +48,10 @@ jobs:
       - name: Build
         run: pnpm build:pkg
 
-      # `pnpm test:types` is deliberately not run here: it fails on main today,
-      # independently of any change, with four tsd errors — three module
-      # resolution complaints about `radix-ui/internal` and one about
-      # typings.d.ts not being in the files list. Add it back once those are
-      # fixed, so a green CI run means something.
+      # tsd over the emitted declarations, so the public prop types are
+      # checked as consumers see them. tsd rewrites `moduleResolution` to the
+      # legacy `node` resolver unless `module` is node16 or nodenext, which
+      # cannot read radix-ui's exports map, hence `tsd.compilerOptions` in
+      # package.json and the ESM-scoped tests/types/package.json.
+      - name: Type tests
+        run: pnpm --filter @kushagradhawan/kookie-ui test:types
