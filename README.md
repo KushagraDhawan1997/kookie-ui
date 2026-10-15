@@ -57,7 +57,7 @@ Documented components:
 
 Plus theming documentation for colors, typography, radius, shadows, and material system.
 
-For larger patterns such as code blocks, documentation layouts, and marketing sections, see [Blocks](https://hellokookie.com/docs/blocks). Blocks are copy-paste source, not a package: copy the files into your project and change them freely.
+For larger patterns such as code blocks, documentation layouts, and marketing sections, see [Blocks](https://womp-ui.kookie.design/docs/blocks). Blocks are copy-paste source, not a package: copy the files into your project and change them freely.
 
 ## Quick Start
 
@@ -87,7 +87,7 @@ export default function App() {
 
 ## Documentation
 
-Visit [hellokookie.com](https://hellokookie.com) for full documentation, including installation guides, component APIs, and theming.
+Visit [womp-ui.kookie.design](https://womp-ui.kookie.design) for full documentation, including installation guides, component APIs, and theming.
 
 ## Requirements
 

@@ -4,9 +4,10 @@ import { DocsLayout } from '../components/docs-layout';
 import './globals.css';
 import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
+import { BASE_URL } from '../lib/constants';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://hellokookie.com'),
+  metadataBase: new URL(BASE_URL),
   title: {
     default: 'Womp Design System',
     template: '%s – Womp Design',
@@ -35,7 +36,7 @@ export const metadata: Metadata = {
     title: 'Womp Design System',
     description:
       "Womp's design system: React components built on Kookie UI v1, an open-source fork of Radix Themes by Kushagra Dhawan.",
-    url: 'https://hellokookie.com',
+    url: BASE_URL,
     siteName: 'Womp Design',
     images: [
       {
@@ -117,8 +118,8 @@ export default function RootLayout({
               },
               {
                 '@type': 'WebSite',
-                '@id': 'https://hellokookie.com/#website',
-                url: 'https://hellokookie.com',
+                '@id': `${BASE_URL}/#website`,
+                url: BASE_URL,
                 name: 'Womp Design',
                 description:
                   "Womp's design system: React components built on Kookie UI v1, an open-source fork of Radix Themes by Kushagra Dhawan.",
@@ -127,11 +128,11 @@ export default function RootLayout({
               },
               {
                 '@type': 'SoftwareApplication',
-                '@id': 'https://hellokookie.com/#software',
+                '@id': `${BASE_URL}/#software`,
                 name: 'Womp Design',
                 description:
                   "Womp's design system, built on Kookie UI v1, an open-source fork of Radix Themes.",
-                url: 'https://hellokookie.com',
+                url: BASE_URL,
                 applicationCategory: 'DeveloperApplication',
                 operatingSystem: 'Cross-platform',
                 offers: {
@@ -144,11 +145,11 @@ export default function RootLayout({
               },
               {
                 '@type': 'SoftwareSourceCode',
-                '@id': 'https://hellokookie.com/#sourcecode',
+                '@id': `${BASE_URL}/#sourcecode`,
                 name: 'Kookie UI v1',
                 description:
                   'Source code for Kookie UI v1, the open-source library Womp Design is built on.',
-                url: 'https://hellokookie.com',
+                url: BASE_URL,
                 codeRepository: 'https://github.com/KushagraDhawan1997/kookie-ui',
                 programmingLanguage: ['TypeScript', 'React'],
                 runtimePlatform: 'Node.js',
@@ -157,30 +158,30 @@ export default function RootLayout({
               },
               {
                 '@type': 'WebPage',
-                '@id': 'https://hellokookie.com/#webpage',
-                url: 'https://hellokookie.com',
+                '@id': `${BASE_URL}/#webpage`,
+                url: BASE_URL,
                 name: 'Womp Design System',
-                isPartOf: { '@id': 'https://hellokookie.com/#website' },
-                about: { '@id': 'https://hellokookie.com/#software' },
+                isPartOf: { '@id': `${BASE_URL}/#website` },
+                about: { '@id': `${BASE_URL}/#software` },
                 description:
                   "Womp's design system: React components built on Kookie UI v1, an open-source fork of Radix Themes by Kushagra Dhawan.",
                 inLanguage: 'en-US',
               },
               {
                 '@type': 'BreadcrumbList',
-                '@id': 'https://hellokookie.com/#breadcrumb',
+                '@id': `${BASE_URL}/#breadcrumb`,
                 itemListElement: [
                   {
                     '@type': 'ListItem',
                     position: 1,
                     name: 'Home',
-                    item: 'https://hellokookie.com',
+                    item: BASE_URL,
                   },
                   {
                     '@type': 'ListItem',
                     position: 2,
                     name: 'Documentation',
-                    item: 'https://hellokookie.com/docs',
+                    item: `${BASE_URL}/docs`,
                   },
                 ],
               },

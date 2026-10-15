@@ -319,7 +319,7 @@ MIT © [Kushagra Dhawan](https://github.com/KushagraDhawan1997)
 
 ## Links
 
-- [Documentation](https://hellokookie.com)
+- [Documentation](https://womp-ui.kookie.design)
 - [GitHub Repository](https://github.com/KushagraDhawan1997/kookie-ui)
 - [Issue Tracker](https://github.com/KushagraDhawan1997/kookie-ui/issues)
 
