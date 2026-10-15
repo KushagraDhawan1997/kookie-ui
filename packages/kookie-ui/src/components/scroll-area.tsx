@@ -1,8 +1,10 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { ScrollArea as ScrollAreaPrimitive } from 'radix-ui';
+import { useComposedRefs } from 'radix-ui/internal';
 
 import { scrollAreaPropDefs } from './scroll-area.props.js';
+import { useScrollEdges } from '../hooks/use-scroll-edges.js';
 import { extractMarginProps } from '../helpers/extract-margin-props.js';
 import { getMarginStyles } from '../helpers/get-margin-styles.js';
 import { getResponsiveClassNames } from '../helpers/get-responsive-styles.js';
@@ -35,14 +37,18 @@ const ScrollArea = React.forwardRef<ScrollAreaElement, ScrollAreaProps>((props, 
     size = scrollAreaPropDefs.size.default,
     radius = scrollAreaPropDefs.radius.default,
     scrollbars = scrollAreaPropDefs.scrollbars.default,
+    fade = scrollAreaPropDefs.fade.default,
     ...viewportProps
   } = marginRest;
+  const setEdgesElement = useScrollEdges<HTMLDivElement>(fade);
+  const viewportRef = useComposedRefs(forwardedRef, setEdgesElement);
 
   return (
     <ScrollAreaPrimitive.Root
       type={type}
       scrollHideDelay={scrollHideDelay}
       className={classNames('rt-ScrollAreaRoot', marginClassNames, className)}
+      data-fade={fade ? '' : undefined}
       style={mergeStyles(marginCustomProperties, style)}
       asChild={asChild}
     >
@@ -50,7 +56,7 @@ const ScrollArea = React.forwardRef<ScrollAreaElement, ScrollAreaProps>((props, 
         <>
           <ScrollAreaPrimitive.Viewport
             {...viewportProps}
-            ref={forwardedRef}
+            ref={viewportRef}
             className="rt-ScrollAreaViewport"
           >
             {children}

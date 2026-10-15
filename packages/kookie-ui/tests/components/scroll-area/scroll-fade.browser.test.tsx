@@ -1,0 +1,64 @@
+import * as React from 'react';
+import { describe, it, expect } from 'vitest';
+import { render } from '@testing-library/react';
+import { MessageScroller, ScrollArea, Theme } from '../../../src/components/index';
+
+const frames = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => r(null))));
+const rows = Array.from({ length: 40 }, (_, i) => <div key={i} style={{ height: 30 }}>Row {i}</div>);
+const vars = (el: HTMLElement) => ({
+  start: el.style.getPropertyValue('--scroll-overflow-start'),
+  end: el.style.getPropertyValue('--scroll-overflow-end'),
+});
+
+describe('scroll fade in a browser', () => {
+  it('ScrollArea publishes what is hidden past each edge, and masks only with fade', async () => {
+    render(
+      <Theme>
+        <ScrollArea fade style={{ height: 200 }} data-testid="faded">{rows}</ScrollArea>
+        <ScrollArea style={{ height: 200 }}>{rows}</ScrollArea>
+      </Theme>,
+    );
+    const [faded, plain] = Array.from(document.querySelectorAll<HTMLElement>('.rt-ScrollAreaViewport'));
+    await frames();
+    expect(vars(faded!).start).toBe('0px');
+    expect(parseFloat(vars(faded!).end)).toBeGreaterThan(900);
+    expect(getComputedStyle(faded!).maskImage).toContain('linear-gradient');
+    expect(getComputedStyle(plain!).maskImage).toBe('none');
+    expect(vars(plain!).start).toBe('');
+
+    faded!.scrollTop = 300;
+    faded!.dispatchEvent(new Event('scroll'));
+    await frames();
+    expect(vars(faded!).start).toBe('300px');
+  });
+
+  it('MessageScroller fades by default, and a band can set its reach', async () => {
+    render(
+      <Theme>
+        <MessageScroller.Root style={{ height: 200, ['--scroll-fade-start' as string]: '80px' }}>
+          <MessageScroller.Viewport aria-label="Conversation">
+            <MessageScroller.Content>{rows}</MessageScroller.Content>
+          </MessageScroller.Viewport>
+        </MessageScroller.Root>
+      </Theme>,
+    );
+    const viewport = document.querySelector<HTMLElement>('.rt-MessageScrollerViewport')!;
+    await frames();
+    await frames();
+    expect(viewport.hasAttribute('data-fade')).toBe(true);
+    expect(getComputedStyle(viewport).maskImage).toContain('linear-gradient');
+    expect(getComputedStyle(viewport).getPropertyValue('--scroll-fade-start').trim()).toBe('80px');
+  });
+
+  it('a nested scroller does not take its ancestor band’s reach', () => {
+    render(
+      <Theme>
+        <ScrollArea fade style={{ height: 300, ['--scroll-fade-start' as string]: '80px' }}>
+          <ScrollArea fade style={{ height: 100 }}>{rows}</ScrollArea>
+        </ScrollArea>
+      </Theme>,
+    );
+    const inner = document.querySelectorAll<HTMLElement>('.rt-ScrollAreaViewport')[1]!;
+    expect(getComputedStyle(inner).getPropertyValue('--scroll-fade-start').trim()).toBe('');
+  });
+});

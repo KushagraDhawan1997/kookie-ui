@@ -2,6 +2,10 @@
 
 Decisions about Kookie UI v1 and why they were made. Newest first. The docs site is the source of truth for what the system says. This file records how it got there.
 
+## 2026-10-15: the scroll fade
+
+Womp's chat floats its toolbar and goal tray over the transcript, and content cut hard at their edges. Kushagra asked for a fade native to the scroller, as v2 does. It is a mask on the viewport, so it fades the content and lets whatever is behind show through; a painted gradient would have to fade toward a colour that differs on every surface. v2 reads Base UI's per-edge overflow variables; Radix's ScrollArea publishes none, so a small hook (`use-scroll-edges`) writes `--scroll-overflow-start/-end` on scroll and resize, at most once a frame, with no re-render. Bands publish their reach through `--scroll-fade-start/-end`, and a nested scroller stands those down, the rule v2 learned from a band reaching every scroller inside its pane.
+
 ## 2026-10-15: components are tested in a real browser
 
 Womp's copy has no docs site, so the public repo's Playwright suite (`apps/e2e`), which drives the docs pages, cannot test a component that ships here. Kushagra: anything shipped on Womp's Kookie has to be testable in this repo. The answer is v2's: a second Vitest project in browser mode, mounting each component directly in Chromium through Playwright. A component gets one `*.browser.test.tsx` beside its jsdom tests, with no page or app to maintain, so it scales with the component count. jsdom stays for behaviour that needs no layout, because it is fast. Every new browser test was checked against a broken version of the code it guards (autoScroll off, a strip that cannot wrap) and failed.

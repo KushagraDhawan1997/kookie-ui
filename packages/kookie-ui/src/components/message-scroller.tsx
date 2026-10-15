@@ -40,7 +40,10 @@ import {
   type MessageScrollerVisibilityState,
 } from '@shadcn/react/message-scroller';
 
+import { useComposedRefs } from 'radix-ui/internal';
+
 import { IconButton, type IconButtonProps } from './icon-button.js';
+import { useScrollEdges } from '../hooks/use-scroll-edges.js';
 
 interface RootProps extends React.ComponentPropsWithoutRef<'div'> {
   /**
@@ -78,14 +81,30 @@ interface ViewportProps extends React.ComponentPropsWithoutRef<'div'> {
   'aria-label'?: string;
   /** Keep the reader's place when older messages are added above. Default `true`. */
   preserveScrollOnPrepend?: boolean;
+  /**
+   * Fades messages toward the top and bottom edges while there is more past them. A floating
+   * band over an edge (a toolbar, a goal tray, a composer) can set `--scroll-fade-start` or
+   * `--scroll-fade-end` to its height, so messages fade as they pass under it. Default `true`.
+   */
+  fade?: boolean;
 }
 
 /** The scrolling element. */
-const Viewport = React.forwardRef<HTMLDivElement, ViewportProps>(({ className, 'aria-label': label, ...props }, forwardedRef) => (
-  // The primitive names an unnamed viewport "Messages", in English. An empty name is skipped by
-  // accessible-name computation, so a transcript is only named when the app names it.
-  <Primitive.Viewport aria-label={label ?? ''} {...props} ref={forwardedRef} className={classNames('rt-MessageScrollerViewport', className)} />
-));
+const Viewport = React.forwardRef<HTMLDivElement, ViewportProps>(({ className, 'aria-label': label, fade = true, ...props }, forwardedRef) => {
+  const setEdgesElement = useScrollEdges<HTMLDivElement>(fade);
+  const ref = useComposedRefs(forwardedRef, setEdgesElement);
+  return (
+    // The primitive names an unnamed viewport "Messages", in English. An empty name is skipped by
+    // accessible-name computation, so a transcript is only named when the app names it.
+    <Primitive.Viewport
+      aria-label={label ?? ''}
+      {...props}
+      ref={ref}
+      data-fade={fade ? '' : undefined}
+      className={classNames('rt-MessageScrollerViewport', className)}
+    />
+  );
+});
 Viewport.displayName = 'MessageScroller.Viewport';
 
 type ContentProps = React.ComponentPropsWithoutRef<'div'>;

@@ -144,3 +144,47 @@
     }
   }
 }
+
+/***************************************************************************************************
+ *                                                                                                 *
+ * SCROLL FADE                                                                                     *
+ *                                                                                                 *
+ ***************************************************************************************************/
+
+/*
+ * Content dissolves toward an edge that has more past it. A mask, not a painted gradient: a paint
+ * has to fade toward a colour, and the right colour differs on every surface, while a mask fades
+ * the content itself and lets whatever is behind show through.
+ *
+ * `--scroll-overflow-start/-end` are how far content is hidden past each edge, written by
+ * Kookie's scroll-edges hook. `min()` against the fade length is the whole behaviour: an edge
+ * with nothing past it fades over 0px, and the fade ramps in over the first pixels of scrolling.
+ * A floating band over an edge sets `--scroll-fade-start` or `--scroll-fade-end` to its height.
+ *
+ * Shared by ScrollArea (on its viewport) and MessageScroller (on its viewport). Scrollbars are
+ * siblings of the viewport, outside the mask, so the thumb stays crisp.
+ */
+:where(.rt-ScrollAreaRoot[data-fade]) > .rt-ScrollAreaViewport,
+.rt-MessageScrollerViewport:where([data-fade]) {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black min(var(--scroll-overflow-start, 0px), var(--scroll-fade-start, var(--scroll-fade-size))),
+    black calc(100% - min(var(--scroll-overflow-end, 0px), var(--scroll-fade-end, var(--scroll-fade-size)))),
+    transparent 100%
+  );
+}
+
+:root,
+.radix-themes {
+  --scroll-fade-size: var(--space-6);
+}
+
+/*
+ * A band is above the scroller it floats over and above nothing else. The reach hooks inherit,
+ * so a scroller nested inside another takes the designed length, not its ancestor's band.
+ */
+:where(.rt-ScrollAreaViewport, .rt-MessageScrollerViewport) :where(.rt-ScrollAreaRoot, .rt-MessageScrollerViewport) {
+  --scroll-fade-start: initial;
+  --scroll-fade-end: initial;
+}

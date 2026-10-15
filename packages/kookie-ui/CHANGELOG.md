@@ -1,3 +1,10 @@
+## [0.10.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.9.1...v0.10.0) (2026-10-15)
+
+### Features
+
+* **scroll-area:** `fade` fades the content toward the top and bottom edges while there is more content past them. An edge with nothing hidden past it does not fade, and the fade ramps in over the first pixels of scrolling. It is a mask, not a painted gradient, so it works on any background. A floating band over an edge can set `--scroll-fade-start` or `--scroll-fade-end` to its height so content fades as it passes under it. A scroller nested inside another takes the default fade length, not its ancestor's band. `--scroll-fade-size` sets the length (default `var(--space-6)`).
+* **message-scroller:** `MessageScroller.Viewport` fades by default, with the same reach hooks. Pass `fade={false}` to turn it off.
+
 ## [0.9.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.9.0...v0.9.1) (2026-10-15)
 
 ### Tests
