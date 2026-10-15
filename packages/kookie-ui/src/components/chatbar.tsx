@@ -9,6 +9,8 @@ import { CloseIcon, FileTextIcon } from './icons.js';
 import { Flex } from './flex.js';
 import { ScrollArea } from './scroll-area.js';
 import { Slot } from './slot.js';
+import { NoticeSizeContext } from './notice.js';
+import { Spinner } from './spinner.js';
 import { Text } from './text.js';
 import { VisuallyHidden } from './visually-hidden.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
@@ -257,6 +259,19 @@ interface ChatbarRootBaseProps {
    * Provides methods to focus the textarea and open the file picker.
    */
   apiRef?: React.Ref<ChatbarApi>;
+
+  /**
+   * Messages that need an answer before the next message, such as `Notice` and `Confirmation`.
+   * They stack in a column above the chatbar, in the order given, so put the one the next
+   * message answers last, nearest the text. They sit outside the box: a button in a notice never
+   * submits the message, and pressing one never collapses the chatbar.
+   */
+  notices?: React.ReactNode;
+  /**
+   * Short facts that stay true about the conversation, such as the model or the context left.
+   * They sit below the chatbar, inset from its sides.
+   */
+  context?: React.ReactNode;
 }
 
 type RootElement = React.ElementRef<'div'>;
@@ -328,6 +343,8 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
     dropzone = true,
     apiRef,
     onBlurCapture,
+    notices,
+    context,
     ...divProps
   } = props;
   const effectiveMaterial = material || panelBackground;
@@ -704,7 +721,12 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
                 style={{ display: 'none' }}
                 onChange={handleFileInputChange}
               />
-              <div {...(dropzone ? getRootProps() : {})} style={{ width: '100%', height: '100%' }} onPointerDown={handleContainerPointerDown}>
+              {notices ? (
+                <div className="rt-ChatbarNotices">
+                  <NoticeSizeContext.Provider value={size}>{notices}</NoticeSizeContext.Provider>
+                </div>
+              ) : null}
+              <div {...(dropzone ? getRootProps() : {})} style={{ width: '100%', flex: '1 1 auto', minHeight: 0 }} onPointerDown={handleContainerPointerDown}>
                 <m.div
                   className={classNames('rt-ChatbarBox', `rt-variant-${variant ?? 'surface'}`)}
                   style={{ position: 'relative' }}
@@ -729,6 +751,11 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
                   )}
                 </m.div>
               </div>
+              {context ? (
+                <Text as="div" size={size === '3' ? '2' : '1'} emphasis="medium" className="rt-ChatbarContext">
+                  {context}
+                </Text>
+              ) : null}
               <VisuallyHidden role="status" aria-live="polite">
                 {dragActive ? 'Drop files here to attach.' : <span key={announcement.id}>{announcement.text}</span>}
               </VisuallyHidden>
@@ -1187,6 +1214,8 @@ const RowEnd = React.forwardRef<HTMLDivElement, RowSlotProps>((props, forwardedR
 });
 RowEnd.displayName = 'Chatbar.RowEnd';
 
+type SendStatus = 'ready' | 'submitted' | 'streaming' | 'error';
+
 type SendProps = Omit<IconButtonProps, 'aria-label' | 'aria-labelledby'> & {
   /** Optional override for accessible name. Defaults to "Send". */
   'aria-label'?: string;
@@ -1194,6 +1223,25 @@ type SendProps = Omit<IconButtonProps, 'aria-label' | 'aria-labelledby'> & {
   asChild?: boolean;
   /** Clear message and attachments after sending. Defaults to Root `clearOnSubmit`. */
   clearOnSend?: boolean;
+  /**
+   * What the button means. `ready` sends. While a reply is `submitted` or `streaming` and the
+   * box is empty, the button STOPS the reply (`onStop`); with a draft in the box it still sends,
+   * and the app decides whether sending interrupts the reply. After an `error`, an empty box
+   * makes it RETRY (`onRetry`). Default `ready`.
+   */
+  status?: SendStatus;
+  /** Called when the button is pressed to stop a reply. */
+  onStop?: () => void;
+  /** Called when the button is pressed to retry after an error. */
+  onRetry?: () => void;
+  /** Accessible name while it stops. Default "Stop". */
+  stopLabel?: string;
+  /** Accessible name while it retries. Default "Retry". */
+  retryLabel?: string;
+  /** Glyph while it stops. Defaults to a square, or a spinner while `submitted`. */
+  stopIcon?: React.ReactNode;
+  /** Glyph while it retries. */
+  retryIcon?: React.ReactNode;
 };
 
 const Send = React.forwardRef<HTMLButtonElement, SendProps>((props, forwardedRef) => {
@@ -1208,6 +1256,13 @@ const Send = React.forwardRef<HTMLButtonElement, SendProps>((props, forwardedRef
     variant: variantProp,
     tabIndex,
     onClick,
+    status = 'ready',
+    onStop,
+    onRetry,
+    stopLabel = 'Stop',
+    retryLabel = 'Retry',
+    stopIcon,
+    retryIcon,
     'aria-label': ariaLabel,
     'aria-labelledby': ariaLabelledby,
     ...buttonProps
@@ -1215,30 +1270,64 @@ const Send = React.forwardRef<HTMLButtonElement, SendProps>((props, forwardedRef
   const ctx = useChatbarContext();
   const value = React.useContext(ChatbarValueContext);
 
-  if (ctx.sendMode === 'never') return null;
-
   const hasContent = hasText(value) || ctx.attachments.length > 0;
-  const visible = ctx.sendMode === 'always' || hasContent;
-  const inactive = disabled || ctx.disabled || ctx.readOnly || !hasContent;
+  const running = status === 'submitted' || status === 'streaming';
+  const mode: 'send' | 'stop' | 'retry' = hasContent ? 'send' : running ? 'stop' : status === 'error' ? 'retry' : 'send';
 
-  const labelProps: { 'aria-label': string } | { 'aria-labelledby': string } = ariaLabelledby
-    ? { 'aria-labelledby': ariaLabelledby }
-    : { 'aria-label': ariaLabel ?? 'Send' };
+  if (ctx.sendMode === 'never' && mode === 'send') return null;
+
+  const visible = mode !== 'send' || ctx.sendMode === 'always' || hasContent;
+  const inactive = mode === 'send' ? disabled || ctx.disabled || ctx.readOnly || !hasContent : disabled || ctx.disabled;
+
+  const sendName = ariaLabel ?? 'Send';
+  const labelProps: { 'aria-label': string } | { 'aria-labelledby': string } =
+    mode === 'stop' ? { 'aria-label': stopLabel } : mode === 'retry' ? { 'aria-label': retryLabel } : ariaLabelledby ? { 'aria-labelledby': ariaLabelledby } : { 'aria-label': sendName };
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     onClick?.(event);
     if (event.defaultPrevented || inactive) return;
+    if (mode === 'stop') {
+      onStop?.();
+      return;
+    }
+    if (mode === 'retry') {
+      onRetry?.();
+      return;
+    }
     const clear = clearOnSend ?? ctx.clearOnSubmit;
     // Clearing hides and disables this button; keep keyboard focus in the composer
     if (ctx.submit(clear) && clear) ctx.textareaRef.current?.focus({ preventScroll: true });
   };
+
+  const glyph =
+    mode === 'stop' ? (
+      stopIcon ?? (status === 'submitted' ? <Spinner size={ctx.size} /> : (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+          <rect x="7" y="7" width="10" height="10" rx="2" />
+        </svg>
+      ))
+    ) : mode === 'retry' ? (
+      retryIcon ?? (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+          <path d="M3 3v5h5" />
+        </svg>
+      )
+    ) : (
+      children ?? (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <path d="M5 12h14" />
+          <path d="m12 5 7 7-7 7" />
+        </svg>
+      )
+    );
 
   return (
     <IconButton
       {...buttonProps}
       ref={forwardedRef}
       size={sizeProp ?? ctx.size}
-      variant={variantProp ?? (ctx.open ? 'solid' : 'ghost')}
+      variant={variantProp ?? (ctx.open || mode !== 'send' ? 'solid' : 'ghost')}
       disabled={inactive}
       className={classNames('rt-ChatbarSend', className)}
       style={{ opacity: visible ? 1 : 0, pointerEvents: visible ? undefined : 'none', ...style }}
@@ -1247,14 +1336,11 @@ const Send = React.forwardRef<HTMLButtonElement, SendProps>((props, forwardedRef
       tabIndex={visible ? tabIndex : -1}
       asChild={asChild}
       onClick={handleClick}
+      data-status={status}
+      data-mode={mode}
       {...labelProps}
     >
-      {children ?? (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-          <path d="M5 12h14" />
-          <path d="m12 5 7 7-7 7" />
-        </svg>
-      )}
+      {glyph}
     </IconButton>
   );
 });
@@ -1278,4 +1364,5 @@ export type {
   AttachmentStatus as ChatbarAttachmentStatus,
   ExpandOn as ChatbarExpandOn,
   SendMode as ChatbarSendMode,
+  SendStatus as ChatbarSendStatus,
 };

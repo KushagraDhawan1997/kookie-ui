@@ -47,6 +47,8 @@ already load.
 
 Kookie UI is a fork of [Radix Themes](https://radix-ui.com/themes) that extends it into a full design system. While Radix provided excellent building blocks, Kookie UI codifies the patterns and rules that make interfaces feel consistent and systematic.
 
+`MessageScroller` is Kookie's surface over shadcn/ui's [Message Scroller](https://ui.shadcn.com) primitive (`@shadcn/react`, MIT); the scrolling behaviour is shadcn's.
+
 ### Key Features
 
 - **Systematic Design Tokens** - 12-point progressions for spacing, radius, and shadows with predictable steps

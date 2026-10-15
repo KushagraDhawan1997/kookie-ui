@@ -1,0 +1,91 @@
+/*
+ * Notice and Confirmation — one strip, two kinds.
+ * It takes space and never floats: no position, no z-index.
+ */
+
+.rt-NoticeRoot {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  color: var(--accent-ink);
+  border-radius: var(--notice-radius);
+
+  --material-blend: 100%;
+  --material-alpha: 0;
+  background-color: color-mix(in srgb, var(--accent-a3) calc(var(--material-alpha) * 100%), var(--accent-3) var(--material-blend));
+
+  &:where([data-material='translucent']) {
+    --material-blend: 60%;
+    --material-alpha: 1;
+    backdrop-filter: var(--backdrop-filter-components-enabled);
+  }
+
+  @media (forced-colors: active) {
+    border: 1px solid CanvasText;
+  }
+}
+
+/* Gray is the resting category: its fill is one step quieter and its words are the ordinary ink. */
+.rt-NoticeRoot:where([data-accent-color='gray']) {
+  background-color: color-mix(in srgb, var(--gray-a3) calc(var(--material-alpha) * 100%), var(--gray-3) var(--material-blend));
+  color: var(--gray-12);
+}
+
+.rt-NoticeIcon {
+  display: flex;
+  flex: none;
+  align-items: center;
+
+  /* stylelint-disable-next-line selector-max-type */
+  & :where(svg) {
+    width: var(--notice-icon-size);
+    height: var(--notice-icon-size);
+  }
+}
+
+.rt-NoticeText {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.rt-NoticeActions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* A question wraps its answers under the words when the strip is narrow. */
+.rt-NoticeRoot:where([data-kind='confirmation']) {
+  flex-wrap: wrap;
+
+  & :where(.rt-NoticeActions) {
+    margin-left: auto;
+  }
+}
+
+.rt-NoticeRoot {
+  &:where(.rt-r-size-1) {
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-1) var(--space-1) var(--space-3);
+    min-height: calc(var(--space-6) + var(--space-2));
+    --notice-radius: var(--radius-surface-1);
+    --notice-icon-size: var(--content-icon-size-1);
+  }
+  &:where(.rt-r-size-2) {
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-1) var(--space-1) var(--space-3);
+    min-height: calc(var(--space-7) + var(--space-2));
+    --notice-radius: var(--radius-surface-2);
+    --notice-icon-size: var(--content-icon-size-2);
+  }
+  &:where(.rt-r-size-3) {
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+    min-height: calc(var(--space-8) + var(--space-2));
+    --notice-radius: var(--radius-surface-3);
+    --notice-icon-size: var(--content-icon-size-3);
+  }
+}

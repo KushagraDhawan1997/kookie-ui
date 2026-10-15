@@ -1,6 +1,6 @@
 {
   "name": "@kushagradhawan/kookie-ui",
-  "version": "0.8.1",
+  "version": "0.9.1",
   "description": "A modern React component library with beautiful design tokens, flexible theming, and comprehensive documentation",
   "keywords": [
     "react",
@@ -140,12 +140,14 @@
     "bench": "vitest bench --run --config vitest.bench.config.ts",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:browser": "vitest --project browser",
     "test:ui": "vitest --ui",
     "test:types": "pnpm build:js:esm:types && tsd --typings dist/esm/components/index.d.ts --files \"tests/types/**/*.test-d.ts\""
   },
   "dependencies": {
     "@radix-ui/colors": "^3.0.0",
     "@radix-ui/react-accordion": "^1.2.20",
+    "@shadcn/react": "0.3.1",
     "@tanstack/react-virtual": "^3.14.13",
     "@zag-js/react": "^1.44.0",
     "@zag-js/splitter": "^1.44.0",
@@ -179,6 +181,8 @@
     "@testing-library/user-event": "^14.6.7",
     "@types/jsdom": "^28.0.3",
     "@types/node": "^24.13.5",
+    "@vitest/browser": "^5.0.5",
+    "@vitest/browser-playwright": "^5.0.5",
     "autoprefixer": "10.6.1",
     "esbuild": "0.28.2",
     "eslint": "^10.11.0",
@@ -187,6 +191,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.12.0",
     "jsdom": "^29.1.1",
+    "playwright": "^1.64.1",
     "postcss": "8.5.28",
     "postcss-cli": "12.0.0",
     "postcss-combine-duplicated-selectors": "10.0.3",
@@ -200,7 +205,7 @@
     "tsd": "^0.33.0",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.70.0",
-    "vitest": "^5.0.1"
+    "vitest": "^5.0.5"
   },
   "homepage": "https://github.com/KushagraDhawan1997/kookie-ui",
   "repository": {

@@ -2,6 +2,20 @@
 
 Decisions about Kookie UI v1 and why they were made. Newest first. The docs site is the source of truth for what the system says. This file records how it got there.
 
+## 2026-10-15: components are tested in a real browser
+
+Womp's copy has no docs site, so the public repo's Playwright suite (`apps/e2e`), which drives the docs pages, cannot test a component that ships here. Kushagra: anything shipped on Womp's Kookie has to be testable in this repo. The answer is v2's: a second Vitest project in browser mode, mounting each component directly in Chromium through Playwright. A component gets one `*.browser.test.tsx` beside its jsdom tests, with no page or app to maintain, so it scales with the component count. jsdom stays for behaviour that needs no layout, because it is fast. Every new browser test was checked against a broken version of the code it guards (autoScroll off, a strip that cannot wrap) and failed.
+
+## 2026-10-15: the chat pieces (0.9.0)
+
+Womp's chat was being redesigned as one screen rather than as an input: a transcript, a column of messages that wait above the input, the input, and quiet facts below it. Kookie gained the parts of that screen that are system decisions. The arrangement of a conversation (turns, replies, folded tool steps, the goal tray) stays in the app, as v2 keeps it in a block.
+
+- **`MessageScroller` takes shadcn/ui's primitive rather than writing one.** Following a streamed reply, anchoring a new turn, keeping the reader's place when history loads above and jumping back are a body of edge cases; `@shadcn/react` (MIT) is the second runtime dependency of its kind after Radix, credited in AUTHORS. v2 makes its `ScrollArea` render as the primitive's viewport so there is one scroller. v1 cannot: Radix's `ScrollArea.Viewport` wraps its children in its own element and cannot be replaced, so the transcript scrolls natively with a thin scrollbar. Womp's chat already hides its scrollbar. The jump button is centred by margins, never by `translate`, because a button's own press motion may use it.
+- **Notice and Confirmation, not Callout.** A notice is a condition that is true now and that nobody just caused. It takes layout space and never floats, has at most one action that fixes the condition, and its dismissal only acknowledges it, with the state in the app because a component cannot remember a dismissal across a reload. A confirmation is a question: a quiet no before a loud yes and no dismiss button, because closing a question does not answer it. Callout stays for authored asides.
+- **Notices sit outside the chatbar's box.** A button in a notice must not submit the message, and a question may need to be a form of its own. They are inside `Chatbar.Root`, so pressing one does not collapse the bar, but outside the drop area and the click-to-focus area. They take the bar's size through context. The order is the app's; the last is nearest the text.
+- **Send means more than send.** `sendMode` decides whether the button shows, never what it does, so a person could not stop a reply. `status` makes the empty-box button stop a running reply or retry after an error. With a draft, it still sends and the app decides whether that interrupts.
+- **Context is quiet text, not a ground.** A ground tucked behind the box's bottom edge showed through the box's translucent fill, so it became text below the box, inset to the text inside it.
+
 ## 2026-10-14: the Shell audit
 
 A multi-agent audit of the 0.8.0 branch confirmed 49 defects, each reproduced and argued against independently. Four exist only in the 0.7.1 code (fixed in 0.8.0 already), so the recommendation is to publish 0.8.0 and not 0.7.1 on its own. The rest are fixed in 0.8.0. The ones that changed a decision:

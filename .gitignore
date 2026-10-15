@@ -84,3 +84,6 @@ Thumbs.db
 
 # Turbo cache
 .turbo/
+
+# Vitest browser-mode artifacts
+packages/kookie-ui/.vitest

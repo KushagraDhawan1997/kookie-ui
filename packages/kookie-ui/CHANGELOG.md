@@ -1,3 +1,28 @@
+## [0.9.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.9.0...v0.9.1) (2026-10-15)
+
+### Tests
+
+* Components are now tested in a real browser as well as in jsdom. A second Vitest project, `browser`, mounts components in Chromium through Playwright (`@vitest/browser-playwright`) and checks what jsdom cannot: layout, scrolling, focus and computed CSS. Browser tests are named `*.browser.test.tsx` and live beside a component's jsdom tests. `pnpm test` runs both; `pnpm test:browser` runs the browser project in watch mode, and `pnpm test:browser --ui` shows each fixture rendered. CI installs Chromium and runs both.
+* Browser tests for 0.9.0: `MessageScroller` opens at its end, follows new messages, leaves a reader who scrolled up alone, wakes and centres its jump button, and jumps back. `Notice` takes layout space, keeps its buttons inside a narrow strip and grows with `size`; `Confirmation` puts its answers under the words when narrow; `Chatbar` stacks notices above the box and context below it, and stays open when a notice's button is pressed.
+
+No runtime code changed.
+
+## [0.9.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.8.1...v0.9.0) (2026-10-15)
+
+The pieces a chat screen needs around its input: a transcript that follows the conversation, messages that wait above the input, and a send button that can stop a reply.
+
+### Features
+
+* **message-scroller:** new `MessageScroller` (`Root`, `Viewport`, `Content`, `Item`, `Button`, plus `useMessageScroller`, `useMessageScrollerScrollable` and `useMessageScrollerVisibility`). The transcript opens at its end, follows a streamed reply while the reader is at the end, leaves them alone once they scroll up, anchors a new message near the top with `scrollAnchor`, keeps their place when older messages load above, and shows a jump-to-latest button only while they are away from the end. The behaviour is shadcn/ui's Message Scroller primitive (`@shadcn/react`, MIT), credited in AUTHORS. It needs React 19. The viewport scrolls natively with a thin scrollbar, because Radix's `ScrollArea` cannot hand its viewport element to another library.
+* **notice:** new `Notice`, for a condition that is true now. It takes space and never floats, announces politely, and has at most one `action` that fixes the condition. `onDismiss` shows a dismiss button that only acknowledges the message; the app removes the notice and remembers the choice. `color` is the category (default `gray`), `size` is `1`–`3`.
+* **notice:** new `Confirmation`, for a question that waits for an answer: a quiet `cancelLabel` before a loud `confirmLabel`, no dismiss button, and `busy` while the yes runs. It never takes focus, so a person can answer by typing instead.
+* **chatbar:** `Chatbar.Root` takes `notices`, a column of `Notice` and `Confirmation` above the box (in the order given, the last nearest the text), and `context`, quiet text below the box for facts that stay true, such as the model or the credits left. Notices take the chatbar's `size` unless they set their own, sit outside the box so their buttons never submit the message, and do not collapse the chatbar when pressed.
+* **chatbar:** `Chatbar.Send` takes `status` (`ready`, `submitted`, `streaming`, `error`). While a reply runs and the box is empty it stops the reply through `onStop`; after an error it retries through `onRetry`. With a draft in the box it still sends. `stopLabel`, `retryLabel`, `stopIcon` and `retryIcon` set the words and glyphs.
+
+### Changes
+
+* **chatbar:** `.rt-ChatbarRoot` is a flex column, and the drop area fills it with `flex: 1` instead of `height: 100%`. A root given a height still fills it with the box.
+
 ## [0.8.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.8.0...v0.8.1) (2026-10-15)
 
 ### Bug Fixes

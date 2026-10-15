@@ -9,6 +9,9 @@
 /* Defaults */
 .rt-ChatbarRoot {
   --chatbar-attachment-thumb: var(--space-8);
+  /* A column: notices, then the box (which fills any height the consumer gives the root), then context. */
+  display: flex;
+  flex-direction: column;
 
   /*
    * Component-level material override
@@ -594,4 +597,25 @@
       --chatbar-attachments-radius: var(--radius-3);
     }
   }
+}
+
+/***************************************************************************************************
+ *                                                                                                 *
+ * NOTICES AND CONTEXT                                                                             *
+ *                                                                                                 *
+ ***************************************************************************************************/
+
+/* Notices stand above the box, in a column; the last one is nearest the text. */
+.rt-ChatbarNotices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+/* Context is quiet text below the box, inset to line up with the text inside it. */
+.rt-ChatbarContext {
+  padding: var(--space-2) var(--space-3) 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }

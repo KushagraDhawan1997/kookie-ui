@@ -1,0 +1,165 @@
+'use client';
+
+/**
+ * MessageScroller — a transcript that follows a conversation.
+ *
+ * The behaviour is shadcn/ui's Message Scroller primitive (`@shadcn/react/message-scroller`,
+ * MIT, https://ui.shadcn.com). Streaming, anchoring a new turn, keeping your place when history
+ * loads above, and jumping back to the latest are a body of edge cases nobody should rewrite, so
+ * Kookie takes the primitive and adds only the surface: the parts, the class names, the button.
+ *
+ * Anatomy
+ * ```tsx
+ * <MessageScroller.Root>
+ *   <MessageScroller.Viewport aria-label="Conversation">
+ *     <MessageScroller.Content>
+ *       <MessageScroller.Item messageId="u1" scrollAnchor>…</MessageScroller.Item>
+ *       <MessageScroller.Item messageId="a1">…</MessageScroller.Item>
+ *     </MessageScroller.Content>
+ *   </MessageScroller.Viewport>
+ *   <MessageScroller.Button aria-label="Jump to the latest" />
+ * </MessageScroller.Root>
+ * ```
+ *
+ * The viewport is its own scroller. Kookie's `ScrollArea` is Radix's, and Radix cannot hand its
+ * viewport element to another library, so the transcript scrolls natively with a thin scrollbar.
+ *
+ * Requires React 19, which the primitive needs.
+ */
+
+import * as React from 'react';
+import classNames from 'classnames';
+import {
+  MessageScroller as Primitive,
+  useMessageScroller,
+  useMessageScrollerScrollable,
+  useMessageScrollerVisibility,
+  type MessageScrollerDefaultScrollPosition,
+  type MessageScrollerScrollOptions,
+  type MessageScrollerScrollable,
+  type MessageScrollerVisibilityState,
+} from '@shadcn/react/message-scroller';
+
+import { IconButton, type IconButtonProps } from './icon-button.js';
+
+interface RootProps extends React.ComponentPropsWithoutRef<'div'> {
+  /**
+   * Keeps the newest content in view while the reader is at the end. Default `true`.
+   * Once the reader scrolls up, the transcript stays where they are until they return.
+   */
+  autoScroll?: boolean;
+  /** Where the transcript opens: `end` (default), `start`, or the last anchored message. */
+  defaultScrollPosition?: MessageScrollerDefaultScrollPosition;
+  /** Distance in pixels from the end that still counts as "at the end". */
+  scrollEdgeThreshold?: number;
+  /** Space in pixels kept above a message when one is scrolled to or anchored. */
+  scrollMargin?: number;
+}
+
+/** Holds the scroll state. Everything else goes inside it. */
+const Root = React.forwardRef<HTMLDivElement, RootProps>(
+  ({ autoScroll = true, defaultScrollPosition = 'end', scrollEdgeThreshold, scrollMargin, className, children, ...props }, forwardedRef) => (
+    <Primitive.Provider
+      autoScroll={autoScroll}
+      defaultScrollPosition={defaultScrollPosition}
+      {...(scrollEdgeThreshold != null ? { scrollEdgeThreshold } : {})}
+      {...(scrollMargin != null ? { scrollMargin } : {})}
+    >
+      <Primitive.Root {...props} ref={forwardedRef} className={classNames('rt-MessageScrollerRoot', className)}>
+        {children}
+      </Primitive.Root>
+    </Primitive.Provider>
+  ),
+);
+Root.displayName = 'MessageScroller.Root';
+
+interface ViewportProps extends React.ComponentPropsWithoutRef<'div'> {
+  /** Name of the transcript region, e.g. "Conversation". */
+  'aria-label'?: string;
+  /** Keep the reader's place when older messages are added above. Default `true`. */
+  preserveScrollOnPrepend?: boolean;
+}
+
+/** The scrolling element. */
+const Viewport = React.forwardRef<HTMLDivElement, ViewportProps>(({ className, 'aria-label': label, ...props }, forwardedRef) => (
+  // The primitive names an unnamed viewport "Messages", in English. An empty name is skipped by
+  // accessible-name computation, so a transcript is only named when the app names it.
+  <Primitive.Viewport aria-label={label ?? ''} {...props} ref={forwardedRef} className={classNames('rt-MessageScrollerViewport', className)} />
+));
+Viewport.displayName = 'MessageScroller.Viewport';
+
+type ContentProps = React.ComponentPropsWithoutRef<'div'>;
+
+/** The list of messages, inside the viewport. */
+const Content = React.forwardRef<HTMLDivElement, ContentProps>(({ className, ...props }, forwardedRef) => (
+  <Primitive.Content {...props} ref={forwardedRef} className={classNames('rt-MessageScrollerContent', className)} />
+));
+Content.displayName = 'MessageScroller.Content';
+
+interface ItemProps extends React.ComponentPropsWithoutRef<'div'> {
+  /** A stable id, so the row can be scrolled to with `useMessageScroller().scrollToMessage`. */
+  messageId?: string;
+  /** Anchor this row near the top when it arrives. Set it on the person's own messages. */
+  scrollAnchor?: boolean;
+}
+
+/** One row of the transcript. */
+const Item = React.forwardRef<HTMLDivElement, ItemProps>(({ className, ...props }, forwardedRef) => (
+  <Primitive.Item {...props} ref={forwardedRef} className={classNames('rt-MessageScrollerItem', className)} />
+));
+Item.displayName = 'MessageScroller.Item';
+
+type ButtonProps = Omit<IconButtonProps, 'aria-label' | 'aria-labelledby'> & {
+  /** Accessible name, in your words. Default "Jump to the latest". */
+  'aria-label'?: string;
+  /** `end` jumps to the latest message (default); `start` to the first. */
+  direction?: 'start' | 'end';
+  /** Scroll behaviour of the jump. Default `smooth`. */
+  behavior?: ScrollBehavior;
+};
+
+/**
+ * Jumps back to the latest message. It renders only while the reader is away from the end.
+ * Place it inside `Root`, after the viewport. It sits over the viewport's bottom edge.
+ */
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ direction = 'end', behavior, className, children, size = '2', variant = 'surface', color = 'gray', radius = 'full', 'aria-label': label, ...props }, forwardedRef) => (
+    <Primitive.Button
+      direction={direction}
+      {...(behavior ? { behavior } : {})}
+      render={
+        <IconButton
+          {...props}
+          ref={forwardedRef}
+          size={size}
+          variant={variant}
+          color={color}
+          radius={radius}
+          aria-label={label ?? (direction === 'end' ? 'Jump to the latest' : 'Jump to the first')}
+          className={classNames('rt-MessageScrollerButton', className)}
+          data-direction={direction}
+        >
+          {children ?? (
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden style={direction === 'start' ? { transform: 'rotate(180deg)' } : undefined}>
+              <path d="M7.5 2.5v10M3.5 8.5l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          )}
+        </IconButton>
+      }
+    />
+  ),
+);
+Button.displayName = 'MessageScroller.Button';
+
+export { Root, Viewport, Content, Item, Button, useMessageScroller, useMessageScrollerScrollable, useMessageScrollerVisibility };
+export type {
+  RootProps as MessageScrollerRootProps,
+  ViewportProps as MessageScrollerViewportProps,
+  ContentProps as MessageScrollerContentProps,
+  ItemProps as MessageScrollerItemProps,
+  ButtonProps as MessageScrollerButtonProps,
+  MessageScrollerDefaultScrollPosition,
+  MessageScrollerScrollOptions,
+  MessageScrollerScrollable,
+  MessageScrollerVisibilityState,
+};

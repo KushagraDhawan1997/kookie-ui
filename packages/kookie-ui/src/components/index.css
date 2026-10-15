@@ -62,6 +62,8 @@
 @import './user-card.css';
 @import './virtual-menu.css';
 @import './chatbar.css';
+@import './message-scroller.css';
+@import './notice.css';
 
 .radix-themes:where([data-is-root-theme='true']) {
   /* Create a new stacking context on the root `Theme` so layered components work out of the box */

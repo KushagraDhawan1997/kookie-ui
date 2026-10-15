@@ -40,6 +40,10 @@ jobs:
       - name: Lint
         run: pnpm --filter @kushagradhawan/kookie-ui lint
 
+      # The browser test project mounts components in real Chromium through Playwright.
+      - name: Install Chromium for browser tests
+        run: pnpm --filter @kushagradhawan/kookie-ui exec playwright install --with-deps chromium
+
       - name: Test
         run: pnpm --filter @kushagradhawan/kookie-ui test
 

@@ -80,3 +80,10 @@ export * as Sidebar from './sidebar.js';
 export * as Shell from './shell.js';
 export * as Sheet from './sheet.js';
 export * as Chatbar from './chatbar.js';
+export * as MessageScroller from './message-scroller.js';
+export {
+  Notice,
+  Confirmation,
+  type NoticeProps,
+  type ConfirmationProps,
+} from './notice.js';
