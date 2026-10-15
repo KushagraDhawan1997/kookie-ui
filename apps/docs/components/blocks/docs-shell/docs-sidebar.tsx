@@ -145,16 +145,18 @@ export function DocsSidebar({
       </Sidebar.Search>
 
       <Sidebar.Content>
-        <Sidebar.Menu>
-          {isSearching
-            ? flatResults.map((item) => renderItem(item, true))
-            : filteredGroups.map((group) => (
-                <Sidebar.Group key={group.label}>
-                  <Sidebar.GroupLabel>{group.label}</Sidebar.GroupLabel>
-                  <Sidebar.GroupContent>{group.items.map(renderGroupItem)}</Sidebar.GroupContent>
-                </Sidebar.Group>
-              ))}
-        </Sidebar.Menu>
+        {isSearching ? (
+          <Sidebar.Menu>{flatResults.map((item) => renderItem(item, true))}</Sidebar.Menu>
+        ) : (
+          filteredGroups.map((group) => (
+            <Sidebar.Group key={group.label}>
+              <Sidebar.GroupLabel>{group.label}</Sidebar.GroupLabel>
+              <Sidebar.GroupContent>
+                <Sidebar.Menu>{group.items.map(renderGroupItem)}</Sidebar.Menu>
+              </Sidebar.GroupContent>
+            </Sidebar.Group>
+          ))
+        )}
       </Sidebar.Content>
 
       {footer && <Sidebar.Footer>{footer}</Sidebar.Footer>}

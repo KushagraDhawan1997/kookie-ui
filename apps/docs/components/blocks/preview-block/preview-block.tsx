@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { SegmentedControl, Theme } from '@kushagradhawan/kookie-ui';
+import { SegmentedControl, Theme, useThemeContext } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Moon02Icon, Sun01Icon } from '@hugeicons/core-free-icons';
 import { CodeBlock, type CodeBlockProps } from '../code-block/code-block';
@@ -79,6 +79,7 @@ export function PreviewBlock({
   className,
 }: PreviewBlockProps) {
   const [chosenAppearance, setChosenAppearance] = React.useState<Appearance | undefined>(appearance);
+  const siteAppearance = useThemeContext().appearance;
   const hasToolbar = showThemeToggle || label !== undefined;
 
   return (
@@ -89,7 +90,7 @@ export function PreviewBlock({
           {showThemeToggle && (
             <SegmentedControl.Root
               size="2"
-              value={chosenAppearance ?? 'light'}
+              value={chosenAppearance ?? (siteAppearance === 'dark' ? 'dark' : 'light')}
               onValueChange={(value) => setChosenAppearance(value === 'dark' ? 'dark' : 'light')}
               className="preview-block-theme-toggle"
             >

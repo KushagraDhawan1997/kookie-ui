@@ -189,7 +189,8 @@
   padding-inline-start: var(--base-menu-item-padding-left);
   padding-inline-end: var(--base-menu-item-padding-right);
   box-sizing: border-box;
-  color: var(--gray-a10);
+  /* a11 keeps the label above 4.5:1 on every sidebar background. */
+  color: var(--gray-a11);
   user-select: none;
   cursor: default;
 

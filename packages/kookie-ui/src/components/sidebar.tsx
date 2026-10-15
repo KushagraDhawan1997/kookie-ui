@@ -211,11 +211,12 @@ const SidebarSeparator = React.forwardRef<React.ComponentRef<typeof Separator>, 
 ));
 SidebarSeparator.displayName = 'Sidebar.Separator';
 
-// Menu components - reusing dropdown menu structure
+// Menu components - styled like dropdown menus, but semantically a navigation list.
+// No menu/menuitem roles: those promise an application menu, which a list of links is not.
 interface SidebarMenuProps extends React.ComponentPropsWithoutRef<'ul'> {}
 
 const SidebarMenu = React.forwardRef<HTMLUListElement, SidebarMenuProps>(({ className, ...props }, forwardedRef) => (
-  <ul {...props} ref={forwardedRef} role="menu" className={classNames('rt-SidebarMenu', className)} />
+  <ul {...props} ref={forwardedRef} className={classNames('rt-SidebarMenu', className)} />
 ));
 SidebarMenu.displayName = 'Sidebar.Menu';
 
@@ -282,33 +283,25 @@ const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonP
 
     const Comp = asChild ? Slot : 'button';
 
-    const { onClick } = props;
+    // Enter and Space are left to the native button or link. Arrow keys move between
+    // the visible buttons of the same sidebar, as a convenience on top of Tab.
     const handleKeyDown = React.useCallback(
       (event: React.KeyboardEvent<HTMLButtonElement>) => {
-        switch (event.key) {
-          case 'Enter':
-          case ' ':
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          const scope = event.currentTarget.closest('.rt-SidebarContent, .rt-SidebarSearchPopover');
+          const buttons = scope
+            ? Array.from(scope.querySelectorAll<HTMLElement>('.rt-SidebarMenuButton')).filter((el) => el.offsetParent !== null)
+            : [];
+          const index = buttons.indexOf(event.currentTarget);
+          const next = buttons[index + (event.key === 'ArrowDown' ? 1 : -1)];
+          if (index !== -1 && next) {
             event.preventDefault();
-            if (onClick) onClick(event as any);
-            break;
-          case 'ArrowDown': {
-            event.preventDefault();
-            // Focus next menu item
-            const nextItem = (event.currentTarget as HTMLElement).nextElementSibling?.querySelector('[role="menuitem"]') as HTMLElement;
-            if (nextItem) nextItem.focus();
-            break;
-          }
-          case 'ArrowUp': {
-            event.preventDefault();
-            // Focus previous menu item
-            const prevItem = (event.currentTarget as HTMLElement).previousElementSibling?.querySelector('[role="menuitem"]') as HTMLElement;
-            if (prevItem) prevItem.focus();
-            break;
+            next.focus();
           }
         }
         onKeyDown?.(event);
       },
-      [onClick, onKeyDown],
+      [onKeyDown],
     );
 
     // Memoize child processing to avoid re-traversal on every render
@@ -361,7 +354,6 @@ const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonP
       <Comp
         {...props}
         ref={forwardedRef}
-        role="menuitem"
         aria-current={isActive ? 'page' : undefined}
         className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-SidebarMenuButton', className)}
         data-active={isActive || undefined}
@@ -458,7 +450,6 @@ const SidebarMenuSubTrigger = React.forwardRef<React.ElementRef<typeof Accordion
             {...(props as any)}
             ref={forwardedRef as any}
             type="button"
-            role="menuitem"
             aria-haspopup="menu"
             className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-SidebarMenuButton', 'rt-SidebarMenuSubTrigger', className)}
           >
@@ -475,8 +466,6 @@ const SidebarMenuSubTrigger = React.forwardRef<React.ElementRef<typeof Accordion
             {...props}
             ref={forwardedRef}
             asChild={asChild}
-            role="menuitem"
-            aria-haspopup="true"
             className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-SidebarMenuButton', 'rt-SidebarMenuSubTrigger', className)}
           >
             {asChild ? (
@@ -554,7 +543,7 @@ const SidebarMenuSubContent = React.forwardRef<React.ElementRef<typeof Accordion
 });
 SidebarMenuSubContent.displayName = 'Sidebar.MenuSubContent';
 
-// Group components
+// Group components. The label is plain text: no role, so it isn't announced as an empty group.
 interface SidebarGroupProps extends React.ComponentPropsWithoutRef<'div'> {}
 
 const SidebarGroup = React.forwardRef<HTMLDivElement, SidebarGroupProps>(({ className, ...props }, forwardedRef) => (
@@ -569,7 +558,7 @@ interface SidebarGroupLabelProps extends React.ComponentPropsWithoutRef<'div'> {
 const SidebarGroupLabel = React.forwardRef<HTMLDivElement, SidebarGroupLabelProps>(({ asChild = false, className, ...props }, forwardedRef) => {
   const Comp = asChild ? Slot : 'div';
 
-  return <Comp {...props} ref={forwardedRef} role="group" className={classNames('rt-BaseMenuLabel', 'rt-SidebarGroupLabel', className)} />;
+  return <Comp {...props} ref={forwardedRef} className={classNames('rt-BaseMenuLabel', 'rt-SidebarGroupLabel', className)} />;
 });
 SidebarGroupLabel.displayName = 'Sidebar.GroupLabel';
 
