@@ -12,7 +12,7 @@ Read `docs/LOG.md` first. It records how v1 relates to v2 and the docs restructu
 - **Current version:** 0.x (check `packages/kookie-ui/package.json` for exact version)
 - **License:** MIT
 - **Status:** Alpha — breaking changes may occur
-- **Documentation:** https://kookie-ui.vercel.app
+- **Documentation:** https://womp-ui.kookie.design
 
 ## Documentation
 
