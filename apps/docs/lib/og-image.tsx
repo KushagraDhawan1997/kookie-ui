@@ -1,4 +1,7 @@
 import { ImageResponse } from 'next/og';
+import { BASE_URL } from './constants';
+
+const SITE_HOST = new URL(BASE_URL).host;
 
 export const ogSize = { width: 1200, height: 630 };
 export const ogContentType = 'image/png';
@@ -27,7 +30,7 @@ async function loadGoogleFont(
 
 // Light-mode only — OG images are static assets and cannot adapt to user theme preferences.
 export async function generateOgImage(title: string, category: string) {
-  const allText = `Kookie UI${title}${category}hellokookie.com`;
+  const allText = `Kookie UI${title}${category}${SITE_HOST}`;
   const interMedium = await loadGoogleFont('Inter', 500, allText);
   const interRegular = await loadGoogleFont('Inter', 400, allText);
 
@@ -98,7 +101,7 @@ export async function generateOgImage(title: string, category: string) {
               color: '#d4d4d4',
             }}
           >
-            hellokookie.com
+            {SITE_HOST}
           </div>
         </div>
       </div>
