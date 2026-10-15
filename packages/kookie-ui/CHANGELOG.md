@@ -1,3 +1,12 @@
+## [0.8.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.8.0...v0.8.1) (2026-10-15)
+
+### Bug Fixes
+
+* **sidebar:** the sidebar is a navigation list, not an application menu. `Sidebar.Menu`, `Sidebar.MenuButton` and `Sidebar.MenuSubTrigger` no longer set `role="menu"` or `role="menuitem"`, and `Sidebar.GroupLabel` no longer sets `role="group"`. Screen readers now read a list of links, and axe no longer reports missing menu parents and children.
+* **sidebar:** Enter on a `Sidebar.MenuButton` rendered `asChild` as a link follows the link. It used to be swallowed when no `onClick` was given.
+* **sidebar:** ArrowUp and ArrowDown move focus between the visible menu buttons of the same sidebar or search popover. They used to do nothing.
+* **sidebar:** group labels use `--gray-a11` instead of `--gray-a10`, to pass WCAG AA contrast.
+
 ## [0.8.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.7.0...v0.8.0) (2026-10-14)
 
 The Shell is rebuilt on kookie-ui-v2's model, behind 0.7's API. Every prop and export from 0.7 still exists. What changes is behaviour, listed in full below, because each item is something an app could have depended on.
