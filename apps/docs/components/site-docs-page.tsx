@@ -17,6 +17,7 @@ const FOOTER = {
   name: 'Kushagra Dhawan',
   url: 'https://www.kushagradhawan.com',
   githubUrl: 'https://github.com/KushagraDhawan1997/kookie-ui',
+  links: [{ label: "What's new", href: '/whats-new' }],
 };
 
 /** DocsPage with this site's footer. */

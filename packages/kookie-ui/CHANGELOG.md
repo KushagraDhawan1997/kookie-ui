@@ -1,3 +1,16 @@
+## [0.13.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.12.0...v0.13.0) (2026-10-16)
+
+Light and dark mode are decided before the first paint and kept on `<html>`, as in Kookie UI v2.
+
+### Features
+
+* **appearance:** `appearanceScript`, a string to inline in `<head>`. It reads the stored choice, falls back to `prefers-color-scheme`, and writes the `light` or `dark` class, `data-appearance` and `color-scheme` on `<html>` before anything paints, so a dark visitor never sees a light flash. Import it from `@kushagradhawan/kookie-ui/appearance-script` in a server component such as a Next.js root layout, and add `suppressHydrationWarning` to `<html>`.
+* **appearance:** `useAppearance()` returns `{ choice, appearance, setAppearance }`. `choice` is `system`, `light` or `dark`; `appearance` is what is showing. `setAppearance` writes `<html>` and stores the choice, and still changes the mode when storage is blocked. With no stored choice, the page follows the system as it changes. `setAppearance` is also exported on its own.
+
+### How to adopt
+
+Keep the root `<Theme>` at `appearance="inherit"` (the default) so `<html>` is the one source of truth. Nested themes and portalled menus and dialogs then inherit the mode without being patched. Stop calling `onAppearanceChange` or toggling classes on `.radix-themes` elements to switch modes. An explicit `appearance="light"` or `"dark"` on a nested `<Theme>` still fixes that region. Nothing that worked before changes.
+
 ## [0.12.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.11.0...v0.12.0) (2026-10-16)
 
 The composer can show what a message refers to, not only the files it carries.

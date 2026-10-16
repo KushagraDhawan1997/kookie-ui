@@ -4,6 +4,7 @@ import { DocsLayout } from '../components/docs-layout';
 import './globals.css';
 import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
+import { appearanceScript } from '@kushagradhawan/kookie-ui/appearance-script';
 import { BASE_URL } from '../lib/constants';
 
 export const metadata: Metadata = {
@@ -86,7 +87,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    // The pre-paint script writes the mode on <html>, so React must not flag the class it added.
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: appearanceScript }} />
+      </head>
       <body>
         <Providers>
           <DocsLayout>{children}</DocsLayout>

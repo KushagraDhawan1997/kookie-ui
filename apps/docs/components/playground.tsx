@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import NextImage from 'next/image';
-import { Flex, Theme, Button, Box, Text, SegmentedControl, Popover, IconButton, Image, useThemeContext } from '@kushagradhawan/kookie-ui';
+import { Flex, Theme, Button, Box, Text, SegmentedControl, Popover, IconButton, Image, useAppearance } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Copy01Icon, Sun01Icon, Moon02Icon, SlidersHorizontalIcon, Tick01Icon } from '@hugeicons/core-free-icons';
 import '@/components/blocks/preview-block/preview-block.css';
@@ -71,9 +71,9 @@ interface PlaygroundProps {
 export default function Playground({ component, code, items, showBackground = false, hint, showControls = false, showToolbar = true, height = '22rem' }: PlaygroundProps) {
   const [copied, setCopied] = useState(false);
   // Follows the site theme until the reader picks one with the toggle.
-  const siteAppearance = useThemeContext().appearance;
+  const siteAppearance = useAppearance().appearance;
   const [chosenAppearance, setAppearance] = useState<'light' | 'dark'>();
-  const appearance = chosenAppearance ?? (siteAppearance === 'dark' ? 'dark' : 'light');
+  const appearance = chosenAppearance ?? siteAppearance;
 
   useEffect(() => {
     if (!copied) return;
