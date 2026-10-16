@@ -23,7 +23,7 @@ export default function Home() {
   return (
     <SiteDocsPage meta={{ title: "Womp's Design System", description: DESCRIPTION }} showCopyButton={false}>
       <Flex direction="column" gap="9">
-        <Callout.Root color="amber" variant="soft" size="2">
+        <Callout.Root color="amber" variant="soft" size="3">
           <Callout.Icon>
             <HugeiconsIcon icon={Wrench01Icon} strokeWidth={1.75} />
           </Callout.Icon>
