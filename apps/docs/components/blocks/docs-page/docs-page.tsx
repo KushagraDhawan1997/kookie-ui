@@ -28,7 +28,7 @@ export interface DocsPageProps {
   /** Maximum width of the reading column. @default "44rem" */
   maxWidth?: string;
   /** Copyright line under the content. */
-  footer?: { name: string; url?: string; githubUrl?: string; links?: { label: string; href: string }[] };
+  footer?: { name: string; url?: string; githubUrl?: string };
 }
 
 /**
@@ -83,15 +83,6 @@ export function DocsPage({
                   .
                 </>
               )}
-              {footer.links?.map((link) => (
-                <React.Fragment key={link.href}>
-                  {' '}
-                  <Link href={link.href} color="gray">
-                    {link.label}
-                  </Link>
-                  .
-                </React.Fragment>
-              ))}
             </Text>
           )}
         </Flex>
