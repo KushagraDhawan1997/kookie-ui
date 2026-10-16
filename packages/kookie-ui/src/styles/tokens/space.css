@@ -12,6 +12,13 @@
   --space-7: calc(40px * var(--scaling));
   --space-8: calc(48px * var(--scaling));
 
+  /* Control heights. One ladder for every control: size N is the same height in
+     Button, Menu, Sidebar, Tabs, TextField, Select, SegmentedControl and Toolbar. */
+  --control-height-1: var(--space-5);
+  --control-height-2: var(--space-6);
+  --control-height-3: var(--space-7);
+  --control-height-4: var(--space-8);
+
   /*  */
   --space-9: calc(64px * var(--scaling));
   --space-10: calc(80px * var(--scaling));

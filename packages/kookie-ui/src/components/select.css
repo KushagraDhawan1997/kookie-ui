@@ -186,7 +186,7 @@
 @breakpoints {
   .rt-SelectTrigger {
     &:where(.rt-r-size-1) {
-      --select-trigger-height: var(--space-5);
+      --select-trigger-height: var(--control-height-1);
       gap: var(--component-gap-1);
       font-size: var(--font-size-1);
       line-height: var(--line-height-1);
@@ -207,7 +207,7 @@
       }
     }
     &:where(.rt-r-size-2) {
-      --select-trigger-height: var(--space-6);
+      --select-trigger-height: var(--control-height-2);
       gap: var(--component-gap-2);
       font-size: var(--font-size-2);
       line-height: var(--line-height-2);
@@ -228,7 +228,7 @@
       }
     }
     &:where(.rt-r-size-3) {
-      --select-trigger-height: var(--space-7);
+      --select-trigger-height: var(--control-height-3);
       gap: var(--component-gap-3);
       font-size: var(--font-size-3);
       line-height: var(--line-height-3);
@@ -261,7 +261,7 @@
   .rt-SelectContent {
     &:where(.rt-r-size-1) {
       --select-content-padding: var(--space-1);
-      --select-item-height: var(--space-5);
+      --select-item-height: var(--control-height-1);
       --select-item-indicator-width: calc(var(--space-5) / var(--select-item-indicator-width-factor));
       --select-separator-margin-right: var(--space-2);
       border-radius: var(--radius-surface-3);
@@ -284,7 +284,6 @@
     }
     &:where(.rt-r-size-2, .rt-r-size-3) {
       --select-content-padding: var(--space-2);
-      --select-item-height: var(--space-6);
       --select-item-indicator-width: var(--space-5);
       --select-separator-margin-right: var(--space-3);
       border-radius: var(--radius-surface-4);
@@ -300,6 +299,8 @@
       }
     }
     &:where(.rt-r-size-2) {
+      --select-item-height: var(--control-height-2);
+
       & :where(.rt-SelectItem) {
         font-size: var(--font-size-2);
         letter-spacing: var(--letter-spacing-2);
@@ -310,6 +311,8 @@
       }
     }
     &:where(.rt-r-size-3) {
+      --select-item-height: var(--control-height-3);
+
       & :where(.rt-SelectItem) {
         font-size: var(--font-size-3);
         letter-spacing: var(--letter-spacing-3);

@@ -167,7 +167,7 @@
       --base-menu-item-padding-left-indicator: calc(var(--space-5) / 1.2);
       --base-menu-item-padding-right: var(--space-2);
       --base-menu-item-padding-y: var(--space-1);
-      --base-menu-item-height: var(--space-5);
+      --base-menu-item-height: var(--control-height-1);
       border-radius: var(--radius-surface-3);
 
       & :where(.rt-BaseMenuItem) {
@@ -205,7 +205,7 @@
       --base-menu-item-padding-left-indicator: var(--space-5);
       --base-menu-item-padding-right: var(--space-3);
       --base-menu-item-padding-y: var(--space-1);
-      --base-menu-item-height: var(--space-6);
+      --base-menu-item-height: var(--control-height-2);
       border-radius: var(--radius-surface-5);
 
       & :where(.rt-BaseMenuItem) {
@@ -243,7 +243,7 @@
       --base-menu-item-padding-left-indicator: var(--space-5);
       --base-menu-item-padding-right: var(--space-3);
       --base-menu-item-padding-y: var(--space-2);
-      --base-menu-item-height: var(--space-7);
+      --base-menu-item-height: var(--control-height-3);
       border-radius: var(--radius-surface-6);
 
       & :where(.rt-BaseMenuItem) {

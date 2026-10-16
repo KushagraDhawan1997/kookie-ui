@@ -214,7 +214,7 @@
 @breakpoints {
   .rt-TextFieldRoot {
     &:where(.rt-r-size-1) {
-      --text-field-height: var(--space-5);
+      --text-field-height: var(--control-height-1);
       --text-field-padding: calc(var(--space-1) * 1.5 - var(--text-field-border-width));
       --text-field-border-radius: max(var(--radius-1), var(--radius-full));
       --text-field-native-icon-size: var(--space-3);
@@ -247,7 +247,7 @@
     }
 
     &:where(.rt-r-size-2) {
-      --text-field-height: var(--space-6);
+      --text-field-height: var(--control-height-2);
       --text-field-padding: calc(var(--space-2) - var(--text-field-border-width));
       --text-field-border-radius: max(var(--radius-2), var(--radius-full));
       --text-field-native-icon-size: var(--space-4);
@@ -281,7 +281,7 @@
     }
 
     &:where(.rt-r-size-3) {
-      --text-field-height: var(--space-7);
+      --text-field-height: var(--control-height-3);
       --text-field-padding: calc(var(--space-3) - var(--text-field-border-width));
       --text-field-border-radius: max(var(--radius-3), var(--radius-full));
       --text-field-native-icon-size: var(--space-4);

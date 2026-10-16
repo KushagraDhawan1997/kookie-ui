@@ -176,22 +176,22 @@
 @breakpoints {
   .rt-BaseButton {
     &:where(.rt-r-size-1) {
-      --base-button-height: var(--space-5);
+      --base-button-height: var(--control-height-1);
       border-radius: max(var(--radius-1), var(--radius-full));
     }
 
     &:where(.rt-r-size-2) {
-      --base-button-height: var(--space-6);
+      --base-button-height: var(--control-height-2);
       border-radius: max(var(--radius-2), var(--radius-full));
     }
 
     &:where(.rt-r-size-3) {
-      --base-button-height: var(--space-7);
+      --base-button-height: var(--control-height-3);
       border-radius: max(var(--radius-3), var(--radius-full));
     }
 
     &:where(.rt-r-size-4) {
-      --base-button-height: var(--space-8);
+      --base-button-height: var(--control-height-4);
       border-radius: max(var(--radius-4), var(--radius-full));
     }
   }

@@ -405,7 +405,7 @@
 
     &:where(.rt-r-size-1) {
       --segmented-control-border-radius: max(var(--radius-1), var(--radius-full));
-      --segmented-control-height: var(--space-5);
+      --segmented-control-height: var(--control-height-1);
       height: var(--segmented-control-height);
 
       /* Vertical: height auto, width determined by content or icon-only */
@@ -436,7 +436,7 @@
     }
     &:where(.rt-r-size-2) {
       --segmented-control-border-radius: max(var(--radius-2), var(--radius-full));
-      --segmented-control-height: var(--space-6);
+      --segmented-control-height: var(--control-height-2);
       height: var(--segmented-control-height);
 
       /* Vertical: height auto, width determined by content or icon-only */
@@ -467,7 +467,7 @@
     }
     &:where(.rt-r-size-3) {
       --segmented-control-border-radius: max(var(--radius-3), var(--radius-full));
-      --segmented-control-height: var(--space-7);
+      --segmented-control-height: var(--control-height-3);
       height: var(--segmented-control-height);
 
       /* Vertical: height auto, width determined by content or icon-only */
@@ -498,7 +498,7 @@
     }
     &:where(.rt-r-size-4) {
       --segmented-control-border-radius: max(var(--radius-4), var(--radius-full));
-      --segmented-control-height: var(--space-8);
+      --segmented-control-height: var(--control-height-4);
       height: var(--segmented-control-height);
 
       /* Vertical: height auto, width determined by content or icon-only */
