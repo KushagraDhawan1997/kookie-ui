@@ -1030,18 +1030,22 @@ InlineEnd.displayName = 'Chatbar.InlineEnd';
 /**
  * Renders a horizontally scrollable list of attachments above the inline row.
  * Hidden when empty unless `forceMount`. Override per-item with `renderAttachment`.
+ * `Chatbar.Item`s passed as children follow the attachments in the same row.
  */
 interface AttachmentsRowProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'children'> {
   asChild?: boolean;
   forceMount?: boolean;
   /** If provided, custom-render a tile; otherwise default tile is used */
   renderAttachment?: (attachment: ChatbarAttachment) => React.ReactNode;
+  /** `Chatbar.Item`s: things the message refers to that are not files. */
+  children?: React.ReactNode;
 }
 
 const AttachmentsRow = React.forwardRef<HTMLDivElement, AttachmentsRowProps>((props, forwardedRef) => {
-  const { asChild, forceMount, renderAttachment, className, ...divProps } = props;
+  const { asChild, forceMount, renderAttachment, className, children, ...divProps } = props;
   const ctx = useChatbarContext();
-  if (ctx.attachments.length === 0 && !forceMount) return null;
+  const hasItems = React.Children.toArray(children).length > 0;
+  if (ctx.attachments.length === 0 && !hasItems && !forceMount) return null;
   const Comp = asChild ? Slot : 'div';
   return (
     <m.div layout="position" transition={LAYOUT_TRANSITION}>
@@ -1053,6 +1057,7 @@ const AttachmentsRow = React.forwardRef<HTMLDivElement, AttachmentsRowProps>((pr
                 {renderAttachment?.(att)}
               </Attachment>
             ))}
+            {children}
           </Flex>
         </ScrollArea>
       </Comp>
@@ -1060,6 +1065,50 @@ const AttachmentsRow = React.forwardRef<HTMLDivElement, AttachmentsRowProps>((pr
   );
 });
 AttachmentsRow.displayName = 'Chatbar.AttachmentsRow';
+
+/**
+ * Moves focus off a pill that is about to unmount, to the next pill's remove
+ * button, the previous one's, or the text, so keyboard users are not dropped
+ * to <body>.
+ */
+function moveFocusOffPill(button: HTMLButtonElement, textareaRef: React.RefObject<HTMLTextAreaElement | null>) {
+  const pill = button.closest('[role="listitem"]');
+  const pills = pill?.parentElement ? Array.from(pill.parentElement.children) : [];
+  const index = pill ? pills.indexOf(pill) : -1;
+  const neighbour = pills[index + 1] ?? pills[index - 1];
+  const nextButton = neighbour?.querySelector<HTMLButtonElement>('.rt-ChatbarItemRemove');
+  if (nextButton) nextButton.focus();
+  else textareaRef.current?.focus({ preventScroll: true });
+}
+
+/** The pill an attachment and an item share: a lead tile, a label and ×. */
+const Pill: React.FC<{
+  lead: React.ReactNode;
+  leadKind: 'image' | 'icon';
+  label: React.ReactNode;
+  /** Read after the label by screen readers only, e.g. a file's size. */
+  detail?: string;
+  removeLabel: string;
+  onRemove?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}> = ({ lead, leadKind, label, detail, removeLabel, onRemove }) => {
+  const ctx = useChatbarContext();
+  return (
+    <>
+      <span className="rt-ChatbarItemLead" data-kind={leadKind} aria-hidden>
+        {lead}
+      </span>
+      <Text className="rt-ChatbarItemLabel" size={ctx.size} truncate>
+        {label}
+        {detail ? <VisuallyHidden>, {detail}</VisuallyHidden> : null}
+      </Text>
+      {onRemove && (
+        <IconButton className="rt-ChatbarItemRemove" aria-label={removeLabel} size="1" variant="ghost" color="gray" onClick={onRemove}>
+          <CloseIcon />
+        </IconButton>
+      )}
+    </>
+  );
+};
 
 /** Default tile renderer for a single attachment. */
 interface AttachmentProps extends React.ComponentPropsWithoutRef<'div'> {
@@ -1079,70 +1128,97 @@ const Attachment = React.forwardRef<HTMLDivElement, AttachmentProps>((props, for
   const locked = ctx.disabled || ctx.readOnly;
 
   const handleRemove = (event: React.MouseEvent<HTMLButtonElement>) => {
-    // Move focus before the tile unmounts so keyboard users are not dropped to <body>
-    const tile = event.currentTarget.closest('[role="listitem"]');
-    const tiles = tile?.parentElement ? Array.from(tile.parentElement.children) : [];
-    const index = tile ? tiles.indexOf(tile) : -1;
-    const neighbour = tiles[index + 1] ?? tiles[index - 1];
-    const nextButton = neighbour?.querySelector<HTMLButtonElement>('.rt-ChatbarAttachmentRemove');
-    if (nextButton) nextButton.focus();
-    else ctx.textareaRef.current?.focus({ preventScroll: true });
+    moveFocusOffPill(event.currentTarget, ctx.textareaRef);
     ctx.removeAttachment(attachment.id);
   };
+
+  const lead =
+    attachment.status === 'uploading' ? (
+      <Spinner size="1" />
+    ) : isImage ? (
+      <img className="rt-ChatbarAttachmentImage" src={attachment.url} alt="" />
+    ) : (
+      <FileTextIcon />
+    );
 
   return (
     <Comp
       {...divProps}
       ref={forwardedRef}
-      className={classNames('rt-ChatbarAttachment', className)}
+      className={classNames(children ? 'rt-ChatbarAttachment' : 'rt-ChatbarAttachment rt-ChatbarItem', className)}
       role="listitem"
       data-kind={isImage ? 'image' : 'file'}
       data-status={attachment.status}
       title={attachment.name}
     >
       {children ?? (
-        <Flex align="center" gap="2" pr={!isImage ? '6' : undefined}>
-          <div className="rt-ChatbarAttachmentPreview" aria-hidden>
-            {isImage ? <img className="rt-ChatbarAttachmentImage" src={attachment.url} alt="" /> : <FileTextIcon />}
-          </div>
-          {isImage ? (
-            <VisuallyHidden>
-              {attachment.name}, {sizeLabel}
-              {statusLabel ? `, ${statusLabel}` : ''}
-            </VisuallyHidden>
-          ) : (
-            <Flex direction="column" gap="0" minWidth="0">
-              <Text size={ctx.size} weight="medium" truncate>
-                {attachment.name}
-              </Text>
-              <Text
-                size="1"
-                color={attachment.status === 'error' ? 'red' : undefined}
-                emphasis={attachment.status === 'error' ? undefined : 'medium'}
-              >
-                {sizeLabel}
-                {statusLabel ? ` · ${statusLabel}` : ''}
-              </Text>
-            </Flex>
-          )}
-          {!locked && (
-            <IconButton
-              className="rt-ChatbarAttachmentRemove"
-              aria-label={`Remove ${attachment.name}`}
-              size="1"
-              variant="classic"
-              color="gray"
-              onClick={handleRemove}
-            >
-              <CloseIcon />
-            </IconButton>
-          )}
-        </Flex>
+        <Pill
+          lead={lead}
+          leadKind={isImage && attachment.status !== 'uploading' ? 'image' : 'icon'}
+          label={attachment.name}
+          detail={statusLabel ? `${sizeLabel}, ${statusLabel}` : sizeLabel}
+          removeLabel={`Remove ${attachment.name}`}
+          onRemove={locked ? undefined : handleRemove}
+        />
       )}
     </Comp>
   );
 });
 Attachment.displayName = 'Chatbar.Attachment';
+
+/**
+ * Something the message refers to that is not a file: a scene object, a
+ * picked mode, a selection. The same pill as an attachment, placed in
+ * `Chatbar.AttachmentsRow` as a child. The app owns the list, so removing one
+ * calls `onRemove` and nothing else; leave it out for a pill that cannot be
+ * removed.
+ */
+interface ItemProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'children' | 'color'> {
+  /** The label. Also names the remove button: "Remove {label}". */
+  children: string;
+  /** Drawn in the lead tile, tinted with `color`. */
+  icon?: React.ReactNode;
+  /** A thumbnail for the lead tile, in place of the icon. */
+  image?: string;
+  /** Tint of the icon tile. Defaults to gray. */
+  color?: (typeof accentColors)[number];
+  onRemove?: () => void;
+  /** Overrides the remove button's label. */
+  removeLabel?: string;
+}
+
+const Item = React.forwardRef<HTMLDivElement, ItemProps>((props, forwardedRef) => {
+  const { children, icon, image, color, onRemove, removeLabel, className, ...divProps } = props;
+  const ctx = useChatbarContext();
+  const locked = ctx.disabled || ctx.readOnly;
+
+  const handleRemove = onRemove
+    ? (event: React.MouseEvent<HTMLButtonElement>) => {
+        moveFocusOffPill(event.currentTarget, ctx.textareaRef);
+        onRemove();
+      }
+    : undefined;
+
+  return (
+    <div
+      {...divProps}
+      ref={forwardedRef}
+      className={classNames('rt-ChatbarItem', className)}
+      role="listitem"
+      data-accent-color={image ? undefined : (color ?? 'gray')}
+      title={children}
+    >
+      <Pill
+        lead={image ? <img className="rt-ChatbarAttachmentImage" src={image} alt="" /> : icon}
+        leadKind={image ? 'image' : 'icon'}
+        label={children}
+        removeLabel={removeLabel ?? `Remove ${children}`}
+        onRemove={locked ? undefined : handleRemove}
+      />
+    </div>
+  );
+});
+Item.displayName = 'Chatbar.Item';
 
 interface AttachTriggerProps extends React.ComponentPropsWithoutRef<'button'> {
   asChild?: boolean;
@@ -1346,13 +1422,14 @@ const Send = React.forwardRef<HTMLButtonElement, SendProps>((props, forwardedRef
 });
 Send.displayName = 'Chatbar.Send';
 
-export { Root, Textarea, InlineStart, InlineEnd, AttachmentsRow, Attachment, AttachTrigger, Row, RowStart, RowEnd, Send };
+export { Root, Textarea, InlineStart, InlineEnd, AttachmentsRow, Attachment, Item, AttachTrigger, Row, RowStart, RowEnd, Send };
 export type {
   RootProps as ChatbarRootProps,
   TextareaProps as ChatbarTextareaProps,
   InlineSlotProps as ChatbarInlineSlotProps,
   AttachmentsRowProps as ChatbarAttachmentsRowProps,
   AttachmentProps as ChatbarAttachmentProps,
+  ItemProps as ChatbarItemProps,
   AttachTriggerProps as ChatbarAttachTriggerProps,
   RowProps as ChatbarRowProps,
   RowSlotProps as ChatbarRowSlotProps,

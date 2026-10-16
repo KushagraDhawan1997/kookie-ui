@@ -1,297 +1,83 @@
 ---
 title: Toolbar
-description: An absolutely positioned container for actions and navigation anchored to edges.
+description: A row of controls with one tab stop and arrow-key navigation.
 source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/toolbar.tsx
 ---
 
-import { Callout, Box } from '@kushagradhawan/kookie-ui';
+import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
+import { Flex, Toolbar } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { Alert02Icon } from '@hugeicons/core-free-icons';
+import { TextBoldIcon, TextItalicIcon, TextUnderlineIcon, Undo02Icon, Redo02Icon } from '@hugeicons/core-free-icons';
 
-<Box>
-  <Callout.Root color="gray" variant="outline">
-    <Callout.Icon>
-      <HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />
-    </Callout.Icon>
-    <Callout.Text>This component's API and documentation are under review and may change. Use with caution in production.</Callout.Text>
-  </Callout.Root>
-</Box>
+Toolbar is a row of controls that counts as one tab stop. Tab moves into it, the arrow keys move between its controls, and Tab moves out. It is built on [Radix Toolbar](https://www.radix-ui.com/primitives/docs/components/toolbar).
 
+For a bar pinned to the edge of a card or panel, use [App Bar](/docs/app-bar).
 
-Toolbar is a compound component for creating action bars anchored to any edge. It builds on Card for visual styling and provides structured slots for content organization.
-
-Use Toolbar inside dialogs, popovers, panels, or any container where you need persistent controls.
-
-## Installation
-
-```bash
-npm install @kushagradhawan/kookie-ui
-```
+<PreviewBlock height="10rem">
+  <Toolbar aria-label="Formatting">
+    <Toolbar.Title>Notes</Toolbar.Title>
+    <Flex gap="2" align="center">
+      <Toolbar.Group aria-label="Text style">
+        <Toolbar.Button iconOnly aria-label="Bold" aria-pressed>
+          <HugeiconsIcon icon={TextBoldIcon} strokeWidth={1.75} />
+        </Toolbar.Button>
+        <Toolbar.Button iconOnly aria-label="Italic" aria-pressed={false}>
+          <HugeiconsIcon icon={TextItalicIcon} strokeWidth={1.75} />
+        </Toolbar.Button>
+        <Toolbar.Button iconOnly aria-label="Underline" aria-pressed={false}>
+          <HugeiconsIcon icon={TextUnderlineIcon} strokeWidth={1.75} />
+        </Toolbar.Button>
+      </Toolbar.Group>
+      <Toolbar.Separator />
+      <Toolbar.Button iconOnly aria-label="Undo">
+        <HugeiconsIcon icon={Undo02Icon} strokeWidth={1.75} />
+      </Toolbar.Button>
+      <Toolbar.Button iconOnly aria-label="Redo">
+        <HugeiconsIcon icon={Redo02Icon} strokeWidth={1.75} />
+      </Toolbar.Button>
+    </Flex>
+  </Toolbar>
+</PreviewBlock>
 
 ## Usage
 
-```tsx
-import { Card, Flex, Toolbar, IconButton } from '@kushagradhawan/kookie-ui';
+```tsx showLineNumbers
+import { Flex, Toolbar } from '@kushagradhawan/kookie-ui';
 
-export function MyToolbar() {
+export function EditorToolbar() {
   return (
-    <Card variant="classic" size="2">
-      <Toolbar variant="soft" size="1">
-        <Toolbar.Left>
-          <IconButton variant="ghost" size="2" color="gray">
-            <ArrowLeftIcon />
-          </IconButton>
-        </Toolbar.Left>
-        <Toolbar.Center>
-          <Toolbar.Title>Settings</Toolbar.Title>
-        </Toolbar.Center>
-        <Toolbar.Right>
-          <IconButton variant="ghost" size="2" color="gray">
-            <CloseIcon />
-          </IconButton>
-        </Toolbar.Right>
-      </Toolbar>
-      <Flex p="4" pt="var(--rt-toolbar-height)">
-        {/* Content */}
+    <Toolbar aria-label="Formatting">
+      <Toolbar.Title>Notes</Toolbar.Title>
+      <Flex gap="2" align="center">
+        <Toolbar.Group aria-label="Text style">
+          <Toolbar.Button iconOnly aria-label="Bold" aria-pressed={bold}>
+            <HugeiconsIcon icon={TextBoldIcon} strokeWidth={1.75} />
+          </Toolbar.Button>
+        </Toolbar.Group>
+        <Toolbar.Separator />
+        <Toolbar.Button>Share</Toolbar.Button>
       </Flex>
-    </Card>
+    </Toolbar>
   );
 }
 ```
 
-Toolbar uses absolute positioning to span edge-to-edge. Use `--rt-toolbar-height` (or `--rt-toolbar-width` for vertical toolbars) to add padding to your content.
+The row spaces its direct children apart. Put controls that belong together in a `Flex`.
 
-## Anatomy
+## Parts
 
-Toolbar is a compound component with the following parts:
+| Part | Description |
+| ---- | ----------- |
+| `Toolbar` | The row. Takes `size` (`'1'`–`'4'`, default `'2'`), `orientation` (`'horizontal'` or `'vertical'`) and `aria-label`. |
+| `Toolbar.Button` | Takes every Button prop. Set `iconOnly` with an `aria-label` for an icon button. Set `aria-pressed` for a toggle. |
+| `Toolbar.Group` | A quiet gray well around related buttons. `disabled` turns them all off. |
+| `Toolbar.Separator` | A hairline between clusters. |
+| `Toolbar.Title` | One truncating line at the leading edge. |
 
-```tsx
-<Toolbar>
-  <Toolbar.Left>{/* Start section content */}</Toolbar.Left>
-  <Toolbar.Center>
-    <Toolbar.Title>{/* Title text */}</Toolbar.Title>
-  </Toolbar.Center>
-  <Toolbar.Right>{/* End section content */}</Toolbar.Right>
-</Toolbar>
-```
-
-## Props
-
-### Root Props
-
-The root component manages positioning and inherits Card's visual styling.
-
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `anchor` | `'top' \| 'bottom' \| 'left' \| 'right'` | `'top'` | Which edge to anchor to. |
-| `floating` | `boolean` | `false` | When true, adds margin from edges for a detached look. |
-| `offset` | `'1' \| '2' \| ... \| '9'` | `'2'` | Margin offset when floating. Uses space scale. |
-| `size` | `'1' \| '2' \| '3' \| '4' \| '5'` | `'1'` | Controls padding. Inherits from Card. |
-| `variant` | `'surface' \| 'outline' \| 'classic' \| 'ghost' \| 'soft'` | `'ghost'` | Visual style. Inherits from Card. |
-| `material` | `'solid' \| 'translucent'` | - | Background material. Translucent adds backdrop blur. |
-
-### Section Props
-
-`Toolbar.Left`, `Toolbar.Center`, and `Toolbar.Right` extend Flex and accept all Flex props. They are placed on a CSS grid for true centering regardless of content width.
-
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `gap` | `'0' \| '1' \| '2' \| ... \| '9'` | `'2'` | Space between items in the section. |
-| `align` | `'start' \| 'center' \| 'end' \| 'baseline' \| 'stretch'` | `'center'` | Vertical alignment of items. |
-| `justify` | `'start' \| 'center' \| 'end' \| 'between'` | varies | Horizontal alignment within the section. |
-
-Plus all other Flex props (`direction`, `wrap`, `p`, `m`, etc.).
-
-### Title Props
-
-`Toolbar.Title` renders a truncated heading and accepts all Heading props with toolbar-appropriate defaults.
-
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `size` | `'1' \| '2' \| ... \| '9'` | `'2'` | Font size. |
-| `weight` | `'light' \| 'regular' \| 'medium' \| 'bold'` | `'medium'` | Font weight. |
-| `truncate` | `boolean` | `true` | Truncate text with ellipsis. |
-| `children` | `ReactNode` | - | The title text. |
-
-## Anchor
-
-Use the `anchor` prop to position the toolbar at different edges.
-
-### Top
-
-The default. Anchors to the top of the scroll container.
-
-```tsx
-<Toolbar anchor="top">
-  <Toolbar.Center>
-    <Toolbar.Title>Top Toolbar</Toolbar.Title>
-  </Toolbar.Center>
-</Toolbar>
-```
-
-### Bottom
-
-Anchors to the bottom, useful for action bars.
-
-```tsx
-<Toolbar anchor="bottom">
-  <Toolbar.Right>
-    <Button>Save</Button>
-  </Toolbar.Right>
-</Toolbar>
-```
-
-### Left / Right
-
-Vertical toolbars for sidebar-style controls.
-
-```tsx
-<Toolbar anchor="left">
-  <Toolbar.Left>
-    <IconButton variant="ghost" size="2">
-      <HomeIcon />
-    </IconButton>
-  </Toolbar.Left>
-</Toolbar>
-```
-
-## Positioning Modes
-
-Toolbar has two positioning modes: **inset** (default) and **floating**. Both use `position: absolute`.
-
-### Inset (Default)
-
-By default, Toolbar uses inset mode to go edge-to-edge inside Cards.
-
-```tsx
-<Card size="2">
-  <Toolbar variant="soft">
-    <Toolbar.Title>Edge-to-edge</Toolbar.Title>
-  </Toolbar>
-  <Flex p="4" pt="var(--rt-toolbar-height)">{/* Content */}</Flex>
-</Card>
-```
-
-When inset (default):
-- No border radius
-- Edge-to-edge layout
-- Only the exposed edge shows a border
-
-### Floating
-
-Use `floating` for a detached look with margin from edges.
-
-```tsx
-<Toolbar floating variant="surface">
-  <Toolbar.Center>
-    <Toolbar.Title>Floating Toolbar</Toolbar.Title>
-  </Toolbar.Center>
-</Toolbar>
-```
-
-When floating:
-- Full border radius from Card
-- Margin from container edges (controlled by `offset`)
-- Complete Card styling (all borders visible)
-
-### Offset
-
-Control the margin when floating with the `offset` prop.
-
-```tsx
-<Toolbar floating offset="4" variant="surface">
-  <Toolbar.Title>More spacing</Toolbar.Title>
-</Toolbar>
-```
-
-## Variants
-
-Toolbar inherits all Card variants. The default is `ghost` for minimal visual weight.
-
-### Soft
-
-Muted background, great for dialog headers.
-
-```tsx
-<Toolbar variant="soft">
-  <Toolbar.Title>Soft</Toolbar.Title>
-</Toolbar>
-```
-
-### Surface
-
-Subtle background with border. Good for floating toolbars.
-
-```tsx
-<Toolbar variant="surface" floating>
-  <Toolbar.Title>Surface</Toolbar.Title>
-</Toolbar>
-```
-
-### Ghost
-
-No visible background or border. Use when the parent provides visual context.
-
-```tsx
-<Toolbar variant="ghost">
-  <Toolbar.Title>Ghost</Toolbar.Title>
-</Toolbar>
-```
-
-## Sizes
-
-Controls padding inside the toolbar.
-
-```tsx
-<Toolbar size="1">{/* Compact */}</Toolbar>
-<Toolbar size="2">{/* Default */}</Toolbar>
-<Toolbar size="3">{/* Comfortable */}</Toolbar>
-```
-
-## Material
-
-Use `material="translucent"` for backdrop blur over images or dynamic backgrounds.
-
-```tsx
-<Toolbar material="translucent" variant="soft">
-  <Toolbar.Title>Translucent</Toolbar.Title>
-</Toolbar>
-```
-
-## CSS Variables
-
-Toolbar exposes dimension variables so you can add padding to prevent content overlap:
-
-- `--rt-toolbar-height` for horizontal toolbars (`anchor="top"` or `anchor="bottom"`)
-- `--rt-toolbar-width` for vertical toolbars (`anchor="left"` or `anchor="right"`)
-
-The variables are set on the Toolbar's parent element, so the Toolbar and content must share a common container:
-
-```tsx
-<Card size="2">
-  <Toolbar anchor="top">
-    <Toolbar.Title>Top Toolbar</Toolbar.Title>
-  </Toolbar>
-  <Flex p="4" pt="var(--rt-toolbar-height)">
-    {/* Content */}
-  </Flex>
-</Card>
-```
-
-For bottom-anchored toolbars, use `pb="var(--rt-toolbar-height)"` on your content instead.
-
-For image or video backgrounds where content should flow behind the toolbar, simply don't apply the padding.
+Buttons rest as gray `soft`, or gray `ghost` inside a group, and take the toolbar's size. A `size`, `variant` or `color` you set wins.
 
 ## Accessibility
 
-- Use semantic elements and ARIA attributes as needed
-- For dialog/popover context, pair with appropriate `aria-labelledby` on the container
-- Toolbar.Title can provide the ID for accessible labeling
-
-```tsx
-<Dialog.Content aria-labelledby="toolbar-title">
-  <Toolbar>
-    <Toolbar.Title id="toolbar-title">Settings</Toolbar.Title>
-  </Toolbar>
-</Dialog.Content>
-```
+- The row is `role="toolbar"` and needs an `aria-label`.
+- Arrow keys move focus and wrap at the ends: Left and Right when horizontal, Up and Down when vertical.
+- `Toolbar.Button` throws outside a `Toolbar`.

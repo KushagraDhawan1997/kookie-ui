@@ -1,203 +1,130 @@
-/* stylelint-disable selector-max-specificity */
-/* Toolbar Component */
+/*
+ * Toolbar: a row of controls with one tab stop (role="toolbar").
+ *
+ * The row paints nothing. It is one control row tall at its size, it spaces its clusters with
+ * `space-between`, and its size reaches every ToolbarButton through context (not CSS).
+ * A ToolbarGroup is a quiet gray well, the same fill a segmented control's track wears,
+ * standing level with a button beside it. A ToolbarSeparator is a gray hairline.
+ */
 
 .rt-Toolbar {
-  position: absolute;
-  z-index: 1;
+  --toolbar-group-inset: calc(var(--space-1) / 2);
 
-  /* --rt-toolbar-height and --rt-toolbar-width are set on parent element via JS */
-  /* Use pt/pb/pl/pr="var(--rt-toolbar-height)" on content to avoid overlap */
-}
-
-/* Grid layout for true centering */
-.rt-ToolbarInner {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: center;
-  width: 100%;
-  height: 100%;
-  gap: var(--space-2);
-}
+  justify-content: space-between;
+  gap: var(--toolbar-gap);
+  min-width: 0;
+  min-height: var(--toolbar-control-height);
+  box-sizing: border-box;
 
-/* Vertical toolbars use row-based grid */
-.rt-Toolbar:where([data-anchor='left'], [data-anchor='right']) .rt-ToolbarInner {
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr auto 1fr;
-}
+  &:where([data-orientation='vertical']) {
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 0;
+    min-width: var(--toolbar-control-height);
+  }
 
-.rt-Toolbar:where([data-anchor='left'], [data-anchor='right']) .rt-ToolbarLeft {
-  grid-column: 1;
-  grid-row: 1;
-}
+  &:where(.rt-r-size-1) {
+    --toolbar-control-height: var(--space-5);
+    --toolbar-radius: max(var(--radius-1), var(--radius-full));
+    --toolbar-gap: var(--space-1);
+    --toolbar-title-gap: var(--space-2);
+  }
 
-.rt-Toolbar:where([data-anchor='left'], [data-anchor='right']) .rt-ToolbarCenter {
-  grid-column: 1;
-  grid-row: 2;
-}
+  &:where(.rt-r-size-2) {
+    --toolbar-control-height: var(--space-6);
+    --toolbar-radius: max(var(--radius-2), var(--radius-full));
+    --toolbar-gap: var(--space-2);
+    --toolbar-title-gap: var(--space-3);
+  }
 
-.rt-Toolbar:where([data-anchor='left'], [data-anchor='right']) .rt-ToolbarRight {
-  grid-column: 1;
-  grid-row: 3;
+  &:where(.rt-r-size-3) {
+    --toolbar-control-height: var(--space-7);
+    --toolbar-radius: max(var(--radius-3), var(--radius-full));
+    --toolbar-gap: var(--space-2);
+    --toolbar-title-gap: var(--space-4);
+  }
+
+  &:where(.rt-r-size-4) {
+    --toolbar-control-height: var(--space-8);
+    --toolbar-radius: max(var(--radius-4), var(--radius-full));
+    --toolbar-gap: var(--space-3);
+    --toolbar-title-gap: var(--space-5);
+  }
 }
 
 /* * * * * * * * * * * * * * * * * * * */
 /*                                     */
-/*           Anchor positions          */
+/*                Group                */
 /*                                     */
 /* * * * * * * * * * * * * * * * * * * */
 
-.rt-Toolbar:where([data-anchor='top']) {
-  top: 0;
-  left: 0;
-  right: 0;
-}
+.rt-ToolbarGroup {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  height: var(--toolbar-control-height);
+  padding: var(--toolbar-group-inset);
+  border-radius: var(--toolbar-radius);
+  background-color: var(--gray-a3);
 
-.rt-Toolbar:where([data-anchor='bottom']) {
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
-.rt-Toolbar:where([data-anchor='left']) {
-  top: 0;
-  bottom: 0;
-  left: 0;
-}
-
-.rt-Toolbar:where([data-anchor='right']) {
-  top: 0;
-  bottom: 0;
-  right: 0;
-}
-
-/* * * * * * * * * * * * * * * * * * * */
-/*                                     */
-/*          Inset mode (default)       */
-/*          Edge-to-edge positioning   */
-/*                                     */
-/* * * * * * * * * * * * * * * * * * * */
-
-/* Remove border-radius in inset mode */
-.rt-Toolbar:where(:not([data-floating])) {
-  --base-card-border-radius: 0;
-  border-radius: 0;
-}
-
-/* Override Card's box-shadow to only show exposed edge */
-/* Top anchor: only show bottom border */
-.rt-Toolbar:where([data-anchor='top']:not([data-floating])) {
-  &::after {
-    box-shadow: inset 0 -1px 0 0 var(--gray-6);
-  }
-  :where([data-panel-background='translucent'], [data-material='translucent']) &::after,
-  &:where([data-panel-background='translucent'], [data-material='translucent'])::after {
-    box-shadow: inset 0 -1px 0 0 var(--gray-a6);
+  &:where([data-orientation='vertical']) {
+    flex-direction: column;
+    height: auto;
+    width: var(--toolbar-control-height);
   }
 }
 
-/* Bottom anchor: only show top border */
-.rt-Toolbar:where([data-anchor='bottom']:not([data-floating])) {
-  &::after {
-    box-shadow: inset 0 1px 0 0 var(--gray-6);
-  }
-  :where([data-panel-background='translucent'], [data-material='translucent']) &::after,
-  &:where([data-panel-background='translucent'], [data-material='translucent'])::after {
-    box-shadow: inset 0 1px 0 0 var(--gray-a6);
-  }
-}
-
-/* Left anchor: only show right border */
-.rt-Toolbar:where([data-anchor='left']:not([data-floating])) {
-  &::after {
-    box-shadow: inset -1px 0 0 0 var(--gray-6);
-  }
-  :where([data-panel-background='translucent'], [data-material='translucent']) &::after,
-  &:where([data-panel-background='translucent'], [data-material='translucent'])::after {
-    box-shadow: inset -1px 0 0 0 var(--gray-a6);
-  }
-}
-
-/* Right anchor: only show left border */
-.rt-Toolbar:where([data-anchor='right']:not([data-floating])) {
-  &::after {
-    box-shadow: inset 1px 0 0 0 var(--gray-6);
-  }
-  :where([data-panel-background='translucent'], [data-material='translucent']) &::after,
-  &:where([data-panel-background='translucent'], [data-material='translucent'])::after {
-    box-shadow: inset 1px 0 0 0 var(--gray-a6);
-  }
-}
-
-/* Ghost variant in normal mode has no border */
-.rt-Toolbar:where(.rt-variant-ghost:not([data-floating]))::after {
-  box-shadow: none;
-}
-
-/* Soft variant in normal mode has no border */
-.rt-Toolbar:where(.rt-variant-soft:not([data-floating]))::after {
-  box-shadow: none;
+/* A button in the group is hosted: the group's height minus the inset on both sides, and a
+   concentric corner. Overriding the height variable (not `height`) keeps an icon button square. */
+.rt-ToolbarGroup > :where(.rt-BaseButton) {
+  --base-button-height: calc(var(--toolbar-control-height) - 2 * var(--toolbar-group-inset));
+  border-radius: max(0px, calc(var(--toolbar-radius) - var(--toolbar-group-inset)));
 }
 
 /* * * * * * * * * * * * * * * * * * * */
 /*                                     */
-/*            Floating mode            */
-/*            Full card treatment      */
+/*              Separator              */
 /*                                     */
 /* * * * * * * * * * * * * * * * * * * */
 
-/* Floating mode: margin controlled via offset prop in JS */
-/* Inherits Card's border-radius (not overridden like inset mode) */
+/* The same gray a Separator draws, at the height of the glyphs beside it rather than the row. */
+.rt-ToolbarSeparator {
+  flex-shrink: 0;
+  background-color: var(--gray-a5);
+
+  &:where([data-orientation='vertical']) {
+    width: var(--border-width-standard);
+    height: calc(var(--toolbar-control-height) / 2);
+  }
+
+  &:where([data-orientation='horizontal']) {
+    height: var(--border-width-standard);
+    width: calc(var(--toolbar-control-height) / 2);
+  }
+}
 
 /* * * * * * * * * * * * * * * * * * * */
 /*                                     */
-/*           Title truncation          */
+/*                Title                */
 /*                                     */
 /* * * * * * * * * * * * * * * * * * * */
 
+/* One line; truncates rather than wrapping, so the row stays one control row tall. */
 .rt-ToolbarTitle {
-  /* Ensure title can truncate within flex container */
   min-width: 0;
   flex-shrink: 1;
 }
 
-/* * * * * * * * * * * * * * * * * * * */
-/*                                     */
-/*         Section alignment           */
-/*                                     */
-/* * * * * * * * * * * * * * * * * * * */
-
-.rt-ToolbarSection {
-  min-width: 0;
+/* A title is a different kind of thing from the controls beside it, so it takes more air than
+   they take from each other. It reaches inside a cluster, since a band is often written
+   <Flex>{back}{title}</Flex>. No air against the row's own ends. */
+:where(.rt-Toolbar) .rt-ToolbarTitle:where(:not(:first-child)) {
+  margin-inline-start: calc(var(--toolbar-title-gap) - var(--toolbar-gap));
 }
 
-.rt-ToolbarLeft {
-  grid-column: 1;
-  justify-self: start;
-}
-
-.rt-ToolbarCenter {
-  grid-column: 2;
-  justify-self: center;
-}
-
-/* Ensure Right always stays in the right column */
-.rt-ToolbarRight {
-  grid-column: 3;
-  justify-self: end;
-}
-
-/* Vertical toolbar section alignment */
-.rt-Toolbar:where([data-anchor='left'], [data-anchor='right']) .rt-ToolbarLeft {
-  align-self: start;
-  justify-self: center;
-}
-
-.rt-Toolbar:where([data-anchor='left'], [data-anchor='right']) .rt-ToolbarCenter {
-  align-self: center;
-  justify-self: center;
-}
-
-.rt-Toolbar:where([data-anchor='left'], [data-anchor='right']) .rt-ToolbarRight {
-  align-self: end;
-  justify-self: center;
+:where(.rt-Toolbar) .rt-ToolbarTitle:where(:not(:last-child)) {
+  margin-inline-end: calc(var(--toolbar-title-gap) - var(--toolbar-gap));
 }

@@ -1,3 +1,40 @@
+## [0.12.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.11.0...v0.12.0) (2026-10-16)
+
+The composer can show what a message refers to, not only the files it carries.
+
+### Features
+
+* **chatbar:** `Chatbar.Item`, a removable pill for something the message refers to that is not a file: a scene object, a picked mode, a selection. It takes a label (`children`, a string), a lead tile (`icon`, tinted with `color`, default gray; or an `image` thumbnail) and `onRemove`. Without `onRemove` it has no ×. The × is labelled "Remove {label}" (`removeLabel` overrides it), and removing one moves focus to the next pill's ×, the previous one's, or the text. Place items as children of `Chatbar.AttachmentsRow`; the row now shows when it has items and no attachments, and items follow the attachments. The app owns the list.
+* **chatbar:** the default attachment is the same pill: a thumbnail (or file icon, or a spinner while uploading), the file name and ×. The size and upload status are read to screen readers after the name instead of shown. A failed upload has a red edge. A custom `renderAttachment` is unchanged.
+
+### Tests
+
+* Browser tests for `Chatbar.Item` (layout, removal and focus, no × without `onRemove`, size, truncation) and for attachments and items sharing one pill.
+
+## [0.11.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.10.0...v0.11.0) (2026-10-16)
+
+`Toolbar` now means what it means in Kookie UI v2: a row of controls with one tab stop. The band it used to name is `AppBar`.
+
+### ⚠ BREAKING CHANGES
+
+* **toolbar:** the old `Toolbar` (`Toolbar`, `Toolbar.Left`, `Toolbar.Center`, `Toolbar.Right`, `Toolbar.Title`, with `anchor`, `floating` and `offset`) is renamed `AppBar` (`AppBar` / `AppBar.Root`, `AppBar.Left`, `AppBar.Center`, `AppBar.Right`, `AppBar.Title`). Its behaviour is unchanged. Its classes are renamed `.rt-Toolbar*` → `.rt-AppBar*`. It publishes its size to its parent as `--rt-app-bar-height` / `--rt-app-bar-width`; the old `--rt-toolbar-height` / `--rt-toolbar-width` are still written with the same value so existing layouts keep their offset. To migrate, rename `Toolbar` to `AppBar` at every call site.
+* **toolbar:** `Toolbar` is a new component with a different API (below). Code that still renders `<Toolbar>` with `Toolbar.Left` / `Center` / `Right` no longer type-checks.
+
+### Features
+
+* **toolbar:** new `Toolbar`, `ToolbarGroup`, `ToolbarButton`, `ToolbarSeparator` and `ToolbarTitle`, also reachable as `Toolbar.Root`, `Toolbar.Group`, `Toolbar.Button`, `Toolbar.Separator` and `Toolbar.Title`. Built on Radix Toolbar, with v2's contract:
+  * `Toolbar` is `role="toolbar"` with one tab stop; the arrow keys move focus between its controls and wrap at the ends. `orientation` is `horizontal` (Left/Right) or `vertical` (Up/Down, the row stacks). `size` `1`–`4` (default `2`) sets the row's height and the size of every control inside it that does not set its own. `aria-label` / `aria-labelledby` pass through. The row paints nothing and spaces its clusters with `space-between`; cluster controls with a `Flex`.
+  * `ToolbarButton` takes every `Button` prop and joins the toolbar's keyboard. `iconOnly` renders an `IconButton` and requires an `aria-label`. `aria-pressed` announces a toggle and wears Button's pressed look. It rests as a gray `soft` button (gray `ghost` inside a group); a stated `size`, `variant` or `color` wins. It throws outside a `Toolbar`.
+  * `ToolbarGroup` is a `role="group"` drawn as a quiet gray well, level with a button beside it, hosting its buttons inside it with a concentric corner. `disabled` turns every control in it off.
+  * `ToolbarSeparator` is a gray hairline across the row's direction, in the gray `Separator` draws, at half the row's height.
+  * `ToolbarTitle` is one truncating line at the row's leading edge, one text step above a button label at the same size, with more air beside it than between two controls. With no children it renders nothing.
+* v2's `backdrop` prop (glass) and `ToolbarOverflow` are not ported.
+* **tokens:** v2's names for the page, its text and its neutral scale resolve in v1: `--color-page` (`--color-background`), `--color-text` (`--gray-12`) and `--neutral-1`…`--neutral-12` (`--gray-N`). Aliases only, following the appearance, so code written against v2's names (such as Kookie Flow's sticky notes) paints correctly on v1.
+
+### Tests
+
+* Browser tests for `Toolbar` (role and name, one tab stop, arrow-key focus, orientation, `aria-pressed`, icon-only buttons, size inheritance, groups, separator, title) and for `AppBar` (layout, published height and width under both names).
+
 ## [0.10.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.9.1...v0.10.0) (2026-10-15)
 
 ### Features

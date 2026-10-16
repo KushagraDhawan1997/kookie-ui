@@ -2,6 +2,10 @@
 
 Decisions about Kookie UI v1 and why they were made. Newest first. The docs site is the source of truth for what the system says. This file records how it got there.
 
+## 2026-10-16: removable items in the composer
+
+Womp's chat needed a pill in the composer for what a message is about (a picked mode, a scene object) next to the files it carries, and Kushagra wanted attachments to look the same. v2 has no such part: its `Chip` refuses dismissal because a removable chip is a control, not an inert atom. So `Chatbar.Item` is a control in the chatbar, not a Chip: a list item in the attachments row with a lead tile, a truncating label and a × named after the label. The app owns the list, so the item only reports removal. Attachments take the same pill so a file and a reference read as one kind of thing. v2 should gain the same contract in its Composer so the two do not disagree.
+
 ## 2026-10-15: the scroll fade
 
 Womp's chat floats its toolbar and goal tray over the transcript, and content cut hard at their edges. Kushagra asked for a fade native to the scroller, as v2 does. It is a mask on the viewport, so it fades the content and lets whatever is behind show through; a painted gradient would have to fade toward a colour that differs on every surface. v2 reads Base UI's per-edge overflow variables; Radix's ScrollArea publishes none, so a small hook (`use-scroll-edges`) writes `--scroll-overflow-start/-end` on scroll and resize, at most once a frame, with no re-render. Bands publish their reach through `--scroll-fade-start/-end`, and a nested scroller stands those down, the rule v2 learned from a band reaching every scroller inside its pane.

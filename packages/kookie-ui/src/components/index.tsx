@@ -1,6 +1,7 @@
 export { AccessibleIcon, type AccessibleIconProps } from './accessible-icon.js';
 export * as Accordion from './accordion.js';
 export * as AlertDialog from './alert-dialog.js';
+export { AppBar } from './app-bar.js';
 export { AspectRatio, type AspectRatioProps } from './aspect-ratio.js';
 export { Avatar, type AvatarProps } from './avatar.js';
 export { Badge, type BadgeProps } from './badge.js';
@@ -71,7 +72,18 @@ export {
 export { Theme, ThemeContext, type ThemeContextValue, type ThemeProps, useThemeContext } from './theme.js';
 export { ToggleButton, type ToggleButtonProps } from './toggle-button.js';
 export { ToggleIconButton, type ToggleIconButtonProps } from './toggle-icon-button.js';
-export { Toolbar } from './toolbar.js';
+export {
+  Toolbar,
+  ToolbarGroup,
+  ToolbarButton,
+  ToolbarSeparator,
+  ToolbarTitle,
+  type ToolbarProps,
+  type ToolbarGroupProps,
+  type ToolbarButtonProps,
+  type ToolbarSeparatorProps,
+  type ToolbarTitleProps,
+} from './toolbar.js';
 export { Tooltip, type TooltipProps } from './tooltip.js';
 export { UserCard, type UserCardProps } from './user-card.js';
 export { VirtualMenu, type VirtualMenuProps, type VirtualMenuItemProps, type VirtualMenuRenderItemProps } from './virtual-menu.js';

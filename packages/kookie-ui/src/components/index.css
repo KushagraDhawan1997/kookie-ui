@@ -57,6 +57,8 @@
 @import './text-area.css';
 @import './text-field.css';
 @import './theme-panel.css';
+/* AppBar keeps the place its old toolbar.css had: it extends Card and must come after card.css */
+@import './app-bar.css';
 @import './toolbar.css';
 @import './tooltip.css';
 @import './user-card.css';

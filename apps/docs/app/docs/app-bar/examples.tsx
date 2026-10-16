@@ -4,13 +4,13 @@ import * as React from 'react';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
 import { SectionHeader } from '@/components/blocks/section-header/section-header';
 import { EmptyState } from '@/components/blocks/empty-state/empty-state';
-import { Flex, Card, Text, Heading, Separator, IconButton, Button, Toolbar, ScrollArea } from '@kushagradhawan/kookie-ui';
+import { Flex, Card, Text, Heading, Separator, IconButton, Button, AppBar, ScrollArea } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { PlusSignIcon, ArrowLeft01Icon, Cancel01Icon, Search01Icon, Settings01Icon, Home01Icon, Add01Icon, File02Icon, Folder02Icon } from '@hugeicons/core-free-icons';
 
 const IMAGE_URL = 'https://images.unsplash.com/photo-1766182601602-55af0dc5e53b?q=80&w=1336&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
 
-export function ToolbarExamples() {
+export function AppBarExamples() {
   return (
     <Flex direction="column" gap="9">
       {/* Example 1: Dialog Header */}
@@ -19,7 +19,7 @@ export function ToolbarExamples() {
           <SectionHeader.Content>
             <SectionHeader.Title>Dialog Header</SectionHeader.Title>
             <SectionHeader.Description>
-              A common pattern for dialog or panel headers. The toolbar stays fixed while content scrolls beneath it. The soft variant provides subtle separation from content.
+              A common pattern for dialog or panel headers. The app bar stays fixed while content scrolls beneath it. The soft variant provides subtle separation from content.
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
@@ -36,8 +36,8 @@ export function ToolbarExamples() {
     flexDirection: 'column',
   }}
 >
-  <Toolbar variant="ghost" size="1">
-    <Toolbar.Left>
+  <AppBar variant="ghost" size="1">
+    <AppBar.Left>
       <IconButton
         radius="full"
         variant="soft"
@@ -47,11 +47,11 @@ export function ToolbarExamples() {
       >
         <ArrowLeftIcon />
       </IconButton>
-    </Toolbar.Left>
-    <Toolbar.Center>
-      <Toolbar.Title>Settings</Toolbar.Title>
-    </Toolbar.Center>
-    <Toolbar.Right gap="1">
+    </AppBar.Left>
+    <AppBar.Center>
+      <AppBar.Title>Settings</AppBar.Title>
+    </AppBar.Center>
+    <AppBar.Right gap="1">
       <IconButton radius="full" size="2" aria-label="Add">
         <PlusIcon />
       </IconButton>
@@ -64,11 +64,11 @@ export function ToolbarExamples() {
       >
         <CloseIcon />
       </IconButton>
-    </Toolbar.Right>
-  </Toolbar>
+    </AppBar.Right>
+  </AppBar>
   <ScrollArea
     scrollbars="vertical"
-    style={{ flexGrow: 1, marginTop: 'var(--rt-toolbar-height)' }}
+    style={{ flexGrow: 1, marginTop: 'var(--rt-app-bar-height)' }}
   >
     <Flex direction="column" gap="4" p="4">
       {/* Settings content */}
@@ -77,25 +77,25 @@ export function ToolbarExamples() {
 </Card>`}
         >
           <Card variant="classic" size="3" inset style={{ width: '100%', maxWidth: '400px', height: '22rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-            <Toolbar variant="ghost" size="1">
-              <Toolbar.Left>
+            <AppBar variant="ghost" size="1">
+              <AppBar.Left>
                 <IconButton radius="full" variant="soft" size="2" color="gray" aria-label="Go back">
                   <HugeiconsIcon icon={ArrowLeft01Icon} strokeWidth={1.75} />
                 </IconButton>
-              </Toolbar.Left>
-              <Toolbar.Center>
-                <Toolbar.Title>Settings</Toolbar.Title>
-              </Toolbar.Center>
-              <Toolbar.Right gap="1">
+              </AppBar.Left>
+              <AppBar.Center>
+                <AppBar.Title>Settings</AppBar.Title>
+              </AppBar.Center>
+              <AppBar.Right gap="1">
                 <IconButton radius="full" size="2" aria-label="Close">
                   <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.75} />
                 </IconButton>
                 <IconButton radius="full" variant="soft" size="2" color="gray" aria-label="Close">
                   <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
                 </IconButton>
-              </Toolbar.Right>
-            </Toolbar>
-            <ScrollArea scrollbars="vertical" style={{ flexGrow: 1, marginTop: 'var(--rt-toolbar-height)' }}>
+              </AppBar.Right>
+            </AppBar>
+            <ScrollArea scrollbars="vertical" style={{ flexGrow: 1, marginTop: 'var(--rt-app-bar-height)' }}>
               <Flex direction="column" gap="4" p="4">
                 <Flex direction="column" gap="1">
                   <Text size="2" weight="medium">
@@ -164,7 +164,7 @@ export function ToolbarExamples() {
           <SectionHeader.Content>
             <SectionHeader.Title>Translucent Overlay</SectionHeader.Title>
             <SectionHeader.Description>
-              Use floating mode with translucent material for toolbars over images or dynamic backgrounds. The backdrop blur creates depth while maintaining readability.
+              Use floating mode with translucent material for app bars over images or dynamic backgrounds. The backdrop blur creates depth while maintaining readability.
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
@@ -187,13 +187,13 @@ export function ToolbarExamples() {
     flexDirection: 'column',
   }}
 >
-  <Toolbar
+  <AppBar
     floating
     variant="surface"
     material="translucent"
     size="1"
   >
-    <Toolbar.Left>
+    <AppBar.Left>
       <IconButton
         variant="ghost"
         size="2"
@@ -202,11 +202,11 @@ export function ToolbarExamples() {
       >
         <HomeIcon />
       </IconButton>
-    </Toolbar.Left>
-    <Toolbar.Center>
-      <Toolbar.Title>Explore</Toolbar.Title>
-    </Toolbar.Center>
-    <Toolbar.Right>
+    </AppBar.Left>
+    <AppBar.Center>
+      <AppBar.Title>Explore</AppBar.Title>
+    </AppBar.Center>
+    <AppBar.Right>
       <IconButton
         variant="ghost"
         size="2"
@@ -215,9 +215,9 @@ export function ToolbarExamples() {
       >
         <SearchIcon />
       </IconButton>
-    </Toolbar.Right>
-  </Toolbar>
-  <EmptyState pt="var(--rt-toolbar-height)" height="100%" justify="center">
+    </AppBar.Right>
+  </AppBar>
+  <EmptyState pt="var(--rt-app-bar-height)" height="100%" justify="center">
     <EmptyState.Icon>
       <SearchIcon size={32} strokeWidth={1.5} />
     </EmptyState.Icon>
@@ -229,22 +229,22 @@ export function ToolbarExamples() {
 </Card>`}
         >
           <Card variant="classic" material="translucent" size="3" inset style={{ width: '100%', maxWidth: '400px', height: '24rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-            <Toolbar floating variant="surface" material="translucent" size="1">
-              <Toolbar.Left>
+            <AppBar floating variant="surface" material="translucent" size="1">
+              <AppBar.Left>
                 <IconButton variant="ghost" size="2" color="gray" aria-label="Home">
                   <HugeiconsIcon icon={Home01Icon} strokeWidth={1.75} />
                 </IconButton>
-              </Toolbar.Left>
-              <Toolbar.Center>
-                <Toolbar.Title>Explore</Toolbar.Title>
-              </Toolbar.Center>
-              <Toolbar.Right>
+              </AppBar.Left>
+              <AppBar.Center>
+                <AppBar.Title>Explore</AppBar.Title>
+              </AppBar.Center>
+              <AppBar.Right>
                 <IconButton variant="ghost" size="2" color="gray" aria-label="Search">
                   <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
                 </IconButton>
-              </Toolbar.Right>
-            </Toolbar>
-            <EmptyState pt="var(--rt-toolbar-height)" height="100%" justify="center">
+              </AppBar.Right>
+            </AppBar>
+            <EmptyState pt="var(--rt-app-bar-height)" height="100%" justify="center">
               <EmptyState.Icon>
                 <HugeiconsIcon icon={Search01Icon} size={32} strokeWidth={1.5} />
               </EmptyState.Icon>
@@ -265,7 +265,7 @@ export function ToolbarExamples() {
           <SectionHeader.Content>
             <SectionHeader.Title>Form Actions</SectionHeader.Title>
             <SectionHeader.Description>
-              Bottom-anchored toolbars work well for form actions. The soft variant provides visual separation, with ghost for cancel and solid for the primary action.
+              Bottom-anchored app bars work well for form actions. The soft variant provides visual separation, with ghost for cancel and solid for the primary action.
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
@@ -273,13 +273,13 @@ export function ToolbarExamples() {
           background="none"
           height="20rem"
           code={`<Card variant="classic" size="2" style={{ display: 'flex', flexDirection: 'column' }}>
-  <Flex direction="column" gap="4" p="4" flexGrow="1" pb="var(--rt-toolbar-height)">
+  <Flex direction="column" gap="4" p="4" flexGrow="1" pb="var(--rt-app-bar-height)">
     <Heading size="4" weight="medium">Edit Profile</Heading>
     <Text size="2" emphasis="medium">Update your account information.</Text>
     {/* Form fields */}
   </Flex>
-  <Toolbar anchor="bottom" variant="soft" size="2">
-    <Toolbar.Left>
+  <AppBar anchor="bottom" variant="soft" size="2">
+    <AppBar.Left>
       <Button
         variant="ghost"
         size="2"
@@ -287,13 +287,13 @@ export function ToolbarExamples() {
       >
         Cancel
       </Button>
-    </Toolbar.Left>
-    <Toolbar.Right>
+    </AppBar.Left>
+    <AppBar.Right>
       <Button variant="solid" size="2">
         Save Changes
       </Button>
-    </Toolbar.Right>
-  </Toolbar>
+    </AppBar.Right>
+  </AppBar>
 </Card>`}
         >
           <Card
@@ -308,7 +308,7 @@ export function ToolbarExamples() {
               flexDirection: 'column',
             }}
           >
-            <Flex direction="column" gap="4" p="4" flexGrow="1" pb="var(--rt-toolbar-height)">
+            <Flex direction="column" gap="4" p="4" flexGrow="1" pb="var(--rt-app-bar-height)">
               <Flex direction="column" gap="1">
                 <Heading size="4" weight="medium">
                   Edit Profile
@@ -335,18 +335,18 @@ export function ToolbarExamples() {
                 </Text>
               </Flex>
             </Flex>
-            <Toolbar anchor="bottom" variant="soft" size="2">
-              <Toolbar.Left>
+            <AppBar anchor="bottom" variant="soft" size="2">
+              <AppBar.Left>
                 <Button variant="ghost" size="2" color="gray">
                   Cancel
                 </Button>
-              </Toolbar.Left>
-              <Toolbar.Right>
+              </AppBar.Left>
+              <AppBar.Right>
                 <Button variant="solid" size="2">
                   Save Changes
                 </Button>
-              </Toolbar.Right>
-            </Toolbar>
+              </AppBar.Right>
+            </AppBar>
           </Card>
         </PreviewBlock>
       </Flex>
@@ -359,7 +359,7 @@ export function ToolbarExamples() {
           <SectionHeader.Content>
             <SectionHeader.Title>Document Browser</SectionHeader.Title>
             <SectionHeader.Description>
-              Toolbars with multiple actions in the right section. The surface variant provides subtle background, with soft icon buttons and a solid primary action.
+              AppBars with multiple actions in the right section. The surface variant provides subtle background, with soft icon buttons and a solid primary action.
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
@@ -367,11 +367,11 @@ export function ToolbarExamples() {
           background="none"
           height="22rem"
           code={`<Card variant="classic" size="2">
-  <Toolbar variant="surface" size="2">
-    <Toolbar.Left>
-      <Toolbar.Title>Documents</Toolbar.Title>
-    </Toolbar.Left>
-    <Toolbar.Right gap="1">
+  <AppBar variant="surface" size="2">
+    <AppBar.Left>
+      <AppBar.Title>Documents</AppBar.Title>
+    </AppBar.Left>
+    <AppBar.Right gap="1">
       <IconButton
         variant="soft"
         size="2"
@@ -392,19 +392,19 @@ export function ToolbarExamples() {
         <AddIcon />
         New
       </Button>
-    </Toolbar.Right>
-  </Toolbar>
-  <Flex direction="column" p="3" gap="1" pt="var(--rt-toolbar-height)">
+    </AppBar.Right>
+  </AppBar>
+  <Flex direction="column" p="3" gap="1" pt="var(--rt-app-bar-height)">
     {/* File list */}
   </Flex>
 </Card>`}
         >
           <Card variant="classic" size="2" style={{ width: '100%', maxWidth: '500px', overflow: 'hidden' }}>
-            <Toolbar variant="surface" size="2">
-              <Toolbar.Left>
-                <Toolbar.Title>Documents</Toolbar.Title>
-              </Toolbar.Left>
-              <Toolbar.Right gap="1">
+            <AppBar variant="surface" size="2">
+              <AppBar.Left>
+                <AppBar.Title>Documents</AppBar.Title>
+              </AppBar.Left>
+              <AppBar.Right gap="1">
                 <IconButton variant="soft" size="2" color="gray" aria-label="Search">
                   <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
                 </IconButton>
@@ -415,9 +415,9 @@ export function ToolbarExamples() {
                   <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
                   New
                 </Button>
-              </Toolbar.Right>
-            </Toolbar>
-            <Flex direction="column" gap="1" pt="var(--rt-toolbar-height)">
+              </AppBar.Right>
+            </AppBar>
+            <Flex direction="column" gap="1" pt="var(--rt-app-bar-height)">
               <Flex align="center" gap="3" py="1">
                 <HugeiconsIcon icon={Folder02Icon} size={20} strokeWidth={1.75} style={{ color: 'var(--gray-10)' }} />
                 <Flex direction="column" gap="1">

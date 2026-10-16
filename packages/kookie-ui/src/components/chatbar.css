@@ -8,7 +8,9 @@
 
 /* Defaults */
 .rt-ChatbarRoot {
-  --chatbar-attachment-thumb: var(--space-8);
+  --chatbar-item-lead: var(--space-5);
+  --chatbar-item-lead-radius: var(--radius-2);
+  --chatbar-item-padding: var(--space-1);
   /* A column: notices, then the box (which fills any height the consumer gives the root), then context. */
   display: flex;
   flex-direction: column;
@@ -116,58 +118,97 @@
   --scrollarea-scrollbar-size: 3px;
 }
 
-/* Attachment tile now uses Card + Flex, no custom layout needed */
+/*
+ * Attachments and items are one pill: a lead tile (thumbnail or tinted icon),
+ * a label and a remove button. A custom `renderAttachment` keeps only the
+ * plain .rt-ChatbarAttachment hook.
+ */
+.rt-ChatbarAttachment {
+  position: relative;
+}
 
-.rt-ChatbarAttachmentPreview {
-  height: var(--chatbar-attachment-thumb);
-  width: var(--chatbar-attachment-thumb);
-  min-width: var(--chatbar-attachment-thumb);
+.rt-ChatbarItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   flex-shrink: 0;
-  border-radius: var(--radius-1);
+  box-sizing: border-box;
+  max-width: 240px;
+  padding: var(--chatbar-item-padding);
+  padding-right: calc(var(--chatbar-item-padding) + var(--space-1));
+  border: 1px solid var(--gray-a5);
+  border-radius: calc(var(--chatbar-item-lead-radius) + var(--chatbar-item-padding));
+  background-color: var(--color-panel-solid);
+  box-shadow: 0 1px 2px var(--gray-a3);
+  color: var(--gray-12);
+}
+
+.rt-ChatbarItem:where([data-status='error']) {
+  border-color: var(--red-a7);
+}
+
+.rt-ChatbarItemLead {
+  height: var(--chatbar-item-lead);
+  width: var(--chatbar-item-lead);
+  flex-shrink: 0;
+  border-radius: var(--chatbar-item-lead-radius);
   overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  background: var(--accent-a3);
+  color: var(--accent-11);
+
+  /* stylelint-disable-next-line selector-max-type */
+  & :where(svg) {
+    width: calc(var(--chatbar-item-lead) * 0.6);
+    height: calc(var(--chatbar-item-lead) * 0.6);
+  }
+
+  &:where([data-kind='image']) {
+    background: var(--gray-a3);
+  }
+}
+
+/* An attachment's file icon and spinner stay neutral */
+.rt-ChatbarAttachment .rt-ChatbarItemLead:where([data-kind='icon']) {
   background: var(--gray-a3);
+  color: var(--gray-11);
 }
 
 .rt-ChatbarAttachmentImage {
+  width: 100%;
   height: 100%;
-  width: auto;
-  object-fit: contain;
+  object-fit: cover;
   max-width: none;
 }
 
-/* PaperclipIcon handles its own sizing via IconButton */
-
-.rt-ChatbarAttachment {
-  position: relative;
-  background-color: var(--gray-1);
-  border-radius: var(--radius-1);
+.rt-ChatbarItemLabel {
+  min-width: 0;
 }
 
-/* Maximum width for non-image attachments */
-.rt-ChatbarAttachment:where([data-kind='file']) {
-  max-width: 200px;
+.rt-ChatbarItemRemove {
+  flex-shrink: 0;
+  margin-left: calc(var(--space-1) * -1);
 }
 
-.rt-ChatbarAttachmentRemove {
-  position: absolute;
-  top: var(--chatbar-remove-offset);
-  right: var(--chatbar-remove-offset);
-}
-
-/* Size-dependent radius for attachment container and preview */
 @breakpoints {
-  .rt-ChatbarRoot:where(.rt-r-size-1) :where(.rt-ChatbarAttachment, .rt-ChatbarAttachmentPreview) {
-    border-radius: var(--radius-1);
-    /* border-radius: var(--radius-1); */
-  }
-  .rt-ChatbarRoot:where(.rt-r-size-2) :where(.rt-ChatbarAttachment, .rt-ChatbarAttachmentPreview) {
-    border-radius: var(--radius-2);
-  }
-  .rt-ChatbarRoot:where(.rt-r-size-3) :where(.rt-ChatbarAttachment, .rt-ChatbarAttachmentPreview) {
-    border-radius: var(--radius-3);
+  .rt-ChatbarRoot {
+    &:where(.rt-r-size-1) {
+      --chatbar-item-lead: var(--space-4);
+      --chatbar-item-lead-radius: var(--radius-1);
+      --chatbar-item-padding: var(--space-1);
+    }
+    &:where(.rt-r-size-2) {
+      --chatbar-item-lead: var(--space-5);
+      --chatbar-item-lead-radius: var(--radius-2);
+      --chatbar-item-padding: var(--space-1);
+    }
+    &:where(.rt-r-size-3) {
+      --chatbar-item-lead: calc(var(--space-5) + var(--space-1));
+      --chatbar-item-lead-radius: var(--radius-2);
+      --chatbar-item-padding: calc(var(--space-1) * 1.5);
+    }
   }
 }
 
@@ -575,24 +616,18 @@
     &:where(.rt-r-size-1) {
       font-size: var(--font-size-1);
       line-height: var(--line-height-1);
-      --chatbar-attachment-thumb: var(--space-8);
-      --chatbar-remove-offset: calc(var(--space-1) * 0.5);
       /* --chatbar-attachments-radius: min(var(--radius-5), calc(var(--radius-1) + var(--space-1))); */
       --chatbar-attachments-radius: var(--radius-1);
     }
     &:where(.rt-r-size-2) {
       font-size: var(--font-size-2);
       line-height: var(--line-height-2);
-      --chatbar-attachment-thumb: var(--space-9);
-      --chatbar-remove-offset: var(--space-1);
       /* --chatbar-attachments-radius: min(var(--radius-6), calc(var(--radius-2) + var(--space-2))); */
       --chatbar-attachments-radius: var(--radius-2);
     }
     &:where(.rt-r-size-3) {
       font-size: var(--font-size-3);
       line-height: var(--line-height-3);
-      --chatbar-attachment-thumb: var(--space-9);
-      --chatbar-remove-offset: var(--space-2);
       /* --chatbar-attachments-radius: min(var(--radius-7), calc(var(--radius-3) + var(--space-3))); */
       --chatbar-attachments-radius: var(--radius-3);
     }

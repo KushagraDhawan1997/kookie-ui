@@ -1,211 +1,272 @@
+'use client';
+
 import * as React from 'react';
 import classNames from 'classnames';
+import { Toolbar as ToolbarPrimitive } from 'radix-ui';
 
-import { Card } from './card.js';
-import { Flex } from './flex.js';
-import { Heading } from './heading.js';
+import { toolbarRootPropDefs } from './toolbar.props.js';
+import { Button } from './button.js';
+import { IconButton } from './icon-button.js';
+import { Text } from './text.js';
+import { extractProps } from '../helpers/extract-props.js';
+import { marginPropDefs } from '../props/margin.props.js';
 
-import type { CardProps } from './card.js';
-import type { FlexProps } from './flex.js';
+import type { ButtonProps } from './button.js';
+import type { TextProps } from './text.js';
+import type { MarginProps } from '../props/margin.props.js';
+import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
+import type { GetPropDefTypes } from '../props/prop-def.js';
 
-// ============================================================================
-// Toolbar Root
-// ============================================================================
+/*
+ * Toolbar takes Kookie UI v2's contract (v2: components/toolbar), built on Radix instead of
+ * Base UI. A toolbar is a row of controls with ONE tab stop: `role="toolbar"`, and the arrow
+ * keys move focus between its controls. That keyboard is the reason it is a component.
+ *
+ * Its `size` reaches every control inside it that does not state its own. The row itself paints
+ * nothing; a `ToolbarGroup` draws a quiet well around controls that belong together, and a
+ * `ToolbarSeparator` draws a gray hairline between clusters. Use a `Flex` to cluster controls
+ * without a well: the row spaces the clusters with `space-between`.
+ *
+ * The band anchored to a pane's edge (Left / Center / Right / Title) that this name used to
+ * mean is `AppBar` since 0.11.0.
+ */
 
-type ToolbarRootElement = React.ElementRef<'div'>;
-type Anchor = 'top' | 'bottom' | 'left' | 'right';
-type SpaceScale = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
+type ToolbarSize = NonNullable<GetPropDefTypes<typeof toolbarRootPropDefs>['size']>;
+type ToolbarOrientation = NonNullable<GetPropDefTypes<typeof toolbarRootPropDefs>['orientation']>;
 
-interface ToolbarRootProps extends Omit<CardProps, 'asChild'> {
-  /**
-   * Which edge to anchor to. Sets position: sticky and the appropriate edge.
-   * @default "top"
-   */
-  anchor?: Anchor;
-  /**
-   * Floating mode adds margin from edges for a detached look with absolute positioning.
-   * When false (default), uses inset mode with negative margins to go edge-to-edge inside Cards.
-   * @default false
-   */
-  floating?: boolean;
-  /**
-   * Margin offset from edges when floating. Uses space scale values.
-   * @default "2"
-   */
-  offset?: SpaceScale;
+interface ToolbarContextValue {
+  size: ToolbarSize;
+  orientation: ToolbarOrientation;
 }
 
-const ToolbarRoot = React.forwardRef<ToolbarRootElement, ToolbarRootProps>(
-  (props, forwardedRef) => {
-    const {
-      anchor = 'top',
-      floating = false,
-      offset = '2',
-      size = '1',
-      variant = 'ghost',
-      material,
-      className,
-      style,
-      children,
-      ...restProps
-    } = props;
+const ToolbarContext = React.createContext<ToolbarContextValue | null>(null);
 
-    const isHorizontal = anchor === 'top' || anchor === 'bottom';
-    const internalRef = React.useRef<HTMLDivElement>(null);
+/** Set by a `ToolbarGroup`: its children rest quiet, and `disabled` turns them all off. */
+const ToolbarGroupContext = React.createContext<{ disabled: boolean } | null>(null);
 
-    // Merge refs
-    const mergedRef = React.useCallback(
-      (node: HTMLDivElement | null) => {
-        (internalRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-        if (typeof forwardedRef === 'function') {
-          forwardedRef(node);
-        } else if (forwardedRef) {
-          forwardedRef.current = node;
-        }
-      },
-      [forwardedRef],
-    );
+function useToolbarContext(consumer: string): ToolbarContextValue {
+  const context = React.useContext(ToolbarContext);
+  if (!context) {
+    throw new Error(`${consumer} must be rendered inside a Toolbar.`);
+  }
+  return context;
+}
 
-    // Expose height/width as CSS variable on parent element
-    React.useEffect(() => {
-      const element = internalRef.current;
-      if (!element) return;
+// ============================================================================
+// Toolbar (root)
+// ============================================================================
 
-      const parent = element.parentElement;
-      if (!parent) return;
+type ToolbarOwnProps = GetPropDefTypes<typeof toolbarRootPropDefs>;
 
-      const update = () => {
-        let dimension = isHorizontal ? element.offsetHeight : element.offsetWidth;
+interface ToolbarProps
+  extends ComponentPropsWithout<typeof ToolbarPrimitive.Root, RemovedProps | 'orientation'>,
+    ToolbarOwnProps,
+    MarginProps {}
 
-        // For floating mode, include the margin in the total space
-        if (floating) {
-          const computedStyle = getComputedStyle(element);
-          const margin = parseFloat(computedStyle.marginTop) || 0;
-          dimension += margin * 2;
-        }
+/**
+ * A row of controls with one keyboard tab stop. The arrow keys move focus between the controls.
+ *
+ * Give it an `aria-label` (or `aria-labelledby`) that says what the controls act on.
+ *
+ * @example
+ * ```tsx
+ * <Toolbar aria-label="Formatting">
+ *   <ToolbarGroup>
+ *     <ToolbarButton iconOnly aria-label="Bold" aria-pressed={bold} onClick={toggleBold}>
+ *       <HugeiconsIcon icon={TextBoldIcon} strokeWidth={1.75} />
+ *     </ToolbarButton>
+ *   </ToolbarGroup>
+ *   <ToolbarSeparator />
+ *   <ToolbarButton>Share</ToolbarButton>
+ * </Toolbar>
+ * ```
+ */
+const ToolbarRoot = React.forwardRef<HTMLDivElement, ToolbarProps>((props, forwardedRef) => {
+  const size: ToolbarSize = props.size ?? toolbarRootPropDefs.size.default;
+  const orientation: ToolbarOrientation = props.orientation ?? toolbarRootPropDefs.orientation.default;
+  const { className, orientation: _orientation, children, ...rootProps } = extractProps(
+    props,
+    toolbarRootPropDefs,
+    marginPropDefs,
+  );
 
-        if (isHorizontal) {
-          parent.style.setProperty('--rt-toolbar-height', `${dimension}px`);
-        } else {
-          parent.style.setProperty('--rt-toolbar-width', `${dimension}px`);
-        }
-      };
+  const context = React.useMemo(() => ({ size, orientation }), [size, orientation]);
 
-      update();
+  return (
+    <ToolbarPrimitive.Root
+      {...rootProps}
+      ref={forwardedRef}
+      orientation={orientation}
+      className={classNames('rt-Toolbar', className)}
+    >
+      <ToolbarContext.Provider value={context}>{children}</ToolbarContext.Provider>
+    </ToolbarPrimitive.Root>
+  );
+});
+ToolbarRoot.displayName = 'Toolbar';
 
-      const resizeObserver = new ResizeObserver(update);
-      resizeObserver.observe(element);
+// ============================================================================
+// ToolbarGroup
+// ============================================================================
 
-      return () => resizeObserver.disconnect();
-    }, [isHorizontal, floating]);
+interface ToolbarGroupProps extends ComponentPropsWithout<'div', RemovedProps> {
+  /** Turns every control in the group off at once. */
+  disabled?: boolean;
+}
 
-    const computedStyle = floating
-      ? { margin: `var(--space-${offset})`, ...style }
-      : style;
-
+/**
+ * Controls that belong together, drawn as one quiet well that stands level with a button
+ * beside it. Buttons inside it rest as `ghost` unless they state a `variant`.
+ * To cluster controls without a well, use a `Flex`.
+ */
+const ToolbarGroup = React.forwardRef<HTMLDivElement, ToolbarGroupProps>(
+  ({ className, disabled = false, children, ...props }, forwardedRef) => {
+    const { orientation } = useToolbarContext('ToolbarGroup');
+    const group = React.useMemo(() => ({ disabled }), [disabled]);
     return (
-      <Card
-        ref={mergedRef}
-        size={size}
-        variant={variant}
-        material={material}
-        data-anchor={anchor}
-        data-floating={floating || undefined}
-        className={classNames('rt-Toolbar', className)}
-        style={computedStyle}
-        {...restProps}
+      <div
+        role="group"
+        data-orientation={orientation}
+        data-disabled={disabled || undefined}
+        {...props}
+        ref={forwardedRef}
+        className={classNames('rt-ToolbarGroup', className)}
       >
-        <div className="rt-ToolbarInner">
-          {children}
-        </div>
-      </Card>
+        <ToolbarGroupContext.Provider value={group}>{children}</ToolbarGroupContext.Provider>
+      </div>
     );
   },
 );
-ToolbarRoot.displayName = 'Toolbar.Root';
+ToolbarGroup.displayName = 'Toolbar.Group';
 
 // ============================================================================
-// Toolbar Left (for horizontal) / Start (alias)
+// ToolbarButton
 // ============================================================================
 
-type ToolbarSectionElement = React.ElementRef<'div'>;
-type ToolbarSectionProps = FlexProps;
+type ToolbarButtonBaseProps = Omit<ButtonProps, 'as' | 'asChild'>;
 
-const ToolbarLeft = React.forwardRef<ToolbarSectionElement, ToolbarSectionProps>(
-  ({ gap = '2', align = 'center', className, children, ...props }, forwardedRef) => (
-    <Flex
-      ref={forwardedRef}
-      align={align}
-      gap={gap}
-      className={classNames('rt-ToolbarSection', 'rt-ToolbarLeft', className)}
-      {...props}
-    >
-      {children}
-    </Flex>
-  ),
+/** A labelled button: takes every `Button` prop. */
+type ToolbarTextButtonProps = ToolbarButtonBaseProps & {
+  iconOnly?: false;
+};
+
+/** An icon-only button: renders an `IconButton`, and the type requires an `aria-label`. */
+type ToolbarIconButtonProps = Omit<ToolbarButtonBaseProps, 'aria-label' | 'aria-labelledby' | 'overrideStyles'> & {
+  iconOnly: true;
+  /** The control's accessible name. An icon has no words of its own, so this is required. */
+  'aria-label': string;
+};
+
+type ToolbarButtonProps = ToolbarTextButtonProps | ToolbarIconButtonProps;
+
+function isPressed(value: React.AriaAttributes['aria-pressed']) {
+  return value === true || value === 'true';
+}
+
+/**
+ * A `Button` that joins the toolbar's keyboard navigation, so a row of them is one tab stop.
+ *
+ * Set `iconOnly` (with an `aria-label`) for a symbol-only control. Set `aria-pressed` for a
+ * control that toggles; a pressed button wears Button's pressed look.
+ *
+ * It takes the toolbar's `size`, and rests as a gray `soft` button (gray `ghost` inside a
+ * `ToolbarGroup`). A stated `size`, `variant` or `color` wins; a stated `variant` without a
+ * `color` takes Button's own default colour. It throws outside a `Toolbar`.
+ */
+const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>((props, forwardedRef) => {
+  const toolbar = useToolbarContext('ToolbarButton');
+  const group = React.useContext(ToolbarGroupContext);
+  const { iconOnly, size, variant, color, disabled, ...rest } = props;
+
+  const pressed = isPressed(props['aria-pressed']);
+  const stateProps =
+    'data-state' in props || props['aria-pressed'] === undefined ? {} : { 'data-state': pressed ? 'on' : 'off' };
+
+  const shared = {
+    size: size ?? toolbar.size,
+    variant: variant ?? (group ? 'ghost' : 'soft'),
+    // The gray rest is a pair with the default variant: a caller who states a variant gets
+    // Button's own colour for it unless they state a colour too.
+    color: color ?? (variant ? undefined : 'gray'),
+    ...stateProps,
+  } as const;
+
+  return (
+    <ToolbarPrimitive.Button asChild ref={forwardedRef} disabled={disabled || group?.disabled || undefined}>
+      {iconOnly ? (
+        <IconButton {...(rest as Omit<ToolbarIconButtonProps, 'iconOnly'>)} {...shared} />
+      ) : (
+        <Button {...(rest as Omit<ToolbarTextButtonProps, 'iconOnly'>)} {...shared} />
+      )}
+    </ToolbarPrimitive.Button>
+  );
+});
+ToolbarButton.displayName = 'Toolbar.Button';
+
+// ============================================================================
+// ToolbarSeparator
+// ============================================================================
+
+type ToolbarSeparatorProps = ComponentPropsWithout<typeof ToolbarPrimitive.Separator, RemovedProps | 'orientation'>;
+
+/**
+ * A gray hairline between two clusters, announced as a separator. Its direction is always
+ * opposite to the toolbar's.
+ */
+const ToolbarSeparator = React.forwardRef<HTMLDivElement, ToolbarSeparatorProps>(
+  ({ className, ...props }, forwardedRef) => {
+    useToolbarContext('ToolbarSeparator');
+    return (
+      <ToolbarPrimitive.Separator
+        {...props}
+        ref={forwardedRef}
+        className={classNames('rt-ToolbarSeparator', className)}
+      />
+    );
+  },
 );
-ToolbarLeft.displayName = 'Toolbar.Left';
+ToolbarSeparator.displayName = 'Toolbar.Separator';
 
 // ============================================================================
-// Toolbar Center
+// ToolbarTitle
 // ============================================================================
 
-const ToolbarCenter = React.forwardRef<ToolbarSectionElement, ToolbarSectionProps>(
-  ({ gap = '2', align = 'center', justify = 'center', className, children, ...props }, forwardedRef) => (
-    <Flex
-      ref={forwardedRef}
-      align={align}
-      justify={justify}
-      gap={gap}
-      className={classNames('rt-ToolbarSection', 'rt-ToolbarCenter', className)}
-      {...props}
-    >
-      {children}
-    </Flex>
-  ),
-);
-ToolbarCenter.displayName = 'Toolbar.Center';
+/** The title's text step: one step above the label of a button at the same size. */
+const TITLE_SIZE = { '1': '2', '2': '3', '3': '4', '4': '5' } as const satisfies Record<ToolbarSize, TextProps['size']>;
 
-// ============================================================================
-// Toolbar Right (for horizontal) / End (alias)
-// ============================================================================
+interface ToolbarTitleProps {
+  /** The title text. With none, the title renders nothing. */
+  children?: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+  /** The id of the title, so that the toolbar's `aria-labelledby` can point at it. */
+  id?: string;
+}
 
-const ToolbarRight = React.forwardRef<ToolbarSectionElement, ToolbarSectionProps>(
-  ({ gap = '2', align = 'center', justify = 'end', className, children, ...props }, forwardedRef) => (
-    <Flex
-      ref={forwardedRef}
-      align={align}
-      justify={justify}
-      gap={gap}
-      className={classNames('rt-ToolbarSection', 'rt-ToolbarRight', className)}
-      {...props}
-    >
-      {children}
-    </Flex>
-  ),
-);
-ToolbarRight.displayName = 'Toolbar.Right';
-
-// ============================================================================
-// Toolbar Title
-// ============================================================================
-
-type ToolbarTitleElement = React.ElementRef<typeof Heading>;
-type ToolbarTitleProps = React.ComponentPropsWithoutRef<typeof Heading>;
-
-const ToolbarTitle = React.forwardRef<ToolbarTitleElement, ToolbarTitleProps>(
-  ({ className, size = '2', weight = 'medium', truncate = true, children, ...props }, forwardedRef) => (
-    <Heading
-      ref={forwardedRef}
-      size={size}
-      weight={weight}
-      truncate={truncate}
-      className={classNames('rt-ToolbarTitle', className)}
-      {...props}
-    >
-      {children}
-    </Heading>
-  ),
+/**
+ * What the row is about, at its leading edge. One line: it truncates rather than wrapping.
+ * Its text step follows the toolbar's `size`, and it takes more air from the controls beside it
+ * than they take from each other.
+ */
+const ToolbarTitle = React.forwardRef<HTMLSpanElement, ToolbarTitleProps>(
+  ({ className, children, style, id }, forwardedRef) => {
+    const { size } = useToolbarContext('ToolbarTitle');
+    if (children === undefined || children === null || children === false) return null;
+    return (
+      <Text
+        ref={forwardedRef}
+        as="span"
+        size={TITLE_SIZE[size]}
+        weight="medium"
+        truncate
+        id={id}
+        style={style}
+        className={classNames('rt-ToolbarTitle', className)}
+      >
+        {children}
+      </Text>
+    );
+  },
 );
 ToolbarTitle.displayName = 'Toolbar.Title';
 
@@ -213,30 +274,35 @@ ToolbarTitle.displayName = 'Toolbar.Title';
 // Exports
 // ============================================================================
 
-const Toolbar = ToolbarRoot as typeof ToolbarRoot & {
-  Left: typeof ToolbarLeft;
-  Center: typeof ToolbarCenter;
-  Right: typeof ToolbarRight;
-  Title: typeof ToolbarTitle;
-};
-
-Toolbar.Left = ToolbarLeft;
-Toolbar.Center = ToolbarCenter;
-Toolbar.Right = ToolbarRight;
-Toolbar.Title = ToolbarTitle;
+const Toolbar = Object.assign(ToolbarRoot, {
+  Root: ToolbarRoot,
+  Group: ToolbarGroup,
+  Button: ToolbarButton,
+  Separator: ToolbarSeparator,
+  Title: ToolbarTitle,
+});
 
 export {
   Toolbar,
+  ToolbarGroup,
+  ToolbarButton,
+  ToolbarSeparator,
+  ToolbarTitle,
   ToolbarRoot as Root,
-  ToolbarLeft as Left,
-  ToolbarCenter as Center,
-  ToolbarRight as Right,
+  ToolbarGroup as Group,
+  ToolbarButton as Button,
+  ToolbarSeparator as Separator,
   ToolbarTitle as Title,
 };
 export type {
-  ToolbarRootProps as RootProps,
-  ToolbarSectionProps as LeftProps,
-  ToolbarSectionProps as CenterProps,
-  ToolbarSectionProps as RightProps,
+  ToolbarProps,
+  ToolbarGroupProps,
+  ToolbarButtonProps,
+  ToolbarSeparatorProps,
+  ToolbarTitleProps,
+  ToolbarProps as RootProps,
+  ToolbarGroupProps as GroupProps,
+  ToolbarButtonProps as ButtonProps,
+  ToolbarSeparatorProps as SeparatorProps,
   ToolbarTitleProps as TitleProps,
 };
