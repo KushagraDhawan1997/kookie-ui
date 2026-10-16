@@ -1,5 +1,9 @@
 # What's new in Womp's Design System
 
+## 0.13.1 (October 17)
+
+1. **One height for every control.** A control of a given size is now the same height everywhere. Sidebar rows and Tabs are a step shorter, and Select items at size 3 are a step taller.
+
 ## 0.12.0 (October 16)
 
 1. **Toolbar becomes AppBar.** The old Toolbar is now AppBar. Toolbar is a new row of controls, with its own page.
