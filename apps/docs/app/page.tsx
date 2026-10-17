@@ -1,8 +1,6 @@
 'use client';
 
 import { Link as KUILink, Callout, Flex, Grid, Heading, Text } from '@kushagradhawan/kookie-ui';
-import { HugeiconsIcon } from '@hugeicons/react';
-import { Wrench01Icon } from '@hugeicons/core-free-icons';
 import Link from 'next/link';
 import { SiteDocsPage } from '@/components/site-docs-page';
 import { SECTIONS, chaptersIn } from '@/lib/chapters';
@@ -24,9 +22,6 @@ export default function Home() {
     <SiteDocsPage meta={{ title: "Womp's Design System", description: DESCRIPTION }} showCopyButton={false}>
       <Flex direction="column" gap="9">
         <Callout.Root color="amber" variant="soft" size="3">
-          <Callout.Icon>
-            <HugeiconsIcon icon={Wrench01Icon} strokeWidth={1.75} />
-          </Callout.Icon>
           <Callout.Text>
             <Text weight="medium">Work in progress.</Text> Many design decisions in v1 are still open. Where v1 does not yet follow its own principles, these pages say so.
           </Callout.Text>
