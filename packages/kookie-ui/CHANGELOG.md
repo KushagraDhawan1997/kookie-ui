@@ -1,3 +1,9 @@
+## [0.13.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.13.1...v0.13.2) (2026-10-17)
+
+### Bug Fixes
+
+* **sidebar:** in thin mode, the icon tile behind each item and the search trigger takes `--radius-full`, so it is a pill when the theme's `radius` is `full`, as buttons are. Size 3 uses `--radius-3` instead of `--radius-2`.
+
 ## [0.13.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.12.0...v0.13.0) (2026-10-16)
 
 Light and dark mode are decided before the first paint and kept on `<html>`, as in Kookie UI v2.
