@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Button, IconButton, ScrollArea, Text } from '@kushagradhawan/kookie-ui';
+import { Button, IconButton, Link, ScrollArea, Text } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Copy01Icon, Tick01Icon } from '@hugeicons/core-free-icons';
 import type { BundledLanguage, BundledTheme, ShikiTransformer } from 'shiki';
@@ -334,9 +334,11 @@ export function CodeBlock({
 
         {collapsible && overflows && (
           <div className="code-block-footer">
-            <Button size="2" variant="ghost" color="gray" onClick={() => setExpanded((value) => !value)}>
-              {expanded ? 'Show less' : `Show all ${lineCount} lines`}
-            </Button>
+            <Link asChild size="2" color="gray">
+              <button type="button" aria-expanded={expanded} onClick={() => setExpanded((value) => !value)}>
+                {expanded ? 'Show less' : `Show all ${lineCount} lines`}
+              </button>
+            </Link>
           </div>
         )}
       </div>
