@@ -27,8 +27,8 @@ export interface DocsPageProps {
   tableOfContents?: React.ReactNode;
   /** Maximum width of the reading column. @default "44rem" */
   maxWidth?: string;
-  /** Copyright line under the content. */
-  footer?: { name: string; url?: string; githubUrl?: string; links?: { label: string; href: string }[] };
+  /** Copyright line under the content, or your own footer element to render there instead. */
+  footer?: { name: string; url?: string; githubUrl?: string; links?: { label: string; href: string }[] } | React.ReactElement;
 }
 
 /**
@@ -63,7 +63,9 @@ export function DocsPage({
             {children}
           </Box>
 
-          {footer && (
+          {React.isValidElement(footer) ? (
+            <Box mt="9">{footer}</Box>
+          ) : footer && (
             <Text as="p" size="2" emphasis="medium" mt="9">
               © {new Date().getFullYear()}{' '}
               {footer.url ? (
