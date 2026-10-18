@@ -496,7 +496,9 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
   useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
   const material = props.material ?? props.panelBackground ?? themeContext.material ?? themeContext.panelBackground;
-  const size = props.size ?? ctx.size ?? comboboxContentPropDefs.size.default;
+  // Menus stop at size 3; a size 4 field opens a size 3 list.
+  const rootSize = ctx.size === '4' ? '3' : ctx.size;
+  const size = props.size ?? rootSize ?? comboboxContentPropDefs.size.default;
   if (props.variant !== undefined) {
     warnDeprecated(
       'The menu `variant` prop is deprecated and will be removed in 0.15.0. Menus highlight with a soft fill, and a solid one when the person asks for more contrast.',

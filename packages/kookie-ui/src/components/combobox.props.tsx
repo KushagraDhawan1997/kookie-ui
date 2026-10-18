@@ -6,7 +6,7 @@ import { heightPropDefs } from '../props/height.props.js';
 
 import type { PropDef } from '../props/prop-def.js';
 
-const sizes = ['1', '2', '3'] as const;
+const sizes = ['1', '2', '3', '4'] as const;
 
 /**
  * Shared responsive sizing inherited by Combobox.Root.
@@ -50,6 +50,8 @@ const comboboxTriggerPropDefs = {
   placeholder: PropDef<string>;
 };
 
+// The list is a menu, and menus stop at size 3.
+const contentSizes = ['1', '2', '3'] as const;
 const contentVariants = ['solid', 'soft'] as const;
 const materials = ['solid', 'translucent'] as const;
 
@@ -57,7 +59,7 @@ const materials = ['solid', 'translucent'] as const;
  * Styling props for the dropdown surface rendered by Combobox.Content.
  */
 const comboboxContentPropDefs = {
-  size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
+  size: { type: 'enum', className: 'rt-r-size', values: contentSizes, default: '2', responsive: true },
   variant: { type: 'enum', className: 'rt-variant', values: contentVariants, default: 'soft' },
   ...colorPropDef,
   material: { type: 'enum', values: materials, default: undefined },
@@ -68,7 +70,7 @@ const comboboxContentPropDefs = {
   maxWidth: { ...widthPropDefs.maxWidth, default: '480px' },
   ...heightPropDefs,
 } satisfies {
-  size: PropDef<(typeof sizes)[number]>;
+  size: PropDef<(typeof contentSizes)[number]>;
   variant: PropDef<(typeof contentVariants)[number]>;
   material: PropDef<(typeof materials)[number] | undefined>;
   panelBackground: PropDef<(typeof materials)[number] | undefined>;

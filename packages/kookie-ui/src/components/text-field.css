@@ -314,6 +314,39 @@
         }
       }
     }
+
+    /* Size 4 sits on the same ladder step as Button size 4. */
+    &:where(.rt-r-size-4) {
+      --text-field-height: var(--control-height-4);
+      --text-field-padding: calc(var(--space-4) - var(--text-field-border-width));
+      --text-field-border-radius: var(--radius-pill-4);
+      --text-field-native-icon-size: var(--space-5);
+      font-size: var(--font-size-4);
+      letter-spacing: var(--letter-spacing-4);
+
+      & :where(.rt-TextFieldInput) {
+        padding-bottom: 0px;
+
+        /* Safari credentials autofill icon */
+        &::-webkit-textfield-decoration-container {
+          padding-right: 5px;
+          margin-right: 0px;
+        }
+      }
+
+      & :where(.rt-TextFieldSlot) {
+        gap: var(--space-3);
+        padding-left: var(--space-4);
+        padding-right: var(--space-4);
+
+        /* stylelint-disable-next-line selector-max-type */
+        & :where(svg) {
+          width: var(--content-icon-size-4);
+          height: var(--content-icon-size-4);
+          flex-shrink: 0;
+        }
+      }
+    }
   }
 }
 

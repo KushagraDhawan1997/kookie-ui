@@ -185,6 +185,19 @@
         letter-spacing: var(--letter-spacing-3);
       }
     }
+    &:where(.rt-r-size-4) {
+      min-height: var(--space-10);
+      border-radius: var(--radius-4);
+
+      & :where(.rt-TextAreaInput) {
+        /* Clip text to border */
+        --text-area-padding-y: calc(var(--space-3) - var(--text-area-border-width));
+        --text-area-padding-x: calc(var(--space-4) - var(--text-area-border-width));
+        font-size: var(--font-size-4);
+        line-height: var(--line-height-4);
+        letter-spacing: var(--letter-spacing-4);
+      }
+    }
   }
 }
 

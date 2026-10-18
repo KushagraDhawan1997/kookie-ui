@@ -93,6 +93,7 @@
   --select-indicator-icon-size-1: calc(8px * var(--scaling));
   --select-indicator-icon-size-2: calc(10px * var(--scaling));
   --select-indicator-icon-size-3: calc(10px * var(--scaling));
+  --select-indicator-icon-size-4: calc(12px * var(--scaling));
 
   /* Select component specific constants */
   --select-item-indicator-width-factor: 1.2;

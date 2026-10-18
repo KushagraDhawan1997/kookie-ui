@@ -6,7 +6,7 @@ import { flexPropDefs } from './flex.props.js';
 
 import type { PropDef } from '../props/prop-def.js';
 
-const sizes = ['1', '2', '3'] as const;
+const sizes = ['1', '2', '3', '4'] as const;
 const variants = ['raised', 'surface', 'soft', 'ghost', 'outline', 'classic'] as const;
 const panelBackgrounds = ['solid', 'translucent'] as const;
 const materials = ['solid', 'translucent'] as const;

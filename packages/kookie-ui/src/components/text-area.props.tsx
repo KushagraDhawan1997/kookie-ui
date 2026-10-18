@@ -4,7 +4,7 @@ import { radiusPropDef } from '../props/radius.prop.js';
 
 import type { PropDef } from '../props/prop-def.js';
 
-const sizes = ['1', '2', '3'] as const;
+const sizes = ['1', '2', '3', '4'] as const;
 const variants = ['raised', 'surface', 'soft', 'outline', 'ghost', 'classic'] as const;
 const resizeValues = ['none', 'vertical', 'horizontal', 'both'] as const;
 const panelBackgrounds = ['solid', 'translucent'] as const;

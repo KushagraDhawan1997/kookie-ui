@@ -2,7 +2,7 @@ import { colorPropDef } from '../../props/color.prop.js';
 
 import type { PropDef } from '../../props/prop-def.js';
 
-const sizes = ['1', '2'] as const;
+const sizes = ['1', '2', '3', '4'] as const;
 const wrapValues = ['nowrap', 'wrap', 'wrap-reverse'] as const;
 const justifyValues = ['start', 'center', 'end'] as const;
 const panelBackgrounds = ['solid', 'translucent'] as const;

@@ -51,6 +51,10 @@
   padding: var(--space-4) var(--space-5);
 }
 
+.rt-NavbarRoot[data-size='4'] .rt-NavbarContainer {
+  padding: var(--space-5) var(--space-6);
+}
+
 /* Slot overflow handling */
 .rt-NavbarLogo,
 .rt-NavbarActions {
