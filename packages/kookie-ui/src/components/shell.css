@@ -289,7 +289,10 @@
   display: none;
 }
 
-.rt-ShellPane[data-state='auto'][data-auto-initial='open'],
+.rt-ShellPane[data-state='auto'][data-auto-initial='open'] {
+  display: flex;
+}
+
 .rt-ShellSidebar[data-state='auto'][data-auto-initial='open'] {
   inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
 }
@@ -338,11 +341,13 @@
     display: none;
   }
 
-  .rt-ShellPane[data-state='auto'][data-auto-xs='open'],
+  .rt-ShellPane[data-state='auto'][data-auto-xs='open'] {
+    display: flex;
+  }
+
   .rt-ShellSidebar[data-state='auto'][data-auto-xs='open'] {
     inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
   }
-
 }
 
 @media (min-width: 768px) {
@@ -389,11 +394,13 @@
     display: none;
   }
 
-  .rt-ShellPane[data-state='auto'][data-auto-sm='open'],
+  .rt-ShellPane[data-state='auto'][data-auto-sm='open'] {
+    display: flex;
+  }
+
   .rt-ShellSidebar[data-state='auto'][data-auto-sm='open'] {
     inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
   }
-
 }
 
 @media (min-width: 1024px) {
@@ -440,11 +447,13 @@
     display: none;
   }
 
-  .rt-ShellPane[data-state='auto'][data-auto-md='open'],
+  .rt-ShellPane[data-state='auto'][data-auto-md='open'] {
+    display: flex;
+  }
+
   .rt-ShellSidebar[data-state='auto'][data-auto-md='open'] {
     inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
   }
-
 }
 
 @media (min-width: 1280px) {
@@ -491,11 +500,13 @@
     display: none;
   }
 
-  .rt-ShellPane[data-state='auto'][data-auto-lg='open'],
+  .rt-ShellPane[data-state='auto'][data-auto-lg='open'] {
+    display: flex;
+  }
+
   .rt-ShellSidebar[data-state='auto'][data-auto-lg='open'] {
     inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
   }
-
 }
 
 @media (min-width: 1640px) {
@@ -542,11 +553,13 @@
     display: none;
   }
 
-  .rt-ShellPane[data-state='auto'][data-auto-xl='open'],
+  .rt-ShellPane[data-state='auto'][data-auto-xl='open'] {
+    display: flex;
+  }
+
   .rt-ShellSidebar[data-state='auto'][data-auto-xl='open'] {
     inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
   }
-
 }
 
 /* ── Peek ──────────────────────────────────────────────────────────────────── */
