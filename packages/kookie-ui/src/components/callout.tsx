@@ -1,5 +1,6 @@
 'use client';
 
+import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import classNames from 'classnames';
 import { Slot } from 'radix-ui';
@@ -37,8 +38,12 @@ interface CalloutRootProps
   /** Semantic role for the callout */
   role?: 'alert' | 'status' | 'note';
 }
+/** @deprecated Removed in 0.15.0. Use `Notice` for a condition that is true now, or `Text` for an aside. */
 const CalloutRoot = React.forwardRef<CalloutRootElement, CalloutRootProps>(
   (props, forwardedRef) => {
+    warnDeprecated(
+      'Callout is deprecated and will be removed in 0.15.0. Use Notice for a condition that is true now, or Text for an aside.',
+    );
     const {
       size = calloutRootPropDefs.size.default,
       live = 'polite',

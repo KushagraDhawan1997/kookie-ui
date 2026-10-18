@@ -1,3 +1,4 @@
+import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import classNames from 'classnames';
 
@@ -43,8 +44,12 @@ interface AppBarRootProps extends Omit<CardProps, 'asChild'> {
  * This component was called `Toolbar` until 0.11.0. It is not a `role="toolbar"`: for a row of
  * controls with one tab stop and arrow-key navigation, use `Toolbar`.
  */
+/** @deprecated Removed in 0.15.0. Put a `Toolbar` in `Shell.Header`, or at the top edge of the pane that owns it. */
 const AppBarRoot = React.forwardRef<AppBarRootElement, AppBarRootProps>(
   (props, forwardedRef) => {
+    warnDeprecated(
+      'AppBar is deprecated and will be removed in 0.15.0. Put a Toolbar in Shell.Header, or at the top edge of the pane that owns it.',
+    );
     const {
       anchor = 'top',
       floating = false,
