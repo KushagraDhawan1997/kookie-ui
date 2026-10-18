@@ -1,4 +1,7 @@
 @breakpoints {
+  .rt-r-gr {
+    /* Keep this selector here to maintain the source order */
+  }
   .rt-r-gr-1 {
     grid-row: 1;
   }
