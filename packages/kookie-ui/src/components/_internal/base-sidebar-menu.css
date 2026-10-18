@@ -84,9 +84,17 @@
   }
 
   /* Ensure shortcuts inherit color in disabled/highlighted/hover/active states */
-  &:where([data-disabled], [data-highlighted], :hover, [data-active]) {
+  &:where([data-disabled], [data-highlighted], [data-active]) {
     & :where(.rt-SidebarMenuShortcut) {
       color: inherit;
+    }
+  }
+
+  @media (hover: hover) {
+    &:where(:hover) {
+      & :where(.rt-SidebarMenuShortcut) {
+        color: inherit;
+      }
     }
   }
 

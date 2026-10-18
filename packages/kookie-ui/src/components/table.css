@@ -89,26 +89,6 @@
         line-height: var(--line-height-3);
       }
     }
-    &:where(.rt-r-size-4) {
-      --table-border-radius: min(var(--radius-surface-8), calc(var(--radius-surface-4) + var(--space-4)));
-      --table-cell-padding: var(--space-5);
-      --table-cell-min-height: var(--space-9);
-
-      & :where(.rt-TableRootTable) {
-        font-size: var(--font-size-3);
-        line-height: var(--line-height-3);
-      }
-    }
-    &:where(.rt-r-size-5) {
-      --table-border-radius: min(var(--radius-surface-9), calc(var(--radius-surface-5) + var(--space-5)));
-      --table-cell-padding: var(--space-6);
-      --table-cell-min-height: var(--space-10);
-
-      & :where(.rt-TableRootTable) {
-        font-size: var(--font-size-4);
-        line-height: var(--line-height-4);
-      }
-    }
   }
 }
 

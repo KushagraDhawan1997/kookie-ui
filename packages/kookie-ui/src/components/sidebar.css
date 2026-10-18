@@ -230,19 +230,19 @@
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-r-size-1 .rt-SidebarMenuIconWrapper {
   padding: var(--space-2) var(--space-2);
-  border-radius: max(var(--radius-1), var(--radius-full));
+  border-radius: var(--radius-pill-1);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-r-size-2 .rt-SidebarMenuIconWrapper {
   padding: var(--space-2);
-  border-radius: max(var(--radius-2), var(--radius-full));
+  border-radius: var(--radius-pill-2);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-r-size-3 .rt-SidebarMenuIconWrapper {
   padding: var(--space-3);
-  border-radius: max(var(--radius-3), var(--radius-full));
+  border-radius: var(--radius-pill-3);
 }
 
 /* Label styling in thin mode - outside the background area */
@@ -266,19 +266,36 @@
 }
 
 /* Highlighted label gets slightly darker color */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuLabel) {
+:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton:where([data-highlighted]):not([data-disabled]) .rt-SidebarMenuLabel) {
   color: var(--accent-ink);
 }
 
+@media (hover: hover) {
+  :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton:where(:hover):not([data-disabled]) .rt-SidebarMenuLabel) {
+    color: var(--accent-ink);
+  }
+}
+
 /* Remove background from button itself in thin mode - styles are on icon wrapper */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled])),
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton[data-active]) {
+:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton:where([data-highlighted]):not([data-disabled])), :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton[data-active]) {
   background-color: transparent !important;
 }
 
+@media (hover: hover) {
+  :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarMenuButton:where(:hover):not([data-disabled])) {
+    background-color: transparent !important;
+  }
+}
+
 /* Soft variant icon wrapper states in thin mode */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-soft .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
+:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-soft .rt-SidebarMenuButton:where([data-highlighted]):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
   background-color: var(--accent-4);
+}
+
+@media (hover: hover) {
+  :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-soft .rt-SidebarMenuButton:where(:hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
+    background-color: var(--accent-4);
+  }
 }
 
 :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-soft .rt-SidebarMenuButton[data-active] .rt-SidebarMenuIconWrapper) {
@@ -286,8 +303,14 @@
 }
 
 /* Translucent panel support for soft variant */
-:where([data-panel-background='translucent']) :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-soft .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
+:where([data-panel-background='translucent']) :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-soft .rt-SidebarMenuButton:where([data-highlighted]):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
   background-color: var(--accent-a4);
+}
+
+@media (hover: hover) {
+  :where([data-panel-background='translucent']) :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-soft .rt-SidebarMenuButton:where(:hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
+    background-color: var(--accent-a4);
+  }
 }
 
 :where([data-panel-background='translucent']) :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-soft .rt-SidebarMenuButton[data-active] .rt-SidebarMenuIconWrapper) {
@@ -295,9 +318,16 @@
 }
 
 /* Solid variant icon wrapper states in thin mode */
-:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-solid .rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
+:where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-solid .rt-SidebarMenuButton:where([data-highlighted]):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
   background-color: var(--accent-solid);
   color: var(--accent-solid-contrast);
+}
+
+@media (hover: hover) {
+  :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-solid .rt-SidebarMenuButton:where(:hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
+    background-color: var(--accent-solid);
+    color: var(--accent-solid-contrast);
+  }
 }
 
 :where(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent.rt-menu-variant-solid .rt-SidebarMenuButton[data-active] .rt-SidebarMenuIconWrapper) {
@@ -786,7 +816,7 @@
   }
 
   /* Hover/highlighted state for solid variant - EXACT match to base menu */
-  & :where(.rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled])) {
+  & :where(.rt-SidebarMenuButton:where([data-highlighted]):not([data-disabled])) {
     background-color: var(--accent-solid);
     color: var(--accent-solid-contrast);
 
@@ -808,6 +838,33 @@
     & :where(.rt-Badge) {
       color: var(--accent-solid-badge-contrast) !important;
       background-color: var(--accent-solid-badge) !important;
+    }
+  }
+
+  @media (hover: hover) {
+    & :where(.rt-SidebarMenuButton:where(:hover):not([data-disabled])) {
+      background-color: var(--accent-solid);
+      color: var(--accent-solid-contrast);
+  
+      & :where(.rt-BaseMenuSubTriggerIcon) {
+        color: var(--accent-solid-contrast);
+      }
+  
+      /* Force all text elements to inherit hover color, including those with color="gray" */
+      & :where(.rt-Text) {
+        color: inherit !important;
+      }
+  
+      /* Also target any element with data-accent-color="gray" */
+      & :where([data-accent-color='gray']:not(.rt-Badge)) {
+        color: inherit !important;
+      }
+  
+      /* FIX: Ensure badges maintain their own styling and don't inherit hover colors */
+      & :where(.rt-Badge) {
+        color: var(--accent-solid-badge-contrast) !important;
+        background-color: var(--accent-solid-badge) !important;
+      }
     }
   }
 
@@ -888,7 +945,7 @@
   }
 
   /* Hover/highlighted state for soft variant - EXACT match to base menu */
-  & :where(.rt-SidebarMenuButton:where([data-highlighted], :hover):not([data-disabled])) {
+  & :where(.rt-SidebarMenuButton:where([data-highlighted]):not([data-disabled])) {
     /* Base state: solid accent for solid panels */
     background-color: var(--accent-4);
 
@@ -911,6 +968,34 @@
     /* In soft variant, lift muted text a step while keeping the hierarchy */
     & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
       color: var(--gray-11) !important;
+    }
+  }
+
+  @media (hover: hover) {
+    & :where(.rt-SidebarMenuButton:where(:hover):not([data-disabled])) {
+      /* Base state: solid accent for solid panels */
+      background-color: var(--accent-4);
+  
+      /* Theme-level translucent override */
+      :where([data-panel-background='translucent']) & {
+        background-color: var(--accent-a4);
+      }
+  
+      /* Component-level overrides (higher specificity) */
+      &:where([data-panel-background='solid']) {
+        background-color: var(--accent-4);
+        backdrop-filter: none;
+        --backdrop-filter-components: none;
+      }
+  
+      &:where([data-panel-background='translucent']) {
+        background-color: var(--accent-a4);
+      }
+  
+      /* In soft variant, lift muted text a step while keeping the hierarchy */
+      & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
+        color: var(--gray-11) !important;
+      }
     }
   }
 
@@ -1038,42 +1123,54 @@
 }
 
 /* Remove hover background from thin trigger button itself (styles live on icon wrapper) */
-:where(.rt-SidebarContainer[data-presentation='thin']) :where(.rt-SidebarSearchTrigger:where(:hover, [data-state='open'])) {
+:where(.rt-SidebarContainer[data-presentation='thin']) :where(.rt-SidebarSearchTrigger:where([data-state='open'])) {
   background-color: transparent !important;
+}
+
+@media (hover: hover) {
+  :where(.rt-SidebarContainer[data-presentation='thin']) :where(.rt-SidebarSearchTrigger:where(:hover)) {
+    background-color: transparent !important;
+  }
 }
 
 /* Search trigger icon wrapper - size-specific padding (mirrors Content-scoped rules) */
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-SidebarContainer[data-presentation='thin'].rt-r-size-1 .rt-SidebarSearchTrigger .rt-SidebarMenuIconWrapper {
   padding: var(--space-2) var(--space-2);
-  border-radius: max(var(--radius-1), var(--radius-full));
+  border-radius: var(--radius-pill-1);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-SidebarContainer[data-presentation='thin'].rt-r-size-2 .rt-SidebarSearchTrigger .rt-SidebarMenuIconWrapper {
   padding: var(--space-2);
-  border-radius: max(var(--radius-2), var(--radius-full));
+  border-radius: var(--radius-pill-2);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-SidebarContainer[data-presentation='thin'].rt-r-size-3 .rt-SidebarSearchTrigger .rt-SidebarMenuIconWrapper {
   padding: var(--space-3);
-  border-radius: max(var(--radius-3), var(--radius-full));
+  border-radius: var(--radius-pill-3);
 }
 
 /* Search trigger icon wrapper hover (soft variant) */
-:where(.rt-SidebarContainer[data-presentation='thin'].rt-menu-variant-soft) :where(.rt-SidebarSearchTrigger:where(:hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
-  background-color: var(--accent-4);
+@media (hover: hover) {
+  :where(.rt-SidebarContainer[data-presentation='thin'].rt-menu-variant-soft) :where(.rt-SidebarSearchTrigger:where(:hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
+    background-color: var(--accent-4);
+  }
 }
 
-:where([data-panel-background='translucent']) :where(.rt-SidebarContainer[data-presentation='thin'].rt-menu-variant-soft) :where(.rt-SidebarSearchTrigger:where(:hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
-  background-color: var(--accent-a4);
+@media (hover: hover) {
+  :where([data-panel-background='translucent']) :where(.rt-SidebarContainer[data-presentation='thin'].rt-menu-variant-soft) :where(.rt-SidebarSearchTrigger:where(:hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
+    background-color: var(--accent-a4);
+  }
 }
 
 /* Search trigger icon wrapper hover (solid variant) */
-:where(.rt-SidebarContainer[data-presentation='thin'].rt-menu-variant-solid) :where(.rt-SidebarSearchTrigger:where(:hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
-  background-color: var(--accent-solid);
-  color: var(--accent-solid-contrast);
+@media (hover: hover) {
+  :where(.rt-SidebarContainer[data-presentation='thin'].rt-menu-variant-solid) :where(.rt-SidebarSearchTrigger:where(:hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
+    background-color: var(--accent-solid);
+    color: var(--accent-solid-contrast);
+  }
 }
 
 /* Popover inner wrapper - provide base menu tokens for portal-rendered items */
@@ -1139,9 +1236,11 @@
 }
 
 /* Popover menu button hover (soft variant) */
-/* stylelint-disable-next-line selector-max-specificity */
-.rt-SidebarSearchPopover .rt-SidebarMenuButton:where(:hover):not([data-disabled]) {
-  background-color: var(--accent-a4);
+@media (hover: hover) {
+  /* stylelint-disable-next-line selector-max-specificity */
+  .rt-SidebarSearchPopover .rt-SidebarMenuButton:where(:hover):not([data-disabled]) {
+    background-color: var(--accent-a4);
+  }
 }
 
 /* Popover menu button focus (arrow-key navigation) */
@@ -1213,9 +1312,11 @@
   transition: color 100ms;
 }
 
-/* stylelint-disable-next-line selector-max-specificity */
-.rt-SidebarSearchClear:hover {
-  color: var(--gray-a11);
+@media (hover: hover) {
+  /* stylelint-disable-next-line selector-max-specificity */
+  .rt-SidebarSearchClear:hover {
+    color: var(--gray-a11);
+  }
 }
 
 /* Size-specific overrides (need real selectors to beat base .rt-SidebarSearchIcon / .rt-SidebarSearchInput) */

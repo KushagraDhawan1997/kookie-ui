@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { act, render, screen } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
+import { Direction } from 'radix-ui';
 
 import { Theme, useThemeContext } from '../../../src/components/theme';
 
@@ -260,5 +261,31 @@ describe('useThemeContext outside a provider', () => {
     expect(screen.getByTestId('ok')).toBeTruthy();
     expect(value?.accentColor).toBeTruthy();
     expect(() => value?.onAccentColorChange('jade')).not.toThrow();
+  });
+});
+
+describe('Theme direction', () => {
+  function DirProbe() {
+    return <span data-testid="dir">{Direction.useDirection()}</span>;
+  }
+
+  test('defaults to left-to-right', () => {
+    render(
+      <Theme>
+        <DirProbe />
+      </Theme>,
+    );
+    expect(screen.getByTestId('dir').textContent).toBe('ltr');
+  });
+
+  test('inherits a direction set above it', () => {
+    render(
+      <Direction.Provider dir="rtl">
+        <Theme>
+          <DirProbe />
+        </Theme>
+      </Direction.Provider>,
+    );
+    expect(screen.getByTestId('dir').textContent).toBe('rtl');
   });
 });

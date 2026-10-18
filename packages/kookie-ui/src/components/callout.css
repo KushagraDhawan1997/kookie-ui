@@ -106,22 +106,6 @@
       --callout-icon-height: var(--line-height-3);
       --callout-icon-size: var(--content-icon-size-3);
     }
-    &:where(.rt-r-size-4) {
-      row-gap: var(--space-3);
-      column-gap: var(--space-5);
-      padding: var(--space-6);
-      --callout-border-radius: var(--radius-surface-4);
-      --callout-icon-height: var(--line-height-4);
-      --callout-icon-size: var(--content-icon-size-4);
-    }
-    &:where(.rt-r-size-5) {
-      row-gap: var(--space-4);
-      column-gap: var(--space-6);
-      padding: var(--space-7);
-      --callout-border-radius: var(--radius-surface-5);
-      --callout-icon-height: var(--line-height-5);
-      --callout-icon-size: var(--content-icon-size-5);
-    }
   }
 }
 

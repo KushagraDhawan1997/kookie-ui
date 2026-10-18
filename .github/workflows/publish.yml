@@ -62,9 +62,38 @@ jobs:
           echo "Resolved version: $VERSION"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Set package version from tag
+      # One release record: the tag, package.json and npm agree, and versions only go up.
+      - name: Check the release is tagged, recorded and newer
         working-directory: packages/kookie-ui
-        run: npm version "${{ steps.version.outputs.version }}" --no-git-tag-version --allow-same-version
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if ! git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null; then
+            echo "No tag v$VERSION. Tag the release commit first; every publish has a tag."
+            exit 1
+          fi
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          if [ "$PKG_VERSION" != "$VERSION" ]; then
+            echo "package.json says $PKG_VERSION but the release is $VERSION. Bump package.json in the release commit."
+            exit 1
+          fi
+          if ! grep -q "^## \[$VERSION\]" CHANGELOG.md; then
+            echo "CHANGELOG.md has no entry for $VERSION."
+            exit 1
+          fi
+          LATEST=$(npm view "$PACKAGE_NAME" dist-tags.latest 2>/dev/null || echo 0.0.0)
+          node -e '
+            const [a, b] = process.argv.slice(1).map((v) => v.split("-")[0].split(".").map(Number));
+            for (let i = 0; i < 3; i++) { if (a[i] > b[i]) process.exit(0); if (a[i] < b[i]) break; }
+            if (process.argv[1] === process.argv[2]) process.exit(0);
+            console.error("Version " + process.argv[1] + " is not above npm latest " + process.argv[2] + ".");
+            process.exit(1);
+          ' "$VERSION" "$LATEST"
+
+      - name: Install Chromium for browser tests
+        run: pnpm --filter @kushagradhawan/kookie-ui exec playwright install --with-deps chromium
+
+      - name: Test
+        run: pnpm --filter @kushagradhawan/kookie-ui test
 
       - name: Build package
         run: pnpm --filter @kushagradhawan/kookie-ui build

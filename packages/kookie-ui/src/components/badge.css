@@ -88,7 +88,7 @@
       letter-spacing: var(--letter-spacing-1);
       padding: var(--space-1) var(--space-2);
       gap: calc(var(--space-1) * 1.5);
-      border-radius: max(var(--radius-1), var(--radius-full));
+      border-radius: var(--radius-pill-1);
       
       &:where(.rt-variant-ghost) {
         padding: calc(var(--space-1) * 0.5) calc(var(--space-1) * 1.25);
@@ -101,7 +101,7 @@
       letter-spacing: var(--letter-spacing-2);
       padding: var(--space-1) calc(var(--space-2) * 1.25);
       gap: var(--space-2);
-      border-radius: max(var(--radius-2), var(--radius-full));
+      border-radius: var(--radius-pill-2);
       
       &:where(.rt-variant-ghost) {
         padding: calc(var(--space-1) * 0.75) var(--space-2);
@@ -114,7 +114,7 @@
       letter-spacing: var(--letter-spacing-3);
       padding: calc(var(--space-1) * 1.25) calc(var(--space-2) * 1.5);
       gap: calc(var(--space-2) * 1.25);
-      border-radius: max(var(--radius-3), var(--radius-full));
+      border-radius: var(--radius-pill-3);
       
       &:where(.rt-variant-ghost) {
         padding: var(--space-1) calc(var(--space-2) * 1.25);

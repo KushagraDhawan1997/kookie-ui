@@ -22,8 +22,10 @@
   border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--gray-a7);
+@media (hover: hover) {
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--gray-a7);
+  }
 }
 
 ::-webkit-scrollbar-corner {

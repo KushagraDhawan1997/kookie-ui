@@ -191,7 +191,7 @@
       font-size: var(--font-size-1);
       line-height: var(--line-height-1);
       letter-spacing: var(--letter-spacing-1);
-      border-radius: max(var(--radius-1), var(--radius-full));
+      border-radius: var(--radius-pill-1);
 
       &:where(:not(.rt-variant-ghost)) {
         padding-left: var(--space-2);
@@ -212,7 +212,7 @@
       font-size: var(--font-size-2);
       line-height: var(--line-height-2);
       letter-spacing: var(--letter-spacing-2);
-      border-radius: max(var(--radius-2), var(--radius-full));
+      border-radius: var(--radius-pill-2);
 
       &:where(:not(.rt-variant-ghost)) {
         padding-left: var(--space-3);
@@ -233,7 +233,7 @@
       font-size: var(--font-size-3);
       line-height: var(--line-height-3);
       letter-spacing: var(--letter-spacing-3);
-      border-radius: max(var(--radius-3), var(--radius-full));
+      border-radius: var(--radius-pill-3);
 
       &:where(:not(.rt-variant-ghost)) {
         padding-left: var(--space-4);

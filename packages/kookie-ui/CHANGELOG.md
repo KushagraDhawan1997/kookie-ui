@@ -1,3 +1,20 @@
+## [0.13.3](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.13.2...v0.13.3) (2026-10-18)
+
+Fixes only. Nothing to change in your code. The one visible difference: disabled tabs and accordion triggers now look disabled.
+
+### Bug Fixes
+
+* **touch:** hover effects apply only where the pointer can hover. On touch screens, Accordion, Sidebar, the Button and Card press scale, the Shell resizer and Slider ticks no longer stay hovered after a tap.
+* **disabled:** a disabled Tabs trigger or Accordion trigger reads like a disabled menu item: `--gray-a8` text, a default cursor and no hover fill. A disabled interactive Card stops reacting to the pointer.
+* **theme:** the root `Theme` inherits text direction from a Radix `DirectionProvider` above it instead of forcing left-to-right. Left-to-right stays the default.
+* **peer dependencies:** React `^18.0 || ^19.0`. The package already needed React 18 (`useId`, `useSyncExternalStore`); the range now says so.
+
+### Internal
+
+* **tokens:** `--radius-pill-1`…`--radius-pill-12`, the radius step or a pill when the theme radius is `full`, replace 54 copies of `max(var(--radius-N), var(--radius-full))`. Same computed values.
+* **css:** blur, opacity and transition tokens are imported once, and styles for sizes no prop offers (Callout 4–5, Table 4–5, Progress 5–9) are gone.
+* **release:** publishing requires a git tag, a matching `package.json` and CHANGELOG entry, and a version above npm's latest, and runs the tests first.
+
 ## [0.13.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.13.1...v0.13.2) (2026-10-17)
 
 ### Bug Fixes

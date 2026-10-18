@@ -85,11 +85,14 @@ function useThemeContext() {
 interface ThemeProps extends ThemeImplPublicProps {}
 const Theme = React.forwardRef<ThemeImplElement, ThemeProps>((props, forwardedRef) => {
   const context = React.useContext(ThemeContext);
+  // Direction is inherited: a Radix DirectionProvider above the Theme (for a right-to-left app)
+  // wins, and left-to-right stays the default when there is none.
+  const dir = Direction.useDirection();
   const isRoot = context === undefined;
   if (isRoot) {
     return (
       <TooltipPrimitive.Provider delayDuration={200}>
-        <Direction.Provider dir="ltr">
+        <Direction.Provider dir={dir}>
           <ThemeRoot {...props} ref={forwardedRef} />
         </Direction.Provider>
       </TooltipPrimitive.Provider>

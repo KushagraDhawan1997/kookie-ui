@@ -404,7 +404,7 @@
     }
 
     &:where(.rt-r-size-1) {
-      --segmented-control-border-radius: max(var(--radius-1), var(--radius-full));
+      --segmented-control-border-radius: var(--radius-pill-1);
       --segmented-control-height: var(--control-height-1);
       height: var(--segmented-control-height);
 
@@ -435,7 +435,7 @@
       }
     }
     &:where(.rt-r-size-2) {
-      --segmented-control-border-radius: max(var(--radius-2), var(--radius-full));
+      --segmented-control-border-radius: var(--radius-pill-2);
       --segmented-control-height: var(--control-height-2);
       height: var(--segmented-control-height);
 
@@ -466,7 +466,7 @@
       }
     }
     &:where(.rt-r-size-3) {
-      --segmented-control-border-radius: max(var(--radius-3), var(--radius-full));
+      --segmented-control-border-radius: var(--radius-pill-3);
       --segmented-control-height: var(--control-height-3);
       height: var(--segmented-control-height);
 
@@ -497,7 +497,7 @@
       }
     }
     &:where(.rt-r-size-4) {
-      --segmented-control-border-radius: max(var(--radius-4), var(--radius-full));
+      --segmented-control-border-radius: var(--radius-pill-4);
       --segmented-control-height: var(--control-height-4);
       height: var(--segmented-control-height);
 

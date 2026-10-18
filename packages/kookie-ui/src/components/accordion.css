@@ -243,9 +243,11 @@
 }
 
 /* Trigger hover states */
-:where(.rt-AccordionTrigger:hover) {
-  background-color: var(--gray-a3);
-  transform: translateY(-1px);
+@media (hover: hover) {
+  :where(.rt-AccordionTrigger:hover) {
+    background-color: var(--gray-a3);
+    transform: translateY(-1px);
+  }
 }
 
 :where(.rt-AccordionTrigger:active) {
@@ -259,22 +261,24 @@
 }
 
 /* Classic variant shadow states */
-:where(.rt-AccordionRoot:where(.rt-variant-classic):hover) {
-  background-color: var(--accent-2);
-  box-shadow: var(--shadow-2);
-
-  /* Theme-level translucent override for hover */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-  }
-
-  /* Component-level overrides for hover */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+@media (hover: hover) {
+  :where(.rt-AccordionRoot:where(.rt-variant-classic):hover) {
     background-color: var(--accent-2);
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
+    box-shadow: var(--shadow-2);
+  
+    /* Theme-level translucent override for hover */
+    :where([data-panel-background='translucent'], [data-material='translucent']) & {
+      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
+    }
+  
+    /* Component-level overrides for hover */
+    &:where([data-panel-background='solid'], [data-material='solid']) {
+      background-color: var(--accent-2);
+    }
+  
+    &:where([data-panel-background='translucent'], [data-material='translucent']) {
+      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
+    }
   }
 }
 
@@ -284,90 +288,98 @@
   transition: var(--transition-text-field);
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-soft)) :where(.rt-AccordionTrigger:hover) {
-  background-color: var(--accent-4);
-  
-  /* Theme-level translucent override for hover */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-  }
-
-  /* Component-level overrides for hover */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+@media (hover: hover) {
+  :where(.rt-AccordionRoot:where(.rt-variant-soft)) :where(.rt-AccordionTrigger:hover) {
     background-color: var(--accent-4);
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
+    
+    /* Theme-level translucent override for hover */
+    :where([data-panel-background='translucent'], [data-material='translucent']) & {
+      background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
+    }
+  
+    /* Component-level overrides for hover */
+    &:where([data-panel-background='solid'], [data-material='solid']) {
+      background-color: var(--accent-4);
+    }
+  
+    &:where([data-panel-background='translucent'], [data-material='translucent']) {
+      background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
+    }
   }
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-outline)) :where(.rt-AccordionTrigger:hover) {
-  background-color: var(--accent-2);
-  box-shadow: inset 0 0 0 1px var(--accent-7);
-  
-  /* Theme-level translucent override for hover */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a7);
-  }
-
-  /* Component-level overrides for hover */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+@media (hover: hover) {
+  :where(.rt-AccordionRoot:where(.rt-variant-outline)) :where(.rt-AccordionTrigger:hover) {
     background-color: var(--accent-2);
     box-shadow: inset 0 0 0 1px var(--accent-7);
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a7);
+    
+    /* Theme-level translucent override for hover */
+    :where([data-panel-background='translucent'], [data-material='translucent']) & {
+      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
+      box-shadow: inset 0 0 0 1px var(--accent-a7);
+    }
+  
+    /* Component-level overrides for hover */
+    &:where([data-panel-background='solid'], [data-material='solid']) {
+      background-color: var(--accent-2);
+      box-shadow: inset 0 0 0 1px var(--accent-7);
+    }
+  
+    &:where([data-panel-background='translucent'], [data-material='translucent']) {
+      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
+      box-shadow: inset 0 0 0 1px var(--accent-a7);
+    }
   }
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-surface)) :where(.rt-AccordionTrigger:hover) {
-  background-color: var(--accent-3);
-  box-shadow: inset 0 0 0 1px var(--accent-7);
-  
-  /* Theme-level translucent override for hover */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a7);
-  }
-
-  /* Component-level overrides for hover */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+@media (hover: hover) {
+  :where(.rt-AccordionRoot:where(.rt-variant-surface)) :where(.rt-AccordionTrigger:hover) {
     background-color: var(--accent-3);
     box-shadow: inset 0 0 0 1px var(--accent-7);
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a7);
+    
+    /* Theme-level translucent override for hover */
+    :where([data-panel-background='translucent'], [data-material='translucent']) & {
+      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
+      box-shadow: inset 0 0 0 1px var(--accent-a7);
+    }
+  
+    /* Component-level overrides for hover */
+    &:where([data-panel-background='solid'], [data-material='solid']) {
+      background-color: var(--accent-3);
+      box-shadow: inset 0 0 0 1px var(--accent-7);
+    }
+  
+    &:where([data-panel-background='translucent'], [data-material='translucent']) {
+      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
+      box-shadow: inset 0 0 0 1px var(--accent-a7);
+    }
   }
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-ghost)) :where(.rt-AccordionTrigger:hover) {
-  /* Base state: solid accent for solid panels */
-  background-color: var(--accent-3);
-  
-  /* Theme-level translucent override for hover */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-  }
-
-  /* Component-level overrides for hover */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+@media (hover: hover) {
+  :where(.rt-AccordionRoot:where(.rt-variant-ghost)) :where(.rt-AccordionTrigger:hover) {
+    /* Base state: solid accent for solid panels */
     background-color: var(--accent-3);
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-  }
-
-  /* Disable backdrop-filter when inside elements that already have backdrop-filter */
-  /* :where(.rt-PopoverContent, .rt-BaseDialogContent, .rt-BaseMenuContent, .rt-DropdownMenuContent, .rt-ContextMenuContent, .rt-AlertDialogContent, .rt-HoverCardContent, .rt-TooltipContent, .rt-Card) & {
+    
+    /* Theme-level translucent override for hover */
+    :where([data-panel-background='translucent'], [data-material='translucent']) & {
+      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
+    }
+  
+    /* Component-level overrides for hover */
+    &:where([data-panel-background='solid'], [data-material='solid']) {
+      background-color: var(--accent-3);
+    }
+  
+    &:where([data-panel-background='translucent'], [data-material='translucent']) {
+      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
+    }
+  
+    /* Disable backdrop-filter when inside elements that already have backdrop-filter */
+    /* :where(.rt-PopoverContent, .rt-BaseDialogContent, .rt-BaseMenuContent, .rt-DropdownMenuContent, .rt-ContextMenuContent, .rt-AlertDialogContent, .rt-HoverCardContent, .rt-TooltipContent, .rt-Card) & {
     backdrop-filter: none !important;
   } */
+  }
 }
 
 /* Trigger focus states */
@@ -469,8 +481,10 @@
 }
 
 /* Color accent support */
-:where(.rt-AccordionRoot:where(.rt-variant-soft)[data-accent-color]) :where(.rt-AccordionTrigger:hover) {
-  background-color: var(--accent-a4);
+@media (hover: hover) {
+  :where(.rt-AccordionRoot:where(.rt-variant-soft)[data-accent-color]) :where(.rt-AccordionTrigger:hover) {
+    background-color: var(--accent-a4);
+  }
 }
 
 /* Reduced motion */
@@ -487,8 +501,10 @@
     background-color: var(--accent-2);
   }
   
-  :where(.rt-AccordionRoot[data-material='translucent']) :where(.rt-AccordionTrigger:hover) {
-    background-color: var(--accent-4);
+  @media (hover: hover) {
+    :where(.rt-AccordionRoot[data-material='translucent']) :where(.rt-AccordionTrigger:hover) {
+      background-color: var(--accent-4);
+    }
   }
 }
 
@@ -588,3 +604,10 @@
     background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
   }
 } 
+/* Disabled: the same treatment as a disabled menu item. It keeps no hover fill or lift. */
+.rt-AccordionTrigger:where([data-disabled]) {
+  color: var(--gray-a8);
+  cursor: default;
+  background-color: transparent;
+  transform: none;
+}
