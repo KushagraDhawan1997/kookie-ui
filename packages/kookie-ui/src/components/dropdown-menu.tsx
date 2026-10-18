@@ -2,6 +2,7 @@
 
 import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
+import { VirtualMenu } from './virtual-menu.js';
 import classNames from 'classnames';
 import { DropdownMenu as DropdownMenuPrimitive, Slot } from 'radix-ui';
 import { useCallbackRef } from 'radix-ui/internal';
@@ -827,6 +828,7 @@ export {
   DropdownMenuSubTrigger as SubTrigger,
   DropdownMenuSubContent as SubContent,
   DropdownMenuSeparator as Separator,
+  VirtualMenu as Virtual,
 };
 
 export type {
