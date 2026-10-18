@@ -41,11 +41,11 @@ The TextArea component is the textarea element that accepts multi-line text inpu
 | `color` | `AccentColor` | Semantic color for focus state and validation feedback. Use for visual categorization or status communication |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Corner radius scale: none for sharp edges, small/medium/large for progressive rounding, full for maximum rounding |
 | `material` | `'solid' \| 'translucent'` | Background appearance: solid for opaque backgrounds, translucent for depth over images or dynamic backgrounds |
-| `panelBackground` | `'solid' \| 'translucent'` | Deprecated: Use material prop instead. Controls panel background appearance |
+| `panelBackground` | `'solid' \| 'translucent'` | Deprecated: use `material`. Removed in 0.15.0 |
 | `resize` | `'none' \| 'vertical' \| 'horizontal' \| 'both'` | Controls textarea resizing behavior. Default: user agent default (usually 'vertical') |
 | `error` | `boolean` | Marks field as invalid. Use with errorMessage for accessibility |
 | `errorMessage` | `string` | Error message displayed below textarea. Automatically connected via ARIA attributes for screen readers |
-| `isInvalid` | `boolean` | Alternative to error prop for marking field as invalid |
+| `isInvalid` | `boolean` | Deprecated: use `error`. Removed in 0.15.0 |
 | `required` | `boolean` | Marks field as required for forms |
 | `placeholder` | `string` | Placeholder text shown when textarea is empty |
 | `disabled` | `boolean` | Prevents interaction when textarea is unavailable |
@@ -399,7 +399,7 @@ TextArea provides comprehensive accessibility through ARIA attributes and semant
 
 ### ARIA Attributes
 
-- `aria-invalid="true"` - Automatically set when error or isInvalid is true
+- `aria-invalid="true"` - Automatically set when `error` is true
 - `aria-describedby` - Links to error message for screen reader announcements
 - `aria-labelledby` - Links to external label element
 - `role="alert"` - Error messages are announced immediately
@@ -446,7 +446,7 @@ Size prop supports responsive objects for adaptive sizing across breakpoints. Mo
 
 ### Added
 
-- **Error validation system** with `error`, `errorMessage`, and `isInvalid` props
+- **Error validation system** with `error` and `errorMessage` props
 - **Automatic ARIA attributes** for error messages and validation states
 - **Material prop** for solid/translucent theme contexts
 - **Resize control** with `resize` prop for user resizing behavior

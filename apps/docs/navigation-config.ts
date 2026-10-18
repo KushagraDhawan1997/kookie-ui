@@ -69,6 +69,10 @@ export const docsNavigation: DocsNavigationConfig = {
           title: 'Navbar',
         },
         {
+          href: '/docs/notice',
+          title: 'Notice',
+        },
+        {
           href: '/docs/segmented-control',
           title: 'Segmented Control',
         },
