@@ -55,7 +55,7 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>((props, forwarded
     warnDeprecated('`menuVariant` on Sidebar.Root is deprecated and will be removed in 0.15.0. Rows use the soft highlight, and the solid one under prefers-contrast: more.');
   }
   if (props.presentation === 'thin' || props.layout === 'rail') {
-    warnDeprecated('Sidebar thin mode is deprecated and will be removed in 0.15.0. Use Shell.Rail for a column of icons.');
+    warnDeprecated('Sidebar thin mode is deprecated and will be removed in 0.15.0. Put the rows in Shell.Rail, which draws them as tiles.');
   }
 
   const {

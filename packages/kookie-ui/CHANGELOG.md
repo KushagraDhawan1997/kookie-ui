@@ -17,7 +17,7 @@ New defaults and new names. Everything that is going away still works, warns onc
 * **menus:** `DropdownMenu.Virtual` and `ContextMenu.Virtual`, a virtualised list that keeps its menu's size, highlight and material.
 * **variants:** RadioGroup takes Radio's variants, UserCard's `avatarVariant` takes Avatar's, and CheckboxCards and RadioCards take Card's.
 * **tokens:** `--heading-font-weight` (bold by default) sets every Heading's weight. `--raised-*` replaces `--classic-*`.
-* **shell:** `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter` hold a pane's chrome. `Shell.Root size` (1–3) sets their index. Sidebar's menu parts work directly inside `Shell.Sidebar` and `Shell.Panel`, sized by the Shell, with no `Sidebar.Root`.
+* **shell:** `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter` hold a pane's chrome. `Shell.Root size` (1–3) sets their index. Sidebar's menu parts work directly inside `Shell.Sidebar` and `Shell.Panel`, sized by the Shell, with no `Sidebar.Root`. In `Shell.Rail` the same rows draw as tiles, which replaces thin mode.
 
 ### Bug Fixes
 
@@ -36,7 +36,7 @@ New defaults and new names. Everything that is going away still works, warns onc
 * `AppBar`: use `Toolbar`, in `Shell.Header` for an app header.
 * `Sidebar.Root`, `Sidebar.Content`, `Sidebar.Header`, `Sidebar.Footer`: use `Shell.Sidebar` with `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter`.
 * `menuVariant` on Sidebar.
-* Sidebar thin mode (`presentation="thin"`, `layout="rail"`) and Shell.Sidebar's thin state and `thinSize`: use `Shell.Rail`.
+* Sidebar thin mode (`presentation="thin"`, `layout="rail"`) and Shell.Sidebar's thin state and `thinSize`: put the rows in `Shell.Rail`.
 * The `UserCard` export: the pattern moves to a docs block.
 
 ### How to adopt
