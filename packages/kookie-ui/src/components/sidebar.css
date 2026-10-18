@@ -650,13 +650,23 @@
      menu item or TextField of size N. Content is a BaseMenuContent, so it takes
      every size value from base-menu.css. Header and Footer are not, so they
      restate base-menu's values here; keep the two in step. */
-  .rt-SidebarContainer,
-  .rt-ShellPaneChrome {
+  .rt-SidebarContainer {
     &:where(.rt-r-size-1) {
       --sidebar-base-padding: var(--space-3);
     }
     &:where(.rt-r-size-2, .rt-r-size-3) {
       --sidebar-base-padding: var(--space-4);
+    }
+  }
+
+  /* In a Shell pane, the header, footer and search pad by the rows' own inset, so every row
+     and every control in the pane starts on one line. */
+  .rt-ShellPaneChrome {
+    &:where(.rt-r-size-1) {
+      --sidebar-base-padding: var(--space-2);
+    }
+    &:where(.rt-r-size-2, .rt-r-size-3) {
+      --sidebar-base-padding: var(--space-3);
     }
   }
 
