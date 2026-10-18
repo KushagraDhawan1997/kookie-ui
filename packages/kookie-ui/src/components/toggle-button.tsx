@@ -64,24 +64,39 @@ type ToggleButtonElement = React.ElementRef<typeof Button>;
  * ```
  */
 const ToggleButton = React.forwardRef<ToggleButtonElement, ToggleButtonProps>(({ pressed, onPressedChange, defaultPressed, children, ...buttonProps }, forwardedRef) => {
+  const { 'aria-label': ariaLabel, 'aria-labelledby': ariaLabelledBy, iconOnly } = buttonProps;
+
+  // The label behind aria-labelledby is read once per id, not on every press.
+  const cachedLabelRef = React.useRef<string | null>(null);
+  React.useEffect(() => {
+    cachedLabelRef.current = null;
+  }, [ariaLabelledBy]);
+
   /**
-   * Extract accessible name from button content for announcements.
-   * This ensures screen readers announce meaningful state changes.
+   * The name announced when the pressed state changes: aria-label, then the label
+   * aria-labelledby points at, then visible text.
    */
   const getAccessibleName = React.useCallback(() => {
+    if (ariaLabel) return ariaLabel;
+    if (ariaLabelledBy) {
+      if (cachedLabelRef.current === null) {
+        cachedLabelRef.current = document.getElementById(ariaLabelledBy)?.textContent || 'Toggle button';
+      }
+      return cachedLabelRef.current;
+    }
     if (typeof children === 'string') return children;
     if (React.isValidElement(children) && typeof (children.props as any)?.children === 'string') {
       return (children.props as any).children;
     }
     return 'Toggle button';
-  }, [children]);
+  }, [ariaLabel, ariaLabelledBy, children]);
 
   // Use shared toggle state hook for accessibility announcements and warnings
   const { handlePressedChange } = useToggleState({
     pressed,
     onPressedChange,
     getAccessibleName,
-    componentName: 'ToggleButton',
+    componentName: iconOnly ? 'ToggleIconButton' : 'ToggleButton',
   });
 
   // Render the toggle button using Radix UI's Toggle primitive
