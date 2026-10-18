@@ -64,17 +64,17 @@
   outline: none;
 
   /* Theme-level backdrop filter for auto dialogs */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     backdrop-filter: var(--backdrop-filter-dialog);
   }
 
-  /* Component-level overrides (when panelBackground prop is explicitly set) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  /* Component-level overrides (when the material prop is set) */
+  &:where([data-material='solid']) {
     background-color: var(--color-dialog-solid);
     backdrop-filter: none;
   }
 
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     background-color: var(--color-dialog-translucent);
     backdrop-filter: var(--backdrop-filter-dialog);
   }
@@ -129,7 +129,7 @@
 /* Safari backdrop-filter fallback */
 @supports not (backdrop-filter: blur(1px)) {
   :where(.rt-BaseDialogContent[data-material='translucent']),
-  :where(.rt-BaseDialogContent[data-panel-background='translucent']) {
+  :where(.rt-BaseDialogContent[data-material='translucent']) {
     background-color: var(--color-dialog-solid);
   }
 }

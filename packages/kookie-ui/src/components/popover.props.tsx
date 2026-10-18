@@ -5,7 +5,7 @@ import { widthPropDefs } from '../props/width.props.js';
 import type { PropDef, GetPropDefTypes } from '../props/prop-def.js';
 
 const contentSizes = ['1', '2', '3', '4'] as const;
-const panelBackgrounds = ['solid', 'translucent'] as const;
+const materials = ['solid', 'translucent'] as const;
 
 const popoverContentPropDefs = {
   ...asChildPropDef,
@@ -16,9 +16,7 @@ const popoverContentPropDefs = {
     default: '2',
     responsive: true,
   },
-  material: { type: 'enum', values: panelBackgrounds, default: undefined },
-  /** @deprecated Use `material`. Removed in 0.15.0. */
-  panelBackground: { type: 'enum', values: panelBackgrounds, default: undefined },
+  material: { type: 'enum', values: materials, default: undefined },
   width: widthPropDefs.width,
   minWidth: widthPropDefs.minWidth,
   maxWidth: { ...widthPropDefs.maxWidth, default: '480px' },
@@ -28,8 +26,7 @@ const popoverContentPropDefs = {
   minWidth: PropDef<string>;
   maxWidth: PropDef<string>;
   size: PropDef<(typeof contentSizes)[number]>;
-  material: PropDef<(typeof panelBackgrounds)[number] | undefined>;
-  panelBackground: PropDef<(typeof panelBackgrounds)[number] | undefined>;
+  material: PropDef<(typeof materials)[number] | undefined>;
 };
 
 type PopoverContentOwnProps = GetPropDefTypes<

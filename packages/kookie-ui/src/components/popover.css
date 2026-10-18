@@ -34,12 +34,12 @@
   }
 
   /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid']) {
+  &:where([data-material='solid']) {
     background-color: var(--color-panel-solid);
     backdrop-filter: none;
   }
 
-  &:where([data-panel-background='translucent']) {
+  &:where([data-material='translucent']) {
     background-color: var(--color-panel-translucent);
     backdrop-filter: var(--backdrop-filter-panel);
   }

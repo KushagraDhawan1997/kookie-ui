@@ -22,7 +22,6 @@ import { Theme, useThemeContext } from './theme.js';
 import { ThickCheckIcon, ThickChevronRightIcon, ThickDotIcon } from './icons.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
-import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 import { MenuProvider } from './_internal/menu-context.js';
 import {
   MenuShortcut,
@@ -82,9 +81,8 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
   (props, forwardedRef) => {
     const themeContext = useThemeContext();
 
-    useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
-    const material = resolveMenuMaterial(props.material, props.panelBackground, themeContext);
+    const material = resolveMenuMaterial(props.material, themeContext);
     const {
       size = contextMenuContentPropDefs.size.default,
     } = props;
@@ -95,7 +93,6 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
       container,
       forceMount,
       material: _material,
-      panelBackground: _panelBackground,
       submenuBehavior: _submenuBehavior,
       virtualized = false,
       ...contentProps
@@ -121,7 +118,6 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
           <ContextMenuPrimitive.Content
             data-accent-color={resolvedColor}
             data-material={material}
-            data-panel-background={material}
             alignOffset={getMenuAlignOffset(scalarSize, themeContext.scaling)}
             collisionPadding={10}
             {...contentProps}
@@ -361,13 +357,12 @@ const ContextMenuSubContent = React.forwardRef<
   const parent = React.useContext(ContextMenuContentContext);
   const themeContext = useThemeContext();
 
-  useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
   // A submenu inherits the parent surface, and its own props win.
   const size = props.size ?? parent.size;
   const color = props.color ?? parent.color;
   const material =
-    props.material ?? props.panelBackground ?? parent.material ?? resolveMenuMaterial(undefined, undefined, themeContext);
+    props.material ?? parent.material ?? resolveMenuMaterial(undefined, themeContext);
 
   const {
     className,
@@ -376,7 +371,6 @@ const ContextMenuSubContent = React.forwardRef<
     forceMount,
     color: _color,
     material: _material,
-    panelBackground: _panelBackground,
     virtualized = false,
     ...subContentProps
   } = extractProps({ ...props, size }, contextMenuSubContentPropDefs);
@@ -400,7 +394,6 @@ const ContextMenuSubContent = React.forwardRef<
         <ContextMenuPrimitive.SubContent
           data-accent-color={color}
           data-material={material}
-          data-panel-background={material}
           alignOffset={getMenuAlignOffset(scalarSize, themeContext.scaling)}
           // Side offset accounts for the outer solid box-shadow
           sideOffset={1}

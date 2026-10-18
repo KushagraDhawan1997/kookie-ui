@@ -21,12 +21,12 @@
    * Component-level material override
    * When component has explicit material prop, override the inherited theme values.
    */
-  &:where([data-material='solid'], [data-panel-background='solid']) {
+  &:where([data-material='solid']) {
     --material-blend: 100%;
     --material-alpha: 0;
   }
 
-  &:where([data-material='translucent'], [data-panel-background='translucent']) {
+  &:where([data-material='translucent']) {
     --material-blend: 60%;
     --material-alpha: 1;
   }
@@ -45,7 +45,7 @@
   overflow: hidden;
 
   /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     backdrop-filter: var(--backdrop-filter-components);
     --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
@@ -54,12 +54,12 @@
   isolation: isolate;
 
   /* Component-level overrides */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     backdrop-filter: none;
     --backdrop-filter-components: none;
   }
   
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     backdrop-filter: var(--backdrop-filter-components);
     --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
@@ -437,7 +437,7 @@
   transition: var(--transition-text-field);
 
   /* Translucent theme override */
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     background-color: var(--color-surface-translucent);
   }
 

@@ -5,7 +5,7 @@
   isolation: isolate;
 
   /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     backdrop-filter: var(--backdrop-filter-components);
     --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
@@ -14,12 +14,12 @@
   isolation: isolate;
 
   /* Component-level overrides */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     backdrop-filter: none;
     --backdrop-filter-components: none;
   }
   
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     backdrop-filter: var(--backdrop-filter-components);
     --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
@@ -50,21 +50,21 @@
   transition: var(--transition-background-blur);
 
   /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
     box-shadow: inset 0 0 0 1px var(--accent-a6);
     backdrop-filter: var(--backdrop-filter-components);
   }
 
   /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     background-color: var(--accent-2);
     box-shadow: inset 0 0 0 1px var(--accent-6);
     backdrop-filter: none;
     --backdrop-filter-components: none;
   }
 
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
     box-shadow: inset 0 0 0 1px var(--accent-a6);
     backdrop-filter: var(--backdrop-filter-components);
@@ -79,19 +79,19 @@
   transition: var(--transition-text-field);
 
   /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     background-color: var(--color-surface-translucent);
     backdrop-filter: var(--backdrop-filter-components);
   }
 
   /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     background-color: var(--color-surface-solid);
     backdrop-filter: none;
     --backdrop-filter-components: none;
   }
 
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     background-color: var(--color-surface-translucent);
     backdrop-filter: var(--backdrop-filter-components);
     --backdrop-filter-components: var(--backdrop-filter-components-enabled);
@@ -104,19 +104,19 @@
   transition: var(--transition-background-blur);
 
   /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
     backdrop-filter: var(--backdrop-filter-components);
   }
 
   /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     background-color: var(--accent-2);
     backdrop-filter: none;
     --backdrop-filter-components: none;
   }
 
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
     backdrop-filter: var(--backdrop-filter-components);
     --backdrop-filter-components: var(--backdrop-filter-components-enabled);
@@ -129,18 +129,18 @@
   transition: var(--transition-background-blur);
 
   /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     box-shadow: inset 0 0 0 1px var(--accent-a6);
   }
 
   /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     box-shadow: inset 0 0 0 1px var(--accent-6);
     backdrop-filter: none;
     --backdrop-filter-components: none;
   }
 
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     box-shadow: inset 0 0 0 1px var(--accent-a6);
     backdrop-filter: var(--backdrop-filter-components);
     --backdrop-filter-components: var(--backdrop-filter-components-enabled);
@@ -267,16 +267,16 @@
     box-shadow: var(--shadow-2);
   
     /* Theme-level translucent override for hover */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
+    :where([data-material='translucent']) & {
       background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
     }
   
     /* Component-level overrides for hover */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
+    &:where([data-material='solid']) {
       background-color: var(--accent-2);
     }
   
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
+    &:where([data-material='translucent']) {
       background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
     }
   }
@@ -293,16 +293,16 @@
     background-color: var(--accent-4);
     
     /* Theme-level translucent override for hover */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
+    :where([data-material='translucent']) & {
       background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
     }
   
     /* Component-level overrides for hover */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
+    &:where([data-material='solid']) {
       background-color: var(--accent-4);
     }
   
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
+    &:where([data-material='translucent']) {
       background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
     }
   }
@@ -314,18 +314,18 @@
     box-shadow: inset 0 0 0 1px var(--accent-7);
     
     /* Theme-level translucent override for hover */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
+    :where([data-material='translucent']) & {
       background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
       box-shadow: inset 0 0 0 1px var(--accent-a7);
     }
   
     /* Component-level overrides for hover */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
+    &:where([data-material='solid']) {
       background-color: var(--accent-2);
       box-shadow: inset 0 0 0 1px var(--accent-7);
     }
   
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
+    &:where([data-material='translucent']) {
       background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
       box-shadow: inset 0 0 0 1px var(--accent-a7);
     }
@@ -338,18 +338,18 @@
     box-shadow: inset 0 0 0 1px var(--accent-7);
     
     /* Theme-level translucent override for hover */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
+    :where([data-material='translucent']) & {
       background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
       box-shadow: inset 0 0 0 1px var(--accent-a7);
     }
   
     /* Component-level overrides for hover */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
+    &:where([data-material='solid']) {
       background-color: var(--accent-3);
       box-shadow: inset 0 0 0 1px var(--accent-7);
     }
   
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
+    &:where([data-material='translucent']) {
       background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
       box-shadow: inset 0 0 0 1px var(--accent-a7);
     }
@@ -362,16 +362,16 @@
     background-color: var(--accent-3);
     
     /* Theme-level translucent override for hover */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
+    :where([data-material='translucent']) & {
       background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
     }
   
     /* Component-level overrides for hover */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
+    &:where([data-material='solid']) {
       background-color: var(--accent-3);
     }
   
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
+    &:where([data-material='translucent']) {
       background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
     }
   
@@ -538,13 +538,13 @@
   :where(.rt-AccordionRoot.rt-variant-soft:hover) {
     background-color: var(--accent-4);
   }
-  :where([data-panel-background='translucent'], [data-material='translucent']) :where(.rt-AccordionRoot.rt-variant-soft:hover) {
+  :where([data-material='translucent']) :where(.rt-AccordionRoot.rt-variant-soft:hover) {
     background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
   }
-  :where(.rt-AccordionRoot.rt-variant-soft[data-panel-background='solid'], .rt-AccordionRoot.rt-variant-soft[data-material='solid']:hover) {
+  :where(.rt-AccordionRoot.rt-variant-soft[data-material='solid'], .rt-AccordionRoot.rt-variant-soft[data-material='solid']:hover) {
     background-color: var(--accent-4);
   }
-  :where(.rt-AccordionRoot.rt-variant-soft[data-panel-background='translucent'], .rt-AccordionRoot.rt-variant-soft[data-material='translucent']:hover) {
+  :where(.rt-AccordionRoot.rt-variant-soft[data-material='translucent'], .rt-AccordionRoot.rt-variant-soft[data-material='translucent']:hover) {
     background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
   }
 }
@@ -555,15 +555,15 @@
     background-color: var(--accent-2);
     box-shadow: inset 0 0 0 1px var(--accent-7);
   }
-  :where([data-panel-background='translucent'], [data-material='translucent']) :where(.rt-AccordionRoot.rt-variant-outline:hover) {
+  :where([data-material='translucent']) :where(.rt-AccordionRoot.rt-variant-outline:hover) {
     background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
     box-shadow: inset 0 0 0 1px var(--accent-a7);
   }
-  :where(.rt-AccordionRoot.rt-variant-outline[data-panel-background='solid'], .rt-AccordionRoot.rt-variant-outline[data-material='solid']:hover) {
+  :where(.rt-AccordionRoot.rt-variant-outline[data-material='solid'], .rt-AccordionRoot.rt-variant-outline[data-material='solid']:hover) {
     background-color: var(--accent-2);
     box-shadow: inset 0 0 0 1px var(--accent-7);
   }
-  :where(.rt-AccordionRoot.rt-variant-outline[data-panel-background='translucent'], .rt-AccordionRoot.rt-variant-outline[data-material='translucent']:hover) {
+  :where(.rt-AccordionRoot.rt-variant-outline[data-material='translucent'], .rt-AccordionRoot.rt-variant-outline[data-material='translucent']:hover) {
     background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
     box-shadow: inset 0 0 0 1px var(--accent-a7);
   }
@@ -575,15 +575,15 @@
     background-color: var(--accent-3);
     box-shadow: inset 0 0 0 1px var(--accent-7);
   }
-  :where([data-panel-background='translucent'], [data-material='translucent']) :where(.rt-AccordionRoot.rt-variant-surface:hover) {
+  :where([data-material='translucent']) :where(.rt-AccordionRoot.rt-variant-surface:hover) {
     background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
     box-shadow: inset 0 0 0 1px var(--accent-a7);
   }
-  :where(.rt-AccordionRoot.rt-variant-surface[data-panel-background='solid'], .rt-AccordionRoot.rt-variant-surface[data-material='solid']:hover) {
+  :where(.rt-AccordionRoot.rt-variant-surface[data-material='solid'], .rt-AccordionRoot.rt-variant-surface[data-material='solid']:hover) {
     background-color: var(--accent-3);
     box-shadow: inset 0 0 0 1px var(--accent-7);
   }
-  :where(.rt-AccordionRoot.rt-variant-surface[data-panel-background='translucent'], .rt-AccordionRoot.rt-variant-surface[data-material='translucent']:hover) {
+  :where(.rt-AccordionRoot.rt-variant-surface[data-material='translucent'], .rt-AccordionRoot.rt-variant-surface[data-material='translucent']:hover) {
     background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
     box-shadow: inset 0 0 0 1px var(--accent-a7);
   }
@@ -594,13 +594,13 @@
   :where(.rt-AccordionRoot.rt-variant-ghost:hover) {
     background-color: var(--accent-2);
   }
-  :where([data-panel-background='translucent'], [data-material='translucent']) :where(.rt-AccordionRoot.rt-variant-ghost:hover) {
+  :where([data-material='translucent']) :where(.rt-AccordionRoot.rt-variant-ghost:hover) {
     background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
   }
-  :where(.rt-AccordionRoot.rt-variant-ghost[data-panel-background='solid'], .rt-AccordionRoot.rt-variant-ghost[data-material='solid']:hover) {
+  :where(.rt-AccordionRoot.rt-variant-ghost[data-material='solid'], .rt-AccordionRoot.rt-variant-ghost[data-material='solid']:hover) {
     background-color: var(--accent-2);
   }
-  :where(.rt-AccordionRoot.rt-variant-ghost[data-panel-background='translucent'], .rt-AccordionRoot.rt-variant-ghost[data-material='translucent']:hover) {
+  :where(.rt-AccordionRoot.rt-variant-ghost[data-material='translucent'], .rt-AccordionRoot.rt-variant-ghost[data-material='translucent']:hover) {
     background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
   }
 } 

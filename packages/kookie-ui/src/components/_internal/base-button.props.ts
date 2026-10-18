@@ -28,7 +28,6 @@ const variants = ['raised', 'solid', 'soft', 'surface', 'outline', 'ghost'] as c
  * Available panel background options (deprecated)
  * @deprecated Use `materials` instead
  */
-const panelBackgrounds = ['solid', 'translucent'] as const;
 
 /**
  * Available material options for visual rendering
@@ -98,7 +97,6 @@ const baseButtonPropDefs = {
    * Panel background type (deprecated)
    * @deprecated Use `material` prop instead. This prop will be removed in a future version.
    */
-  panelBackground: { type: 'enum', values: panelBackgrounds, default: undefined },
   /**
    * Flush mode that removes visual padding for seamless text integration
    * Only effective with ghost variant
@@ -110,7 +108,6 @@ const baseButtonPropDefs = {
   loading: PropDef<boolean>;
   fullWidth: PropDef<boolean>;
   material: PropDef<(typeof materials)[number] | undefined>;
-  panelBackground: PropDef<(typeof panelBackgrounds)[number] | undefined>;
   flush: PropDef<boolean>;
 };
 

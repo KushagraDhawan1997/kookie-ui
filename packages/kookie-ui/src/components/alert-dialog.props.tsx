@@ -9,7 +9,6 @@ const alertDialogContentPropDefs = {
 } satisfies {
   align: PropDef<'start' | 'center'>;
   size: PropDef<'1' | '2' | '3' | '4'>;
-  panelBackground: PropDef<'solid' | 'translucent' | undefined>;
   width: PropDef<string>;
   minWidth: PropDef<string>;
   maxWidth: PropDef<string>;

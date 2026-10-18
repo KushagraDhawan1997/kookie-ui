@@ -94,7 +94,7 @@
   background-color: var(--accent-4);
 }
 
-.rt-BaseMenuContent:where(.rt-variant-soft):where([data-panel-background='translucent'], [data-material='translucent'])
+.rt-BaseMenuContent:where(.rt-variant-soft):where([data-material='translucent'])
   :where(.rt-ComboboxItem[data-selected='true']) {
   background-color: var(--accent-a4);
 }

@@ -7,7 +7,6 @@ import type { PropDef } from '../props/prop-def.js';
 
 const sizes = ['1', '2', '3', '4'] as const;
 const variants = ['raised', 'surface', 'soft', 'ghost', 'outline'] as const;
-const panelBackgrounds = ['solid', 'translucent'] as const;
 const materials = ['solid', 'translucent'] as const;
 
 const textFieldRootPropDefs = {
@@ -22,7 +21,6 @@ const textFieldRootPropDefs = {
   'aria-labelledby': { type: 'string', default: undefined },
   ...colorPropDef,
   ...radiusPropDef,
-  panelBackground: { type: 'enum', values: panelBackgrounds, default: undefined },
   material: { type: 'enum', values: materials, default: undefined },
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;
@@ -32,7 +30,6 @@ const textFieldRootPropDefs = {
   required: PropDef<boolean>;
   'aria-describedby': PropDef<string | undefined>;
   'aria-labelledby': PropDef<string | undefined>;
-  panelBackground: PropDef<(typeof panelBackgrounds)[number] | undefined>;
   material: PropDef<(typeof materials)[number] | undefined>;
 };
 

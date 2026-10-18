@@ -1,6 +1,5 @@
 'use client';
 
-import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import classNames from 'classnames';
@@ -36,11 +35,9 @@ const SegmentedControlRoot = React.forwardRef<HTMLDivElement, SegmentedControlRo
       defaultValue: defaultValueProp,
       onValueChange: onValueChangeProp,
       material: materialProp,
-      panelBackground,
       ...rootProps
     } = extractProps(props, segmentedControlRootPropDefs, marginPropDefs);
-    useDeprecatedPanelBackgroundWarning(props.panelBackground);
-    const material = materialProp ?? panelBackground;
+    const material = materialProp;
 
 
     const [value, setValue] = useControllableState({
@@ -53,7 +50,6 @@ const SegmentedControlRoot = React.forwardRef<HTMLDivElement, SegmentedControlRo
       <ToggleGroupPrimitive.Root
         data-disabled={props.disabled || undefined}
         data-radius={radius}
-        data-panel-background={material}
         data-material={material}
         ref={forwardedRef}
         className={classNames('rt-SegmentedControlRoot', className)}

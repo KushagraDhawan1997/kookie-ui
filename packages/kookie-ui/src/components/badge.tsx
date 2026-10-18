@@ -10,7 +10,6 @@ import { Tooltip } from './tooltip.js';
 import type { MarginProps } from '../props/margin.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
-import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 
 type BadgeElement = React.ElementRef<'span'>;
 type BadgeOwnProps = GetPropDefTypes<typeof badgePropDefs>;
@@ -38,7 +37,6 @@ const Badge = React.forwardRef<BadgeElement, BadgeProps>((props, forwardedRef) =
     color,
     radius,
     material,
-    panelBackground,
     tooltip,
     tooltipSide = 'top',
     tooltipAlign = 'center',
@@ -47,13 +45,8 @@ const Badge = React.forwardRef<BadgeElement, BadgeProps>((props, forwardedRef) =
     ...badgeProps
   } = extractProps(props, badgePropDefs, marginPropDefs);
 
-  // Memoize material calculation for performance
-  const effectiveMaterial = React.useMemo(
-    () => material ?? panelBackground,
-    [material, panelBackground],
-  );
+  const effectiveMaterial = material;
 
-  useDeprecatedPanelBackgroundWarning(panelBackground);
 
   // Memoize component variable to prevent unnecessary re-renders
   const Comp = React.useMemo(() => (asChild ? Slot.Root : 'span'), [asChild]);
@@ -63,7 +56,6 @@ const Badge = React.forwardRef<BadgeElement, BadgeProps>((props, forwardedRef) =
       data-accent-color={color}
       data-radius={radius}
       data-material={effectiveMaterial}
-      data-panel-background={effectiveMaterial}
       {...badgeProps}
       ref={forwardedRef}
       className={classNames('rt-reset', 'rt-Badge', className)}

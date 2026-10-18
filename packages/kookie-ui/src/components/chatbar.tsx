@@ -219,7 +219,6 @@ interface ChatbarRootBaseProps {
   /** Optional radius override (matches TextArea) */
   radius?: (typeof radii)[number];
   /** Panel/material translucency flags (matches TextArea) */
-  panelBackground?: 'solid' | 'translucent';
   material?: 'solid' | 'translucent';
 
   width?: React.CSSProperties['width'];
@@ -325,7 +324,6 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
     variant,
     color,
     radius,
-    panelBackground,
     material,
     width,
     maxWidth,
@@ -347,7 +345,7 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
     context,
     ...divProps
   } = props;
-  const effectiveMaterial = material || panelBackground;
+  const effectiveMaterial = material;
 
   const isValueControlled = valueProp != null;
   const [valueUncontrolled, setValueUncontrolled] = React.useState<string>(defaultValue);
@@ -709,7 +707,6 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
               data-drop-active={dragActive ? '' : undefined}
               data-accent-color={color}
               data-radius={radius}
-              data-panel-background={effectiveMaterial}
               data-material={effectiveMaterial}
               onBlurCapture={handleBlurCapture}
             >
@@ -732,7 +729,6 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
                   style={{ position: 'relative' }}
                   data-accent-color={color}
                   data-radius={radius}
-                  data-panel-background={effectiveMaterial}
                   data-material={effectiveMaterial}
                   layout
                   transition={LAYOUT_TRANSITION}

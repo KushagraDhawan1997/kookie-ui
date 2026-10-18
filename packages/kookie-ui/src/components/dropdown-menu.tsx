@@ -38,7 +38,6 @@ import {
   useResolvedResponsiveValue,
 } from './_internal/base-menu.utils.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
-import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 
 import type { SubmenuBehavior } from './_internal/dropdown-menu-drill-down.js';
 import type { IconProps } from './icons.js';
@@ -134,9 +133,8 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
   (props, forwardedRef) => {
     const themeContext = useThemeContext();
 
-    useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
-    const material = resolveMenuMaterial(props.material, props.panelBackground, themeContext);
+    const material = resolveMenuMaterial(props.material, themeContext);
     const {
       size = dropdownMenuContentPropDefs.size.default,
     } = props;
@@ -147,7 +145,6 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
       container,
       forceMount,
       material: _material,
-      panelBackground: _panelBackground,
       submenuBehavior,
       virtualized = false,
       onEscapeKeyDown,
@@ -200,7 +197,6 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
           <DropdownMenuPrimitive.Content
             data-accent-color={resolvedColor}
             data-material={material}
-            data-panel-background={material}
             align="start"
             sideOffset={4}
             collisionPadding={10}
@@ -664,13 +660,12 @@ const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, Dropdo
     const parent = React.useContext(DropdownMenuContentContext);
     const themeContext = useThemeContext();
 
-    useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
     // A submenu inherits the parent surface, and its own props win.
     const size = props.size ?? parent.size;
     const color = props.color ?? parent.color;
     const material =
-      props.material ?? props.panelBackground ?? parent.material ?? resolveMenuMaterial(undefined, undefined, themeContext);
+      props.material ?? parent.material ?? resolveMenuMaterial(undefined, themeContext);
 
     const {
       className,
@@ -679,7 +674,6 @@ const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, Dropdo
       forceMount,
       color: _color,
       material: _material,
-      panelBackground: _panelBackground,
       virtualized = false,
       ...subContentProps
     } = extractProps({ ...props, size }, dropdownMenuSubContentPropDefs);
@@ -703,7 +697,6 @@ const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, Dropdo
           <DropdownMenuPrimitive.SubContent
             data-accent-color={color}
             data-material={material}
-            data-panel-background={material}
             alignOffset={getMenuAlignOffset(scalarSize, themeContext.scaling)}
             // Side offset accounts for the outer solid box-shadow
             sideOffset={1}
@@ -765,7 +758,6 @@ const DrillDownPanel = React.forwardRef<DropdownMenuSubContentElement, DrillDown
       size: _size,
       color: _color,
       material: _material,
-      panelBackground: _panelBackground,
       ...panelProps
     } = omitPopperProps(props);
 

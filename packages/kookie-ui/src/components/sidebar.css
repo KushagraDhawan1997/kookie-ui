@@ -308,17 +308,17 @@
 }
 
 /* Translucent panel support for soft variant */
-:where([data-panel-background='translucent']) :where(:is(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent, .rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter)).rt-menu-variant-soft .rt-SidebarMenuButton:where([data-highlighted]):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
+:where([data-material='translucent']) :where(:is(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent, .rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter)).rt-menu-variant-soft .rt-SidebarMenuButton:where([data-highlighted]):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
   background-color: var(--accent-a4);
 }
 
 @media (hover: hover) {
-  :where([data-panel-background='translucent']) :where(:is(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent, .rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter)).rt-menu-variant-soft .rt-SidebarMenuButton:where(:hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
+  :where([data-material='translucent']) :where(:is(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent, .rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter)).rt-menu-variant-soft .rt-SidebarMenuButton:where(:hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
     background-color: var(--accent-a4);
   }
 }
 
-:where([data-panel-background='translucent']) :where(:is(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent, .rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter)).rt-menu-variant-soft .rt-SidebarMenuButton[data-active] .rt-SidebarMenuIconWrapper) {
+:where([data-material='translucent']) :where(:is(.rt-SidebarContainer[data-presentation='thin'] .rt-SidebarContent, .rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter)).rt-menu-variant-soft .rt-SidebarMenuButton[data-active] .rt-SidebarMenuIconWrapper) {
   background-color: var(--accent-a3);
 }
 
@@ -420,13 +420,13 @@
   background-color: var(--sidebar-background-color);
 
   /* Theme-level translucent override */
-  :where([data-panel-background='translucent']) & {
+  :where([data-material='translucent']) & {
     --sidebar-border-color: var(--gray-a6);
     backdrop-filter: var(--backdrop-filter-panel);
   }
 
   /* Component-level overrides */
-  &:where([data-panel-background='solid']) {
+  &:where([data-material='solid']) {
     backdrop-filter: none;
     --backdrop-filter-panel: none;
   }
@@ -460,7 +460,7 @@
   --sidebar-background-color: var(--gray-2);
 
   /* Theme-level translucent override */
-  :where([data-panel-background='translucent']) & {
+  :where([data-material='translucent']) & {
     --sidebar-background-color: color-mix(in srgb, var(--gray-a2), var(--gray-2) 60%);
   }
 }
@@ -472,7 +472,7 @@
   --sidebar-background-color: var(--gray-1);
 
   /* Theme-level translucent override */
-  :where([data-panel-background='translucent']) & {
+  :where([data-material='translucent']) & {
     --sidebar-background-color: color-mix(in srgb, var(--gray-a1), var(--gray-1) 60%);
   }
 }
@@ -792,7 +792,7 @@
     }
 
     /* Remove backdrop-filter transitions in translucent mode to prevent flickering */
-    :where([data-panel-background='translucent']) & {
+    :where([data-material='translucent']) & {
       transition:
         background var(--duration-1) var(--ease-1),
         color var(--duration-2) var(--ease-1);
@@ -805,18 +805,18 @@
     background-color: var(--gray-3);
 
     /* Theme-level translucent override */
-    :where([data-panel-background='translucent']) & {
+    :where([data-material='translucent']) & {
       background-color: var(--gray-a3);
     }
 
     /* Component-level overrides (higher specificity) */
-    &:where([data-panel-background='solid']) {
+    &:where([data-material='solid']) {
       background-color: var(--gray-3);
       backdrop-filter: none;
       --backdrop-filter-components: none;
     }
 
-    &:where([data-panel-background='translucent']) {
+    &:where([data-material='translucent']) {
       background-color: var(--gray-a3);
     }
   }
@@ -824,7 +824,7 @@
   /* Menu item transitions - match base menu */
   & :where(.rt-SidebarMenuButton) {
     /* Remove backdrop-filter transitions in translucent mode to prevent flickering */
-    :where([data-panel-background='translucent']) & {
+    :where([data-material='translucent']) & {
       transition:
         background var(--duration-1) var(--ease-1),
         color var(--duration-2) var(--ease-1);
@@ -921,7 +921,7 @@
     }
 
     /* Remove backdrop-filter transitions in translucent mode to prevent flickering */
-    :where([data-panel-background='translucent']) & {
+    :where([data-material='translucent']) & {
       transition:
         background var(--duration-1) var(--ease-1),
         color var(--duration-2) var(--ease-1);
@@ -934,18 +934,18 @@
     background-color: var(--accent-3);
 
     /* Theme-level translucent override */
-    :where([data-panel-background='translucent']) & {
+    :where([data-material='translucent']) & {
       background-color: var(--accent-a3);
     }
 
     /* Component-level overrides (higher specificity) */
-    &:where([data-panel-background='solid']) {
+    &:where([data-material='solid']) {
       background-color: var(--accent-3);
       backdrop-filter: none;
       --backdrop-filter-components: none;
     }
 
-    &:where([data-panel-background='translucent']) {
+    &:where([data-material='translucent']) {
       background-color: var(--accent-a3);
     }
   }
@@ -953,7 +953,7 @@
   /* Menu item transitions - match base menu */
   & :where(.rt-SidebarMenuButton) {
     /* Remove backdrop-filter transitions in translucent mode to prevent flickering */
-    :where([data-panel-background='translucent']) & {
+    :where([data-material='translucent']) & {
       transition:
         background var(--duration-1) var(--ease-1),
         color var(--duration-2) var(--ease-1);
@@ -966,18 +966,18 @@
     background-color: var(--accent-4);
 
     /* Theme-level translucent override */
-    :where([data-panel-background='translucent']) & {
+    :where([data-material='translucent']) & {
       background-color: var(--accent-a4);
     }
 
     /* Component-level overrides (higher specificity) */
-    &:where([data-panel-background='solid']) {
+    &:where([data-material='solid']) {
       background-color: var(--accent-4);
       backdrop-filter: none;
       --backdrop-filter-components: none;
     }
 
-    &:where([data-panel-background='translucent']) {
+    &:where([data-material='translucent']) {
       background-color: var(--accent-a4);
     }
 
@@ -993,18 +993,18 @@
       background-color: var(--accent-4);
   
       /* Theme-level translucent override */
-      :where([data-panel-background='translucent']) & {
+      :where([data-material='translucent']) & {
         background-color: var(--accent-a4);
       }
   
       /* Component-level overrides (higher specificity) */
-      &:where([data-panel-background='solid']) {
+      &:where([data-material='solid']) {
         background-color: var(--accent-4);
         backdrop-filter: none;
         --backdrop-filter-components: none;
       }
   
-      &:where([data-panel-background='translucent']) {
+      &:where([data-material='translucent']) {
         background-color: var(--accent-a4);
       }
   
@@ -1023,20 +1023,20 @@
     font-weight: var(--font-weight-medium);
 
     /* Theme-level translucent override */
-    :where([data-panel-background='translucent']) & {
+    :where([data-material='translucent']) & {
       background-color: var(--accent-a3);
       color: var(--accent-a12);
     }
 
     /* Component-level overrides (higher specificity) */
-    &:where([data-panel-background='solid']) {
+    &:where([data-material='solid']) {
       background-color: var(--accent-3);
       color: var(--accent-12);
       backdrop-filter: none;
       --backdrop-filter-components: none;
     }
 
-    &:where([data-panel-background='translucent']) {
+    &:where([data-material='translucent']) {
       background-color: var(--accent-a3);
       color: var(--accent-a12);
     }
@@ -1059,18 +1059,18 @@
       background-color: var(--gray-3);
 
       /* Theme-level translucent override */
-      :where([data-panel-background='translucent']) & {
+      :where([data-material='translucent']) & {
         background-color: var(--gray-a3);
       }
 
       /* Component-level overrides (higher specificity) */
-      &:where([data-panel-background='solid']) {
+      &:where([data-material='solid']) {
         background-color: var(--gray-3);
         backdrop-filter: none;
         --backdrop-filter-components: none;
       }
 
-      &:where([data-panel-background='translucent']) {
+      &:where([data-material='translucent']) {
         background-color: var(--gray-a3);
       }
     }
@@ -1283,7 +1283,7 @@
 }
 
 @media (hover: hover) {
-  :where([data-panel-background='translucent']) :where(:is(.rt-SidebarContainer[data-presentation='thin'], .rt-ShellRailContent).rt-menu-variant-soft) :where(.rt-SidebarSearchTrigger:where(:hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
+  :where([data-material='translucent']) :where(:is(.rt-SidebarContainer[data-presentation='thin'], .rt-ShellRailContent).rt-menu-variant-soft) :where(.rt-SidebarSearchTrigger:where(:hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
     background-color: var(--accent-a4);
   }
 }

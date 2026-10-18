@@ -19,12 +19,12 @@
    * Component-level material override
    * When component has explicit material prop, override the inherited theme values.
    */
-  &:where([data-material='solid'], [data-panel-background='solid']) {
+  &:where([data-material='solid']) {
     --material-blend: 100%;
     --material-alpha: 0;
   }
 
-  &:where([data-material='translucent'], [data-panel-background='translucent']) {
+  &:where([data-material='translucent']) {
     --material-blend: 60%;
     --material-alpha: 1;
   }
@@ -224,11 +224,11 @@
 }
 
 /* Theme-level translucent override for the visual shell (matches any ancestor) */
-:where([data-panel-background='translucent'], [data-material='translucent']) .rt-ChatbarBox {
+:where([data-material='translucent']) .rt-ChatbarBox {
   backdrop-filter: var(--backdrop-filter-components);
   --backdrop-filter-components: var(--backdrop-filter-components-enabled);
 }
-.rt-ChatbarRoot:where([data-panel-background='solid'], [data-material='solid']) .rt-ChatbarBox {
+.rt-ChatbarRoot:where([data-material='solid']) .rt-ChatbarBox {
   backdrop-filter: none;
   --backdrop-filter-components: none;
 }
@@ -468,12 +468,12 @@
   transition: var(--transition-text-field);
 
   /* Translucent theme override (ancestor match, zero added specificity so hover still wins) */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     background-color: var(--color-surface-translucent);
   }
 
   /* Explicit solid material on the component beats an inherited translucent theme */
-  :where(.rt-ChatbarRoot[data-panel-background='solid'], .rt-ChatbarRoot[data-material='solid']) & {
+  :where(.rt-ChatbarRoot[data-material='solid']) & {
     background-color: var(--color-surface-solid);
   }
 

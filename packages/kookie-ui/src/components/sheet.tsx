@@ -14,8 +14,7 @@
  * - Side: set with `side` on `Sheet.Content`. Aliases: `left` → `start`, `right` → `end`.
  * - Sizing: reuses Dialog content prop defs (width/min/max/height/size). Default Dialog
  *   maxWidth clamping is removed for Sheets.
- * - Material: use `material` (solid | translucent). Deprecated `panelBackground` falls back
- *   in dev with a warning.
+ * - Material: use `material` (solid | translucent).
  * - A11y: provide an accessible name via `Sheet.Title` or `aria-label` on `Sheet.Content`.
  *
  * Example
@@ -43,7 +42,6 @@ import { Theme } from './theme.js';
 import { Heading } from './heading.js';
 import { Text } from './text.js';
 import { extractProps } from '../helpers/extract-props.js';
-import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
 import { useBodyPointerEventsCleanup } from '../hooks/use-body-pointer-events-cleanup.js';
 
@@ -87,19 +85,17 @@ Trigger.displayName = 'Sheet.Trigger';
 // Content
 /** Element type for `Sheet.Content`. */
 // Reuse dialog content prop defs for size/width/height tokens, but handle
-// material/panelBackground explicitly to avoid forwarding unknown DOM props.
+// material explicitly to avoid forwarding unknown DOM props.
 // Built once at module scope: `extractProps` memoises on the identity of the
 // prop def objects it is handed, so rebuilding these per render would recompile
 // them every time a sheet renders.
 const {
   align: _alignPropDef,
-  panelBackground: panelBackgroundPropDef,
   material: materialPropDef,
   ...dialogPropDefsForSheet
 } = dialogContentPropDefs;
 
 const materialPropDefs = {
-  panelBackground: panelBackgroundPropDef,
   material: materialPropDef,
 };
 
@@ -132,7 +128,6 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>(
       forceMount,
       container,
       className,
-      panelBackground: panelBackgroundProp,
       material: materialProp,
       ...restProps
     } = allProps;
@@ -145,16 +140,13 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>(
       bottom: 'bottom',
     };
     const normalizedSide = normalizedSideMap[side];
-    // Extract panelBackground and material together (remove from DOM props)
-    const { panelBackground: resolvedPanelBackground, material: resolvedMaterial } = extractProps(
-      { panelBackground: panelBackgroundProp, material: materialProp },
+    const { material: resolvedMaterial } = extractProps(
+      { material: materialProp },
       materialPropDefs,
     );
 
-    useDeprecatedPanelBackgroundWarning(panelBackgroundProp);
 
-    // Material takes precedence over the deprecated panelBackground
-    const materialValue = resolvedMaterial ?? resolvedPanelBackground;
+    const materialValue = resolvedMaterial;
 
     // Size/width/height class names come from the dialog defs — see `sheetPropDefs`.
     const { className: extractedClassName, ...contentProps } = extractProps(
@@ -249,7 +241,6 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>(
               )}
               data-side={normalizedSide}
               data-material={materialValue}
-              data-panel-background={materialValue}
               tabIndex={-1}
               role="dialog"
               aria-modal="true"

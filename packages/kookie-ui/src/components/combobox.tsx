@@ -25,7 +25,6 @@ import { useCallbackRef, useComposedRefs, useControllableState, useLayoutEffect 
 import { Command as CommandPrimitive, useCommandState } from 'cmdk';
 
 import { extractProps } from '../helpers/extract-props.js';
-import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 import { comboboxRootPropDefs, comboboxTriggerPropDefs, comboboxContentPropDefs } from './combobox.props.js';
 import { marginPropDefs } from '../props/margin.props.js';
 import { ChevronDownIcon, ThickCheckIcon } from './icons.js';
@@ -341,9 +340,7 @@ const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTrigger
     ...triggerProps
   } = extractProps({ size: ctx.size, ...props }, triggerSizingPropDefs, comboboxTriggerPropDefs, marginPropDefs);
 
-  // `panelBackground` has a className prop def, so extractProps strips it.
-  const { panelBackground } = props;
-  const resolvedMaterial = material ?? panelBackground;
+  const resolvedMaterial = material;
   const isDisabled = disabled ?? ctx.disabled;
   const resolvedColor = color ?? ctx.color;
   // Read-only and loading triggers stay focusable but do not open.
@@ -411,7 +408,6 @@ const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTrigger
       <button
         data-accent-color={resolvedColor}
         data-radius={radius}
-        data-panel-background={resolvedMaterial}
         data-material={resolvedMaterial}
         data-error={error}
         data-loading={loading}
@@ -492,9 +488,8 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
   const ctx = useComboboxContext('Content');
   const themeContext = useThemeContext();
 
-  useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
-  const material = props.material ?? props.panelBackground ?? themeContext.material ?? themeContext.panelBackground;
+  const material = props.material ?? themeContext.material;
   // Menus stop at size 3; a size 4 field opens a size 3 list.
   const rootSize = ctx.size === '4' ? '3' : ctx.size;
   const size = props.size ?? rootSize ?? comboboxContentPropDefs.size.default;
@@ -506,7 +501,6 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
     forceMount,
     container,
     material: _material,
-    panelBackground: _panelBackground,
     onOpenAutoFocus,
     'aria-label': _ariaLabel,
     'aria-labelledby': ariaLabelledByProp,
@@ -563,7 +557,6 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
         <PopoverPrimitive.Content
           data-accent-color={resolvedColor}
           data-material={material}
-          data-panel-background={material}
           align="start"
           sideOffset={4}
           collisionPadding={10}
@@ -627,7 +620,6 @@ const ComboboxInput = React.forwardRef<ComboboxInputElement, ComboboxInputProps>
         className={classNames('rt-TextFieldRoot', 'rt-ComboboxInputRoot', contentContext?.sizeClassName, `rt-variant-${textFieldVariant}`)}
         data-accent-color={contentContext?.color}
         data-material={contentContext?.material}
-        data-panel-background={contentContext?.material}
       >
         {startAdornment ? <div className="rt-TextFieldSlot">{startAdornment}</div> : null}
         <CommandPrimitive.Input

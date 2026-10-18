@@ -188,8 +188,8 @@ const ThemePanelContent = React.forwardRef<ThemePanelContentElement, ThemePanelC
       onAccentColorChange,
       grayColor,
       onGrayColorChange,
-      panelBackground,
-      onPanelBackgroundChange,
+      material,
+      onMaterialChange,
       radius,
       onRadiusChange,
       scaling,
@@ -231,8 +231,7 @@ const ThemePanelContent = React.forwardRef<ThemePanelContentElement, ThemePanelC
         appearance: appearance === themePropDefs.appearance.default ? undefined : appearance,
         accentColor: accentColor === themePropDefs.accentColor.default ? undefined : accentColor,
         grayColor: grayColor === themePropDefs.grayColor.default ? undefined : grayColor,
-        panelBackground:
-          panelBackground === themePropDefs.panelBackground.default ? undefined : panelBackground,
+        material: material === themePropDefs.material.default ? undefined : material,
         radius: radius === themePropDefs.radius.default ? undefined : radius,
         scaling: scaling === themePropDefs.scaling.default ? undefined : scaling,
       } satisfies GetPropDefTypes<typeof themePropDefs>;
@@ -525,7 +524,7 @@ const ThemePanelContent = React.forwardRef<ThemePanelContentElement, ThemePanelC
           {/* Panel background */}
           <ThemePanelSection>
             <Flex align="center" gap="2">
-              <ThemePanelHeading id="panel-background-title">Panel background</ThemePanelHeading>
+              <ThemePanelHeading id="material-title">Material</ThemePanelHeading>
               <Popover.Root>
                 <Popover.Trigger>
                   <IconButton size="1" variant="ghost" color="gray">
@@ -566,18 +565,18 @@ const ThemePanelContent = React.forwardRef<ThemePanelContentElement, ThemePanelC
               rows={{ initial: '2', sm: '1' }}
               gap="2"
               role="group"
-              aria-labelledby="panel-background-title"
+              aria-labelledby="material-title"
             >
-              {themePropDefs.panelBackground.values.map((value) => (
+              {themePropDefs.material.values.map((value) => (
                 <label key={value} className="rt-ThemePanelRadioCard">
                   <input
                     className="rt-ThemePanelRadioCardInput"
                     type="radio"
-                    name="panelBackground"
+                    name="material"
                     value={value}
-                    checked={panelBackground === value}
+                    checked={material === value}
                     onChange={(event) =>
-                      onPanelBackgroundChange(event.target.value as typeof panelBackground)
+                      onMaterialChange(event.target.value as typeof material)
                     }
                   />
                   <Flex align="center" justify="center" height="32px" gap="2">

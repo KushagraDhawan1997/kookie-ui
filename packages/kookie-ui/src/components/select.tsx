@@ -1,6 +1,5 @@
 'use client';
 
-import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import classNames from 'classnames';
@@ -58,7 +57,6 @@ const SelectTrigger = React.forwardRef<SelectTriggerElement, SelectTriggerProps>
       disabled,
       readOnly,
       material,
-      panelBackground: panelBackgroundProp,
       ...triggerProps
     } = extractProps(
       // Pass size value from the context to generate styles
@@ -69,8 +67,6 @@ const SelectTrigger = React.forwardRef<SelectTriggerElement, SelectTriggerProps>
       marginPropDefs,
     );
 
-    useDeprecatedPanelBackgroundWarning(panelBackgroundProp);
-    const panelBackground = material ?? panelBackgroundProp;
 
     const ariaProps = React.useMemo(
       () => ({
@@ -87,8 +83,7 @@ const SelectTrigger = React.forwardRef<SelectTriggerElement, SelectTriggerProps>
         <button
           data-accent-color={color}
           data-radius={radius}
-          data-panel-background={panelBackground}
-          data-material={panelBackground}
+          data-material={material}
           data-error={error}
           data-loading={loading}
           {...triggerProps}

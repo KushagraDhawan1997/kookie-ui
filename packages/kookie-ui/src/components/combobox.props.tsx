@@ -23,11 +23,6 @@ const triggerVariants = ['raised', 'surface', 'soft', 'outline', 'ghost'] as con
  */
 const comboboxTriggerPropDefs = {
   variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'raised' },
-  panelBackground: {
-    type: 'enum',
-    className: 'rt-panel-background',
-    values: ['solid', 'translucent'],
-  },
   material: { type: 'enum', values: ['solid', 'translucent'] },
   error: { type: 'boolean' },
   loading: { type: 'boolean' },
@@ -39,7 +34,6 @@ const comboboxTriggerPropDefs = {
   placeholder: { type: 'string' },
 } satisfies {
   variant: PropDef<(typeof triggerVariants)[number]>;
-  panelBackground: PropDef<'solid' | 'translucent'>;
   material: PropDef<'solid' | 'translucent'>;
   error: PropDef<boolean>;
   loading: PropDef<boolean>;
@@ -60,8 +54,6 @@ const comboboxContentPropDefs = {
   size: { type: 'enum', className: 'rt-r-size', values: contentSizes, default: '2', responsive: true },
   ...colorPropDef,
   material: { type: 'enum', values: materials, default: undefined },
-  /** @deprecated Use `material`. */
-  panelBackground: { type: 'enum', values: materials, default: undefined },
   width: widthPropDefs.width,
   minWidth: widthPropDefs.minWidth,
   maxWidth: { ...widthPropDefs.maxWidth, default: '480px' },
@@ -69,7 +61,6 @@ const comboboxContentPropDefs = {
 } satisfies {
   size: PropDef<(typeof contentSizes)[number]>;
   material: PropDef<(typeof materials)[number] | undefined>;
-  panelBackground: PropDef<(typeof materials)[number] | undefined>;
   width: PropDef<string>;
   minWidth: PropDef<string>;
   maxWidth: PropDef<string>;

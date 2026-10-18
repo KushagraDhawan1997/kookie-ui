@@ -188,19 +188,19 @@
       background-color: var(--gray-a3);
 
       /* Theme-level translucent override for hover */
-      :where([data-panel-background='translucent']) & {
+      :where([data-material='translucent']) & {
         background-color: var(--gray-a3);
         backdrop-filter: var(--backdrop-filter-components);
       }
 
       /* Component-level overrides for hover */
-      :where(.rt-BaseTabList[data-panel-background='solid']) & {
+      :where(.rt-BaseTabList[data-material='solid']) & {
         background-color: var(--gray-a3);
         backdrop-filter: none;
         --backdrop-filter-components: none;
       }
 
-      :where(.rt-BaseTabList[data-panel-background='translucent']) & {
+      :where(.rt-BaseTabList[data-material='translucent']) & {
         background-color: var(--gray-a3);
         backdrop-filter: var(--backdrop-filter-components);
         --backdrop-filter-components: var(--backdrop-filter-components-enabled);
@@ -216,19 +216,19 @@
       background-color: var(--accent-a3);
 
       /* Theme-level translucent override for focus+hover */
-      :where([data-panel-background='translucent']) & {
+      :where([data-material='translucent']) & {
         background-color: var(--accent-a3);
         backdrop-filter: var(--backdrop-filter-components);
       }
 
       /* Component-level overrides for focus+hover */
-      :where(.rt-BaseTabList[data-panel-background='solid']) & {
+      :where(.rt-BaseTabList[data-material='solid']) & {
         background-color: var(--accent-a3);
         backdrop-filter: none;
         --backdrop-filter-components: none;
       }
 
-      :where(.rt-BaseTabList[data-panel-background='translucent']) & {
+      :where(.rt-BaseTabList[data-material='translucent']) & {
         background-color: var(--accent-a3);
         backdrop-filter: var(--backdrop-filter-components);
         --backdrop-filter-components: var(--backdrop-filter-components-enabled);

@@ -23,7 +23,7 @@
   --material-alpha: 0;
 
   /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     --material-blend: 60%;
     --material-alpha: 1;
     backdrop-filter: var(--backdrop-filter-components);
@@ -34,14 +34,14 @@
   isolation: isolate;
 
   /* Component-level overrides */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     --material-blend: 100%;
     --material-alpha: 0;
     backdrop-filter: none;
     --backdrop-filter-components: none;
   }
   
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     --material-blend: 60%;
     --material-alpha: 1;
     backdrop-filter: var(--backdrop-filter-components);
@@ -207,15 +207,15 @@
   --raised-surface: var(--color-surface-solid);
   background-color: var(--raised-surface);
 
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     --raised-surface: var(--color-surface-translucent);
   }
 
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     --raised-surface: var(--color-surface-solid);
   }
 
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     --raised-surface: var(--color-surface-translucent);
   }
 }

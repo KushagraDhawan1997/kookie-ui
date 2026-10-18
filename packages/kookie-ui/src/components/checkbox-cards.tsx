@@ -1,6 +1,5 @@
 'use client';
 
-import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 import * as React from 'react';
 import classNames from 'classnames';
 import { Context } from 'radix-ui/internal';
@@ -47,14 +46,12 @@ interface CheckboxCardsRootProps
 const CheckboxCardsRoot = React.forwardRef<CheckboxCardsRootElement, CheckboxCardsRootProps>(
   (props: ScopedProps<CheckboxCardsRootProps>, forwardedRef) => {
     const themeContext = useThemeContext();
-    useDeprecatedPanelBackgroundWarning(props.panelBackground);
-    const panelBackground = props.material ?? props.panelBackground ?? themeContext.material ?? themeContext.panelBackground;
+    const resolvedMaterial = props.material ?? themeContext.material;
     const {
       __scopeCheckboxCards,
       className,
       color,
       material: _material,
-      panelBackground: _,
       ...rootProps
     } = extractProps(props, checkboxCardsRootPropDefs, marginPropDefs);
     const checkboxGroupScope = useCheckboxGroupScope(__scopeCheckboxCards);
@@ -68,8 +65,7 @@ const CheckboxCardsRoot = React.forwardRef<CheckboxCardsRootElement, CheckboxCar
           <CheckboxGroupPrimitive.Root
             {...checkboxGroupScope}
             data-accent-color={color}
-            data-panel-background={panelBackground}
-            data-material={panelBackground}
+            data-material={resolvedMaterial}
             {...rootProps}
             ref={forwardedRef}
             className={classNames('rt-CheckboxCardsRoot', className)}

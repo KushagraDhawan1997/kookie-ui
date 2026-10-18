@@ -27,12 +27,12 @@
   --material-blend: 100%;
   --material-alpha: 0;
 
-  &:where([data-material='solid'], [data-panel-background='solid']) {
+  &:where([data-material='solid']) {
     --material-blend: 100%;
     --material-alpha: 0;
   }
 
-  &:where([data-material='translucent'], [data-panel-background='translucent']) {
+  &:where([data-material='translucent']) {
     --material-blend: 60%;
     --material-alpha: 1;
   }
@@ -86,16 +86,16 @@
   }
 
   /* Backdrop-filter for ::before - applies to outline, soft, surface */
-  :where([data-panel-background='translucent'], [data-material='translucent']) &::before {
+  :where([data-material='translucent']) &::before {
     backdrop-filter: var(--backdrop-filter-panel);
     --backdrop-filter-panel: var(--backdrop-filter-panel-enabled);
   }
 
-  &:where([data-material='solid'], [data-panel-background='solid'])::before {
+  &:where([data-material='solid'])::before {
     backdrop-filter: none;
   }
 
-  &:where([data-material='translucent'], [data-panel-background='translucent'])::before {
+  &:where([data-material='translucent'])::before {
     backdrop-filter: var(--backdrop-filter-panel);
     --backdrop-filter-panel: var(--backdrop-filter-panel-enabled);
   }
@@ -467,16 +467,16 @@
   }
 
   /* Backdrop-filter handling for ghost - on element, not ::before */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     backdrop-filter: var(--backdrop-filter-panel);
     --backdrop-filter-panel: var(--backdrop-filter-panel-enabled);
   }
 
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     backdrop-filter: none;
   }
 
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     backdrop-filter: var(--backdrop-filter-panel);
     --backdrop-filter-panel: var(--backdrop-filter-panel-enabled);
   }
@@ -530,17 +530,7 @@
   }
 
   /* Prevent backdrop-filter stacking inside overlay components */
-  :where(
-    .rt-PopoverContent,
-    .rt-BaseDialogContent,
-    .rt-BaseMenuContent,
-    .rt-DropdownMenuContent,
-    .rt-ContextMenuContent,
-    .rt-AlertDialogContent,
-    .rt-HoverCardContent,
-    .rt-TooltipContent,
-    .rt-Card
-  ) & {
+  :where(.rt-PopoverContent, .rt-BaseDialogContent, .rt-BaseMenuContent, .rt-DropdownMenuContent, .rt-ContextMenuContent, .rt-AlertDialogContent, .rt-HoverCardContent, .rt-TooltipContent, .rt-Card) & {
     backdrop-filter: none !important;
   }
 }
@@ -560,15 +550,15 @@
   top: var(--raised-elevation-offset);
   box-shadow: var(--shadow-2);
 
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     --card-background-color: var(--color-surface-translucent);
   }
 
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     --card-background-color: var(--color-surface-solid);
   }
 
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     --card-background-color: var(--color-surface-translucent);
   }
 

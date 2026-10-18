@@ -30,7 +30,7 @@
    * Theme-level translucent override
    * Applies backdrop filter for elevated visual effects
    */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     backdrop-filter: var(--backdrop-filter-components);
     --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
@@ -39,12 +39,12 @@
    * Component-level material overrides
    * These ensure proper rendering based on material setting
    */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     backdrop-filter: none;
     --backdrop-filter-components: none;
   }
   
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     backdrop-filter: var(--backdrop-filter-components);
     --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
@@ -541,16 +541,16 @@
   background-color: var(--gray-3);
 
   /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     background-color: color-mix(in srgb, var(--gray-a3), var(--gray-3) 60%);
   }
 
   /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     background-color: var(--gray-3);
   }
 
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     background-color: color-mix(in srgb, var(--gray-a3), var(--gray-3) 60%);
   }
 }

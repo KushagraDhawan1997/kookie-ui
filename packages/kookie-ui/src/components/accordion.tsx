@@ -19,7 +19,6 @@ import type {
   AccordionContentOwnProps,
 } from './accordion.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
-import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 
 // Root component
 type AccordionRootElement = React.ElementRef<typeof AccordionPrimitive.Root>;
@@ -29,17 +28,15 @@ interface AccordionRootProps
 
 const AccordionRoot = React.forwardRef<AccordionRootElement, AccordionRootProps>(
   (props, forwardedRef) => {
-    const { className, panelBackground, material, flush, radius, color, ...extractedRadixProps } =
+    const { className, material, flush, radius, color, ...extractedRadixProps } =
       extractProps(props, accordionRootPropDefs);
 
     const radixProps = extractedRadixProps as React.ComponentPropsWithoutRef<
       typeof AccordionPrimitive.Root
     >;
 
-    useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
-    // Material takes precedence over panelBackground
-    const effectiveMaterial = material ?? panelBackground;
+    const effectiveMaterial = material;
 
     // Ensure single accordions can collapse by default unless explicitly set
     if (radixProps.type === 'single' && radixProps.collapsible === undefined) {
@@ -76,7 +73,6 @@ const AccordionRoot = React.forwardRef<AccordionRootElement, AccordionRootProps>
         ref={forwardedRef}
         className={classNames('rt-AccordionRoot', className)}
         data-accent-color={color}
-        data-panel-background={effectiveMaterial}
         data-material={effectiveMaterial}
         data-flush={flush || undefined}
         data-radius={radius}

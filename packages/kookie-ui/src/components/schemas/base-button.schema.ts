@@ -139,15 +139,6 @@ export const BaseButtonSchema = z
       .describe('Material type for visual rendering and depth effects'),
 
     /**
-     * Panel background type (deprecated)
-     * @deprecated Use `material` prop instead. This prop will be removed in a future version.
-     */
-    panelBackground: z
-      .enum(['solid', 'translucent'])
-      .optional()
-      .describe('Panel background type (deprecated - use material instead)'),
-
-    /**
      * Flush mode that removes visual padding for seamless text integration
      * Only effective with ghost variant
      * @default false

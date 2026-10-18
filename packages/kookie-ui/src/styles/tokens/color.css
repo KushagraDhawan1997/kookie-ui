@@ -153,7 +153,7 @@
 /* * * * * * * * * * * * * * * * * * * */
 
 .radix-themes {
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     --color-panel: var(--color-panel-solid);
     --color-surface: var(--color-surface-solid);
     --color-dialog: var(--color-dialog-solid);
@@ -164,7 +164,7 @@
     --material-blend: 100%;
     --material-alpha: 0;
   }
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     --color-panel: var(--color-panel-translucent);
     --color-surface: var(--color-surface-translucent);
     --color-dialog: var(--color-dialog-translucent);
