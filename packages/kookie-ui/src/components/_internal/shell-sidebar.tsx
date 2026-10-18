@@ -114,7 +114,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
 
   if (props.thinSize !== undefined || pane.value === 'thin') {
     warnDeprecated(
-      "Shell.Sidebar's thin mode is deprecated and will be removed in 0.15.0. Use Shell.Rail for a column of icons, and toggleModes=\"single\" so the toggle skips thin.",
+      "Shell.Sidebar's thin mode is deprecated and will be removed in 0.15.0. Put the rows in Shell.Rail, which draws them as tiles, and use toggleModes=\"single\" so the toggle skips thin.",
     );
   }
 

@@ -486,11 +486,21 @@ const Rail = React.forwardRef<HTMLDivElement, RailProps>((props, ref) => {
       tabIndex={pane.overlaying ? -1 : domProps.tabIndex}
       style={{ ...style, '--rail-size': `${expandedSize}px` } as CSSPropertiesWithVars}
     >
-      <div className="rt-ShellRailContent">{children}</div>
+      <RailContent>{children}</RailContent>
     </div>
   );
 });
 Rail.displayName = 'Shell.Rail';
+
+/** The Rail's content carries the index, so the thin row styles can size themselves by it. */
+function RailContent({ children }: { children: React.ReactNode }) {
+  const size = React.useContext(ShellSizeContext);
+  return (
+    <div className={classNames('rt-ShellRailContent', `rt-r-size-${size}`)}>
+      <PaneChromeScope presentation="thin">{children}</PaneChromeScope>
+    </div>
+  );
+}
 
 /* ── Panel ─────────────────────────────────────────────────────────────────── */
 

@@ -74,6 +74,34 @@ describe('Sidebar parts inside Shell.Sidebar', () => {
     expect(screen.queryByRole('navigation')).toBeNull();
   });
 
+  it('in a Rail, rows and the footer are thin tiles', () => {
+    const { container } = renderWithProviders(
+      <Shell.Root>
+        <Shell.Rail defaultOpen>
+          <Shell.Scroll>
+            <Nav />
+          </Shell.Scroll>
+          <Shell.PaneFooter>
+            <Sidebar.MenuButton>
+              <svg />
+              Settings
+            </Sidebar.MenuButton>
+          </Shell.PaneFooter>
+        </Shell.Rail>
+        <Shell.Sidebar>
+          <Shell.Scroll>
+            <Sidebar.MenuButton>
+              <svg />
+              Full
+            </Sidebar.MenuButton>
+          </Shell.Scroll>
+        </Shell.Sidebar>
+      </Shell.Root>,
+    );
+    expect(container.querySelector('.rt-ShellRail .rt-ShellPaneFooter .rt-SidebarMenuIconWrapper')).not.toBeNull();
+    expect(container.querySelector('.rt-ShellSidebar .rt-SidebarMenuIconWrapper')).toBeNull();
+  });
+
   it('a Sidebar.Root inside the pane still sets its own index', () => {
     const { container } = renderWithProviders(
       <Shell.Root size="3">
