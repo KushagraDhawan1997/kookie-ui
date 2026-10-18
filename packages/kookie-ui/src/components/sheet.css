@@ -69,18 +69,3 @@
     backdrop-filter: none !important;
   }
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  /* Override base dialog animations specifically for Sheet */
-  .rt-SheetContent:where([data-state='closed']) {
-    /* Keep visible to allow reverse slide-out */
-    opacity: 1;
-  }
-
-  /* OPEN: fade in inner content after slide completes */
-  .rt-SheetContent:where([data-state='open']) > * {
-    opacity: 0;
-  }
-
-  /* CLOSED: fade out inner content immediately, then container slides */
-}

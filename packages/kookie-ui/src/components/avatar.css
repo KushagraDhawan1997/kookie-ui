@@ -17,10 +17,9 @@
  ***************************************************************************************************/
 
 .rt-AvatarRoot {
-  /*
-   * Component-level material override
-   * When avatar has explicit material prop, override the inherited theme values.
-   */
+  /* Avatar takes no material: it stays solid inside a translucent theme or surface. */
+  --material-blend: 100%;
+  --material-alpha: 0;
 
   display: inline-flex;
   align-items: center;
