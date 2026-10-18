@@ -1,5 +1,6 @@
 'use client';
 
+import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import classNames from 'classnames';
 import { ToggleGroup as ToggleGroupPrimitive } from 'radix-ui';
@@ -35,6 +36,10 @@ const SegmentedControlRoot = React.forwardRef<HTMLDivElement, SegmentedControlRo
       onValueChange: onValueChangeProp,
       ...rootProps
     } = extractProps(props, segmentedControlRootPropDefs, marginPropDefs);
+
+    if (props.variant !== undefined) {
+      warnDeprecated('SegmentedControl `variant` is deprecated and will be removed in 0.15.0. It has one value, so it chooses nothing.');
+    }
 
     const [value, setValue] = useControllableState({
       prop: valueProp,

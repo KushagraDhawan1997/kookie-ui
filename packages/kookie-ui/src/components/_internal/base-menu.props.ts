@@ -22,7 +22,7 @@ const baseMenuSharedPropDefs = {
     type: 'enum',
     className: 'rt-variant',
     values: contentVariants,
-    default: 'solid',
+    default: 'soft',
   },
   material: {
     type: 'enum',

@@ -367,6 +367,39 @@
   }
 }
 
+/* The menu highlight is soft, and solid when the person asks for more contrast. */
+@media (prefers-contrast: more) {
+  .rt-BaseMenuContent:where(.rt-variant-soft) {
+    & :where(.rt-BaseMenuSubTrigger[data-state='open']) {
+      background-color: var(--gray-3);
+    }
+
+    &:where([data-panel-background='translucent']) :where(.rt-BaseMenuSubTrigger[data-state='open']) {
+      background-color: var(--gray-a3);
+    }
+
+    /* Gray fills with step 12 automatically; a coloured item re-resolves the solid tokens */
+    & :where(.rt-BaseMenuItem[data-highlighted]) {
+      background-color: var(--accent-solid);
+      color: var(--accent-solid-contrast);
+
+      & :where(.rt-BaseMenuSubTriggerIcon) {
+        color: var(--accent-solid-contrast);
+      }
+
+      /* Force all text elements to inherit hover color, including those with color="gray" */
+      & :where(.rt-Text) {
+        color: inherit !important;
+      }
+
+      /* Also target any element with data-accent-color="gray" */
+      & :where([data-accent-color='gray']:not(.rt-Badge)) {
+        color: inherit !important;
+      }
+    }
+  }
+}
+
 /* Forced colors support */
 @media (forced-colors: active) {
   .rt-BaseMenuItem:where(:focus-visible) {

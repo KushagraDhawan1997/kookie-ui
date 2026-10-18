@@ -1,5 +1,6 @@
 'use client';
 
+import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import classNames from 'classnames';
 import { Select as SelectPrimitive, ScrollArea as ScrollAreaPrimitive } from 'radix-ui';
@@ -131,6 +132,7 @@ interface SelectContentProps
 }
 const SelectContent = React.forwardRef<SelectContentElement, SelectContentProps>(
   (props, forwardedRef) => {
+    if (props.variant !== undefined) warnDeprecated('The menu `variant` prop is deprecated and will be removed in 0.15.0. Menus highlight with a soft fill, and a solid one when the person asks for more contrast.');
     const context = React.useContext(SelectContext);
     const { className, children, color, container, ...contentProps } = extractProps(
       // Pass size value from the context to generate styles

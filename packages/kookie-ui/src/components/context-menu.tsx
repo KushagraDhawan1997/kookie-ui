@@ -4,6 +4,7 @@
  */
 'use client';
 
+import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import classNames from 'classnames';
 import { ContextMenu as ContextMenuPrimitive, Slot } from 'radix-ui';
@@ -101,6 +102,7 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
       ...contentProps
     } = extractProps(props, contextMenuContentPropDefs);
 
+    if (props.variant !== undefined) warnDeprecated('The menu `variant` prop is deprecated and will be removed in 0.15.0. Menus highlight with a soft fill, and a solid one when the person asks for more contrast.');
     const resolvedColor = color || themeContext.accentColor;
     const scalarSize = useResolvedResponsiveValue(size, contextMenuContentPropDefs.size.default);
 
