@@ -92,7 +92,6 @@ type DropdownMenuSurfaceProps = GetPropDefTypes<typeof dropdownMenuSubContentPro
 
 type DropdownMenuContentContextValue = {
   size?: DropdownMenuSurfaceProps['size'];
-  variant?: DropdownMenuSurfaceProps['variant'];
   color?: DropdownMenuSurfaceProps['color'];
   material?: DropdownMenuSurfaceProps['material'];
 };
@@ -140,7 +139,6 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
     const material = resolveMenuMaterial(props.material, props.panelBackground, themeContext);
     const {
       size = dropdownMenuContentPropDefs.size.default,
-      variant = dropdownMenuContentPropDefs.variant.default,
     } = props;
     const {
       className,
@@ -157,7 +155,6 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
       ...contentProps
     } = extractProps(props, dropdownMenuContentPropDefs);
 
-    if (props.variant !== undefined) warnDeprecated('The menu `variant` prop is deprecated and will be removed in 0.15.0. Menus highlight with a soft fill, and a solid one when the person asks for more contrast.');
     const resolvedColor = color || themeContext.accentColor;
     const behavior = useResolvedResponsiveValue<SubmenuBehavior>(submenuBehavior, 'cascade');
     const isDrillDown = behavior === 'drill-down';
@@ -183,8 +180,8 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
     };
 
     const contextValue = React.useMemo(
-      () => ({ size, variant, color: resolvedColor, material }),
-      [size, variant, resolvedColor, material],
+      () => ({ size, color: resolvedColor, material }),
+      [size, resolvedColor, material],
     );
 
     const contentBody = (
@@ -215,6 +212,7 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
             className={classNames(
               'rt-PopperContent',
               'rt-BaseMenuContent',
+          'rt-variant-soft',
               'rt-DropdownMenuContent',
               className,
             )}
@@ -670,7 +668,6 @@ const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, Dropdo
 
     // A submenu inherits the parent surface, and its own props win.
     const size = props.size ?? parent.size;
-    const variant = props.variant ?? parent.variant;
     const color = props.color ?? parent.color;
     const material =
       props.material ?? props.panelBackground ?? parent.material ?? resolveMenuMaterial(undefined, undefined, themeContext);
@@ -685,13 +682,13 @@ const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, Dropdo
       panelBackground: _panelBackground,
       virtualized = false,
       ...subContentProps
-    } = extractProps({ ...props, size, variant }, dropdownMenuSubContentPropDefs);
+    } = extractProps({ ...props, size }, dropdownMenuSubContentPropDefs);
 
     const scalarSize = useResolvedResponsiveValue(size, dropdownMenuSubContentPropDefs.size.default);
 
     const contextValue = React.useMemo(
-      () => ({ size, variant, color, material }),
-      [size, variant, color, material],
+      () => ({ size, color, material }),
+      [size, color, material],
     );
 
     const body = (
@@ -717,6 +714,7 @@ const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, Dropdo
             className={classNames(
               'rt-PopperContent',
               'rt-BaseMenuContent',
+          'rt-variant-soft',
               'rt-BaseMenuSubContent',
               'rt-DropdownMenuContent',
               'rt-DropdownMenuSubContent',
@@ -765,7 +763,6 @@ const DrillDownPanel = React.forwardRef<DropdownMenuSubContentElement, DrillDown
       forceMount: _forceMount,
       virtualized: _virtualized,
       size: _size,
-      variant: _variant,
       color: _color,
       material: _material,
       panelBackground: _panelBackground,

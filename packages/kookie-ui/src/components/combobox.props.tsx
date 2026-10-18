@@ -51,7 +51,6 @@ const comboboxTriggerPropDefs = {
 
 // The list is a menu, and menus stop at size 3.
 const contentSizes = ['1', '2', '3'] as const;
-const contentVariants = ['solid', 'soft'] as const;
 const materials = ['solid', 'translucent'] as const;
 
 /**
@@ -59,7 +58,6 @@ const materials = ['solid', 'translucent'] as const;
  */
 const comboboxContentPropDefs = {
   size: { type: 'enum', className: 'rt-r-size', values: contentSizes, default: '2', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: contentVariants, default: 'soft' },
   ...colorPropDef,
   material: { type: 'enum', values: materials, default: undefined },
   /** @deprecated Use `material`. */
@@ -70,7 +68,6 @@ const comboboxContentPropDefs = {
   ...heightPropDefs,
 } satisfies {
   size: PropDef<(typeof contentSizes)[number]>;
-  variant: PropDef<(typeof contentVariants)[number]>;
   material: PropDef<(typeof materials)[number] | undefined>;
   panelBackground: PropDef<(typeof materials)[number] | undefined>;
   width: PropDef<string>;

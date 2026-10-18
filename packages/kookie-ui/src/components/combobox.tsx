@@ -132,7 +132,6 @@ const ComboboxItemContext = React.createContext<ComboboxItemContextValue | null>
 
 /** Values resolved by Content and read by Input and List. */
 interface ComboboxContentContextValue {
-  variant: 'solid' | 'soft';
   sizeClassName?: string;
   color?: string;
   material?: string;
@@ -499,12 +498,6 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
   // Menus stop at size 3; a size 4 field opens a size 3 list.
   const rootSize = ctx.size === '4' ? '3' : ctx.size;
   const size = props.size ?? rootSize ?? comboboxContentPropDefs.size.default;
-  if (props.variant !== undefined) {
-    warnDeprecated(
-      'The menu `variant` prop is deprecated and will be removed in 0.15.0. Menus highlight with a soft fill, and a solid one when the person asks for more contrast.',
-    );
-  }
-  const variant = props.variant ?? comboboxContentPropDefs.variant.default;
 
   const {
     className,
@@ -518,7 +511,7 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
     'aria-label': _ariaLabel,
     'aria-labelledby': ariaLabelledByProp,
     ...contentProps
-  } = extractProps({ ...props, size, variant }, comboboxContentPropDefs);
+  } = extractProps({ ...props, size }, comboboxContentPropDefs);
 
   const resolvedColor = color || ctx.color || themeContext.accentColor;
 
@@ -538,14 +531,13 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
 
   const contentContextValue = React.useMemo<ComboboxContentContextValue>(
     () => ({
-      variant,
       // Responsive-aware size class for the search field (never String() a responsive object).
       sizeClassName: extractProps({ size }, contentSizePropDefs).className || undefined,
       color: resolvedColor,
       material,
       label,
     }),
-    [variant, size, resolvedColor, material, label],
+    [size, resolvedColor, material, label],
   );
 
   const commandRef = React.useRef<HTMLDivElement>(null);
@@ -581,7 +573,8 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
           forceMount={forceMount ? true : undefined}
           onOpenAutoFocus={handleOpenAutoFocus}
           ref={forwardedRef}
-          className={classNames('rt-PopperContent', 'rt-BaseMenuContent', 'rt-ComboboxContent', className)}
+          className={classNames('rt-PopperContent', 'rt-BaseMenuContent',
+          'rt-variant-soft', 'rt-ComboboxContent', className)}
         >
           <ComboboxContentContext.Provider value={contentContextValue}>
             <CommandPrimitive
@@ -623,8 +616,7 @@ const ComboboxInput = React.forwardRef<ComboboxInputElement, ComboboxInputProps>
     const search = React.useContext(ComboboxSearchContext);
     const contentContext = useComboboxContentContext();
 
-    const contentVariant = contentContext?.variant ?? 'soft';
-    const textFieldVariant = inputVariant ?? (contentVariant === 'solid' ? 'surface' : 'soft');
+    const textFieldVariant = inputVariant ?? 'soft';
 
     // The search text lives in Root; only this component subscribes to it.
     const searchValue = value ?? search?.value ?? '';

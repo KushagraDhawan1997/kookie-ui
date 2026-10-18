@@ -42,9 +42,6 @@ const SegmentedControlRoot = React.forwardRef<HTMLDivElement, SegmentedControlRo
     useDeprecatedPanelBackgroundWarning(props.panelBackground);
     const material = materialProp ?? panelBackground;
 
-    if (props.variant !== undefined) {
-      warnDeprecated('SegmentedControl `variant` is deprecated and will be removed in 0.15.0. It has one value, so it chooses nothing.');
-    }
 
     const [value, setValue] = useControllableState({
       prop: valueProp,

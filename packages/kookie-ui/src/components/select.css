@@ -974,26 +974,6 @@
   color: var(--gray-a10);
 }
 
-/* solid */
-
-.rt-SelectContent:where(.rt-variant-solid) {
-  /* Gray fills with step 12 through the solid tokens */
-  & :where(.rt-SelectItem[data-highlighted]) {
-    background-color: var(--accent-solid);
-    color: var(--accent-solid-contrast);
-
-    /* Force all text elements to inherit hover color, including those with color="gray" */
-    & :where(.rt-Text) {
-      color: inherit !important;
-    }
-
-    /* Also target any element with data-accent-color="gray" */
-    & :where([data-accent-color='gray']) {
-      color: inherit !important;
-    }
-  }
-}
-
 /* soft */
 
 .rt-SelectContent:where(.rt-variant-soft) {
@@ -1003,6 +983,27 @@
     /* In soft variant, lift muted text a step while keeping the hierarchy */
     & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
       color: var(--gray-11) !important;
+    }
+  }
+}
+
+/* The highlight is solid when the system asks for more contrast. */
+@media (prefers-contrast: more) {
+  .rt-SelectContent:where(.rt-variant-soft) {
+    /* Gray fills with step 12 through the solid tokens */
+    & :where(.rt-SelectItem[data-highlighted]) {
+      background-color: var(--accent-solid);
+      color: var(--accent-solid-contrast);
+
+      /* Force all text elements to inherit hover color, including those with color="gray" */
+      & :where(.rt-Text) {
+        color: inherit !important;
+      }
+
+      /* Also target any element with data-accent-color="gray" */
+      & :where([data-accent-color='gray']) {
+        color: inherit !important;
+      }
     }
   }
 }

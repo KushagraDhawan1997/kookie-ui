@@ -4,7 +4,6 @@ import { colorPropDef } from '../../props/color.prop.js';
 import type { PropDef } from '../../props/prop-def.js';
 
 const contentSizes = ['1', '2'] as const;
-const contentVariants = ['solid', 'soft'] as const;
 const panelBackgrounds = ['solid', 'translucent'] as const;
 const materials = ['solid', 'translucent'] as const;
 const submenuBehaviors = ['cascade', 'drill-down'] as const;
@@ -17,12 +16,6 @@ const baseMenuSharedPropDefs = {
     values: contentSizes,
     default: '2',
     responsive: true,
-  },
-  variant: {
-    type: 'enum',
-    className: 'rt-variant',
-    values: contentVariants,
-    default: 'soft',
   },
   material: {
     type: 'enum',
@@ -40,7 +33,6 @@ const baseMenuSharedPropDefs = {
   ...colorPropDef,
 } satisfies {
   size: PropDef<(typeof contentSizes)[number]>;
-  variant: PropDef<(typeof contentVariants)[number]>;
   material: PropDef<(typeof materials)[number] | undefined>;
   panelBackground: PropDef<(typeof panelBackgrounds)[number] | undefined>;
 };
@@ -62,7 +54,6 @@ const baseMenuContentPropDefs = {
   },
 } satisfies {
   size: PropDef<(typeof contentSizes)[number]>;
-  variant: PropDef<(typeof contentVariants)[number]>;
   material: PropDef<(typeof materials)[number] | undefined>;
   panelBackground: PropDef<(typeof panelBackgrounds)[number] | undefined>;
   submenuBehavior: PropDef<(typeof submenuBehaviors)[number]>;

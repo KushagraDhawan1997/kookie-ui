@@ -536,7 +536,7 @@
 /*                                     */
 /* * * * * * * * * * * * * * * * * * * */
 
-.rt-SegmentedControlRoot:where(.rt-variant-soft) {
+.rt-SegmentedControlRoot {
   /* Base state: solid color for solid panels */
   background-color: var(--gray-3);
 
