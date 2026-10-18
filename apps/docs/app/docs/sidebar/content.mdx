@@ -1,111 +1,146 @@
 ---
-title: Sidebar (Presentation)
-description: Standalone navigation sidebar with menus, groups, and adaptive layouts
+title: Sidebar
+description: Navigation rows for a Shell sidebar
 source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/sidebar.tsx
 ---
 
-A presentational sidebar component for building navigation menus. Works standalone or inside `Shell.Sidebar` for layout integration. Adapts between rail (icon-focused) and panel (full-width) presentations.
+import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
+import { Box, Notice, Shell, Sidebar, Text } from '@kushagradhawan/kookie-ui';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Alert02Icon, Home01Icon, InboxIcon, Search01Icon, Settings01Icon } from '@hugeicons/core-free-icons';
 
-## Installation
+<Notice icon={<HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />}>`Sidebar.Root`, `Sidebar.Content`, `Sidebar.Header`, `Sidebar.Footer`, `menuVariant` and thin mode are deprecated and will be removed in 0.15.0. Put the rows in `Shell.Sidebar`, or in `Shell.Rail` for tiles.</Notice>
 
-```bash
-npm install @kushagradhawan/kookie-ui
-```
+Sidebar is the set of navigation rows: menus, groups, sub-menus and search. `Shell.Sidebar` is the pane that holds them. The pane renders anything, and with `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter` it is the sidebar.
 
-## Usage
-
-```tsx
-import { Sidebar } from '@kushagradhawan/kookie-ui';
-
-export function MyNavigation() {
-  return (
-    <Sidebar.Root>
-      <Sidebar.Header>
-        <Logo />
-      </Sidebar.Header>
-      <Sidebar.Content>
+<PreviewBlock height="20rem">
+  <Box width="100%" height="100%">
+  <Shell.Root height="100%">
+    <Shell.Sidebar defaultState="expanded" presentation="fixed" style={{ backgroundColor: 'var(--gray-2)' }}>
+      <Shell.Scroll role="navigation" aria-label="Main">
         <Sidebar.Menu>
           <Sidebar.MenuItem>
             <Sidebar.MenuButton isActive>
-              <HomeIcon />
+              <HugeiconsIcon icon={Home01Icon} strokeWidth={1.75} />
               Home
             </Sidebar.MenuButton>
           </Sidebar.MenuItem>
+          <Sidebar.MenuItem>
+            <Sidebar.MenuButton badge="3">
+              <HugeiconsIcon icon={InboxIcon} strokeWidth={1.75} />
+              Inbox
+            </Sidebar.MenuButton>
+          </Sidebar.MenuItem>
         </Sidebar.Menu>
-      </Sidebar.Content>
-    </Sidebar.Root>
-  );
-}
+      </Shell.Scroll>
+      <Shell.PaneFooter>
+        <Sidebar.MenuButton>
+          <HugeiconsIcon icon={Settings01Icon} strokeWidth={1.75} />
+          Settings
+        </Sidebar.MenuButton>
+      </Shell.PaneFooter>
+    </Shell.Sidebar>
+    <Shell.Content>
+      <Box p="5">
+        <Text size="2" emphasis="medium">Page content</Text>
+      </Box>
+    </Shell.Content>
+  </Shell.Root>
+  </Box>
+</PreviewBlock>
+
+## Usage
+
+```tsx showLineNumbers
+import { Shell, Sidebar } from '@kushagradhawan/kookie-ui';
+
+<Shell.Root>
+  <Shell.Sidebar>
+    <Shell.PaneHeader>{/* Logo, controls */}</Shell.PaneHeader>
+    <Shell.Scroll role="navigation" aria-label="Main">
+      <Sidebar.Group>
+        <Sidebar.GroupLabel>Workspace</Sidebar.GroupLabel>
+        <Sidebar.GroupContent>
+          <Sidebar.Menu>
+            <Sidebar.MenuItem>
+              <Sidebar.MenuButton isActive>Home</Sidebar.MenuButton>
+            </Sidebar.MenuItem>
+          </Sidebar.Menu>
+        </Sidebar.GroupContent>
+      </Sidebar.Group>
+    </Shell.Scroll>
+    <Shell.PaneFooter>{/* Profile, settings */}</Shell.PaneFooter>
+  </Shell.Sidebar>
+  <Shell.Content>{/* Page */}</Shell.Content>
+</Shell.Root>
 ```
 
-## Anatomy
+## Parts
 
-Sidebar is a compound component with the following parts:
+| Part | Description |
+| ---- | ----------- |
+| `Shell.PaneHeader` | The row above the scrolling region. |
+| `Shell.Scroll` | The region that scrolls. Not a landmark: pass `role="navigation"` and `aria-label` for navigation. |
+| `Shell.PaneFooter` | The row below the scrolling region. |
+| `Sidebar.Search` | A search field above the rows. |
+| `Sidebar.Group`, `GroupLabel`, `GroupContent` | A labelled set of rows. |
+| `Sidebar.Menu`, `MenuItem`, `MenuButton` | The rows. |
+| `Sidebar.MenuSub`, `MenuSubTrigger`, `MenuSubContent` | A collapsible set of nested rows. |
+| `Sidebar.Separator` | A line between groups. |
 
-```tsx
-<Sidebar.Root>
-  <Sidebar.Header>{/* Logo, app name, controls */}</Sidebar.Header>
-  <Sidebar.Content>
-    <Sidebar.Group>
-      <Sidebar.GroupLabel>{/* Section label */}</Sidebar.GroupLabel>
-      <Sidebar.GroupContent>
+## In a Rail
+
+The same rows in `Shell.Rail` draw as tiles: an icon with a small label under it. A sub-menu opens as a dropdown.
+
+<PreviewBlock height="24rem">
+  <Box width="100%" height="100%">
+  <Shell.Root height="100%">
+    <Shell.Rail defaultOpen presentation="fixed" style={{ backgroundColor: 'var(--gray-2)' }}>
+      <Shell.Scroll role="navigation" aria-label="Main">
         <Sidebar.Menu>
           <Sidebar.MenuItem>
-            <Sidebar.MenuButton>{/* Nav item */}</Sidebar.MenuButton>
+            <Sidebar.MenuButton isActive>
+              <HugeiconsIcon icon={Home01Icon} strokeWidth={1.75} />
+              Home
+            </Sidebar.MenuButton>
           </Sidebar.MenuItem>
-          <Sidebar.MenuSub>
-            <Sidebar.MenuSubTrigger>{/* Expandable item */}</Sidebar.MenuSubTrigger>
-            <Sidebar.MenuSubContent>
-              {/* Nested items */}
-            </Sidebar.MenuSubContent>
-          </Sidebar.MenuSub>
+          <Sidebar.MenuItem>
+            <Sidebar.MenuButton>
+              <HugeiconsIcon icon={InboxIcon} strokeWidth={1.75} />
+              Inbox
+            </Sidebar.MenuButton>
+          </Sidebar.MenuItem>
+          <Sidebar.MenuItem>
+            <Sidebar.MenuButton>
+              <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
+              Search
+            </Sidebar.MenuButton>
+          </Sidebar.MenuItem>
         </Sidebar.Menu>
-      </Sidebar.GroupContent>
-    </Sidebar.Group>
-  </Sidebar.Content>
-  <Sidebar.Footer>{/* User profile, settings */}</Sidebar.Footer>
-  <Sidebar.Separator />
-</Sidebar.Root>
-```
+      </Shell.Scroll>
+      <Shell.PaneFooter>
+        <Sidebar.MenuButton>
+          <HugeiconsIcon icon={Settings01Icon} strokeWidth={1.75} />
+          Settings
+        </Sidebar.MenuButton>
+      </Shell.PaneFooter>
+    </Shell.Rail>
+    <Shell.Content>
+      <Box p="5">
+        <Text size="2" emphasis="medium">Page content</Text>
+      </Box>
+    </Shell.Content>
+  </Shell.Root>
+  </Box>
+</PreviewBlock>
 
-## Root Props
+## Sizes
 
-The Root component provides context and styling for all child components.
+`Shell.Root size` (`'1'`, `'2'` or `'3'`, default `'2'`) sets the index. A row is as tall as a Button of that size.
 
-| Prop              | Type                                          | Default     | Description                                                                 |
-| ----------------- | --------------------------------------------- | ----------- | --------------------------------------------------------------------------- |
-| `size`            | `'1' \| '2'`                                  | `'2'`       | Controls density and spacing. Supports responsive objects                   |
-| `variant`         | `'soft' \| 'outline' \| 'surface' \| 'ghost'` | `'outline'` | Visual style of the sidebar container                                       |
-| `menuVariant`     | `'solid' \| 'soft'`                           | `'soft'`    | Style of menu item highlights                                               |
-| `presentation`    | `'thin' \| 'expanded'`                        | —           | Layout mode: thin for rail-style, expanded for panel-style                  |
-| `layout`          | `'rail' \| 'panel'`                           | `'panel'`   | Alternative to presentation. Use presentation for clearer intent            |
-| `color`           | `AccentColor`                                 | theme       | Accent color for active states and highlights                               |
-| `panelBackground` | `'solid' \| 'translucent'`                    | —           | Background appearance when used with translucent theme                      |
+## Highlight
 
-## Content Props
-
-Scrollable container for navigation content.
-
-| Prop         | Type                       | Default               | Description                              |
-| ------------ | -------------------------- | --------------------- | ---------------------------------------- |
-| `role`       | `'navigation' \| 'none'`   | `'navigation'`        | ARIA role for accessibility              |
-| `aria-label` | `string`                   | `'Main navigation'`   | Accessible label for the navigation area |
-
-## Header Props
-
-Container for logo, app name, and header controls.
-
-| Prop          | Type      | Default | Description                                        |
-| ------------- | --------- | ------- | -------------------------------------------------- |
-| `asContainer` | `boolean` | `true`  | Applies default flex container layout when true    |
-
-## Footer Props
-
-Container for user profile, settings, and footer content.
-
-| Prop          | Type      | Default | Description                                        |
-| ------------- | --------- | ------- | -------------------------------------------------- |
-| `asContainer` | `boolean` | `true`  | Applies default flex container layout when true    |
+Rows use the soft highlight. When the system asks for more contrast (`prefers-contrast: more`), they use the solid one.
 
 ## MenuButton Props
 
@@ -132,7 +167,7 @@ type BadgeConfig = {
 
 ## MenuSub Props
 
-Container for collapsible sub-menus. Renders as accordion in expanded mode, dropdown in thin mode.
+Container for a collapsible sub-menu.
 
 | Prop          | Type      | Default | Description                            |
 | ------------- | --------- | ------- | -------------------------------------- |
@@ -317,70 +352,6 @@ With `menuVariant="solid"`, a gray sidebar fills its active items with step 12 o
 </Sidebar.Root>
 ```
 
-## Groups
-
-Use `Sidebar.Group` to organize related navigation items with optional labels.
-
-```tsx
-<Sidebar.Root>
-  <Sidebar.Content>
-    <Sidebar.Group>
-      <Sidebar.GroupLabel>Main</Sidebar.GroupLabel>
-      <Sidebar.GroupContent>
-        <Sidebar.Menu>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton>Dashboard</Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton>Analytics</Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-        </Sidebar.Menu>
-      </Sidebar.GroupContent>
-    </Sidebar.Group>
-
-    <Sidebar.Separator />
-
-    <Sidebar.Group>
-      <Sidebar.GroupLabel>Settings</Sidebar.GroupLabel>
-      <Sidebar.GroupContent>
-        <Sidebar.Menu>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton>Preferences</Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-        </Sidebar.Menu>
-      </Sidebar.GroupContent>
-    </Sidebar.Group>
-  </Sidebar.Content>
-</Sidebar.Root>
-```
-
-## Sub-menus
-
-Use `Sidebar.MenuSub` for collapsible nested navigation. Automatically adapts: accordion in expanded mode, dropdown in thin mode.
-
-```tsx
-<Sidebar.Root>
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuSub defaultOpen>
-        <Sidebar.MenuSubTrigger>
-          <FolderIcon />
-          Projects
-        </Sidebar.MenuSubTrigger>
-        <Sidebar.MenuSubContent>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton>Project Alpha</Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton>Project Beta</Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-        </Sidebar.MenuSubContent>
-      </Sidebar.MenuSub>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>
-```
-
 ## Badges
 
 Add badges to menu buttons for notifications or status indicators.
@@ -441,199 +412,20 @@ import Link from 'next/link';
 </Sidebar.MenuItem>
 ```
 
-## With Shell
-
-`Sidebar` does not read the Shell's state by itself. Inside `Shell.Sidebar`, read the Shell's sidebar mode with `Shell.useSidebarMode()` in a small wrapper, and pass it to `presentation`:
-
-```tsx showLineNumbers
-import { Shell, Sidebar } from '@kushagradhawan/kookie-ui';
-
-function Nav() {
-  const { sidebarMode } = Shell.useSidebarMode();
-  return (
-    <Sidebar.Root presentation={sidebarMode === 'thin' ? 'thin' : 'expanded'}>
-      <Sidebar.Content>{/* Navigation items */}</Sidebar.Content>
-    </Sidebar.Root>
-  );
-}
-
-<Shell.Root>
-  <Shell.Sidebar>
-    <Nav />
-  </Shell.Sidebar>
-  <Shell.Content>{/* Main content */}</Shell.Content>
-</Shell.Root>
-```
-
-`Shell.useSidebarMode()` returns `sidebarMode` (`'collapsed'`, `'thin'` or `'expanded'`) and `setSidebarMode`. The setter acts like a Trigger: it calls the Shell Sidebar's `onStateChange` with `reason: 'toggle'`, and a controlled Sidebar changes only when you pass the new `state`. It must be called inside `Shell.Root`.
-
-## Examples
-
-### Application Sidebar
-
-Complete sidebar with header, grouped navigation, and footer:
-
-```tsx
-<Sidebar.Root presentation="expanded" size="2">
-  <Sidebar.Header>
-    <Logo />
-    <span>Acme Inc</span>
-  </Sidebar.Header>
-
-  <Sidebar.Content>
-    <Sidebar.Group>
-      <Sidebar.GroupLabel>Platform</Sidebar.GroupLabel>
-      <Sidebar.GroupContent>
-        <Sidebar.Menu>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton isActive>
-              <LayoutDashboardIcon />
-              Dashboard
-            </Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton badge="12">
-              <InboxIcon />
-              Inbox
-            </Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-          <Sidebar.MenuSub>
-            <Sidebar.MenuSubTrigger>
-              <FolderIcon />
-              Projects
-            </Sidebar.MenuSubTrigger>
-            <Sidebar.MenuSubContent>
-              <Sidebar.MenuItem>
-                <Sidebar.MenuButton>Design System</Sidebar.MenuButton>
-              </Sidebar.MenuItem>
-              <Sidebar.MenuItem>
-                <Sidebar.MenuButton>Marketing Site</Sidebar.MenuButton>
-              </Sidebar.MenuItem>
-            </Sidebar.MenuSubContent>
-          </Sidebar.MenuSub>
-        </Sidebar.Menu>
-      </Sidebar.GroupContent>
-    </Sidebar.Group>
-
-    <Sidebar.Separator />
-
-    <Sidebar.Group>
-      <Sidebar.GroupLabel>Settings</Sidebar.GroupLabel>
-      <Sidebar.GroupContent>
-        <Sidebar.Menu>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton shortcut="⌘,">
-              <SettingsIcon />
-              Settings
-            </Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-        </Sidebar.Menu>
-      </Sidebar.GroupContent>
-    </Sidebar.Group>
-  </Sidebar.Content>
-
-  <Sidebar.Footer>
-    <Sidebar.MenuButton>
-      <Avatar size="1" fallback="JD" />
-      John Doe
-    </Sidebar.MenuButton>
-  </Sidebar.Footer>
-</Sidebar.Root>
-```
-
-### Rail Sidebar
-
-Compact icon-focused sidebar:
-
-```tsx
-<Sidebar.Root presentation="thin" size="1">
-  <Sidebar.Header>
-    <Logo />
-  </Sidebar.Header>
-
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton isActive>
-          <HomeIcon />
-          Home
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>
-          <SearchIcon />
-          Search
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>
-          <BellIcon />
-          Alerts
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-
-  <Sidebar.Footer>
-    <Sidebar.MenuButton>
-      <SettingsIcon />
-      Settings
-    </Sidebar.MenuButton>
-  </Sidebar.Footer>
-</Sidebar.Root>
-```
-
 ## Accessibility
 
-Sidebar provides comprehensive accessibility through semantic HTML and ARIA attributes.
-
-### Keyboard Navigation
-
-- **Tab** - Move focus between interactive elements
-- **Enter / Space** - Activate focused menu button
-- **Arrow Down** - Move to next menu item
-- **Arrow Up** - Move to previous menu item
-- **Arrow Right** - Expand sub-menu (accordion mode)
-- **Arrow Left** - Collapse sub-menu (accordion mode)
-- **Escape** - Close dropdown (thin mode sub-menus)
-
-### ARIA Attributes
-
-- `role="menu"` on menu containers
-- `role="menuitem"` on interactive items
-- `aria-current="page"` on active items
-- `aria-haspopup="menu"` on sub-menu triggers
-- `aria-expanded` on collapsible sections
-- `role="navigation"` with `aria-label` on content container
-
-### Screen Readers
-
-- Semantic structure with proper heading hierarchy via group labels
-- Active state announcements for current page
-- Sub-menu expansion state announcements
-- Badge content included in accessible name
+- `aria-current="page"` marks the active row.
+- Arrow Up and Arrow Down move between rows. Arrow Left and Arrow Right close and open a sub-menu.
+- Give `Shell.Scroll` `role="navigation"` and an `aria-label` when it holds navigation.
 
 ## Changelog
 
-### Added
+### Deprecated
 
-- Initial release of standalone Sidebar (Presentation) component
-- Compound component API with Root, Content, Header, Footer, Menu, MenuItem, MenuButton, MenuSub, MenuSubTrigger, MenuSubContent, Group, GroupLabel, GroupContent, Separator
-- Two presentation modes: expanded (panel) and thin (rail)
-- Automatic sub-menu behavior adaptation: accordion in expanded, dropdown in thin
-- Badge support with string or full configuration object
-- Keyboard shortcut display
-- Integration with routing via asChild
-- Full keyboard navigation
-- Responsive size prop support
-
-### Changed
-
-- Decoupled from Shell context for standalone usage
-- Simplified API focused on presentation rather than state management
-- Solid gray menu items fill with step 12 automatically, and labels read the strong ink
+- 0.14.0: `Sidebar.Root`, `Sidebar.Content`, `Sidebar.Header` and `Sidebar.Footer`. Use `Shell.Sidebar` with `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter`. Removed in 0.15.0.
+- 0.14.0: `menuVariant`. Rows use the soft highlight, and the solid one under `prefers-contrast: more`. Removed in 0.15.0.
+- 0.14.0: thin mode (`presentation="thin"`, `layout="rail"`). Put the rows in `Shell.Rail`, which draws them as tiles. Removed in 0.15.0.
 
 ### Removed
 
-- `highContrast` on `Sidebar.Root` and in `BadgeConfig`. Delete it; gray and text contrast are now automatic
-
+- `highContrast` on `Sidebar.Root` and in `BadgeConfig`. Gray and text contrast are now automatic.

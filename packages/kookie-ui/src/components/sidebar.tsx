@@ -16,6 +16,8 @@ import { ThickChevronRightIcon } from './icons.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { Kbd } from './kbd.js';
 import { Badge } from './badge.js';
+import { SidebarVisualContext, useSidebarVisual } from './_internal/pane-chrome.js';
+import { warnDeprecated } from '../helpers/warn-deprecated.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
@@ -30,18 +32,6 @@ type BadgeConfig = {
   radius?: BadgeProps['radius'];
 };
 
-// Internal presentational context (not exported) for size/menu variant
-type SidebarVisualContextValue = {
-  size: '1' | '2' | '3';
-  menuVariant: 'solid' | 'soft';
-  presentation?: 'thin' | 'expanded';
-  color?: string;
-};
-const SidebarVisualContext = React.createContext<SidebarVisualContextValue | null>(null);
-function useSidebarVisual() {
-  return React.useContext(SidebarVisualContext);
-}
-
 // Sidebar is now independent of Shell - no integration needed
 
 // Main Sidebar component
@@ -55,8 +45,18 @@ interface SidebarProps extends ComponentPropsWithout<'div', RemovedProps>, Sideb
   presentation?: 'thin' | 'expanded';
 }
 
+/** @deprecated Removed in 0.15.0. Put the menu parts in `Shell.Sidebar`. */
 const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>((props, forwardedRef) => {
   const themeContext = useThemeContext();
+  warnDeprecated(
+    'Sidebar.Root is deprecated and will be removed in 0.15.0. Put the Sidebar menu parts in Shell.Sidebar, between Shell.PaneHeader, Shell.Scroll and Shell.PaneFooter.',
+  );
+  if (props.menuVariant !== undefined) {
+    warnDeprecated('`menuVariant` on Sidebar.Root is deprecated and will be removed in 0.15.0. Rows use the soft highlight, and the solid one under prefers-contrast: more.');
+  }
+  if (props.presentation === 'thin' || props.layout === 'rail') {
+    warnDeprecated('Sidebar thin mode is deprecated and will be removed in 0.15.0. Put the rows in Shell.Rail, which draws them as tiles.');
+  }
 
   const {
     size = sidebarPropDefs.size.default,
@@ -110,8 +110,10 @@ interface SidebarContentProps extends React.ComponentPropsWithoutRef<'div'> {
   'aria-label'?: string;
 }
 
+/** @deprecated Removed in 0.15.0. Use `Shell.Scroll`. */
 const SidebarContent = React.forwardRef<HTMLDivElement, SidebarContentProps>(
   ({ className, children, role = 'navigation', 'aria-label': ariaLabel = 'Main navigation', id, ...props }, forwardedRef) => {
+    warnDeprecated('Sidebar.Content is deprecated and will be removed in 0.15.0. Use Shell.Scroll inside Shell.Sidebar.');
     const visual = useSidebarVisual();
     const size = visual?.size ?? '2';
     const menuVariant = visual?.menuVariant ?? 'soft';
@@ -143,7 +145,9 @@ interface SidebarHeaderProps extends React.ComponentPropsWithoutRef<'div'> {
   asContainer?: boolean;
 }
 
+/** @deprecated Removed in 0.15.0. Use `Shell.PaneHeader`. */
 const SidebarHeader = React.forwardRef<HTMLDivElement, SidebarHeaderProps>(({ className, asContainer = true, ...props }, forwardedRef) => {
+    warnDeprecated('Sidebar.Header is deprecated and will be removed in 0.15.0. Use Shell.PaneHeader inside Shell.Sidebar.');
   const visual = useSidebarVisual();
   const size = visual?.size ?? '2';
   const menuVariant = visual?.menuVariant ?? 'soft';
@@ -175,7 +179,9 @@ interface SidebarFooterProps extends React.ComponentPropsWithoutRef<'div'> {
   asContainer?: boolean;
 }
 
+/** @deprecated Removed in 0.15.0. Use `Shell.PaneFooter`. */
 const SidebarFooter = React.forwardRef<HTMLDivElement, SidebarFooterProps>(({ className, asContainer = true, ...props }, forwardedRef) => {
+    warnDeprecated('Sidebar.Footer is deprecated and will be removed in 0.15.0. Use Shell.PaneFooter inside Shell.Sidebar.');
   const visual = useSidebarVisual();
   const size = visual?.size ?? '2';
   const menuVariant = visual?.menuVariant ?? 'soft';
@@ -758,7 +764,7 @@ const SidebarSearch = React.forwardRef<HTMLDivElement, SidebarSearchProps>(
 
     // Expanded mode: inline input
     return (
-      <div {...props} ref={forwardedRef} className={classNames('rt-SidebarSearch', 'rt-SidebarSearch--expanded', className)} role="search">
+      <div {...props} ref={forwardedRef} className={classNames('rt-SidebarSearch', 'rt-SidebarSearch--expanded', 'rt-ShellPaneChrome', `rt-r-size-${visual?.size ?? '2'}`, className)} role="search">
         <div className="rt-SidebarSearchInputWrapper">
           <SearchIcon className="rt-SidebarSearchIcon" />
           <input

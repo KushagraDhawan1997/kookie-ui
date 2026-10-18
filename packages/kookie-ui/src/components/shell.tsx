@@ -47,6 +47,8 @@ import { navigationRest, detailRest, toPaneValue, startAnchoredGrowth, withoutRe
 import { useShell, useSidebarMode } from './shell.context.js';
 import { useResponsivePresentation } from './shell.hooks.js';
 import { readBreakpoint } from '../hooks/use-breakpoint.js';
+import { PaneChromeScope, PaneFooter, PaneHeader, Scroll, ShellSizeContext } from './_internal/pane-chrome.js';
+import type { PaneSize } from './_internal/pane-chrome.js';
 import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, PaneMode, PaneName, PaneTarget, ResponsivePresentation, SidebarMode } from './shell.types.js';
 
 /* ── Root ──────────────────────────────────────────────────────────────────── */
@@ -54,6 +56,8 @@ import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, PaneMode, PaneNa
 export interface ShellRootProps extends React.ComponentPropsWithoutRef<'div'> {
   children: React.ReactNode;
   height?: 'full' | 'auto' | string | number;
+  /** The index the panes' chrome takes: `Shell.PaneHeader`, `Shell.Scroll`, `Shell.PaneFooter` and the Sidebar rows in them. Default `2`. */
+  size?: PaneSize;
 }
 
 /**
@@ -92,7 +96,7 @@ function triggerFor(doc: Document, id: string, within?: HTMLElement[]): HTMLElem
 
 type LivePane = { name: PaneName; id: string; el: HTMLElement };
 
-const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, children, height = 'full', style, onKeyDown, onFocus, ...props }, ref) => {
+const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, children, height = 'full', size = '2', style, onKeyDown, onFocus, ...props }, ref) => {
   const [store] = React.useState(createShellStore);
   const subscribe = React.useCallback((listener: () => void) => subscribeShellStore(store, listener), [store]);
   // Subscribed for the re-render, not for a value: a pane opening or closing
@@ -354,6 +358,7 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
 
   return (
     <ShellStoreContext.Provider value={store}>
+      <ShellSizeContext.Provider value={size}>
       <ShellInsetContext.Provider value={insetContext}>
         {/* The Root is not a widget: it hears Escape bubbling up from the panes,
             after their own handlers, to close the overlays. */}
@@ -376,6 +381,7 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
           <div className="rt-ShellScrim" aria-hidden onClick={closeOverlays} />
         </div>
       </ShellInsetContext.Provider>
+      </ShellSizeContext.Provider>
     </ShellStoreContext.Provider>
   );
 });
@@ -480,11 +486,21 @@ const Rail = React.forwardRef<HTMLDivElement, RailProps>((props, ref) => {
       tabIndex={pane.overlaying ? -1 : domProps.tabIndex}
       style={{ ...style, '--rail-size': `${expandedSize}px` } as CSSPropertiesWithVars}
     >
-      <div className="rt-ShellRailContent">{children}</div>
+      <RailContent>{children}</RailContent>
     </div>
   );
 });
 Rail.displayName = 'Shell.Rail';
+
+/** The Rail's content carries the index, so the thin row styles can size themselves by it. */
+function RailContent({ children }: { children: React.ReactNode }) {
+  const size = React.useContext(ShellSizeContext);
+  return (
+    <div className={classNames('rt-ShellRailContent', `rt-r-size-${size}`)}>
+      <PaneChromeScope presentation="thin">{children}</PaneChromeScope>
+    </div>
+  );
+}
 
 /* ── Panel ─────────────────────────────────────────────────────────────────── */
 
@@ -640,7 +656,9 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
         } as CSSPropertiesWithVars
       }
     >
-      <div className="rt-ShellPanelContent">{content}</div>
+      <div className="rt-ShellPanelContent">
+        <PaneChromeScope>{content}</PaneChromeScope>
+      </div>
       {handle}
     </div>
   );
@@ -750,6 +768,9 @@ export {
   Inspector,
   Bottom,
   Trigger,
+  PaneHeader,
+  PaneFooter,
+  Scroll,
   useShell,
   useSidebarMode,
   useResponsivePresentation,

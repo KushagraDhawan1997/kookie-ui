@@ -66,7 +66,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
 
 | File | Contains |
 | ---- | -------- |
-| `docs-shell.tsx` | `DocsShell`: the `Shell` layout, mobile trigger and optional collapse toggle |
+| `docs-shell.tsx` | `DocsShell`: the `Shell` layout and mobile trigger |
 | `docs-sidebar.tsx` | `DocsSidebar`: logo, search, grouped menu and footer. Usable on its own inside any `Shell.Sidebar` |
 | `types.ts` | Navigation, logo and link types |
 
@@ -80,8 +80,6 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
 | `logo` | `DocsLogoConfig` | - | Logo in the sidebar header. |
 | `headerActions` | `ReactNode` | - | Beside the logo, e.g. a GitHub link or version badge. |
 | `sidebarFooter` | `ReactNode` | - | Bottom of the sidebar, e.g. a theme switch. |
-| `sidebarToggle` | `boolean` | `false` | Add a button that collapses the sidebar to icons. |
-| `sidebarThinSize` | `number` | `80` | Width of the collapsed sidebar, in pixels. |
 | `sidebarResizable` | `boolean` | `true` | Let people drag the sidebar edge. |
 | `mobileTriggerIcon` | `ReactNode` | Menu icon | Icon for the small-screen menu button. |
 | `height` | `Shell.Root` height | - | Height of the shell. |
@@ -101,7 +99,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
 | Field | Type | Default | Description |
 | ----- | ---- | ------- | ----------- |
 | `src` | `string` | - | Image URL. Ignored when `label` is set. |
-| `label` | `string` | - | A text wordmark instead of an image. The collapsed sidebar shows its first letter. |
+| `label` | `string` | - | A text wordmark instead of an image. |
 | `alt` | `string` | - | Accessible name. Its first letter is the image fallback. |
 | `href` | `string` | `'/'` | Where the logo links. |
 | `size` | `'1'` – `'5'` | `'3'` | Image size. |
@@ -130,16 +128,6 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
   ],
 }
 ```
-
-### Collapsible Sidebar
-
-```tsx
-<DocsShell navigation={navigation} sidebarToggle sidebarFooter={<ThemeSwitch />}>
-  {children}
-</DocsShell>
-```
-
-Items show only their icon when collapsed, so give each one an `icon` if you enable this.
 
 ## Accessibility
 

@@ -1,3 +1,23 @@
+## [0.14.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.14.0...v0.14.1) (2026-10-18)
+
+Sidebar rows live in the Shell. Nothing that worked before changes; the old Sidebar frame and thin mode warn once in development and are removed in 0.15.0.
+
+### Features
+
+* **shell:** `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter` hold a pane's chrome. `Shell.Root size` (1–3) sets their index.
+* **sidebar:** Sidebar's menu parts work directly inside `Shell.Sidebar` and `Shell.Panel`, sized by the Shell, with no `Sidebar.Root`. In `Shell.Rail` the same rows draw as tiles: an icon with a small label, sub-menus as dropdowns. This replaces thin mode.
+* **sidebar:** rows use the soft highlight, and the solid one under `prefers-contrast: more`.
+
+### Deprecated (removed in 0.15.0)
+
+* `Sidebar.Root`, `Sidebar.Content`, `Sidebar.Header`, `Sidebar.Footer`: use `Shell.Sidebar` with `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter`.
+* `menuVariant` on Sidebar.
+* Sidebar thin mode (`presentation="thin"`, `layout="rail"`) and Shell.Sidebar's thin state and `thinSize`: put the rows in `Shell.Rail`.
+
+### How to adopt
+
+Replace `Sidebar.Root` with `Shell.Sidebar`, `Sidebar.Header` with `Shell.PaneHeader`, `Sidebar.Content` with `Shell.Scroll role="navigation" aria-label="…"`, and `Sidebar.Footer` with `Shell.PaneFooter`. Move `size` to `Shell.Root`. A `variant="soft"` sidebar's gray fill is not drawn by the pane; set `style={{ backgroundColor: 'var(--gray-2)' }}` on `Shell.Sidebar` to keep it.
+
 ## [0.14.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.13.3...v0.14.0) (2026-10-18)
 
 New defaults and new names. Everything that is going away still works, warns once in development, and is removed in 0.15.0.
