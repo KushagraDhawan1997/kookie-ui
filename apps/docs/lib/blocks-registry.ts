@@ -32,6 +32,7 @@ export const blocksRegistry: BlockEntry[] = [
   { slug: 'footer', title: 'Footer', dependencies: [], blocks: [] },
   { slug: 'testimonial', title: 'Testimonial', dependencies: [], blocks: [] },
   { slug: 'empty-state', title: 'Empty State', dependencies: [], blocks: [] },
+  { slug: 'user-card', title: 'User Card', dependencies: [], blocks: [] },
 ];
 
 export function getBlockEntry(slug: string): BlockEntry | undefined {

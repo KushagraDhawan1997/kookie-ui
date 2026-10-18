@@ -1,0 +1,39 @@
+---
+title: User Card
+description: A person's avatar, name and one line about them
+source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/components/blocks/user-card
+---
+
+import { BlockInstallation } from '@/components/block-doc-page';
+import { UserCard } from '@/components/blocks/user-card/user-card';
+import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
+
+User Card shows a person: an avatar, their name and one line about them, in a Card. It replaces the `UserCard` package export, which is deprecated and removed in 0.15.0.
+
+<PreviewBlock height="10rem">
+  <UserCard name="Ada Lovelace" description="ada@example.com" fallback="AL" />
+</PreviewBlock>
+
+## Installation
+
+<BlockInstallation />
+
+## Usage
+
+```tsx
+import { UserCard } from '@/components/blocks/user-card/user-card';
+
+<UserCard name="Ada Lovelace" description="ada@example.com" fallback="AL" />
+```
+
+## Props
+
+| Prop | Type | Description |
+| ---- | ---- | ----------- |
+| `name` | `string` | The person's name |
+| `description` | `string` | A second line, such as a role or an email |
+| `src` | `string` | Avatar image URL |
+| `fallback` | `ReactNode` | Shown when there is no image |
+| `size` | `'1' \| '2' \| '3' \| '4'` | Card padding, avatar and text size. Default `'2'` |
+
+Every other prop goes to the Card, so `variant`, `material` and `asChild` work as they do on Card.
