@@ -2,7 +2,7 @@ import { asChildPropDef } from '../props/as-child.prop.js';
 
 import type { PropDef } from '../props/prop-def.js';
 
-const sizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
+const sizes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] as const;
 const variants = ['raised', 'soft'] as const;
 
 const kbdPropDefs = {

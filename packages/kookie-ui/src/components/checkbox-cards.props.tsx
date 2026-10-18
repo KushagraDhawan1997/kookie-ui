@@ -5,7 +5,7 @@ import { gridPropDefs } from './grid.props.js';
 
 import type { PropDef } from '../props/prop-def.js';
 
-const sizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] as const;
+const sizes = ['1', '2', '3', '4', '5'] as const;
 // The same list as Card: a selectable card looks like any other card.
 const variants = cardPropDefs.variant.values;
 const materials = ['solid', 'translucent'] as const;
