@@ -1,3 +1,4 @@
+import { parseVariant } from '../helpers/parse-variant.js';
 import { asChildPropDef } from '../props/as-child.prop.js';
 import { accentColorPropDef, accentColors } from '../props/color.prop.js';
 import { radiusPropDef } from '../props/radius.prop.js';
@@ -5,7 +6,7 @@ import { radiusPropDef } from '../props/radius.prop.js';
 import type { PropDef } from '../props/prop-def.js';
 
 const sizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] as const;
-const variants = ['classic', 'solid', 'soft', 'surface', 'outline'] as const;
+const variants = ['raised', 'solid', 'soft', 'surface', 'outline', 'classic'] as const;
 const panelBackgrounds = ['solid', 'translucent'] as const;
 const materials = ['solid', 'translucent'] as const;
 const objectFitValues = ['cover', 'contain', 'fill', 'scale-down', 'none'] as const;
@@ -13,7 +14,7 @@ const objectFitValues = ['cover', 'contain', 'fill', 'scale-down', 'none'] as co
 const avatarPropDefs = {
   ...asChildPropDef,
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '3', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'soft' },
+  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'soft', parseValue: parseVariant },
   ...accentColorPropDef,
   ...radiusPropDef,
   fallback: { type: 'ReactNode', required: true },

@@ -390,7 +390,7 @@
     }
   }
 
-  /* Focus state - outline ring (classic has its own box-shadow ring) */
+  /* Focus state - outline ring (raised has its own box-shadow ring) */
   &:where(:focus-within) {
     outline: 2px solid var(--v-focus-color, var(--focus-8));
     outline-offset: -1px;
@@ -457,8 +457,8 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* Classic variant - uses --color-surface and shadow */
-.rt-ChatbarBox:where(.rt-variant-classic) {
+/* Raised variant - uses --color-surface and shadow */
+.rt-ChatbarBox:where(.rt-variant-raised) {
   --text-area-border-width: 0px;
   --v-selection-color: var(--focus-a5);
   --v-focus-color: var(--focus-8);
@@ -521,7 +521,7 @@
     box-shadow: inset 0 0 0 var(--text-area-border-width) var(--gray-a6);
   }
 
-  & .rt-ChatbarBox:where(.rt-variant-classic) {
+  & .rt-ChatbarBox:where(.rt-variant-raised) {
     background-image: linear-gradient(var(--gray-a2), var(--gray-a2));
   }
 

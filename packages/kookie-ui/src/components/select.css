@@ -331,11 +331,11 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* classic */
+/* raised */
 
-.rt-SelectTrigger:where(.rt-variant-classic) {
+.rt-SelectTrigger:where(.rt-variant-raised) {
   position: relative;
-  top: var(--classic-elevation-offset);
+  top: var(--raised-elevation-offset);
   color: var(--accent-ink);
   background-color: var(--color-surface);
   box-shadow: var(--shadow-2);

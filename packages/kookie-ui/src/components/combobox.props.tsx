@@ -1,3 +1,4 @@
+import { parseVariant } from '../helpers/parse-variant.js';
 import { colorPropDef } from '../props/color.prop.js';
 import { radiusPropDef } from '../props/radius.prop.js';
 import { widthPropDefs } from '../props/width.props.js';
@@ -16,13 +17,13 @@ const comboboxRootPropDefs = {
   size: PropDef<(typeof sizes)[number]>;
 };
 
-const triggerVariants = ['classic', 'surface', 'soft', 'outline', 'ghost'] as const;
+const triggerVariants = ['raised', 'surface', 'soft', 'outline', 'ghost', 'classic'] as const;
 
 /**
  * Token-aware props specific to Combobox.Trigger.
  */
 const comboboxTriggerPropDefs = {
-  variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'surface' },
+  variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'surface', parseValue: parseVariant },
   panelBackground: {
     type: 'enum',
     className: 'rt-panel-background',

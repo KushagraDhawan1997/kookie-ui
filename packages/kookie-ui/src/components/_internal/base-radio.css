@@ -122,11 +122,11 @@
   }
 }
 
-/* classic */
+/* raised */
 
-.rt-BaseRadioRoot:where(.rt-variant-classic) {
+.rt-BaseRadioRoot:where(.rt-variant-raised) {
   position: relative;
-  top: var(--classic-elevation-offset);
+  top: var(--raised-elevation-offset);
   
   &:where(:not(:checked), [data-state='unchecked'])::before {
     color: var(--accent-ink);
@@ -170,7 +170,7 @@
   }
 
   &:where(:active:not(:disabled, [data-disabled])) {
-    top: calc(var(--classic-elevation-offset) + var(--classic-active-padding-offset-1));
+    top: calc(var(--raised-elevation-offset) + var(--raised-active-padding-offset-1));
     
     &::before {
       background-color: var(--accent-3);

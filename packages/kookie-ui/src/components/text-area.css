@@ -6,7 +6,7 @@
  * - Sizes: Responsive sizing and typography
  * - Variant palettes: Each variant defines its color scale as CSS variables
  * - Shared state logic: Single set of hover/focus/disabled selectors
- * - Special variants: classic (unique behavior, kept separate)
+ * - Special variants: raised (unique behavior, kept separate)
  * - Error states: Override colors for error styling
  */
 
@@ -413,8 +413,8 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* Classic variant - uses --color-surface and shadow */
-.rt-TextAreaRoot:where(.rt-variant-classic) {
+/* Raised variant - uses --color-surface and shadow */
+.rt-TextAreaRoot:where(.rt-variant-raised) {
   --text-area-border-width: 0px;
   --v-selection-color: var(--focus-a5);
   --v-focus-color: var(--focus-8);
@@ -570,8 +570,8 @@
   }
 }
 
-/* Error classic variant */
-.rt-TextAreaRoot:where(.rt-error.rt-variant-classic) {
+/* Error raised variant */
+.rt-TextAreaRoot:where(.rt-error.rt-variant-raised) {
   box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-6);
   
   @media (hover: hover) {

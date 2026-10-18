@@ -195,27 +195,27 @@
   color: var(--accent-ink);
 }
 
-/* classic */
+/* raised */
 
-.rt-Badge:where(.rt-variant-classic) {
+.rt-Badge:where(.rt-variant-raised) {
   position: relative;
-  top: var(--classic-elevation-offset);
+  top: var(--raised-elevation-offset);
   color: var(--accent-ink);
   box-shadow: var(--shadow-2);
   transition: var(--transition-text-field);
 
-  --classic-surface: var(--color-surface-solid);
-  background-color: var(--classic-surface);
+  --raised-surface: var(--color-surface-solid);
+  background-color: var(--raised-surface);
 
   :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    --classic-surface: var(--color-surface-translucent);
+    --raised-surface: var(--color-surface-translucent);
   }
 
   &:where([data-panel-background='solid'], [data-material='solid']) {
-    --classic-surface: var(--color-surface-solid);
+    --raised-surface: var(--color-surface-solid);
   }
 
   &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    --classic-surface: var(--color-surface-translucent);
+    --raised-surface: var(--color-surface-translucent);
   }
 }

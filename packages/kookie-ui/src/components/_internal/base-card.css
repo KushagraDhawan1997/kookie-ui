@@ -553,11 +553,11 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-BaseCard:where(.rt-variant-classic) {
+.rt-BaseCard:where(.rt-variant-raised) {
   --card-border-width: 1px;
   --card-background-color: var(--color-surface-solid);
   position: relative;
-  top: var(--classic-elevation-offset);
+  top: var(--raised-elevation-offset);
   box-shadow: var(--shadow-2);
 
   :where([data-panel-background='translucent'], [data-material='translucent']) & {

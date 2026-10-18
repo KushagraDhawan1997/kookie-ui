@@ -1,3 +1,4 @@
+import { parseVariant } from '../helpers/parse-variant.js';
 import { asChildPropDef } from '../props/as-child.prop.js';
 import { accentColorPropDef } from '../props/color.prop.js';
 import { radiusPropDef } from '../props/radius.prop.js';
@@ -5,14 +6,14 @@ import { radiusPropDef } from '../props/radius.prop.js';
 import type { PropDef } from '../props/prop-def.js';
 
 const sizes = ['1', '2', '3', '4'] as const;
-const variants = ['solid', 'soft', 'surface', 'outline', 'ghost', 'classic'] as const;
+const variants = ['raised', 'solid', 'soft', 'surface', 'outline', 'ghost', 'classic'] as const;
 const panelBackgrounds = ['solid', 'translucent'] as const;
 const materials = ['solid', 'translucent'] as const;
 
 const badgePropDefs = {
   ...asChildPropDef,
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '1', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'soft' },
+  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'soft', parseValue: parseVariant },
   ...accentColorPropDef,
   ...radiusPropDef,
   material: { type: 'enum', values: materials, default: undefined },

@@ -41,35 +41,35 @@
   /* Standard border width constants */
   --border-width-standard: 1px;
 
-  /* Classic variant 3D effect constants - simplified for button-like components */
-  --classic-elevation-offset: -0.02em;
-  --classic-active-padding-offset-1: 0.5px;
-  --classic-active-padding-offset-2: 1px;
-  --classic-shadow-blur-small: 0.15em;
-  --classic-border-width: 0.03em;
-  --classic-border-width-thick: 0.05em;
-  --classic-shadow-offset-y: 0.04em;
-  --classic-word-spacing: -0.1em;
+  /* Raised variant 3D effect constants - simplified for button-like components */
+  --raised-elevation-offset: -0.02em;
+  --raised-active-padding-offset-1: 0.5px;
+  --raised-active-padding-offset-2: 1px;
+  --raised-shadow-blur-small: 0.15em;
+  --raised-border-width: 0.03em;
+  --raised-border-width-thick: 0.05em;
+  --raised-shadow-offset-y: 0.04em;
+  --raised-word-spacing: -0.1em;
 
-  /* Classic variant division factors for form components and inset effects */
-  --classic-elevation-factor-subtle: 3;
-  --classic-shadow-factor-light: 1.5;
-  --classic-border-multiplier-double: 2;
+  /* Raised variant division factors for form components and inset effects */
+  --raised-elevation-factor-subtle: 3;
+  --raised-shadow-factor-light: 1.5;
+  --raised-border-multiplier-double: 2;
 
   /* Complex shadow tokens for form components and inset effects */
-  --classic-shadow-blur-medium: 0.2em;
-  --classic-shadow-blur-large: 0.4em;
-  --classic-shadow-medium-factor-third: 3;
+  --raised-shadow-blur-medium: 0.2em;
+  --raised-shadow-blur-large: 0.4em;
+  --raised-shadow-medium-factor-third: 3;
 
-  /* Classic inset shadow tokens - based on text field pattern for consistent 3D effects */
-  --classic-inset-shadow-dark:
-    inset 0 var(--classic-border-width)
-      calc(var(--classic-shadow-blur-small) / var(--classic-shadow-factor-light)) var(--gray-a4),
-    inset 0 calc(-1 * var(--classic-border-width)) var(--gray-a2),
-    inset 0 calc(var(--classic-border-width) * var(--classic-border-multiplier-double))
-      calc(var(--classic-shadow-blur-medium) / var(--classic-shadow-medium-factor-third))
+  /* Raised inset shadow tokens - based on text field pattern for consistent 3D effects */
+  --raised-inset-shadow-dark:
+    inset 0 var(--raised-border-width)
+      calc(var(--raised-shadow-blur-small) / var(--raised-shadow-factor-light)) var(--gray-a4),
+    inset 0 calc(-1 * var(--raised-border-width)) var(--gray-a2),
+    inset 0 calc(var(--raised-border-width) * var(--raised-border-multiplier-double))
+      calc(var(--raised-shadow-blur-medium) / var(--raised-shadow-medium-factor-third))
       var(--gray-a3),
-    0 0 0 var(--classic-border-width) var(--gray-a5);
+    0 0 0 var(--raised-border-width) var(--gray-a5);
 
   /* Trigger icon size constants (for dropdowns, selects) */
   --trigger-icon-size-default: 9px;
@@ -128,7 +128,7 @@
   --slider-thumb-inset-factor: 0.25;
   --slider-focus-ring-inner: 3px;
   --slider-focus-ring-outer: 5px;
-  --slider-classic-inset-offset: 1.5px;
+  --slider-raised-inset-offset: 1.5px;
 
   /* Shared Progress and Slider sizing tokens */
   --progress-slider-height-1: var(--space-1);
@@ -202,4 +202,22 @@
 
   /* Component padding relationships */
   --padding-ratio-horizontal: 1.5;
+
+  /* Deprecated: the old `--classic-*` names. They point at `--raised-*` and are removed in 0.15.0. */
+  --classic-active-padding-offset-1: var(--raised-active-padding-offset-1);
+  --classic-active-padding-offset-2: var(--raised-active-padding-offset-2);
+  --classic-border-multiplier-double: var(--raised-border-multiplier-double);
+  --classic-border-width: var(--raised-border-width);
+  --classic-border-width-thick: var(--raised-border-width-thick);
+  --classic-elevation-factor-subtle: var(--raised-elevation-factor-subtle);
+  --classic-elevation-offset: var(--raised-elevation-offset);
+  --classic-inset-shadow-dark: var(--raised-inset-shadow-dark);
+  --classic-shadow-blur-large: var(--raised-shadow-blur-large);
+  --classic-shadow-blur-medium: var(--raised-shadow-blur-medium);
+  --classic-shadow-blur-small: var(--raised-shadow-blur-small);
+  --classic-shadow-factor-light: var(--raised-shadow-factor-light);
+  --classic-shadow-medium-factor-third: var(--raised-shadow-medium-factor-third);
+  --classic-shadow-offset-y: var(--raised-shadow-offset-y);
+  --classic-word-spacing: var(--raised-word-spacing);
+  --slider-classic-inset-offset: var(--slider-raised-inset-offset);
 }

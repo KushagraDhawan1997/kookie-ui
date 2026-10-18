@@ -401,9 +401,9 @@
   }
 }
 
-/* classic */
+/* raised */
 
-.rt-TextFieldRoot:where(.rt-variant-classic) {
+.rt-TextFieldRoot:where(.rt-variant-raised) {
   --text-field-selection-color: var(--focus-a5);
   --text-field-focus-color: var(--focus-8);
   --text-field-border-width: 0px;
@@ -804,7 +804,7 @@
   }
 }
 
-.rt-TextFieldRoot:where(.rt-error.rt-variant-classic) {
+.rt-TextFieldRoot:where(.rt-error.rt-variant-raised) {
   box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-6);
   
   @media (hover: hover) {

@@ -1,3 +1,4 @@
+import { parseVariant } from '../helpers/parse-variant.js';
 import type React from 'react';
 
 import { colorPropDef } from '../props/color.prop.js';
@@ -13,10 +14,10 @@ const selectRootPropDefs = {
   size: PropDef<(typeof sizes)[number]>;
 };
 
-const triggerVariants = ['classic', 'surface', 'soft', 'outline', 'ghost'] as const;
+const triggerVariants = ['raised', 'surface', 'soft', 'outline', 'ghost', 'classic'] as const;
 
 const selectTriggerPropDefs = {
-  variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'surface' },
+  variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'surface', parseValue: parseVariant },
   panelBackground: {
     type: 'enum',
     className: 'rt-panel-background',

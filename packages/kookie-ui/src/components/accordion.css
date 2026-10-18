@@ -72,7 +72,7 @@
   }
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-classic)) {
+:where(.rt-AccordionRoot:where(.rt-variant-raised)) {
   /* Base state: solid surface for solid panels */
   background-color: var(--color-surface-solid);
   box-shadow: var(--shadow-2);
@@ -256,13 +256,13 @@
 }
 
 /* Trigger colour reads the loud ink in every variant; gray resolves to step 12 */
-:where(.rt-AccordionRoot:where(.rt-variant-soft, .rt-variant-outline, .rt-variant-surface, .rt-variant-ghost, .rt-variant-classic)) .rt-AccordionTrigger {
+:where(.rt-AccordionRoot:where(.rt-variant-soft, .rt-variant-outline, .rt-variant-surface, .rt-variant-ghost, .rt-variant-raised)) .rt-AccordionTrigger {
   color: var(--accent-ink);
 }
 
-/* Classic variant shadow states */
+/* Raised variant shadow states */
 @media (hover: hover) {
-  :where(.rt-AccordionRoot:where(.rt-variant-classic):hover) {
+  :where(.rt-AccordionRoot:where(.rt-variant-raised):hover) {
     background-color: var(--accent-2);
     box-shadow: var(--shadow-2);
   
@@ -282,7 +282,7 @@
   }
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-classic):focus-within) {
+:where(.rt-AccordionRoot:where(.rt-variant-raised):focus-within) {
   outline: 2px solid var(--focus-8);
   outline-offset: 2px;
   transition: var(--transition-text-field);

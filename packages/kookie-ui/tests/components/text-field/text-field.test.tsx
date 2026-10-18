@@ -34,10 +34,13 @@ describe('TextField', () => {
       expect(root).toHaveClass('rt-variant-surface');
     });
 
-    it('renders with classic variant', () => {
+    it('renders the deprecated classic variant as raised, with a warning', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const { container } = renderWithProviders(<TextField.Root variant="classic" />);
       const root = container.querySelector('.rt-TextFieldRoot');
-      expect(root).toHaveClass('rt-variant-classic');
+      expect(root).toHaveClass('rt-variant-raised');
+      expect(root).not.toHaveClass('rt-variant-classic');
+      warn.mockRestore();
     });
 
     it('renders with soft variant', () => {
