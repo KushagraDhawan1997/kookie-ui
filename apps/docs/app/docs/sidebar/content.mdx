@@ -7,9 +7,9 @@ source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kooki
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
 import { Box, Notice, Shell, Sidebar, Text } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { Alert02Icon, Home01Icon, InboxIcon, Settings01Icon } from '@hugeicons/core-free-icons';
+import { Alert02Icon, Home01Icon, InboxIcon, Search01Icon, Settings01Icon } from '@hugeicons/core-free-icons';
 
-<Notice icon={<HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />}>`Sidebar.Root`, `Sidebar.Content`, `Sidebar.Header`, `Sidebar.Footer`, `menuVariant` and thin mode are deprecated and will be removed in 0.15.0. Put the rows in `Shell.Sidebar`.</Notice>
+<Notice icon={<HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />}>`Sidebar.Root`, `Sidebar.Content`, `Sidebar.Header`, `Sidebar.Footer`, `menuVariant` and thin mode are deprecated and will be removed in 0.15.0. Put the rows in `Shell.Sidebar`, or in `Shell.Rail` for tiles.</Notice>
 
 Sidebar is the set of navigation rows: menus, groups, sub-menus and search. `Shell.Sidebar` is the pane that holds them. The pane renders anything, and with `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter` it is the sidebar.
 
@@ -87,6 +87,52 @@ import { Shell, Sidebar } from '@kushagradhawan/kookie-ui';
 | `Sidebar.Menu`, `MenuItem`, `MenuButton` | The rows. |
 | `Sidebar.MenuSub`, `MenuSubTrigger`, `MenuSubContent` | A collapsible set of nested rows. |
 | `Sidebar.Separator` | A line between groups. |
+
+## In a Rail
+
+The same rows in `Shell.Rail` draw as tiles: an icon with a small label under it. A sub-menu opens as a dropdown.
+
+<PreviewBlock height="24rem">
+  <Box width="100%" height="100%">
+  <Shell.Root height="100%">
+    <Shell.Rail defaultOpen presentation="fixed" style={{ backgroundColor: 'var(--gray-2)' }}>
+      <Shell.Scroll role="navigation" aria-label="Main">
+        <Sidebar.Menu>
+          <Sidebar.MenuItem>
+            <Sidebar.MenuButton isActive>
+              <HugeiconsIcon icon={Home01Icon} strokeWidth={1.75} />
+              Home
+            </Sidebar.MenuButton>
+          </Sidebar.MenuItem>
+          <Sidebar.MenuItem>
+            <Sidebar.MenuButton>
+              <HugeiconsIcon icon={InboxIcon} strokeWidth={1.75} />
+              Inbox
+            </Sidebar.MenuButton>
+          </Sidebar.MenuItem>
+          <Sidebar.MenuItem>
+            <Sidebar.MenuButton>
+              <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
+              Search
+            </Sidebar.MenuButton>
+          </Sidebar.MenuItem>
+        </Sidebar.Menu>
+      </Shell.Scroll>
+      <Shell.PaneFooter>
+        <Sidebar.MenuButton>
+          <HugeiconsIcon icon={Settings01Icon} strokeWidth={1.75} />
+          Settings
+        </Sidebar.MenuButton>
+      </Shell.PaneFooter>
+    </Shell.Rail>
+    <Shell.Content>
+      <Box p="5">
+        <Text size="2" emphasis="medium">Page content</Text>
+      </Box>
+    </Shell.Content>
+  </Shell.Root>
+  </Box>
+</PreviewBlock>
 
 ## Sizes
 
@@ -378,7 +424,7 @@ import Link from 'next/link';
 
 - 0.14.0: `Sidebar.Root`, `Sidebar.Content`, `Sidebar.Header` and `Sidebar.Footer`. Use `Shell.Sidebar` with `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter`. Removed in 0.15.0.
 - 0.14.0: `menuVariant`. Rows use the soft highlight, and the solid one under `prefers-contrast: more`. Removed in 0.15.0.
-- 0.14.0: thin mode (`presentation="thin"`, `layout="rail"`). Use `Shell.Rail` for a column of icons. Removed in 0.15.0.
+- 0.14.0: thin mode (`presentation="thin"`, `layout="rail"`). Put the rows in `Shell.Rail`, which draws them as tiles. Removed in 0.15.0.
 
 ### Removed
 

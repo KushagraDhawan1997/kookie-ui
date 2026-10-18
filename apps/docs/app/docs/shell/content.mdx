@@ -50,7 +50,7 @@ Every part is optional except `Shell.Content`. The Root renders every child in t
 
 ### Pane chrome
 
-`Shell.Sidebar` and `Shell.Panel` render anything. With these three parts they are a navigation column:
+`Shell.Sidebar`, `Shell.Panel` and `Shell.Rail` render anything. With these three parts they are a navigation column. In a Rail, the [Sidebar](/docs/sidebar) rows draw as tiles: an icon with a small label under it.
 
 ```tsx showLineNumbers
 <Shell.Sidebar>
@@ -239,7 +239,7 @@ They are not called on mount, and not called when the window crosses a breakpoin
 
 ### Sidebar thin
 
-Thin mode is deprecated and will be removed in 0.15.0. Use `Shell.Rail` for a column of icons, and `toggleModes="single"`.
+Thin mode is deprecated and will be removed in 0.15.0. Put the rows in `Shell.Rail`, which draws them as tiles, and use `toggleModes="single"`.
 
 `thin` shows the sidebar at `thinSize`. With `toggleModes="both"` a trigger goes collapsed, thin, expanded. With `toggleModes="single"` it goes between collapsed and the sidebar's open state (thin if `defaultState` is `"thin"`, else expanded).
 
@@ -374,7 +374,7 @@ The values are written to the pane as `data-presentation-<bp>` and `data-auto-<b
 
 ### 0.14.0
 
-- Added: `Shell.PaneHeader`, `Shell.Scroll`, `Shell.PaneFooter`, and `size` on `Shell.Root`.
+- Added: `Shell.PaneHeader`, `Shell.Scroll`, `Shell.PaneFooter`, and `size` on `Shell.Root`. Sidebar rows in `Shell.Rail` draw as tiles.
 - Deprecated: the sidebar's thin mode and `thinSize`. Removed in 0.15.0.
 
 ### 0.8.0
