@@ -171,14 +171,6 @@
   --position-negative-full: -100%;
   --position-zero: 0%;
 
-  /* Transition constants */
-  --transition-background-blur:
-    background-color var(--duration-2) var(--ease-1),
-    scale var(--motion-duration-small) var(--motion-ease-standard);
-
-  /* Sheet animation constants */
-  --sheet-slide-distance: 50%;
-
   /* Spacing multipliers for component sizing */
   --spacing-multiplier-small: 0.5;
   --spacing-multiplier-medium: 0.75;

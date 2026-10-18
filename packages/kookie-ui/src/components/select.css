@@ -6,7 +6,6 @@
   user-select: none;
   vertical-align: top;
   line-height: var(--height);
-  transition: var(--transition-select);
 
   font-family: var(--default-font-family);
   font-weight: var(--font-weight-regular);
@@ -46,9 +45,6 @@
   }
 
   /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 }
 
 .rt-SelectTriggerInner {
@@ -178,7 +174,6 @@
     box-sizing: border-box;
     height: var(--select-trigger-height);
     padding: 0 var(--select-trigger-ghost-padding-x);
-
 
   }
 }
@@ -372,7 +367,6 @@
   color: var(--accent-ink);
   background-color: var(--color-surface);
   box-shadow: var(--shadow-2);
-  transition: var(--transition-text-field);
 
   /* Theme-level translucent override */
   :where([data-material='translucent']) & {
@@ -671,7 +665,6 @@
   /* Base state: solid colors for solid panels */
   box-shadow: inset 0 0 0 1px var(--accent-6);
   color: var(--accent-ink);
-  transition: var(--transition-background-blur);
 
   /* Theme-level translucent override */
   :where([data-material='translucent']) & {
@@ -938,12 +931,6 @@
 }
 
 /* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .rt-SelectLoadingIcon,
-  .rt-SelectLoadingIconCircle {
-    animation: none;
-  }
-}
 
 /* Forced colors support */
 @media (forced-colors: active) {

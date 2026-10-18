@@ -29,7 +29,6 @@
   --checkbox-radius-ratio-max: 0.4;
   --checkbox-radius-max: calc(var(--checkbox-size) * var(--checkbox-radius-ratio-max));
 
-
   /* Theme-level translucent override */
   :where([data-material='translucent']) & {
     backdrop-filter: var(--backdrop-filter-components);
@@ -50,14 +49,12 @@
     --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
 
-
   &::before {
     content: '';
     display: block;
     height: var(--checkbox-size);
     width: var(--checkbox-size);
     border-radius: var(--checkbox-border-radius);
-    transition: var(--transition-checkbox);
   }
 }
 
@@ -69,15 +66,11 @@
   /* Required for subpixel alignment in Safari */
   transform: translate(-50%, -50%);
   top: 50%;
-  left: 50%;
+  left: 50%
   
   /* Smooth color transitions for the indicator icon */
-  transition: color var(--duration-1) var(--ease-1);
   
   /* Respect user preference for reduced motion */
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 }
 
 /***************************************************************************************************
@@ -265,8 +258,6 @@
     }
   }
 }
-
-
 
 /* outline */
 

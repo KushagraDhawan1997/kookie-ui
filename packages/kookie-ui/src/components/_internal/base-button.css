@@ -51,7 +51,6 @@
   cursor: pointer;
   contain: paint;
   gap: var(--base-button-gap);
-  transition: var(--transition-button);
 
   /* Typography */
   font-family: var(--default-font-family);
@@ -110,9 +109,7 @@
 
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
-    transition: none;
     backdrop-filter: none;
-    animation: none;
   }
 
   /* Stabilize SVGs during scale transforms (prevent wobble, especially Firefox) */
@@ -126,41 +123,6 @@
 
   /* Set height using CSS custom property for responsive sizing */
   height: var(--base-button-height);
-
-  /* Scale interaction effects using CSS scale property (separate from transform).
-   * This avoids conflicts with user's transform styles (e.g. translateX).
-   * Uses spring-bounce easing from --transition-button for natural feel. */
-  @media (hover: hover) {
-    &:where(:hover:not([data-disabled], [data-state='open'])) {
-      scale: 1.02;
-    }
-  }
-
-  &:where(:active:not([data-disabled])) {
-    scale: 0.96;
-  }
-
-  &:where([data-state='open']) {
-    scale: 0.96;
-  }
-
-  /* Disable scale on Firefox (SVG rendering issues with transforms) */
-  @supports (-moz-appearance: none) {
-    &:where(:hover:not([data-disabled], [data-state='open'])),
-    &:where(:active:not([data-disabled])),
-    &:where([data-state='open']) {
-      scale: 1;
-    }
-  }
-
-  /* Disable scale on Windows (subpixel text re-rasterization causes flicker) */
-  :where([data-os='windows']) & {
-    &:where(:hover:not([data-disabled], [data-state='open'])),
-    &:where(:active:not([data-disabled])),
-    &:where([data-state='open']) {
-      scale: 1;
-    }
-  }
 }
 
 /* Full width mode */

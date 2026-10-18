@@ -58,12 +58,10 @@
       0 0 0 var(--raised-border-width-thick) var(--gray-a7),
       0 var(--raised-shadow-offset-y) var(--raised-shadow-blur-small) var(--black-a12);
   }
-  transition: box-shadow 120ms, background-color 120ms;
 
   &:where(:any-link, button) {
           @media (hover: hover) {
         &:where(:hover) {
-          transition-duration: 40ms, 40ms;
           background-color: var(--color-background);
           /* prettier-ignore */
           box-shadow:
@@ -81,7 +79,6 @@
         }
       }
     &:where([data-state='open']) {
-      transition-duration: 40ms, 40ms;
       background-color: var(--color-background);
       /* prettier-ignore */
       box-shadow:
@@ -101,7 +98,6 @@
     &:where(:active:not([data-state='open'])) {
       padding-top: var(--raised-border-width);
       padding-bottom: 0;
-      transition-duration: 40ms, 40ms;
       background-color: var(--gray-2);
       box-shadow: inset 0 var(--raised-border-width) var(--black-a3), 0 0 0 var(--raised-border-width) var(--gray-a7);
     }

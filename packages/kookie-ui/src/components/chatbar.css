@@ -45,7 +45,6 @@
   font: inherit;
   line-height: inherit;
   text-align: start;
-  transition: height var(--motion-duration-small) ease-out;
 }
 .rt-ChatbarInput:focus,
 .rt-ChatbarInput:focus-visible {
@@ -83,9 +82,6 @@
 }
 
 /* Send button - extend button transition with opacity for visibility fade */
-.rt-ChatbarSend {
-  transition: var(--transition-button), opacity var(--motion-duration-small) var(--motion-ease-standard);
-}
 
 /* Hidden send button stays invisible even when disabled styling applies */
 .rt-ChatbarSend[aria-hidden='true'] {
@@ -218,7 +214,6 @@
 .rt-ChatbarBox {
   box-sizing: border-box;
   width: 100%;
-  transition: var(--transition-text-field);
   /* Padding is applied per size below to match Card spacing */
   isolation: isolate;
 }
@@ -465,7 +460,6 @@
 
   background-color: var(--color-surface-solid);
   box-shadow: var(--shadow-2);
-  transition: var(--transition-text-field);
 
   /* Translucent theme override (ancestor match, zero added specificity so hover still wins) */
   :where([data-material='translucent']) & {
@@ -562,7 +556,6 @@
   align-items: center;
   justify-content: center;
   z-index: 10;
-  animation: rt-fade-in var(--motion-duration-small) var(--motion-spring-snappy);
 }
 
 .rt-ChatbarDropContent {
@@ -573,17 +566,6 @@
 }
 
 /* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .rt-ChatbarInput,
-  .rt-ChatbarBox,
-  .rt-ChatbarSend {
-    transition: none;
-  }
-
-  .rt-ChatbarDropOverlay {
-    animation: none;
-  }
-}
 
 /* Inline slot positioning */
 .rt-ChatbarInlineStart,

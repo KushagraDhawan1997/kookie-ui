@@ -43,7 +43,6 @@
   overflow: hidden;
   box-sizing: border-box;
   border-radius: var(--base-card-border-radius);
-  transition: var(--transition-card);
   contain: paint;
 
   /* Padding */
@@ -76,7 +75,6 @@
     content: '';
     position: absolute;
     pointer-events: none;
-    transition: inherit;
     border-radius: calc(var(--base-card-border-radius) - var(--base-card-border-width));
     inset: var(--base-card-border-width);
   }
@@ -100,37 +98,8 @@
     --backdrop-filter-panel: var(--backdrop-filter-panel-enabled);
   }
 
-  /* Interactive scale - applies to all interactive cards */
   &:where(:any-link, button, label) {
     cursor: pointer;
-
-    @media (hover: hover) {
-      &:where(:hover:not([data-state='open'])) {
-        scale: 1.01;
-      }
-    }
-
-    &:where(:active:not([data-state='open'])) {
-      scale: 0.98;
-    }
-  }
-
-  /* Disable scale on Firefox (SVG rendering issues with transforms) */
-  @supports (-moz-appearance: none) {
-    &:where(:any-link, button, label) {
-      &:where(:hover:not([data-state='open'])),
-      &:where(:active:not([data-state='open'])) {
-        scale: 1;
-      }
-    }
-  }
-
-  /* Disable scale on Windows (subpixel text re-rasterization causes flicker) */
-  :where([data-os='windows']) &:where(:any-link, button, label) {
-    &:where(:hover:not([data-state='open'])),
-    &:where(:active:not([data-state='open'])) {
-      scale: 1;
-    }
   }
 }
 
@@ -647,5 +616,4 @@
 /* A disabled interactive card keeps its look but stops reacting to the pointer. */
 .rt-BaseCard:where(:any-link, button, label):where(:disabled, [data-disabled]) {
   cursor: default;
-  scale: 1;
 }

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { LazyMotion, MotionConfig, domAnimation, m } from 'motion/react';
 import { useComposedRefs } from 'radix-ui/internal';
 import { useDropzone } from 'react-dropzone';
 
@@ -51,9 +50,6 @@ function withoutPlaceholder(el: HTMLTextAreaElement, measure: () => void): void 
     el.placeholder = placeholder;
   }
 }
-
-// Shared layout spring; hoisted so every motion node receives the same object
-const LAYOUT_TRANSITION = { layout: { type: 'spring', visualDuration: 0.15, bounce: 0.1 } } as const;
 
 type ExpandOn = 'none' | 'focus' | 'overflow' | 'both';
 type SendMode = 'always' | 'whenDirty' | 'never';
@@ -694,8 +690,7 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
   return (
     <ChatbarContext.Provider value={contextValue}>
       <ChatbarValueContext.Provider value={value}>
-        <LazyMotion features={domAnimation}>
-          <MotionConfig reducedMotion="user">
+        <>
             <div
               {...divProps}
               ref={composedRootRef}
@@ -724,18 +719,16 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
                 </div>
               ) : null}
               <div {...(dropzone ? getRootProps() : {})} style={{ width: '100%', flex: '1 1 auto', minHeight: 0 }} onPointerDown={handleContainerPointerDown}>
-                <m.div
+                <div
                   className={classNames('rt-ChatbarBox', `rt-variant-${variant ?? 'raised'}`)}
                   style={{ position: 'relative' }}
                   data-accent-color={color}
                   data-radius={radius}
                   data-material={effectiveMaterial}
-                  layout
-                  transition={LAYOUT_TRANSITION}
                 >
-                  <m.div className="rt-ChatbarGrid" layout="position" transition={LAYOUT_TRANSITION}>
+                  <div className="rt-ChatbarGrid">
                     {children}
-                  </m.div>
+                  </div>
                   {dragActive && (
                     <div className="rt-ChatbarDropOverlay" aria-hidden>
                       <div className="rt-ChatbarDropContent">
@@ -745,7 +738,7 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
                       </div>
                     </div>
                   )}
-                </m.div>
+                </div>
               </div>
               {context ? (
                 <Text as="div" size={size === '3' ? '2' : '1'} emphasis="medium" className="rt-ChatbarContext">
@@ -756,8 +749,7 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
                 {dragActive ? 'Drop files here to attach.' : <span key={announcement.id}>{announcement.text}</span>}
               </VisuallyHidden>
             </div>
-          </MotionConfig>
-        </LazyMotion>
+        </>
       </ChatbarValueContext.Provider>
     </ChatbarContext.Provider>
   );
@@ -968,7 +960,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>((props, fo
 
   const Comp = asChild ? Slot : 'textarea';
   return (
-    <m.div className={classNames('rt-ChatbarField', 'rt-ChatbarTextarea', className)} layout="position" transition={LAYOUT_TRANSITION}>
+    <div className={classNames('rt-ChatbarField', 'rt-ChatbarTextarea', className)}>
       <Comp
         {...textareaProps}
         ref={composedRef}
@@ -987,7 +979,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>((props, fo
         autoCorrect={textareaProps.autoCorrect ?? 'on'}
         style={style}
       />
-    </m.div>
+    </div>
   );
 });
 Textarea.displayName = 'Chatbar.Textarea';
@@ -1044,7 +1036,7 @@ const AttachmentsRow = React.forwardRef<HTMLDivElement, AttachmentsRowProps>((pr
   if (ctx.attachments.length === 0 && !hasItems && !forceMount) return null;
   const Comp = asChild ? Slot : 'div';
   return (
-    <m.div layout="position" transition={LAYOUT_TRANSITION}>
+    <div>
       <Comp {...divProps} ref={forwardedRef} className={classNames('rt-ChatbarAttachmentsRow', className)} role="list" aria-label={divProps['aria-label'] ?? 'Attachments'}>
         <ScrollArea className="rt-ChatbarScrollArea" scrollbars="horizontal" size="1">
           <Flex align="center" gap="2" minWidth="fit-content">
@@ -1057,7 +1049,7 @@ const AttachmentsRow = React.forwardRef<HTMLDivElement, AttachmentsRowProps>((pr
           </Flex>
         </ScrollArea>
       </Comp>
-    </m.div>
+    </div>
   );
 });
 AttachmentsRow.displayName = 'Chatbar.AttachmentsRow';
@@ -1261,13 +1253,13 @@ const Row = React.forwardRef<HTMLDivElement, RowProps>((props, forwardedRef) => 
   if (!ctx.open) return null;
   const Comp = asChild ? Slot : 'div';
   return (
-    <m.div layout="position" transition={LAYOUT_TRANSITION}>
+    <div>
       <Comp {...divProps} ref={forwardedRef} className={classNames('rt-ChatbarRow', className)}>
         <Flex align="center" justify="between" width="100%">
           {children}
         </Flex>
       </Comp>
-    </m.div>
+    </div>
   );
 });
 Row.displayName = 'Chatbar.Row';

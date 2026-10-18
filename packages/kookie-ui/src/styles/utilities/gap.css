@@ -1,7 +1,4 @@
 @breakpoints {
-  .rt-r-gap {
-    /* Keep this selector here to maintain the source order */
-  }
   .rt-r-gap-0 {
     gap: 0;
   }
@@ -41,9 +38,6 @@
   .rt-r-gap-12 {
     gap: var(--space-12);
   }
-  .rt-r-cg {
-    /* Keep this selector here to maintain the source order */
-  }
   .rt-r-cg-0 {
     column-gap: 0;
   }
@@ -82,9 +76,6 @@
   }
   .rt-r-cg-12 {
     column-gap: var(--space-12);
-  }
-  .rt-r-rg {
-    /* Keep this selector here to maintain the source order */
   }
   .rt-r-rg-0 {
     row-gap: 0;

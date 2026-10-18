@@ -1,7 +1,6 @@
 .rt-TextFieldRoot {
   display: flex;
   align-items: stretch;
-  transition: var(--transition-text-field);
   contain: paint;
 
   font-family: var(--default-font-family);
@@ -47,9 +46,6 @@
   }
 
   /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 }
 
 .rt-TextFieldInput {
@@ -365,7 +361,6 @@
 
   /* Base state: solid colors for solid panels */
   box-shadow: inset 0 0 0 1px var(--accent-6);
-  transition: var(--transition-background-blur);
 
   /* Theme-level translucent override */
   :where([data-material='translucent']) & {
@@ -444,7 +439,6 @@
   /* Base state: solid surface for solid panels */
   background-color: var(--color-surface-solid);
   box-shadow: var(--shadow-2);
-  transition: var(--transition-text-field);
 
   /* Theme-level translucent override */
   :where([data-material='translucent']) & {
@@ -523,7 +517,6 @@
 
   /* Base state: solid color for solid panels */
   background-color: var(--accent-3);
-  transition: var(--transition-background-blur);
 
   /* Theme-level translucent override */
   :where([data-material='translucent']) & {
@@ -684,7 +677,6 @@
   /* Base state: solid accent for solid panels */
   background-color: var(--accent-2);
   box-shadow: inset 0 0 0 1px var(--accent-6);
-  transition: var(--transition-background-blur);
 
   /* Theme-level translucent override */
   :where([data-material='translucent']) & {

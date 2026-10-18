@@ -5,9 +5,6 @@
 /* * * * * * * * * * * * * * * * * * * */
 
 @breakpoints {
-  .rt-r-p {
-    /* Keep this selector here to maintain the source order */
-  }
   .rt-r-p-0 {
     padding: 0;
   }
@@ -91,9 +88,6 @@
 /* * * * * * * * * * * * * * * * * * * */
 
 @breakpoints {
-  .rt-r-px {
-    /* Keep this selector here to maintain the source order */
-  }
   .rt-r-px-0 {
     padding-left: 0;
     padding-right: 0;
@@ -194,9 +188,6 @@
 /* * * * * * * * * * * * * * * * * * * */
 
 @breakpoints {
-  .rt-r-py {
-    /* Keep this selector here to maintain the source order */
-  }
   .rt-r-py-0 {
     padding-top: 0;
     padding-bottom: 0;
@@ -297,9 +288,6 @@
 /* * * * * * * * * * * * * * * * * * * */
 
 @breakpoints {
-  .rt-r-pt {
-    /* Keep this selector here to maintain the source order */
-  }
   .rt-r-pt-0 {
     padding-top: 0;
   }
@@ -380,9 +368,6 @@
 /* * * * * * * * * * * * * * * * * * * */
 
 @breakpoints {
-  .rt-r-pr {
-    /* Keep this selector here to maintain the source order */
-  }
   .rt-r-pr-0 {
     padding-right: 0;
   }
@@ -463,9 +448,6 @@
 /* * * * * * * * * * * * * * * * * * * */
 
 @breakpoints {
-  .rt-r-pb {
-    /* Keep this selector here to maintain the source order */
-  }
   .rt-r-pb-0 {
     padding-bottom: 0;
   }
@@ -546,9 +528,6 @@
 /* * * * * * * * * * * * * * * * * * * */
 
 @breakpoints {
-  .rt-r-pl {
-    /* Keep this selector here to maintain the source order */
-  }
   .rt-r-pl-0 {
     padding-left: 0;
   }

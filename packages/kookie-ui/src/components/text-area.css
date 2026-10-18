@@ -39,7 +39,6 @@
   font-weight: var(--font-weight-regular);
   font-style: normal;
   text-align: start;
-  transition: var(--transition-text-field);
 
   /* Allows the `resize` property to work on the div */
   overflow: hidden;
@@ -71,10 +70,6 @@
 
   &::selection {
     background-color: var(--v-selection-color, var(--focus-a5));
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
   }
 }
 
@@ -252,7 +247,6 @@
   --v-border-hover-a: var(--accent-a7);
   --v-placeholder-color: var(--gray-a10);
   /* Outline uses a different transition */
-  transition: var(--transition-background-blur);
 }
 
 /* Surface variant palette */
@@ -434,7 +428,6 @@
 
   background-color: var(--color-surface-solid);
   box-shadow: var(--shadow-2);
-  transition: var(--transition-text-field);
 
   /* Translucent theme override */
   &:where([data-material='translucent']) {

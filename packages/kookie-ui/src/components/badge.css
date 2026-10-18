@@ -7,7 +7,6 @@
   font-style: normal;
   flex-shrink: 0;
   line-height: 1;
-  transition: var(--transition-badge);
 
   /* Make sure that the height is not stretched in a Flex/Grid layout */
   height: fit-content;
@@ -49,9 +48,6 @@
   }
 
   /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 
   /* Forced colors support */
   @media (forced-colors: active) {
@@ -185,7 +181,6 @@
 .rt-Badge:where(.rt-variant-outline) {
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-a6) calc(var(--material-alpha) * 100%), var(--accent-6) var(--material-blend));
   color: var(--accent-ink);
-  transition: var(--transition-background-blur);
 }
 
 /* ghost */
@@ -202,7 +197,6 @@
   top: var(--raised-elevation-offset);
   color: var(--accent-ink);
   box-shadow: var(--shadow-2);
-  transition: var(--transition-text-field);
 
   --raised-surface: var(--color-surface-solid);
   background-color: var(--raised-surface);

@@ -69,10 +69,10 @@
   }
 }
 
-/* Enhanced reduced motion support */
+/* A busy indicator keeps moving when motion is reduced, more slowly. */
 @media (prefers-reduced-motion: reduce) {
   .rt-Spinner {
-    animation: none;
+    animation-duration: calc(var(--spinner-animation-duration) * 3);
   }
 }
 

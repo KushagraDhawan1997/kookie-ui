@@ -316,7 +316,6 @@
   min-height: 44px;
   min-width: 44px;
   border-radius: var(--radius-2);
-  transition: background-color var(--transition-standard);
   z-index: 1;
   pointer-events: auto;
 }
@@ -355,7 +354,6 @@
   height: var(--space-2);
   background-color: var(--gray-6);
   border-radius: 1px;
-  transition: background-color var(--transition-standard);
 }
 
 .rt-SliderTickLabel {
@@ -368,5 +366,4 @@
   text-overflow: ellipsis;
   max-width: 60px;
   text-align: center;
-  transition: color var(--transition-standard), font-weight var(--transition-standard);
 }

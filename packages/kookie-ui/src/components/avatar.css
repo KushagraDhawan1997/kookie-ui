@@ -68,12 +68,8 @@
 .rt-AvatarRoot:where(a),
 .rt-AvatarRoot:where([role="button"]) {
   cursor: pointer;
-  transition: var(--transition-button);
 
   /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 
   &:where(:focus-visible) {
     outline: var(--focus-outline-width) solid var(--focus-8);

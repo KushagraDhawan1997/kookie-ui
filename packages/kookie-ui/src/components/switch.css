@@ -46,7 +46,6 @@
     width: var(--switch-width);
     height: var(--switch-height);
     border-radius: 9999px;
-    transition: background-color var(--transition-standard), box-shadow var(--transition-standard);
     cursor: var(--cursor-switch);
   }
 
@@ -68,7 +67,6 @@
   height: var(--switch-thumb-size);
   border-radius: 9999px;
   box-shadow: var(--shadow-2);
-  transition: transform var(--transition-standard), box-shadow var(--transition-standard);
 
   &:where([data-state='checked']) {
     background-color: var(--accent-solid-thumb);

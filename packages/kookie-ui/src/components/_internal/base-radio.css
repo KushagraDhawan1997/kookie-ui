@@ -46,7 +46,6 @@
     height: var(--radio-size);
     width: var(--radio-size);
     border-radius: 100%;
-    transition: var(--transition-radio);
   }
 
   &::after {
@@ -57,7 +56,6 @@
     border-radius: 100%;
     /* Scale via transform to achieve perfect sub-pixel positioning */
     transform: scale(0.4);
-    transition: var(--transition-radio);
   }
 
   &:where(:checked, [data-state='checked']) {

@@ -1,7 +1,4 @@
 @breakpoints {
-  .rt-r-gtc {
-    /* Keep this selector here to maintain the source order */
-  }
   .rt-r-gtc-1 {
     grid-template-columns: minmax(0, 1fr);
   }

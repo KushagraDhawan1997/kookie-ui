@@ -36,9 +36,6 @@
     margin-bottom: var(--margin-bottom-override, var(--margin-bottom));
     margin-left: var(--margin-left-override, var(--margin-left));
   }
-  .rt-r-m {
-    /* Keep this selector here to maintain the source order */
-  }
   .rt-r-m-0 {
     --margin-top: 0px;
     --margin-right: 0px;
@@ -273,9 +270,6 @@
     margin-left: var(--margin-left-override, var(--margin-left));
     margin-right: var(--margin-right-override, var(--margin-right));
   }
-  .rt-r-mx {
-    /* Keep this selector here to maintain the source order */
-  }
   .rt-r-mx-0 {
     --margin-left: 0px;
     --margin-right: 0px;
@@ -448,9 +442,6 @@
     margin-top: var(--margin-top-override, var(--margin-top));
     margin-bottom: var(--margin-bottom-override, var(--margin-bottom));
   }
-  .rt-r-my {
-    /* Keep this selector here to maintain the source order */
-  }
   .rt-r-my-0 {
     --margin-top: 0px;
     --margin-bottom: 0px;
@@ -622,9 +613,6 @@
   .-rt-r-mt-12 {
     margin-top: var(--margin-top-override, var(--margin-top));
   }
-  .rt-r-mt {
-    /* Keep this selector here to maintain the source order */
-  }
   .rt-r-mt-0 {
     --margin-top: 0px;
   }
@@ -764,9 +752,6 @@
   .-rt-r-mr-11,
   .-rt-r-mr-12 {
     margin-right: var(--margin-right-override, var(--margin-right));
-  }
-  .rt-r-mr {
-    /* Keep this selector here to maintain the source order */
   }
   .rt-r-mr-0 {
     --margin-right: 0px;
@@ -908,9 +893,6 @@
   .-rt-r-mb-12 {
     margin-bottom: var(--margin-bottom-override, var(--margin-bottom));
   }
-  .rt-r-mb {
-    /* Keep this selector here to maintain the source order */
-  }
   .rt-r-mb-0 {
     --margin-bottom: 0px;
   }
@@ -1051,9 +1033,6 @@
   .-rt-r-ml-11,
   .-rt-r-ml-12 {
     margin-left: var(--margin-left-override, var(--margin-left));
-  }
-  .rt-r-ml {
-    /* Keep this selector here to maintain the source order */
   }
   .rt-r-ml-0 {
     --margin-left: 0px;

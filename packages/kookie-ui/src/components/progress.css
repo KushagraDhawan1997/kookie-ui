@@ -54,7 +54,6 @@
       -100% + max(calc(var(--progress-value) / var(--progress-max) * 100%), var(--progress-height))
     )
   );
-  transition: var(--transition-progress);
 
   &:where([data-state='indeterminate']) {
     animation-name: rt-progress-indicator-indeterminate-grow;

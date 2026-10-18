@@ -226,9 +226,6 @@
   width: auto;
   padding: var(--space-3) var(--space-2);
   border-radius: var(--radius-2);
-  transition:
-    background-color var(--motion-duration-micro) var(--motion-ease-standard),
-    color var(--motion-duration-small) var(--motion-ease-standard);
 }
 
 /* Size-specific icon wrapper padding */
@@ -531,10 +528,6 @@
   justify-content: flex-start;
 
   /* Transitions */
-  transition:
-    background var(--motion-duration-small) var(--motion-ease-standard),
-    box-shadow var(--motion-duration-small) var(--motion-ease-standard),
-    filter var(--motion-duration-small) var(--motion-ease-standard);
 
   /* Focus state */
   &:where(:focus-visible) {
@@ -543,9 +536,6 @@
   }
 
   /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 }
 
 .rt-SidebarHeader :where(.rt-SidebarMenuButton) {
@@ -692,21 +682,6 @@
 .rt-SidebarContent:where(.rt-menu-variant-soft),
 .rt-SidebarFooter:where(.rt-menu-variant-soft) {
   /* Sub-trigger transitions - match base menu */
-  & :where(.rt-SidebarMenuSubTrigger) {
-    transition: var(--transition-menu);
-
-    /* Reduced motion support */
-    @media (prefers-reduced-motion: reduce) {
-      transition: none;
-    }
-
-    /* Remove backdrop-filter transitions in translucent mode to prevent flickering */
-    :where([data-material='translucent']) & {
-      transition:
-        background var(--duration-1) var(--ease-1),
-        color var(--duration-2) var(--ease-1);
-    }
-  }
 
   /* Sub-trigger open state - match base menu */
   & :where(.rt-SidebarMenuSubTrigger[data-state='open']) {
@@ -731,14 +706,6 @@
   }
 
   /* Menu item transitions - match base menu */
-  & :where(.rt-SidebarMenuButton) {
-    /* Remove backdrop-filter transitions in translucent mode to prevent flickering */
-    :where([data-material='translucent']) & {
-      transition:
-        background var(--duration-1) var(--ease-1),
-        color var(--duration-2) var(--ease-1);
-    }
-  }
 
   /* Hover/highlighted state for soft variant - EXACT match to base menu */
   & :where(.rt-SidebarMenuButton:where([data-highlighted]):not([data-disabled])) {
@@ -881,7 +848,6 @@
       }
     }
 
-
     /* Active navigation state for solid variant - same as highlighted */
     & :where(.rt-SidebarMenuButton[data-active]) {
       background-color: var(--accent-solid);
@@ -959,7 +925,6 @@
   background-color: var(--gray-a3);
   border-radius: var(--radius-2);
   padding: var(--space-1) var(--space-2);
-  transition: box-shadow 120ms;
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
@@ -1091,7 +1056,6 @@
   background-color: var(--gray-a3);
   border-radius: var(--radius-2);
   padding: var(--space-1) var(--space-2);
-  transition: box-shadow 120ms;
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
@@ -1206,7 +1170,6 @@
   border-radius: var(--radius-1);
   color: var(--gray-a9);
   cursor: pointer;
-  transition: color 100ms;
 }
 
 @media (hover: hover) {

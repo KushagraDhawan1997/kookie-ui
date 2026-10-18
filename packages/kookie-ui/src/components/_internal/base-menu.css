@@ -20,16 +20,12 @@
   background-color: var(--color-panel);
   backdrop-filter: var(--backdrop-filter-panel);
   box-shadow: var(--shadow-5);
-  transition: var(--transition-background-blur);
 
   /* GPU optimization: limit paint scope and prevent backdrop-filter layering */
   contain: paint;
   isolation: isolate;
 
   /* Enhanced reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 
   /* Component-level overrides (higher specificity) */
   &:where([data-material='solid']) {
@@ -70,7 +66,6 @@
   position: relative;
   outline: none;
   scroll-margin: var(--base-menu-content-padding) 0;
-  transition: var(--transition-menu);
 
   /* Fix sticky text highlighting after selection in Firefox */
   user-select: none;
@@ -82,9 +77,6 @@
   }
 
   /* Enhanced reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 }
 
 .rt-BaseMenuShortcut {
