@@ -2,11 +2,11 @@
 
 > Context file for AI agents working in this repository.
 
-Read `docs/LOG.md` first. It records how v1 relates to v2 and the docs restructure in progress. Where this file disagrees with it, the log wins.
+Read `docs/LOG.md` first. It records the decisions behind v1 and why they were made. Where this file disagrees with it, the log wins.
 
 ## Project Overview
 
-**Kookie UI** (`@kushagradhawan/kookie-ui`) is a modern React component library built as a fork of [Radix Themes](https://www.radix-ui.com/themes). It extends Radix with a complete layout engine, universal material system, enhanced design tokens, and specialized components not available in upstream Radix.
+**Kookie UI** (`@kushagradhawan/kookie-ui`) is a modern React component library built as a fork of [Radix Themes](https://www.radix-ui.com/themes). It extends Radix with a layout engine, a material setting for surfaces, its own design tokens, and components that upstream Radix doesn't have. Its API has diverged from Radix Themes.
 
 - **Package name:** `@kushagradhawan/kookie-ui`
 - **Current version:** 0.x (check `packages/kookie-ui/package.json` for exact version)
@@ -19,10 +19,9 @@ Read `docs/LOG.md` first. It records how v1 relates to v2 and the docs restructu
 The docs site is part of this monorepo at `apps/docs/` (Next.js App Router + MDX). Key sections:
 
 - **Component docs:** `/docs/<component-name>` (e.g., `/docs/button`, `/docs/shell`)
-- **Theming:** `/docs/theme`, `/docs/colors`, `/docs/radius`, `/docs/shadows`
-- **Tokens:** `/docs/constants`, `/docs/typography`
+- **Chapters:** `/start/<name>` and `/foundations/<name>` (e.g., `/start/theming`, `/foundations/color`), listed in `apps/docs/lib/chapters.ts`
 
-When you need to understand a component's API or usage patterns, **read the MDX content files** at `apps/docs/app/docs/<component>/content.mdx` rather than guessing.
+When you need to understand a component's API or usage patterns, **read the MDX content files** at `apps/docs/app/docs/<component>/content.mdx` and the chapters in `apps/docs/content/` rather than guessing.
 
 ## Repository Structure
 
@@ -185,7 +184,7 @@ A 7-slot layout system: Header, Rail, Panel, Sidebar, Content, Inspector, Bottom
 
 ### Material System
 
-Theme-level `material` prop for surfaces: `solid`, `translucent` (with backdrop blur), `ghost`. Replaces Radix's limited `panelBackground`. Backed by a 12-step blur token scale.
+Theme-level `material` prop for surfaces: `solid` or `translucent` (with backdrop blur). Replaces Radix's `panelBackground`. Backed by a 12-step blur token scale.
 
 ### Extended Token Systems
 
@@ -225,7 +224,7 @@ Component prop schemas are auto-generated from Zod definitions and published as 
 - Component files use kebab-case naming (e.g., `alert-dialog.tsx`)
 - Props files export a `*PropDefs` object defining allowed values and defaults
 - Use `classnames` library for conditional class merging
-- **No Tailwind** in the component library (docs site uses Tailwind separately)
+- **No Tailwind classes** anywhere. The docs site loads only Tailwind's preflight reset
 - **HugeIcons only** — never use other icon libraries in components
 
 See `CLAUDE.md` at the repository root for the full coding conventions and guidelines.
