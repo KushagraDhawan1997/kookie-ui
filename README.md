@@ -16,14 +16,14 @@ Kookie UI starts earlier in the chain. It begins with patterns — the rules tha
 
 Kookie UI extends Radix Themes with:
 
-- **Universal material system** — Theme-level `material` prop for translucent/solid surfaces with backdrop blur, replacing the limited `panelBackground`
+- **Material** — a Theme-level `material` prop for translucent or solid surfaces with backdrop blur, replacing `panelBackground`
 - **Shell architecture** — Complete layout engine with 7 slots (Header, Rail, Panel, Sidebar, Content, Inspector, Bottom), responsive presentation modes, and resize handles
 - **Navbar component** — Semantic slots for logo, navigation, and actions with fixed/sticky/static positioning
 - **Built-in tooltip support** — Native `tooltip` prop on Button and IconButton eliminates wrapper components
 - **Enhanced accessibility** — RTL layout support, Windows High Contrast mode, improved reduced motion handling
 - **Extended token systems** — 12-step blur scale, 9-step opacity scale, enhanced 3D button effects
 
-All Radix Themes components and APIs remain fully compatible.
+Kookie UI started from Radix Themes, and its API has since diverged. Check the changelog before moving code across.
 
 ## Philosophy
 
@@ -37,25 +37,16 @@ The result isn't magic or perfection. It's a foundation you can trust just enoug
 
 Kookie UI includes the same foundations you'd expect — spacing tokens, color tokens, motion tokens — but rebuilt systematically. On top of that, it ships with components that apply those rules consistently, so teams don't have to remember them case by case.
 
-- **Density system** that adapts from compact SaaS layouts to touch-friendly mobile flows with four predictable size scales
+- **Size steps** shared by controls, so `size="2"` means the same height across them
 - **Shell architecture** with structural patterns for sidebars, panels, and toolbars that actually work together
-- **Universal material system** with translucency vs. solidity support across all components
+- **Material** for surfaces: solid or translucent
 - **Consistent sizing** where cards, buttons, dropdowns, selects, and avatars all follow the same scale
 - **Unified motion** with transition patterns that work consistently across components
 - **Enhanced accessibility** with native tooltip support and stricter aria-label enforcement
 
 ## Components
 
-Documented components:
-
-- **Button** — Primary action component with variants and sizes
-- **TextField** — Text input with built-in validation states
-- **Combobox** — Searchable dropdown selection
-- **SegmentedControl** — Mutually exclusive option selector
-- **Navbar** — Application navigation bar
-- **Shell** — Application layout structure
-
-Plus theming documentation for colors, typography, radius, shadows, and material system.
+Each documented component has a page at [womp-ui.kookie.design/docs](https://womp-ui.kookie.design/docs), with chapters on colour, typography, radius, materials and depth.
 
 For larger patterns such as code blocks, documentation layouts, and marketing sections, see [Blocks](https://womp-ui.kookie.design/docs/blocks). Blocks are copy-paste source, not a package: copy the files into your project and change them freely.
 
@@ -91,7 +82,7 @@ Visit [womp-ui.kookie.design](https://womp-ui.kookie.design) for full documentat
 
 ## Requirements
 
-- React 16.8+ through React 19
+- React 18 or 19 (`MessageScroller` needs React 19)
 - Node.js 16+ (for development)
 - TypeScript support built-in
 

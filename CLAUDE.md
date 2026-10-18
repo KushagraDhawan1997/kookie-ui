@@ -1,6 +1,6 @@
 # Claude Guidelines for kookie-ui
 
-Read `docs/LOG.md` first. It records how v1 relates to v2 and the docs restructure in progress. Where this file disagrees with it, the log wins.
+Read `docs/LOG.md` first. It records the decisions behind v1 and why they were made. Where this file disagrees with it, the log wins.
 
 ## Performance > Everything
 

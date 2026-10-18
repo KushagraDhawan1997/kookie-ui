@@ -1,6 +1,6 @@
 'use client';
 
-import { Link as KUILink, Callout, Flex, Grid, Heading, Text } from '@kushagradhawan/kookie-ui';
+import { Link as KUILink, Flex, Grid, Heading, Text } from '@kushagradhawan/kookie-ui';
 import Link from 'next/link';
 import { SiteDocsPage } from '@/components/site-docs-page';
 import { SECTIONS, chaptersIn } from '@/lib/chapters';
@@ -12,21 +12,14 @@ const DESCRIPTION =
   'Kookie UI v1 is the design system behind Womp. It gives you the foundations and the building blocks to make design decisions, and every screen reads each decision from one place.';
 
 /**
- * The homepage has the same structure as v2's: a title, one paragraph on what the system is,
- * then the four sections and their pages (docs/LOG.md, 2026-09-19). Like v2's, it renders
- * through the same page block as every chapter, so its header, column and footer match them.
- * The look is v1's own.
+ * The homepage: a title, one paragraph on what the system is, then each section and its pages.
+ * It renders through the same page block as every chapter, so its header, column and footer
+ * match them.
  */
 export default function Home() {
   return (
     <SiteDocsPage meta={{ title: "Womp's Design System", description: DESCRIPTION }} showCopyButton={false}>
       <Flex direction="column" gap="9">
-        <Callout.Root color="amber" variant="soft" size="3">
-          <Callout.Text>
-            <Text weight="medium">Work in progress.</Text> Many design decisions in v1 are still open. Where v1 does not yet follow its own principles, these pages say so.
-          </Callout.Text>
-        </Callout.Root>
-
         <Grid columns={{ initial: '1', sm: '2' }} gapX="7" gapY="9">
           {SECTIONS.map((section) => (
             <Flex key={section.id} direction="column" gap="4">
@@ -54,7 +47,7 @@ export default function Home() {
                 <h2>Components</h2>
               </Heading>
               <Text as="p" size="3" emphasis="medium">
-                Every component in the package. Each page covers what the component is, which props it takes and how to use it.
+                A page for each documented component. Each one covers what the component is, which props it takes and how to use it.
               </Text>
             </Flex>
             <Flex align="start">
