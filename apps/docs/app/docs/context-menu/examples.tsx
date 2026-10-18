@@ -97,7 +97,7 @@ const [zoom, setZoom] = React.useState('fit');
       </Text>
     </Card>
   </ContextMenu.Trigger>
-  <ContextMenu.Content size="1" variant="soft">
+  <ContextMenu.Content size="1">
     <ContextMenu.Label>View</ContextMenu.Label>
     <ContextMenu.CheckboxItem
       checked={showGrid}
@@ -137,7 +137,7 @@ function CanvasOptions() {
           </Text>
         </Card>
       </ContextMenu.Trigger>
-      <ContextMenu.Content size="1" variant="soft">
+      <ContextMenu.Content size="1">
         <ContextMenu.Label>View</ContextMenu.Label>
         <ContextMenu.CheckboxItem checked={showGrid} onCheckedChange={setShowGrid} shortcut="⌘ '">
           Show grid

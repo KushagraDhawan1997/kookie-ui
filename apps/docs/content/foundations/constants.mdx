@@ -1,4 +1,4 @@
-Kookie UI's custom design constants provide consistent values for transitions, effects, and component behavior across your application. These constants are unique to Kookie UI and are not part of the Radix Themes system.
+Kookie UI's custom design constants provide consistent values for effects and component behavior across your application. These constants are unique to Kookie UI and are not part of the Radix Themes system.
 
 ## Installation
 
@@ -14,107 +14,9 @@ These constants are automatically available in your CSS when using Kookie UI. Th
 .my-component {
   backdrop-filter: blur(var(--backdrop-blur-panel));
   background: rgba(255, 255, 255, var(--panel-opacity));
-  transition: var(--transition-button);
   border-radius: var(--radius-3);
   padding: var(--space-4);
-  box-shadow: var(--raised-inset-shadow-dark);
 }
-```
-
-## Transitions
-
-Comprehensive transition system with spring-based easing and component-specific configurations:
-
-### Duration Tokens
-
-```css
-var(--duration-1)  /* 50ms - Micro interactions */
-var(--duration-2)  /* 75ms - Fast transitions */
-var(--duration-3)  /* 100ms - Standard transitions */
-var(--duration-4)  /* 150ms - Slower transitions */
-var(--duration-5)  /* 200ms - Slow animations */
-```
-
-### Spring Easing Curves
-
-```css
-var(--ease-spring-1)  /* cubic-bezier(0.25, 0.46, 0.45, 0.94) - Spring out back */
-var(--ease-spring-2)  /* cubic-bezier(0.68, -0.55, 0.265, 1.55) - Spring bounce */
-var(--ease-spring-3)  /* cubic-bezier(0.175, 0.885, 0.32, 1.275) - Spring elastic */
-```
-
-### Semantic Motion Tokens
-
-```css
-/* Motion duration */
-var(--motion-duration-micro)     /* 75ms - Micro-interactions */
-var(--motion-duration-small)      /* 150ms - Small UI changes */
-var(--motion-duration-medium)     /* 250ms - Medium/large changes */
-var(--motion-duration-large)      /* 350ms - Large movements */
-
-/* Motion easing */
-var(--motion-ease-standard)       /* ease-in-out - Most UI changes */
-var(--motion-ease-smooth)         /* cubic-bezier(0.4, 0, 0.2, 1) - Material-like */
-var(--motion-ease-anticipate)    /* cubic-bezier(0.36, 0, 0.66, -0.56) */
-var(--motion-ease-follow)         /* cubic-bezier(0.34, 1.56, 0.64, 1) */
-
-/* Spring semantics */
-var(--motion-spring-snappy)       /* Spring out back */
-var(--motion-spring-bounce)       /* Spring bounce */
-var(--motion-spring-elastic)      /* Spring elastic */
-```
-
-### Component Transitions
-
-Pre-configured transitions for specific components:
-
-```css
-/* Button transitions */
-var(--transition-button)
-/* Includes: background, box-shadow, filter, backdrop-filter, transform, padding */
-
-/* Form field transitions */
-var(--transition-text-field)
-var(--transition-select)
-/* Includes: background, box-shadow */
-
-/* UI component transitions */
-var(--transition-card)
-var(--transition-badge)
-var(--transition-tabs)
-var(--transition-menu)
-var(--transition-checkbox)
-var(--transition-radio)
-
-/* Specialized transitions */
-var(--transition-accordion-content)
-var(--transition-accordion-trigger)
-var(--transition-segmented-control)
-var(--transition-progress)
-
-/* GPU-optimized spring transitions */
-var(--transition-spring-gpu)
-var(--transition-spring-gpu-fast)
-```
-
-### Stagger & Animation
-
-```css
-/* Stagger delays */
-var(--motion-stagger-1)  /* 15ms */
-var(--motion-stagger-2)  /* 30ms */
-var(--motion-stagger-3)  /* 45ms */
-
-/* Spring physics parameters */
-var(--spring-snappy-mass)           /* 1 */
-var(--spring-snappy-stiffness)      /* 280 */
-var(--spring-snappy-damping)        /* 24 */
-var(--spring-snappy-initial-velocity) /* 0 */
-
-var(--spring-smooth-mass)           /* 1 */
-var(--spring-smooth-stiffness)      /* 200 */
-var(--spring-smooth-damping)        /* 30 */
-var(--spring-smooth-initial-velocity) /* 0 */
 ```
 
 ## Visual Effects
@@ -128,9 +30,6 @@ var(--backdrop-blur-panel)       /* var(--blur-5) - Panels */
 var(--backdrop-blur-dialog)      /* var(--blur-6) - Dialogs */
 
 /* Surface opacity constants */
-var(--surface-opacity-light)     /* var(--opacity-5) - Light surfaces */
-var(--surface-opacity-heavy)     /* var(--opacity-6) - Heavy surfaces */
-var(--surface-opacity-dark)      /* var(--opacity-7) - Dark surfaces */
 
 /* Panel and dialog opacity */
 var(--panel-opacity)             /* var(--opacity-8) - Panel backgrounds */
@@ -155,7 +54,6 @@ var(--raised-active-padding-offset-2) /* 1px - Active state padding */
 
 /* Shadow system */
 var(--raised-shadow-blur-small)       /* 0.15em - Small shadow blur */
-var(--raised-shadow-blur-medium)      /* 0.2em - Medium shadow blur */
 var(--raised-shadow-blur-large)       /* 0.4em - Large shadow blur */
 var(--raised-shadow-offset-y)         /* 0.04em - Shadow Y offset */
 
@@ -167,13 +65,8 @@ var(--raised-border-width-thick)      /* 0.05em - Thick border width */
 var(--raised-word-spacing)            /* -0.1em - Word spacing for 3D effect */
 
 /* Division factors */
-var(--raised-elevation-factor-subtle)  /* 3 - Subtle elevation factor */
-var(--raised-shadow-factor-light)     /* 1.5 - Light shadow factor */
-var(--raised-border-multiplier-double) /* 2 - Double border multiplier */
-var(--raised-shadow-medium-factor-third) /* 3 - Medium shadow factor */
 
 /* Complex inset shadow */
-var(--raised-inset-shadow-dark)
 /* Multi-layered inset shadow for form components */
 ```
 
@@ -227,8 +120,6 @@ var(--component-gap-ghost-3)  /* var(--space-2) - Large ghost gap */
 var(--component-gap-ghost-4)  /* var(--space-2) - Large ghost gap */
 
 /* Size multipliers */
-var(--size-multiplier-small)  /* 0.75 */
-var(--size-multiplier-large)  /* 1.25 */
 
 /* Spacing multipliers */
 var(--spacing-multiplier-small)  /* 0.5 */
@@ -241,20 +132,13 @@ var(--padding-ratio-horizontal)  /* 1.5 */
 
 ## Progress & Slider
 
-Animation and sizing constants for progress and slider components:
+Sizing constants for progress and slider components:
 
 ```css
-/* Progress animation timing */
+/* Progress timing */
 var(--progress-default-duration)        /* 5s */
-var(--progress-animation-delay-start)   /* 5s */
-var(--progress-animation-delay-shine)   /* 7.5s */
-var(--progress-animation-duration-fade) /* 2.5s */
-var(--progress-animation-duration-pulse) /* 5s */
 
 /* Progress visual effects */
-var(--progress-shine-width-multiplier)  /* 4 */
-var(--progress-gradient-stop-start)     /* 25% */
-var(--progress-gradient-stop-end)       /* 75% */
 
 /* Progress scale values */
 var(--progress-scale-initial)  /* 0.01 */
@@ -264,17 +148,12 @@ var(--progress-scale-step-3)   /* 0.9 */
 var(--progress-scale-final)    /* 1 */
 
 /* Progress timing percentages */
-var(--progress-timing-step-1)  /* 20% */
-var(--progress-timing-step-2)  /* 30% */
-var(--progress-timing-step-3)  /* 40% */
-var(--progress-timing-step-4)  /* 50% */
 
 /* Slider component constants */
 var(--slider-thumb-hit-area-multiplier) /* 2 */
 var(--slider-thumb-inset-factor)        /* 0.25 */
 var(--slider-focus-ring-inner)          /* 3px */
 var(--slider-focus-ring-outer)          /* 5px */
-var(--slider-raised-inset-offset)      /* 1.5px */
 
 /* Shared Progress and Slider sizing */
 var(--progress-slider-height-1)  /* var(--space-1) */
@@ -300,8 +179,6 @@ var(--focus-outline-offset)       /* 2px */
 var(--focus-outline-offset-inset) /* -1px */
 
 /* State opacity constants */
-var(--opacity-disabled)           /* var(--opacity-5) - Disabled state */
-var(--opacity-soft-variant)       /* var(--opacity-8) - Soft variant */
 
 /* Standard border width */
 var(--border-width-standard)      /* 1px */
@@ -318,12 +195,5 @@ Positioning and layout constants:
 /* Positioning constants */
 var(--position-center)         /* 50% */
 var(--position-full)           /* 100% */
-var(--position-negative-full)  /* -100% */
-var(--position-zero)           /* 0% */
 
-/* Sheet animation constants */
-var(--sheet-slide-distance)    /* 50% */
-
-/* Transition combinations */
-var(--transition-background-blur) /* background-color var(--duration-2) var(--ease-1) */
 ```

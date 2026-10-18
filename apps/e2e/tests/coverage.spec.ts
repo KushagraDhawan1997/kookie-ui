@@ -54,7 +54,6 @@ const WITHOUT_PAGE = [
   'theme',
   'theme-panel',
   'tooltip',
-  'user-card',
   'virtual-menu',
   'visually-hidden',
 ];

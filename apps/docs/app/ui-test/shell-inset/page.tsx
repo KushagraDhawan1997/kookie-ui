@@ -30,7 +30,6 @@ export default function ShellInsetTest() {
       <Shell.Sidebar
         defaultState="expanded"
         expandedSize={280}
-        thinSize={64}
         presentation={{ initial: 'overlay', md: 'fixed' }}
         inset={insetConfig.sidebar}
       >

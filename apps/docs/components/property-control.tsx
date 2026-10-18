@@ -110,7 +110,7 @@ function Group({ width, items, style }: { width?: string | number; items: Item[]
                       <span style={{ textTransform: 'capitalize' }}>{item.options.find((o) => o.value === item.value)?.label || item.placeholder || 'Select'}</span>
                     </Button>
                   </DropdownMenu.Trigger>
-                  <DropdownMenu.Content variant="soft">
+                  <DropdownMenu.Content>
                     <DropdownMenu.RadioGroup value={item.value} onValueChange={item.onChange}>
                       {item.options.map((opt) => (
                         <DropdownMenu.RadioItem key={opt.value} value={opt.value}>

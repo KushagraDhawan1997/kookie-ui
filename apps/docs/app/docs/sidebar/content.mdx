@@ -5,11 +5,9 @@ source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kooki
 ---
 
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
-import { Box, Notice, Shell, Sidebar, Text } from '@kushagradhawan/kookie-ui';
+import { Box, Shell, Sidebar, Text } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { Alert02Icon, Home01Icon, InboxIcon, Search01Icon, Settings01Icon } from '@hugeicons/core-free-icons';
-
-<Notice icon={<HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />}>`Sidebar.Root`, `Sidebar.Content`, `Sidebar.Header`, `Sidebar.Footer`, `menuVariant` and thin mode are deprecated and will be removed in 0.15.0. Put the rows in `Shell.Sidebar`, or in `Shell.Rail` for tiles.</Notice>
+import { Home01Icon, InboxIcon, Search01Icon, Settings01Icon } from '@hugeicons/core-free-icons';
 
 Sidebar is the set of navigation rows: menus, groups, sub-menus and search. `Shell.Sidebar` is the pane that holds them. The pane renders anything, and with `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter` it is the sidebar.
 
@@ -173,185 +171,6 @@ Container for a collapsible sub-menu.
 | ------------- | --------- | ------- | -------------------------------------- |
 | `defaultOpen` | `boolean` | `false` | Whether the sub-menu starts expanded   |
 
-## Presentation
-
-Use the `presentation` prop to control the sidebar layout mode.
-
-### Expanded
-
-Full-width panel layout with text labels. Ideal for main navigation.
-
-```tsx
-<Sidebar.Root presentation="expanded">
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>
-          <HomeIcon />
-          Dashboard
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>
-```
-
-### Thin
-
-Compact rail layout with icons and minimal text. Icons stack vertically, text appears below icons in smaller font. Sub-menus render as dropdowns instead of accordions.
-
-```tsx
-<Sidebar.Root presentation="thin">
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>
-          <HomeIcon />
-          Home
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>
-```
-
-## Sizes
-
-Set `size` for sidebar density: `1` for compact interfaces, `2` for standard spacing.
-
-### Size 1
-
-Compact density for information-dense layouts.
-
-```tsx
-<Sidebar.Root size="1">
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>
-          <FileIcon />
-          Files
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>
-```
-
-### Size 2
-
-Standard density for most applications.
-
-```tsx
-<Sidebar.Root size="2">
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>
-          <FileIcon />
-          Files
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>
-```
-
-## Variants
-
-Use the `variant` prop to set the sidebar container style.
-
-### Outline
-
-Default bordered style providing clear visual boundaries.
-
-```tsx
-<Sidebar.Root variant="outline">
-  {/* content */}
-</Sidebar.Root>
-```
-
-### Soft
-
-Subtle background for less prominent sidebars.
-
-```tsx
-<Sidebar.Root variant="soft">
-  {/* content */}
-</Sidebar.Root>
-```
-
-### Surface
-
-Elevated surface for content-heavy UIs.
-
-```tsx
-<Sidebar.Root variant="surface">
-  {/* content */}
-</Sidebar.Root>
-```
-
-### Ghost
-
-Minimal style that blends with the background.
-
-```tsx
-<Sidebar.Root variant="ghost">
-  {/* content */}
-</Sidebar.Root>
-```
-
-## Menu Variants
-
-Use the `menuVariant` prop to control how menu item highlights appear.
-
-### Soft
-
-Subtle background highlights on hover and active states.
-
-```tsx
-<Sidebar.Root menuVariant="soft">
-  {/* content */}
-</Sidebar.Root>
-```
-
-### Solid
-
-Bold filled highlights for maximum emphasis.
-
-```tsx
-<Sidebar.Root menuVariant="solid">
-  {/* content */}
-</Sidebar.Root>
-```
-
-## Colors
-
-Use the `color` prop to set the accent color for active states and highlights.
-
-```tsx
-<Sidebar.Root color="crimson">
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton isActive>
-          <HomeIcon />
-          Active Item
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>
-```
-
-With `menuVariant="solid"`, a gray sidebar fills its active items with step 12 on its own:
-
-```tsx
-<Sidebar.Root color="gray" menuVariant="solid">
-  {/* content */}
-</Sidebar.Root>
-```
-
 ## Badges
 
 Add badges to menu buttons for notifications or status indicators.
@@ -420,11 +239,13 @@ import Link from 'next/link';
 
 ## Changelog
 
-### Deprecated
+### 0.15.0
 
-- 0.14.0: `Sidebar.Root`, `Sidebar.Content`, `Sidebar.Header` and `Sidebar.Footer`. Use `Shell.Sidebar` with `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter`. Removed in 0.15.0.
-- 0.14.0: `menuVariant`. Rows use the soft highlight, and the solid one under `prefers-contrast: more`. Removed in 0.15.0.
-- 0.14.0: thin mode (`presentation="thin"`, `layout="rail"`). Put the rows in `Shell.Rail`, which draws them as tiles. Removed in 0.15.0.
+- Removed: `Sidebar.Root`, `Sidebar.Content`, `Sidebar.Header`, `Sidebar.Footer`, `menuVariant` and thin mode. Put the rows in `Shell.Sidebar`, between `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter`, or in `Shell.Rail` for tiles.
+
+### 0.14.1
+
+- Added: Sidebar rows work in `Shell.Sidebar` and `Shell.Panel`, and draw as tiles in `Shell.Rail`.
 
 ### Removed
 

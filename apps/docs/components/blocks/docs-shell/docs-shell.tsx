@@ -56,7 +56,6 @@ export function DocsShell({
   return (
     <Shell.Root height={height}>
       <Shell.Sidebar
-        toggleModes="single"
         resizable={sidebarResizable}
         defaultState={{ initial: 'collapsed', sm: 'expanded' }}
         presentation={{ initial: 'overlay', sm: 'fixed' }}

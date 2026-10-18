@@ -72,7 +72,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 | `scaling` | `'90%' \| '95%' \| '100%' \| '105%' \| '110%'` | Global size scale for UI density. Default: `'100%'` |
 | `fontFamily` | `'sans' \| 'mono' \| 'serif'` | Font family for body text. Default: `'sans'` |
 | `headingFontFamily` | `'sans' \| 'mono' \| 'serif'` | Font family for `Heading`, set independently of body text. Follows `fontFamily` when unset |
-| `panelBackground` | `'solid' \| 'translucent'` | Deprecated: use `material`. Removed in 0.15.0 |
 | `hasBackground` | `boolean` | Whether to apply background color to the Theme element. Default: `true` for root Theme |
 | `asChild` | `boolean` | Merges Theme props with child element using Radix Slot pattern |
 
@@ -250,7 +249,7 @@ Kookie UI extends Radix Themes with practical improvements:
 
 ### Material Prop
 
-Use `material` instead of `panelBackground` for intuitive panel transparency control. `panelBackground` still works, warns in development, and is removed in 0.15.0. All panels automatically respect your material setting.
+`material` sets whether panels are solid or translucent. Every panel follows it.
 
 ### Effects
 

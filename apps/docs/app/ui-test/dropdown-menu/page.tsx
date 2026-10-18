@@ -201,7 +201,6 @@ export default function DropdownMenuTest() {
             </DropdownMenu.Trigger>
             <DropdownMenu.Content
               submenuBehavior="drill-down"
-              variant="soft"
               color="purple"
               style={{ minWidth: 240 }}
             >
@@ -215,7 +214,6 @@ export default function DropdownMenuTest() {
             </DropdownMenu.Trigger>
             <DropdownMenu.Content
               submenuBehavior="drill-down"
-              variant="solid"
               color="indigo"
               style={{ minWidth: 240 }}
             >
@@ -229,7 +227,6 @@ export default function DropdownMenuTest() {
             </DropdownMenu.Trigger>
             <DropdownMenu.Content
               submenuBehavior="drill-down"
-              variant="soft"
               color="gray"
               style={{ minWidth: 240 }}
             >
