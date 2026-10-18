@@ -93,25 +93,26 @@
  * Text
  * -------------------------------------------------------------------------------------------*/
 
-.markdown :is(ul, ol) {
+.markdown :is(ul, ol):not(.preview-block *) {
   margin-block: 0;
   padding-left: 1.5em;
 }
 
-.markdown ul {
+.markdown ul:not(.preview-block *) {
   list-style-type: disc;
 }
 
-.markdown ol {
+.markdown ol:not(.preview-block *) {
   list-style-type: decimal;
 }
 
-.markdown li {
+/* Lists in a live preview are the component's, not the page's. */
+.markdown li:not(.preview-block *) {
   padding-left: 0.25em;
 }
 
-.markdown li + li,
-.markdown li > :is(ul, ol) {
+.markdown li:not(.preview-block *) + li,
+.markdown li:not(.preview-block *) > :is(ul, ol) {
   margin-top: var(--markdown-list-gap);
 }
 
