@@ -1,4 +1,3 @@
-import { parseVariant } from '../helpers/parse-variant.js';
 import { cardPropDefs } from './card.props.js';
 import { asChildPropDef } from '../props/as-child.prop.js';
 import { colorPropDef } from '../props/color.prop.js';
@@ -14,7 +13,7 @@ const panelBackgrounds = ['solid', 'translucent'] as const;
 const radioCardsRootPropDefs = {
   ...asChildPropDef,
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised', parseValue: parseVariant },
+  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised' },
   material: { type: 'enum', values: panelBackgrounds, default: undefined },
   /** @deprecated Use `material`. Removed in 0.15.0. */
   panelBackground: { type: 'enum', values: panelBackgrounds, default: undefined },

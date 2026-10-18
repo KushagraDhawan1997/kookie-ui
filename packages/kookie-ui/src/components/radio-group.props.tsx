@@ -1,4 +1,3 @@
-import { parseVariant } from '../helpers/parse-variant.js';
 import { baseRadioPropDefs } from './_internal/base-radio.props.js';
 import { asChildPropDef } from '../props/as-child.prop.js';
 import { colorPropDef } from '../props/color.prop.js';
@@ -12,7 +11,7 @@ const variants = baseRadioPropDefs.variant.values;
 const radioGroupRootPropDefs = {
   ...asChildPropDef,
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised', parseValue: parseVariant },
+  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised' },
   ...colorPropDef,
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;

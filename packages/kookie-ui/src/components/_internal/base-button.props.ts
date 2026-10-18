@@ -1,4 +1,3 @@
-import { parseVariant } from '../../helpers/parse-variant.js';
 import { asChildPropDef } from '../../props/as-child.prop.js';
 import { accentColorPropDef } from '../../props/color.prop.js';
 import { radiusPropDef } from '../../props/radius.prop.js';
@@ -23,7 +22,7 @@ const sizes = ['1', '2', '3', '4'] as const;
  * - outline: Secondary actions that support primary actions
  * - ghost: Utility functions that don't compete for attention
  */
-const variants = ['raised', 'solid', 'soft', 'surface', 'outline', 'ghost', 'override', 'classic'] as const;
+const variants = ['raised', 'solid', 'soft', 'surface', 'outline', 'ghost'] as const;
 
 /**
  * Available panel background options (deprecated)
@@ -77,7 +76,7 @@ const baseButtonPropDefs = {
   /**
    * Visual variant that determines the button's appearance and context
    */
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised', parseValue: parseVariant },
+  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised' },
   ...accentColorPropDef,
   ...radiusPropDef,
   /**

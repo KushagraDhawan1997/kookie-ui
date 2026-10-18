@@ -1,4 +1,3 @@
-import { parseVariant } from '../helpers/parse-variant.js';
 import * as React from 'react';
 import classNames from 'classnames';
 import { LazyMotion, MotionConfig, domAnimation, m } from 'motion/react';
@@ -214,8 +213,7 @@ interface ChatbarRootBaseProps {
   onSubmit?: (payload: ChatbarSubmitPayload) => void;
 
   size?: '1' | '2' | '3';
-  /** `classic` is a deprecated alias of `raised`, removed in 0.15.0. */
-  variant?: 'raised' | 'surface' | 'outline' | 'ghost' | 'soft' | 'classic';
+  variant?: 'raised' | 'surface' | 'outline' | 'ghost' | 'soft';
   /** Accent color for the control (matches TextArea) */
   color?: (typeof accentColors)[number];
   /** Optional radius override (matches TextArea) */
@@ -730,7 +728,7 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
               ) : null}
               <div {...(dropzone ? getRootProps() : {})} style={{ width: '100%', flex: '1 1 auto', minHeight: 0 }} onPointerDown={handleContainerPointerDown}>
                 <m.div
-                  className={classNames('rt-ChatbarBox', `rt-variant-${parseVariant(variant ?? 'raised')}`)}
+                  className={classNames('rt-ChatbarBox', `rt-variant-${variant ?? 'raised'}`)}
                   style={{ position: 'relative' }}
                   data-accent-color={color}
                   data-radius={radius}

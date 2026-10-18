@@ -1,4 +1,3 @@
-import { parseVariant } from '../helpers/parse-variant.js';
 import { avatarPropDefs } from './avatar.props.js';
 import { asChildPropDef } from '../props/as-child.prop.js';
 import { grayAccentColorPropDef } from '../props/color.prop.js';
@@ -7,7 +6,7 @@ import { radiusPropDef } from '../props/radius.prop.js';
 import type { PropDef } from '../props/prop-def.js';
 
 const sizes = ['1', '2', '3', '4'] as const;
-const variants = ['raised', 'ghost', 'surface', 'classic'] as const;
+const variants = ['raised', 'ghost', 'surface'] as const;
 // The same list as Avatar.
 const avatarVariants = avatarPropDefs.variant.values;
 const panelBackgrounds = ['solid', 'translucent'] as const;
@@ -15,7 +14,7 @@ const panelBackgrounds = ['solid', 'translucent'] as const;
 const userCardPropDefs = {
   ...asChildPropDef,
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised', parseValue: parseVariant },
+  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised' },
 
   // Content props
   src: { type: 'string' },

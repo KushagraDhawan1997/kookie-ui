@@ -203,22 +203,4 @@
 
   /* Component padding relationships */
   --padding-ratio-horizontal: 1.5;
-
-  /* Deprecated: the old `--classic-*` names. They point at `--raised-*` and are removed in 0.15.0. */
-  --classic-active-padding-offset-1: var(--raised-active-padding-offset-1);
-  --classic-active-padding-offset-2: var(--raised-active-padding-offset-2);
-  --classic-border-multiplier-double: var(--raised-border-multiplier-double);
-  --classic-border-width: var(--raised-border-width);
-  --classic-border-width-thick: var(--raised-border-width-thick);
-  --classic-elevation-factor-subtle: var(--raised-elevation-factor-subtle);
-  --classic-elevation-offset: var(--raised-elevation-offset);
-  --classic-inset-shadow-dark: var(--raised-inset-shadow-dark);
-  --classic-shadow-blur-large: var(--raised-shadow-blur-large);
-  --classic-shadow-blur-medium: var(--raised-shadow-blur-medium);
-  --classic-shadow-blur-small: var(--raised-shadow-blur-small);
-  --classic-shadow-factor-light: var(--raised-shadow-factor-light);
-  --classic-shadow-medium-factor-third: var(--raised-shadow-medium-factor-third);
-  --classic-shadow-offset-y: var(--raised-shadow-offset-y);
-  --classic-word-spacing: var(--raised-word-spacing);
-  --slider-classic-inset-offset: var(--slider-raised-inset-offset);
 }

@@ -10,7 +10,7 @@
  * - Sizes: Responsive height and border-radius
  * - Variant palettes: Each variant defines its color scale as CSS variables
  * - Shared state logic: Single set of hover/active/open/disabled selectors
- * - Special variants: raised, override, solid (unique behavior, kept separate)
+ * - Special variants: raised, solid (unique behavior, kept separate)
  * - Toggle states: Pressed state overrides for all variants
  */
 
@@ -490,70 +490,6 @@
     cursor: not-allowed;
     pointer-events: none;
     top: 0;
-  }
-}
-
-/* Override variant - fully customizable via CSS variables */
-.rt-BaseButton:where(.rt-variant-override) {
-  color: var(--button-override-color, inherit);
-  background: var(--button-override-background, transparent);
-  background-color: var(--button-override-background-color, initial);
-  box-shadow: var(--button-override-box-shadow, none);
-  filter: var(--button-override-filter, none);
-  outline: var(--button-override-outline, none);
-
-  @media (hover: hover) {
-    &:where(:hover) {
-      color: var(--button-override-hover-color, var(--button-override-color, inherit));
-      background: var(--button-override-hover-background, var(--button-override-background, transparent));
-      background-color: var(--button-override-hover-background-color, var(--button-override-background-color, initial));
-      box-shadow: var(--button-override-hover-box-shadow, var(--button-override-box-shadow, none));
-      filter: var(--button-override-hover-filter, var(--button-override-filter, none));
-      outline: var(--button-override-hover-outline, var(--button-override-outline, none));
-    }
-  }
-
-  &:where([data-state='open']) {
-    color: var(--button-override-open-color, var(--button-override-color, inherit));
-    background: var(--button-override-open-background, var(--button-override-background, transparent));
-    background-color: var(--button-override-open-background-color, var(--button-override-background-color, initial));
-    box-shadow: var(--button-override-open-box-shadow, var(--button-override-box-shadow, none));
-    filter: var(--button-override-open-filter, var(--button-override-filter, none));
-    outline: var(--button-override-open-outline, var(--button-override-outline, none));
-  }
-
-  &:where(:active:not([data-state='open'])) {
-    color: var(--button-override-active-color, var(--button-override-color, inherit));
-    background: var(--button-override-active-background, var(--button-override-background, transparent));
-    background-color: var(--button-override-active-background-color, var(--button-override-background-color, initial));
-    box-shadow: var(--button-override-active-box-shadow, var(--button-override-box-shadow, none));
-    filter: var(--button-override-active-filter, var(--button-override-filter, none));
-    outline: var(--button-override-active-outline, var(--button-override-outline, none));
-  }
-
-  &:where(:focus-visible) {
-    outline: var(--button-override-focus-outline, var(--focus-ring, 2px solid var(--focus-8)));
-    outline-offset: var(--button-override-focus-outline-offset, 2px);
-  }
-
-  &:where([data-state='on']) {
-    color: var(--button-override-pressed-color, var(--button-override-active-color, var(--button-override-color, inherit)));
-    background: var(--button-override-pressed-background, var(--button-override-active-background, var(--button-override-background, transparent)));
-    background-color: var(--button-override-pressed-background-color, var(--button-override-active-background-color, var(--button-override-background-color, initial)));
-    box-shadow: var(--button-override-pressed-box-shadow, var(--button-override-active-box-shadow, var(--button-override-box-shadow, none)));
-    filter: var(--button-override-pressed-filter, var(--button-override-active-filter, var(--button-override-filter, none)));
-    outline: var(--button-override-pressed-outline, var(--button-override-active-outline, var(--button-override-outline, none)));
-  }
-
-  &:where([data-disabled]) {
-    color: var(--button-override-disabled-color, var(--gray-a8));
-    background: var(--button-override-disabled-background, var(--gray-a3));
-    background-color: var(--button-override-disabled-background-color, var(--gray-a3));
-    box-shadow: var(--button-override-disabled-box-shadow, none);
-    filter: var(--button-override-disabled-filter, none);
-    outline: var(--button-override-disabled-outline, none);
-    cursor: not-allowed;
-    pointer-events: none;
   }
 }
 
