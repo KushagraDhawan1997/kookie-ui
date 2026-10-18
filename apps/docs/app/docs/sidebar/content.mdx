@@ -5,7 +5,7 @@ source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kooki
 ---
 
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
-import { Notice, Shell, Sidebar } from '@kushagradhawan/kookie-ui';
+import { Box, Notice, Shell, Sidebar, Text } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Alert02Icon, Home01Icon, InboxIcon, Settings01Icon } from '@hugeicons/core-free-icons';
 
@@ -14,8 +14,9 @@ import { Alert02Icon, Home01Icon, InboxIcon, Settings01Icon } from '@hugeicons/c
 Sidebar is the set of navigation rows: menus, groups, sub-menus and search. `Shell.Sidebar` is the pane that holds them. The pane renders anything, and with `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter` it is the sidebar.
 
 <PreviewBlock height="20rem">
-  <Shell.Root height="18rem">
-    <Shell.Sidebar defaultState="expanded" presentation="fixed">
+  <Box width="100%" height="100%">
+  <Shell.Root height="100%">
+    <Shell.Sidebar defaultState="expanded" presentation="fixed" style={{ backgroundColor: 'var(--gray-2)' }}>
       <Shell.Scroll role="navigation" aria-label="Main">
         <Sidebar.Menu>
           <Sidebar.MenuItem>
@@ -39,7 +40,13 @@ Sidebar is the set of navigation rows: menus, groups, sub-menus and search. `She
         </Sidebar.MenuButton>
       </Shell.PaneFooter>
     </Shell.Sidebar>
+    <Shell.Content>
+      <Box p="5">
+        <Text size="2" emphasis="medium">Page content</Text>
+      </Box>
+    </Shell.Content>
   </Shell.Root>
+  </Box>
 </PreviewBlock>
 
 ## Usage
