@@ -23,7 +23,7 @@ const triggerVariants = ['raised', 'surface', 'soft', 'outline', 'ghost', 'class
  * Token-aware props specific to Combobox.Trigger.
  */
 const comboboxTriggerPropDefs = {
-  variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'surface', parseValue: parseVariant },
+  variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'raised', parseValue: parseVariant },
   panelBackground: {
     type: 'enum',
     className: 'rt-panel-background',

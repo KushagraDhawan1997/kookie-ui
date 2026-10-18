@@ -77,7 +77,7 @@ const baseButtonPropDefs = {
   /**
    * Visual variant that determines the button's appearance and context
    */
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'solid', parseValue: parseVariant },
+  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised', parseValue: parseVariant },
   ...accentColorPropDef,
   ...radiusPropDef,
   /**

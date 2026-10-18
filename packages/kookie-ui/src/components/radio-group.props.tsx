@@ -10,7 +10,7 @@ const variants = ['raised', 'solid', 'soft', 'classic'] as const;
 const radioGroupRootPropDefs = {
   ...asChildPropDef,
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'solid', parseValue: parseVariant },
+  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised', parseValue: parseVariant },
   ...colorPropDef,
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;

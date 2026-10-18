@@ -12,7 +12,7 @@ const materials = ['solid', 'translucent'] as const;
 const calloutRootPropDefs = {
   ...asChildPropDef,
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'soft', parseValue: parseVariant },
+  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised', parseValue: parseVariant },
   ...accentColorPropDef,
   material: { type: 'enum', values: materials, default: undefined },
   /**

@@ -730,7 +730,7 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
               ) : null}
               <div {...(dropzone ? getRootProps() : {})} style={{ width: '100%', flex: '1 1 auto', minHeight: 0 }} onPointerDown={handleContainerPointerDown}>
                 <m.div
-                  className={classNames('rt-ChatbarBox', `rt-variant-${parseVariant(variant ?? 'surface')}`)}
+                  className={classNames('rt-ChatbarBox', `rt-variant-${parseVariant(variant ?? 'raised')}`)}
                   style={{ position: 'relative' }}
                   data-accent-color={color}
                   data-radius={radius}

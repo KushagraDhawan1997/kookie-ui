@@ -13,7 +13,7 @@ const panelBackgrounds = ['solid', 'translucent'] as const;
 const userCardPropDefs = {
   ...asChildPropDef,
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'surface', parseValue: parseVariant },
+  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised', parseValue: parseVariant },
 
   // Content props
   src: { type: 'string' },

@@ -17,7 +17,7 @@ const selectRootPropDefs = {
 const triggerVariants = ['raised', 'surface', 'soft', 'outline', 'ghost', 'classic'] as const;
 
 const selectTriggerPropDefs = {
-  variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'surface', parseValue: parseVariant },
+  variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'raised', parseValue: parseVariant },
   panelBackground: {
     type: 'enum',
     className: 'rt-panel-background',

@@ -13,7 +13,7 @@ const materials = ['solid', 'translucent'] as const;
 
 const textFieldRootPropDefs = {
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'surface', parseValue: parseVariant },
+  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised', parseValue: parseVariant },
   // Error and validation props
   error: { type: 'boolean', default: false },
   errorMessage: { type: 'string', default: undefined },

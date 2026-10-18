@@ -11,7 +11,7 @@ const materials = ['solid', 'translucent'] as const;
 const cardPropDefs = {
   ...asChildPropDef,
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '1', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'outline', parseValue: parseVariant },
+  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised', parseValue: parseVariant },
   panelBackground: { type: 'enum', values: panelBackgrounds, default: undefined },
   material: { type: 'enum', values: materials, default: undefined },
   flush: { type: 'boolean', default: false },

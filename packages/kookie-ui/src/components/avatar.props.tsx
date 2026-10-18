@@ -14,7 +14,7 @@ const objectFitValues = ['cover', 'contain', 'fill', 'scale-down', 'none'] as co
 const avatarPropDefs = {
   ...asChildPropDef,
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '3', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'soft', parseValue: parseVariant },
+  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised', parseValue: parseVariant },
   ...accentColorPropDef,
   ...radiusPropDef,
   fallback: { type: 'ReactNode', required: true },

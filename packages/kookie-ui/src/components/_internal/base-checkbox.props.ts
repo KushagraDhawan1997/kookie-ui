@@ -9,7 +9,7 @@ const materials = ['solid', 'translucent'] as const;
 
 const baseCheckboxPropDefs = {
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'solid', parseValue: parseVariant },
+  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised', parseValue: parseVariant },
   material: { type: 'enum', values: materials, default: undefined },
   ...colorPropDef,
 } satisfies {

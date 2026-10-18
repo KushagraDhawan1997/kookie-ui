@@ -12,7 +12,7 @@ const panelBackgrounds = ['solid', 'translucent'] as const;
 const checkboxCardsRootPropDefs = {
   ...asChildPropDef,
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'surface', parseValue: parseVariant },
+  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised', parseValue: parseVariant },
   panelBackground: { type: 'enum', values: panelBackgrounds, default: undefined },
   ...colorPropDef,
   columns: { ...gridPropDefs.columns, default: 'repeat(auto-fit, minmax(200px, 1fr))' },

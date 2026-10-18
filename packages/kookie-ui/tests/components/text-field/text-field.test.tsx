@@ -28,10 +28,10 @@ describe('TextField', () => {
       expect(root).toHaveClass('rt-r-size-3');
     });
 
-    it('renders with default variant (surface)', () => {
+    it('renders with default variant (raised)', () => {
       const { container } = renderWithProviders(<TextField.Root />);
       const root = container.querySelector('.rt-TextFieldRoot');
-      expect(root).toHaveClass('rt-variant-surface');
+      expect(root).toHaveClass('rt-variant-raised');
     });
 
     it('renders the deprecated classic variant as raised, with a warning', () => {
