@@ -1,8 +1,8 @@
 Kookie uses a small set of words for the kinds of component: a card, a control, a mark, a row, and
 a few more. The kind of a component tells you what it is for, and which of its options matter.
 
-If you're not sure how to use a component, find its kind. The kind usually tells you which
-choices are real and which options exist only because a decision is still open.
+If you're not sure how to use a component, find its kind. The kind tells you which of its options
+matter.
 
 ## Cards and the page
 
@@ -14,17 +14,15 @@ surface is made of something. Use one material for each kind of surface.
 
 Do not put a Card inside a Card to make a quieter region. A card is an object, not a tint.
 
-<GapNote>
-v1 has no component for a **ground**, a region that holds cards and sits on the page without a
-shadow. v2 calls it `Surface`. In v1, a layout component with a background does this job.
-</GapNote>
+A region that holds cards and sits on the page without a shadow is a **ground**. Use a layout
+component with a background for it.
 
 ## Controls
 
 A control is something that people operate. There are four kinds of control.
 
 **Buttons** do something, and they rank against each other. On a screen, one action matters most
-and the others are quieter. In v1, `variant` sets how loud a button is. Use the same variant for
+and the others are quieter. `variant` sets how loud a button is. Use the same variant for
 the main action everywhere, and the same one for quiet actions. `color` sets what the action
 means, such as danger. Use one loud button on each screen.
 
@@ -39,12 +37,6 @@ text next to it. A label is text, and `Text` gives it every size, weight and col
 **Instruments** show a value on a track: `Slider` and `Progress`. An instrument has no surface of
 its own.
 
-<GapNote>
-Marks in v1 take options they may not need. `Checkbox`, `Radio` and `Switch` take a
-`material`, and `Checkbox` takes twelve sizes. A mark has no surface, and its size should follow
-the text beside it. How v1 settles this is not decided yet.
-</GapNote>
-
 ## Rows
 
 A row is one interactive line in a list. Each item in a `DropdownMenu` is a row, and so is each
@@ -55,9 +47,9 @@ it. So rows don't rank. The selected row changes colour. It does not become loud
 
 ## Type, layout, and the frame
 
-**Type** components get their colour from the surface below them. `Text`, `Heading`,
-`Blockquote`, `Code` and `Kbd` have no fill of their own. So on a type component, `color` and
-`emphasis` choose a text colour, not a background.
+**Type** components get their colour from the surface below them. `Text`, `Heading` and
+`Blockquote` have no fill of their own, so `color` and `emphasis` choose a text colour, not a
+background. `Code` and `Kbd` are the exception: their `variant` can give them a fill.
 
 `Link` responds to a pointer, but it is type, not a control. A control is a box with a height,
 padding, a corner and a tap target. A link is a group of words in a sentence. It must stay

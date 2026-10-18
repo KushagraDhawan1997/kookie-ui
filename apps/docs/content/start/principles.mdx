@@ -3,12 +3,6 @@ Two components can look almost the same and do different jobs. When that happens
 them separate. Each one gets its own name and its own props. Tabs and SegmentedControl are the
 clearest example.
 
-Kookie UI v1 and Kookie UI v2 share these principles, but they are different systems. v1 is the
-simpler one. It is built for a product that people use every day. v2 is more experimental, and it
-tests how far modern design can go. They also look different, and they are at different stages.
-In v2, most design decisions are already made. In v1, many are still open, so v1 gives you the
-building blocks to make them. The principles are the same in both.
-
 ## Behaviour comes first
 
 A pattern is a structure that occurs again and again. It has a context, a problem, and the shape
@@ -35,12 +29,6 @@ without setting a value. You can set a value without switching views. So they ar
 operations, not one operation with two appearances. A `variant` changes how a component looks,
 so a `variant` never turns one of these into the other.
 
-<GapNote>
-`IconButton` is a separate component from `Button`, but it does the same job. It is a button
-with an icon and no text. That is a difference in look, not in behaviour. v2 has one `Button`
-with an `iconOnly` prop.
-</GapNote>
-
 ## Components and patterns
 
 A component contains the things that it owns. A pattern coordinates things that it doesn't
@@ -48,8 +36,8 @@ contain. A button owns its label, its icon and its padding, so it's a component.
 coordinates the header, the sidebar, the content and the window width, so it's a pattern. You
 build a pattern from components.
 
-It is easy to tell the two apart, because the children of a component never configure their
-parent. Sometimes a child must change its parent, for example a sidebar that sets the margin of
+It is easy to tell the two apart, because the children of a component should never configure
+their parent. Sometimes a child must change its parent, for example a sidebar that sets the margin of
 the page. Then you have a pattern. Build it in your app. Do not ask one component to hold it.
 
 ## Measurements and judgments
@@ -64,17 +52,14 @@ Some design questions are a matter of taste. Others have been measured.
 - WCAG and APCA both measure whether text is readable against its background.
 
 After the measured limits, a decision is a judgment. Examples are the exact corner radius, the
-saturation of a glass panel, and the hue of the accent.
+strength of a shadow, and the hue of the accent.
 
 Keep the two kinds apart. A measured limit is a floor, and no design choice goes below it. A
 judgment is written down as one value, in one place, so you can change it with a one-line edit.
 Never present a judgment as if it were a measurement.
 
-<GapNote>
-v1 doesn't enforce the measured limits. A prop can set a tap target below 44 points or put text
-on a background it can't be read against. Until v1 prevents this, your product has to check
-these limits itself.
-</GapNote>
+Kookie doesn't enforce the measured limits for you. A prop can set a tap target below 44 points or
+put text on a background it can't be read against. Check these limits in your product.
 
 ## Consistency
 
@@ -85,16 +70,14 @@ places. No screen can see what the other screens decided.
 The fix is to make each decision one time. Each decision is in one place, and every screen reads
 it from there.
 
-## Why v1 has options
+## Why Kookie has options
 
-Most v1 components take a `variant`, a `color`, a `size` and a `material`. These options exist
-because many design decisions are not made yet. You can't decide on the right answer before you
-have seen the choices in a real product. The options are the building blocks that let you try
-them and settle on one.
+Many components take a `variant`, a `color` and a `size`, and surfaces take a `material`. You
+can't decide on the right answer before you have seen the choices in a real product. The options
+are the building blocks that let you try them and settle on one.
 
-When a decision settles, it moves into the system. Its options narrow, and some go away. So the
-number of options in v1 is a measure of how many decisions are still open.
+When a decision settles, it moves into the system. Its options narrow, and some go away.
 
-While a decision is open, keep it in one place. If each screen picks its own variant, you get the
+While a decision is being made, keep it in one place. If each screen picks its own variant, you get the
 inconsistency the section above describes, and you learn nothing from it. If one place picks, you
-can see the answer, change it in one edit, and move it into v1 when it settles.
+can see the answer, change it in one edit, and move it into the system when it settles.
