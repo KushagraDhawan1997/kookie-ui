@@ -1,11 +1,8 @@
 @import '@radix-ui/colors/black-alpha.css';
 @import '@radix-ui/colors/white-alpha.css';
 
-/* * * * * * * * * * * * * * * * * * * */
 /*                                     */
-/*           Semantic colors           */
 /*                                     */
-/* * * * * * * * * * * * * * * * * * * */
 
 :where(.radix-themes) {
   --color-background: white;
@@ -52,30 +49,21 @@
   --color-dialog-translucent: color-mix(in srgb, var(--gray-2) var(--dialog-opacity-percentage), transparent);
 }
 
-/* * * * * * * * * * * * * * * * * * * */
 /*                                     */
-/*            Transparency             */
 /*                                     */
-/* * * * * * * * * * * * * * * * * * * */
 
-/* Because Chrome is buggy with box-shadow transitions from "transparent" keyword and/or RGB color into P3 colors. */
 /* Note: using `:where` here to guarantee that the P3 color will take over regardless of the output rule order. */
 :where(.radix-themes) {
-  --color-transparent: rgb(0 0 0 / 0);
 }
 @supports (color: color(display-p3 1 1 1)) {
   @media (color-gamut: p3) {
     .radix-themes {
-      --color-transparent: color(display-p3 0 0 0 / 0);
     }
   }
 }
 
-/* * * * * * * * * * * * * * * * * * * */
 /*                                     */
-/*            Color scheme             */
 /*                                     */
-/* * * * * * * * * * * * * * * * * * * */
 
 /*
  * Make sure that forced light/dark appearance also sets corresponding browser colors,
@@ -94,11 +82,8 @@
   }
 }
 
-/* * * * * * * * * * * * * * * * * * * */
 /*                                     */
-/*   Focus, selection, and autofill    */
 /*                                     */
-/* * * * * * * * * * * * * * * * * * * */
 
 .radix-themes,
 [data-accent-color]:where(:not([data-accent-color=''], [data-accent-color='gray'])) {
@@ -133,11 +118,8 @@
   background-color: var(--focus-a5);
 }
 
-/* * * * * * * * * * * * * * * * * * * */
 /*                                     */
-/*         Background and text         */
 /*                                     */
-/* * * * * * * * * * * * * * * * * * * */
 
 .radix-themes {
   color: var(--gray-12);
@@ -146,11 +128,8 @@
   }
 }
 
-/* * * * * * * * * * * * * * * * * * * */
 /*                                     */
-/*          Panel background           */
 /*                                     */
-/* * * * * * * * * * * * * * * * * * * */
 
 .radix-themes {
   &:where([data-material='solid']) {
@@ -177,11 +156,8 @@
   }
 }
 
-/* * * * * * * * * * * * * * * * * * * */
 /*                                     */
-/*            Accent color             */
 /*                                     */
-/* * * * * * * * * * * * * * * * * * * */
 
 [data-accent-color='amber'] {
   --accent-1: var(--amber-1);
@@ -1041,11 +1017,8 @@
   --accent-track: var(--yellow-track);
 }
 
-/* * * * * * * * * * * * * * * * * * * */
 /*                                     */
-/*             Accent roles            */
 /*                                     */
-/* * * * * * * * * * * * * * * * * * * */
 
 /*
  * Role tokens for accent text and solid fills. There is no per-component contrast prop.
@@ -1150,11 +1123,8 @@
   --accent-solid-open-filter: var(--solid-gray-open-filter);
 }
 
-/* * * * * * * * * * * * * * * * * * * */
 /*                                     */
-/*             Gray color              */
 /*                                     */
-/* * * * * * * * * * * * * * * * * * * */
 
 .radix-themes {
   &:where([data-gray-color='mauve']) {
