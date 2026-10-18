@@ -1329,7 +1329,7 @@ const Send = React.forwardRef<HTMLButtonElement, SendProps>((props, forwardedRef
     style,
     className,
     size: sizeProp,
-    variant: variantProp,
+    variant: variantProp, emphasis,
     tabIndex,
     onClick,
     status = 'ready',
@@ -1403,7 +1403,7 @@ const Send = React.forwardRef<HTMLButtonElement, SendProps>((props, forwardedRef
       {...buttonProps}
       ref={forwardedRef}
       size={sizeProp ?? ctx.size}
-      variant={variantProp ?? (ctx.open || mode !== 'send' ? 'solid' : 'ghost')}
+      {...(emphasis ? { emphasis } : { variant: variantProp ?? (ctx.open || mode !== 'send' ? 'solid' : 'ghost') })}
       disabled={inactive}
       className={classNames('rt-ChatbarSend', className)}
       style={{ opacity: visible ? 1 : 0, pointerEvents: visible ? undefined : 'none', ...style }}

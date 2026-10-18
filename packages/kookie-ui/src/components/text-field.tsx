@@ -1,6 +1,5 @@
 'use client';
 
-import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import classNames from 'classnames';
@@ -32,10 +31,7 @@ const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>
   const errorId = React.useId();
 
   // Determine invalid state
-  const isInvalid = inputProps.error || inputProps.isInvalid;
-  if (inputProps.isInvalid !== undefined && inputProps.isInvalid !== false) {
-    warnDeprecated('`isInvalid` is deprecated and will be removed in 0.15.0. Use `error`, the one name every field uses for an invalid value.');
-  }
+  const isInvalid = inputProps.error;
 
   const { 'aria-describedby': ariaDescribedby, 'aria-labelledby': ariaLabelledby } = inputProps;
 
@@ -58,7 +54,7 @@ const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>
   );
 
   // Filter out our custom props to avoid DOM warnings
-  const { error, errorMessage, isInvalid: _isInvalid, required, 'aria-describedby': _ariaDescribedby, 'aria-labelledby': _ariaLabelledby, ...nativeInputProps } = inputProps;
+  const { error, errorMessage, required, 'aria-describedby': _ariaDescribedby, 'aria-labelledby': _ariaLabelledby, ...nativeInputProps } = inputProps;
 
   // Memoized pointer event handler
   const handlePointerDown = React.useCallback((event: React.PointerEvent) => {

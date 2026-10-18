@@ -4,7 +4,6 @@ import classNames from 'classnames';
 import { BaseButton } from './_internal/base-button.js';
 import { Tooltip } from './tooltip.js';
 import { useTooltipWrapper } from '../hooks/use-tooltip-wrapper.js';
-import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import type { BaseButtonProps } from './_internal/base-button.js';
 
 type ButtonElement = React.ElementRef<typeof BaseButton>;
@@ -132,11 +131,10 @@ const Button = React.forwardRef(
     // Use shared tooltip wrapper hook for accessibility props
     const { tooltipId, hasTooltip, accessibilityProps: tooltipAccessibilityProps } = useTooltipWrapper(tooltip);
 
+    // An icon button is square, so it never takes the full width.
     if (iconOnly) {
       validateIconButtonName(props);
-      if (props.fullWidth) {
-        warnDeprecated('`fullWidth` on an icon-only button is deprecated and will be removed in 0.15.0. An icon button is square.');
-      }
+      props.fullWidth = false;
     }
 
     if (emphasis !== undefined && variant !== undefined) {
@@ -173,4 +171,4 @@ const Button = React.forwardRef(
 Button.displayName = 'Button';
 
 export { Button };
-export type { ButtonProps, ButtonEmphasis };
+export type { ButtonProps, ButtonEmphasis, ButtonRankProps };
