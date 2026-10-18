@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Avatar, Flex, Sidebar } from '@kushagradhawan/kookie-ui';
+import { Avatar, Flex, Shell, Sidebar } from '@kushagradhawan/kookie-ui';
 import { Logo } from '@/components/logo';
 import { HugeiconsIcon, type IconSvgElement } from '@hugeicons/react';
 import type {
@@ -15,19 +15,9 @@ import type {
 export interface DocsSidebarProps {
   navigation: DocsNavigationConfig;
   logo?: DocsLogoConfig;
-  /** Set by `DocsShell` from the sidebar state. @default "expanded" */
-  presentation?: 'thin' | 'expanded';
   /** Rendered next to the logo, e.g. a GitHub link. */
   headerActions?: React.ReactNode;
   footer?: React.ReactNode;
-  /** @default "2" */
-  size?: '1' | '2';
-  /** @default "soft" */
-  variant?: 'soft' | 'outline' | 'surface' | 'ghost';
-  /** @default "soft" */
-  menuVariant?: 'solid' | 'soft';
-  /** @default "gray" */
-  color?: React.ComponentProps<typeof Sidebar.Root>['color'];
   /** Current path, used to mark the active item. */
   pathname?: string;
   /** Your router's link, e.g. `next/link`. Defaults to a plain anchor. */
@@ -56,13 +46,8 @@ function renderIcon(icon: DocsNavigationItem['icon']) {
 export function DocsSidebar({
   navigation,
   logo,
-  presentation = 'expanded',
   headerActions,
   footer,
-  size = '2',
-  variant = 'soft',
-  menuVariant = 'soft',
-  color = 'gray',
   pathname = '',
   linkComponent: LinkComponent = Anchor,
 }: DocsSidebarProps) {
@@ -117,9 +102,9 @@ export function DocsSidebar({
   const flatResults = filteredGroups.flatMap((group) => group.items);
 
   return (
-    <Sidebar.Root size={size} variant={variant} color={color} menuVariant={menuVariant} presentation={presentation}>
+    <>
       {(logo || headerActions) && (
-        <Sidebar.Header>
+        <Shell.PaneHeader>
           <Flex justify="between" align="center" width="100%">
             {logo && (
               <LinkComponent href={logo.href ?? '/'} aria-label={logo.alt ?? 'Home'}>
@@ -134,17 +119,12 @@ export function DocsSidebar({
             )}
             {headerActions && <Flex align="center">{headerActions}</Flex>}
           </Flex>
-        </Sidebar.Header>
+        </Shell.PaneHeader>
       )}
 
-      <Sidebar.Search value={searchQuery} onValueChange={setSearchQuery} placeholder="Search...">
-        {/* In thin mode, results render inside the search popover. */}
-        {presentation === 'thin' && isSearching && (
-          <Sidebar.Menu>{flatResults.map((item) => renderItem(item, false))}</Sidebar.Menu>
-        )}
-      </Sidebar.Search>
+      <Sidebar.Search value={searchQuery} onValueChange={setSearchQuery} placeholder="Search..." />
 
-      <Sidebar.Content>
+      <Shell.Scroll role="navigation" aria-label="Documentation">
         {isSearching ? (
           <Sidebar.Menu>{flatResults.map((item) => renderItem(item, true))}</Sidebar.Menu>
         ) : (
@@ -157,9 +137,9 @@ export function DocsSidebar({
             </Sidebar.Group>
           ))
         )}
-      </Sidebar.Content>
+      </Shell.Scroll>
 
-      {footer && <Sidebar.Footer>{footer}</Sidebar.Footer>}
-    </Sidebar.Root>
+      {footer && <Shell.PaneFooter>{footer}</Shell.PaneFooter>}
+    </>
   );
 }

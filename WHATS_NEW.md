@@ -4,7 +4,8 @@
 
 1. **New defaults.** Controls rest raised, badges and avatars rest gray, and the theme is gray and solid unless you set it. Menus use a soft highlight, and a solid one when the system asks for more contrast.
 2. **One button.** `Button iconOnly` is the icon button. Fields, Select, Tabs and Navbar gain size 4.
-3. **Notice replaces Callout.** Callout, AppBar, the UserCard export, `classic`, `panelBackground` and `isInvalid` still work, warn in development, and go in 0.15.0.
+3. **Sidebar lives in the Shell.** Sidebar rows go straight into `Shell.Sidebar`, between `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter`.
+4. **Notice replaces Callout.** Callout, AppBar, the UserCard export, `Sidebar.Root`, thin mode, `classic`, `panelBackground` and `isInvalid` still work, warn in development, and go in 0.15.0.
 
 ## 0.13.1 (October 17)
 

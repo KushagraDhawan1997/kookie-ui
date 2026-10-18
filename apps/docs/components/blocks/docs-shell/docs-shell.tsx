@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Flex, IconButton, Shell } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { SidebarLeft01Icon, SidebarLeftIcon } from '@hugeicons/core-free-icons';
+import { SidebarLeftIcon } from '@hugeicons/core-free-icons';
 import { createPortal } from 'react-dom';
 import { DocsSidebar } from './docs-sidebar';
 import type { DocsLinkComponent, DocsLogoConfig, DocsNavigationConfig } from './types';
@@ -16,8 +16,6 @@ export interface DocsShellProps {
   headerActions?: React.ReactNode;
   sidebarFooter?: React.ReactNode;
   height?: React.ComponentProps<typeof Shell.Root>['height'];
-  /** Width of the collapsed sidebar, in pixels. @default 80 */
-  sidebarThinSize?: number;
   /** @default true */
   sidebarResizable?: boolean;
   /** Replaces the icon of the sidebar button in the top bar. */
@@ -26,8 +24,6 @@ export interface DocsShellProps {
   pathname?: string;
   /** Your router's link, e.g. `next/link`. Defaults to a plain anchor. */
   linkComponent?: DocsLinkComponent;
-  /** Add a collapse/expand button to the sidebar footer. @default false */
-  sidebarToggle?: boolean;
 }
 
 /** Where a page puts its own actions: the end of the shell's top bar. */
@@ -42,24 +38,7 @@ export function DocsShellPageActions({ children }: { children: React.ReactNode }
   return slot ? createPortal(children, slot) : null;
 }
 
-function SidebarThinToggle() {
-  const { sidebarMode, setSidebarMode } = Shell.useSidebarMode();
-  const isThin = sidebarMode === 'thin';
-
-  return (
-    <IconButton
-      variant="ghost"
-      size="2"
-      color="gray"
-      onClick={() => setSidebarMode(isThin ? 'expanded' : 'thin')}
-      aria-label={isThin ? 'Expand sidebar' : 'Collapse sidebar'}
-    >
-      <HugeiconsIcon icon={isThin ? SidebarLeftIcon : SidebarLeft01Icon} strokeWidth={1.75} />
-    </IconButton>
-  );
-}
-
-/** Documentation app frame: a searchable, collapsible sidebar beside the page content. */
+/** Documentation app frame: a searchable sidebar beside the page content. */
 export function DocsShell({
   children,
   navigation,
@@ -67,41 +46,26 @@ export function DocsShell({
   headerActions,
   sidebarFooter,
   height,
-  sidebarThinSize = 80,
   sidebarResizable = true,
   mobileTriggerIcon,
   pathname = '',
   linkComponent,
-  sidebarToggle = false,
 }: DocsShellProps) {
-  const [presentation, setPresentation] = React.useState<'thin' | 'expanded'>('expanded');
   const [actionsSlot, setActionsSlot] = React.useState<HTMLElement | null>(null);
-
-  const footer = sidebarToggle ? (
-    <Flex justify="between" align="center" width="100%" gap="1">
-      {sidebarFooter}
-      <SidebarThinToggle />
-    </Flex>
-  ) : (
-    sidebarFooter
-  );
 
   return (
     <Shell.Root height={height}>
       <Shell.Sidebar
         toggleModes="single"
-        thinSize={sidebarThinSize}
         resizable={sidebarResizable}
         defaultState={{ initial: 'collapsed', sm: 'expanded' }}
-        onStateChange={(state) => setPresentation(state === 'thin' ? 'thin' : 'expanded')}
         presentation={{ initial: 'overlay', sm: 'fixed' }}
       >
         <DocsSidebar
           navigation={navigation}
           logo={logo}
-          presentation={presentation}
           headerActions={headerActions}
-          footer={footer}
+          footer={sidebarFooter}
           pathname={pathname}
           linkComponent={linkComponent}
         />
