@@ -26,9 +26,6 @@ import type { GetPropDefTypes } from '../props/prop-def.js';
  * nothing; a `ToolbarGroup` draws a quiet well around controls that belong together, and a
  * `ToolbarSeparator` draws a gray hairline between clusters. Use a `Flex` to cluster controls
  * without a well: the row spaces the clusters with `space-between`.
- *
- * The band anchored to a pane's edge (Left / Center / Right / Title) that this name used to
- * mean is `AppBar` since 0.11.0.
  */
 
 type ToolbarSize = NonNullable<GetPropDefTypes<typeof toolbarRootPropDefs>['size']>;
