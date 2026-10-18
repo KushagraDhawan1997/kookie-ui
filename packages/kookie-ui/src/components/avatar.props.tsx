@@ -6,7 +6,6 @@ import type { PropDef } from '../props/prop-def.js';
 
 const sizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] as const;
 const variants = ['raised', 'solid', 'soft', 'surface', 'outline'] as const;
-const materials = ['solid', 'translucent'] as const;
 const objectFitValues = ['cover', 'contain', 'fill', 'scale-down', 'none'] as const;
 
 const avatarPropDefs = {
@@ -16,7 +15,6 @@ const avatarPropDefs = {
   ...grayAccentColorPropDef,
   ...radiusPropDef,
   fallback: { type: 'ReactNode', required: true },
-  material: { type: 'enum', values: materials, default: undefined },
   /**
    * Status indicator color. Renders a small colored dot at the bottom-right corner.
    * Cannot be used together with `badge`.
@@ -37,7 +35,6 @@ const avatarPropDefs = {
   size: PropDef<(typeof sizes)[number]>;
   variant: PropDef<(typeof variants)[number]>;
   fallback: PropDef<React.ReactNode>;
-  material: PropDef<(typeof materials)[number] | undefined>;
   status: PropDef<(typeof accentColors)[number] | undefined>;
   badge: PropDef<React.ReactNode>;
   fit: PropDef<(typeof objectFitValues)[number]>;

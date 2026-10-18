@@ -6,7 +6,6 @@ import type { PropDef } from '../props/prop-def.js';
 
 const sizes = ['1', '2', '3', '4'] as const;
 const variants = ['raised', 'solid', 'soft', 'surface', 'outline', 'ghost'] as const;
-const materials = ['solid', 'translucent'] as const;
 
 const badgePropDefs = {
   ...asChildPropDef,
@@ -14,11 +13,9 @@ const badgePropDefs = {
   variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised' },
   ...grayAccentColorPropDef,
   ...radiusPropDef,
-  material: { type: 'enum', values: materials, default: undefined },
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;
   variant: PropDef<(typeof variants)[number]>;
-  material: PropDef<(typeof materials)[number] | undefined>;
 };
 
 export { badgePropDefs };

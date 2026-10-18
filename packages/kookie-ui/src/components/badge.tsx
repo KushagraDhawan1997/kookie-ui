@@ -36,7 +36,6 @@ const Badge = React.forwardRef<BadgeElement, BadgeProps>((props, forwardedRef) =
     children,
     color,
     radius,
-    material,
     tooltip,
     tooltipSide = 'top',
     tooltipAlign = 'center',
@@ -45,7 +44,6 @@ const Badge = React.forwardRef<BadgeElement, BadgeProps>((props, forwardedRef) =
     ...badgeProps
   } = extractProps(props, badgePropDefs, marginPropDefs);
 
-  const effectiveMaterial = material;
 
 
   // Memoize component variable to prevent unnecessary re-renders
@@ -55,7 +53,6 @@ const Badge = React.forwardRef<BadgeElement, BadgeProps>((props, forwardedRef) =
     <Comp
       data-accent-color={color}
       data-radius={radius}
-      data-material={effectiveMaterial}
       {...badgeProps}
       ref={forwardedRef}
       className={classNames('rt-reset', 'rt-Badge', className)}

@@ -27,7 +27,6 @@ const Checkbox = React.forwardRef<CheckboxElement, CheckboxProps>((props, forwar
   const {
     className,
     color,
-    material,
     checked: checkedProp,
     defaultChecked: defaultCheckedProp,
     onCheckedChange,
@@ -43,7 +42,6 @@ const Checkbox = React.forwardRef<CheckboxElement, CheckboxProps>((props, forwar
   return (
     <CheckboxPrimitive.Root
       data-accent-color={color}
-      data-material={material}
       {...checkboxProps}
       defaultChecked={defaultCheckedProp}
       checked={checked}

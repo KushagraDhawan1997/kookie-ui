@@ -22,7 +22,6 @@ const Avatar = React.forwardRef<AvatarImplElement, AvatarProps>((props, forwarde
     style,
     color,
     radius,
-    material,
     status,
     badge,
     ...imageProps
@@ -52,7 +51,6 @@ const Avatar = React.forwardRef<AvatarImplElement, AvatarProps>((props, forwarde
     <AvatarPrimitive.Root
       data-accent-color={color}
       data-radius={radius}
-      data-material={material}
       data-disabled={isDisabled || undefined}
       data-has-indicator={hasIndicator || undefined}
       className={classNames('rt-reset', 'rt-AvatarRoot', className)}

@@ -15,26 +15,12 @@
   border-radius: var(--skeleton-radius);
   --skeleton-radius-override: 100%;
 
-
   /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 
   /* Prevent backdrop-filter stacking with parents */
   isolation: isolate;
 
   /* Component-level overrides */
-  &:where([data-material='solid']) {
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-  
-  &:where([data-material='translucent']) {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 
   &:where(:disabled, [data-disabled]) {
     cursor: var(--cursor-disabled);
@@ -129,39 +115,19 @@
   &:where(:not(:checked), [data-state='unchecked'])::before {
     color: var(--accent-ink);
     background-color: var(--color-surface-solid);
-    box-shadow: var(--shadow-2);
+    box-shadow: var(--shadow-2)
 
     /* Theme-level translucent override */
-    :where([data-material='translucent']) & {
-      background-color: var(--color-surface-translucent);
-    }
 
     /* Component-level overrides (higher specificity) */
-    &:where([data-material='solid']) {
-      background-color: var(--color-surface-solid);
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: var(--color-surface-translucent);
-    }
   }
   
   &:where(:checked, [data-state='checked'])::before {
-    background-color: var(--accent-3);
+    background-color: var(--accent-3)
 
     /* Theme-level translucent override */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
 
     /* Component-level overrides (higher specificity) */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-3);
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
   }
   &::after {
     background-color: var(--accent-ink);
@@ -171,21 +137,11 @@
     top: calc(var(--raised-elevation-offset) + var(--raised-active-padding-offset-1));
     
     &::before {
-      background-color: var(--accent-3);
+      background-color: var(--accent-3)
 
       /* Theme-level translucent override for active */
-      :where([data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      }
 
       /* Component-level overrides for active */
-      &:where([data-material='solid']) {
-        background-color: var(--accent-3);
-      }
-
-      &:where([data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      }
     }
   }
 
@@ -206,21 +162,11 @@
 
 .rt-BaseRadioRoot:where(.rt-variant-soft) {
   &::before {
-    background-color: var(--accent-3);
+    background-color: var(--accent-3)
 
     /* Theme-level translucent override */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
 
     /* Component-level overrides (higher specificity) */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-3);
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
   }
   &::after {
     background-color: var(--accent-ink);
@@ -239,50 +185,25 @@
   }
 }
 
-
-
 /* outline */
 
 .rt-BaseRadioRoot:where(.rt-variant-outline) {
   &:where(:not(:checked), [data-state='unchecked'])::before {
     box-shadow: inset 0 0 0 1px var(--accent-6);
-    color: var(--accent-ink);
+    color: var(--accent-ink)
 
     /* Theme-level translucent override */
-    :where([data-material='translucent']) & {
-      box-shadow: inset 0 0 0 1px var(--accent-a6);
-    }
 
     /* Component-level overrides (higher specificity) */
-    &:where([data-material='solid']) {
-      box-shadow: inset 0 0 0 1px var(--accent-6);
-    }
-
-    &:where([data-material='translucent']) {
-      box-shadow: inset 0 0 0 1px var(--accent-a6);
-    }
   }
 
   &:where(:checked, [data-state='checked'])::before {
     background-color: var(--accent-2);
-    box-shadow: inset 0 0 0 1px var(--accent-7);
+    box-shadow: inset 0 0 0 1px var(--accent-7)
 
     /* Theme-level translucent override */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a7);
-    }
 
     /* Component-level overrides (higher specificity) */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-2);
-      box-shadow: inset 0 0 0 1px var(--accent-7);
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a7);
-    }
   }
   &::after {
     background-color: var(--accent-ink);
@@ -302,46 +223,20 @@
 .rt-BaseRadioRoot:where(.rt-variant-surface) {
   &:where(:not(:checked), [data-state='unchecked'])::before {
     background-color: var(--accent-2);
-    box-shadow: inset 0 0 0 1px var(--accent-6);
+    box-shadow: inset 0 0 0 1px var(--accent-6)
 
     /* Theme-level translucent override */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a6);
-    }
 
     /* Component-level overrides (higher specificity) */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-2);
-      box-shadow: inset 0 0 0 1px var(--accent-6);
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a6);
-    }
   }
 
   &:where(:checked, [data-state='checked'])::before {
     background-color: var(--accent-3);
-    box-shadow: inset 0 0 0 1px var(--accent-8);
+    box-shadow: inset 0 0 0 1px var(--accent-8)
 
     /* Theme-level translucent override */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a8);
-    }
 
     /* Component-level overrides (higher specificity) */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-3);
-      box-shadow: inset 0 0 0 1px var(--accent-8);
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a8);
-    }
   }
   &::after {
     background-color: var(--accent-ink);

@@ -22,30 +22,11 @@
   --material-alpha: 0;
 
   /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    --material-blend: 60%;
-    --material-alpha: 1;
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 
   /* Prevent backdrop-filter stacking with parents */
   isolation: isolate;
 
   /* Component-level overrides */
-  &:where([data-material='solid']) {
-    --material-blend: 100%;
-    --material-alpha: 0;
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-  
-  &:where([data-material='translucent']) {
-    --material-blend: 60%;
-    --material-alpha: 1;
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 
   /* Reduced motion support */
 
@@ -199,17 +180,5 @@
   box-shadow: var(--shadow-2);
 
   --raised-surface: var(--color-surface-solid);
-  background-color: var(--raised-surface);
-
-  :where([data-material='translucent']) & {
-    --raised-surface: var(--color-surface-translucent);
-  }
-
-  &:where([data-material='solid']) {
-    --raised-surface: var(--color-surface-solid);
-  }
-
-  &:where([data-material='translucent']) {
-    --raised-surface: var(--color-surface-translucent);
-  }
+  background-color: var(--raised-surface)
 }
