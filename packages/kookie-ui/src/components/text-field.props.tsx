@@ -17,7 +17,8 @@ const textFieldRootPropDefs = {
   // Error and validation props
   error: { type: 'boolean', default: false },
   errorMessage: { type: 'string', default: undefined },
-  isInvalid: { type: 'boolean', default: false },
+  /** @deprecated Use `error`. Removed in 0.15.0. */
+  isInvalid: { type: 'boolean' },
   required: { type: 'boolean', default: false },
   // Accessibility props
   'aria-describedby': { type: 'string', default: undefined },
