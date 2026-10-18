@@ -1096,32 +1096,6 @@
       }
     }
 
-    @media (hover: hover) {
-      & :where(.rt-SidebarMenuButton:where(:hover):not([data-disabled])) {
-        background-color: var(--accent-solid);
-        color: var(--accent-solid-contrast);
-  
-        & :where(.rt-BaseMenuSubTriggerIcon) {
-          color: var(--accent-solid-contrast);
-        }
-  
-        /* Force all text elements to inherit hover color, including those with color="gray" */
-        & :where(.rt-Text) {
-          color: inherit !important;
-        }
-  
-        /* Also target any element with data-accent-color="gray" */
-        & :where([data-accent-color='gray']:not(.rt-Badge)) {
-          color: inherit !important;
-        }
-  
-        /* FIX: Ensure badges maintain their own styling and don't inherit hover colors */
-        & :where(.rt-Badge) {
-          color: var(--accent-solid-badge-contrast) !important;
-          background-color: var(--accent-solid-badge) !important;
-        }
-      }
-    }
 
     /* Active navigation state for solid variant - same as highlighted */
     & :where(.rt-SidebarMenuButton[data-active]) {
@@ -1145,6 +1119,35 @@
       }
     }
   }
+}
+
+@media (prefers-contrast: more) and (hover: hover) {
+  .rt-SidebarHeader:where(.rt-menu-variant-soft) :where(.rt-SidebarMenuButton:where(:hover):not([data-disabled])),
+  .rt-SidebarContent:where(.rt-menu-variant-soft) :where(.rt-SidebarMenuButton:where(:hover):not([data-disabled])),
+  .rt-SidebarFooter:where(.rt-menu-variant-soft) :where(.rt-SidebarMenuButton:where(:hover):not([data-disabled])) {
+    background-color: var(--accent-solid);
+    color: var(--accent-solid-contrast);
+
+    & :where(.rt-BaseMenuSubTriggerIcon) {
+      color: var(--accent-solid-contrast);
+    }
+
+    /* Force all text elements to inherit hover color, including those with color="gray" */
+    & :where(.rt-Text) {
+      color: inherit !important;
+    }
+
+    /* Also target any element with data-accent-color="gray" */
+    & :where([data-accent-color='gray']:not(.rt-Badge)) {
+      color: inherit !important;
+    }
+
+    /* FIX: Ensure badges maintain their own styling and don't inherit hover colors */
+    & :where(.rt-Badge) {
+      color: var(--accent-solid-badge-contrast) !important;
+      background-color: var(--accent-solid-badge) !important;
+    }
+    }
 }
 
 /* Removed old icon-only collapsed mode rules in favor of Shell rail mode */
