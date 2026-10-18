@@ -10,7 +10,7 @@
 
 ## 0.12.0 (October 16)
 
-1. **Toolbar becomes AppBar.** The old Toolbar is now AppBar. Toolbar is a new row of controls, with its own page.
+1. **Toolbar becomes AppBar (breaking).** The old Toolbar is now AppBar. Toolbar is a new row of controls, with its own page.
 2. **Chatbar.Item.** A removable pill for what a message refers to, like a picked mode or a scene object. Attachments use the same pill.
 
 ## 0.10.0 (October 15)
@@ -32,12 +32,12 @@
 
 ## 0.7.0 (September 20)
 
-1. **highContrast is gone.** Use the new `emphasis` prop and the ink and solid color tokens instead.
+1. **highContrast is gone (breaking).** Use the new `emphasis` prop and the ink and solid color tokens instead.
 
 ## 0.6.0 (September 19)
 
 1. **Blocks in the docs.** Kookie Blocks are now copy-paste blocks inside the docs.
-2. **New docs structure.** The docs follow Kookie UI's structure, with Principles and Vocabulary chapters.
+2. **New docs structure.** The docs are organised into chapters, starting with Principles and Vocabulary.
 3. **Lighter scrollbars.** The scroll thumb is lighter and the track is gone.
 
 ## 0.5.0 sync (September 18)

@@ -4,9 +4,18 @@
 
 * **sidebar:** in thin mode, the icon tile behind each item and the search trigger takes `--radius-full`, so it is a pill when the theme's `radius` is `full`, as buttons are. Size 3 uses `--radius-3` instead of `--radius-2`.
 
+## [0.13.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.13.0...v0.13.1) (2026-10-17)
+
+### Changes
+
+* **tokens:** one control height ladder, `--control-height-1`…`--control-height-4`. Button, the menus, TextField, Select, SegmentedControl, Toolbar and Tabs read it, so a size means the same height on each of them.
+* **sidebar:** drops its own size ladder, which ran one step taller, and takes the menus'. Sidebar rows are one step shorter.
+* **tabs:** one step shorter, to match the ladder.
+* **select:** items at size 3 are 40px tall.
+
 ## [0.13.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.12.0...v0.13.0) (2026-10-16)
 
-Light and dark mode are decided before the first paint and kept on `<html>`, as in Kookie UI v2.
+Light and dark mode are decided before the first paint and kept on `<html>`.
 
 ### Features
 
@@ -32,7 +41,9 @@ The composer can show what a message refers to, not only the files it carries.
 
 ## [0.11.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.10.0...v0.11.0) (2026-10-16)
 
-`Toolbar` now means what it means in Kookie UI v2: a row of controls with one tab stop. The band it used to name is `AppBar`.
+Not published on its own. These changes shipped in 0.12.0.
+
+`Toolbar` is now a row of controls with one tab stop. The band it used to name is `AppBar`.
 
 ### ⚠ BREAKING CHANGES
 
@@ -41,14 +52,13 @@ The composer can show what a message refers to, not only the files it carries.
 
 ### Features
 
-* **toolbar:** new `Toolbar`, `ToolbarGroup`, `ToolbarButton`, `ToolbarSeparator` and `ToolbarTitle`, also reachable as `Toolbar.Root`, `Toolbar.Group`, `Toolbar.Button`, `Toolbar.Separator` and `Toolbar.Title`. Built on Radix Toolbar, with v2's contract:
+* **toolbar:** new `Toolbar`, `ToolbarGroup`, `ToolbarButton`, `ToolbarSeparator` and `ToolbarTitle`, also reachable as `Toolbar.Root`, `Toolbar.Group`, `Toolbar.Button`, `Toolbar.Separator` and `Toolbar.Title`. Built on Radix Toolbar:
   * `Toolbar` is `role="toolbar"` with one tab stop; the arrow keys move focus between its controls and wrap at the ends. `orientation` is `horizontal` (Left/Right) or `vertical` (Up/Down, the row stacks). `size` `1`–`4` (default `2`) sets the row's height and the size of every control inside it that does not set its own. `aria-label` / `aria-labelledby` pass through. The row paints nothing and spaces its clusters with `space-between`; cluster controls with a `Flex`.
   * `ToolbarButton` takes every `Button` prop and joins the toolbar's keyboard. `iconOnly` renders an `IconButton` and requires an `aria-label`. `aria-pressed` announces a toggle and wears Button's pressed look. It rests as a gray `soft` button (gray `ghost` inside a group); a stated `size`, `variant` or `color` wins. It throws outside a `Toolbar`.
   * `ToolbarGroup` is a `role="group"` drawn as a quiet gray well, level with a button beside it, hosting its buttons inside it with a concentric corner. `disabled` turns every control in it off.
   * `ToolbarSeparator` is a gray hairline across the row's direction, in the gray `Separator` draws, at half the row's height.
   * `ToolbarTitle` is one truncating line at the row's leading edge, one text step above a button label at the same size, with more air beside it than between two controls. With no children it renders nothing.
-* v2's `backdrop` prop (glass) and `ToolbarOverflow` are not ported.
-* **tokens:** v2's names for the page, its text and its neutral scale resolve in v1: `--color-page` (`--color-background`), `--color-text` (`--gray-12`) and `--neutral-1`…`--neutral-12` (`--gray-N`). Aliases only, following the appearance, so code written against v2's names (such as Kookie Flow's sticky notes) paints correctly on v1.
+* **tokens:** `--color-page` (`--color-background`), `--color-text` (`--gray-12`) and `--neutral-1`…`--neutral-12` (`--gray-N`) resolve as aliases that follow the appearance.
 
 ### Tests
 
@@ -71,6 +81,8 @@ The composer can show what a message refers to, not only the files it carries.
 No runtime code changed.
 
 ## [0.9.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.8.1...v0.9.0) (2026-10-15)
+
+Not published on its own. These changes shipped in 0.9.1.
 
 The pieces a chat screen needs around its input: a transcript that follows the conversation, messages that wait above the input, and a send button that can stop a reply.
 
@@ -97,7 +109,7 @@ The pieces a chat screen needs around its input: a transcript that follows the c
 
 ## [0.8.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.7.0...v0.8.0) (2026-10-14)
 
-The Shell is rebuilt on kookie-ui-v2's model, behind 0.7's API. Every prop and export from 0.7 still exists. What changes is behaviour, listed in full below, because each item is something an app could have depended on.
+The Shell is rebuilt behind 0.7's API. Every prop and export from 0.7 still exists. What changes is behaviour, listed in full below, because each item is something an app could have depended on.
 
 ### ⚠ BREAKING CHANGES
 
@@ -196,6 +208,10 @@ No API change and no behaviour a consumer relied on changes; each item is someth
 | `<DataList.Label highContrast>` | `<DataList.Label emphasis="loud">` |
 | `highContrastPropDef` import | Delete it; use `emphasisPropDef` for text-first components |
 | `var(--opacity-high-contrast)` | `var(--opacity-8)` |
+
+## Note on 1.0.0–1.0.3
+
+These four releases were tagged in git in January 2026 and never published to npm. The package continued from 0.7.0, and every release since then goes up from there. The 1.0.x entries below are kept as history.
 
 ## [1.0.3](https://github.com/KushagraDhawan1997/kookie-ui/compare/v1.0.2...v1.0.3) (2026-01-12)
 
