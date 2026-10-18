@@ -1,3 +1,24 @@
+## [0.15.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.14.3...v0.15.0) (2026-10-18)
+
+The breaking release. Everything 0.14 deprecated is removed, and so is motion. There is one way to do each thing.
+
+### Breaking changes
+
+* **variants:** `variant="classic"` and the `--classic-*` tokens are gone; use `raised`. Button's `variant="override"` and `overrideStyles` are gone; style it with `className`, `style` or its CSS variables.
+* **menus:** `variant` is gone from DropdownMenu, ContextMenu, Select and Combobox content, and from SegmentedControl. Menus use the soft highlight, and the solid one under `prefers-contrast: more`.
+* **material:** `panelBackground` is gone everywhere, including `Theme` and `ThemePanel`; use `material`. Stylesheets read `data-material` only. Checkbox, Radio, Switch, Badge and Avatar take no `material`.
+* **fields:** `isInvalid` is gone from TextField and TextArea; use `error`.
+* **button:** an icon-only button ignores `fullWidth`, and IconButton's type has no `fullWidth`.
+* **components:** `Callout` (use `Notice`), `AppBar` (use `Toolbar`, in `Shell.Header` for an app header) and the `UserCard` export (copy the User Card docs block) are deleted.
+* **sidebar:** `Sidebar.Root`, `Sidebar.Content`, `Sidebar.Header`, `Sidebar.Footer`, `menuVariant` and thin mode are deleted. Put the rows in `Shell.Sidebar` between `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter`, or in `Shell.Rail` for tiles. `Shell.Sidebar` has no thin state, `thinSize` or `toggleModes`; its toggle goes between collapsed and expanded.
+* **motion:** every transition, entry and exit animation, and press and hover scale is gone, with the `--duration-*`, `--ease-*`, `--motion-*` and `--transition-*` tokens and the `motion` dependency. State changes are instant. Spinner, Skeleton, the indeterminate Progress bar and Select's loading spinner still move; the Spinner slows under reduced motion instead of stopping. Image has no `fadeIn`; it shows once loaded.
+* **tokens:** 29 internal tokens nothing read are removed, among them the progress shine and timing steps and `--color-transparent`.
+* **sizes:** every declared size is styled. Checkbox offers 1–3, Avatar 1–9, CheckboxCards and RadioCards 1–5. Code, Kbd, Link and Blockquote take Text's sizes 0–12 at Text's font steps, so a Kbd is one step larger at the same `size`.
+
+### How to adopt
+
+Fix every 0.14 deprecation warning first: 0.15 removes exactly what warned. Then search for `transition`, `fadeIn` and `--motion-` in your own code, and check any `Kbd size`.
+
 ## [0.14.3](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.14.2...v0.14.3) (2026-10-18)
 
 ### Features
