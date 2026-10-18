@@ -2,11 +2,7 @@ import { Callout } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { AlertSquareIcon } from '@hugeicons/core-free-icons';
 
-Material system creates visual depth through translucent surfaces and backdrop blur effects. Control panel transparency with `material` prop for modern glass-like aesthetics.
-
-**Note:** Material is related to the deprecated `panelBackground` prop from Radix Themes, but Kookie UI's material system is much more powerful and unique. It provides universal material control across all components with enhanced backdrop blur effects and better performance.
-
-The goal is to add material support to all components, but not all components fully support it yet.
+`material` sets what a surface is made of: `solid`, or `translucent` with a backdrop blur. Surfaces such as Card, Dialog, Popover and the menus take it. It replaces the deprecated `panelBackground` prop.
 
 ## Installation
 
@@ -16,7 +12,7 @@ npm install @kushagradhawan/kookie-ui
 
 ## Usage
 
-Set `material` prop on the Theme component to control panel transparency globally. Use `solid` for opaque backgrounds or `translucent` for glass-like effects.
+Set `material` prop on the Theme component to control panel transparency globally. Use `solid` for opaque backgrounds or `translucent` for a blurred, see-through one.
 
 ```tsx
 import { Theme } from '@kushagradhawan/kookie-ui';
@@ -40,15 +36,13 @@ Use solid material when:
 
 ## Translucent
 
-Translucent material creates glass-like effects with semi-transparent backgrounds and backdrop blur. Perfect for modern, elevated interfaces.
+Translucent material gives a surface a semi-transparent background and a backdrop blur.
 
 ```tsx
 <Theme material="translucent"><YourApp /></Theme>
 ```
 
 Use translucent material when:
-- You want modern, glass-like aesthetics
-- Building design-focused applications
 - You have backgrounds that benefit from transparency
 - Working on high-end devices
 
