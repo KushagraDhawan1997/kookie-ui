@@ -52,8 +52,8 @@ Kookie UI is a fork of [Radix Themes](https://radix-ui.com/themes) that extends 
 ### Key Features
 
 - **Systematic Design Tokens** - 12-point progressions for spacing, radius, and shadows with predictable steps
-- **Universal Material System** - Every component understands translucency vs. solidity with theme-level defaults and per-component overrides
-- **Consistent Sizing** - Cards, buttons, dropdowns, selects, and avatars all follow the same scale
+- **Material** - Surfaces are solid or translucent, with a theme-level default and per-surface overrides
+- **Shared Size Steps** - Controls share one set of size steps
 - **Unified Motion** - Transition patterns work consistently across all components
 - **Enhanced Accessibility** - Native tooltip support, stricter aria-label enforcement, and improved keyboard navigation
 - **Layout Patterns** - Shells, sidebars, panels, and toolbars that work together predictably
@@ -203,15 +203,15 @@ import '@kushagradhawan/kookie-ui/layout.css'; // Layout utilities
 
 ## Requirements
 
-- React 16.8+ through React 19
+- React 18 or 19 (`MessageScroller` needs React 19)
 - Node.js 16+ (for development)
 - TypeScript support built-in
 
 ```json
 {
   "peerDependencies": {
-    "react": "16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc",
-    "react-dom": "16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc"
+    "react": "^18.0 || ^19.0",
+    "react-dom": "^18.0 || ^19.0"
   }
 }
 ```
