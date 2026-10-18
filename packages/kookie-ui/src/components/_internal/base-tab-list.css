@@ -232,3 +232,13 @@
 }
 
 
+
+/* Disabled: the same treatment as a disabled menu item. It keeps no hover fill. */
+.rt-BaseTabListTrigger:where([data-disabled]) {
+  color: var(--gray-a8);
+  cursor: default;
+
+  & :where(.rt-BaseTabListTriggerInner) {
+    background-color: transparent;
+  }
+}

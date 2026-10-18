@@ -604,3 +604,10 @@
     background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
   }
 } 
+/* Disabled: the same treatment as a disabled menu item. It keeps no hover fill or lift. */
+.rt-AccordionTrigger:where([data-disabled]) {
+  color: var(--gray-a8);
+  cursor: default;
+  background-color: transparent;
+  transform: none;
+}
