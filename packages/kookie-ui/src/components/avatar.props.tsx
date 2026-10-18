@@ -1,6 +1,6 @@
 import { parseVariant } from '../helpers/parse-variant.js';
 import { asChildPropDef } from '../props/as-child.prop.js';
-import { accentColorPropDef, accentColors } from '../props/color.prop.js';
+import { grayAccentColorPropDef, accentColors } from '../props/color.prop.js';
 import { radiusPropDef } from '../props/radius.prop.js';
 
 import type { PropDef } from '../props/prop-def.js';
@@ -15,7 +15,7 @@ const avatarPropDefs = {
   ...asChildPropDef,
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '3', responsive: true },
   variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised', parseValue: parseVariant },
-  ...accentColorPropDef,
+  ...grayAccentColorPropDef,
   ...radiusPropDef,
   fallback: { type: 'ReactNode', required: true },
   material: { type: 'enum', values: materials, default: undefined },

@@ -1,5 +1,5 @@
 import { asChildPropDef } from '../props/as-child.prop.js';
-import { accentColorPropDef } from '../props/color.prop.js';
+import { grayAccentColorPropDef } from '../props/color.prop.js';
 import { emphasisPropDef } from '../props/emphasis.prop.js';
 import { textWrapPropDef } from '../props/text-wrap.prop.js';
 import { truncatePropDef } from '../props/truncate.prop.js';
@@ -20,7 +20,7 @@ const codePropDefs = {
   },
   variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'soft' },
   ...weightPropDef,
-  ...accentColorPropDef,
+  ...grayAccentColorPropDef,
   ...emphasisPropDef,
   ...truncatePropDef,
   ...textWrapPropDef,

@@ -1,6 +1,6 @@
 import { parseVariant } from '../helpers/parse-variant.js';
 import { asChildPropDef } from '../props/as-child.prop.js';
-import { accentColorPropDef } from '../props/color.prop.js';
+import { grayAccentColorPropDef } from '../props/color.prop.js';
 
 import type { PropDef } from '../props/prop-def.js';
 
@@ -13,7 +13,7 @@ const calloutRootPropDefs = {
   ...asChildPropDef,
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
   variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised', parseValue: parseVariant },
-  ...accentColorPropDef,
+  ...grayAccentColorPropDef,
   material: { type: 'enum', values: materials, default: undefined },
   /**
    * @deprecated Use `material` prop instead. This prop will be removed in a future version.

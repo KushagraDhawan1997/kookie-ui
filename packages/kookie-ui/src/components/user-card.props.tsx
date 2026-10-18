@@ -1,7 +1,7 @@
 import { parseVariant } from '../helpers/parse-variant.js';
 import { avatarPropDefs } from './avatar.props.js';
 import { asChildPropDef } from '../props/as-child.prop.js';
-import { accentColorPropDef } from '../props/color.prop.js';
+import { grayAccentColorPropDef } from '../props/color.prop.js';
 import { radiusPropDef } from '../props/radius.prop.js';
 
 import type { PropDef } from '../props/prop-def.js';
@@ -28,7 +28,7 @@ const userCardPropDefs = {
   ...radiusPropDef,
 
   // Card styling
-  ...accentColorPropDef,
+  ...grayAccentColorPropDef,
   panelBackground: { type: 'enum', values: panelBackgrounds, default: undefined },
   flush: { type: 'boolean', default: false },
 } satisfies {

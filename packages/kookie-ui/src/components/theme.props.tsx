@@ -32,14 +32,14 @@ const themePropDefs = {
    * @link
    * https://www.radix-ui.com/themes/docs/theme/color
    */
-  accentColor: { type: 'enum', values: accentColors, default: 'blue' },
+  accentColor: { type: 'enum', values: accentColors, default: 'gray' },
   /**
    * Selects one of the gray color options to use in the Theme.
    *
    * @link
    * https://www.radix-ui.com/themes/docs/theme/color
    */
-  grayColor: { type: 'enum', values: grayColors, default: 'slate' },
+  grayColor: { type: 'enum', values: grayColors, default: 'gray' },
   /**
    * Controls whether to use a solid or translucent background color on panelled
    * elements such as Card or Table is solid or translucent.
@@ -47,7 +47,7 @@ const themePropDefs = {
    * @link
    * https://www.radix-ui.com/themes/docs/theme/visual-style
    */
-  material: { type: 'enum', values: materials, default: 'translucent' },
+  material: { type: 'enum', values: materials, default: 'solid' },
   /**
    * Controls whether to use a solid or translucent background color on panelled
    * elements such as Card or Table is solid or translucent.
@@ -57,7 +57,7 @@ const themePropDefs = {
    * @link
    * https://www.radix-ui.com/themes/docs/theme/visual-style
    */
-  panelBackground: { type: 'enum', values: panelBackgrounds, default: 'translucent' },
+  panelBackground: { type: 'enum', values: panelBackgrounds, default: 'solid' },
   /**
    * Sets the default radius of the components.
    *
