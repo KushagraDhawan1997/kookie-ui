@@ -15,6 +15,8 @@ const radioCardsRootPropDefs = {
   ...asChildPropDef,
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
   variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised', parseValue: parseVariant },
+  material: { type: 'enum', values: panelBackgrounds, default: undefined },
+  /** @deprecated Use `material`. Removed in 0.15.0. */
   panelBackground: { type: 'enum', values: panelBackgrounds, default: undefined },
   ...colorPropDef,
   columns: { ...gridPropDefs.columns, default: 'repeat(auto-fit, minmax(160px, 1fr))' },
@@ -22,6 +24,7 @@ const radioCardsRootPropDefs = {
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;
   variant: PropDef<(typeof variants)[number]>;
+  material: PropDef<(typeof panelBackgrounds)[number] | undefined>;
   panelBackground: PropDef<(typeof panelBackgrounds)[number] | undefined>;
   columns: PropDef<(typeof gridPropDefs.columns.values)[number]>;
   gap: PropDef<(typeof gridPropDefs.gap.values)[number]>;

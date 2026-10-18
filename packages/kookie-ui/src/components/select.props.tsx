@@ -18,11 +18,9 @@ const triggerVariants = ['raised', 'surface', 'soft', 'outline', 'ghost', 'class
 
 const selectTriggerPropDefs = {
   variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'raised', parseValue: parseVariant },
-  panelBackground: {
-    type: 'enum',
-    className: 'rt-panel-background',
-    values: ['solid', 'translucent'],
-  },
+  material: { type: 'enum', values: ['solid', 'translucent'] },
+  /** @deprecated Use `material`. Removed in 0.15.0. */
+  panelBackground: { type: 'enum', values: ['solid', 'translucent'] },
   error: { type: 'boolean' },
   loading: { type: 'boolean' },
   disabled: { type: 'boolean' },
@@ -32,6 +30,7 @@ const selectTriggerPropDefs = {
   placeholder: { type: 'ReactNode' },
 } satisfies {
   variant: PropDef<(typeof triggerVariants)[number]>;
+  material: PropDef<'solid' | 'translucent'>;
   panelBackground: PropDef<'solid' | 'translucent'>;
   error: PropDef<boolean>;
   loading: PropDef<boolean>;

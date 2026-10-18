@@ -16,6 +16,8 @@ const popoverContentPropDefs = {
     default: '2',
     responsive: true,
   },
+  material: { type: 'enum', values: panelBackgrounds, default: undefined },
+  /** @deprecated Use `material`. Removed in 0.15.0. */
   panelBackground: { type: 'enum', values: panelBackgrounds, default: undefined },
   width: widthPropDefs.width,
   minWidth: widthPropDefs.minWidth,
@@ -26,6 +28,7 @@ const popoverContentPropDefs = {
   minWidth: PropDef<string>;
   maxWidth: PropDef<string>;
   size: PropDef<(typeof contentSizes)[number]>;
+  material: PropDef<(typeof panelBackgrounds)[number] | undefined>;
   panelBackground: PropDef<(typeof panelBackgrounds)[number] | undefined>;
 };
 

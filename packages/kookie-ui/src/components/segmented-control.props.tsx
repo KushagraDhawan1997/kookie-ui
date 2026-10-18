@@ -17,17 +17,16 @@ const segmentedControlRootPropDefs = {
     default: 'horizontal',
     responsive: true,
   },
-  panelBackground: {
-    type: 'enum',
-    className: 'rt-panel-background',
-    values: ['solid', 'translucent'],
-  },
+  material: { type: 'enum', values: ['solid', 'translucent'] },
+  /** @deprecated Use `material`. Removed in 0.15.0. */
+  panelBackground: { type: 'enum', values: ['solid', 'translucent'] },
   ...radiusPropDef,
 } satisfies {
   disabled?: PropDef<boolean>;
   size: PropDef<(typeof sizes)[number]>;
   variant: PropDef<(typeof variants)[number]>;
   orientation: PropDef<(typeof orientations)[number]>;
+  material: PropDef<'solid' | 'translucent'>;
   panelBackground: PropDef<'solid' | 'translucent'>;
 };
 

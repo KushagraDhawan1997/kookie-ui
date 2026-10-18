@@ -22,11 +22,14 @@ const baseTabListPropDefs = {
     responsive: true,
   },
   ...colorPropDef,
+  material: { type: 'enum', values: panelBackgrounds, default: undefined },
+  /** @deprecated Use `material`. Removed in 0.15.0. */
   panelBackground: { type: 'enum', values: panelBackgrounds, default: undefined },
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;
   wrap: PropDef<(typeof wrapValues)[number]>;
   justify: PropDef<(typeof justifyValues)[number]>;
+  material: PropDef<(typeof panelBackgrounds)[number] | undefined>;
   panelBackground: PropDef<(typeof panelBackgrounds)[number] | undefined>;
 };
 
