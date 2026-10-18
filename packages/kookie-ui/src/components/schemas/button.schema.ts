@@ -45,6 +45,21 @@ export const ButtonSchema = BaseButtonSchema.extend({
     .describe('Side of the button where the tooltip should appear'),
 
   /**
+   * The button's rank: loud is solid, medium is raised, quiet is ghost. Pass this or `variant`, not both.
+   */
+  emphasis: z.enum(['loud', 'medium', 'quiet']).optional().describe("The button's rank: loud (solid), medium (raised) or quiet (ghost). Not with variant."),
+
+  /**
+   * A square button holding only an icon. Needs an accessible name.
+   */
+  iconOnly: z.boolean().optional().default(false).describe('Square button holding only an icon; needs aria-label'),
+
+  /**
+   * Expands the button to fill its container. Ignored when iconOnly is set.
+   */
+  fullWidth: z.boolean().optional().default(false).describe('Expands the button to fill its container'),
+
+  /**
    * Alignment of the tooltip relative to the button
    * @default 'center'
    */

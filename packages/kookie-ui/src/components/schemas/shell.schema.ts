@@ -123,6 +123,7 @@ export const ShellRootSchema = z
       .union([z.literal('full'), z.literal('auto'), z.string(), z.number()])
       .default('full')
       .describe('Height of the frame. `full` is 100dvh, with 100vh where dvh is not supported.'),
+    size: z.enum(['1', '2', '3']).default('2').describe('Index of the pane chrome and the Sidebar rows in it'),
     className: z.string().optional().describe('Additional CSS class name'),
     style: StyleSchema,
     children: z.any().optional().describe('The Shell parts, and anything else, rendered in order'),

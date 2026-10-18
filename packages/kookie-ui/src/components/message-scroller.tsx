@@ -44,6 +44,7 @@ import { useComposedRefs } from 'radix-ui/internal';
 
 import { IconButton, type IconButtonProps } from './icon-button.js';
 import { useScrollEdges } from '../hooks/use-scroll-edges.js';
+import type { ButtonRankProps } from './button.js';
 
 interface RootProps extends React.ComponentPropsWithoutRef<'div'> {
   /**
@@ -128,7 +129,8 @@ const Item = React.forwardRef<HTMLDivElement, ItemProps>(({ className, ...props 
 ));
 Item.displayName = 'MessageScroller.Item';
 
-type ButtonProps = Omit<IconButtonProps, 'aria-label' | 'aria-labelledby'> & {
+type ButtonProps = Omit<IconButtonProps, 'aria-label' | 'aria-labelledby' | 'variant' | 'emphasis'> &
+  ButtonRankProps & {
   /** Accessible name, in your words. Default "Jump to the latest". */
   'aria-label'?: string;
   /** `end` jumps to the latest message (default); `start` to the first. */

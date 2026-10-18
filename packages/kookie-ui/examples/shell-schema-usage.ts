@@ -40,7 +40,6 @@ const validatedRootProps = parseShellRootProps(rootProps);
 const untouchedSidebarProps: ShellSidebarProps = {
   presentation: { initial: 'overlay', sm: 'fixed' },
   expandedSize: 288,
-  thinSize: 64,
 };
 
 const validatedUntouchedSidebar = parseShellSidebarProps(untouchedSidebarProps);
@@ -48,9 +47,8 @@ const validatedUntouchedSidebar = parseShellSidebarProps(untouchedSidebarProps);
 // Example 3: a Sidebar with a responsive starting state. The object is the
 // answer at each breakpoint until a user changes the state.
 const responsiveSidebarProps: ShellSidebarProps = {
-  defaultState: { initial: 'collapsed', sm: 'thin', lg: 'expanded' },
+  defaultState: { initial: 'collapsed', lg: 'expanded' },
   presentation: { initial: 'overlay', sm: 'fixed' },
-  toggleModes: 'both',
   onStateChange: (state, { reason }) => console.log('Sidebar state:', state, reason),
 };
 

@@ -119,17 +119,6 @@ export const BaseButtonSchema = z
       .describe('Loading state that shows a spinner and disables interaction'),
 
     /**
-     * Full width mode that expands the button to fill its container
-     * Useful for mobile layouts and form submissions
-     * @default false
-     */
-    fullWidth: z
-      .boolean()
-      .optional()
-      .default(false)
-      .describe('Full width mode that expands the button to fill its container'),
-
-    /**
      * Material type for visual rendering and depth effects
      * Controls how the button renders its visual elements
      */
