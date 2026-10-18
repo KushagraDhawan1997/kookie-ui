@@ -5,7 +5,8 @@
  *
  * `--radius-*`         CONTROLS & MARKS — buttons, inputs, checkboxes, badges,
  *                      switches, tabs. These scale aggressively with the theme
- *                      and opt into `--radius-full` to become pills.
+ *                      and opt into `--radius-full` to become pills, through
+ *                      `--radius-pill-*`.
  *
  * `--radius-surface-*` SURFACES — cards, dialogs, popovers, menus, tables,
  *                      callouts. These damp as the theme grows and never go
@@ -36,6 +37,21 @@
   --radius-10: calc(40px * var(--scaling) * var(--radius-factor));
   --radius-11: calc(48px * var(--scaling) * var(--radius-factor));
   --radius-12: calc(56px * var(--scaling) * var(--radius-factor));
+
+  /* Controls that turn into a pill when the theme radius is `full`. Use these instead of
+     repeating `max(var(--radius-N), var(--radius-full))` in each component. */
+  --radius-pill-1: max(var(--radius-1), var(--radius-full));
+  --radius-pill-2: max(var(--radius-2), var(--radius-full));
+  --radius-pill-3: max(var(--radius-3), var(--radius-full));
+  --radius-pill-4: max(var(--radius-4), var(--radius-full));
+  --radius-pill-5: max(var(--radius-5), var(--radius-full));
+  --radius-pill-6: max(var(--radius-6), var(--radius-full));
+  --radius-pill-7: max(var(--radius-7), var(--radius-full));
+  --radius-pill-8: max(var(--radius-8), var(--radius-full));
+  --radius-pill-9: max(var(--radius-9), var(--radius-full));
+  --radius-pill-10: max(var(--radius-10), var(--radius-full));
+  --radius-pill-11: max(var(--radius-11), var(--radius-full));
+  --radius-pill-12: max(var(--radius-12), var(--radius-full));
 
   /* Surfaces — same ramp, damped factor, no pill */
   --radius-surface-1: calc(6px * var(--scaling) * var(--radius-surface-factor));

@@ -150,11 +150,11 @@
   --progress-slider-radius-4: var(--radius-4);
 
   /* Outlier radius for size 5 to 9. */
-  /* --progress-slider-radius-5: max(var(--radius-1), var(--radius-full)); */
-  /* --progress-slider-radius-6: max(var(--radius-2), var(--radius-full)); */
-  /* --progress-slider-radius-7: max(var(--radius-3), var(--radius-full)); */
-  /* --progress-slider-radius-8: max(var(--radius-4), var(--radius-full)); */
-  /* --progress-slider-radius-9: max(var(--radius-5), var(--radius-full)); */
+  /* --progress-slider-radius-5: var(--radius-pill-1); */
+  /* --progress-slider-radius-6: var(--radius-pill-2); */
+  /* --progress-slider-radius-7: var(--radius-pill-3); */
+  /* --progress-slider-radius-8: var(--radius-pill-4); */
+  /* --progress-slider-radius-9: var(--radius-pill-5); */
 
   /* Size multipliers */
   --size-multiplier-small: 0.75;
