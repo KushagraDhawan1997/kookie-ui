@@ -1,3 +1,44 @@
+## [0.14.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.13.3...v0.14.0) (2026-10-18)
+
+New defaults and new names. Everything that is going away still works, warns once in development, and is removed in 0.15.0.
+
+### Visual changes
+
+* **variants:** `raised` (renamed from `classic`) is the default wherever it exists: Button, IconButton, the toggle buttons, Checkbox, Radio, RadioGroup, Avatar, Badge, Card, CheckboxCards, RadioCards, Accordion, Callout, TextField, TextArea, the Select and Combobox triggers, UserCard and the Chatbar box. Kbd was already raised.
+* **colour:** Badge, Avatar, Code, Callout and UserCard rest gray. `color` picks a category when it means something. Button and Link keep the accent.
+* **theme:** `Theme` defaults to a gray accent, gray grays and solid material. Radius is unchanged.
+* **menus:** DropdownMenu, ContextMenu, Select and Combobox lists use the soft highlight, and the solid one under `prefers-contrast: more`.
+
+### Features
+
+* **button:** `iconOnly` on Button and ToggleButton draws the square icon button and requires an accessible name. IconButton and ToggleIconButton are those two with `iconOnly` set.
+* **sizes:** TextField, TextArea, Select and the Combobox field take size 4, the same height as Button size 4. Tabs and TabNav take 1–4, and Navbar 1–4. A Combobox list stops at size 3.
+* **material:** Tabs, TabNav, Popover, SegmentedControl, the Select trigger, CheckboxCards and RadioCards take `material`.
+* **menus:** `DropdownMenu.Virtual` and `ContextMenu.Virtual`, a virtualised list that keeps its menu's size, highlight and material.
+* **variants:** RadioGroup takes Radio's variants, UserCard's `avatarVariant` takes Avatar's, and CheckboxCards and RadioCards take Card's.
+* **tokens:** `--heading-font-weight` (bold by default) sets every Heading's weight. `--raised-*` replaces `--classic-*`.
+
+### Bug Fixes
+
+* **segmented control:** `panelBackground` reaches the stylesheet. Before, it set a class nothing read.
+* **fields:** error messages drop `aria-live`, which conflicted with `role="alert"`.
+
+### Deprecated (removed in 0.15.0)
+
+* `variant="classic"`: use `variant="raised"`. `--classic-*` tokens: use `--raised-*`.
+* `variant="override"` on Button: style it with `className`, `style` or its CSS variables.
+* `variant` on DropdownMenu, ContextMenu, Select and Combobox content, and on SegmentedControl.
+* `panelBackground`: use `material`.
+* `isInvalid` on TextField and TextArea: use `error`.
+* `fullWidth` on IconButton.
+* `Callout`: use `Notice`.
+* `AppBar`: use `Toolbar`, in `Shell.Header` for an app header.
+* The `UserCard` export: the pattern moves to a docs block.
+
+### How to adopt
+
+Search for `classic`, `panelBackground`, `isInvalid`, `Callout`, `AppBar` and `UserCard`, and replace each as listed above. To keep the old look while you do, set `accentColor`, `grayColor` and `material` on your root `Theme`, and `color` or `variant` where a component should not rest gray or raised.
+
 ## [0.13.3](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.13.2...v0.13.3) (2026-10-18)
 
 Fixes only. Nothing to change in your code. The one visible difference: disabled tabs and accordion triggers now look disabled.
