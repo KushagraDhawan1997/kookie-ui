@@ -21,7 +21,7 @@ import { z } from 'zod';
 
 // Common types
 const PaneModeSchema = z.enum(['expanded', 'collapsed']).describe('Pane state mode');
-const SidebarModeSchema = z.enum(['collapsed', 'thin', 'expanded']).describe('Sidebar state');
+const SidebarModeSchema = z.enum(['collapsed', 'expanded']).describe('Sidebar state');
 const PresentationValueSchema = z.enum(['fixed', 'overlay', 'stacked']).describe('Presentation mode');
 const _BreakpointSchema = z.enum(['initial', 'xs', 'sm', 'md', 'lg', 'xl']).describe('Responsive breakpoint');
 const PaneTargetSchema = z.enum(['left', 'rail', 'panel', 'sidebar', 'inspector', 'bottom']).describe('Pane target. `left` is deprecated: use `rail`.');
@@ -188,8 +188,6 @@ export const ShellSidebarSchema = z
     expandedSize: z.number().default(288).describe('Open width in pixels'),
     minSize: z.number().default(200).describe('Minimum width when resizing'),
     maxSize: z.number().default(400).describe('Maximum width when resizing'),
-    thinSize: z.number().default(64).describe('Width in the thin state'),
-    toggleModes: z.enum(['both', 'single']).default('both').describe('`both` goes collapsed, thin, expanded; `single` goes between collapsed and one open state'),
     resizable: z.boolean().default(false).describe('Whether the sidebar can be resized'),
     collapsible: z.boolean().default(true).describe('Whether a double-click on the handle closes the sidebar'),
   })

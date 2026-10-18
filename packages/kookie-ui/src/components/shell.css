@@ -106,7 +106,6 @@
   --rt-shell-offset: initial;
   --rt-shell-handle: initial;
   --rt-shell-start: initial;
-  --rt-shell-thin: initial;
 
   display: flex;
   flex-direction: column;
@@ -164,11 +163,6 @@
   inset-inline-start: var(--rt-shell-offset, 0px);
   inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
   max-inline-size: var(--rt-shell-cap, none);
-}
-
-.rt-ShellSidebar[data-thin] {
-  inline-size: var(--sidebar-thin-size, 64px);
-  --rt-shell-thin: none;
 }
 
 .rt-ShellInspector {
@@ -251,11 +245,6 @@
   display: none;
 }
 
-.rt-ShellSidebar[data-state='auto'][data-auto='thin'] {
-  inline-size: var(--sidebar-thin-size, 64px);
-  --rt-shell-thin: none;
-}
-
 /* initial: below 520px, and the base every larger breakpoint overrides. */
 .rt-ShellPane[data-presentation-initial='fixed'],
 .rt-ShellRail[data-presentation-initial='fixed'] ~ .rt-ShellPanel[data-presentation-follows] {
@@ -301,18 +290,8 @@
 }
 
 .rt-ShellPane[data-state='auto'][data-auto-initial='open'],
-.rt-ShellPane[data-state='auto'][data-auto-initial='thin'] {
-  display: flex;
-}
-
 .rt-ShellSidebar[data-state='auto'][data-auto-initial='open'] {
   inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
-  --rt-shell-thin: initial;
-}
-
-.rt-ShellSidebar[data-state='auto'][data-auto-initial='thin'] {
-  inline-size: var(--sidebar-thin-size, 64px);
-  --rt-shell-thin: none;
 }
 
 @media (min-width: 520px) {
@@ -360,19 +339,10 @@
   }
 
   .rt-ShellPane[data-state='auto'][data-auto-xs='open'],
-  .rt-ShellPane[data-state='auto'][data-auto-xs='thin'] {
-    display: flex;
-  }
-
   .rt-ShellSidebar[data-state='auto'][data-auto-xs='open'] {
     inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
-    --rt-shell-thin: initial;
   }
 
-  .rt-ShellSidebar[data-state='auto'][data-auto-xs='thin'] {
-    inline-size: var(--sidebar-thin-size, 64px);
-    --rt-shell-thin: none;
-  }
 }
 
 @media (min-width: 768px) {
@@ -420,19 +390,10 @@
   }
 
   .rt-ShellPane[data-state='auto'][data-auto-sm='open'],
-  .rt-ShellPane[data-state='auto'][data-auto-sm='thin'] {
-    display: flex;
-  }
-
   .rt-ShellSidebar[data-state='auto'][data-auto-sm='open'] {
     inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
-    --rt-shell-thin: initial;
   }
 
-  .rt-ShellSidebar[data-state='auto'][data-auto-sm='thin'] {
-    inline-size: var(--sidebar-thin-size, 64px);
-    --rt-shell-thin: none;
-  }
 }
 
 @media (min-width: 1024px) {
@@ -480,19 +441,10 @@
   }
 
   .rt-ShellPane[data-state='auto'][data-auto-md='open'],
-  .rt-ShellPane[data-state='auto'][data-auto-md='thin'] {
-    display: flex;
-  }
-
   .rt-ShellSidebar[data-state='auto'][data-auto-md='open'] {
     inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
-    --rt-shell-thin: initial;
   }
 
-  .rt-ShellSidebar[data-state='auto'][data-auto-md='thin'] {
-    inline-size: var(--sidebar-thin-size, 64px);
-    --rt-shell-thin: none;
-  }
 }
 
 @media (min-width: 1280px) {
@@ -540,19 +492,10 @@
   }
 
   .rt-ShellPane[data-state='auto'][data-auto-lg='open'],
-  .rt-ShellPane[data-state='auto'][data-auto-lg='thin'] {
-    display: flex;
-  }
-
   .rt-ShellSidebar[data-state='auto'][data-auto-lg='open'] {
     inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
-    --rt-shell-thin: initial;
   }
 
-  .rt-ShellSidebar[data-state='auto'][data-auto-lg='thin'] {
-    inline-size: var(--sidebar-thin-size, 64px);
-    --rt-shell-thin: none;
-  }
 }
 
 @media (min-width: 1640px) {
@@ -600,19 +543,10 @@
   }
 
   .rt-ShellPane[data-state='auto'][data-auto-xl='open'],
-  .rt-ShellPane[data-state='auto'][data-auto-xl='thin'] {
-    display: flex;
-  }
-
   .rt-ShellSidebar[data-state='auto'][data-auto-xl='open'] {
     inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
-    --rt-shell-thin: initial;
   }
 
-  .rt-ShellSidebar[data-state='auto'][data-auto-xl='thin'] {
-    inline-size: var(--sidebar-thin-size, 64px);
-    --rt-shell-thin: none;
-  }
 }
 
 /* ── Peek ──────────────────────────────────────────────────────────────────── */
@@ -736,7 +670,7 @@
   background: transparent;
   /* hit target size, adjustable per media */
   --resizer-hit: var(--space-3);
-  display: var(--rt-shell-thin, var(--rt-shell-handle, flex));
+  display: var(--rt-shell-handle, flex);
   align-items: center;
   justify-content: center;
   overflow: visible;
@@ -826,7 +760,3 @@
   background-color: var(--focus-8);
 }
 
-/* Hide the handle while its pane is a thin sidebar. */
-.rt-ShellSidebar[data-thin] .rt-ShellResizer {
-  display: none;
-}

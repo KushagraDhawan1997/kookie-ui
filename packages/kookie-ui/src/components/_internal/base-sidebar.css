@@ -8,44 +8,7 @@
 /* Removed Sidebar Provider (unused) */
 
 /* Sidebar Root Container */
-.rt-SidebarRoot {
-  --sidebar-base-border-radius: 0; /* Default to no radius */
-
-  width: 100%;
-  height: 100%;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-
-  /* Make sure Theme wrapper also participates in flex layout */
-  & :where(.radix-themes) {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    height: 100%;
-  }
-}
-
 /* Sidebar Container */
-.rt-SidebarContainer {
-  /*
-   * This surface blurs its own backdrop, which makes it the backdrop root for
-   * everything inside it. A component nested here would re-blur an already
-   * blurred, already flat surface for the full cost of another blur pass, so
-   * switch the component filter off for the subtree. See tokens/blur.css.
-   */
-  --backdrop-filter-components-enabled: none;
-  --sidebar-base-border-radius: 0; /* Default to no radius */
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  background-color: var(--color-panel);
-  backdrop-filter: var(--backdrop-filter-panel);
-  border-radius: inherit;
-  flex: 1;
-}
-
 /* Sidebar Header */
 .rt-SidebarHeader {
   display: flex;

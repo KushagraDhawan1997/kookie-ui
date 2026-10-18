@@ -255,11 +255,10 @@ export function paneAttributes(pane: PaneController, presentationAttributes: Rec
   const { state, value, presentation, shown } = pane;
   return {
     ...presentationAttributes,
-    'data-state': state === 'thin' ? 'open' : state,
-    'data-thin': state === 'thin' ? '' : undefined,
+    'data-state': state,
     ...(state === 'auto' ? tableAttributes('auto', pane.autoTable) : {}),
     'data-presentation': presentation,
-    'data-mode': value === undefined ? undefined : value === 'closed' ? 'collapsed' : value === 'thin' ? 'thin' : 'expanded',
+    'data-mode': value === undefined ? undefined : value === 'closed' ? 'collapsed' : 'expanded',
     // Kept for stylesheets written against 0.7: set while a stacked pane is open.
     'data-open': presentation === 'stacked' && shown ? '' : undefined,
     'data-peek': pane.peeking ? '' : undefined,

@@ -5,7 +5,7 @@ export type PresentationValue = 'fixed' | 'overlay' | 'stacked';
 export type ResponsivePresentation = PresentationValue | Partial<Record<'initial' | 'xs' | 'sm' | 'md' | 'lg' | 'xl', PresentationValue>>;
 
 export type PaneMode = 'expanded' | 'collapsed';
-export type SidebarMode = 'collapsed' | 'thin' | 'expanded';
+export type SidebarMode = 'collapsed' | 'expanded';
 
 export type ResponsiveMode = PaneMode | Partial<Record<'initial' | 'xs' | 'sm' | 'md' | 'lg' | 'xl', PaneMode>>;
 
