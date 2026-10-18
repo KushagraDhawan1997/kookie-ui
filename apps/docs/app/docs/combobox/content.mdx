@@ -93,7 +93,7 @@ The Root component manages state and provides context to all child components.
 
 | Prop | Type | Description |
 | ---- | ---- | ----------- |
-| `size` | `'1' \| '2' \| '3'` | Combobox density: 1 (24px) for toolbars, 2 (32px) for standard forms, 3 (40px) for prominent selections. Supports responsive objects |
+| `size` | `'1' \| '2' \| '3' \| '4'` | Combobox density: 1 (24px) for toolbars, 2 (32px) for standard forms, 3 (40px) for prominent selections, 4 (48px) to match Button size 4; its list stops at size 3. Supports responsive objects |
 | `value` | `string \| null` | Controlled selection value |
 | `defaultValue` | `string \| null` | Initial selection value for uncontrolled usage |
 | `onValueChange` | `(value: string \| null) => void` | Callback fired when selection changes |
@@ -140,7 +140,6 @@ The Content component renders the dropdown surface containing the search input a
 
 | Prop | Type | Description |
 | ---- | ---- | ----------- |
-| `variant` | `'solid' \| 'soft'` | Content surface style: solid for opaque standard background, soft for subtle content-heavy interfaces |
 | `size` | `'1' \| '2' \| '3'` | Override size from Root. Affects padding and item height |
 | `color` | `AccentColor` | Semantic color for items. Falls back to Root color, then theme accent |
 | `material` | `'solid' \| 'translucent'` | Surface background. Falls back to the Theme material |
@@ -155,7 +154,7 @@ The Input component renders the search field inside Content.
 
 | Prop | Type | Description |
 | ---- | ---- | ----------- |
-| `variant` | `'raised' \| 'surface' \| 'soft' \| 'outline' \| 'ghost'` | Input field style. Defaults to 'surface' for solid Content, 'soft' for soft Content |
+| `variant` | `'raised' \| 'surface' \| 'soft' \| 'outline' \| 'ghost'` | Input field style. Defaults to 'soft' |
 | `placeholder` | `string` | Search input placeholder. Overrides searchPlaceholder from Root |
 | `startAdornment` | `ReactNode` | Icon or element before input (e.g., search icon) |
 | `endAdornment` | `ReactNode` | Icon or element after input |

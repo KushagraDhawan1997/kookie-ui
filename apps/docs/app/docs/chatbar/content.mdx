@@ -80,7 +80,7 @@ Chatbar is a compound component with the following parts:
 | `readOnly` | `boolean` | - | Allows selection; blocks editing, submitting and adding attachments |
 | `onSubmit` | `(payload: Chatbar.ChatbarSubmitPayload) => void` | - | Called with text and attachments. Only fires when there is text or at least one attachment |
 | `size` | `'1' \| '2' \| '3'` | `'2'` | Component density: 1 for compact, 2 for standard, 3 for prominent |
-| `variant` | `'surface' \| 'outline' \| 'raised' \| 'ghost' \| 'soft'` | `'surface'` | Visual style variant |
+| `variant` | `'surface' \| 'outline' \| 'raised' \| 'ghost' \| 'soft'` | `'raised'` | Visual style variant |
 | `color` | `AccentColor` | - | Accent color for focus states and send button |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | - | Corner radius override |
 | `material` | `'solid' \| 'translucent'` | - | Background appearance for layered interfaces |
@@ -221,7 +221,7 @@ Elevated with shadow for maximum visual impact and prominent chat interfaces.
 
 ### Surface
 
-Subtle border with background fill. The default variant for most contexts.
+Subtle border with background fill.
 
 ```tsx
 <Chatbar.Root variant="surface">

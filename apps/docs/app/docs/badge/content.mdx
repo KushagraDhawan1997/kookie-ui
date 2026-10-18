@@ -48,8 +48,8 @@ export function MyBadges() {
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
 | `size` | `'1' \| '2' \| '3' \| '4'` | `'1'` | Controls the size of the badge. Supports responsive values. |
-| `variant` | `'solid' \| 'soft' \| 'surface' \| 'outline' \| 'ghost' \| 'raised'` | `'soft'` | The visual style of the badge. |
-| `color` | `AccentColor` | - | The accent color. Uses theme accent if not specified. |
+| `variant` | `'solid' \| 'soft' \| 'surface' \| 'outline' \| 'ghost' \| 'raised'` | `'raised'` | The visual style of the badge. |
+| `color` | `AccentColor` | `'gray'` | Rests gray. Set a color to mark a category. |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | - | Override the default border radius. |
 | `tooltip` | `React.ReactNode` | - | Content to display in a tooltip on hover. |
 | `tooltipSide` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | Position of the tooltip. |
@@ -68,7 +68,7 @@ Bold, filled background for high emphasis.
 
 ### Soft
 
-The default variant with a subtle tinted background.
+A subtle tinted background.
 
 ```tsx
 <Badge variant="soft" color="blue">Soft</Badge>

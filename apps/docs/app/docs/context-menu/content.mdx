@@ -90,7 +90,6 @@ The context menu is composed of several parts:
 | Prop               | Type                         | Default         | Description                                                        |
 | ------------------ | ---------------------------- | --------------- | ------------------------------------------------------------------ |
 | `size`             | `'1' \| '2' \| Responsive`   | `'2'`           | Size of the menu items                                             |
-| `variant`          | `'solid' \| 'soft'`          | `'solid'`       | Visual style of the menu                                           |
 | `color`            | `AccentColor`                | —               | Accent color for highlighted items. Inherits from theme if not set |
 | `material`         | `'solid' \| 'translucent'`   | —               | Background appearance. Inherits from the nearest Theme if not set  |
 | `virtualized`      | `boolean`                    | `false`         | Skips the ScrollArea so a `VirtualMenu` scrolls itself             |
@@ -148,7 +147,6 @@ The context menu is composed of several parts:
 | Prop           | Type                        | Default   | Description                                              |
 | -------------- | --------------------------- | --------- | -------------------------------------------------------- |
 | `size`         | `'1' \| '2' \| Responsive`  | Inherited | Size of the submenu. Inherits from the parent content    |
-| `variant`      | `'solid' \| 'soft'`         | Inherited | Visual style of the submenu                              |
 | `color`        | `AccentColor`               | Inherited | Accent color for highlighted items                       |
 | `material`     | `'solid' \| 'translucent'`  | Inherited | Background appearance                                    |
 | `virtualized`  | `boolean`                   | `false`   | Skips the ScrollArea so a `VirtualMenu` scrolls itself   |
@@ -315,7 +313,7 @@ export function CanvasMenu() {
 
 ### Nested Actions
 
-Submenus open to the side and inherit the parent's size, variant, color and material. Pass props to `SubContent` to override them.
+Submenus open to the side and inherit the parent's size, color and material. Pass props to `SubContent` to override them.
 
 ```tsx showLineNumbers
 <ContextMenu.Root>

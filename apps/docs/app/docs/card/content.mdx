@@ -49,7 +49,7 @@ export function MyCard() {
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
 | `size` | `'1' \| '2' \| '3' \| '4' \| '5'` | `'1'` | Controls the padding and spacing inside the card. Supports responsive values. |
-| `variant` | `'surface' \| 'outline' \| 'raised' \| 'ghost' \| 'soft'` | `'outline'` | The visual style of the card. |
+| `variant` | `'surface' \| 'outline' \| 'raised' \| 'ghost' \| 'soft'` | `'raised'` | The visual style of the card. |
 | `material` | `'solid' \| 'translucent'` | - | Controls the material appearance. Translucent adds backdrop blur. |
 | `flush` | `boolean` | `false` | When true, removes padding for full-bleed content. |
 | `asChild` | `boolean` | `false` | Merge props onto the child element using Radix Slot. |
@@ -68,7 +68,7 @@ A subtle elevated card with a light background.
 
 ### Outline
 
-The default variant with a visible border.
+A visible border.
 
 ```tsx
 <Card variant="outline">

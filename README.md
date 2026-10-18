@@ -20,14 +20,14 @@ Kookie UI extends Radix Themes with:
 - **Shell architecture** — Complete layout engine with 7 slots (Header, Rail, Panel, Sidebar, Content, Inspector, Bottom), responsive presentation modes, and resize handles
 - **Navbar component** — Semantic slots for logo, navigation, and actions with fixed/sticky/static positioning
 - **Built-in tooltip support** — Native `tooltip` prop on Button and IconButton eliminates wrapper components
-- **Enhanced accessibility** — RTL layout support, Windows High Contrast mode, improved reduced motion handling
+- **Enhanced accessibility** — RTL layout support, Windows High Contrast mode, and no motion beyond busy indicators
 - **Extended token systems** — 12-step blur scale, 9-step opacity scale, enhanced 3D button effects
 
 Kookie UI started from Radix Themes, and its API has since diverged. Check the changelog before moving code across.
 
 ## Philosophy
 
-Kookie UI is intentionally boring. It doesn't try to reinvent interface design or compete with design trends. Instead, it codifies the non-negotiables: spacing systems, semantic colors, accessible defaults, predictable motion, and interaction rules that behave consistently.
+Kookie UI is intentionally boring. It doesn't try to reinvent interface design or compete with design trends. Instead, it codifies the non-negotiables: spacing systems, semantic colors, accessible defaults, and interaction rules that behave consistently.
 
 The idea is simple: once the basics are solid, teams can focus on the parts of the product that actually make it unique. Patterns handle the baseline, components enforce the patterns, and the rest of your product can grow without carrying that overhead.
 
@@ -35,13 +35,12 @@ The result isn't magic or perfection. It's a foundation you can trust just enoug
 
 ## What's Included
 
-Kookie UI includes the same foundations you'd expect — spacing tokens, color tokens, motion tokens — but rebuilt systematically. On top of that, it ships with components that apply those rules consistently, so teams don't have to remember them case by case.
+Kookie UI includes the same foundations you'd expect — spacing tokens and color tokens — but rebuilt systematically. On top of that, it ships with components that apply those rules consistently, so teams don't have to remember them case by case.
 
 - **Size steps** shared by controls, so `size="2"` means the same height across them
 - **Shell architecture** with structural patterns for sidebars, panels, and toolbars that actually work together
 - **Material** for surfaces: solid or translucent
 - **Consistent sizing** where cards, buttons, dropdowns, selects, and avatars all follow the same scale
-- **Unified motion** with transition patterns that work consistently across components
 - **Enhanced accessibility** with native tooltip support and stricter aria-label enforcement
 
 ## Components
