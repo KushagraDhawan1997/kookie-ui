@@ -24,6 +24,7 @@ const sidebarPropDefs = {
   ...asChildPropDef,
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
   variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'outline' },
+  /** @deprecated Removed in 0.15.0. Rows use the soft highlight, and the solid one under `prefers-contrast: more`. */
   menuVariant: {
     type: 'enum',
     className: 'rt-menu-variant',

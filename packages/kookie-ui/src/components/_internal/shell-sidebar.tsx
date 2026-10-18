@@ -10,14 +10,17 @@ import { splitHandles, useResizablePane, type SizeChangeMeta } from './shell-res
 import { useInsetRegistration, warnOnce, type PaneValue } from './shell-store.js';
 import { navigationRest, startAnchoredGrowth, withoutRemovedPaneProps } from './shell-rest.js';
 import { readBreakpoint } from '../../hooks/use-breakpoint.js';
+import { warnDeprecated } from '../../helpers/warn-deprecated.js';
+import { PaneChromeScope } from './pane-chrome.js';
 import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, Responsive, SidebarMode } from '../shell.types.js';
 
 type SidebarStateChangeMeta = { reason: 'init' | 'toggle' | 'responsive' | 'dismiss' };
 type SidebarControlledProps = { state: Responsive<SidebarMode>; onStateChange?: (state: SidebarMode, meta: SidebarStateChangeMeta) => void; defaultState?: never };
 type SidebarUncontrolledProps = { defaultState?: SidebarMode | Partial<Record<Breakpoint, SidebarMode>>; onStateChange?: (state: SidebarMode, meta: SidebarStateChangeMeta) => void; state?: never };
 type SidebarPublicProps = PaneBaseProps & {
+  /** @deprecated Thin mode is removed in 0.15.0. Use `Shell.Rail`. */
   thinSize?: number;
-  /** `both` toggles through collapsed, thin and expanded; `single` between collapsed and the default. */
+  /** `both` (deprecated with thin mode; `single` is the 0.15.0 behaviour) toggles through collapsed, thin and expanded; `single` between collapsed and the default. */
   toggleModes?: 'both' | 'single';
   size?: number | string;
   defaultSize?: number | string;
@@ -109,6 +112,12 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
   });
   useInsetRegistration('sidebar', inset);
 
+  if (props.thinSize !== undefined || pane.value === 'thin') {
+    warnDeprecated(
+      "Shell.Sidebar's thin mode is deprecated and will be removed in 0.15.0. Use Shell.Rail for a column of icons, and toggleModes=\"single\" so the toggle skips thin.",
+    );
+  }
+
   React.useEffect(() => {
     if (snapPoints !== undefined || collapseThreshold !== undefined || paneId !== undefined || persistence !== undefined) {
       warnOnce('Shell.Sidebar: `snapPoints`, `collapseThreshold`, `paneId` and `persistence` are deprecated and are removed in 1.0. Keep the size in your own state with `size`/`onSizeChange`.');
@@ -184,7 +193,9 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
         } as CSSPropertiesWithVars
       }
     >
-      <div className="rt-ShellSidebarContent">{content}</div>
+      <div className="rt-ShellSidebarContent">
+        <PaneChromeScope>{content}</PaneChromeScope>
+      </div>
       {handle}
     </div>
   );

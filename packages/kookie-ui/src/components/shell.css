@@ -207,6 +207,12 @@
   gap: var(--space-2);
 }
 
+/* Shell.Scroll takes the room a pane's header and footer leave, and scrolls inside it. */
+.rt-ShellScroll {
+  flex: 1;
+  min-height: 0;
+}
+
 /* Closed is closed, in every posture: out of the layout, the tab order and the accessibility tree. */
 .rt-ShellPane[data-state='closed'] {
   display: none;

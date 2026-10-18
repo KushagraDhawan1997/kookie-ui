@@ -650,7 +650,8 @@
      menu item or TextField of size N. Content is a BaseMenuContent, so it takes
      every size value from base-menu.css. Header and Footer are not, so they
      restate base-menu's values here; keep the two in step. */
-  .rt-SidebarContainer {
+  .rt-SidebarContainer,
+  .rt-ShellPaneChrome {
     &:where(.rt-r-size-1) {
       --sidebar-base-padding: var(--space-3);
     }
@@ -1028,6 +1029,110 @@
     /* In soft variant, lift muted text a step while keeping the hierarchy */
     & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
       color: var(--gray-11) !important;
+    }
+  }
+}
+
+/* Rows use the soft highlight. When the system asks for more contrast, they take the solid one. */
+@media (prefers-contrast: more) {
+  .rt-SidebarHeader:where(.rt-menu-variant-soft),
+  .rt-SidebarContent:where(.rt-menu-variant-soft),
+  .rt-SidebarFooter:where(.rt-menu-variant-soft) {
+    /* Sub-trigger open state - match base menu */
+    & :where(.rt-SidebarMenuSubTrigger[data-state='open']) {
+      /* Base state: solid gray for solid panels */
+      background-color: var(--gray-3);
+
+      /* Theme-level translucent override */
+      :where([data-panel-background='translucent']) & {
+        background-color: var(--gray-a3);
+      }
+
+      /* Component-level overrides (higher specificity) */
+      &:where([data-panel-background='solid']) {
+        background-color: var(--gray-3);
+        backdrop-filter: none;
+        --backdrop-filter-components: none;
+      }
+
+      &:where([data-panel-background='translucent']) {
+        background-color: var(--gray-a3);
+      }
+    }
+
+    /* Hover/highlighted state for solid variant - EXACT match to base menu */
+    & :where(.rt-SidebarMenuButton:where([data-highlighted]):not([data-disabled])) {
+      background-color: var(--accent-solid);
+      color: var(--accent-solid-contrast);
+
+      & :where(.rt-BaseMenuSubTriggerIcon) {
+        color: var(--accent-solid-contrast);
+      }
+
+      /* Force all text elements to inherit hover color, including those with color="gray" */
+      & :where(.rt-Text) {
+        color: inherit !important;
+      }
+
+      /* Also target any element with data-accent-color="gray" */
+      & :where([data-accent-color='gray']:not(.rt-Badge)) {
+        color: inherit !important;
+      }
+
+      /* FIX: Ensure badges maintain their own styling and don't inherit hover colors */
+      & :where(.rt-Badge) {
+        color: var(--accent-solid-badge-contrast) !important;
+        background-color: var(--accent-solid-badge) !important;
+      }
+    }
+
+    @media (hover: hover) {
+      & :where(.rt-SidebarMenuButton:where(:hover):not([data-disabled])) {
+        background-color: var(--accent-solid);
+        color: var(--accent-solid-contrast);
+  
+        & :where(.rt-BaseMenuSubTriggerIcon) {
+          color: var(--accent-solid-contrast);
+        }
+  
+        /* Force all text elements to inherit hover color, including those with color="gray" */
+        & :where(.rt-Text) {
+          color: inherit !important;
+        }
+  
+        /* Also target any element with data-accent-color="gray" */
+        & :where([data-accent-color='gray']:not(.rt-Badge)) {
+          color: inherit !important;
+        }
+  
+        /* FIX: Ensure badges maintain their own styling and don't inherit hover colors */
+        & :where(.rt-Badge) {
+          color: var(--accent-solid-badge-contrast) !important;
+          background-color: var(--accent-solid-badge) !important;
+        }
+      }
+    }
+
+    /* Active navigation state for solid variant - same as highlighted */
+    & :where(.rt-SidebarMenuButton[data-active]) {
+      background-color: var(--accent-solid);
+      color: var(--accent-solid-contrast);
+      font-weight: var(--font-weight-medium);
+
+      /* Force all text elements to inherit active color */
+      & :where(.rt-Text) {
+        color: inherit !important;
+      }
+
+      & :where([data-accent-color='gray']:not(.rt-Badge)) {
+        color: inherit !important;
+      }
+
+      /* FIX: Ensure badges maintain their own styling and don't inherit active colors */
+      & :where(.rt-Badge) {
+        color: var(--accent-solid-badge-contrast) !important;
+        background-color: var(--accent-solid-badge) !important;
+      }
     }
   }
 }
