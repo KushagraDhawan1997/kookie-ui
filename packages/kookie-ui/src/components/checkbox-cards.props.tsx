@@ -1,4 +1,5 @@
 import { parseVariant } from '../helpers/parse-variant.js';
+import { cardPropDefs } from './card.props.js';
 import { asChildPropDef } from '../props/as-child.prop.js';
 import { colorPropDef } from '../props/color.prop.js';
 import { gridPropDefs } from './grid.props.js';
@@ -6,7 +7,8 @@ import { gridPropDefs } from './grid.props.js';
 import type { PropDef } from '../props/prop-def.js';
 
 const sizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] as const;
-const variants = ['raised', 'outline', 'ghost', 'soft', 'surface', 'classic'] as const;
+// The same list as Card: a selectable card looks like any other card.
+const variants = cardPropDefs.variant.values;
 const panelBackgrounds = ['solid', 'translucent'] as const;
 
 const checkboxCardsRootPropDefs = {

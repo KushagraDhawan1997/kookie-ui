@@ -1,11 +1,13 @@
 import { parseVariant } from '../helpers/parse-variant.js';
+import { baseRadioPropDefs } from './_internal/base-radio.props.js';
 import { asChildPropDef } from '../props/as-child.prop.js';
 import { colorPropDef } from '../props/color.prop.js';
 
 import type { PropDef } from '../props/prop-def.js';
 
 const sizes = ['1', '2', '3'] as const;
-const variants = ['raised', 'solid', 'soft', 'classic'] as const;
+// The same list as Radio: a group offers exactly what its items can draw.
+const variants = baseRadioPropDefs.variant.values;
 
 const radioGroupRootPropDefs = {
   ...asChildPropDef,

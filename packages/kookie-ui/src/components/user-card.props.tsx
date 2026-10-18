@@ -1,4 +1,5 @@
 import { parseVariant } from '../helpers/parse-variant.js';
+import { avatarPropDefs } from './avatar.props.js';
 import { asChildPropDef } from '../props/as-child.prop.js';
 import { accentColorPropDef } from '../props/color.prop.js';
 import { radiusPropDef } from '../props/radius.prop.js';
@@ -7,7 +8,8 @@ import type { PropDef } from '../props/prop-def.js';
 
 const sizes = ['1', '2', '3', '4'] as const;
 const variants = ['raised', 'ghost', 'surface', 'classic'] as const;
-const avatarVariants = ['solid', 'soft', 'surface', 'outline'] as const;
+// The same list as Avatar.
+const avatarVariants = avatarPropDefs.variant.values;
 const panelBackgrounds = ['solid', 'translucent'] as const;
 
 const userCardPropDefs = {
