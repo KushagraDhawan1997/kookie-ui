@@ -7,7 +7,7 @@ New defaults and new names. Everything that is going away still works, warns onc
 * **variants:** `raised` (renamed from `classic`) is the default wherever it exists: Button, IconButton, the toggle buttons, Checkbox, Radio, RadioGroup, Avatar, Badge, Card, CheckboxCards, RadioCards, Accordion, Callout, TextField, TextArea, the Select and Combobox triggers, UserCard and the Chatbar box. Kbd was already raised.
 * **colour:** Badge, Avatar, Code, Callout and UserCard rest gray. `color` picks a category when it means something. Button and Link keep the accent.
 * **theme:** `Theme` defaults to a gray accent, gray grays and solid material. Radius is unchanged.
-* **menus:** DropdownMenu, ContextMenu, Select and Combobox lists use the soft highlight, and the solid one under `prefers-contrast: more`.
+* **menus:** DropdownMenu, ContextMenu, Select, Combobox and Sidebar rows use the soft highlight, and the solid one under `prefers-contrast: more`.
 
 ### Features
 
@@ -17,6 +17,7 @@ New defaults and new names. Everything that is going away still works, warns onc
 * **menus:** `DropdownMenu.Virtual` and `ContextMenu.Virtual`, a virtualised list that keeps its menu's size, highlight and material.
 * **variants:** RadioGroup takes Radio's variants, UserCard's `avatarVariant` takes Avatar's, and CheckboxCards and RadioCards take Card's.
 * **tokens:** `--heading-font-weight` (bold by default) sets every Heading's weight. `--raised-*` replaces `--classic-*`.
+* **shell:** `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter` hold a pane's chrome. `Shell.Root size` (1–3) sets their index. Sidebar's menu parts work directly inside `Shell.Sidebar` and `Shell.Panel`, sized by the Shell, with no `Sidebar.Root`.
 
 ### Bug Fixes
 
@@ -33,11 +34,14 @@ New defaults and new names. Everything that is going away still works, warns onc
 * `fullWidth` on IconButton.
 * `Callout`: use `Notice`.
 * `AppBar`: use `Toolbar`, in `Shell.Header` for an app header.
+* `Sidebar.Root`, `Sidebar.Content`, `Sidebar.Header`, `Sidebar.Footer`: use `Shell.Sidebar` with `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter`.
+* `menuVariant` on Sidebar.
+* Sidebar thin mode (`presentation="thin"`, `layout="rail"`) and Shell.Sidebar's thin state and `thinSize`: use `Shell.Rail`.
 * The `UserCard` export: the pattern moves to a docs block.
 
 ### How to adopt
 
-Search for `classic`, `panelBackground`, `isInvalid`, `Callout`, `AppBar` and `UserCard`, and replace each as listed above. To keep the old look while you do, set `accentColor`, `grayColor` and `material` on your root `Theme`, and `color` or `variant` where a component should not rest gray or raised.
+Search for `classic`, `panelBackground`, `isInvalid`, `Callout`, `AppBar`, `UserCard`, `Sidebar.Root` and `thin`, and replace each as listed above. To keep the old look while you do, set `accentColor`, `grayColor` and `material` on your root `Theme`, and `color` or `variant` where a component should not rest gray or raised.
 
 ## [0.13.3](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.13.2...v0.13.3) (2026-10-18)
 

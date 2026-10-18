@@ -86,7 +86,7 @@ export const docsNavigation: DocsNavigationConfig = {
         },
         {
           href: '/docs/sidebar',
-          title: 'Sidebar (Presentation)',
+          title: 'Sidebar',
         },
         {
           href: '/docs/text',

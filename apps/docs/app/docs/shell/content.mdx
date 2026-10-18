@@ -48,6 +48,20 @@ On a window 768px or wider the sidebar sits in the frame and is open. Below 768p
 
 Every part is optional except `Shell.Content`. The Root renders every child in the order you write it, and each part takes its own place on the Root's grid. A part must therefore be a direct child of `Shell.Root`, or sit in a wrapper with `display: contents`; inside any other wrapper the wrapper takes the grid cell. Any other child is a grid item too: give it a place (`grid-area` or `position`), or it takes the first free cell.
 
+### Pane chrome
+
+`Shell.Sidebar` and `Shell.Panel` render anything. With these three parts they are a navigation column:
+
+```tsx showLineNumbers
+<Shell.Sidebar>
+  <Shell.PaneHeader>{/* logo, controls */}</Shell.PaneHeader>
+  <Shell.Scroll role="navigation" aria-label="Main">{/* Sidebar rows */}</Shell.Scroll>
+  <Shell.PaneFooter>{/* profile, settings */}</Shell.PaneFooter>
+</Shell.Sidebar>
+```
+
+`Shell.Scroll` takes the room the header and footer leave. The [Sidebar](/docs/sidebar) rows inside take the Root's `size`.
+
 A Panel with no `presentation` of its own takes the Rail's. In the server HTML it does so only when it comes after the Rail in the same parent; otherwise it follows the Rail once the page is hydrated.
 
 ## Props
@@ -57,6 +71,7 @@ A Panel with no `presentation` of its own takes the Rail's. In the server HTML i
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
 | `height` | `'full' \| 'auto' \| string \| number` | `'full'` | The height of the frame. `'full'` is `100dvh`, with `100vh` where `dvh` is not supported. |
+| `size` | `'1' \| '2' \| '3'` | `'2'` | The index of the pane chrome and the Sidebar rows in it. |
 | `children` | `ReactNode` | | The parts, and anything else. |
 
 ### Header
@@ -224,6 +239,8 @@ They are not called on mount, and not called when the window crosses a breakpoin
 
 ### Sidebar thin
 
+Thin mode is deprecated and will be removed in 0.15.0. Use `Shell.Rail` for a column of icons, and `toggleModes="single"`.
+
 `thin` shows the sidebar at `thinSize`. With `toggleModes="both"` a trigger goes collapsed, thin, expanded. With `toggleModes="single"` it goes between collapsed and the sidebar's open state (thin if `defaultState` is `"thin"`, else expanded).
 
 ## Examples
@@ -354,6 +371,11 @@ The values are written to the pane as `data-presentation-<bp>` and `data-auto-<b
 - The resize handle is a focusable `role="separator"` with `aria-controls`, `aria-valuenow`, `aria-valuemin` and `aria-valuemax`. The arrow keys move it by 8px (32px with Shift), and Home and End go to the limits. It shows a focus line on `:focus-visible`.
 
 ## Changelog
+
+### 0.14.0
+
+- Added: `Shell.PaneHeader`, `Shell.Scroll`, `Shell.PaneFooter`, and `size` on `Shell.Root`.
+- Deprecated: the sidebar's thin mode and `thinSize`. Removed in 0.15.0.
 
 ### 0.8.0
 
