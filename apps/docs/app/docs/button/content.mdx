@@ -47,6 +47,7 @@ export function MyComponent() {
 | `variant`      | `'raised' \| 'solid' \| 'soft' \| 'surface' \| 'outline' \| 'ghost'` | Button style variant: raised for elevated, solid for primary, outline for secondary, ghost for utility, soft/surface for content-heavy UIs |
 | `size`         | `'1' \| '2' \| '3' \| '4'`                                            | Button density: 1 (24px) for toolbars, 2 (32px) standard, 3 (40px) for important actions, 4 (48px) for hero sections. Supports responsive objects |
 | `color`        | `AccentColor`                                                         | Semantic color to communicate action intent. Gray fills with step 12 on its own |
+| `emphasis`     | `'loud' \| 'medium' \| 'quiet'`                                     | The button's rank: loud is `solid`, medium is `raised` (the default), quiet is `ghost`. Pass `emphasis` or `variant`, not both |
 | `iconOnly`     | `boolean`                                                             | Square button for a single icon. Needs `aria-label`. Same as IconButton                         |
 | `fullWidth`    | `boolean`                                                             | Makes button fill its container width. Useful for mobile layouts and form submissions          |
 | `flush`        | `boolean`                                                             | Removes padding for seamless text integration. Use with ghost variant to blend with text while staying interactive |

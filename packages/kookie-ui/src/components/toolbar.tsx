@@ -176,7 +176,7 @@ function isPressed(value: React.AriaAttributes['aria-pressed']) {
 const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>((props, forwardedRef) => {
   const toolbar = useToolbarContext('ToolbarButton');
   const group = React.useContext(ToolbarGroupContext);
-  const { iconOnly, size, variant, color, disabled, ...rest } = props;
+  const { iconOnly, size, variant, emphasis, color, disabled, ...rest } = props;
 
   const pressed = isPressed(props['aria-pressed']);
   const stateProps =
@@ -184,19 +184,20 @@ const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>((p
 
   const shared = {
     size: size ?? toolbar.size,
-    variant: variant ?? (group ? 'ghost' : 'soft'),
-    // The gray rest is a pair with the default variant: a caller who states a variant gets
-    // Button's own colour for it unless they state a colour too.
-    color: color ?? (variant ? undefined : 'gray'),
+    // A caller states the look by `variant` or the rank by `emphasis`, never both.
+    ...(emphasis !== undefined ? { emphasis } : { variant: variant ?? (group ? 'ghost' : 'soft') }),
+    // The gray rest is a pair with the default variant: a caller who states a variant or an
+    // emphasis gets Button's own colour for it unless they state a colour too.
+    color: color ?? (variant || emphasis ? undefined : 'gray'),
     ...stateProps,
   } as const;
 
   return (
     <ToolbarPrimitive.Button asChild ref={forwardedRef} disabled={disabled || group?.disabled || undefined}>
       {iconOnly ? (
-        <IconButton {...(rest as Omit<ToolbarIconButtonProps, 'iconOnly'>)} {...shared} />
+        <IconButton {...(rest as Omit<ToolbarIconButtonProps, 'iconOnly' | 'variant' | 'emphasis'>)} {...shared} />
       ) : (
-        <Button {...(rest as Omit<ToolbarTextButtonProps, 'iconOnly'>)} {...shared} />
+        <Button {...(rest as Omit<ToolbarTextButtonProps, 'iconOnly' | 'variant' | 'emphasis'>)} {...shared} />
       )}
     </ToolbarPrimitive.Button>
   );

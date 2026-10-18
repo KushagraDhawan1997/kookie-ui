@@ -9,14 +9,14 @@ import { useToggleState } from '../hooks/use-toggle-state.js';
  * The ToggleButton component provides a button that can be pressed/unpressed
  * with proper accessibility announcements and state management.
  */
-interface ToggleButtonProps extends React.ComponentPropsWithoutRef<typeof Button> {
+type ToggleButtonProps = React.ComponentPropsWithoutRef<typeof Button> & {
   /** Controlled pressed state */
   pressed?: boolean;
   /** Callback when pressed state changes */
   onPressedChange?: (pressed: boolean) => void;
   /** Default pressed state for uncontrolled usage */
   defaultPressed?: boolean;
-}
+};
 
 type ToggleButtonElement = React.ElementRef<typeof Button>;
 

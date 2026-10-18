@@ -47,7 +47,7 @@ type ButtonElement = React.ElementRef<typeof BaseButton>;
  * Tooltip configuration props that can be passed to Button
  * These props are forwarded to the underlying Tooltip component
  */
-interface ButtonTooltipProps {
+export interface ButtonTooltipProps {
   /** Content to display in the tooltip on hover/focus */
   tooltip?: React.ReactNode;
   /** Side of the button where the tooltip should appear */
@@ -64,7 +64,28 @@ interface ButtonTooltipProps {
  * Core Button props excluding the 'as' prop for polymorphic behavior
  * Combines BaseButton props with tooltip functionality
  */
-type ButtonOwnProps = Omit<BaseButtonProps, 'as'> &
+type ButtonEmphasis = 'loud' | 'medium' | 'quiet';
+
+/** `emphasis` is a button's rank: loud is `solid`, medium is `raised`, quiet is `ghost`. */
+const EMPHASIS_VARIANT = { loud: 'solid', medium: 'raised', quiet: 'ghost' } as const;
+
+/**
+ * A button states its rank with `emphasis` or its look with `variant`, never both.
+ */
+type ButtonRankProps =
+  | {
+      /** The button's look. `outline` and `surface` have no emphasis of their own. */
+      variant?: BaseButtonProps['variant'];
+      emphasis?: never;
+    }
+  | {
+      /** The button's rank: `loud` (solid), `medium` (raised, the default) or `quiet` (ghost). */
+      emphasis?: ButtonEmphasis;
+      variant?: never;
+    };
+
+type ButtonOwnProps = Omit<BaseButtonProps, 'as' | 'variant'> &
+  ButtonRankProps &
   ButtonTooltipProps & {
     /**
      * When using variant="override", provide token-based styles per state.
@@ -132,7 +153,20 @@ function validateIconButtonName(props: Record<string, unknown>) {
  */
 const Button = React.forwardRef(
   (
-    { className, style, tooltip, tooltipSide = 'top', tooltipAlign = 'center', tooltipDelayDuration, tooltipDisableHoverableContent, overrideStyles, iconOnly = false, ...props }: ButtonProps,
+    {
+      className,
+      style,
+      tooltip,
+      tooltipSide = 'top',
+      tooltipAlign = 'center',
+      tooltipDelayDuration,
+      tooltipDisableHoverableContent,
+      overrideStyles,
+      iconOnly = false,
+      emphasis,
+      variant,
+      ...props
+    }: ButtonProps,
     forwardedRef: React.ForwardedRef<ButtonElement>,
   ) => {
     // Use shared tooltip wrapper hook for accessibility props
@@ -183,9 +217,15 @@ const Button = React.forwardRef(
       }
     }
 
+    if (emphasis !== undefined && variant !== undefined) {
+      throw new Error('Button: pass `emphasis` or `variant`, not both. They set the same thing.');
+    }
+    const resolvedVariant = emphasis !== undefined ? EMPHASIS_VARIANT[emphasis] : variant;
+
     const button = (
       <BaseButton
         {...props}
+        variant={resolvedVariant}
         {...tooltipAccessibilityProps}
         ref={forwardedRef}
         className={classNames(iconOnly ? 'rt-IconButton' : 'rt-Button', className)}
@@ -211,4 +251,4 @@ const Button = React.forwardRef(
 Button.displayName = 'Button';
 
 export { Button };
-export type { ButtonProps, ButtonOverrideStyles, ButtonOverrideStateStyles };
+export type { ButtonProps, ButtonEmphasis, ButtonOverrideStyles, ButtonOverrideStateStyles };
