@@ -130,8 +130,10 @@
   /* Scale interaction effects using CSS scale property (separate from transform).
    * This avoids conflicts with user's transform styles (e.g. translateX).
    * Uses spring-bounce easing from --transition-button for natural feel. */
-  &:where(:hover:not([data-disabled], [data-state='open'])) {
-    scale: 1.02;
+  @media (hover: hover) {
+    &:where(:hover:not([data-disabled], [data-state='open'])) {
+      scale: 1.02;
+    }
   }
 
   &:where(:active:not([data-disabled])) {

@@ -802,9 +802,14 @@
   block-size: 2px;
 }
 
-.rt-ShellResizer:hover::before,
 .rt-ShellResizer[data-dragging]::before {
   background-color: var(--gray-a6);
+}
+
+@media (hover: hover) {
+  .rt-ShellResizer:hover::before {
+    background-color: var(--gray-a6);
+  }
 }
 
 .rt-ShellResizer:focus-visible {

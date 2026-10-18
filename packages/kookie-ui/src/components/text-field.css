@@ -106,8 +106,10 @@
   &:where(:not([type='time']))::-webkit-calendar-picker-indicator {
     margin-left: var(--space-1);
   }
-  &::-webkit-calendar-picker-indicator:where(:hover) {
-    background-color: var(--gray-a3);
+  @media (hover: hover) {
+    &::-webkit-calendar-picker-indicator:where(:hover) {
+      background-color: var(--gray-a3);
+    }
   }
   &::-webkit-calendar-picker-indicator:where(:focus-visible) {
     outline: 2px solid var(--text-field-focus-color);
