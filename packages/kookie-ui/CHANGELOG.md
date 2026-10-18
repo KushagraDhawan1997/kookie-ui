@@ -1,3 +1,9 @@
+## [0.14.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.14.1...v0.14.2) (2026-10-18)
+
+### Visual changes
+
+* **notice:** Notice takes Callout's look: an even inset on every side (12, 16 or 24px by size), wider gaps, the icon and actions on the first line so a long message wraps under itself, and a tinted alpha fill. Notices above the Chatbar are taller.
+
 ## [0.14.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.14.0...v0.14.1) (2026-10-18)
 
 Sidebar rows live in the Shell. Nothing that worked before changes; the old Sidebar frame and thin mode warn once in development and are removed in 0.15.0.
