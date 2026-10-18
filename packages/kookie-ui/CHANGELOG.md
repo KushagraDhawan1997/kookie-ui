@@ -1,3 +1,9 @@
+## [0.14.3](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.14.2...v0.14.3) (2026-10-18)
+
+### Features
+
+* **button:** `emphasis` on Button, IconButton, ToggleButton, ToggleIconButton and Toolbar.Button states a button's rank: `loud` is `solid`, `medium` is `raised` (the default) and `quiet` is `ghost`. `variant` keeps all its values, so `outline` and `surface` stay available. Passing both is a type error and throws.
+
 ## [0.14.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.14.1...v0.14.2) (2026-10-18)
 
 ### Visual changes
