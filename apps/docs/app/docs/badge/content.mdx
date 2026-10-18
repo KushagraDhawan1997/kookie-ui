@@ -55,7 +55,7 @@ export function MyBadges() {
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
 | `size` | `'1' \| '2' \| '3' \| '4'` | `'1'` | Controls the size of the badge. Supports responsive values. |
-| `variant` | `'solid' \| 'soft' \| 'surface' \| 'outline' \| 'ghost' \| 'classic'` | `'soft'` | The visual style of the badge. |
+| `variant` | `'solid' \| 'soft' \| 'surface' \| 'outline' \| 'ghost' \| 'raised'` | `'soft'` | The visual style of the badge. |
 | `color` | `AccentColor` | - | The accent color. Uses theme accent if not specified. |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | - | Override the default border radius. |
 | `material` | `'solid' \| 'translucent'` | - | Controls material appearance with translucent adding blur. |
@@ -106,12 +106,12 @@ Minimal styling, no background or border.
 <Badge variant="ghost" color="blue">Ghost</Badge>
 ```
 
-### Classic
+### Raised
 
 A refined, subtle appearance.
 
 ```tsx
-<Badge variant="classic" color="blue">Classic</Badge>
+<Badge variant="raised" color="blue">Raised</Badge>
 ```
 
 ## Colors

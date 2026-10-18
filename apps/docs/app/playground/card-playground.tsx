@@ -4,7 +4,7 @@ import React from 'react';
 import { Card, Flex } from '@kushagradhawan/kookie-ui';
 import Playground from '@/components/playground';
 
-const variants = ['surface', 'outline', 'classic', 'ghost', 'soft'] as const;
+const variants = ['surface', 'outline', 'raised', 'ghost', 'soft'] as const;
 const sizes = ['1', '2', '3', '4', '5'] as const;
 const materials = ['solid', 'translucent'] as const;
 
@@ -19,7 +19,7 @@ export default function CardPlayground({
   showToolbar = true,
   height,
 }: CardPlaygroundProps = {}) {
-  const [variant, setVariant] = React.useState<string>('classic');
+  const [variant, setVariant] = React.useState<string>('raised');
   const [size, setSize] = React.useState<string>('2');
   const [material, setMaterial] = React.useState<string>('theme');
   const [interactive, setInteractive] = React.useState<boolean>(false);

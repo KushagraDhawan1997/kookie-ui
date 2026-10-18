@@ -131,12 +131,12 @@ Build UI by composing small primitives instead of monolithic components:
 ## Variant & Size Defaults
 
 - **Default size**: Use `size="2"` when no specific size is required
-- **Variant preference**: `classic` > `soft` > `surface` > `outline` > `ghost`
+- **Variant preference**: `raised` (the default) > `soft` > `surface` > `outline` > `ghost`
 - **Gray**: Gray fills with step 12 automatically; no extra prop is needed
 - **Muted text**: Use `emphasis="medium"` or `"quiet"` on Text, Heading, Blockquote, Code, DataList.Label; not `color="gray"`
 
 ```tsx
-<Button size="2" variant="classic">Primary</Button>
+<Button size="2" variant="raised">Primary</Button>
 <Button size="2" variant="soft" color="gray">Secondary</Button>
 ```
 
@@ -148,12 +148,12 @@ Every button pairing needs clear visual hierarchy:
 // ✅ Good - Clear hierarchy
 <Flex gap="2">
   <Button variant="soft" color="gray">Cancel</Button>
-  <Button variant="classic">Save</Button>
+  <Button variant="raised">Save</Button>
 </Flex>
 
-// ❌ Bad - Inside classic Card, don't use classic Button
-<Card variant="classic">
-  <Button variant="classic">Action</Button>  // Use solid instead
+// ❌ Bad - Inside a raised Card, don't use a raised Button
+<Card variant="raised">
+  <Button variant="raised">Action</Button>  // Use solid instead
 </Card>
 ```
 
@@ -283,7 +283,7 @@ Always use multi-line formatting for 3+ props:
 ```tsx
 // ✅ Good
 <Button
-  variant="classic"
+  variant="raised"
   size="2"
   loading={isSubmitting}
 >
@@ -291,7 +291,7 @@ Always use multi-line formatting for 3+ props:
 </Button>
 
 // ❌ Bad - Long single line
-<Button variant="classic" size="2" loading={isSubmitting}>Save Changes</Button>
+<Button variant="raised" size="2" loading={isSubmitting}>Save Changes</Button>
 ```
 
 ## Strategic Variant Usage
@@ -306,16 +306,16 @@ Don't create variant catalogs:
 // ✅ Good - Variants in context
 <Flex gap="2">
   <Button variant="soft" color="gray">Cancel</Button>
-  <Button variant="classic">Save</Button>
+  <Button variant="raised">Save</Button>
 </Flex>
 ```
 
 ## Card Context
 
-Use `variant="classic"` for Cards providing UI context:
+Use `variant="raised"` for Cards providing UI context:
 
 ```tsx
-<Card variant="classic" size="2">
+<Card variant="raised" size="2">
   <Flex justify="between" align="center" p="2">
     <Text size="2" weight="medium">
       Dashboard

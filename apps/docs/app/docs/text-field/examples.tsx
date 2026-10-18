@@ -78,7 +78,7 @@ export function TextFieldExamples() {
         </SectionHeader.Root>
         <PreviewBlock
           background="dots"
-          code={`<Card variant="classic" size="2" style={{ maxWidth: 400 }}>
+          code={`<Card variant="raised" size="2" style={{ maxWidth: 400 }}>
   <Flex direction="column">
     <Inset clip="padding-box" side="top" pb="current">
       <Image
@@ -134,7 +134,7 @@ export function TextFieldExamples() {
   </Flex>
 </Card>`}
         >
-          <Card variant="classic" size="2" style={{ maxWidth: 400 }}>
+          <Card variant="raised" size="2" style={{ maxWidth: 400 }}>
             <Flex direction="column">
               <Inset clip="padding-box" side="top" pb="current">
                 <Image
@@ -246,7 +246,7 @@ const [height, setHeight] = React.useState(1080);
   </TextField.Slot>
 </TextField.Root>`}
         >
-          <Card variant="classic" size="1" style={{ width: 200 }}>
+          <Card variant="raised" size="1" style={{ width: 200 }}>
             <Flex direction="column" gap="2" p="2">
               <Text size="1" weight="medium" emphasis="medium">
                 Dimensions

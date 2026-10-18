@@ -18,13 +18,13 @@ export function CardExamples() {
           <SectionHeader.Content>
             <SectionHeader.Title>Content Card</SectionHeader.Title>
             <SectionHeader.Description>
-              Use Inset for edge-to-edge media placement within cards. The classic variant provides subtle elevation, with solid buttons for clear hierarchy.
+              Use Inset for edge-to-edge media placement within cards. The raised variant provides subtle elevation, with solid buttons for clear hierarchy.
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
         <PreviewBlock
           background="dots"
-          code={`<Card variant="classic" size="2" style={{ maxWidth: 320 }}>
+          code={`<Card variant="raised" size="2" style={{ maxWidth: 320 }}>
   <Flex direction="column">
     <Inset clip="padding-box" side="top" pb="current">
       <Image
@@ -50,7 +50,7 @@ export function CardExamples() {
   </Flex>
 </Card>`}
         >
-          <Card variant="classic" size="2" style={{ maxWidth: 320 }}>
+          <Card variant="raised" size="2" style={{ maxWidth: 320 }}>
             <Flex direction="column">
               <Inset clip="padding-box" side="top" pb="current">
                 <Image
@@ -102,7 +102,7 @@ export function CardExamples() {
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
-          code={`<Card variant="classic" material="translucent" size="3" style={{ maxWidth: 320 }}>
+          code={`<Card variant="raised" material="translucent" size="3" style={{ maxWidth: 320 }}>
   <Flex direction="column" gap="8">
     <Flex direction="column" gap="4">
       <HugeiconsIcon icon={Book02Icon} size={24} strokeWidth={1.75} />
@@ -125,7 +125,7 @@ export function CardExamples() {
   </Flex>
 </Card>`}
         >
-          <Card variant="classic" material="translucent" size="3" style={{ maxWidth: 320 }}>
+          <Card variant="raised" material="translucent" size="3" style={{ maxWidth: 320 }}>
             <Flex direction="column" gap="8">
               <Flex direction="column" gap="4">
                 <HugeiconsIcon icon={Book02Icon} size={24} strokeWidth={1.75} />

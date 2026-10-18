@@ -22,7 +22,7 @@ export function BadgeExamples() {
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
-          code={`<Card variant="classic" size="2">
+          code={`<Card variant="raised" size="2">
   <Flex direction="column" gap="3">
     <Flex justify="between" align="center">
       <Flex gap="2" align="center">
@@ -42,7 +42,7 @@ export function BadgeExamples() {
   </Flex>
 </Card>`}
         >
-          <Card variant="classic" size="2" style={{ minWidth: 360 }}>
+          <Card variant="raised" size="2" style={{ minWidth: 360 }}>
             <Flex direction="column" gap="3">
               <Flex justify="between" align="center">
                 <Flex gap="2" align="center">
@@ -86,7 +86,7 @@ export function BadgeExamples() {
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
-          code={`<Card variant="classic" size="3">
+          code={`<Card variant="raised" size="3">
   <Flex direction="column" gap="5" align="center" p="1">
     <Avatar
       size="6"
@@ -109,7 +109,7 @@ export function BadgeExamples() {
   </Flex>
 </Card>`}
         >
-          <Card variant="classic" size="3" style={{ maxWidth: 360 }}>
+          <Card variant="raised" size="3" style={{ maxWidth: 360 }}>
             <Flex direction="column" gap="5" align="center" p="1" style={{ textAlign: 'center' }}>
               <Avatar size="6" fallback="AL" color="violet" variant="solid" />
               <Flex direction="column" gap="1">
@@ -168,7 +168,7 @@ export function BadgeExamples() {
   </Badge>
 </Flex>`}
         >
-          <Card variant="classic" size="2" style={{ minWidth: 320, maxWidth: 400 }}>
+          <Card variant="raised" size="2" style={{ minWidth: 320, maxWidth: 400 }}>
             <Flex direction="column" gap="3">
               <Flex justify="between" align="center">
                 <Flex direction="column" gap="1">
@@ -233,7 +233,7 @@ export function BadgeExamples() {
   </Flex>
 </Flex>`}
         >
-          <Card variant="classic" size="2" style={{ minWidth: 320, maxWidth: 400 }}>
+          <Card variant="raised" size="2" style={{ minWidth: 320, maxWidth: 400 }}>
             <Flex direction="column" gap="4">
               <Flex gap="3" align="start">
                 <Avatar size="3" fallback="JD" color="blue" variant="soft" />

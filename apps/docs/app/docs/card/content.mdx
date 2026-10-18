@@ -56,7 +56,7 @@ export function MyCard() {
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
 | `size` | `'1' \| '2' \| '3' \| '4' \| '5'` | `'1'` | Controls the padding and spacing inside the card. Supports responsive values. |
-| `variant` | `'surface' \| 'outline' \| 'classic' \| 'ghost' \| 'soft'` | `'outline'` | The visual style of the card. |
+| `variant` | `'surface' \| 'outline' \| 'raised' \| 'ghost' \| 'soft'` | `'outline'` | The visual style of the card. |
 | `material` | `'solid' \| 'translucent'` | - | Controls the material appearance. Translucent adds backdrop blur. |
 | `flush` | `boolean` | `false` | When true, removes padding for full-bleed content. |
 | `asChild` | `boolean` | `false` | Merge props onto the child element using Radix Slot. |
@@ -83,13 +83,13 @@ The default variant with a visible border.
 </Card>
 ```
 
-### Classic
+### Raised
 
 A solid, opaque card with subtle shadow.
 
 ```tsx
-<Card variant="classic">
-  <Text>Classic variant with solid background</Text>
+<Card variant="raised">
+  <Text>Raised variant with solid background</Text>
 </Card>
 ```
 

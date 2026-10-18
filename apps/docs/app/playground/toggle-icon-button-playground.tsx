@@ -35,7 +35,7 @@ const accentColors = [
   'sky',
 ] as const;
 
-const variants = ['classic', 'solid', 'soft', 'surface', 'outline', 'ghost'] as const;
+const variants = ['raised', 'solid', 'soft', 'surface', 'outline', 'ghost'] as const;
 const sizes = ['1', '2', '3', '4'] as const;
 const radiusOptions = ['none', 'small', 'medium', 'large', 'full'] as const;
 const materials = ['solid', 'translucent'] as const;

@@ -69,7 +69,7 @@ The Callout component is composed of three parts:
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
 | `size` | `'1' \| '2' \| '3'` | `'2'` | Controls the size. Supports responsive values. |
-| `variant` | `'soft' \| 'surface' \| 'outline' \| 'classic'` | `'soft'` | The visual style of the callout. |
+| `variant` | `'soft' \| 'surface' \| 'outline' \| 'raised'` | `'soft'` | The visual style of the callout. |
 | `color` | `AccentColor` | - | The accent color. Uses theme accent if not specified. |
 | `material` | `'solid' \| 'translucent'` | - | Material appearance. |
 | `live` | `'off' \| 'polite' \| 'assertive'` | `'polite'` | ARIA live region behavior. |
@@ -117,16 +117,16 @@ Bordered with transparent background.
 </Callout.Root>
 ```
 
-### Classic
+### Raised
 
 A refined, subtle appearance.
 
 ```tsx
-<Callout.Root variant="classic" color="blue">
+<Callout.Root variant="raised" color="blue">
   <Callout.Icon>
     <HugeiconsIcon icon={InformationCircleIcon} strokeWidth={1.75} />
   </Callout.Icon>
-  <Callout.Text>Classic variant with refined styling.</Callout.Text>
+  <Callout.Text>Raised variant with refined styling.</Callout.Text>
 </Callout.Root>
 ```
 

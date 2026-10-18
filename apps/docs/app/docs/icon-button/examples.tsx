@@ -20,7 +20,7 @@ export function IconButtonExamples() {
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
-          code={`<Card variant="classic" size="2">
+          code={`<Card variant="raised" size="2">
   <Flex justify="between" align="center" p="1">
     <Skeleton width="80px" height="14px" />
     <Flex gap="1" align="center">
@@ -37,7 +37,7 @@ export function IconButtonExamples() {
   </Flex>
 </Card>`}
         >
-          <Card variant="classic" size="2" style={{ width: '100%', maxWidth: 400 }}>
+          <Card variant="raised" size="2" style={{ width: '100%', maxWidth: 400 }}>
             <Flex justify="between" align="center" p="1">
               <Skeleton width="80px" height="14px" />
               <Flex gap="1" align="center">
@@ -68,7 +68,7 @@ export function IconButtonExamples() {
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
-          code={`<Card variant="classic" size="2" style={{ maxWidth: 320 }}>
+          code={`<Card variant="raised" size="2" style={{ maxWidth: 320 }}>
   <Flex direction="column" gap="3" p="1">
     <Flex direction="column" gap="1">
       <Skeleton width="140px" height="12px" />
@@ -85,7 +85,7 @@ export function IconButtonExamples() {
   </Flex>
 </Card>`}
         >
-          <Card variant="classic" size="2" style={{ maxWidth: 320 }}>
+          <Card variant="raised" size="2" style={{ maxWidth: 320 }}>
             <Flex direction="column" gap="3" p="1">
               <Flex direction="column" gap="1">
                 <Skeleton width="140px" height="12px" />
@@ -116,7 +116,7 @@ export function IconButtonExamples() {
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
-          code={`<Card variant="classic" size="1">
+          code={`<Card variant="raised" size="1">
   <Flex justify="between" align="center" p="1">
     <Skeleton width="60px" height="12px" />
     <Flex gap="1" align="center">
@@ -133,7 +133,7 @@ export function IconButtonExamples() {
   </Flex>
 </Card>`}
         >
-          <Card variant="classic" size="1" style={{ width: '100%', maxWidth: 400 }}>
+          <Card variant="raised" size="1" style={{ width: '100%', maxWidth: 400 }}>
             <Flex justify="between" align="center" p="1">
               <Skeleton width="60px" height="12px" />
               <Flex gap="1" align="center">
@@ -164,7 +164,7 @@ export function IconButtonExamples() {
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
-          code={`<Card variant="classic" size="2" style={{ maxWidth: 400, position: 'relative' }}>
+          code={`<Card variant="raised" size="2" style={{ maxWidth: 400, position: 'relative' }}>
   <Flex position="absolute" top="2" right="2">
     <IconButton color="gray" variant="ghost" size="2" aria-label="Close dialog" tooltip="Close">
       <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
@@ -176,7 +176,7 @@ export function IconButtonExamples() {
   </Flex>
 </Card>`}
         >
-          <Card variant="classic" size="2" style={{ maxWidth: 400, position: 'relative' }}>
+          <Card variant="raised" size="2" style={{ maxWidth: 400, position: 'relative' }}>
             <Flex position="absolute" top="2" right="2">
               <IconButton color="gray" variant="ghost" size="2" aria-label="Close dialog" tooltip="Close">
                 <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />

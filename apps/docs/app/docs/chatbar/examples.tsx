@@ -29,7 +29,7 @@ export function ChatbarExamples() {
           background="none"
           height="30rem"
           code={`<Chatbar.Root
-  variant="classic"
+  variant="raised"
   size="2"
   sendMode="always"
   minLines={3}
@@ -94,7 +94,7 @@ export function ChatbarExamples() {
 </Chatbar.Root>`}
         >
           <Chatbar.Root
-            variant="classic"
+            variant="raised"
             size="2"
             sendMode="always"
             minLines={3}
@@ -260,7 +260,7 @@ export function ChatbarExamples() {
           <SectionHeader.Content>
             <SectionHeader.Title>Translucent Hero</SectionHeader.Title>
             <SectionHeader.Description>
-              The translucent material creates depth over dynamic backgrounds. The classic variant keeps text on the strong ink, so it stays readable on complex surfaces.
+              The translucent material creates depth over dynamic backgrounds. The raised variant keeps text on the strong ink, so it stays readable on complex surfaces.
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
@@ -324,7 +324,7 @@ export function ChatbarExamples() {
         >
           <Chatbar.Root
             open
-            variant="classic"
+            variant="raised"
             size="2"
             color="gray"
             material="translucent"

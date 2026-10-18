@@ -39,7 +39,7 @@ export function MyComponent() {
 
 | Prop           | Type                                                                  | Description                                                                                     |
 | -------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `variant`      | `'classic' \| 'solid' \| 'soft' \| 'surface' \| 'outline' \| 'ghost'` | Button style variant: classic for elevated, solid for primary, outline for secondary, ghost for utility, soft/surface for content-heavy UIs |
+| `variant`      | `'raised' \| 'solid' \| 'soft' \| 'surface' \| 'outline' \| 'ghost'` | Button style variant: raised for elevated, solid for primary, outline for secondary, ghost for utility, soft/surface for content-heavy UIs |
 | `size`         | `'1' \| '2' \| '3' \| '4'`                                            | Button density: 1 (24px) for toolbars, 2 (32px) standard, 3 (40px) for important actions, 4 (48px) for hero sections. Supports responsive objects |
 | `color`        | `AccentColor`                                                         | Semantic color to communicate action intent. Gray fills with step 12 on its own |
 | `radius`       | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'`                  | Corner radius scale: none for sharp edges, small/medium/large for progressive rounding, full for circular |
@@ -97,14 +97,14 @@ import { Settings } from 'lucide-react';
 
 Use the `variant` prop to set button style.
 
-### Classic
+### Raised
 
 Elevated style with subtle shadow for maximum visual impact.
 
 ```tsx
 import { Star } from 'lucide-react';
 
-<IconButton size="3" variant="classic" aria-label="Favorite">
+<IconButton size="3" variant="raised" aria-label="Favorite">
   <Star />
 </IconButton>
 ```

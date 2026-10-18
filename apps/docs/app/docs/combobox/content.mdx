@@ -127,7 +127,7 @@ The Trigger component renders as a button that opens the dropdown.
 
 | Prop | Type | Description |
 | ---- | ---- | ----------- |
-| `variant` | `'classic' \| 'surface' \| 'soft' \| 'outline' \| 'ghost'` | Trigger button style: classic for elevated, surface for standard fields, outline for bordered, soft for subtle, ghost for minimal |
+| `variant` | `'raised' \| 'surface' \| 'soft' \| 'outline' \| 'ghost'` | Trigger button style: raised for elevated, surface for standard fields, outline for bordered, soft for subtle, ghost for minimal |
 | `color` | `AccentColor` | Semantic color. Overrides color from Root if provided |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Corner radius scale |
 | `material` | `'solid' \| 'translucent'` | Trigger background: solid for opaque, translucent for depth over images |
@@ -164,7 +164,7 @@ The Input component renders the search field inside Content.
 
 | Prop | Type | Description |
 | ---- | ---- | ----------- |
-| `variant` | `'classic' \| 'surface' \| 'soft' \| 'outline' \| 'ghost'` | Input field style. Defaults to 'surface' for solid Content, 'soft' for soft Content |
+| `variant` | `'raised' \| 'surface' \| 'soft' \| 'outline' \| 'ghost'` | Input field style. Defaults to 'surface' for solid Content, 'soft' for soft Content |
 | `placeholder` | `string` | Search input placeholder. Overrides searchPlaceholder from Root |
 | `startAdornment` | `ReactNode` | Icon or element before input (e.g., search icon) |
 | `endAdornment` | `ReactNode` | Icon or element after input |
@@ -194,13 +194,13 @@ Search matches the item's visible text, its `value`, and its `keywords`.
 
 ## Trigger Variants
 
-### Classic
+### Raised
 
 Elevated style with subtle shadow for maximum visual impact.
 
 ```tsx
 <Combobox.Root size="2">
-  <Combobox.Trigger variant="classic" aria-label="Option">
+  <Combobox.Trigger variant="raised" aria-label="Option">
     <Combobox.Value placeholder="Select option" />
   </Combobox.Trigger>
   <Combobox.Content>
@@ -839,7 +839,7 @@ When the dropdown opens, the highlight starts on the selected option. Without a 
 
 - Initial Combobox component with search and filtering
 - Built on cmdk for fuzzy search and keyboard navigation
-  - Trigger variants: classic, surface, soft, outline, ghost
+  - Trigger variants: raised, surface, soft, outline, ghost
   - Content variants: solid, soft
 - Three sizes (1, 2, 3) with responsive support
 - Custom filter function support via `filter` prop

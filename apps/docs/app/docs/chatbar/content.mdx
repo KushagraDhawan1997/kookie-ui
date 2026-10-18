@@ -87,7 +87,7 @@ Chatbar is a compound component with the following parts:
 | `readOnly` | `boolean` | - | Allows selection; blocks editing, submitting and adding attachments |
 | `onSubmit` | `(payload: Chatbar.ChatbarSubmitPayload) => void` | - | Called with text and attachments. Only fires when there is text or at least one attachment |
 | `size` | `'1' \| '2' \| '3'` | `'2'` | Component density: 1 for compact, 2 for standard, 3 for prominent |
-| `variant` | `'surface' \| 'outline' \| 'classic' \| 'ghost' \| 'soft'` | `'surface'` | Visual style variant |
+| `variant` | `'surface' \| 'outline' \| 'raised' \| 'ghost' \| 'soft'` | `'surface'` | Visual style variant |
 | `color` | `AccentColor` | - | Accent color for focus states and send button |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | - | Corner radius override |
 | `material` | `'solid' \| 'translucent'` | - | Background appearance for layered interfaces |
@@ -213,12 +213,12 @@ interface ChatbarApi {
 
 Use the `variant` prop to set chatbar style.
 
-### Classic
+### Raised
 
 Elevated with shadow for maximum visual impact and prominent chat interfaces.
 
 ```tsx
-<Chatbar.Root variant="classic">
+<Chatbar.Root variant="raised">
   <Chatbar.Textarea aria-label="Message" />
   <Chatbar.InlineEnd>
     <Chatbar.Send />
@@ -335,7 +335,7 @@ Chatbar automatically inherits the theme's material setting:
 
 ```tsx
 <Theme material="translucent">
-  <Chatbar.Root variant="classic">
+  <Chatbar.Root variant="raised">
     <Chatbar.Textarea aria-label="Message" />
   </Chatbar.Root>
 </Theme>
@@ -347,7 +347,7 @@ Override the theme's material for specific effects:
 
 ```tsx
 <Theme material="solid">
-  <Chatbar.Root material="translucent" variant="classic">
+  <Chatbar.Root material="translucent" variant="raised">
     <Chatbar.Textarea aria-label="Message" />
   </Chatbar.Root>
 </Theme>
@@ -634,7 +634,7 @@ Chatbar provides accessibility through semantic markup, keyboard support and liv
 - File picker, drag-and-drop, and paste-to-attach support
 - Auto-resizing textarea with configurable line limits
 - Imperative API via `apiRef` for programmatic control
-- Multiple visual variants: surface, outline, classic, ghost, soft
+- Multiple visual variants: surface, outline, raised, ghost, soft
 - Material support for translucent surfaces
 - Comprehensive accessibility with ARIA attributes and keyboard navigation
 - Exported types on the `Chatbar` namespace: `ChatbarApi`, `ChatbarAttachment`, `ChatbarAttachmentRejection`, `ChatbarRejectReason`, `ChatbarSubmitPayload`, `ChatbarSendMode`, `ChatbarExpandOn`, and part props types

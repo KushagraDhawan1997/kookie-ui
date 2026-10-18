@@ -110,7 +110,7 @@ export function DropdownMenuExamples() {
   </DropdownMenu.Content>
 </DropdownMenu.Root>`}
         >
-          <Card variant="classic" size="2" style={{ width: 320 }}>
+          <Card variant="raised" size="2" style={{ width: 320 }}>
             <Flex justify="between" align="center" p="2">
               <Flex gap="3" align="center">
                 <Avatar fallback="D" size="2" color="blue" />
@@ -444,7 +444,7 @@ const [theme, setTheme] = React.useState('system');
           background="none"
           code={`<DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <Button variant="classic" size="2">
+    <Button variant="raised" size="2">
       <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
       New
     </Button>
@@ -482,7 +482,7 @@ const [theme, setTheme] = React.useState('system');
         >
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>
-              <Button variant="classic" size="2">
+              <Button variant="raised" size="2">
                 <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
                 New
               </Button>

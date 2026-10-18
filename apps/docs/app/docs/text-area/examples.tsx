@@ -92,7 +92,7 @@ const handleSubmit = () => {
               <Button variant="soft" size="2" onClick={() => setComment('')}>
                 Cancel
               </Button>
-              <Button variant="classic" size="2" onClick={handleCommentSubmit}>
+              <Button variant="raised" size="2" onClick={handleCommentSubmit}>
                 Post Comment
               </Button>
             </Flex>
@@ -133,7 +133,7 @@ const handleSubmit = async () => {
   rows={6}
 />`}
         >
-          <Card variant="classic" size="2" style={{ maxWidth: 560 }}>
+          <Card variant="raised" size="2" style={{ maxWidth: 560 }}>
             <Flex direction="column" gap="6">
               <Flex direction="column" gap="2">
                 <Heading size="5" weight="medium">
@@ -150,7 +150,7 @@ const handleSubmit = async () => {
                 <Button variant="soft" size="2" color="gray" disabled={isSubmitting} onClick={() => setFeedback('')}>
                   Clear
                 </Button>
-                <Button variant="classic" size="2" loading={isSubmitting} onClick={handleFeedbackSubmit} disabled={!feedback.trim()}>
+                <Button variant="raised" size="2" loading={isSubmitting} onClick={handleFeedbackSubmit} disabled={!feedback.trim()}>
                   Submit Feedback
                 </Button>
               </Flex>
@@ -195,7 +195,7 @@ const maxLength = 280;
               <Text size="1" emphasis="medium">
                 {tweet.length} / {maxLength}
               </Text>
-              <Button variant="classic" size="1" disabled={tweet.length === 0 || tweet.length > maxLength}>
+              <Button variant="raised" size="1" disabled={tweet.length === 0 || tweet.length > maxLength}>
                 Post
               </Button>
             </Flex>
@@ -252,7 +252,7 @@ const maxLength = 280;
           <SectionHeader.Content>
             <SectionHeader.Title>Product Description Editor</SectionHeader.Title>
             <SectionHeader.Description>
-              Use the classic variant for prominent content editing areas. This example shows a product description editor with a clear, elevated appearance that draws focus to the content creation
+              Use the raised variant for prominent content editing areas. This example shows a product description editor with a clear, elevated appearance that draws focus to the content creation
               task.
             </SectionHeader.Description>
           </SectionHeader.Content>
@@ -261,13 +261,13 @@ const maxLength = 280;
           background="dots"
           code={`<TextArea
   size="3"
-  variant="classic"
+  variant="raised"
   placeholder="Describe your product features, benefits, and specifications..."
   resize="none"
   rows={8}
 />`}
         >
-          <Card variant="classic" size="2" style={{ maxWidth: 640 }}>
+          <Card variant="raised" size="2" style={{ maxWidth: 640 }}>
             <Flex direction="column" gap="6">
               <Flex direction="column" gap="2">
                 <Heading size="5" weight="medium">
@@ -282,14 +282,14 @@ const maxLength = 280;
                 <Text size="2" weight="medium">
                   Description
                 </Text>
-                <TextArea size="3" variant="classic" placeholder="Describe your product features, benefits, and specifications..." resize="none" rows={8} />
+                <TextArea size="3" variant="raised" placeholder="Describe your product features, benefits, and specifications..." resize="none" rows={8} />
               </Flex>
 
               <Flex gap="2" justify="end">
                 <Button variant="soft" size="2" color="gray">
                   Cancel
                 </Button>
-                <Button variant="classic" size="2">
+                <Button variant="raised" size="2">
                   Save Product
                 </Button>
               </Flex>

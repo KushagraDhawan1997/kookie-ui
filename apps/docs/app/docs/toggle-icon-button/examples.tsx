@@ -62,7 +62,7 @@ export function ToggleIconButtonExamples() {
           code={`const [favorited, setFavorited] = React.useState(false);
 const [pinned, setPinned] = React.useState(false);
 
-<Card variant="classic" size="2">
+<Card variant="raised" size="2">
   <Flex direction="column" gap="3" p="1">
     <Flex direction="column" gap="1">
       <Skeleton width="140px" height="12px" />
@@ -95,7 +95,7 @@ const [pinned, setPinned] = React.useState(false);
   </Flex>
 </Card>`}
         >
-          <Card variant="classic" size="2" style={{ maxWidth: 320 }}>
+          <Card variant="raised" size="2" style={{ maxWidth: 320 }}>
             <Flex direction="column" gap="3" p="1">
               <Flex direction="column" gap="1">
                 <Skeleton width="140px" height="12px" />
@@ -146,7 +146,7 @@ const [pinned, setPinned] = React.useState(false);
 const [italic, setItalic] = React.useState(false);
 const [underline, setUnderline] = React.useState(false);
 
-<Card variant="classic" size="2">
+<Card variant="raised" size="2">
   <Flex direction="column" gap="3" p="1">
     <Flex gap="1" align="center">
       <ToggleIconButton
@@ -185,7 +185,7 @@ const [underline, setUnderline] = React.useState(false);
   </Flex>
 </Card>`}
         >
-          <Card variant="classic" size="2" style={{ width: '100%', maxWidth: 320 }}>
+          <Card variant="raised" size="2" style={{ width: '100%', maxWidth: 320 }}>
             <Flex direction="column" gap="3" p="1">
               <Flex gap="1" align="center">
                 <ToggleIconButton variant="ghost" size="2" pressed={bold} onPressedChange={setBold} aria-label={bold ? 'Remove bold' : 'Bold'}>

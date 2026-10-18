@@ -9,7 +9,7 @@ import { Copy01Icon, Delete01Icon, Download01Icon, PencilEdit01Icon, Share01Icon
 
 const fileActionsCode = `<ContextMenu.Root>
   <ContextMenu.Trigger>
-    <Card variant="classic" size="2">
+    <Card variant="raised" size="2">
       <Flex gap="3" align="center">
         <Avatar fallback="Q" size="2" color="blue" />
         <Flex direction="column">
@@ -48,7 +48,7 @@ function FileActions() {
   return (
     <ContextMenu.Root>
       <ContextMenu.Trigger>
-        <Card variant="classic" size="2">
+        <Card variant="raised" size="2">
           <Flex gap="3" align="center">
             <Avatar fallback="Q" size="2" color="blue" />
             <Flex direction="column">
@@ -91,7 +91,7 @@ const [zoom, setZoom] = React.useState('fit');
 
 <ContextMenu.Root>
   <ContextMenu.Trigger>
-    <Card variant="classic" size="2">
+    <Card variant="raised" size="2">
       <Text size="2" emphasis="medium">
         Canvas · zoom {zoom}
       </Text>
@@ -131,7 +131,7 @@ function CanvasOptions() {
   return (
     <ContextMenu.Root>
       <ContextMenu.Trigger>
-        <Card variant="classic" size="2">
+        <Card variant="raised" size="2">
           <Text size="2" emphasis="medium">
             Canvas · zoom {zoom}
           </Text>
@@ -159,7 +159,7 @@ function CanvasOptions() {
 
 const layerActionsCode = `<ContextMenu.Root>
   <ContextMenu.Trigger>
-    <Card variant="classic" size="2">
+    <Card variant="raised" size="2">
       <Text size="2">Header layer</Text>
     </Card>
   </ContextMenu.Trigger>
@@ -194,7 +194,7 @@ function LayerActions() {
   return (
     <ContextMenu.Root>
       <ContextMenu.Trigger>
-        <Card variant="classic" size="2">
+        <Card variant="raised" size="2">
           <Text size="2">Header layer</Text>
         </Card>
       </ContextMenu.Trigger>
