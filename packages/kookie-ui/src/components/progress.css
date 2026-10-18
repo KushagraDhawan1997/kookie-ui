@@ -36,7 +36,6 @@
   }
 }
 
-
 .rt-ProgressIndicator {
   display: block;
   height: var(--position-full);
@@ -85,8 +84,6 @@
   }
 }
 
-
-
 /***************************************************************************************************
  *                                                                                                 *
  * SIZES                                                                                           *
@@ -114,31 +111,6 @@
       --progress-height: var(--progress-slider-height-4);
       --progress-radius: var(--progress-slider-radius-4);
       --progress-indicator-radius: var(--progress-slider-radius-4);
-    }
-    &:where(.rt-r-size-5) {
-      --progress-height: var(--progress-slider-height-5);
-      --progress-radius: var(--progress-slider-radius-5);
-      --progress-indicator-radius: var(--progress-slider-radius-5);
-    }
-    &:where(.rt-r-size-6) {
-      --progress-height: var(--progress-slider-height-6);
-      --progress-radius: var(--progress-slider-radius-6);
-      --progress-indicator-radius: var(--progress-slider-radius-6);
-    }
-    &:where(.rt-r-size-7) {
-      --progress-height: var(--progress-slider-height-7);
-      --progress-radius: var(--progress-slider-radius-7);
-      --progress-indicator-radius: var(--progress-slider-radius-7);
-    }
-    &:where(.rt-r-size-8) {
-      --progress-height: var(--progress-slider-height-8);
-      --progress-radius: var(--progress-slider-radius-8);
-      --progress-indicator-radius: var(--progress-slider-radius-8);
-    }
-    &:where(.rt-r-size-9) {
-      --progress-height: var(--progress-slider-height-9);
-      --progress-radius: var(--progress-slider-radius-9);
-      --progress-indicator-radius: var(--progress-slider-radius-9);
     }
   }
 }
@@ -176,12 +148,6 @@
     background-color: var(--accent-solid);
   }
 }
-
-
-
-
-
-
 
 /* soft */
 
@@ -231,8 +197,4 @@
     background-color: var(--accent-solid);
   }
 }
-
-
-
-
 
