@@ -6,7 +6,7 @@
  * - Sizes: Responsive sizing and typography
  * - Variant palettes: Each variant defines its color scale as CSS variables
  * - Shared state logic: Single set of hover/focus/disabled selectors
- * - Special variants: classic (unique behavior, kept separate)
+ * - Special variants: raised (unique behavior, kept separate)
  * - Error states: Override colors for error styling
  */
 
@@ -183,6 +183,19 @@
         font-size: var(--font-size-3);
         line-height: var(--line-height-3);
         letter-spacing: var(--letter-spacing-3);
+      }
+    }
+    &:where(.rt-r-size-4) {
+      min-height: var(--space-10);
+      border-radius: var(--radius-4);
+
+      & :where(.rt-TextAreaInput) {
+        /* Clip text to border */
+        --text-area-padding-y: calc(var(--space-3) - var(--text-area-border-width));
+        --text-area-padding-x: calc(var(--space-4) - var(--text-area-border-width));
+        font-size: var(--font-size-4);
+        line-height: var(--line-height-4);
+        letter-spacing: var(--letter-spacing-4);
       }
     }
   }
@@ -413,8 +426,8 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* Classic variant - uses --color-surface and shadow */
-.rt-TextAreaRoot:where(.rt-variant-classic) {
+/* Raised variant - uses --color-surface and shadow */
+.rt-TextAreaRoot:where(.rt-variant-raised) {
   --text-area-border-width: 0px;
   --v-selection-color: var(--focus-a5);
   --v-focus-color: var(--focus-8);
@@ -570,8 +583,8 @@
   }
 }
 
-/* Error classic variant */
-.rt-TextAreaRoot:where(.rt-error.rt-variant-classic) {
+/* Error raised variant */
+.rt-TextAreaRoot:where(.rt-error.rt-variant-raised) {
   box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-6);
   
   @media (hover: hover) {

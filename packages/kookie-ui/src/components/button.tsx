@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { BaseButton } from './_internal/base-button.js';
 import { Tooltip } from './tooltip.js';
 import { useTooltipWrapper } from '../hooks/use-tooltip-wrapper.js';
+import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import type { BaseButtonProps } from './_internal/base-button.js';
 
 /**
@@ -70,6 +71,11 @@ type ButtonOwnProps = Omit<BaseButtonProps, 'as'> &
      * We propagate these into CSS variables consumed by the override variant.
      */
     overrideStyles?: ButtonOverrideStyles;
+    /**
+     * A square button holding only an icon. It needs an accessible name: `aria-label`,
+     * `aria-labelledby`, or visible text. `IconButton` is this button with `iconOnly` set.
+     */
+    iconOnly?: boolean;
   };
 
 /**
@@ -86,6 +92,20 @@ type ButtonProps<C extends React.ElementType = 'button'> = ButtonOwnProps & {
  * @template C - The element type to render as
  */
 type ButtonComponent = <C extends React.ElementType = 'button'>(props: ButtonProps<C> & { ref?: React.ForwardedRef<ButtonElement> }) => React.ReactElement | null;
+
+/**
+ * An icon-only button must have an accessible name. Throws in development, logs otherwise.
+ */
+function validateIconButtonName(props: Record<string, unknown>) {
+  if (props['aria-label'] || props['aria-labelledby'] || props.children) return;
+  const errorMessage =
+    'IconButton: Icon buttons must have an accessible name. Please provide either:' +
+    '\n- aria-label prop with descriptive text' +
+    '\n- aria-labelledby prop referencing a label element' +
+    '\n- or visible text children';
+  if (process.env.NODE_ENV === 'development') throw new Error(errorMessage);
+  console.error(errorMessage);
+}
 
 /**
  * Button component for triggering actions throughout your interface
@@ -112,7 +132,7 @@ type ButtonComponent = <C extends React.ElementType = 'button'>(props: ButtonPro
  */
 const Button = React.forwardRef(
   (
-    { className, style, tooltip, tooltipSide = 'top', tooltipAlign = 'center', tooltipDelayDuration, tooltipDisableHoverableContent, overrideStyles, ...props }: ButtonProps,
+    { className, style, tooltip, tooltipSide = 'top', tooltipAlign = 'center', tooltipDelayDuration, tooltipDisableHoverableContent, overrideStyles, iconOnly = false, ...props }: ButtonProps,
     forwardedRef: React.ForwardedRef<ButtonElement>,
   ) => {
     // Use shared tooltip wrapper hook for accessibility props
@@ -156,7 +176,22 @@ const Button = React.forwardRef(
     // Combine override styles with user-provided styles
     const combinedStyle = React.useMemo(() => (overrideVars ? { ...overrideVars, ...style } : style), [overrideVars, style]);
 
-    const button = <BaseButton {...props} {...tooltipAccessibilityProps} ref={forwardedRef} className={classNames('rt-Button', className)} style={combinedStyle} />;
+    if (iconOnly) {
+      validateIconButtonName(props);
+      if (props.fullWidth) {
+        warnDeprecated('`fullWidth` on an icon-only button is deprecated and will be removed in 0.15.0. An icon button is square.');
+      }
+    }
+
+    const button = (
+      <BaseButton
+        {...props}
+        {...tooltipAccessibilityProps}
+        ref={forwardedRef}
+        className={classNames(iconOnly ? 'rt-IconButton' : 'rt-Button', className)}
+        style={combinedStyle}
+      />
+    );
 
     // If no tooltip is provided, return the button as-is for better performance
     if (!hasTooltip) {

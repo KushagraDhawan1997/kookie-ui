@@ -1,3 +1,4 @@
+import { parseVariant } from '../helpers/parse-variant.js';
 import { asChildPropDef } from '../props/as-child.prop.js';
 import { colorPropDef } from '../props/color.prop.js';
 import { radiusPropDef } from '../props/radius.prop.js';
@@ -5,13 +6,13 @@ import { radiusPropDef } from '../props/radius.prop.js';
 import type { PropDef } from '../props/prop-def.js';
 
 const sizes = ['1', '2', '3', '4'] as const;
-const variants = ['classic', 'soft', 'surface', 'outline', 'ghost'] as const;
+const variants = ['raised', 'soft', 'surface', 'outline', 'ghost', 'classic'] as const;
 const panelBackgrounds = ['solid', 'translucent'] as const;
 
 const accordionRootPropDefs = {
   ...asChildPropDef,
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'surface' },
+  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised', parseValue: parseVariant },
   ...colorPropDef,
   ...radiusPropDef,
   material: { type: 'enum', values: panelBackgrounds, default: undefined },

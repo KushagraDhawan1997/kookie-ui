@@ -28,16 +28,19 @@ describe('TextField', () => {
       expect(root).toHaveClass('rt-r-size-3');
     });
 
-    it('renders with default variant (surface)', () => {
+    it('renders with default variant (raised)', () => {
       const { container } = renderWithProviders(<TextField.Root />);
       const root = container.querySelector('.rt-TextFieldRoot');
-      expect(root).toHaveClass('rt-variant-surface');
+      expect(root).toHaveClass('rt-variant-raised');
     });
 
-    it('renders with classic variant', () => {
+    it('renders the deprecated classic variant as raised, with a warning', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const { container } = renderWithProviders(<TextField.Root variant="classic" />);
       const root = container.querySelector('.rt-TextFieldRoot');
-      expect(root).toHaveClass('rt-variant-classic');
+      expect(root).toHaveClass('rt-variant-raised');
+      expect(root).not.toHaveClass('rt-variant-classic');
+      warn.mockRestore();
     });
 
     it('renders with soft variant', () => {

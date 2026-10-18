@@ -1,3 +1,4 @@
+import { parseVariant } from '../helpers/parse-variant.js';
 import type React from 'react';
 
 import { colorPropDef } from '../props/color.prop.js';
@@ -5,7 +6,7 @@ import { radiusPropDef } from '../props/radius.prop.js';
 
 import type { PropDef } from '../props/prop-def.js';
 
-const sizes = ['1', '2', '3'] as const;
+const sizes = ['1', '2', '3', '4'] as const;
 
 const selectRootPropDefs = {
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
@@ -13,15 +14,13 @@ const selectRootPropDefs = {
   size: PropDef<(typeof sizes)[number]>;
 };
 
-const triggerVariants = ['classic', 'surface', 'soft', 'outline', 'ghost'] as const;
+const triggerVariants = ['raised', 'surface', 'soft', 'outline', 'ghost', 'classic'] as const;
 
 const selectTriggerPropDefs = {
-  variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'surface' },
-  panelBackground: {
-    type: 'enum',
-    className: 'rt-panel-background',
-    values: ['solid', 'translucent'],
-  },
+  variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'raised', parseValue: parseVariant },
+  material: { type: 'enum', values: ['solid', 'translucent'] },
+  /** @deprecated Use `material`. Removed in 0.15.0. */
+  panelBackground: { type: 'enum', values: ['solid', 'translucent'] },
   error: { type: 'boolean' },
   loading: { type: 'boolean' },
   disabled: { type: 'boolean' },
@@ -31,6 +30,7 @@ const selectTriggerPropDefs = {
   placeholder: { type: 'ReactNode' },
 } satisfies {
   variant: PropDef<(typeof triggerVariants)[number]>;
+  material: PropDef<'solid' | 'translucent'>;
   panelBackground: PropDef<'solid' | 'translucent'>;
   error: PropDef<boolean>;
   loading: PropDef<boolean>;
@@ -42,7 +42,7 @@ const selectTriggerPropDefs = {
 const contentVariants = ['solid', 'soft'] as const;
 
 const selectContentPropDefs = {
-  variant: { type: 'enum', className: 'rt-variant', values: contentVariants, default: 'solid' },
+  variant: { type: 'enum', className: 'rt-variant', values: contentVariants, default: 'soft' },
   ...colorPropDef,
 } satisfies {
   variant: PropDef<(typeof contentVariants)[number]>;

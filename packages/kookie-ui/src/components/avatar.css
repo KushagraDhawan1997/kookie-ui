@@ -6,7 +6,7 @@
  * - Sizes: Responsive avatar dimensions and border-radius
  * - Variant palettes: Each variant defines its color scale as CSS variables
  * - Shared state logic: Single set of hover/active/disabled selectors
- * - Special variants: classic, solid (unique behavior, kept separate)
+ * - Special variants: raised, solid (unique behavior, kept separate)
  * - Image, object-fit, fallback, status indicator, badge
  */
 
@@ -438,10 +438,10 @@
   }
 }
 
-/* Classic variant - uses --color-surface and gray interactive states */
-.rt-AvatarRoot:where(.rt-variant-classic) {
+/* Raised variant - uses --color-surface and gray interactive states */
+.rt-AvatarRoot:where(.rt-variant-raised) {
   position: relative;
-  top: var(--classic-elevation-offset);
+  top: var(--raised-elevation-offset);
 
   & :where(.rt-AvatarFallback) {
     position: relative;
@@ -459,8 +459,8 @@
   }
 }
 
-/* Classic interactive states */
-.rt-AvatarRoot:where(button, a, [role="button"]):where(.rt-variant-classic) {
+/* Raised interactive states */
+.rt-AvatarRoot:where(button, a, [role="button"]):where(.rt-variant-raised) {
   @media (hover: hover) {
     &:where(:hover:not(:disabled, [data-disabled])) {
       background-color: color-mix(in srgb, var(--gray-a2) calc(var(--material-alpha) * 100%), var(--gray-2) var(--material-blend));
@@ -474,7 +474,7 @@
   }
 
   &:where(:active:not(:disabled, [data-disabled])) {
-    padding-top: var(--classic-active-padding-offset-2);
+    padding-top: var(--raised-active-padding-offset-2);
     padding-bottom: 0;
     background-color: color-mix(in srgb, var(--gray-a3) calc(var(--material-alpha) * 100%), var(--gray-3) var(--material-blend));
 

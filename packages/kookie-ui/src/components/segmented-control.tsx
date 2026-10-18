@@ -1,5 +1,7 @@
 'use client';
 
+import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
+import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import classNames from 'classnames';
 import { ToggleGroup as ToggleGroupPrimitive } from 'radix-ui';
@@ -33,8 +35,16 @@ const SegmentedControlRoot = React.forwardRef<HTMLDivElement, SegmentedControlRo
       value: valueProp,
       defaultValue: defaultValueProp,
       onValueChange: onValueChangeProp,
+      material: materialProp,
+      panelBackground,
       ...rootProps
     } = extractProps(props, segmentedControlRootPropDefs, marginPropDefs);
+    useDeprecatedPanelBackgroundWarning(props.panelBackground);
+    const material = materialProp ?? panelBackground;
+
+    if (props.variant !== undefined) {
+      warnDeprecated('SegmentedControl `variant` is deprecated and will be removed in 0.15.0. It has one value, so it chooses nothing.');
+    }
 
     const [value, setValue] = useControllableState({
       prop: valueProp,
@@ -46,6 +56,8 @@ const SegmentedControlRoot = React.forwardRef<HTMLDivElement, SegmentedControlRo
       <ToggleGroupPrimitive.Root
         data-disabled={props.disabled || undefined}
         data-radius={radius}
+        data-panel-background={material}
+        data-material={material}
         ref={forwardedRef}
         className={classNames('rt-SegmentedControlRoot', className)}
         onValueChange={(value) => {

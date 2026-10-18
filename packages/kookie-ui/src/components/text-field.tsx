@@ -1,5 +1,6 @@
 'use client';
 
+import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import classNames from 'classnames';
@@ -32,6 +33,9 @@ const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>
 
   // Determine invalid state
   const isInvalid = inputProps.error || inputProps.isInvalid;
+  if (inputProps.isInvalid !== undefined && inputProps.isInvalid !== false) {
+    warnDeprecated('`isInvalid` is deprecated and will be removed in 0.15.0. Use `error`, the one name every field uses for an invalid value.');
+  }
 
   const { 'aria-describedby': ariaDescribedby, 'aria-labelledby': ariaLabelledby } = inputProps;
 
@@ -97,7 +101,7 @@ const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>
       <input spellCheck="false" {...nativeInputProps} {...ariaProps} ref={composeRefs(inputRef, forwardedRef)} className="rt-reset rt-TextFieldInput" />
       {children}
       {inputProps.errorMessage && (
-        <div id={errorId} className="rt-TextFieldErrorMessage" role="alert" aria-live="polite">
+        <div id={errorId} className="rt-TextFieldErrorMessage" role="alert">
           {inputProps.errorMessage}
         </div>
       )}

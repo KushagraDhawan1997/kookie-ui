@@ -1,3 +1,4 @@
+import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 import * as React from 'react';
 import classNames from 'classnames';
 import { RadioGroup as RadioGroupPrimitive } from 'radix-ui';
@@ -36,10 +37,12 @@ interface RadioCardsRootProps
 const RadioCardsRoot = React.forwardRef<RadioCardsRootElement, RadioCardsRootProps>(
   (props, forwardedRef) => {
     const themeContext = useThemeContext();
-    const panelBackground = props.panelBackground ?? themeContext.panelBackground;
+    useDeprecatedPanelBackgroundWarning(props.panelBackground);
+    const panelBackground = props.material ?? props.panelBackground ?? themeContext.material ?? themeContext.panelBackground;
     const {
       className,
       color,
+      material: _material,
       panelBackground: _,
       ...rootProps
     } = extractProps(props, radioCardsRootPropDefs, marginPropDefs);
@@ -49,6 +52,7 @@ const RadioCardsRoot = React.forwardRef<RadioCardsRootElement, RadioCardsRootPro
           <RadioGroupPrimitive.Root
             data-accent-color={color}
             data-panel-background={panelBackground}
+            data-material={panelBackground}
             {...rootProps}
             ref={forwardedRef}
             className={classNames('rt-RadioCardsRoot', className)}

@@ -666,7 +666,7 @@ function ContextMenuChecks() {
       <Flex gap="3" wrap="wrap">
         <ContextMenu.Root>
           <ContextMenu.Trigger>
-            <Card variant="classic" size="2">
+            <Card variant="raised" size="2">
               <Text size="2">Right-click: responsive size</Text>
             </Card>
           </ContextMenu.Trigger>
@@ -686,7 +686,7 @@ function ContextMenuChecks() {
         </ContextMenu.Root>
         <ContextMenu.Root>
           <ContextMenu.Trigger>
-            <Card variant="classic" size="2">
+            <Card variant="raised" size="2">
               <Text size="2">Right-click: virtualized {picked && `(${picked})`}</Text>
             </Card>
           </ContextMenu.Trigger>

@@ -20,8 +20,8 @@ Preview Block frames a live demo: a toolbar with a light/dark switch, a padded s
 ```tsx
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
 
-<PreviewBlock code={`<Button variant="classic">Save</Button>`}>
-  <Button variant="classic">Save</Button>
+<PreviewBlock code={`<Button variant="raised">Save</Button>`}>
+  <Button variant="raised">Save</Button>
 </PreviewBlock>
 ```
 
@@ -62,7 +62,7 @@ The toolbar only renders when there is a switch or a label.
 A grid suits layout demos, where alignment matters.
 
 <PreviewBlock background="grid" label="Storage card" code={previewSources.grid}>
-  <Card variant="classic" size="2">
+  <Card variant="raised" size="2">
     <Flex direction="column" gap="1" width="240px">
       <Text size="2" weight="medium">Storage</Text>
       <Text size="2" emphasis="medium">18.4 GB of 50 GB used</Text>

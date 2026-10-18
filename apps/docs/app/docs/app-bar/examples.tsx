@@ -27,7 +27,7 @@ export function AppBarExamples() {
           background="none"
           height="24rem"
           code={`<Card
-  variant="classic"
+  variant="raised"
   size="3"
   inset
   style={{
@@ -76,7 +76,7 @@ export function AppBarExamples() {
   </ScrollArea>
 </Card>`}
         >
-          <Card variant="classic" size="3" inset style={{ width: '100%', maxWidth: '400px', height: '22rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+          <Card variant="raised" size="3" inset style={{ width: '100%', maxWidth: '400px', height: '22rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
             <AppBar variant="ghost" size="1">
               <AppBar.Left>
                 <IconButton radius="full" variant="soft" size="2" color="gray" aria-label="Go back">
@@ -228,7 +228,7 @@ export function AppBarExamples() {
   </EmptyState>
 </Card>`}
         >
-          <Card variant="classic" material="translucent" size="3" inset style={{ width: '100%', maxWidth: '400px', height: '24rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+          <Card variant="raised" material="translucent" size="3" inset style={{ width: '100%', maxWidth: '400px', height: '24rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
             <AppBar floating variant="surface" material="translucent" size="1">
               <AppBar.Left>
                 <IconButton variant="ghost" size="2" color="gray" aria-label="Home">
@@ -272,7 +272,7 @@ export function AppBarExamples() {
         <PreviewBlock
           background="none"
           height="20rem"
-          code={`<Card variant="classic" size="2" style={{ display: 'flex', flexDirection: 'column' }}>
+          code={`<Card variant="raised" size="2" style={{ display: 'flex', flexDirection: 'column' }}>
   <Flex direction="column" gap="4" p="4" flexGrow="1" pb="var(--rt-app-bar-height)">
     <Heading size="4" weight="medium">Edit Profile</Heading>
     <Text size="2" emphasis="medium">Update your account information.</Text>
@@ -297,7 +297,7 @@ export function AppBarExamples() {
 </Card>`}
         >
           <Card
-            variant="classic"
+            variant="raised"
             size="1"
             style={{
               width: '100%',
@@ -366,7 +366,7 @@ export function AppBarExamples() {
         <PreviewBlock
           background="none"
           height="22rem"
-          code={`<Card variant="classic" size="2">
+          code={`<Card variant="raised" size="2">
   <AppBar variant="surface" size="2">
     <AppBar.Left>
       <AppBar.Title>Documents</AppBar.Title>
@@ -399,7 +399,7 @@ export function AppBarExamples() {
   </Flex>
 </Card>`}
         >
-          <Card variant="classic" size="2" style={{ width: '100%', maxWidth: '500px', overflow: 'hidden' }}>
+          <Card variant="raised" size="2" style={{ width: '100%', maxWidth: '500px', overflow: 'hidden' }}>
             <AppBar variant="surface" size="2">
               <AppBar.Left>
                 <AppBar.Title>Documents</AppBar.Title>

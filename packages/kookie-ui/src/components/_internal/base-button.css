@@ -10,7 +10,7 @@
  * - Sizes: Responsive height and border-radius
  * - Variant palettes: Each variant defines its color scale as CSS variables
  * - Shared state logic: Single set of hover/active/open/disabled selectors
- * - Special variants: classic, override, solid (unique behavior, kept separate)
+ * - Special variants: raised, override, solid (unique behavior, kept separate)
  * - Toggle states: Pressed state overrides for all variants
  */
 
@@ -444,8 +444,8 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* Classic variant - uses --color-surface and gray interactive states */
-.rt-BaseButton:where(.rt-variant-classic) {
+/* Raised variant - uses --color-surface and gray interactive states */
+.rt-BaseButton:where(.rt-variant-raised) {
   position: relative;
   color: var(--accent-ink);
   background-color: var(--color-surface-solid);
@@ -477,7 +477,7 @@
 
   @media (pointer: coarse) {
     &:where(:active:not([data-state='open'])) {
-      outline: var(--classic-shadow-blur-large) solid var(--gray-a4);
+      outline: var(--raised-shadow-blur-large) solid var(--gray-a4);
       outline-offset: 0;
     }
   }
@@ -594,7 +594,7 @@
 
   @media (pointer: coarse) {
     &:where(:active:not([data-state='open'])) {
-      outline: var(--classic-shadow-blur-large) solid var(--accent-a4);
+      outline: var(--raised-shadow-blur-large) solid var(--accent-a4);
       outline-offset: 0;
     }
   }
@@ -634,8 +634,8 @@
     filter: none;
   }
 
-  /* Classic needs special handling for top position */
-  &:where(.rt-variant-classic) {
+  /* Raised needs special handling for top position */
+  &:where(.rt-variant-raised) {
     top: 0;
   }
 }

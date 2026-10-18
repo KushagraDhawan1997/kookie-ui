@@ -1,0 +1,59 @@
+---
+title: Notice
+description: A message about a condition that is true now.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/notice.tsx
+---
+
+import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
+import { Button, Flex, Notice } from '@kushagradhawan/kookie-ui';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Alert02Icon } from '@hugeicons/core-free-icons';
+
+Notice tells the person about a condition that is true now and that nobody just caused: a usage limit, a lost connection, a finished job. It takes space in the layout and never floats, so it cannot cover what it is about. It replaces Callout.
+
+<PreviewBlock height="10rem">
+  <Flex direction="column" gap="3" width="100%" maxWidth="28rem">
+    <Notice icon={<HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />} action={<Button size="2" variant="soft" color="gray">Add credits</Button>}>You have used 90% of this month's credits.</Notice>
+  </Flex>
+</PreviewBlock>
+
+## Usage
+
+```tsx showLineNumbers
+import { Button, Notice } from '@kushagradhawan/kookie-ui';
+
+export function UsageNotice({ onDismiss }: { onDismiss: () => void }) {
+  return (
+    <Notice
+      icon={<HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />}
+      action={<Button>Add credits</Button>}
+      onDismiss={onDismiss}
+    >
+      You have used 90% of this month's credits.
+    </Notice>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Description |
+| ---- | ---- | ----------- |
+| `size` | `'1' \| '2' \| '3'` | Padding, text and button size. Default `'2'` |
+| `color` | `AccentColor` | The category of the message. Default `'gray'`. Use a colour only when it adds a fact the words don't give |
+| `icon` | `ReactNode` | An icon before the message, hidden from assistive technology |
+| `action` | `ReactNode` | One action that fixes the condition |
+| `onDismiss` | `() => void` | Shows a dismiss button. Dismissing hides the message; your app removes it and remembers the choice |
+| `dismissLabel` | `string` | Accessible name of the dismiss button. Default `'Dismiss'` |
+| `material` | `'solid' \| 'translucent'` | `translucent` when content scrolls behind it |
+
+A notice with no action and no dismiss button is a sentence. Use `Text` unless it must stand apart from the page.
+
+## Confirmation
+
+`Confirmation` is the same strip for a question that waits for an answer: a quiet no before a loud yes, and no dismiss button. It takes `confirmLabel`, `cancelLabel` (default `'Not now'`), `onConfirm`, `onCancel` and `busy`.
+
+## Accessibility
+
+- The strip is `role="status"` with `aria-live="polite"`, so a notice that appears is announced without moving focus.
+- Neither Notice nor Confirmation takes focus.

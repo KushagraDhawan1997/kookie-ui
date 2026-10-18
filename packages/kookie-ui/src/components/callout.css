@@ -137,24 +137,24 @@
   color: var(--accent-ink);
 }
 
-/* classic */
+/* raised */
 
-.rt-CalloutRoot:where(.rt-variant-classic) {
-  --classic-surface: var(--color-surface-solid);
-  background-color: var(--classic-surface);
+.rt-CalloutRoot:where(.rt-variant-raised) {
+  --raised-surface: var(--color-surface-solid);
+  background-color: var(--raised-surface);
   box-shadow: var(--shadow-2);
   color: var(--accent-ink);
   transition: var(--transition-text-field);
 
   :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    --classic-surface: var(--color-surface-translucent);
+    --raised-surface: var(--color-surface-translucent);
   }
 
   &:where([data-panel-background='solid'], [data-material='solid']) {
-    --classic-surface: var(--color-surface-solid);
+    --raised-surface: var(--color-surface-solid);
   }
 
   &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    --classic-surface: var(--color-surface-translucent);
+    --raised-surface: var(--color-surface-translucent);
   }
 }

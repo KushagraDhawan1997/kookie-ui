@@ -1,5 +1,6 @@
 'use client';
 
+import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import classNames from 'classnames';
 
@@ -25,7 +26,11 @@ interface UserCardProps
     MarginProps,
     UserCardOwnProps {}
 
+/** @deprecated Removed from the package in 0.15.0. Copy the UserCard block from the docs instead. */
 const UserCard = React.forwardRef<UserCardElement, UserCardProps>((props, forwardedRef) => {
+  warnDeprecated(
+    'UserCard is deprecated as a package export and will be removed in 0.15.0. Copy the UserCard block from the docs into your project.',
+  );
   const themeContext = useThemeContext();
   const resolvedPanelBackground = props.panelBackground ?? themeContext.panelBackground;
 

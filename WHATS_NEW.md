@@ -1,5 +1,11 @@
 # What's new in Womp's Design System
 
+## 0.14.0 (October 18)
+
+1. **New defaults.** Controls rest raised, badges and avatars rest gray, and the theme is gray and solid unless you set it. Menus use a soft highlight, and a solid one when the system asks for more contrast.
+2. **One button.** `Button iconOnly` is the icon button. Fields, Select, Tabs and Navbar gain size 4.
+3. **Notice replaces Callout.** Callout, AppBar, the UserCard export, `classic`, `panelBackground` and `isInvalid` still work, warn in development, and go in 0.15.0.
+
 ## 0.13.1 (October 17)
 
 1. **One height for every control.** A control of a given size is now the same height everywhere. Sidebar rows and Tabs are a step shorter, and Select items at size 3 are a step taller.

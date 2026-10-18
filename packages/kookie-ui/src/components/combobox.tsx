@@ -17,6 +17,7 @@
  * items are never lit at once and Enter always picks the lit item.
  */
 
+import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import classNames from 'classnames';
 import { Popover as PopoverPrimitive } from 'radix-ui';
@@ -495,7 +496,14 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
   useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
   const material = props.material ?? props.panelBackground ?? themeContext.material ?? themeContext.panelBackground;
-  const size = props.size ?? ctx.size ?? comboboxContentPropDefs.size.default;
+  // Menus stop at size 3; a size 4 field opens a size 3 list.
+  const rootSize = ctx.size === '4' ? '3' : ctx.size;
+  const size = props.size ?? rootSize ?? comboboxContentPropDefs.size.default;
+  if (props.variant !== undefined) {
+    warnDeprecated(
+      'The menu `variant` prop is deprecated and will be removed in 0.15.0. Menus highlight with a soft fill, and a solid one when the person asks for more contrast.',
+    );
+  }
   const variant = props.variant ?? comboboxContentPropDefs.variant.default;
 
   const {
@@ -615,7 +623,7 @@ const ComboboxInput = React.forwardRef<ComboboxInputElement, ComboboxInputProps>
     const search = React.useContext(ComboboxSearchContext);
     const contentContext = useComboboxContentContext();
 
-    const contentVariant = contentContext?.variant ?? 'solid';
+    const contentVariant = contentContext?.variant ?? 'soft';
     const textFieldVariant = inputVariant ?? (contentVariant === 'solid' ? 'surface' : 'soft');
 
     // The search text lives in Root; only this component subscribes to it.

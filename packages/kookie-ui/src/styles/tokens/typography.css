@@ -97,6 +97,8 @@
 
   --strong-font-size-adjust: 1;
   --strong-font-style: inherit;
+  /* The weight every Heading uses unless it sets `weight`. Change it here, once. */
+  --heading-font-weight: var(--font-weight-bold);
   --strong-font-weight: var(--font-weight-medium);
   --strong-letter-spacing: 0em;
 

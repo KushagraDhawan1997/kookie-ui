@@ -3,7 +3,7 @@
   --leading-trim-end: var(--heading-leading-trim-end);
   font-family: var(--heading-font-family);
   font-style: var(--heading-font-style);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--heading-font-weight);
   line-height: var(--line-height);
 
   /* `font` prop — all three resolve through the same tier-1 stacks. */

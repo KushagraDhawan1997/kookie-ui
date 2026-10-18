@@ -19,9 +19,9 @@ const iconNameMap = new Map([
   [Tree01Icon, 'Tree01Icon'],
 ]);
 
-const variants = ['classic', 'surface', 'soft', 'outline', 'ghost'] as const;
+const variants = ['raised', 'surface', 'soft', 'outline', 'ghost'] as const;
 const contentVariants = ['solid', 'soft'] as const;
-const inputVariants = ['classic', 'surface', 'soft', 'outline', 'ghost'] as const;
+const inputVariants = ['raised', 'surface', 'soft', 'outline', 'ghost'] as const;
 const sizes = ['1', '2', '3'] as const;
 const triggerWidths = ['fit-content', '200px', '240px', '320px', '100%'] as const;
 const accentColors = ['theme', 'gray', 'iris', 'crimson', 'jade', 'gold'] as const;

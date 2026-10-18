@@ -30,7 +30,6 @@ const WITHOUT_PAGE = [
   'kbd',
   'link',
   'message-scroller',
-  'notice',
   'popover',
   'portal',
   'progress',

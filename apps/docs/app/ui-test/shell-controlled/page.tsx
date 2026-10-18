@@ -287,7 +287,7 @@ export default function ShellControlledTest() {
             <Flex gap="2" wrap="wrap">
               <Button
                 size="2"
-                variant="classic"
+                variant="raised"
                 color="amber"
                 onClick={() => {
                   addLog('Test', 'rail-close', 'Closing Rail — Panel should stay as it is');
@@ -298,7 +298,7 @@ export default function ShellControlledTest() {
               </Button>
               <Button
                 size="2"
-                variant="classic"
+                variant="raised"
                 color="amber"
                 onClick={() => {
                   addLog('Test', 'panel-open', 'Opening Panel — Rail should stay as it is');
@@ -333,7 +333,7 @@ export default function ShellControlledTest() {
             <Flex gap="2" wrap="wrap">
               <Button
                 size="2"
-                variant="classic"
+                variant="raised"
                 color="green"
                 onClick={() => {
                   addLog('Test', 'rapid-toggle', 'Rapidly toggling all panes');
@@ -347,7 +347,7 @@ export default function ShellControlledTest() {
               </Button>
               <Button
                 size="2"
-                variant="classic"
+                variant="raised"
                 color="green"
                 onClick={async () => {
                   addLog('Test', 'sequential', 'Sequential open: Rail → Panel → Inspector → Bottom');

@@ -32,7 +32,7 @@ export function CalloutExamples() {
   </Callout.Text>
 </Callout.Root>`}
         >
-          <Card variant="classic" size="3" style={{ maxWidth: 520 }}>
+          <Card variant="raised" size="3" style={{ maxWidth: 520 }}>
             <Flex direction="column" gap="4">
               <Text size="3" weight="medium">
                 Authentication
@@ -171,7 +171,7 @@ export function CalloutExamples() {
   </Callout.Text>
 </Callout.Root>`}
         >
-          <Card variant="classic" size="3" style={{ maxWidth: 480 }}>
+          <Card variant="raised" size="3" style={{ maxWidth: 480 }}>
             <Flex direction="column" gap="4">
               <Text size="3" weight="medium">
                 Account Security
@@ -217,7 +217,7 @@ export function CalloutExamples() {
   </Callout.Text>
 </Callout.Root>`}
         >
-          <Card variant="classic" size="3" style={{ maxWidth: 520 }}>
+          <Card variant="raised" size="3" style={{ maxWidth: 520 }}>
             <Flex direction="column" gap="4" align="start">
               <Code size="3">
                 useOldHook()
@@ -290,7 +290,7 @@ export function CalloutExamples() {
   </Callout.Text>
 </Callout.Root>`}
         >
-          <Card variant="classic" size="3" style={{ maxWidth: 400 }}>
+          <Card variant="raised" size="3" style={{ maxWidth: 400 }}>
             <Flex direction="column" gap="3">
               <Text size="2" weight="medium">
                 Export Format

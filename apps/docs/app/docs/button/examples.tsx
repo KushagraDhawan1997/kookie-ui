@@ -47,7 +47,7 @@ export function ButtonExamples() {
           <SectionHeader.Content>
             <SectionHeader.Title>Form Submission</SectionHeader.Title>
             <SectionHeader.Description>
-              The classic variant commands attention for primary actions. Click to see the loading state - the button replaces all content with a centered spinner and disables interaction
+              The raised variant commands attention for primary actions. Click to see the loading state - the button replaces all content with a centered spinner and disables interaction
               automatically.
             </SectionHeader.Description>
           </SectionHeader.Content>
@@ -64,7 +64,7 @@ export function ButtonExamples() {
     Cancel
   </Button>
   <Button
-    variant="classic"
+    variant="raised"
     size="2"
     loading={isSubmitting}
     onClick={handleSubmit}
@@ -78,7 +78,7 @@ export function ButtonExamples() {
             <Button variant="soft" size="2" color="gray" disabled={isSubmitting}>
               Cancel
             </Button>
-            <Button variant="classic" size="2" loading={isSubmitting} onClick={handleSubmit}>
+            <Button variant="raised" size="2" loading={isSubmitting} onClick={handleSubmit}>
               <HugeiconsIcon icon={Tick01Icon} strokeWidth={1.75} />
               Save Changes
             </Button>
@@ -101,7 +101,7 @@ export function ButtonExamples() {
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
-          code={`<Button disabled={isBookmarking} variant="classic">
+          code={`<Button disabled={isBookmarking} variant="raised">
   <Spinner loading={isBookmarking}>
     <BookmarkIcon />
   </Spinner>
@@ -109,7 +109,7 @@ export function ButtonExamples() {
 </Button>`}
         >
           <Flex gap="2" align="center">
-            <Button variant="classic" size="2" disabled={isBookmarking} onClick={handleBookmark}>
+            <Button variant="raised" size="2" disabled={isBookmarking} onClick={handleBookmark}>
               <Spinner loading={isBookmarking}>
                 <HugeiconsIcon icon={Bookmark01Icon} strokeWidth={1.75} />
               </Spinner>
@@ -169,14 +169,14 @@ export function ButtonExamples() {
           <SectionHeader.Content>
             <SectionHeader.Title>Card Call-to-Action</SectionHeader.Title>
             <SectionHeader.Description>
-              Inside a classic card, use solid for the primary action to maintain clear hierarchy. The ghost secondary action stays minimal within the elevated surface.
+              Inside a raised card, use solid for the primary action to maintain clear hierarchy. The ghost secondary action stays minimal within the elevated surface.
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
           code={`<Card
-  variant="classic"
+  variant="raised"
   size="2"
   style={{ maxWidth: 320 }}
 >
@@ -201,7 +201,7 @@ export function ButtonExamples() {
   </Flex>
 </Card>`}
         >
-          <Card variant="classic" size="2" style={{ maxWidth: 320 }}>
+          <Card variant="raised" size="2" style={{ maxWidth: 320 }}>
             <Flex direction="column" gap="6" p="2">
               <Flex direction="column" gap="1">
                 <Heading size="4" weight="medium">

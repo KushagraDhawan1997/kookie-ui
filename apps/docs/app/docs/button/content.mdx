@@ -44,14 +44,15 @@ export function MyComponent() {
 
 | Prop           | Type                                                                  | Description                                                                                     |
 | -------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `variant`      | `'classic' \| 'solid' \| 'soft' \| 'surface' \| 'outline' \| 'ghost'` | Button style variant: classic for elevated, solid for primary, outline for secondary, ghost for utility, soft/surface for content-heavy UIs |
+| `variant`      | `'raised' \| 'solid' \| 'soft' \| 'surface' \| 'outline' \| 'ghost'` | Button style variant: raised for elevated, solid for primary, outline for secondary, ghost for utility, soft/surface for content-heavy UIs |
 | `size`         | `'1' \| '2' \| '3' \| '4'`                                            | Button density: 1 (24px) for toolbars, 2 (32px) standard, 3 (40px) for important actions, 4 (48px) for hero sections. Supports responsive objects |
 | `color`        | `AccentColor`                                                         | Semantic color to communicate action intent. Gray fills with step 12 on its own |
+| `iconOnly`     | `boolean`                                                             | Square button for a single icon. Needs `aria-label`. Same as IconButton                         |
 | `fullWidth`    | `boolean`                                                             | Makes button fill its container width. Useful for mobile layouts and form submissions          |
 | `flush`        | `boolean`                                                             | Removes padding for seamless text integration. Use with ghost variant to blend with text while staying interactive |
 | `radius`       | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'`                  | Corner radius scale: none for sharp edges, small/medium/large for progressive rounding, full for pill-shaped |
 | `material`     | `'solid' \| 'translucent'`                                            | Background appearance: solid for opaque backgrounds, translucent for depth over images or dynamic backgrounds |
-| `panelBackground` | `'solid' \| 'translucent'`                                         | Deprecated: Use material prop instead. Controls panel background appearance                     |
+| `panelBackground` | `'solid' \| 'translucent'`                                         | Deprecated: use `material`. Removed in 0.15.0 |
 | `loading`      | `boolean`                                                             | Replaces all content with a centered spinner and disables button automatically. For visible text during loading, use Spinner component around icons instead |
 | `disabled`     | `boolean`                                                             | Prevents interaction when action is unavailable, such as during form validation or when authentication is required |
 | `as`           | `ElementType`                                                         | Renders button as different HTML element while maintaining button styling. Useful for navigation links or routing integration |
@@ -64,12 +65,12 @@ export function MyComponent() {
 
 Use the `variant` prop to set button style.
 
-### Classic
+### Raised
 
 Elevated style with subtle shadow for maximum visual impact and primary actions.
 
 ```tsx
-<Button size="3" variant="classic">
+<Button size="3" variant="raised">
   Button
 </Button>
 ```
@@ -252,10 +253,10 @@ Set the `disabled` prop to `true` to prevent interaction when an action is unava
 Buttons handle focus for keyboard navigation. For complex patterns, use `data-state` for custom visuals.
 
 ```tsx
-<Button size="3" variant="classic" data-state="open">
+<Button size="3" variant="raised" data-state="open">
   Open
 </Button>
-<Button size="3" variant="classic" data-state="on">
+<Button size="3" variant="raised" data-state="on">
   On
 </Button>
 ```

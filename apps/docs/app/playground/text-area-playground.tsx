@@ -4,7 +4,7 @@ import React from 'react';
 import { TextArea } from '@kushagradhawan/kookie-ui';
 import Playground from '@/components/playground';
 
-const variants = ['classic', 'surface', 'soft', 'outline', 'ghost'] as const;
+const variants = ['raised', 'surface', 'soft', 'outline', 'ghost'] as const;
 const sizes = ['1', '2', '3'] as const;
 const radiusOptions = ['none', 'small', 'medium', 'large', 'full'] as const;
 const materials = ['solid', 'translucent'] as const;

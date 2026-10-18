@@ -1,3 +1,4 @@
+import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 import * as React from 'react';
 import classNames from 'classnames';
 import { Tabs as TabsPrimitive } from 'radix-ui';
@@ -36,15 +37,18 @@ interface TabsListProps
     MarginProps,
     TabsListOwnProps {}
 const TabsList = React.forwardRef<TabsListElement, TabsListProps>((props, forwardedRef) => {
-  const { className, color, panelBackground, ...listProps } = extractProps(
+  const { className, color, material: materialProp, panelBackground, ...listProps } = extractProps(
     props,
     tabsListPropDefs,
     marginPropDefs,
   );
+  useDeprecatedPanelBackgroundWarning(props.panelBackground);
+  const material = materialProp ?? panelBackground;
   return (
     <TabsPrimitive.List
       data-accent-color={color}
-      data-panel-background={panelBackground}
+      data-panel-background={material}
+      data-material={material}
       {...listProps}
       asChild={false}
       ref={forwardedRef}

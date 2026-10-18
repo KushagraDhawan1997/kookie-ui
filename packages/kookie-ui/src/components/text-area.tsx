@@ -1,3 +1,4 @@
+import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import classNames from 'classnames';
 
@@ -31,6 +32,9 @@ const TextArea = React.forwardRef<TextAreaElement, TextAreaProps>((props, forwar
 
   // Determine invalid state
   const isInvalid = textAreaProps.error || textAreaProps.isInvalid;
+  if (textAreaProps.isInvalid !== undefined && textAreaProps.isInvalid !== false) {
+    warnDeprecated('`isInvalid` is deprecated and will be removed in 0.15.0. Use `error`, the one name every field uses for an invalid value.');
+  }
 
   // Build aria-describedby string
   const describedBy = React.useMemo(() => {
@@ -79,7 +83,7 @@ const TextArea = React.forwardRef<TextAreaElement, TextAreaProps>((props, forwar
         {...ariaProps}
       />
       {textAreaProps.errorMessage && (
-        <div id={errorId} className="rt-TextAreaErrorMessage" role="alert" aria-live="polite">
+        <div id={errorId} className="rt-TextAreaErrorMessage" role="alert">
           {textAreaProps.errorMessage}
         </div>
       )}

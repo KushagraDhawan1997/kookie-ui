@@ -1,9 +1,7 @@
 import * as React from 'react';
-import classNames from 'classnames';
 
 import { BaseButton } from './_internal/base-button.js';
-import { Tooltip } from './tooltip.js';
-import { useTooltipWrapper } from '../hooks/use-tooltip-wrapper.js';
+import { Button } from './button.js';
 import type { BaseButtonProps } from './_internal/base-button.js';
 
 type IconButtonElement = React.ElementRef<typeof BaseButton>;
@@ -61,7 +59,8 @@ type IconButtonProps<C extends React.ElementType = 'button'> = IconButtonOwnProp
 type IconButtonComponent = <C extends React.ElementType = 'button'>(props: IconButtonProps<C> & { ref?: React.ForwardedRef<IconButtonElement> }) => React.ReactElement | null;
 
 /**
- * IconButton component for compact, accessible icon-only interactions
+ * IconButton component for compact, accessible icon-only interactions. It is `Button` with
+ * `iconOnly` set, kept as its own name for its stricter type: an accessible name is required.
  *
  * The IconButton component extends Button with specialized behavior for visual symbols.
  * It enforces accessibility requirements, provides automatic square sizing, and includes
@@ -101,50 +100,7 @@ type IconButtonComponent = <C extends React.ElementType = 'button'>(props: IconB
  * ```
  */
 const IconButton = React.forwardRef(
-  (
-    { className, tooltip, tooltipSide = 'top', tooltipAlign = 'center', tooltipDelayDuration, tooltipDisableHoverableContent, ...props }: IconButtonProps,
-    forwardedRef: React.ForwardedRef<IconButtonElement>,
-  ) => {
-    // Use shared tooltip wrapper hook for accessibility props
-    const { tooltipId, hasTooltip, accessibilityProps: tooltipAccessibilityProps } = useTooltipWrapper(tooltip);
-
-    // Runtime accessibility validation to ensure WCAG compliance
-    // This helps catch accessibility issues during development
-    const hasAriaLabel = 'aria-label' in props && props['aria-label'];
-    const hasAriaLabelledBy = 'aria-labelledby' in props && props['aria-labelledby'];
-    const hasChildren = 'children' in props && props.children;
-
-    // Validate accessible name - throw in development, log error in production
-    if (!hasAriaLabel && !hasAriaLabelledBy && !hasChildren) {
-      const errorMessage =
-        'IconButton: Icon buttons must have an accessible name. Please provide either:' +
-        '\n- aria-label prop with descriptive text' +
-        '\n- aria-labelledby prop referencing a label element' +
-        '\n- or visible text children';
-
-      if (process.env.NODE_ENV === 'development') {
-        throw new Error(errorMessage);
-      } else {
-        console.error(errorMessage);
-      }
-    }
-
-    // Create the base icon button element with accessibility props
-    const iconButton = <BaseButton {...props} {...tooltipAccessibilityProps} ref={forwardedRef} className={classNames('rt-IconButton', className)} />;
-
-    // If no tooltip is provided, return the icon button as-is for better performance
-    if (!hasTooltip) {
-      return iconButton;
-    }
-
-    // Wrap with Tooltip when tooltip content is provided
-    // This creates a compound component that handles both button and tooltip functionality
-    return (
-      <Tooltip content={tooltip} side={tooltipSide} align={tooltipAlign} delayDuration={tooltipDelayDuration} disableHoverableContent={tooltipDisableHoverableContent} id={tooltipId}>
-        {iconButton}
-      </Tooltip>
-    );
-  },
+  (props: IconButtonProps, forwardedRef: React.ForwardedRef<IconButtonElement>) => <Button {...props} iconOnly ref={forwardedRef} />,
 ) as IconButtonComponent & { displayName?: string };
 
 IconButton.displayName = 'IconButton';

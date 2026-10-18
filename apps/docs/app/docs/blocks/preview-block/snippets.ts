@@ -1,6 +1,6 @@
 export const previewSources = {
   grid: `<PreviewBlock background="grid" label="Storage card" code={source}>
-  <Card variant="classic" size="2">
+  <Card variant="raised" size="2">
     <Flex direction="column" gap="1" width="240px">
       <Text size="2" weight="medium">Storage</Text>
       <Text size="2" emphasis="medium">18.4 GB of 50 GB used</Text>

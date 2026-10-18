@@ -57,11 +57,11 @@ export const BaseButtonSchema = z
 
     /**
      * Visual variant that determines the button's appearance and context
-     * @default 'solid'
+     * @default 'raised'
      */
     variant: z
-      .enum(['classic', 'solid', 'soft', 'surface', 'outline', 'ghost', 'override'])
-      .default('solid')
+      .enum(['raised', 'solid', 'soft', 'surface', 'outline', 'ghost', 'override', 'classic'])
+      .default('raised')
       .describe("Visual variant that determines the button's appearance and context"),
 
     /**

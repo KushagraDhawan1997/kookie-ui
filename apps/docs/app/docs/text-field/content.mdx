@@ -48,14 +48,14 @@ The Root component is the input element that accepts user text input.
 | Prop | Type | Description |
 | ---- | ---- | ----------- |
 | `size` | `'1' \| '2' \| '3'` | Input density: 1 (24px) for compact interfaces, 2 (32px) standard, 3 (40px) for mobile-friendly touch targets. Supports responsive objects |
-| `variant` | `'classic' \| 'surface' \| 'soft' \| 'ghost' \| 'outline'` | Input style variant: classic for elevated, surface for standard forms, soft for subtle integration, outline for defined boundaries, ghost for minimal inline editing |
+| `variant` | `'raised' \| 'surface' \| 'soft' \| 'ghost' \| 'outline'` | Input style variant: raised for elevated, surface for standard forms, soft for subtle integration, outline for defined boundaries, ghost for minimal inline editing |
 | `color` | `AccentColor` | Semantic color for focus state and validation feedback. Use for visual categorization or status communication |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Corner radius scale: none for sharp edges, small/medium/large for progressive rounding, full for pill-shaped |
 | `material` | `'solid' \| 'translucent'` | Background appearance: solid for opaque backgrounds, translucent for depth over images or dynamic backgrounds |
-| `panelBackground` | `'solid' \| 'translucent'` | Deprecated: Use material prop instead. Controls panel background appearance |
+| `panelBackground` | `'solid' \| 'translucent'` | Deprecated: use `material`. Removed in 0.15.0 |
 | `error` | `boolean` | Marks field as invalid. Use with errorMessage for accessibility |
 | `errorMessage` | `string` | Error message displayed below input. Automatically connected via ARIA attributes for screen readers |
-| `isInvalid` | `boolean` | Alternative to error prop for marking field as invalid |
+| `isInvalid` | `boolean` | Deprecated: use `error`. Removed in 0.15.0 |
 | `required` | `boolean` | Marks field as required for forms |
 | `type` | `'text' \| 'email' \| 'password' \| 'search' \| 'tel' \| 'url' \| 'number' \| 'date' \| 'time' \| 'datetime-local' \| 'month' \| 'week' \| 'hidden'` | HTML input type for different input modes and validation |
 | `placeholder` | `string` | Placeholder text shown when input is empty |
@@ -93,12 +93,12 @@ Slots allow you to place content before or after the input. Use them for icons, 
 
 Use the `variant` prop to set input style.
 
-### Classic
+### Raised
 
 Elevated style with subtle shadow for maximum visual prominence and important inputs.
 
 ```tsx
-<TextField.Root variant="classic" placeholder="Enter text" />
+<TextField.Root variant="raised" placeholder="Enter text" />
 ```
 
 ### Surface
@@ -625,7 +625,7 @@ TextField provides comprehensive accessibility through ARIA attributes and seman
 
 ### ARIA Attributes
 
-- `aria-invalid="true"` - Automatically set when error or isInvalid is true
+- `aria-invalid="true"` - Automatically set when `error` is true
 - `aria-describedby` - Links to error message for screen reader announcements
 - `aria-labelledby` - Links to external label element
 - `role="alert"` - Error messages are announced immediately
@@ -679,7 +679,7 @@ Built-in support for required fields, pattern validation, and min/max constraint
 ### Added
 
 - **Scrubbing behavior** for TextField.Slot with pointer lock and virtual cursor
-- **Error validation system** with `error`, `errorMessage`, and `isInvalid` props
+- **Error validation system** with `error` and `errorMessage` props
 - **Automatic ARIA attributes** for error messages and validation states
 - **Material prop** for solid/translucent theme contexts
 - **Slot composition system** for prefix/suffix content
