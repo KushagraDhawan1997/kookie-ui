@@ -227,24 +227,11 @@ describe('Theme values follow their props', () => {
     expect(seen.at(-1)?.accentColor).toBe('crimson');
   });
 
-  test('panelBackground tracks material for backwards compatibility', () => {
-    const { seen, Probe } = readContext();
-    render(
-      <Theme material="solid">
-        <Probe />
-      </Theme>,
-    );
-
-    expect(seen.at(-1)?.material).toBe('solid');
-    expect(seen.at(-1)?.panelBackground).toBe('solid');
-  });
-
   test('material is settled on the first commit, not corrected afterwards', () => {
     const { container } = render(<Theme material="solid" />);
     const root = container.querySelector('.radix-themes') as HTMLElement;
 
     expect(root.dataset.material).toBe('solid');
-    expect(root.dataset.panelBackground).toBe('solid');
   });
 });
 

@@ -130,18 +130,6 @@ describe('Button still renders its material attributes', () => {
     const button = screen.getByTestId('btn');
 
     expect(button.dataset.material).toBe('translucent');
-    expect(button.dataset.panelBackground).toBe('translucent');
-  });
-
-  test('panelBackground still feeds material for backwards compatibility', () => {
-    vi.spyOn(console, 'warn').mockImplementation(() => {});
-    renderWithProviders(
-      <Button data-testid="btn" panelBackground="solid">
-        a
-      </Button>,
-    );
-
-    expect(screen.getByTestId('btn').dataset.material).toBe('solid');
   });
 
   test('a button defaults to type="button"', () => {

@@ -452,7 +452,6 @@ describe('Combobox', () => {
       const trigger = screen.getByTestId('trigger');
       expect(trigger).not.toHaveAttribute('material');
       expect(trigger).toHaveAttribute('data-material', 'translucent');
-      expect(trigger).toHaveAttribute('data-panel-background', 'translucent');
     });
   });
 

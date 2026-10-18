@@ -51,6 +51,7 @@
   cursor: pointer;
   contain: paint;
   gap: var(--base-button-gap);
+  height: var(--base-button-height);
 
   /* Typography */
   font-family: var(--default-font-family);
@@ -121,8 +122,6 @@
     shape-rendering: geometricPrecision;
   }
 
-  /* Set height using CSS custom property for responsive sizing */
-  height: var(--base-button-height);
 }
 
 /* Full width mode */

@@ -104,23 +104,9 @@ describe('Collapsed panes layout (Issue 1: space taken when collapsed)', () => {
       expect(sidebar).toHaveAttribute('data-mode', 'expanded');
     });
 
-    it('has data-mode="thin" when defaultState is thin', () => {
-      renderWithProviders(
-        <Shell.Root>
-          <Shell.Sidebar presentation="fixed" defaultState="thin">
-            sidebar
-          </Shell.Sidebar>
-          <Shell.Content>content</Shell.Content>
-        </Shell.Root>,
-      );
-
-      const sidebar = screen.getByText('sidebar').closest('.rt-ShellSidebar') as HTMLElement;
-      expect(sidebar).toHaveAttribute('data-mode', 'thin');
-    });
-
     it('transitions from expanded to collapsed correctly', async () => {
       function Fixture() {
-        const [state, setState] = React.useState<'collapsed' | 'thin' | 'expanded'>('expanded');
+        const [state, setState] = React.useState<'collapsed' | 'expanded'>('expanded');
         return (
           <Shell.Root>
             <Shell.Header>

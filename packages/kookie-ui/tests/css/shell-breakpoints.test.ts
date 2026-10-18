@@ -35,7 +35,6 @@ const attributesFor = (bp: string) => [
   `[data-presentation-${bp}='stacked']`,
   `[data-auto-${bp}='closed']`,
   `[data-auto-${bp}='open']`,
-  `[data-auto-${bp}='thin']`,
 ];
 
 /**

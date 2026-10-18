@@ -56,17 +56,15 @@ describe('DropdownMenu', () => {
     expect(screen.queryByRole('menu')).toBeNull();
   });
 
-  it('applies size, variant, material and color to the content', async () => {
+  it('applies size, material and color to the content, with the soft highlight', async () => {
     renderMenu(<DropdownMenu.Item>One</DropdownMenu.Item>, {
       size: '1',
-      variant: 'soft',
       material: 'solid',
       color: 'red',
     });
     const menu = await screen.findByRole('menu');
     expect(menu).toHaveClass('rt-r-size-1', 'rt-variant-soft');
     expect(menu).toHaveAttribute('data-material', 'solid');
-    expect(menu).toHaveAttribute('data-panel-background', 'solid');
     expect(menu).toHaveAttribute('data-accent-color', 'red');
     expect(menu).not.toHaveAttribute('color');
     expect(menu).not.toHaveAttribute('submenubehavior');

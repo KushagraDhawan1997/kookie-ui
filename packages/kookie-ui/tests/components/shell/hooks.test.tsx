@@ -44,10 +44,10 @@ describe('Shell.useSidebarMode', () => {
       </Shell.Root>,
     );
 
-    act(() => api.setSidebarMode('thin'));
+    act(() => api.setSidebarMode('collapsed'));
 
-    expect(onStateChange).toHaveBeenLastCalledWith('thin', { reason: 'toggle' });
-    expect(screen.getByTestId('mode').textContent).toBe('thin');
+    expect(onStateChange).toHaveBeenLastCalledWith('collapsed', { reason: 'toggle' });
+    expect(screen.getByTestId('mode').textContent).toBe('collapsed');
   });
 
   it('does not move a controlled Sidebar until the app passes the new state', () => {
@@ -97,8 +97,8 @@ describe('Shell.useShell (deprecated)', () => {
     act(() => shell.setInspectorMode('expanded'));
     expect(onOpenChange).toHaveBeenLastCalledWith(true, { reason: 'toggle' });
     expect(shell.inspectorMode).toBe('expanded');
-    act(() => shell.setSidebarMode('thin'));
-    expect(shell.sidebarMode).toBe('thin');
+    act(() => shell.setSidebarMode('collapsed'));
+    expect(shell.sidebarMode).toBe('collapsed');
     expect(typeof shell.setHasLeft).toBe('function');
     expect(typeof shell.setPeekTarget).toBe('function');
   });

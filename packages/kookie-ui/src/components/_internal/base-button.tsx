@@ -79,7 +79,6 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((props, 
   } = extractProps(props, baseButtonPropDefs, marginPropDefs);
 
 
-  // Material takes precedence over panelBackground for backward compatibility
   const effectiveMaterial = material;
 
   // asChild takes precedence over as prop for Radix Slot integration
