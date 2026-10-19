@@ -10,7 +10,6 @@ import { splitHandles, useResizablePane, type SizeChangeMeta } from './shell-res
 import { useInsetRegistration, warnOnce, type PaneValue } from './shell-store.js';
 import { navigationRest, startAnchoredGrowth, withoutRemovedPaneProps } from './shell-rest.js';
 import { readBreakpoint } from '../../hooks/use-breakpoint.js';
-import { warnDeprecated } from '../../helpers/warn-deprecated.js';
 import { PaneChromeScope } from './pane-chrome.js';
 import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, Responsive, SidebarMode } from '../shell.types.js';
 
@@ -18,10 +17,6 @@ type SidebarStateChangeMeta = { reason: 'init' | 'toggle' | 'responsive' | 'dism
 type SidebarControlledProps = { state: Responsive<SidebarMode>; onStateChange?: (state: SidebarMode, meta: SidebarStateChangeMeta) => void; defaultState?: never };
 type SidebarUncontrolledProps = { defaultState?: SidebarMode | Partial<Record<Breakpoint, SidebarMode>>; onStateChange?: (state: SidebarMode, meta: SidebarStateChangeMeta) => void; state?: never };
 type SidebarPublicProps = PaneBaseProps & {
-  /** @deprecated Thin mode is removed in 0.15.0. Use `Shell.Rail`. */
-  thinSize?: number;
-  /** `both` (deprecated with thin mode; `single` is the 0.15.0 behaviour) toggles through collapsed, thin and expanded; `single` between collapsed and the default. */
-  toggleModes?: 'both' | 'single';
   size?: number | string;
   defaultSize?: number | string;
   onSizeChange?: (size: number, meta: SizeChangeMeta) => void;
@@ -33,8 +28,8 @@ type SidebarPublicProps = PaneBaseProps & {
 
 type SidebarComponent = React.ForwardRefExoticComponent<SidebarPublicProps & React.RefAttributes<HTMLDivElement>> & { Handle: typeof SidebarHandle };
 
-const toValue = (mode: SidebarMode): PaneValue => (mode === 'collapsed' ? 'closed' : mode === 'thin' ? 'thin' : 'open');
-const toMode = (value: PaneValue): SidebarMode => (value === 'closed' ? 'collapsed' : value === 'thin' ? 'thin' : 'expanded');
+const toValue = (mode: SidebarMode): PaneValue => (mode === 'collapsed' ? 'closed' : 'open');
+const toMode = (value: PaneValue): SidebarMode => (value === 'closed' ? 'collapsed' : 'expanded');
 
 function modeToValue(state: Responsive<SidebarMode> | undefined): PaneValue | Partial<Record<Breakpoint, PaneValue>> | undefined {
   if (state === undefined) return undefined;
@@ -51,12 +46,6 @@ const SIDEBAR_PROP_NAMES = { controlled: 'state', default: 'defaultState' };
 /** Since 0.8.0 the Sidebar is in the frame from 768px up, the boundary kookie-ui-v2 uses everywhere. It was 1024px. */
 const SIDEBAR_DEFAULT_PRESENTATION = { initial: 'overlay', sm: 'fixed' } as const;
 
-const toggleBoth = (current: PaneValue): PaneValue => (current === 'closed' ? 'thin' : current === 'thin' ? 'open' : 'closed');
-const toggleSingle = (current: PaneValue, defaultHere: PaneValue | undefined): PaneValue => {
-  const target: PaneValue = defaultHere === 'thin' ? 'thin' : 'open';
-  if (current === 'closed') return target;
-  return current === target ? 'closed' : target;
-};
 
 export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((props, ref) => {
   const {
@@ -79,8 +68,6 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
     persistence,
     children,
     style,
-    thinSize = 64,
-    toggleModes = 'both',
     state,
     defaultState,
     onStateChange,
@@ -105,18 +92,11 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
     presentationTable: table,
     builtIn: navigationRest,
     onChange: (value, reason) => onStateChange?.(toMode(value), { reason }),
-    toggleNext: toggleModes === 'single' ? toggleSingle : toggleBoth,
     onExpand,
     onCollapse,
     size: expandedSize,
   });
   useInsetRegistration('sidebar', inset);
-
-  if (props.thinSize !== undefined || pane.value === 'thin') {
-    warnDeprecated(
-      "Shell.Sidebar's thin mode is deprecated and will be removed in 0.15.0. Put the rows in Shell.Rail, which draws them as tiles, and use toggleModes=\"single\" so the toggle skips thin.",
-    );
-  }
 
   React.useEffect(() => {
     if (snapPoints !== undefined || collapseThreshold !== undefined || paneId !== undefined || persistence !== undefined) {
@@ -160,18 +140,13 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
   });
 
   const { handles, content } = splitHandles(children, SidebarHandle);
-  // A thin sidebar has no handle: the thin width is a mode, not a size.
   const handle =
-    resizable && pane.value !== 'closed' && pane.value !== 'thin' && !pane.overlaying ? (
+    resizable && pane.value !== 'closed' && !pane.overlaying ? (
       <PaneResizeContext.Provider value={resize}>{handles.length > 0 ? handles : <PaneHandle />}</PaneResizeContext.Provider>
     ) : null;
 
-  // A peek previews the width the next toggle would open to.
-  const peekWidth = pane.peeking
-    ? (toggleModes === 'single' ? toggleSingle : toggleBoth)('closed', pane.defaultHereNow()) === 'thin'
-      ? `${thinSize}px`
-      : `var(--sidebar-size, ${expandedSize}px)`
-    : undefined;
+  // A peek previews the width the next toggle opens to.
+  const peekWidth = pane.peeking ? `var(--sidebar-size, ${expandedSize}px)` : undefined;
 
   return (
     <div
@@ -186,7 +161,6 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
         {
           ...style,
           '--sidebar-expanded-size': `${expandedSize}px`,
-          '--sidebar-thin-size': `${thinSize}px`,
           '--sidebar-min-size': `${minSize}px`,
           '--sidebar-max-size': `${maxSize}px`,
           ...(peekWidth ? { '--peek-sidebar-width': peekWidth } : {}),

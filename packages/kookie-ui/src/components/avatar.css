@@ -17,19 +17,9 @@
  ***************************************************************************************************/
 
 .rt-AvatarRoot {
-  /*
-   * Component-level material override
-   * When avatar has explicit material prop, override the inherited theme values.
-   */
-  &:where([data-material='solid'], [data-panel-background='solid']) {
-    --material-blend: 100%;
-    --material-alpha: 0;
-  }
-
-  &:where([data-material='translucent'], [data-panel-background='translucent']) {
-    --material-blend: 60%;
-    --material-alpha: 1;
-  }
+  /* Avatar takes no material: it stays solid inside a translucent theme or surface. */
+  --material-blend: 100%;
+  --material-alpha: 0;
 
   display: inline-flex;
   align-items: center;
@@ -42,24 +32,11 @@
   position: relative;
 
   /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 
   /* Prevent backdrop-filter stacking with parents */
-  isolation: isolate;
+  isolation: isolate
 
   /* Component-level overrides */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 }
 
 /* Interactive states for avatars used as buttons/links */
@@ -68,12 +45,8 @@
 .rt-AvatarRoot:where(a),
 .rt-AvatarRoot:where([role="button"]) {
   cursor: pointer;
-  transition: var(--transition-button);
 
   /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 
   &:where(:focus-visible) {
     outline: var(--focus-outline-width) solid var(--focus-8);

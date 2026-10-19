@@ -1,7 +1,6 @@
 .rt-TextFieldRoot {
   display: flex;
   align-items: stretch;
-  transition: var(--transition-text-field);
   contain: paint;
 
   font-family: var(--default-font-family);
@@ -10,7 +9,7 @@
   text-align: start;
 
     /* Theme-level translucent override */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
+    :where([data-material='translucent']) & {
       backdrop-filter: var(--backdrop-filter-components);
       --backdrop-filter-components: var(--backdrop-filter-components-enabled);
     }
@@ -19,12 +18,12 @@
   isolation: isolate;
 
   /* Component-level overrides */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     backdrop-filter: none;
     --backdrop-filter-components: none;
   }
   
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     backdrop-filter: var(--backdrop-filter-components);
     --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
@@ -47,9 +46,6 @@
   }
 
   /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 }
 
 .rt-TextFieldInput {
@@ -365,19 +361,18 @@
 
   /* Base state: solid colors for solid panels */
   box-shadow: inset 0 0 0 1px var(--accent-6);
-  transition: var(--transition-background-blur);
 
   /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     box-shadow: inset 0 0 0 1px var(--accent-a6);
   }
 
   /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     box-shadow: inset 0 0 0 1px var(--accent-6);
   }
 
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     box-shadow: inset 0 0 0 1px var(--accent-a6);
   }
 
@@ -388,18 +383,18 @@
       box-shadow: inset 0 0 0 1px var(--accent-7);
       
       /* Theme-level translucent override for hover */
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
+      :where([data-material='translucent']) & {
         background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
         box-shadow: inset 0 0 0 1px var(--accent-a7);
       }
 
       /* Component-level overrides for hover */
-      &:where([data-panel-background='solid'], [data-material='solid']) {
+      &:where([data-material='solid']) {
         background-color: var(--accent-2);
         box-shadow: inset 0 0 0 1px var(--accent-7);
       }
 
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
+      &:where([data-material='translucent']) {
         background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
         box-shadow: inset 0 0 0 1px var(--accent-a7);
       }
@@ -444,19 +439,18 @@
   /* Base state: solid surface for solid panels */
   background-color: var(--color-surface-solid);
   box-shadow: var(--shadow-2);
-  transition: var(--transition-text-field);
 
   /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     background-color: var(--color-surface-translucent);
   }
 
   /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     background-color: var(--color-surface-solid);
   }
 
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     background-color: var(--color-surface-translucent);
   }
 
@@ -467,16 +461,16 @@
       box-shadow: var(--shadow-2);
 
       /* Theme-level translucent override for hover */
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
+      :where([data-material='translucent']) & {
         background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
       }
 
       /* Component-level overrides for hover */
-      &:where([data-panel-background='solid'], [data-material='solid']) {
+      &:where([data-material='solid']) {
         background-color: var(--accent-2);
       }
 
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
+      &:where([data-material='translucent']) {
         background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
       }
     }
@@ -523,19 +517,18 @@
 
   /* Base state: solid color for solid panels */
   background-color: var(--accent-3);
-  transition: var(--transition-background-blur);
 
   /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
   }
 
   /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     background-color: var(--accent-3);
   }
 
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
   }
 
@@ -545,16 +538,16 @@
       background-color: var(--accent-4);
       
       /* Theme-level translucent override for hover */
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
+      :where([data-material='translucent']) & {
         background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
       }
 
       /* Component-level overrides for hover */
-      &:where([data-panel-background='solid'], [data-material='solid']) {
+      &:where([data-material='solid']) {
         background-color: var(--accent-4);
       }
 
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
+      &:where([data-material='translucent']) {
         background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
       }
     }
@@ -617,16 +610,16 @@
       background-color: var(--accent-3);
       
       /* Theme-level translucent override for hover */
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
+      :where([data-material='translucent']) & {
         background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
       }
 
       /* Component-level overrides for hover */
-      &:where([data-panel-background='solid'], [data-material='solid']) {
+      &:where([data-material='solid']) {
         background-color: var(--accent-3);
       }
 
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
+      &:where([data-material='translucent']) {
         background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
       }
 
@@ -643,16 +636,16 @@
     background-color: var(--accent-2);
 
     /* Theme-level translucent override */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
+    :where([data-material='translucent']) & {
       background-color: var(--accent-a2);
     }
 
     /* Component-level overrides */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
+    &:where([data-material='solid']) {
       background-color: var(--accent-2);
     }
 
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
+    &:where([data-material='translucent']) {
       background-color: var(--accent-a2);
     }
 
@@ -684,21 +677,20 @@
   /* Base state: solid accent for solid panels */
   background-color: var(--accent-2);
   box-shadow: inset 0 0 0 1px var(--accent-6);
-  transition: var(--transition-background-blur);
 
   /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
     box-shadow: inset 0 0 0 1px var(--accent-a6);
   }
 
   /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     background-color: var(--accent-2);
     box-shadow: inset 0 0 0 1px var(--accent-6);
   }
 
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
     box-shadow: inset 0 0 0 1px var(--accent-a6);
   }
@@ -724,18 +716,18 @@
       box-shadow: inset 0 0 0 1px var(--accent-7);
       
       /* Theme-level translucent override for hover */
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
+      :where([data-material='translucent']) & {
         background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
         box-shadow: inset 0 0 0 1px var(--accent-a7);
       }
 
       /* Component-level overrides for hover */
-      &:where([data-panel-background='solid'], [data-material='solid']) {
+      &:where([data-material='solid']) {
         background-color: var(--accent-3);
         box-shadow: inset 0 0 0 1px var(--accent-7);
       }
 
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
+      &:where([data-material='translucent']) {
         background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
         box-shadow: inset 0 0 0 1px var(--accent-a7);
       }
@@ -749,18 +741,18 @@
     box-shadow: inset 0 0 0 var(--text-field-border-width) var(--accent-8);
 
     /* Theme-level translucent override */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
+    :where([data-material='translucent']) & {
       background-color: var(--accent-a2);
       box-shadow: inset 0 0 0 var(--text-field-border-width) var(--accent-a8);
     }
 
     /* Component-level overrides */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
+    &:where([data-material='solid']) {
       background-color: var(--accent-2);
       box-shadow: inset 0 0 0 var(--text-field-border-width) var(--accent-8);
     }
 
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
+    &:where([data-material='translucent']) {
       background-color: var(--accent-a2);
       box-shadow: inset 0 0 0 var(--text-field-border-width) var(--accent-a8);
     }

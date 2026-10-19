@@ -93,26 +93,26 @@
  * Text
  * -------------------------------------------------------------------------------------------*/
 
-.markdown :is(ul, ol):not(.preview-block *) {
+.markdown :is(ul, ol):where(:not([class*='rt-'])) {
   margin-block: 0;
   padding-left: 1.5em;
 }
 
-.markdown ul:not(.preview-block *) {
+.markdown ul:where(:not([class*='rt-'])) {
   list-style-type: disc;
 }
 
-.markdown ol:not(.preview-block *) {
+.markdown ol:where(:not([class*='rt-'])) {
   list-style-type: decimal;
 }
 
-/* Lists in a live preview are the component's, not the page's. */
-.markdown li:not(.preview-block *) {
+/* A component's own list (Sidebar.Menu and the like) is not prose. */
+.markdown li:where(:not([class*='rt-'])) {
   padding-left: 0.25em;
 }
 
-.markdown li:not(.preview-block *) + li,
-.markdown li:not(.preview-block *) > :is(ul, ol) {
+.markdown li:where(:not([class*='rt-'])) + li,
+.markdown li:where(:not([class*='rt-'])) > :is(ul, ol) {
   margin-top: var(--markdown-list-gap);
 }
 

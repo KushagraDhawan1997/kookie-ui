@@ -7,7 +7,6 @@ import { Flex } from '../flex.js';
 import { Spinner } from '../spinner.js';
 import { VisuallyHidden } from '../visually-hidden.js';
 import { extractProps } from '../../helpers/extract-props.js';
-import { useDeprecatedPanelBackgroundWarning } from '../../helpers/use-deprecation-warning.js';
 import { mapResponsiveProp, mapButtonSizeToSpinnerSize } from '../../helpers/map-prop-values.js';
 import { marginPropDefs } from '../../props/margin.props.js';
 
@@ -74,16 +73,13 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((props, 
     color,
     radius,
     material,
-    panelBackground,
     flush,
     disabled = props.loading, // Loading state automatically disables the button
     ...baseButtonProps
   } = extractProps(props, baseButtonPropDefs, marginPropDefs);
 
-  useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
-  // Material takes precedence over panelBackground for backward compatibility
-  const effectiveMaterial = material ?? panelBackground;
+  const effectiveMaterial = material;
 
   // asChild takes precedence over as prop for Radix Slot integration
   // When asChild is true, we use Slot.Root to merge props onto the child element
@@ -135,7 +131,6 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((props, 
       data-accent-color={color}
       data-radius={radius}
       data-material={effectiveMaterial}
-      data-panel-background={effectiveMaterial}
       data-flush={flush ? 'true' : undefined}
       {...baseButtonProps}
       {...accessibilityProps}

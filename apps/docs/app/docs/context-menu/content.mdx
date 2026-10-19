@@ -90,7 +90,6 @@ The context menu is composed of several parts:
 | Prop               | Type                         | Default         | Description                                                        |
 | ------------------ | ---------------------------- | --------------- | ------------------------------------------------------------------ |
 | `size`             | `'1' \| '2' \| Responsive`   | `'2'`           | Size of the menu items                                             |
-| `variant`          | `'solid' \| 'soft'`          | `'solid'`       | Visual style of the menu                                           |
 | `color`            | `AccentColor`                | —               | Accent color for highlighted items. Inherits from theme if not set |
 | `material`         | `'solid' \| 'translucent'`   | —               | Background appearance. Inherits from the nearest Theme if not set  |
 | `virtualized`      | `boolean`                    | `false`         | Skips the ScrollArea so a `VirtualMenu` scrolls itself             |
@@ -148,50 +147,15 @@ The context menu is composed of several parts:
 | Prop           | Type                        | Default   | Description                                              |
 | -------------- | --------------------------- | --------- | -------------------------------------------------------- |
 | `size`         | `'1' \| '2' \| Responsive`  | Inherited | Size of the submenu. Inherits from the parent content    |
-| `variant`      | `'solid' \| 'soft'`         | Inherited | Visual style of the submenu                              |
 | `color`        | `AccentColor`               | Inherited | Accent color for highlighted items                       |
 | `material`     | `'solid' \| 'translucent'`  | Inherited | Background appearance                                    |
 | `virtualized`  | `boolean`                   | `false`   | Skips the ScrollArea so a `VirtualMenu` scrolls itself   |
 
 ContextMenu submenus always cascade. The `submenuBehavior` prop is accepted for backward compatibility and has no effect.
 
-## Variants
+## Highlight
 
-### Solid Variant
-
-The default. Highlighted items use a solid accent fill.
-
-```tsx showLineNumbers
-<ContextMenu.Root>
-  <ContextMenu.Trigger>
-    <Card variant="raised" size="2">
-      <Text size="2">Right-click here</Text>
-    </Card>
-  </ContextMenu.Trigger>
-  <ContextMenu.Content variant="solid">
-    <ContextMenu.Item>Edit</ContextMenu.Item>
-    <ContextMenu.Item>Duplicate</ContextMenu.Item>
-  </ContextMenu.Content>
-</ContextMenu.Root>
-```
-
-### Soft Variant
-
-Highlighted items use a soft accent tint for content-heavy interfaces.
-
-```tsx showLineNumbers
-<ContextMenu.Root>
-  <ContextMenu.Trigger>
-    <Card variant="raised" size="2">
-      <Text size="2">Right-click here</Text>
-    </Card>
-  </ContextMenu.Trigger>
-  <ContextMenu.Content variant="soft">
-    <ContextMenu.Item>Edit</ContextMenu.Item>
-    <ContextMenu.Item>Duplicate</ContextMenu.Item>
-  </ContextMenu.Content>
-</ContextMenu.Root>
-```
+Rows use the soft highlight. When the system asks for more contrast (`prefers-contrast: more`), they use the solid one.
 
 ## Sizes
 
@@ -349,7 +313,7 @@ export function CanvasMenu() {
 
 ### Nested Actions
 
-Submenus open to the side and inherit the parent's size, variant, color and material. Pass props to `SubContent` to override them.
+Submenus open to the side and inherit the parent's size, color and material. Pass props to `SubContent` to override them.
 
 ```tsx showLineNumbers
 <ContextMenu.Root>

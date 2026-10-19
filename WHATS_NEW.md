@@ -1,5 +1,11 @@
 # What's new in Womp's Design System
 
+## 0.15.0 (October 18)
+
+1. **The cleanup (breaking).** Everything 0.14 warned about is gone: `classic`, `panelBackground`, `isInvalid`, the menu variants, Callout, AppBar, the UserCard export, `Sidebar.Root` and thin mode.
+2. **No motion.** State changes are instant. Only spinners, skeletons and loading bars still move.
+3. **Sizes match.** Every size a component offers is styled, and Code, Kbd, Link and Blockquote share Text's scale.
+
 ## 0.14.3 (October 18)
 
 1. **Button emphasis.** `emphasis="loud"`, `"medium"` or `"quiet"` sets a button's rank: solid, raised or ghost. Use it or `variant`, not both.

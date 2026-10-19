@@ -19,12 +19,12 @@
    * Component-level material override
    * When component has explicit material prop, override the inherited theme values.
    */
-  &:where([data-material='solid'], [data-panel-background='solid']) {
+  &:where([data-material='solid']) {
     --material-blend: 100%;
     --material-alpha: 0;
   }
 
-  &:where([data-material='translucent'], [data-panel-background='translucent']) {
+  &:where([data-material='translucent']) {
     --material-blend: 60%;
     --material-alpha: 1;
   }
@@ -45,7 +45,6 @@
   font: inherit;
   line-height: inherit;
   text-align: start;
-  transition: height var(--motion-duration-small) ease-out;
 }
 .rt-ChatbarInput:focus,
 .rt-ChatbarInput:focus-visible {
@@ -83,9 +82,6 @@
 }
 
 /* Send button - extend button transition with opacity for visibility fade */
-.rt-ChatbarSend {
-  transition: var(--transition-button), opacity var(--motion-duration-small) var(--motion-ease-standard);
-}
 
 /* Hidden send button stays invisible even when disabled styling applies */
 .rt-ChatbarSend[aria-hidden='true'] {
@@ -218,17 +214,16 @@
 .rt-ChatbarBox {
   box-sizing: border-box;
   width: 100%;
-  transition: var(--transition-text-field);
   /* Padding is applied per size below to match Card spacing */
   isolation: isolate;
 }
 
 /* Theme-level translucent override for the visual shell (matches any ancestor) */
-:where([data-panel-background='translucent'], [data-material='translucent']) .rt-ChatbarBox {
+:where([data-material='translucent']) .rt-ChatbarBox {
   backdrop-filter: var(--backdrop-filter-components);
   --backdrop-filter-components: var(--backdrop-filter-components-enabled);
 }
-.rt-ChatbarRoot:where([data-panel-background='solid'], [data-material='solid']) .rt-ChatbarBox {
+.rt-ChatbarRoot:where([data-material='solid']) .rt-ChatbarBox {
   backdrop-filter: none;
   --backdrop-filter-components: none;
 }
@@ -465,15 +460,14 @@
 
   background-color: var(--color-surface-solid);
   box-shadow: var(--shadow-2);
-  transition: var(--transition-text-field);
 
   /* Translucent theme override (ancestor match, zero added specificity so hover still wins) */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     background-color: var(--color-surface-translucent);
   }
 
   /* Explicit solid material on the component beats an inherited translucent theme */
-  :where(.rt-ChatbarRoot[data-panel-background='solid'], .rt-ChatbarRoot[data-material='solid']) & {
+  :where(.rt-ChatbarRoot[data-material='solid']) & {
     background-color: var(--color-surface-solid);
   }
 
@@ -562,7 +556,6 @@
   align-items: center;
   justify-content: center;
   z-index: 10;
-  animation: rt-fade-in var(--motion-duration-small) var(--motion-spring-snappy);
 }
 
 .rt-ChatbarDropContent {
@@ -573,17 +566,6 @@
 }
 
 /* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .rt-ChatbarInput,
-  .rt-ChatbarBox,
-  .rt-ChatbarSend {
-    transition: none;
-  }
-
-  .rt-ChatbarDropOverlay {
-    animation: none;
-  }
-}
 
 /* Inline slot positioning */
 .rt-ChatbarInlineStart,

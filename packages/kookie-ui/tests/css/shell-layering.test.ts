@@ -44,13 +44,6 @@ describe('Shell layering and placement', () => {
     expect(rule('.rt-ShellPane:has(> .rt-ShellResizer)')).toMatch(/z-index:\s*var\(--rt-shell-z, 2\)/);
   });
 
-  it('a Sidebar thin by its untouched default shows no handle, at every breakpoint', () => {
-    const thinRules = css.match(/\.rt-ShellSidebar\[data-state='auto'\]\[data-auto(?:-[a-z]+)?='thin'\]\s*\{[^}]*\}/g) ?? [];
-    expect(thinRules.length).toBe(7);
-    for (const r of thinRules) expect(r).toMatch(/--rt-shell-thin:\s*none/);
-    expect(rule('.rt-ShellResizer')).toMatch(/display:\s*var\(--rt-shell-thin, var\(--rt-shell-handle, flex\)\)/);
-  });
-
   it('the handle flips by the nearest direction, not by any rtl ancestor', () => {
     expect(css).not.toMatch(/\[dir='rtl'\]/);
     expect(css).toContain(".rt-ShellResizer[data-orientation='vertical'][data-edge='end']:dir(rtl)");

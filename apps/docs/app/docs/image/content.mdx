@@ -1,10 +1,10 @@
 ---
 title: Image
-description: Display images with enhanced loading states, accessibility features, and flexible layout options. Image provides skeleton placeholders, fade-in animations, and caption support.
+description: Display images with enhanced loading states, accessibility features, and flexible layout options. Image provides skeleton placeholders and caption support.
 source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/image.tsx
 ---
 
-Display images with enhanced loading states, accessibility features, and flexible layout options. Image provides skeleton placeholders, fade-in animations, and caption support.
+Display images with enhanced loading states, accessibility features, and flexible layout options. Image provides skeleton placeholders and caption support.
 
 ## Installation
 
@@ -33,7 +33,6 @@ export function MyComponent() {
 | `loading`         | `'eager' \| 'lazy'`                                       | Native loading behavior. Defaults to lazy                                                       |
 | `placeholder`     | `string`                                                  | Low-quality placeholder image URL (LQIP pattern)                                                |
 | `showSkeleton`    | `boolean`                                                 | Shows a skeleton placeholder while loading                                                      |
-| `fadeIn`          | `boolean`                                                 | Whether the image should fade in when loaded. Defaults to true                                  |
 | `caption`         | `string`                                                  | Optional caption text displayed below the image                                                 |
 | `loadingAriaLabel`| `string`                                                  | ARIA label for loading state. Defaults to "Loading image..."                                    |
 | `errorAriaLabel`  | `string`                                                  | ARIA label for error state. Defaults to "Failed to load image"                                  |
@@ -132,18 +131,6 @@ Combine skeleton and placeholder for the best loading experience.
   showSkeleton
   alt="Product showcase"
 />
-```
-
-## Fade In
-
-By default, images fade in when loaded. Disable this with `fadeIn={false}`.
-
-```tsx
-// With fade-in (default)
-<Image src="/photo.jpg" alt="Photo" fadeIn />
-
-// Without fade-in
-<Image src="/photo.jpg" alt="Photo" fadeIn={false} />
 ```
 
 ## Captions
@@ -283,7 +270,6 @@ Use responsive objects to change fit behavior across breakpoints.
   alt="Mountain landscape at sunset"
   loading="eager"
   fit="cover"
-  fadeIn
 />
 ```
 
@@ -306,7 +292,6 @@ Use responsive objects to change fit behavior across breakpoints.
   placeholder="/gallery-photo-thumb.jpg"
   alt="Abstract art piece"
   showSkeleton
-  fadeIn
   radius="medium"
 />
 ```
@@ -357,10 +342,6 @@ Image automatically sets:
 - `aria-busy="true"` during loading
 - `aria-invalid="true"` on error
 - `aria-describedby` linking to error message
-
-### Reduced Motion
-
-Fade-in animations are disabled when the user prefers reduced motion.
 
 ### High Contrast Mode
 

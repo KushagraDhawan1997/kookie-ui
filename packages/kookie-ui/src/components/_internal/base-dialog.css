@@ -64,17 +64,17 @@
   outline: none;
 
   /* Theme-level backdrop filter for auto dialogs */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     backdrop-filter: var(--backdrop-filter-dialog);
   }
 
-  /* Component-level overrides (when panelBackground prop is explicitly set) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  /* Component-level overrides (when the material prop is set) */
+  &:where([data-material='solid']) {
     background-color: var(--color-dialog-solid);
     backdrop-filter: none;
   }
 
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     background-color: var(--color-dialog-translucent);
     backdrop-filter: var(--backdrop-filter-dialog);
   }
@@ -107,29 +107,10 @@
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .rt-BaseDialogOverlay {
-    /* Keep the overlay mounted until the children have animated */
-    &:where([data-state='closed']) { animation: rt-dialog-overlay-no-op var(--motion-duration-small) var(--motion-spring-snappy); }
-    &:where([data-state='open'])::before {
-      animation: rt-fade-in var(--duration-5) var(--ease-spring-1);
-    }
-    &:where([data-state='closed'])::before {
-      opacity: 0;
-      animation: rt-fade-out var(--duration-4) var(--ease-spring-1);
-    }
-  }
-
-  .rt-BaseDialogContent {
-    &:where([data-state='open']) { animation: rt-dialog-content-show var(--motion-duration-medium) var(--motion-spring-snappy); }
-    &:where([data-state='closed']) { opacity: 0; animation: rt-dialog-content-hide var(--motion-duration-small) var(--motion-spring-snappy); }
-  }
-}
-
 /* Safari backdrop-filter fallback */
 @supports not (backdrop-filter: blur(1px)) {
   :where(.rt-BaseDialogContent[data-material='translucent']),
-  :where(.rt-BaseDialogContent[data-panel-background='translucent']) {
+  :where(.rt-BaseDialogContent[data-material='translucent']) {
     background-color: var(--color-dialog-solid);
   }
 }

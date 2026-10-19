@@ -3,8 +3,8 @@
 /**
  * The Shell's state model (0.8.0), ported from kookie-ui-v2's Shell.
  *
- * - State lives on the pane. Each pane holds `auto | open | closed` (the
- *   Sidebar adds `thin`). `auto` means untouched: the stylesheet decides what
+ * - State lives on the pane. Each pane holds `auto | open | closed`.
+ *   `auto` means untouched: the stylesheet decides what
  *   it shows at each breakpoint, so first paint is right with no script, the
  *   server and the client render the same markup, and no open-state callback
  *   can fire on mount or on a resize.
@@ -26,8 +26,8 @@ import type { Breakpoint, PaneName, PresentationValue } from '../shell.types.js'
 
 export type Table<T> = Record<Breakpoint, T>;
 
-/** What a pane shows: open, open at its thin width (Sidebar only), or closed. */
-export type PaneValue = 'open' | 'thin' | 'closed';
+/** What a pane shows: open or closed. */
+export type PaneValue = 'open' | 'closed';
 
 type ResponsiveInput<T> = T | Partial<Record<Breakpoint, T>> | undefined;
 

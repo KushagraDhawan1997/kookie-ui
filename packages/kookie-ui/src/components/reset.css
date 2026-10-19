@@ -37,22 +37,9 @@
     all: unset;
     -webkit-tap-highlight-color: transparent;
   }
-  &:where(
-      button,
-      select,
-
-      /* Buttons */
-      [type='button'],
-      [type='image'],
-      [type='reset'],
-      [type='submit'],
-
-      /* Non-textual inputs */
-      [type='checkbox'],
-      [type='color'],
-      [type='radio'],
-      [type='range']
-    ) {
+  &:where(button, select, /* Buttons */
+      [type='button'], [type='image'], [type='reset'], [type='submit'], /* Non-textual inputs */
+      [type='checkbox'], [type='color'], [type='radio'], [type='range']) {
     all: unset;
     display: inline-block;
     font-weight: normal;

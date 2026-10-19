@@ -25,7 +25,6 @@ import { useCallbackRef, useComposedRefs, useControllableState, useLayoutEffect 
 import { Command as CommandPrimitive, useCommandState } from 'cmdk';
 
 import { extractProps } from '../helpers/extract-props.js';
-import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 import { comboboxRootPropDefs, comboboxTriggerPropDefs, comboboxContentPropDefs } from './combobox.props.js';
 import { marginPropDefs } from '../props/margin.props.js';
 import { ChevronDownIcon, ThickCheckIcon } from './icons.js';
@@ -132,7 +131,6 @@ const ComboboxItemContext = React.createContext<ComboboxItemContextValue | null>
 
 /** Values resolved by Content and read by Input and List. */
 interface ComboboxContentContextValue {
-  variant: 'solid' | 'soft';
   sizeClassName?: string;
   color?: string;
   material?: string;
@@ -342,9 +340,7 @@ const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTrigger
     ...triggerProps
   } = extractProps({ size: ctx.size, ...props }, triggerSizingPropDefs, comboboxTriggerPropDefs, marginPropDefs);
 
-  // `panelBackground` has a className prop def, so extractProps strips it.
-  const { panelBackground } = props;
-  const resolvedMaterial = material ?? panelBackground;
+  const resolvedMaterial = material;
   const isDisabled = disabled ?? ctx.disabled;
   const resolvedColor = color ?? ctx.color;
   // Read-only and loading triggers stay focusable but do not open.
@@ -412,7 +408,6 @@ const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTrigger
       <button
         data-accent-color={resolvedColor}
         data-radius={radius}
-        data-panel-background={resolvedMaterial}
         data-material={resolvedMaterial}
         data-error={error}
         data-loading={loading}
@@ -493,18 +488,11 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
   const ctx = useComboboxContext('Content');
   const themeContext = useThemeContext();
 
-  useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
-  const material = props.material ?? props.panelBackground ?? themeContext.material ?? themeContext.panelBackground;
+  const material = props.material ?? themeContext.material;
   // Menus stop at size 3; a size 4 field opens a size 3 list.
   const rootSize = ctx.size === '4' ? '3' : ctx.size;
   const size = props.size ?? rootSize ?? comboboxContentPropDefs.size.default;
-  if (props.variant !== undefined) {
-    warnDeprecated(
-      'The menu `variant` prop is deprecated and will be removed in 0.15.0. Menus highlight with a soft fill, and a solid one when the person asks for more contrast.',
-    );
-  }
-  const variant = props.variant ?? comboboxContentPropDefs.variant.default;
 
   const {
     className,
@@ -513,12 +501,11 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
     forceMount,
     container,
     material: _material,
-    panelBackground: _panelBackground,
     onOpenAutoFocus,
     'aria-label': _ariaLabel,
     'aria-labelledby': ariaLabelledByProp,
     ...contentProps
-  } = extractProps({ ...props, size, variant }, comboboxContentPropDefs);
+  } = extractProps({ ...props, size }, comboboxContentPropDefs);
 
   const resolvedColor = color || ctx.color || themeContext.accentColor;
 
@@ -538,14 +525,13 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
 
   const contentContextValue = React.useMemo<ComboboxContentContextValue>(
     () => ({
-      variant,
       // Responsive-aware size class for the search field (never String() a responsive object).
       sizeClassName: extractProps({ size }, contentSizePropDefs).className || undefined,
       color: resolvedColor,
       material,
       label,
     }),
-    [variant, size, resolvedColor, material, label],
+    [size, resolvedColor, material, label],
   );
 
   const commandRef = React.useRef<HTMLDivElement>(null);
@@ -571,7 +557,6 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
         <PopoverPrimitive.Content
           data-accent-color={resolvedColor}
           data-material={material}
-          data-panel-background={material}
           align="start"
           sideOffset={4}
           collisionPadding={10}
@@ -581,7 +566,8 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
           forceMount={forceMount ? true : undefined}
           onOpenAutoFocus={handleOpenAutoFocus}
           ref={forwardedRef}
-          className={classNames('rt-PopperContent', 'rt-BaseMenuContent', 'rt-ComboboxContent', className)}
+          className={classNames('rt-PopperContent', 'rt-BaseMenuContent',
+          'rt-variant-soft', 'rt-ComboboxContent', className)}
         >
           <ComboboxContentContext.Provider value={contentContextValue}>
             <CommandPrimitive
@@ -623,8 +609,7 @@ const ComboboxInput = React.forwardRef<ComboboxInputElement, ComboboxInputProps>
     const search = React.useContext(ComboboxSearchContext);
     const contentContext = useComboboxContentContext();
 
-    const contentVariant = contentContext?.variant ?? 'soft';
-    const textFieldVariant = inputVariant ?? (contentVariant === 'solid' ? 'surface' : 'soft');
+    const textFieldVariant = inputVariant ?? 'soft';
 
     // The search text lives in Root; only this component subscribes to it.
     const searchValue = value ?? search?.value ?? '';
@@ -635,7 +620,6 @@ const ComboboxInput = React.forwardRef<ComboboxInputElement, ComboboxInputProps>
         className={classNames('rt-TextFieldRoot', 'rt-ComboboxInputRoot', contentContext?.sizeClassName, `rt-variant-${textFieldVariant}`)}
         data-accent-color={contentContext?.color}
         data-material={contentContext?.material}
-        data-panel-background={contentContext?.material}
       >
         {startAdornment ? <div className="rt-TextFieldSlot">{startAdornment}</div> : null}
         <CommandPrimitive.Input

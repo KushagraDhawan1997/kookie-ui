@@ -34,14 +34,12 @@ describe('icon-only buttons', () => {
     expect(one).toHaveAttribute('aria-pressed', 'false');
   });
 
-  it('warns that fullWidth on an icon button is deprecated', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  it('an icon-only button never takes the full width', () => {
     renderWithProviders(
-      <IconButton aria-label="Wide" fullWidth>
+      <Button iconOnly aria-label="Wide" fullWidth>
         +
-      </IconButton>,
+      </Button>,
     );
-    expect(warn).toHaveBeenCalledWith(expect.stringContaining('fullWidth'));
-    warn.mockRestore();
+    expect(screen.getByRole('button', { name: 'Wide' })).not.toHaveClass('rt-full-width');
   });
 });

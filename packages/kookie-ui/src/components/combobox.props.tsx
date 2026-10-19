@@ -1,4 +1,3 @@
-import { parseVariant } from '../helpers/parse-variant.js';
 import { colorPropDef } from '../props/color.prop.js';
 import { radiusPropDef } from '../props/radius.prop.js';
 import { widthPropDefs } from '../props/width.props.js';
@@ -17,18 +16,13 @@ const comboboxRootPropDefs = {
   size: PropDef<(typeof sizes)[number]>;
 };
 
-const triggerVariants = ['raised', 'surface', 'soft', 'outline', 'ghost', 'classic'] as const;
+const triggerVariants = ['raised', 'surface', 'soft', 'outline', 'ghost'] as const;
 
 /**
  * Token-aware props specific to Combobox.Trigger.
  */
 const comboboxTriggerPropDefs = {
-  variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'raised', parseValue: parseVariant },
-  panelBackground: {
-    type: 'enum',
-    className: 'rt-panel-background',
-    values: ['solid', 'translucent'],
-  },
+  variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'raised' },
   material: { type: 'enum', values: ['solid', 'translucent'] },
   error: { type: 'boolean' },
   loading: { type: 'boolean' },
@@ -40,7 +34,6 @@ const comboboxTriggerPropDefs = {
   placeholder: { type: 'string' },
 } satisfies {
   variant: PropDef<(typeof triggerVariants)[number]>;
-  panelBackground: PropDef<'solid' | 'translucent'>;
   material: PropDef<'solid' | 'translucent'>;
   error: PropDef<boolean>;
   loading: PropDef<boolean>;
@@ -52,7 +45,6 @@ const comboboxTriggerPropDefs = {
 
 // The list is a menu, and menus stop at size 3.
 const contentSizes = ['1', '2', '3'] as const;
-const contentVariants = ['solid', 'soft'] as const;
 const materials = ['solid', 'translucent'] as const;
 
 /**
@@ -60,20 +52,15 @@ const materials = ['solid', 'translucent'] as const;
  */
 const comboboxContentPropDefs = {
   size: { type: 'enum', className: 'rt-r-size', values: contentSizes, default: '2', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: contentVariants, default: 'soft' },
   ...colorPropDef,
   material: { type: 'enum', values: materials, default: undefined },
-  /** @deprecated Use `material`. */
-  panelBackground: { type: 'enum', values: materials, default: undefined },
   width: widthPropDefs.width,
   minWidth: widthPropDefs.minWidth,
   maxWidth: { ...widthPropDefs.maxWidth, default: '480px' },
   ...heightPropDefs,
 } satisfies {
   size: PropDef<(typeof contentSizes)[number]>;
-  variant: PropDef<(typeof contentVariants)[number]>;
   material: PropDef<(typeof materials)[number] | undefined>;
-  panelBackground: PropDef<(typeof materials)[number] | undefined>;
   width: PropDef<string>;
   minWidth: PropDef<string>;
   maxWidth: PropDef<string>;

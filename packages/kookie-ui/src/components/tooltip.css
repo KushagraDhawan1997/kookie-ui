@@ -5,27 +5,7 @@
   border-radius: var(--radius-surface-1);
   z-index: 300; /* Tooltips always on top - above dialogs (100) and menus (200) */
 
-  transform-origin: var(--radix-tooltip-content-transform-origin);
-
-  animation-duration: var(--motion-duration-small);
-  animation-timing-function: var(--motion-spring-snappy);
-
-  @media (prefers-reduced-motion: no-preference) {
-    &:where([data-state='delayed-open']) {
-      &:where([data-side='top']) {
-        animation-name: rt-slide-from-top, rt-fade-in;
-      }
-      &:where([data-side='bottom']) {
-        animation-name: rt-slide-from-bottom, rt-fade-in;
-      }
-      &:where([data-side='left']) {
-        animation-name: rt-slide-from-left, rt-fade-in;
-      }
-      &:where([data-side='right']) {
-        animation-name: rt-slide-from-right, rt-fade-in;
-      }
-    }
-  }
+  transform-origin: var(--radix-tooltip-content-transform-origin)
 }
 
 .rt-TooltipText {

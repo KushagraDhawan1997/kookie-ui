@@ -51,12 +51,11 @@ describe('getMenuAlignOffset', () => {
 });
 
 describe('resolveMenuMaterial', () => {
-  const theme = { material: 'solid', panelBackground: 'translucent' } as const;
+  const theme = { material: 'solid' } as const;
 
-  test('prefers the material prop, then panelBackground, then the theme material', () => {
-    expect(resolveMenuMaterial('translucent', 'solid', theme)).toBe('translucent');
-    expect(resolveMenuMaterial(undefined, 'translucent', theme)).toBe('translucent');
-    expect(resolveMenuMaterial(undefined, undefined, theme)).toBe('solid');
+  test('prefers the material prop, then the theme material', () => {
+    expect(resolveMenuMaterial('translucent', theme)).toBe('translucent');
+    expect(resolveMenuMaterial(undefined, theme)).toBe('solid');
   });
 });
 

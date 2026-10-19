@@ -1,4 +1,3 @@
-import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 import * as React from 'react';
 import classNames from 'classnames';
 import { Popover as PopoverPrimitive } from 'radix-ui';
@@ -62,14 +61,12 @@ interface PopoverContentProps
 const PopoverContent = React.forwardRef<PopoverContentElement, PopoverContentProps>(
   (props, forwardedRef) => {
     const themeContext = useThemeContext();
-    useDeprecatedPanelBackgroundWarning(props.panelBackground);
-    const panelBackground = props.material ?? props.panelBackground ?? themeContext.material ?? themeContext.panelBackground;
+    const resolvedMaterial = props.material ?? themeContext.material;
     const {
       className,
       forceMount,
       container,
       material: _material,
-      panelBackground: _,
       ...contentProps
     } = extractProps(props, popoverContentPropDefs);
 
@@ -111,8 +108,7 @@ const PopoverContent = React.forwardRef<PopoverContentElement, PopoverContentPro
             {...contentProps}
             ref={combinedRef}
             aria-labelledby={labelId}
-            data-panel-background={panelBackground}
-            data-material={panelBackground}
+            data-material={resolvedMaterial}
             className={classNames('rt-PopperContent', 'rt-PopoverContent', className)}
           >
             <PopoverContentContext.Provider value={React.useMemo(() => ({ contentRef, setToolbarOffset, setLabelId }), [setToolbarOffset])}>

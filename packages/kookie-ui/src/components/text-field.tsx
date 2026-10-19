@@ -1,6 +1,5 @@
 'use client';
 
-import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import classNames from 'classnames';
@@ -25,17 +24,14 @@ type TextFieldInputProps = ComponentPropsWithout<'input', NotInputTextualAttribu
 interface TextFieldRootProps extends TextFieldInputProps, MarginProps, TextFieldRootOwnProps {}
 const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>((props, forwardedRef) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const { children, className, color, radius, panelBackground, material, style, ...inputProps } = extractProps(props, textFieldRootPropDefs, marginPropDefs);
-  const effectiveMaterial = material || panelBackground;
+  const { children, className, color, radius, material, style, ...inputProps } = extractProps(props, textFieldRootPropDefs, marginPropDefs);
+  const effectiveMaterial = material;
 
   // Generate unique IDs for accessibility
   const errorId = React.useId();
 
   // Determine invalid state
-  const isInvalid = inputProps.error || inputProps.isInvalid;
-  if (inputProps.isInvalid !== undefined && inputProps.isInvalid !== false) {
-    warnDeprecated('`isInvalid` is deprecated and will be removed in 0.15.0. Use `error`, the one name every field uses for an invalid value.');
-  }
+  const isInvalid = inputProps.error;
 
   const { 'aria-describedby': ariaDescribedby, 'aria-labelledby': ariaLabelledby } = inputProps;
 
@@ -58,7 +54,7 @@ const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>
   );
 
   // Filter out our custom props to avoid DOM warnings
-  const { error, errorMessage, isInvalid: _isInvalid, required, 'aria-describedby': _ariaDescribedby, 'aria-labelledby': _ariaLabelledby, ...nativeInputProps } = inputProps;
+  const { error, errorMessage, required, 'aria-describedby': _ariaDescribedby, 'aria-labelledby': _ariaLabelledby, ...nativeInputProps } = inputProps;
 
   // Memoized pointer event handler
   const handlePointerDown = React.useCallback((event: React.PointerEvent) => {
@@ -90,7 +86,6 @@ const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>
     <div
       data-accent-color={color}
       data-radius={radius}
-      data-panel-background={effectiveMaterial}
       data-material={effectiveMaterial}
       style={style}
       className={classNames('rt-TextFieldRoot', className, {

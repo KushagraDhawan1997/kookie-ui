@@ -297,7 +297,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
           <Avatar size="2" fallback="JD" />
         </IconButton>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content variant="soft">
+      <DropdownMenu.Content>
         <DropdownMenu.Item>Profile</DropdownMenu.Item>
         <DropdownMenu.Item>Settings</DropdownMenu.Item>
         <DropdownMenu.Separator />
@@ -329,7 +329,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
                     <Avatar size="2" fallback="JD" />
                   </IconButton>
                 </DropdownMenu.Trigger>
-                <DropdownMenu.Content variant="soft">
+                <DropdownMenu.Content>
                   <DropdownMenu.Item>Profile</DropdownMenu.Item>
                   <DropdownMenu.Item>Settings</DropdownMenu.Item>
                   <DropdownMenu.Separator />

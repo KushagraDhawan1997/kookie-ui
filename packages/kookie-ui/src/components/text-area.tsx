@@ -1,4 +1,3 @@
-import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import classNames from 'classnames';
 
@@ -21,9 +20,9 @@ interface TextAreaProps
     TextAreaOwnProps {}
 
 const TextArea = React.forwardRef<TextAreaElement, TextAreaProps>((props, forwardedRef) => {
-  const { className, color, radius, panelBackground, material, style, ...textAreaProps } =
+  const { className, color, radius, material, style, ...textAreaProps } =
     extractProps(props, textAreaPropDefs, marginPropDefs);
-  const effectiveMaterial = material || panelBackground;
+  const effectiveMaterial = material;
 
   // Generate unique IDs for accessibility
   const errorId = React.useId();
@@ -31,10 +30,7 @@ const TextArea = React.forwardRef<TextAreaElement, TextAreaProps>((props, forwar
   const { 'aria-describedby': ariaDescribedby, 'aria-labelledby': ariaLabelledby } = textAreaProps;
 
   // Determine invalid state
-  const isInvalid = textAreaProps.error || textAreaProps.isInvalid;
-  if (textAreaProps.isInvalid !== undefined && textAreaProps.isInvalid !== false) {
-    warnDeprecated('`isInvalid` is deprecated and will be removed in 0.15.0. Use `error`, the one name every field uses for an invalid value.');
-  }
+  const isInvalid = textAreaProps.error;
 
   // Build aria-describedby string
   const describedBy = React.useMemo(() => {
@@ -58,7 +54,7 @@ const TextArea = React.forwardRef<TextAreaElement, TextAreaProps>((props, forwar
   const {
     error,
     errorMessage,
-    isInvalid: _isInvalid,
+   
     required,
     'aria-describedby': _ariaDescribedby,
     'aria-labelledby': _ariaLabelledby,
@@ -69,7 +65,6 @@ const TextArea = React.forwardRef<TextAreaElement, TextAreaProps>((props, forwar
     <div
       data-accent-color={color}
       data-radius={radius}
-      data-panel-background={effectiveMaterial}
       data-material={effectiveMaterial}
       className={classNames('rt-TextAreaRoot', className, {
         'rt-error': isInvalid,

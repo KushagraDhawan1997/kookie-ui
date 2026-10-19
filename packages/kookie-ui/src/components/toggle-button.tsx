@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Toggle } from 'radix-ui';
 import { Button } from './button.js';
+import type { ButtonProps, ButtonRankProps } from './button.js';
 import { useToggleState } from '../hooks/use-toggle-state.js';
 
 /**
@@ -9,7 +10,8 @@ import { useToggleState } from '../hooks/use-toggle-state.js';
  * The ToggleButton component provides a button that can be pressed/unpressed
  * with proper accessibility announcements and state management.
  */
-type ToggleButtonProps = React.ComponentPropsWithoutRef<typeof Button> & {
+type ToggleButtonProps = Omit<ButtonProps<'button'>, 'as' | 'variant' | 'emphasis'> &
+  ButtonRankProps & {
   /** Controlled pressed state */
   pressed?: boolean;
   /** Callback when pressed state changes */

@@ -93,7 +93,7 @@ The Root component manages state and provides context to all child components.
 
 | Prop | Type | Description |
 | ---- | ---- | ----------- |
-| `size` | `'1' \| '2' \| '3'` | Combobox density: 1 (24px) for toolbars, 2 (32px) for standard forms, 3 (40px) for prominent selections. Supports responsive objects |
+| `size` | `'1' \| '2' \| '3' \| '4'` | Combobox density: 1 (24px) for toolbars, 2 (32px) for standard forms, 3 (40px) for prominent selections, 4 (48px) to match Button size 4; its list stops at size 3. Supports responsive objects |
 | `value` | `string \| null` | Controlled selection value |
 | `defaultValue` | `string \| null` | Initial selection value for uncontrolled usage |
 | `onValueChange` | `(value: string \| null) => void` | Callback fired when selection changes |
@@ -124,7 +124,6 @@ The Trigger component renders as a button that opens the dropdown.
 | `color` | `AccentColor` | Semantic color. Overrides color from Root if provided |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Corner radius scale |
 | `material` | `'solid' \| 'translucent'` | Trigger background: solid for opaque, translucent for depth over images |
-| `panelBackground` | `'solid' \| 'translucent'` | Deprecated: use `material`. Removed in 0.15.0 |
 | `loading` | `boolean` | Shows a spinner, sets `aria-busy`, and keeps the popup from opening. The trigger stays focusable |
 | `error` | `boolean` | Visual error state and `aria-invalid`, typically for validation failures |
 | `readOnly` | `boolean` | Shows the value and sets `aria-readonly`. The popup does not open |
@@ -141,11 +140,9 @@ The Content component renders the dropdown surface containing the search input a
 
 | Prop | Type | Description |
 | ---- | ---- | ----------- |
-| `variant` | `'solid' \| 'soft'` | Content surface style: solid for opaque standard background, soft for subtle content-heavy interfaces |
 | `size` | `'1' \| '2' \| '3'` | Override size from Root. Affects padding and item height |
 | `color` | `AccentColor` | Semantic color for items. Falls back to Root color, then theme accent |
 | `material` | `'solid' \| 'translucent'` | Surface background. Falls back to the Theme material |
-| `panelBackground` | `'solid' \| 'translucent'` | Deprecated: use `material`. Removed in 0.15.0 |
 | `width`, `minWidth`, `maxWidth` | `string` | Surface width. `minWidth` defaults to the trigger width, `maxWidth` to 480px |
 | `aria-label` | `string` | Accessible name for the popup, search field and list. Defaults to the trigger's name |
 | `container` | `HTMLElement` | Portal container. Defaults to `document.body` |
@@ -157,7 +154,7 @@ The Input component renders the search field inside Content.
 
 | Prop | Type | Description |
 | ---- | ---- | ----------- |
-| `variant` | `'raised' \| 'surface' \| 'soft' \| 'outline' \| 'ghost'` | Input field style. Defaults to 'surface' for solid Content, 'soft' for soft Content |
+| `variant` | `'raised' \| 'surface' \| 'soft' \| 'outline' \| 'ghost'` | Input field style. Defaults to 'soft' |
 | `placeholder` | `string` | Search input placeholder. Overrides searchPlaceholder from Root |
 | `startAdornment` | `ReactNode` | Icon or element before input (e.g., search icon) |
 | `endAdornment` | `ReactNode` | Icon or element after input |
@@ -282,45 +279,9 @@ Minimal style for utility controls.
 </Combobox.Root>
 ```
 
-## Content Variants
+## Highlight
 
-### Solid
-
-Default opaque background for standard dropdowns with clear separation from the page.
-
-```tsx
-<Combobox.Root size="2">
-  <Combobox.Trigger variant="surface" aria-label="Option">
-    <Combobox.Value placeholder="Solid content" />
-  </Combobox.Trigger>
-  <Combobox.Content variant="solid">
-    <Combobox.Input placeholder="Search..." />
-    <Combobox.List>
-      <Combobox.Item value="1">Option 1</Combobox.Item>
-      <Combobox.Item value="2">Option 2</Combobox.Item>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-```
-
-### Soft
-
-Subtle background for content-heavy interfaces where less visual weight is desired.
-
-```tsx
-<Combobox.Root size="2">
-  <Combobox.Trigger variant="surface" aria-label="Option">
-    <Combobox.Value placeholder="Soft content" />
-  </Combobox.Trigger>
-  <Combobox.Content variant="soft">
-    <Combobox.Input placeholder="Search..." />
-    <Combobox.List>
-      <Combobox.Item value="1">Option 1</Combobox.Item>
-      <Combobox.Item value="2">Option 2</Combobox.Item>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-```
+Rows use the soft highlight. When the system asks for more contrast (`prefers-contrast: more`), they use the solid one.
 
 ## Sizes
 

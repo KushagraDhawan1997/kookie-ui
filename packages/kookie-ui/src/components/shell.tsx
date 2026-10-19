@@ -6,8 +6,8 @@
  * - The Root is a CSS grid and renders its children as given, in JSX order.
  *   Each pane claims its own grid area, so the Root never scans or reorders
  *   children, any child renders, and a pane mounted after the Root works.
- * - State lives on each pane: `auto` (untouched), `open` or `closed`, and the
- *   Sidebar's `thin`. An untouched pane follows the window, resolved by the
+ * - State lives on each pane: `auto` (untouched), `open` or `closed`. An
+ *   untouched pane follows the window, resolved by the
  *   stylesheet, so first paint needs no script and no open-state callback
  *   fires on mount or on a resize.
  * - A pane is one element at every width. `overlay` is a posture of that

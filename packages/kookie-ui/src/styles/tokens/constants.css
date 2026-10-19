@@ -1,8 +1,4 @@
 /* * * * * * * * * * * * * * * * * * * */
-/*                                     */
-/*        Design System Constants      */
-/*                                     */
-/* * * * * * * * * * * * * * * * * * * */
 
 :where(.radix-themes) {
   /* Backdrop blur constants - using new blur tokens */
@@ -20,11 +16,6 @@
   --backdrop-filter-components-enabled: blur(var(--backdrop-blur-components));
   --backdrop-filter-panel-enabled: blur(var(--backdrop-blur-panel));
   --backdrop-filter-dialog-enabled: blur(var(--backdrop-blur-dialog));
-
-  /* Surface background opacity constants - using new opacity tokens */
-  --surface-opacity-light: var(--opacity-5);
-  --surface-opacity-heavy: var(--opacity-6);
-  --surface-opacity-dark: var(--opacity-7);
 
   /* Dialog background opacity constants (stronger than panel) */
   --dialog-opacity: var(--opacity-9);
@@ -51,25 +42,8 @@
   --raised-shadow-offset-y: 0.04em;
   --raised-word-spacing: -0.1em;
 
-  /* Raised variant division factors for form components and inset effects */
-  --raised-elevation-factor-subtle: 3;
-  --raised-shadow-factor-light: 1.5;
-  --raised-border-multiplier-double: 2;
-
   /* Complex shadow tokens for form components and inset effects */
-  --raised-shadow-blur-medium: 0.2em;
   --raised-shadow-blur-large: 0.4em;
-  --raised-shadow-medium-factor-third: 3;
-
-  /* Raised inset shadow tokens - based on text field pattern for consistent 3D effects */
-  --raised-inset-shadow-dark:
-    inset 0 var(--raised-border-width)
-      calc(var(--raised-shadow-blur-small) / var(--raised-shadow-factor-light)) var(--gray-a4),
-    inset 0 calc(-1 * var(--raised-border-width)) var(--gray-a2),
-    inset 0 calc(var(--raised-border-width) * var(--raised-border-multiplier-double))
-      calc(var(--raised-shadow-blur-medium) / var(--raised-shadow-medium-factor-third))
-      var(--gray-a3),
-    0 0 0 var(--raised-border-width) var(--gray-a5);
 
   /* Trigger icon size constants (for dropdowns, selects) */
   --trigger-icon-size-default: 9px;
@@ -103,13 +77,6 @@
 
   /* Progress and Slider component constants */
   --progress-default-duration: 5s;
-  --progress-animation-delay-start: 5s;
-  --progress-animation-delay-shine: 7.5s;
-  --progress-animation-duration-fade: 2.5s;
-  --progress-animation-duration-pulse: 5s;
-  --progress-shine-width-multiplier: 4;
-  --progress-gradient-stop-start: 25%;
-  --progress-gradient-stop-end: 75%;
 
   /* Progress animation scale values */
   --progress-scale-initial: 0.01;
@@ -118,18 +85,11 @@
   --progress-scale-step-3: 0.9;
   --progress-scale-final: 1;
 
-  /* Progress animation timing percentages */
-  --progress-timing-step-1: 20%;
-  --progress-timing-step-2: 30%;
-  --progress-timing-step-3: 40%;
-  --progress-timing-step-4: 50%;
-
   /* Slider component constants */
   --slider-thumb-hit-area-multiplier: 2;
   --slider-thumb-inset-factor: 0.25;
   --slider-focus-ring-inner: 3px;
   --slider-focus-ring-outer: 5px;
-  --slider-raised-inset-offset: 1.5px;
 
   /* Shared Progress and Slider sizing tokens */
   --progress-slider-height-1: var(--space-1);
@@ -137,47 +97,15 @@
   --progress-slider-height-3: var(--space-2);
   --progress-slider-height-4: calc(var(--space-2) * 1.25);
 
-  /* Outlier sizing for size 5 to 9. */
-  /* --progress-slider-height-5: var(--space-5); */
-  /* --progress-slider-height-6: var(--space-6); */
-  /* --progress-slider-height-7: var(--space-7); */
-  /* --progress-slider-height-8: var(--space-8); */
-  /* --progress-slider-height-9: var(--space-9); */
-
   /* Shared Progress and Slider radius tokens */
   --progress-slider-radius-1: var(--radius-1);
   --progress-slider-radius-2: var(--radius-2);
   --progress-slider-radius-3: var(--radius-3);
   --progress-slider-radius-4: var(--radius-4);
 
-  /* Outlier radius for size 5 to 9. */
-  /* --progress-slider-radius-5: var(--radius-pill-1); */
-  /* --progress-slider-radius-6: var(--radius-pill-2); */
-  /* --progress-slider-radius-7: var(--radius-pill-3); */
-  /* --progress-slider-radius-8: var(--radius-pill-4); */
-  /* --progress-slider-radius-9: var(--radius-pill-5); */
-
-  /* Size multipliers */
-  --size-multiplier-small: 0.75;
-  --size-multiplier-large: 1.25;
-
-  /* Opacity constants - using new opacity tokens */
-  --opacity-disabled: var(--opacity-5);
-  --opacity-soft-variant: var(--opacity-8);
-
   /* Positioning constants */
   --position-center: 50%;
   --position-full: 100%;
-  --position-negative-full: -100%;
-  --position-zero: 0%;
-
-  /* Transition constants */
-  --transition-background-blur:
-    background-color var(--duration-2) var(--ease-1),
-    scale var(--motion-duration-small) var(--motion-ease-standard);
-
-  /* Sheet animation constants */
-  --sheet-slide-distance: 50%;
 
   /* Spacing multipliers for component sizing */
   --spacing-multiplier-small: 0.5;
@@ -203,22 +131,4 @@
 
   /* Component padding relationships */
   --padding-ratio-horizontal: 1.5;
-
-  /* Deprecated: the old `--classic-*` names. They point at `--raised-*` and are removed in 0.15.0. */
-  --classic-active-padding-offset-1: var(--raised-active-padding-offset-1);
-  --classic-active-padding-offset-2: var(--raised-active-padding-offset-2);
-  --classic-border-multiplier-double: var(--raised-border-multiplier-double);
-  --classic-border-width: var(--raised-border-width);
-  --classic-border-width-thick: var(--raised-border-width-thick);
-  --classic-elevation-factor-subtle: var(--raised-elevation-factor-subtle);
-  --classic-elevation-offset: var(--raised-elevation-offset);
-  --classic-inset-shadow-dark: var(--raised-inset-shadow-dark);
-  --classic-shadow-blur-large: var(--raised-shadow-blur-large);
-  --classic-shadow-blur-medium: var(--raised-shadow-blur-medium);
-  --classic-shadow-blur-small: var(--raised-shadow-blur-small);
-  --classic-shadow-factor-light: var(--raised-shadow-factor-light);
-  --classic-shadow-medium-factor-third: var(--raised-shadow-medium-factor-third);
-  --classic-shadow-offset-y: var(--raised-shadow-offset-y);
-  --classic-word-spacing: var(--raised-word-spacing);
-  --slider-classic-inset-offset: var(--slider-raised-inset-offset);
 }

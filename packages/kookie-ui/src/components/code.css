@@ -33,6 +33,11 @@
 
 @breakpoints {
   .rt-Code {
+    &:where(.rt-r-size-0) {
+      font-size: calc(var(--font-size-0) * var(--code-variant-font-size-adjust));
+      line-height: var(--line-height-0);
+      --letter-spacing: var(--letter-spacing-0);
+    }
     &:where(.rt-r-size-1) {
       font-size: calc(var(--font-size-1) * var(--code-variant-font-size-adjust));
       line-height: var(--line-height-1);
@@ -77,6 +82,21 @@
       font-size: calc(var(--font-size-9) * var(--code-variant-font-size-adjust));
       line-height: var(--line-height-9);
       --letter-spacing: var(--letter-spacing-9);
+    }
+    &:where(.rt-r-size-10) {
+      font-size: calc(var(--font-size-10) * var(--code-variant-font-size-adjust));
+      line-height: var(--line-height-10);
+      --letter-spacing: var(--letter-spacing-10);
+    }
+    &:where(.rt-r-size-11) {
+      font-size: calc(var(--font-size-11) * var(--code-variant-font-size-adjust));
+      line-height: var(--line-height-11);
+      --letter-spacing: var(--letter-spacing-11);
+    }
+    &:where(.rt-r-size-12) {
+      font-size: calc(var(--font-size-12) * var(--code-variant-font-size-adjust));
+      line-height: var(--line-height-12);
+      --letter-spacing: var(--letter-spacing-12);
     }
   }
 }

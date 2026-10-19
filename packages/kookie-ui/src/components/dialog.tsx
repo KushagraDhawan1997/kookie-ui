@@ -7,7 +7,6 @@ import { Heading } from './heading.js';
 import { Text } from './text.js';
 import { Theme } from './theme.js';
 import { extractProps } from '../helpers/extract-props.js';
-import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
 import { useBodyPointerEventsCleanup } from '../hooks/use-body-pointer-events-cleanup.js';
 
@@ -39,12 +38,10 @@ DialogTrigger.displayName = 'Dialog.Trigger';
 // them on every render.
 const {
   align: alignPropDef,
-  panelBackground: panelBackgroundPropDef,
   material: materialPropDef,
   ...contentPropDefs
 } = dialogContentPropDefs;
 const alignPropDefs = { align: alignPropDef };
-const panelBackgroundPropDefs = { panelBackground: panelBackgroundPropDef };
 const materialPropDefs = { material: materialPropDef };
 
 type DialogContentElement = React.ElementRef<typeof DialogPrimitive.Content>;
@@ -57,27 +54,19 @@ const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>
   ({ align, ...props }, forwardedRef) => {
     const { className: alignClassName } = extractProps({ align }, alignPropDefs);
 
-    // Extract panelBackground and material from props
-    const { panelBackground: extractedPanelBackground } = extractProps(
-      { panelBackground: props.panelBackground },
-      panelBackgroundPropDefs,
-    );
 
     const { material: extractedMaterial } = extractProps(
       { material: props.material },
       materialPropDefs,
     );
 
-    useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
-    // Material takes precedence over the deprecated panelBackground
-    const materialValue = extractedMaterial ?? extractedPanelBackground;
+    const materialValue = extractedMaterial;
 
     const {
       className,
       forceMount,
       container,
-      panelBackground: _,
       material: __,
       ...contentProps
     } = extractProps(props, contentPropDefs);
@@ -155,7 +144,6 @@ const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>
                   ref={combinedRef}
                   className={classNames('rt-BaseDialogContent', 'rt-DialogContent', className)}
                   data-material={materialValue}
-                  data-panel-background={materialValue}
                   tabIndex={-1}
                   role="dialog"
                   aria-modal="true"

@@ -104,24 +104,3 @@
  * DRILL-DOWN ANIMATIONS                                                                           *
  *                                                                                                 *
  ***************************************************************************************************/
-
-@media (prefers-reduced-motion: no-preference) {
-  .rt-DropdownMenuDrillDownPanel:where([data-drill-down-active][data-animation-direction='forward']) {
-    animation: rt-drill-down-enter-from-right var(--motion-duration-small) var(--motion-ease-smooth);
-  }
-
-  .rt-DropdownMenuDrillDownPanel:where([data-drill-down-active][data-animation-direction='backward']),
-  .rt-DropdownMenuDrillDownRoot:where([data-submenu-behavior='drill-down']:not([data-drill-down-active])[data-animation-direction='backward']) {
-    animation: rt-drill-down-enter-from-left var(--motion-duration-small) var(--motion-ease-smooth);
-  }
-
-  /* Mirror the slide direction in right-to-left layouts */
-  :where([dir='rtl']) .rt-DropdownMenuDrillDownPanel:where([data-drill-down-active][data-animation-direction='forward']) {
-    animation-name: rt-drill-down-enter-from-left;
-  }
-
-  :where([dir='rtl']) .rt-DropdownMenuDrillDownPanel:where([data-drill-down-active][data-animation-direction='backward']),
-  :where([dir='rtl']) .rt-DropdownMenuDrillDownRoot:where([data-submenu-behavior='drill-down']:not([data-drill-down-active])[data-animation-direction='backward']) {
-    animation-name: rt-drill-down-enter-from-right;
-  }
-}

@@ -16,6 +16,7 @@ import type { TextProps } from './text.js';
 import type { MarginProps } from '../props/margin.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
+import type { ButtonRankProps } from './button.js';
 
 /*
  * Toolbar takes Kookie UI v2's contract (v2: components/toolbar), built on Radix instead of
@@ -26,9 +27,6 @@ import type { GetPropDefTypes } from '../props/prop-def.js';
  * nothing; a `ToolbarGroup` draws a quiet well around controls that belong together, and a
  * `ToolbarSeparator` draws a gray hairline between clusters. Use a `Flex` to cluster controls
  * without a well: the row spaces the clusters with `space-between`.
- *
- * The band anchored to a pane's edge (Left / Center / Right / Title) that this name used to
- * mean is `AppBar` since 0.11.0.
  */
 
 type ToolbarSize = NonNullable<GetPropDefTypes<typeof toolbarRootPropDefs>['size']>;
@@ -143,15 +141,17 @@ ToolbarGroup.displayName = 'Toolbar.Group';
 // ToolbarButton
 // ============================================================================
 
-type ToolbarButtonBaseProps = Omit<ButtonProps, 'as' | 'asChild'>;
+type ToolbarButtonBaseProps = Omit<ButtonProps, 'as' | 'asChild' | 'variant' | 'emphasis'>;
 
 /** A labelled button: takes every `Button` prop. */
-type ToolbarTextButtonProps = ToolbarButtonBaseProps & {
+type ToolbarTextButtonProps = ToolbarButtonBaseProps &
+  ButtonRankProps & {
   iconOnly?: false;
 };
 
 /** An icon-only button: renders an `IconButton`, and the type requires an `aria-label`. */
-type ToolbarIconButtonProps = Omit<ToolbarButtonBaseProps, 'aria-label' | 'aria-labelledby' | 'overrideStyles'> & {
+type ToolbarIconButtonProps = Omit<ToolbarButtonBaseProps, 'aria-label' | 'aria-labelledby' | 'fullWidth'> &
+  ButtonRankProps & {
   iconOnly: true;
   /** The control's accessible name. An icon has no words of its own, so this is required. */
   'aria-label': string;

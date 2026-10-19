@@ -48,11 +48,10 @@ export function MyAvatars() {
 | ---- | ---- | ------- | ----------- |
 | `src` | `string` | - | The image source URL. |
 | `fallback` | `React.ReactNode` | *required* | Content to display when the image fails to load. |
-| `size` | `'1' \| '2' \| '3' \| ... \| '12'` | `'3'` | Controls the size. Supports responsive values. |
-| `variant` | `'raised' \| 'solid' \| 'soft' \| 'surface' \| 'outline'` | `'soft'` | The visual style of the fallback. |
-| `color` | `AccentColor` | - | The accent color for the fallback. |
+| `size` | `'1' \| '2' \| '3' \| ... \| '9'` | `'3'` | Controls the size. Supports responsive values. |
+| `variant` | `'raised' \| 'solid' \| 'soft' \| 'surface' \| 'outline'` | `'raised'` | The visual style of the fallback. |
+| `color` | `AccentColor` | `'gray'` | Rests gray. Set a color to mark a category. |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | - | Override the border radius. |
-| `material` | `'solid' \| 'translucent'` | - | Material appearance for the fallback. |
 | `status` | `AccentColor` | - | Status indicator color. Renders a colored dot at bottom-right. |
 | `badge` | `React.ReactNode` | - | Custom badge content. Renders at bottom-right. |
 | `fit` | `'cover' \| 'contain' \| 'fill' \| 'scale-down' \| 'none'` | `'cover'` | Controls how the image fits within the avatar. Supports responsive values. |
@@ -85,7 +84,7 @@ When no image is provided or it fails to load, the fallback content is displayed
 
 ## Sizes
 
-Avatars support 12 sizes from compact (1) to large (12).
+Avatars support 9 sizes from compact (1) to large (9).
 
 ```tsx
 <Flex gap="3" align="center">
@@ -249,15 +248,11 @@ Kookie UI extends Radix Themes Avatar with practical improvements:
 
 ### Extended Sizes
 
-Size scale expanded from 9 to 12 values, with consistent radius-to-size mapping and two-letter fallback font sizes at every scale.
+Size scale of 9 values, with consistent radius-to-size mapping and two-letter fallback font sizes at every scale.
 
 ### Additional Variants
 
 Three new variants beyond Radix's `solid` and `soft`: `raised` provides a raised 3D surface appearance with shadow, `surface` adds a subtle bordered background, and `outline` renders a border-only fallback with no fill.
-
-### Material Support
-
-`material` prop controls solid vs. translucent rendering. Translucent avatars use backdrop-filter for a frosted-glass effect and automatically blend with the background. Works across all variants.
 
 ### Status Indicator
 

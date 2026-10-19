@@ -180,7 +180,7 @@ The package produces:
 
 ### Shell Layout Engine
 
-A 7-slot layout system: Header, Rail, Panel, Sidebar, Content, Inspector, Bottom. Supports responsive presentation modes (`fixed`, `overlay`, `stacked`), pane modes (`expanded`, `collapsed`, `thin`), resize handles with localStorage persistence, and context API for layout state.
+A 7-slot layout system: Header, Rail, Panel, Sidebar, Content, Inspector, Bottom. Supports responsive presentation modes (`fixed`, `overlay`, `stacked`), pane modes (`expanded`, `collapsed`), resize handles with localStorage persistence, and context API for layout state.
 
 ### Material System
 
@@ -196,7 +196,7 @@ Theme-level `material` prop for surfaces: `solid` or `translucent` (with backdro
 
 - **Navbar** — Semantic navigation with logo, nav, and action slots
 - **Chatbar** — Chat UI input pattern
-- **Sidebar** — Alternative layout component with `thin` mode
+- **Sidebar** — Navigation rows for `Shell.Sidebar`, `Shell.Panel` and `Shell.Rail` (tiles in a Rail)
 - **Shell** — Full layout engine (not a simple component)
 
 ### Built-in Tooltip Support

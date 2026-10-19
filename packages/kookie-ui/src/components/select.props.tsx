@@ -1,4 +1,3 @@
-import { parseVariant } from '../helpers/parse-variant.js';
 import type React from 'react';
 
 import { colorPropDef } from '../props/color.prop.js';
@@ -14,13 +13,11 @@ const selectRootPropDefs = {
   size: PropDef<(typeof sizes)[number]>;
 };
 
-const triggerVariants = ['raised', 'surface', 'soft', 'outline', 'ghost', 'classic'] as const;
+const triggerVariants = ['raised', 'surface', 'soft', 'outline', 'ghost'] as const;
 
 const selectTriggerPropDefs = {
-  variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'raised', parseValue: parseVariant },
+  variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'raised' },
   material: { type: 'enum', values: ['solid', 'translucent'] },
-  /** @deprecated Use `material`. Removed in 0.15.0. */
-  panelBackground: { type: 'enum', values: ['solid', 'translucent'] },
   error: { type: 'boolean' },
   loading: { type: 'boolean' },
   disabled: { type: 'boolean' },
@@ -31,7 +28,6 @@ const selectTriggerPropDefs = {
 } satisfies {
   variant: PropDef<(typeof triggerVariants)[number]>;
   material: PropDef<'solid' | 'translucent'>;
-  panelBackground: PropDef<'solid' | 'translucent'>;
   error: PropDef<boolean>;
   loading: PropDef<boolean>;
   disabled: PropDef<boolean>;
@@ -39,13 +35,10 @@ const selectTriggerPropDefs = {
   placeholder: PropDef<React.ReactNode>;
 };
 
-const contentVariants = ['solid', 'soft'] as const;
 
 const selectContentPropDefs = {
-  variant: { type: 'enum', className: 'rt-variant', values: contentVariants, default: 'soft' },
   ...colorPropDef,
 } satisfies {
-  variant: PropDef<(typeof contentVariants)[number]>;
 };
 
 export { selectRootPropDefs, selectTriggerPropDefs, selectContentPropDefs };

@@ -15,7 +15,6 @@
   overflow: auto;
   position: relative;
   z-index: 200; /* Above dialogs (100) so popovers inside dialogs/sheets work */
-  transition: var(--transition-background-blur);
 
   --inset-padding-top: var(--popover-content-padding);
   --inset-padding-right: var(--popover-content-padding);
@@ -29,17 +28,14 @@
   transform-origin: var(--radix-popover-content-transform-origin);
 
   /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 
   /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid']) {
+  &:where([data-material='solid']) {
     background-color: var(--color-panel-solid);
     backdrop-filter: none;
   }
 
-  &:where([data-panel-background='translucent']) {
+  &:where([data-material='translucent']) {
     background-color: var(--color-panel-translucent);
     backdrop-filter: var(--backdrop-filter-panel);
   }

@@ -25,7 +25,7 @@ type RadioInputProps = ComponentPropsWithout<
 interface RadioProps extends RadioInputProps, MarginProps, RadioOwnProps {}
 
 const Radio = React.forwardRef<RadioElement, RadioProps>((props, forwardedRef) => {
-  const { className, color, material, onChange, onValueChange, ...radioProps } = extractProps(
+  const { className, color, onChange, onValueChange, ...radioProps } = extractProps(
     props,
     radioPropDefs,
     marginPropDefs,
@@ -34,7 +34,6 @@ const Radio = React.forwardRef<RadioElement, RadioProps>((props, forwardedRef) =
     <input
       type="radio"
       data-accent-color={color}
-      data-material={material}
       {...radioProps}
       onChange={composeEventHandlers(onChange, (event) =>
         onValueChange?.(event.currentTarget.value),

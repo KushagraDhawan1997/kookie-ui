@@ -33,11 +33,6 @@ type ImageOwnProps = GetPropDefTypes<typeof imagePropDefs> & {
    */
   showSkeleton?: boolean;
   /**
-   * Whether the image should fade in when loaded
-   * @default true
-   */
-  fadeIn?: boolean;
-  /**
    * Callback fired when the image successfully loads
    */
   onLoad?: (event: React.SyntheticEvent<HTMLImageElement>) => void;
@@ -124,7 +119,6 @@ const Image = React.forwardRef<ImageElement, ImageProps>((props, forwardedRef) =
     src,
     placeholder,
     showSkeleton = false,
-    fadeIn = true,
     loadingAriaLabel = 'Loading image...',
     errorAriaLabel = 'Failed to load image',
     radius,
@@ -191,15 +185,13 @@ const Image = React.forwardRef<ImageElement, ImageProps>((props, forwardedRef) =
   const imgStyle: React.CSSProperties = hasFill
     ? {
         display: 'block',
-        opacity: fadeIn ? (isLoaded ? 1 : 0) : 1,
-        transition: fadeIn ? 'opacity 0.3s ease-out' : 'none',
+        opacity: isLoaded ? 1 : 0,
       }
     : {
         width: '100%',
         height: '100%',
         display: 'block',
-        opacity: fadeIn ? (isLoaded ? 1 : 0) : 1,
-        transition: fadeIn ? 'opacity 0.3s ease-out' : 'none',
+        opacity: isLoaded ? 1 : 0,
       };
 
   const mergeRefs = (node: HTMLImageElement | null) => {

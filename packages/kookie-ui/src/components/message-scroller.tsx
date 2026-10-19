@@ -44,6 +44,7 @@ import { useComposedRefs } from 'radix-ui/internal';
 
 import { IconButton, type IconButtonProps } from './icon-button.js';
 import { useScrollEdges } from '../hooks/use-scroll-edges.js';
+import type { ButtonRankProps } from './button.js';
 
 interface RootProps extends React.ComponentPropsWithoutRef<'div'> {
   /**
@@ -128,7 +129,8 @@ const Item = React.forwardRef<HTMLDivElement, ItemProps>(({ className, ...props 
 ));
 Item.displayName = 'MessageScroller.Item';
 
-type ButtonProps = Omit<IconButtonProps, 'aria-label' | 'aria-labelledby'> & {
+type ButtonProps = Omit<IconButtonProps, 'aria-label' | 'aria-labelledby' | 'variant' | 'emphasis'> &
+  ButtonRankProps & {
   /** Accessible name, in your words. Default "Jump to the latest". */
   'aria-label'?: string;
   /** `end` jumps to the latest message (default); `start` to the first. */
@@ -142,7 +144,7 @@ type ButtonProps = Omit<IconButtonProps, 'aria-label' | 'aria-labelledby'> & {
  * Place it inside `Root`, after the viewport. It sits over the viewport's bottom edge.
  */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ direction = 'end', behavior, className, children, size = '2', variant = 'surface', color = 'gray', radius = 'full', 'aria-label': label, ...props }, forwardedRef) => (
+  ({ direction = 'end', behavior, className, children, size = '2', variant = 'surface', emphasis, color = 'gray', radius = 'full', 'aria-label': label, ...props }, forwardedRef) => (
     <Primitive.Button
       direction={direction}
       {...(behavior ? { behavior } : {})}
@@ -151,7 +153,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {...props}
           ref={forwardedRef}
           size={size}
-          variant={variant}
+          {...(emphasis ? { emphasis } : { variant })}
           color={color}
           radius={radius}
           aria-label={label ?? (direction === 'end' ? 'Jump to the latest' : 'Jump to the first')}

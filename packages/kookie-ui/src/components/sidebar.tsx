@@ -7,20 +7,13 @@ import * as Accordion from '@radix-ui/react-accordion';
 import * as DropdownMenu from './dropdown-menu.js';
 import * as Popover from './popover.js';
 
-import { sidebarPropDefs } from './sidebar.props.js';
-import { useThemeContext } from './theme.js';
-// import { IconButton } from './icon-button.js';
-import { ScrollArea } from './scroll-area.js';
 import { Separator } from './separator.js';
 import { ThickChevronRightIcon } from './icons.js';
-import { extractProps } from '../helpers/extract-props.js';
 import { Kbd } from './kbd.js';
 import { Badge } from './badge.js';
-import { SidebarVisualContext, useSidebarVisual } from './_internal/pane-chrome.js';
-import { warnDeprecated } from '../helpers/warn-deprecated.js';
+import { useSidebarVisual } from './_internal/pane-chrome.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
-import type { GetPropDefTypes } from '../props/prop-def.js';
 import type { BadgeProps } from './badge.js';
 
 // Badge configuration type for sidebar menu buttons
@@ -31,183 +24,6 @@ type BadgeConfig = {
   color?: BadgeProps['color'];
   radius?: BadgeProps['radius'];
 };
-
-// Sidebar is now independent of Shell - no integration needed
-
-// Main Sidebar component
-type SidebarOwnProps = GetPropDefTypes<typeof sidebarPropDefs>;
-interface SidebarProps extends ComponentPropsWithout<'div', RemovedProps>, SidebarOwnProps {
-  /**
-   * Presentational mode independent of Shell.
-   * 'thin' renders a rail-style sidebar, 'expanded' renders a panel-style sidebar.
-   * If both `presentation` and `layout` are provided, `presentation` takes precedence.
-   */
-  presentation?: 'thin' | 'expanded';
-}
-
-/** @deprecated Removed in 0.15.0. Put the menu parts in `Shell.Sidebar`. */
-const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>((props, forwardedRef) => {
-  const themeContext = useThemeContext();
-  warnDeprecated(
-    'Sidebar.Root is deprecated and will be removed in 0.15.0. Put the Sidebar menu parts in Shell.Sidebar, between Shell.PaneHeader, Shell.Scroll and Shell.PaneFooter.',
-  );
-  if (props.menuVariant !== undefined) {
-    warnDeprecated('`menuVariant` on Sidebar.Root is deprecated and will be removed in 0.15.0. Rows use the soft highlight, and the solid one under prefers-contrast: more.');
-  }
-  if (props.presentation === 'thin' || props.layout === 'rail') {
-    warnDeprecated('Sidebar thin mode is deprecated and will be removed in 0.15.0. Put the rows in Shell.Rail, which draws them as tiles.');
-  }
-
-  const {
-    size = sidebarPropDefs.size.default,
-    variant = sidebarPropDefs.variant.default,
-    menuVariant = sidebarPropDefs.menuVariant.default,
-    layout = sidebarPropDefs.layout.default,
-    presentation,
-    // type = sidebarPropDefs.type.default,
-    // side = sidebarPropDefs.side.default,
-    // collapsible = sidebarPropDefs.collapsible.default,
-    panelBackground,
-    color,
-  } = props;
-
-  const { className, children, ...rootProps } = extractProps(props, sidebarPropDefs);
-  // Remove internal-only props from DOM
-  const { asChild: _, panelBackground: __, presentation: ___, ...safeRootProps } = rootProps;
-  const resolvedColor = color || themeContext.accentColor;
-
-  // Resolve layout (default to 'panel'). `presentation` takes precedence over `layout`.
-  const resolvedLayout = presentation === 'thin' ? 'rail' : presentation === 'expanded' ? 'panel' : layout || 'panel';
-
-  // Update context with current props - we'll pass the resolved values
-  const resolvedSize = typeof size === 'object' ? size.initial || '2' : size;
-  const visualContextValue = React.useMemo(
-    () => ({ size: resolvedSize, menuVariant, presentation, color: resolvedColor }),
-    [resolvedSize, menuVariant, presentation, resolvedColor],
-  );
-  return (
-    <div {...safeRootProps} ref={forwardedRef} data-accent-color={resolvedColor} className={classNames('rt-SidebarRoot', className)}>
-      <SidebarVisualContext.Provider value={visualContextValue}>
-        <div
-          className={classNames('rt-SidebarContainer', `rt-variant-${variant}`, `rt-r-size-${resolvedSize}`, `rt-menu-variant-${menuVariant}`, resolvedLayout && `rt-layout-${resolvedLayout}`)}
-          data-accent-color={resolvedColor}
-          data-panel-background={panelBackground}
-          data-presentation={presentation}
-          data-layout={resolvedLayout}
-        >
-          {children}
-        </div>
-      </SidebarVisualContext.Provider>
-    </div>
-  );
-});
-Sidebar.displayName = 'Sidebar.Root';
-
-// Sidebar content area
-interface SidebarContentProps extends React.ComponentPropsWithoutRef<'div'> {
-  id?: string;
-  role?: 'navigation' | 'none';
-  'aria-label'?: string;
-}
-
-/** @deprecated Removed in 0.15.0. Use `Shell.Scroll`. */
-const SidebarContent = React.forwardRef<HTMLDivElement, SidebarContentProps>(
-  ({ className, children, role = 'navigation', 'aria-label': ariaLabel = 'Main navigation', id, ...props }, forwardedRef) => {
-    warnDeprecated('Sidebar.Content is deprecated and will be removed in 0.15.0. Use Shell.Scroll inside Shell.Sidebar.');
-    const visual = useSidebarVisual();
-    const size = visual?.size ?? '2';
-    const menuVariant = visual?.menuVariant ?? 'soft';
-
-    return (
-      <ScrollArea type="hover">
-        <div
-          {...props}
-          ref={forwardedRef}
-          id={id}
-          role={role}
-          aria-label={ariaLabel}
-          className={classNames('rt-BaseMenuContent', 'rt-SidebarContent', `rt-r-size-${size}`, `rt-menu-variant-${menuVariant}`, className)}
-        >
-          <div className="rt-BaseMenuViewport">{children}</div>
-        </div>
-      </ScrollArea>
-    );
-  },
-);
-SidebarContent.displayName = 'Sidebar.Content';
-
-// Sidebar header
-interface SidebarHeaderProps extends React.ComponentPropsWithoutRef<'div'> {
-  /**
-   * Whether to use the default flex container layout.
-   * @default true
-   */
-  asContainer?: boolean;
-}
-
-/** @deprecated Removed in 0.15.0. Use `Shell.PaneHeader`. */
-const SidebarHeader = React.forwardRef<HTMLDivElement, SidebarHeaderProps>(({ className, asContainer = true, ...props }, forwardedRef) => {
-    warnDeprecated('Sidebar.Header is deprecated and will be removed in 0.15.0. Use Shell.PaneHeader inside Shell.Sidebar.');
-  const visual = useSidebarVisual();
-  const size = visual?.size ?? '2';
-  const menuVariant = visual?.menuVariant ?? 'soft';
-
-  return (
-    <div
-      {...props}
-      ref={forwardedRef}
-      className={classNames(
-        'rt-SidebarHeader',
-        `rt-r-size-${size}`,
-        `rt-menu-variant-${menuVariant}`,
-        {
-          'rt-SidebarHeader--container': asContainer,
-        },
-        className,
-      )}
-    />
-  );
-});
-SidebarHeader.displayName = 'Sidebar.Header';
-
-// Sidebar footer
-interface SidebarFooterProps extends React.ComponentPropsWithoutRef<'div'> {
-  /**
-   * Whether to use the default flex container layout.
-   * @default true
-   */
-  asContainer?: boolean;
-}
-
-/** @deprecated Removed in 0.15.0. Use `Shell.PaneFooter`. */
-const SidebarFooter = React.forwardRef<HTMLDivElement, SidebarFooterProps>(({ className, asContainer = true, ...props }, forwardedRef) => {
-    warnDeprecated('Sidebar.Footer is deprecated and will be removed in 0.15.0. Use Shell.PaneFooter inside Shell.Sidebar.');
-  const visual = useSidebarVisual();
-  const size = visual?.size ?? '2';
-  const menuVariant = visual?.menuVariant ?? 'soft';
-
-  return (
-    <div
-      {...props}
-      ref={forwardedRef}
-      className={classNames(
-        'rt-SidebarFooter',
-        `rt-r-size-${size}`,
-        `rt-menu-variant-${menuVariant}`,
-        {
-          'rt-SidebarFooter--container': asContainer,
-        },
-        className,
-      )}
-    />
-  );
-});
-SidebarFooter.displayName = 'Sidebar.Footer';
-
-// Sidebar trigger button
-// removed Trigger in presentational-only Sidebar
-
-// Removed SidebarInset - not needed
 
 // Sidebar separator
 interface SidebarSeparatorProps extends ComponentPropsWithout<typeof Separator, RemovedProps> {}
@@ -535,7 +351,7 @@ const SidebarMenuSubContent = React.forwardRef<React.ElementRef<typeof Accordion
     // DropdownMenu only supports sizes 1 and 2, so map size 3 to 2
     const dropdownSize = visual?.size === '3' ? '2' : visual?.size;
     return (
-      <DropdownMenu.Content size={dropdownSize} variant={visual?.menuVariant} className={classNames(className)}>
+      <DropdownMenu.Content size={dropdownSize} className={classNames(className)}>
         <DropdownMenu.Group>{normalized}</DropdownMenu.Group>
       </DropdownMenu.Content>
     );
@@ -799,10 +615,6 @@ SidebarSearch.displayName = 'Sidebar.Search';
 
 // Export all components following shadcn's pattern
 export {
-  Sidebar as Root,
-  SidebarContent as Content,
-  SidebarHeader as Header,
-  SidebarFooter as Footer,
   SidebarSeparator as Separator,
   SidebarMenu as Menu,
   SidebarMenuItem as MenuItem,
@@ -816,57 +628,4 @@ export {
   SidebarSearch as Search,
 };
 
-/**
- * Enhanced Sidebar Header and Footer Usage Examples:
- *
- * 1. Simple default container (backwards compatible):
- * <Sidebar.Header>
- *   <Logo />
- *   <span>App Name</span>
- * </Sidebar.Header>
- *
- * 2. Custom flex layout:
- * <Sidebar.Header className="rt-justify-between rt-gap-3">
- *   <Logo />
- *   <Sidebar.MenuButton>
- *     <SettingsIcon />
- *   </Sidebar.MenuButton>
- * </Sidebar.Header>
- *
- * 3. Column layout for multiple rows:
- * <Sidebar.Header className="rt-flex-col rt-gap-2" asContainer={false}>
- *   <div className="rt-flex rt-items-center rt-gap-2">
- *     <Logo />
- *     <span>App Name</span>
- *   </div>
- *   <Sidebar.MenuButton>
- *     <UserAvatar />
- *     <span>John Doe</span>
- *   </Sidebar.MenuButton>
- * </Sidebar.Header>
- *
- * 4. Interactive footer with menu button:
- * <Sidebar.Footer>
- *   <Sidebar.MenuButton>
- *     <UserIcon />
- *     <span>Settings</span>
- *     <ChevronUpIcon />
- *   </Sidebar.MenuButton>
- * </Sidebar.Footer>
- *
- * 5. Custom footer layout:
- * <Sidebar.Footer className="rt-justify-between">
- *   <span>v1.0.0</span>
- *   <Sidebar.MenuButton>
- *     <HelpIcon />
- *   </Sidebar.MenuButton>
- * </Sidebar.Footer>
- *
- * Available utility classes:
- * - Layout: rt-flex-row, rt-flex-col
- * - Alignment: rt-items-center, rt-items-start, rt-items-end
- * - Justification: rt-justify-between, rt-justify-center, rt-justify-start, rt-justify-end
- * - Gap: rt-gap-1, rt-gap-2, rt-gap-3, rt-gap-4
- */
-
-export type { SidebarProps as RootProps, SidebarContentProps as ContentProps, SidebarHeaderProps as HeaderProps, SidebarFooterProps as FooterProps, BadgeConfig };
+export type { BadgeConfig };

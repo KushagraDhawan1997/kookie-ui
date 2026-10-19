@@ -46,10 +46,6 @@
   /* No default border radius - inherited from size-specific rules */
 
   /* Step 3: restrict to paint-only transitions to avoid Chrome compositing nudge */
-  transition:
-    background-color var(--motion-duration-micro) var(--motion-ease-standard),
-    color var(--motion-duration-small) var(--motion-ease-standard),
-    font-weight var(--motion-duration-small) var(--motion-ease-standard);
 
   /* Fix sticky text highlighting after selection in Firefox */
   user-select: none;
@@ -99,9 +95,6 @@
   }
 
   /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 }
 
 /* Sidebar Menu Sub Components - Radix Accordion */
@@ -111,9 +104,6 @@
 
 /* Accordion trigger icon rotation */
 .rt-SidebarMenuSubTrigger {
-  & :where(.rt-SidebarMenuSubTriggerIcon) {
-    transition: transform var(--motion-duration-micro) var(--motion-ease-standard);
-  }
 
   &:where([data-state='open']) :where(.rt-SidebarMenuSubTriggerIcon) {
     transform: rotate(90deg);
@@ -129,31 +119,6 @@
   }
 
   /* Radix Accordion animation support */
-  &:where([data-state='open']) {
-    animation: rt-sidebar-slide-down var(--motion-duration-small) var(--motion-ease-standard);
-  }
-
-  &:where([data-state='closed']) {
-    animation: rt-sidebar-slide-up var(--motion-duration-small) var(--motion-ease-standard);
-  }
-}
-
-@keyframes rt-sidebar-slide-down {
-  from {
-    height: 0;
-  }
-  to {
-    height: var(--radix-accordion-content-height);
-  }
-}
-
-@keyframes rt-sidebar-slide-up {
-  from {
-    height: var(--radix-accordion-content-height);
-  }
-  to {
-    height: 0;
-  }
 }
 
 .rt-SidebarMenuSubList {

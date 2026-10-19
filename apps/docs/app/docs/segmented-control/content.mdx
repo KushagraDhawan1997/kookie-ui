@@ -57,12 +57,10 @@ The Root component manages the selected value and provides context to child item
 | `defaultValue` | `string` | Uncontrolled default value for initial selection |
 | `onValueChange` | `(value: string) => void` | Callback when selection changes. Receives the new selected value |
 | `size` | `'1' \| '2' \| '3' \| '4'` | Control density: 1 (24px) for compact interfaces, 2 (32px) standard, 3 (40px) for touch targets, 4 (48px) for maximum prominence. Supports responsive objects |
-| `variant` | `'soft'` | Visual style. Currently only soft variant is available |
 | `disabled` | `boolean` | Disables all items when true. Use for unavailable functionality or during loading states |
 | `orientation` | `'horizontal' \| 'vertical'` | Layout direction. Horizontal (default) for most cases, vertical for icon-only sidebars and compact interfaces. Supports responsive objects |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Corner radius scale. Controls the roundness of the entire control |
 | `material` | `'solid' \| 'translucent'` | Background appearance: solid for opaque backgrounds, translucent for depth over images or dynamic backgrounds |
-| `panelBackground` | `'solid' \| 'translucent'` | Deprecated: use `material`. Removed in 0.15.0 |
 
 ## Item Props
 
@@ -234,7 +232,7 @@ import { Menu01Icon, Grid02Icon, LayoutIcon } from '@hugeicons/core-free-icons';
 
 ### Active
 
-The selected item displays with a sliding background indicator and increased font weight. The indicator animates smoothly between selections with spring physics for natural motion.
+The selected item displays with a background indicator and increased font weight.
 
 ```tsx
 <SegmentedControl.Root value="grid">
@@ -466,10 +464,6 @@ New `orientation` prop supports both horizontal and vertical layouts. Vertical o
 ### Automatic Icon Sizing
 
 Icons automatically scale based on control size using consistent `--content-icon-size-N` tokens. Ensures visual harmony with Button and IconButton components across your interface.
-
-### Enhanced Animations
-
-Smooth spring-based indicator transitions with optimized motion curves work seamlessly in both horizontal and vertical orientations. Separator lines automatically hide adjacent to selected items for cleaner visual hierarchy.
 
 ### Material System Support
 

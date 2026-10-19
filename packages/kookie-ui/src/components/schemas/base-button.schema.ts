@@ -60,7 +60,7 @@ export const BaseButtonSchema = z
      * @default 'raised'
      */
     variant: z
-      .enum(['raised', 'solid', 'soft', 'surface', 'outline', 'ghost', 'override', 'classic'])
+      .enum(['raised', 'solid', 'soft', 'surface', 'outline', 'ghost'])
       .default('raised')
       .describe("Visual variant that determines the button's appearance and context"),
 
@@ -119,17 +119,6 @@ export const BaseButtonSchema = z
       .describe('Loading state that shows a spinner and disables interaction'),
 
     /**
-     * Full width mode that expands the button to fill its container
-     * Useful for mobile layouts and form submissions
-     * @default false
-     */
-    fullWidth: z
-      .boolean()
-      .optional()
-      .default(false)
-      .describe('Full width mode that expands the button to fill its container'),
-
-    /**
      * Material type for visual rendering and depth effects
      * Controls how the button renders its visual elements
      */
@@ -137,15 +126,6 @@ export const BaseButtonSchema = z
       .enum(['solid', 'translucent'])
       .optional()
       .describe('Material type for visual rendering and depth effects'),
-
-    /**
-     * Panel background type (deprecated)
-     * @deprecated Use `material` prop instead. This prop will be removed in a future version.
-     */
-    panelBackground: z
-      .enum(['solid', 'translucent'])
-      .optional()
-      .describe('Panel background type (deprecated - use material instead)'),
 
     /**
      * Flush mode that removes visual padding for seamless text integration

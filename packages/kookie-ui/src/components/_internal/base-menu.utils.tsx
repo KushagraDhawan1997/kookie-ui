@@ -43,19 +43,9 @@ function useResolvedResponsiveValue<T>(value: Responsive<T> | undefined, default
 
 type MenuMaterial = 'solid' | 'translucent';
 
-/**
- * The menu surface material. The component props win, then the nearest
- * Theme's `material`. Theme keeps `panelBackground` in sync with `material` at
- * the root, but a nested `<Theme material="solid">` only updates `material`,
- * so reading the deprecated `panelBackground` from the theme gave the wrong
- * surface there.
- */
-function resolveMenuMaterial(
-  material: MenuMaterial | undefined,
-  panelBackground: MenuMaterial | undefined,
-  theme: { material: MenuMaterial; panelBackground: MenuMaterial },
-): MenuMaterial {
-  return material ?? panelBackground ?? theme.material ?? theme.panelBackground;
+/** The menu surface material: the component's prop, then the nearest Theme's `material`. */
+function resolveMenuMaterial(material: MenuMaterial | undefined, theme: { material: MenuMaterial }): MenuMaterial {
+  return material ?? theme.material;
 }
 
 /** Content padding per menu size, in px at 100% scaling (see base-menu.css). */

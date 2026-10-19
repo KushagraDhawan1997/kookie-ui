@@ -112,7 +112,7 @@ describe('a single-mode Sidebar toggles back to the default at the current break
         <Shell.Header>
           <Shell.Trigger target="sidebar">sidebar</Shell.Trigger>
         </Shell.Header>
-        <Shell.Sidebar presentation="fixed" toggleModes="single" defaultState={{ initial: 'collapsed', md: 'thin' }} onStateChange={onStateChange}>
+        <Shell.Sidebar presentation="fixed" defaultState={{ initial: 'collapsed', md: 'expanded' }} onStateChange={onStateChange}>
           sidebar
         </Shell.Sidebar>
         <Shell.Content>content</Shell.Content>
@@ -123,6 +123,6 @@ describe('a single-mode Sidebar toggles back to the default at the current break
     fireEvent.click(trigger);
     expect(onStateChange).toHaveBeenLastCalledWith('collapsed', { reason: 'toggle' });
     fireEvent.click(trigger);
-    expect(onStateChange).toHaveBeenLastCalledWith('thin', { reason: 'toggle' });
+    expect(onStateChange).toHaveBeenLastCalledWith('expanded', { reason: 'toggle' });
   });
 });

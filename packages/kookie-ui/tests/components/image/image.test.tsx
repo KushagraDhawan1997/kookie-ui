@@ -186,17 +186,12 @@ describe('Image', () => {
     });
   });
 
-  describe('Fade in animation', () => {
-    it('has opacity transition by default', () => {
+  describe('Loading', () => {
+    it('shows the image once loaded, with no transition', () => {
       renderWithProviders(<Image src="/test.jpg" alt="Test" />);
       const img = screen.getByRole('img');
-      expect(img).toHaveStyle({ transition: 'opacity 0.3s ease-out' });
-    });
-
-    it('has no transition when fadeIn is false', () => {
-      renderWithProviders(<Image src="/test.jpg" alt="Test" fadeIn={false} />);
-      const img = screen.getByRole('img');
-      expect(img).toHaveStyle({ transition: 'none' });
+      expect(img).toHaveStyle({ opacity: '0' });
+      expect(img.style.transition).toBe('');
     });
   });
 

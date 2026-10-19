@@ -7,7 +7,6 @@ import { useComposedRefs, useLayoutEffect } from 'radix-ui/internal';
 
 import { getMatchingGrayColor } from '../helpers/get-matching-gray-color.js';
 import { usePropSyncedState } from '../hooks/use-prop-synced-state.js';
-import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 import { themePropDefs } from './theme.props.js';
 
 import type { ThemeOwnProps } from './theme.props.js';
@@ -19,7 +18,6 @@ type ThemeAppearance = (typeof themePropDefs.appearance.values)[number];
 type ThemeAccentColor = (typeof themePropDefs.accentColor.values)[number];
 type ThemeGrayColor = (typeof themePropDefs.grayColor.values)[number];
 type ThemeMaterial = (typeof themePropDefs.material.values)[number];
-type ThemePanelBackground = (typeof themePropDefs.panelBackground.values)[number];
 type ThemeRadius = (typeof themePropDefs.radius.values)[number];
 type ThemeScaling = (typeof themePropDefs.scaling.values)[number];
 type ThemeFontFamily = (typeof themePropDefs.fontFamily.values)[number];
@@ -32,7 +30,6 @@ interface ThemeChangeHandlers {
   onAccentColorChange: (accentColor: ThemeAccentColor) => void;
   onGrayColorChange: (grayColor: ThemeGrayColor) => void;
   onMaterialChange: (material: ThemeMaterial) => void;
-  onPanelBackgroundChange: (panelBackground: ThemePanelBackground) => void;
   onRadiusChange: (radius: ThemeRadius) => void;
   onScalingChange: (scaling: ThemeScaling) => void;
   onFontFamilyChange: (fontFamily: ThemeFontFamily) => void;
@@ -45,7 +42,6 @@ interface ThemeContextValue extends ThemeChangeHandlers {
   grayColor: ThemeGrayColor;
   resolvedGrayColor: ThemeGrayColor;
   material: ThemeMaterial;
-  panelBackground: ThemePanelBackground;
   radius: ThemeRadius;
   scaling: ThemeScaling;
   fontFamily: ThemeFontFamily;
@@ -58,7 +54,6 @@ const defaultThemeContext: ThemeContextValue = {
   grayColor: themePropDefs.grayColor.default,
   resolvedGrayColor: themePropDefs.grayColor.default,
   material: themePropDefs.material.default,
-  panelBackground: themePropDefs.panelBackground.default,
   radius: themePropDefs.radius.default,
   scaling: themePropDefs.scaling.default,
   fontFamily: themePropDefs.fontFamily.default,
@@ -67,7 +62,6 @@ const defaultThemeContext: ThemeContextValue = {
   onAccentColorChange: noop,
   onGrayColorChange: noop,
   onMaterialChange: noop,
-  onPanelBackgroundChange: noop,
   onRadiusChange: noop,
   onScalingChange: noop,
   onFontFamilyChange: noop,
@@ -109,7 +103,6 @@ const ThemeRoot = React.forwardRef<ThemeImplElement, ThemeImplPublicProps>(
       accentColor: accentColorProp = themePropDefs.accentColor.default,
       grayColor: grayColorProp = themePropDefs.grayColor.default,
       material: materialProp = themePropDefs.material.default,
-      panelBackground: panelBackgroundProp = themePropDefs.panelBackground.default,
       radius: radiusProp = themePropDefs.radius.default,
       scaling: scalingProp = themePropDefs.scaling.default,
       fontFamily: fontFamilyProp = themePropDefs.fontFamily.default,
@@ -118,7 +111,6 @@ const ThemeRoot = React.forwardRef<ThemeImplElement, ThemeImplPublicProps>(
       ...rootProps
     } = props;
 
-    useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
     // Each of these follows its prop but stays independently settable, so
     // `ThemePanel` can change the theme at runtime. Syncing during render
@@ -128,13 +120,7 @@ const ThemeRoot = React.forwardRef<ThemeImplElement, ThemeImplPublicProps>(
     const [accentColor, setAccentColor] = usePropSyncedState(accentColorProp);
     const [grayColor, setGrayColor] = usePropSyncedState(grayColorProp);
 
-    // Material takes precedence over panelBackground
-    const effectiveMaterial =
-      materialProp !== themePropDefs.material.default ? materialProp : panelBackgroundProp;
-    const [material, setMaterial] = usePropSyncedState(effectiveMaterial);
-
-    // Keep panelBackground in sync with material for backward compatibility
-    const [panelBackground, setPanelBackground] = usePropSyncedState(material);
+    const [material, setMaterial] = usePropSyncedState(materialProp);
 
     const [radius, setRadius] = usePropSyncedState(radiusProp);
     const [scaling, setScaling] = usePropSyncedState(scalingProp);
@@ -152,7 +138,6 @@ const ThemeRoot = React.forwardRef<ThemeImplElement, ThemeImplPublicProps>(
         accentColor={accentColor}
         grayColor={grayColor}
         material={material}
-        panelBackground={panelBackground}
         radius={radius}
         scaling={scaling}
         fontFamily={fontFamily}
@@ -162,7 +147,6 @@ const ThemeRoot = React.forwardRef<ThemeImplElement, ThemeImplPublicProps>(
         onAccentColorChange={setAccentColor}
         onGrayColorChange={setGrayColor}
         onMaterialChange={setMaterial}
-        onPanelBackgroundChange={setPanelBackground}
         onRadiusChange={setRadius}
         onScalingChange={setScaling}
         onFontFamilyChange={setFontFamily}
@@ -201,9 +185,6 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
     accentColor = props.accentColor ?? context?.accentColor ?? themePropDefs.accentColor.default,
     grayColor = props.grayColor ?? context?.resolvedGrayColor ?? themePropDefs.grayColor.default,
     material = props.material ?? context?.material ?? themePropDefs.material.default,
-    panelBackground = props.panelBackground ??
-      context?.panelBackground ??
-      themePropDefs.panelBackground.default,
     radius = props.radius ?? context?.radius ?? themePropDefs.radius.default,
     scaling = props.scaling ?? context?.scaling ?? themePropDefs.scaling.default,
     fontFamily = props.fontFamily ?? context?.fontFamily ?? themePropDefs.fontFamily.default,
@@ -213,7 +194,6 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
     onAccentColorChange = noop,
     onGrayColorChange = noop,
     onMaterialChange = noop,
-    onPanelBackgroundChange = noop,
     onRadiusChange = noop,
     onScalingChange = noop,
     onFontFamilyChange = noop,
@@ -255,7 +235,6 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
           grayColor,
           resolvedGrayColor,
           material,
-          panelBackground,
           radius,
           scaling,
           fontFamily,
@@ -265,7 +244,6 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
           onAccentColorChange,
           onGrayColorChange,
           onMaterialChange,
-          onPanelBackgroundChange,
           onRadiusChange,
           onScalingChange,
           onFontFamilyChange,
@@ -277,7 +255,6 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
           grayColor,
           resolvedGrayColor,
           material,
-          panelBackground,
           radius,
           scaling,
           fontFamily,
@@ -287,7 +264,6 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
           onAccentColorChange,
           onGrayColorChange,
           onMaterialChange,
-          onPanelBackgroundChange,
           onRadiusChange,
           onScalingChange,
           onFontFamilyChange,
@@ -302,7 +278,6 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
         // for nested `Theme` background
         data-has-background={hasBackground ? 'true' : 'false'}
         data-material={material}
-        data-panel-background={panelBackground}
         data-radius={radius}
         data-scaling={scaling}
         data-font-family={fontFamily}

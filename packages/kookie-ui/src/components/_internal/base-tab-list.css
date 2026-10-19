@@ -21,7 +21,6 @@
   flex-shrink: 0;
   position: relative;
   user-select: none;
-  transition: var(--transition-tabs);
   scroll-behavior: smooth;
 }
 
@@ -30,7 +29,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: var(--transition-tabs), var(--transition-background-blur);
 }
 
 .rt-BaseTabListTriggerInner {
@@ -39,14 +37,14 @@
   :where(.rt-BaseTabListTrigger[data-state='inactive'], .rt-TabNavLink:not([data-active])) & {
     letter-spacing: var(--tab-inactive-letter-spacing);
     word-spacing: var(--tab-inactive-word-spacing);
-    transition-delay: var(--duration-1); /* 100ms - allows staggered effect vs active state's 0ms */
+ /* 100ms - allows staggered effect vs active state's 0ms */
   }
 
   :where(.rt-BaseTabListTrigger[data-state='active'], .rt-TabNavLink[data-active]) & {
     font-weight: var(--font-weight-medium);
     letter-spacing: var(--tab-active-letter-spacing);
     word-spacing: var(--tab-active-word-spacing);
-    transition-delay: 0ms; /* Immediate transition for active state */
+ /* Immediate transition for active state */
   }
 }
 
@@ -188,19 +186,19 @@
       background-color: var(--gray-a3);
 
       /* Theme-level translucent override for hover */
-      :where([data-panel-background='translucent']) & {
+      :where([data-material='translucent']) & {
         background-color: var(--gray-a3);
         backdrop-filter: var(--backdrop-filter-components);
       }
 
       /* Component-level overrides for hover */
-      :where(.rt-BaseTabList[data-panel-background='solid']) & {
+      :where(.rt-BaseTabList[data-material='solid']) & {
         background-color: var(--gray-a3);
         backdrop-filter: none;
         --backdrop-filter-components: none;
       }
 
-      :where(.rt-BaseTabList[data-panel-background='translucent']) & {
+      :where(.rt-BaseTabList[data-material='translucent']) & {
         background-color: var(--gray-a3);
         backdrop-filter: var(--backdrop-filter-components);
         --backdrop-filter-components: var(--backdrop-filter-components-enabled);
@@ -216,19 +214,19 @@
       background-color: var(--accent-a3);
 
       /* Theme-level translucent override for focus+hover */
-      :where([data-panel-background='translucent']) & {
+      :where([data-material='translucent']) & {
         background-color: var(--accent-a3);
         backdrop-filter: var(--backdrop-filter-components);
       }
 
       /* Component-level overrides for focus+hover */
-      :where(.rt-BaseTabList[data-panel-background='solid']) & {
+      :where(.rt-BaseTabList[data-material='solid']) & {
         background-color: var(--accent-a3);
         backdrop-filter: none;
         --backdrop-filter-components: none;
       }
 
-      :where(.rt-BaseTabList[data-panel-background='translucent']) & {
+      :where(.rt-BaseTabList[data-material='translucent']) & {
         background-color: var(--accent-a3);
         backdrop-filter: var(--backdrop-filter-components);
         --backdrop-filter-components: var(--backdrop-filter-components-enabled);
@@ -253,10 +251,6 @@
     right: 0;
     background-color: var(--accent-solid-indicator);
     transform-origin: center;
-    transition: 
-      transform var(--duration-3) var(--ease-3),
-      opacity var(--duration-2) var(--ease-1),
-      background-color var(--duration-2) var(--ease-1);
   }
 }
 

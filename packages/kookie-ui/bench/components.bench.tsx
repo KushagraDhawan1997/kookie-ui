@@ -8,7 +8,6 @@ import {
   Blockquote,
   Box,
   Button,
-  Callout,
   Card,
   Checkbox,
   Code,
@@ -74,16 +73,7 @@ describe('component render cost (x100)', () => {
   );
   bench('IconButton', () => void many(() => <IconButton size="2" aria-label="a" />));
   bench('Badge', () => void many(() => <Badge variant="soft">Active</Badge>));
-  bench('Card', () => void many(() => <Card variant="classic">body</Card>));
-  bench(
-    'Callout',
-    () =>
-      void many(() => (
-        <Callout.Root>
-          <Callout.Text>note</Callout.Text>
-        </Callout.Root>
-      )),
-  );
+  bench('Card', () => void many(() => <Card variant="raised">body</Card>));
   bench('Avatar', () => void many(() => <Avatar fallback="A" />));
   bench('Separator', () => void many(() => <Separator size="2" />));
   bench('Spinner', () => void many(() => <Spinner size="2" />));

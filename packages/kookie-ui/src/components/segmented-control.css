@@ -1,8 +1,4 @@
 /* stylelint-disable selector-max-specificity */
-.radix-themes {
-  /* Use standard duration token instead of custom duration */
-  --segmented-control-transition-duration: var(--motion-duration-micro); /* Micro-interactions */
-}
 
 .rt-SegmentedControlRoot {
   display: inline-grid;
@@ -30,7 +26,7 @@
    * Theme-level translucent override
    * Applies backdrop filter for elevated visual effects
    */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     backdrop-filter: var(--backdrop-filter-components);
     --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
@@ -39,12 +35,12 @@
    * Component-level material overrides
    * These ensure proper rendering based on material setting
    */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     backdrop-filter: none;
     --backdrop-filter-components: none;
   }
   
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     backdrop-filter: var(--backdrop-filter-components);
     --backdrop-filter-components: var(--backdrop-filter-components-enabled);
   }
@@ -130,30 +126,28 @@
 .rt-SegmentedControlItemLabelInactive {
   position: absolute;
 
-  transition: var(--transition-tabs);
   font-weight: var(--font-weight-regular);
   letter-spacing: var(--tab-inactive-letter-spacing);
   word-spacing: var(--tab-inactive-word-spacing);
 
   opacity: 1;
-  transition-delay: var(--duration-1); /* Staggered effect like tabs */
+ /* Staggered effect like tabs */
   :where(.rt-SegmentedControlItem[data-state='on']) & {
     opacity: 0;
-    transition-delay: 0ms; /* Immediate transition for state change */
+ /* Immediate transition for state change */
   }
 }
 
 .rt-SegmentedControlItemLabelActive {
-  transition: var(--transition-tabs);
   font-weight: var(--font-weight-medium);
   letter-spacing: var(--tab-active-letter-spacing);
   word-spacing: var(--tab-active-word-spacing);
 
   opacity: 0;
-  transition-delay: 0ms; /* Immediate transition for active state like tabs */
+ /* Immediate transition for active state like tabs */
   :where(.rt-SegmentedControlItem[data-state='on']) & {
     opacity: 1;
-    transition-delay: 0ms; /* Immediate transition for active state */
+ /* Immediate transition for active state */
   }
 }
 
@@ -172,7 +166,6 @@
   margin-right: calc(-1 * var(--border-width-standard) * 0.5); /* -0.5px */
   width: var(--border-width-standard); /* 1px */
   background-color: var(--gray-a4);
-  transition: opacity calc(0.8 * var(--segmented-control-transition-duration)) var(--motion-ease-standard);
 
   /* Make separators slow to disappear and fast to appear, syncing it well with the indicator motion */
 
@@ -180,12 +173,8 @@
   :where(.rt-SegmentedControlItem:where([data-state='on'], :focus-visible)) &,
   :where(.rt-SegmentedControlItem:where([data-state='on'], :focus-visible)) + * & {
     opacity: 0;
-    transition-timing-function: var(--ease-1);
   }
   /* Don't transition when the separator is hidden because of the focus outline */
-  :where(.rt-SegmentedControlRoot:has(:focus-visible)) & {
-    transition-duration: 0ms;
-  }
 }
 
 /* Vertical orientation - separator */
@@ -210,7 +199,6 @@
   left: 0;
   height: 100%;
   pointer-events: none;
-  transition: transform var(--segmented-control-transition-duration) var(--motion-spring-snappy);
 
   &::before {
     inset: var(--border-width-standard); /* 1px */
@@ -536,21 +524,21 @@
 /*                                     */
 /* * * * * * * * * * * * * * * * * * * */
 
-.rt-SegmentedControlRoot:where(.rt-variant-soft) {
+.rt-SegmentedControlRoot {
   /* Base state: solid color for solid panels */
   background-color: var(--gray-3);
 
   /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
+  :where([data-material='translucent']) & {
     background-color: color-mix(in srgb, var(--gray-a3), var(--gray-3) 60%);
   }
 
   /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+  &:where([data-material='solid']) {
     background-color: var(--gray-3);
   }
 
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
+  &:where([data-material='translucent']) {
     background-color: color-mix(in srgb, var(--gray-a3), var(--gray-3) 60%);
   }
 }

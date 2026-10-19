@@ -13,10 +13,6 @@ export const docsNavigation: DocsNavigationConfig = {
       label: 'Components',
       items: [
         {
-          href: '/docs/app-bar',
-          title: 'App Bar',
-        },
-        {
           href: '/docs/avatar',
           title: 'Avatar',
         },
@@ -27,10 +23,6 @@ export const docsNavigation: DocsNavigationConfig = {
         {
           href: '/docs/button',
           title: 'Button',
-        },
-        {
-          href: '/docs/callout',
-          title: 'Callout',
         },
         {
           href: '/docs/card',

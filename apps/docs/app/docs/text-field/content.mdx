@@ -47,15 +47,13 @@ The Root component is the input element that accepts user text input.
 
 | Prop | Type | Description |
 | ---- | ---- | ----------- |
-| `size` | `'1' \| '2' \| '3'` | Input density: 1 (24px) for compact interfaces, 2 (32px) standard, 3 (40px) for mobile-friendly touch targets. Supports responsive objects |
+| `size` | `'1' \| '2' \| '3' \| '4'` | Input density: 1 (24px) for compact interfaces, 2 (32px) standard, 3 (40px) for mobile-friendly touch targets, 4 (48px) to match Button size 4. Supports responsive objects |
 | `variant` | `'raised' \| 'surface' \| 'soft' \| 'ghost' \| 'outline'` | Input style variant: raised for elevated, surface for standard forms, soft for subtle integration, outline for defined boundaries, ghost for minimal inline editing |
 | `color` | `AccentColor` | Semantic color for focus state and validation feedback. Use for visual categorization or status communication |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Corner radius scale: none for sharp edges, small/medium/large for progressive rounding, full for pill-shaped |
 | `material` | `'solid' \| 'translucent'` | Background appearance: solid for opaque backgrounds, translucent for depth over images or dynamic backgrounds |
-| `panelBackground` | `'solid' \| 'translucent'` | Deprecated: use `material`. Removed in 0.15.0 |
 | `error` | `boolean` | Marks field as invalid. Use with errorMessage for accessibility |
 | `errorMessage` | `string` | Error message displayed below input. Automatically connected via ARIA attributes for screen readers |
-| `isInvalid` | `boolean` | Deprecated: use `error`. Removed in 0.15.0 |
 | `required` | `boolean` | Marks field as required for forms |
 | `type` | `'text' \| 'email' \| 'password' \| 'search' \| 'tel' \| 'url' \| 'number' \| 'date' \| 'time' \| 'datetime-local' \| 'month' \| 'week' \| 'hidden'` | HTML input type for different input modes and validation |
 | `placeholder` | `string` | Placeholder text shown when input is empty |

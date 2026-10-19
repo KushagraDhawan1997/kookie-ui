@@ -90,7 +90,6 @@ The dropdown menu is composed of several parts:
 | Prop              | Type                        | Default   | Description                                                           |
 | ----------------- | --------------------------- | --------- | --------------------------------------------------------------------- |
 | `size`            | `'1' \| '2' \| Responsive`  | `'2'`     | Size of the menu items                                                |
-| `variant`         | `'solid' \| 'soft'`         | `'solid'` | Visual style of the menu                                              |
 | `color`           | `AccentColor`               | —         | Accent color for highlighted items. Inherits from theme if not set    |
 | `material`        | `'solid' \| 'translucent'`  | —         | Background appearance. Inherits from theme if not set                 |
 | `submenuBehavior` | `'cascade' \| 'drill-down' \| Responsive` | `'cascade'` | How submenus behave. See [Submenu Behavior](#submenu-behavior) |
@@ -162,7 +161,6 @@ In drill-down mode, `open` and `defaultOpen` push the submenu onto the navigatio
 | Prop           | Type                       | Default          | Description                                                        |
 | -------------- | -------------------------- | ---------------- | ------------------------------------------------------------------ |
 | `size`         | `'1' \| '2' \| Responsive` | Inherited        | Size of the submenu. Inherits from the parent content              |
-| `variant`      | `'solid' \| 'soft'`        | Inherited        | Visual style of the submenu                                        |
 | `color`        | `AccentColor`              | Inherited        | Accent color for highlighted items                                 |
 | `material`     | `'solid' \| 'translucent'` | Inherited        | Background appearance                                              |
 | `virtualized`  | `boolean`                  | `false`          | Skips the ScrollArea so a `VirtualMenu` scrolls itself. Cascade mode only |
@@ -172,39 +170,9 @@ In drill-down mode, `open` and `defaultOpen` push the submenu onto the navigatio
 
 `SubContent` has no `submenuBehavior`; the parent `Content` decides it. In drill-down mode the visual and positioning props do not apply, because the panel renders inline in the parent content.
 
-## Variants
+## Highlight
 
-### Solid
-
-Default variant with an opaque background for standard interfaces.
-
-```tsx showLineNumbers
-<DropdownMenu.Root>
-  <DropdownMenu.Trigger>
-    <Button variant="soft">Options</Button>
-  </DropdownMenu.Trigger>
-  <DropdownMenu.Content variant="solid">
-    <DropdownMenu.Item>Edit</DropdownMenu.Item>
-    <DropdownMenu.Item>Duplicate</DropdownMenu.Item>
-  </DropdownMenu.Content>
-</DropdownMenu.Root>
-```
-
-### Soft
-
-Subtle background with reduced contrast for content-heavy interfaces.
-
-```tsx showLineNumbers
-<DropdownMenu.Root>
-  <DropdownMenu.Trigger>
-    <Button variant="soft">Options</Button>
-  </DropdownMenu.Trigger>
-  <DropdownMenu.Content variant="soft">
-    <DropdownMenu.Item>Edit</DropdownMenu.Item>
-    <DropdownMenu.Item>Duplicate</DropdownMenu.Item>
-  </DropdownMenu.Content>
-</DropdownMenu.Root>
-```
+Rows use the soft highlight. When the system asks for more contrast (`prefers-contrast: more`), they use the solid one.
 
 ## Sizes
 

@@ -109,16 +109,6 @@
 
 .rt-ScrollAreaScrollbar {
   border-radius: var(--scrollarea-scrollbar-border-radius);
-
-  animation-duration: var(--motion-duration-micro);
-  animation-timing-function: var(--motion-ease-standard);
-
-  &:where([data-state='visible']) {
-    animation-name: rt-fade-in;
-  }
-  &:where([data-state='hidden']) {
-    animation-name: rt-fade-out;
-  }
   &:where([data-orientation='horizontal']) {
     margin-top: var(--scrollarea-scrollbar-horizontal-margin-top);
     margin-bottom: var(--scrollarea-scrollbar-horizontal-margin-bottom);
@@ -136,7 +126,6 @@
 .rt-ScrollAreaThumb {
   background-color: var(--gray-a6);
   border-radius: inherit;
-  transition: background-color var(--motion-duration-micro) var(--motion-ease-standard);
 
   @media (hover: hover) {
     &:where(:hover) {

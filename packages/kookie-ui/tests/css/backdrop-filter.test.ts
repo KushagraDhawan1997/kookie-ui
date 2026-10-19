@@ -137,7 +137,6 @@ describe('nested blur suppression', () => {
       'components/_internal/base-card.css',
       'components/_internal/base-menu.css',
       'components/_internal/base-dialog.css',
-      'components/_internal/base-sidebar.css',
     ]) {
       expect(declaring, `${file} should switch nested component blur off`).toContain(file);
     }

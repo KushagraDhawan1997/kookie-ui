@@ -20,7 +20,6 @@
   -webkit-tap-highlight-color: transparent;
 
   &:where(:has(:focus-visible)) {
-    transition: var(--transition-focus);
     outline: var(--focus-outline-width) solid var(--focus-8);
     outline-offset: var(--focus-outline-offset-inset);
 

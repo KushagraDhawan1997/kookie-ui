@@ -29,27 +29,12 @@
   --checkbox-radius-ratio-max: 0.4;
   --checkbox-radius-max: calc(var(--checkbox-size) * var(--checkbox-radius-ratio-max));
 
-
   /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 
   /* Prevent backdrop-filter stacking with parents */
   isolation: isolate;
 
   /* Component-level overrides */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-  
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
-
 
   &::before {
     content: '';
@@ -57,7 +42,6 @@
     height: var(--checkbox-size);
     width: var(--checkbox-size);
     border-radius: var(--checkbox-border-radius);
-    transition: var(--transition-checkbox);
   }
 }
 
@@ -69,15 +53,11 @@
   /* Required for subpixel alignment in Safari */
   transform: translate(-50%, -50%);
   top: 50%;
-  left: 50%;
+  left: 50%
   
   /* Smooth color transitions for the indicator icon */
-  transition: color var(--duration-1) var(--ease-1);
   
   /* Respect user preference for reduced motion */
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 }
 
 /***************************************************************************************************
@@ -153,41 +133,21 @@
     &::before {
       color: var(--accent-ink);
       background-color: var(--color-surface-solid);
-      box-shadow: var(--shadow-2);
+      box-shadow: var(--shadow-2)
 
       /* Theme-level translucent override */
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
-        background-color: var(--color-surface-translucent);
-      }
 
       /* Component-level overrides (higher specificity) */
-      &:where([data-panel-background='solid'], [data-material='solid']) {
-        background-color: var(--color-surface-solid);
-      }
-
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
-        background-color: var(--color-surface-translucent);
-      }
     }
   }
 
   &:where([data-state='checked'], [data-state='indeterminate']) {
     &::before {
-      background-color: var(--accent-3);
+      background-color: var(--accent-3)
 
       /* Theme-level translucent override */
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      }
 
       /* Component-level overrides (higher specificity) */
-      &:where([data-panel-background='solid'], [data-material='solid']) {
-        background-color: var(--accent-3);
-      }
-
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      }
     }
     & :where(.rt-BaseCheckboxIndicator) {
       color: var(--accent-ink);
@@ -198,21 +158,11 @@
     top: calc(var(--raised-elevation-offset) + var(--raised-active-padding-offset-1));
     
     &::before {
-      background-color: var(--accent-3);
+      background-color: var(--accent-3)
 
       /* Theme-level translucent override for active */
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      }
 
       /* Component-level overrides for active */
-      &:where([data-panel-background='solid'], [data-material='solid']) {
-        background-color: var(--accent-3);
-      }
-
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      }
     }
   }
 
@@ -233,21 +183,11 @@
 
 .rt-BaseCheckboxRoot:where(.rt-variant-soft) {
   &::before {
-    background-color: var(--accent-3);
+    background-color: var(--accent-3)
 
     /* Theme-level translucent override */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
 
     /* Component-level overrides (higher specificity) */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--accent-3);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
   }
 
   &:where([data-state='checked'], [data-state='indeterminate']) {
@@ -266,53 +206,28 @@
   }
 }
 
-
-
 /* outline */
 
 .rt-BaseCheckboxRoot:where(.rt-variant-outline) {
   &:where([data-state='unchecked']) {
     &::before {
       box-shadow: inset 0 0 0 1px var(--accent-6);
-      color: var(--accent-ink);
+      color: var(--accent-ink)
 
       /* Theme-level translucent override */
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
-        box-shadow: inset 0 0 0 1px var(--accent-a6);
-      }
 
       /* Component-level overrides (higher specificity) */
-      &:where([data-panel-background='solid'], [data-material='solid']) {
-        box-shadow: inset 0 0 0 1px var(--accent-6);
-      }
-
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
-        box-shadow: inset 0 0 0 1px var(--accent-a6);
-      }
     }
   }
 
   &:where([data-state='checked'], [data-state='indeterminate']) {
     &::before {
       background-color: var(--accent-2);
-      box-shadow: inset 0 0 0 1px var(--accent-7);
+      box-shadow: inset 0 0 0 1px var(--accent-7)
 
       /* Theme-level translucent override */
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-        box-shadow: inset 0 0 0 1px var(--accent-a7);
-      }
 
       /* Component-level overrides (higher specificity) */
-      &:where([data-panel-background='solid'], [data-material='solid']) {
-        background-color: var(--accent-2);
-        box-shadow: inset 0 0 0 1px var(--accent-7);
-      }
-
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-        box-shadow: inset 0 0 0 1px var(--accent-a7);
-      }
     }
     & :where(.rt-BaseCheckboxIndicator) {
       color: var(--accent-ink);
@@ -336,48 +251,22 @@
   &:where([data-state='unchecked']) {
     &::before {
       background-color: var(--accent-2);
-      box-shadow: inset 0 0 0 1px var(--accent-6);
+      box-shadow: inset 0 0 0 1px var(--accent-6)
 
       /* Theme-level translucent override */
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-        box-shadow: inset 0 0 0 1px var(--accent-a6);
-      }
 
       /* Component-level overrides (higher specificity) */
-      &:where([data-panel-background='solid'], [data-material='solid']) {
-        background-color: var(--accent-2);
-        box-shadow: inset 0 0 0 1px var(--accent-6);
-      }
-
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-        box-shadow: inset 0 0 0 1px var(--accent-a6);
-      }
     }
   }
 
   &:where([data-state='checked'], [data-state='indeterminate']) {
     &::before {
       background-color: var(--accent-3);
-      box-shadow: inset 0 0 0 1px var(--accent-8);
+      box-shadow: inset 0 0 0 1px var(--accent-8)
 
       /* Theme-level translucent override */
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-        box-shadow: inset 0 0 0 1px var(--accent-a8);
-      }
 
       /* Component-level overrides (higher specificity) */
-      &:where([data-panel-background='solid'], [data-material='solid']) {
-        background-color: var(--accent-3);
-        box-shadow: inset 0 0 0 1px var(--accent-8);
-      }
-
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-        box-shadow: inset 0 0 0 1px var(--accent-a8);
-      }
     }
     & :where(.rt-BaseCheckboxIndicator) {
       color: var(--accent-ink);

@@ -1,4 +1,3 @@
-import { parseVariant } from '../../helpers/parse-variant.js';
 import { asChildPropDef } from '../../props/as-child.prop.js';
 import { accentColorPropDef } from '../../props/color.prop.js';
 import { radiusPropDef } from '../../props/radius.prop.js';
@@ -23,13 +22,12 @@ const sizes = ['1', '2', '3', '4'] as const;
  * - outline: Secondary actions that support primary actions
  * - ghost: Utility functions that don't compete for attention
  */
-const variants = ['raised', 'solid', 'soft', 'surface', 'outline', 'ghost', 'override', 'classic'] as const;
+const variants = ['raised', 'solid', 'soft', 'surface', 'outline', 'ghost'] as const;
 
 /**
  * Available panel background options (deprecated)
  * @deprecated Use `materials` instead
  */
-const panelBackgrounds = ['solid', 'translucent'] as const;
 
 /**
  * Available material options for visual rendering
@@ -77,7 +75,7 @@ const baseButtonPropDefs = {
   /**
    * Visual variant that determines the button's appearance and context
    */
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised', parseValue: parseVariant },
+  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised' },
   ...accentColorPropDef,
   ...radiusPropDef,
   /**
@@ -99,7 +97,6 @@ const baseButtonPropDefs = {
    * Panel background type (deprecated)
    * @deprecated Use `material` prop instead. This prop will be removed in a future version.
    */
-  panelBackground: { type: 'enum', values: panelBackgrounds, default: undefined },
   /**
    * Flush mode that removes visual padding for seamless text integration
    * Only effective with ghost variant
@@ -111,7 +108,6 @@ const baseButtonPropDefs = {
   loading: PropDef<boolean>;
   fullWidth: PropDef<boolean>;
   material: PropDef<(typeof materials)[number] | undefined>;
-  panelBackground: PropDef<(typeof panelBackgrounds)[number] | undefined>;
   flush: PropDef<boolean>;
 };
 

@@ -53,7 +53,6 @@ export function MyComponent() {
 | `flush`        | `boolean`                                                             | Removes padding for seamless text integration. Use with ghost variant to blend with text while staying interactive |
 | `radius`       | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'`                  | Corner radius scale: none for sharp edges, small/medium/large for progressive rounding, full for pill-shaped |
 | `material`     | `'solid' \| 'translucent'`                                            | Background appearance: solid for opaque backgrounds, translucent for depth over images or dynamic backgrounds |
-| `panelBackground` | `'solid' \| 'translucent'`                                         | Deprecated: use `material`. Removed in 0.15.0 |
 | `loading`      | `boolean`                                                             | Replaces all content with a centered spinner and disables button automatically. For visible text during loading, use Spinner component around icons instead |
 | `disabled`     | `boolean`                                                             | Prevents interaction when action is unavailable, such as during form validation or when authentication is required |
 | `as`           | `ElementType`                                                         | Renders button as different HTML element while maintaining button styling. Useful for navigation links or routing integration |
@@ -420,10 +419,6 @@ Kookie UI extends Radix Themes Button with practical improvements:
 ### Built-in Tooltip Support
 
 Native `tooltip` prop eliminates need for wrapper components. Tooltips automatically provide accessibility through `aria-describedby` associations and support positioning via `tooltipSide` and `tooltipAlign` props.
-
-### Override Styles
-
-Advanced `overrideStyles` prop enables per-state style customization using design tokens. Define styles for normal, hover, active, pressed, open, disabled, and focus states without writing CSS.
 
 ### Enhanced Loading State
 

@@ -22,7 +22,6 @@ import { Theme, useThemeContext } from './theme.js';
 import { ThickCheckIcon, ThickChevronRightIcon, ThickDotIcon } from './icons.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
-import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 import { MenuProvider } from './_internal/menu-context.js';
 import {
   MenuShortcut,
@@ -59,7 +58,6 @@ type ContextMenuSurfaceProps = GetPropDefTypes<typeof contextMenuContentPropDefs
 
 type ContextMenuContentContextValue = {
   size?: ContextMenuSurfaceProps['size'];
-  variant?: ContextMenuSurfaceProps['variant'];
   color?: ContextMenuSurfaceProps['color'];
   material?: ContextMenuSurfaceProps['material'];
 };
@@ -83,12 +81,10 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
   (props, forwardedRef) => {
     const themeContext = useThemeContext();
 
-    useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
-    const material = resolveMenuMaterial(props.material, props.panelBackground, themeContext);
+    const material = resolveMenuMaterial(props.material, themeContext);
     const {
       size = contextMenuContentPropDefs.size.default,
-      variant = contextMenuContentPropDefs.variant.default,
     } = props;
     const {
       className,
@@ -97,19 +93,17 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
       container,
       forceMount,
       material: _material,
-      panelBackground: _panelBackground,
       submenuBehavior: _submenuBehavior,
       virtualized = false,
       ...contentProps
     } = extractProps(props, contextMenuContentPropDefs);
 
-    if (props.variant !== undefined) warnDeprecated('The menu `variant` prop is deprecated and will be removed in 0.15.0. Menus highlight with a soft fill, and a solid one when the person asks for more contrast.');
     const resolvedColor = color || themeContext.accentColor;
     const scalarSize = useResolvedResponsiveValue(size, contextMenuContentPropDefs.size.default);
 
     const contextValue = React.useMemo(
-      () => ({ size, variant, color: resolvedColor, material }),
-      [size, variant, resolvedColor, material],
+      () => ({ size, color: resolvedColor, material }),
+      [size, resolvedColor, material],
     );
 
     const body = (
@@ -124,7 +118,6 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
           <ContextMenuPrimitive.Content
             data-accent-color={resolvedColor}
             data-material={material}
-            data-panel-background={material}
             alignOffset={getMenuAlignOffset(scalarSize, themeContext.scaling)}
             collisionPadding={10}
             {...contentProps}
@@ -133,6 +126,7 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
             className={classNames(
               'rt-PopperContent',
               'rt-BaseMenuContent',
+          'rt-variant-soft',
               'rt-ContextMenuContent',
               className,
             )}
@@ -363,14 +357,12 @@ const ContextMenuSubContent = React.forwardRef<
   const parent = React.useContext(ContextMenuContentContext);
   const themeContext = useThemeContext();
 
-  useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
   // A submenu inherits the parent surface, and its own props win.
   const size = props.size ?? parent.size;
-  const variant = props.variant ?? parent.variant;
   const color = props.color ?? parent.color;
   const material =
-    props.material ?? props.panelBackground ?? parent.material ?? resolveMenuMaterial(undefined, undefined, themeContext);
+    props.material ?? parent.material ?? resolveMenuMaterial(undefined, themeContext);
 
   const {
     className,
@@ -379,16 +371,15 @@ const ContextMenuSubContent = React.forwardRef<
     forceMount,
     color: _color,
     material: _material,
-    panelBackground: _panelBackground,
     virtualized = false,
     ...subContentProps
-  } = extractProps({ ...props, size, variant }, contextMenuSubContentPropDefs);
+  } = extractProps({ ...props, size }, contextMenuSubContentPropDefs);
 
   const scalarSize = useResolvedResponsiveValue(size, contextMenuSubContentPropDefs.size.default);
 
   const contextValue = React.useMemo(
-    () => ({ size, variant, color, material }),
-    [size, variant, color, material],
+    () => ({ size, color, material }),
+    [size, color, material],
   );
 
   const body = (
@@ -403,7 +394,6 @@ const ContextMenuSubContent = React.forwardRef<
         <ContextMenuPrimitive.SubContent
           data-accent-color={color}
           data-material={material}
-          data-panel-background={material}
           alignOffset={getMenuAlignOffset(scalarSize, themeContext.scaling)}
           // Side offset accounts for the outer solid box-shadow
           sideOffset={1}
@@ -414,6 +404,7 @@ const ContextMenuSubContent = React.forwardRef<
           className={classNames(
             'rt-PopperContent',
             'rt-BaseMenuContent',
+          'rt-variant-soft',
             'rt-BaseMenuSubContent',
             'rt-ContextMenuContent',
             'rt-ContextMenuSubContent',

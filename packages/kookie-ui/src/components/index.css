@@ -1,5 +1,4 @@
 @import './reset.css';
-@import './animations.css';
 @import './layout.css';
 
 /* Import Skeleton before other components so that its default border-radius doesn’t have a higher specificity */
@@ -14,7 +13,6 @@
 @import './badge.css';
 @import './blockquote.css';
 @import './button.css';
-@import './callout.css';
 @import './card.css';
 @import './checkbox-cards.css';
 @import './checkbox-group.css';
@@ -57,11 +55,8 @@
 @import './text-area.css';
 @import './text-field.css';
 @import './theme-panel.css';
-/* AppBar keeps the place its old toolbar.css had: it extends Card and must come after card.css */
-@import './app-bar.css';
 @import './toolbar.css';
 @import './tooltip.css';
-@import './user-card.css';
 @import './virtual-menu.css';
 @import './chatbar.css';
 @import './message-scroller.css';

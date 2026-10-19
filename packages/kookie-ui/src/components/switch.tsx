@@ -20,17 +20,14 @@ interface SwitchProps
     MarginProps,
     SwitchOwnProps {}
 const Switch = React.forwardRef<SwitchElement, SwitchProps>((props, forwardedRef) => {
-  const { className, color, panelBackground, material, ...switchProps } = extractProps(
+  const { className, color, ...switchProps } = extractProps(
     props,
     switchPropDefs,
     marginPropDefs,
   );
-  const effectiveMaterial = material || panelBackground;
   return (
     <SwitchPrimitive.Root
       data-accent-color={color}
-      data-panel-background={effectiveMaterial}
-      data-material={effectiveMaterial}
       {...switchProps}
       asChild={false}
       ref={forwardedRef}

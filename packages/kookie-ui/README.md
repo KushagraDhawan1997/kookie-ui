@@ -54,7 +54,7 @@ Kookie UI is a fork of [Radix Themes](https://radix-ui.com/themes) that extends 
 - **Systematic Design Tokens** - 12-point progressions for spacing, radius, and shadows with predictable steps
 - **Material** - Surfaces are solid or translucent, with a theme-level default and per-surface overrides
 - **Shared Size Steps** - Controls share one set of size steps
-- **Unified Motion** - Transition patterns work consistently across all components
+- **No motion** - State changes are instant; only busy indicators move
 - **Enhanced Accessibility** - Native tooltip support, stricter aria-label enforcement, and improved keyboard navigation
 - **Layout Patterns** - Shells, sidebars, panels, and toolbars that work together predictably
 
@@ -270,7 +270,7 @@ import '@kushagradhawan/kookie-ui/layout.css'; // Layout utilities
 - `Popover` - Floating content panel
 - `HoverCard` - Hover-triggered card
 - `Tooltip` - Contextual tooltip
-- `Callout` - Callout message
+- `Notice` - A message about a condition that is true now
 - `Spinner` - Loading spinner
 
 ### Overlays
