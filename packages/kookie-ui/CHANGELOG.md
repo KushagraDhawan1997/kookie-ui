@@ -1,3 +1,12 @@
+## [0.14.4](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.14.3...v0.14.4) (2026-10-19)
+
+Two fixes from the 0.15.0 audit, for apps still on 0.14.
+
+### Bug Fixes
+
+* **button:** `emphasis` and `variant` are mutually exclusive on every button type: ToggleButton, ToggleIconButton, IconButton, Toolbar.Button, MessageScroller.Button and Chatbar.Send. Passing both is a type error instead of a render-time crash, and ToggleButton no longer accepts any prop. MessageScroller.Button and Chatbar.Send take `emphasis` without throwing.
+* **sidebar:** under `prefers-contrast: more`, the active, highlighted or hovered Rail tile is solid with solid ink. Before, its icon took the solid ink on a pale tile and nearly vanished.
+
 ## [0.14.3](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.14.2...v0.14.3) (2026-10-18)
 
 ### Features

@@ -3,6 +3,7 @@ import * as React from 'react';
 import { BaseButton } from './_internal/base-button.js';
 import { Button } from './button.js';
 import type { BaseButtonProps } from './_internal/base-button.js';
+import type { ButtonRankProps } from './button.js';
 
 type IconButtonElement = React.ElementRef<typeof BaseButton>;
 
@@ -41,7 +42,7 @@ interface IconButtonTooltipProps {
  * Core IconButton props excluding the 'as' prop for polymorphic behavior
  * Combines BaseButton props with accessibility requirements and tooltip functionality
  */
-type IconButtonOwnProps = Omit<BaseButtonProps, 'as'> & AccessibilityProps & IconButtonTooltipProps;
+type IconButtonOwnProps = Omit<BaseButtonProps, 'as' | 'variant'> & ButtonRankProps & AccessibilityProps & IconButtonTooltipProps;
 
 /**
  * Polymorphic IconButton props that support rendering as different HTML elements

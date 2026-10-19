@@ -3,6 +3,7 @@ import { Toggle } from 'radix-ui';
 import { ToggleButton } from './toggle-button.js';
 import { BaseButton } from './_internal/base-button.js';
 import type { IconButtonProps } from './icon-button.js';
+import type { ButtonRankProps } from './button.js';
 
 type ToggleIconButtonElement = React.ElementRef<typeof BaseButton>;
 
@@ -30,14 +31,15 @@ type AccessibilityProps =
  * Combine IconButton props with Toggle-specific props
  * Includes tooltip props from IconButton for comprehensive functionality
  */
-interface ToggleIconButtonProps extends Omit<IconButtonProps, 'as'> {
+type ToggleIconButtonProps = Omit<IconButtonProps, 'as' | 'variant' | 'emphasis'> &
+  ButtonRankProps & {
   /** Controlled pressed state */
   pressed?: ToggleProps['pressed'];
   /** Callback when pressed state changes */
   onPressedChange?: ToggleProps['onPressedChange'];
   /** Default pressed state for uncontrolled usage */
   defaultPressed?: ToggleProps['defaultPressed'];
-}
+  };
 
 /**
  * Intersection with accessibility props to ensure compliance

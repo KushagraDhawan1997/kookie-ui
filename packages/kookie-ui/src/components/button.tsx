@@ -251,4 +251,4 @@ const Button = React.forwardRef(
 Button.displayName = 'Button';
 
 export { Button };
-export type { ButtonProps, ButtonEmphasis, ButtonOverrideStyles, ButtonOverrideStateStyles };
+export type { ButtonProps, ButtonEmphasis, ButtonRankProps, ButtonOverrideStyles, ButtonOverrideStateStyles };

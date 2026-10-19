@@ -1,5 +1,9 @@
 # What's new in Womp's Design System
 
+## 0.14.4 (October 19)
+
+1. **Two fixes for 0.14.** Buttons reject `emphasis` and `variant` together at compile time instead of crashing, and Rail icons stay visible when the system asks for more contrast.
+
 ## 0.14.3 (October 18)
 
 1. **Button emphasis.** `emphasis="loud"`, `"medium"` or `"quiet"` sets a button's rank: solid, raised or ghost. Use it or `variant`, not both.

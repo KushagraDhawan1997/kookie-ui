@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { renderWithProviders, screen } from '../../test-utils';
-import { Button, IconButton, ToggleButton, ToggleIconButton, Toolbar } from '../../../src/components/index';
+import { Button, Chatbar, IconButton, MessageScroller, ToggleButton, ToggleIconButton, Toolbar } from '../../../src/components/index';
 
 const RANKS = [
   ['loud', 'solid'],
@@ -48,5 +48,26 @@ describe('emphasis is a button rank, and the same thing as its variant', () => {
     const save = screen.getByRole('button', { name: 'Save' });
     expect(save).toHaveClass('rt-variant-solid');
     expect(save).not.toHaveAttribute('data-accent-color', 'gray');
+  });
+});
+
+describe('wrapped icon buttons take emphasis without throwing', () => {
+  it('MessageScroller.Button and Chatbar.Send', () => {
+    expect(() =>
+      renderWithProviders(
+        <MessageScroller.Root>
+          <MessageScroller.Viewport>text</MessageScroller.Viewport>
+          <MessageScroller.Button emphasis="loud" />
+        </MessageScroller.Root>,
+      ),
+    ).not.toThrow();
+    expect(() =>
+      renderWithProviders(
+        <Chatbar.Root>
+          <Chatbar.Textarea aria-label="Message" />
+          <Chatbar.Send emphasis="loud" />
+        </Chatbar.Root>,
+      ),
+    ).not.toThrow();
   });
 });

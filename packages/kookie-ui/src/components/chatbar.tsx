@@ -17,6 +17,7 @@ import { VisuallyHidden } from './visually-hidden.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { accentColors } from '../props/color.prop.js';
 import type { radii } from '../props/radius.prop.js';
+import type { ButtonRankProps } from './button.js';
 
 // Avoid SSR warnings by using an isomorphic layout effect
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
@@ -1294,7 +1295,8 @@ RowEnd.displayName = 'Chatbar.RowEnd';
 
 type SendStatus = 'ready' | 'submitted' | 'streaming' | 'error';
 
-type SendProps = Omit<IconButtonProps, 'aria-label' | 'aria-labelledby'> & {
+type SendProps = Omit<IconButtonProps, 'aria-label' | 'aria-labelledby' | 'variant' | 'emphasis'> &
+  ButtonRankProps & {
   /** Optional override for accessible name. Defaults to "Send". */
   'aria-label'?: string;
   'aria-labelledby'?: string;
@@ -1332,6 +1334,7 @@ const Send = React.forwardRef<HTMLButtonElement, SendProps>((props, forwardedRef
     className,
     size: sizeProp,
     variant: variantProp,
+    emphasis,
     tabIndex,
     onClick,
     status = 'ready',
@@ -1405,7 +1408,7 @@ const Send = React.forwardRef<HTMLButtonElement, SendProps>((props, forwardedRef
       {...buttonProps}
       ref={forwardedRef}
       size={sizeProp ?? ctx.size}
-      variant={variantProp ?? (ctx.open || mode !== 'send' ? 'solid' : 'ghost')}
+      {...(emphasis ? { emphasis } : { variant: variantProp ?? (ctx.open || mode !== 'send' ? 'solid' : 'ghost') })}
       disabled={inactive}
       className={classNames('rt-ChatbarSend', className)}
       style={{ opacity: visible ? 1 : 0, pointerEvents: visible ? undefined : 'none', ...style }}

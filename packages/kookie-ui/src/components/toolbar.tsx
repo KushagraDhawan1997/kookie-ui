@@ -16,6 +16,7 @@ import type { TextProps } from './text.js';
 import type { MarginProps } from '../props/margin.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
+import type { ButtonRankProps } from './button.js';
 
 /*
  * Toolbar takes Kookie UI v2's contract (v2: components/toolbar), built on Radix instead of
@@ -143,15 +144,17 @@ ToolbarGroup.displayName = 'Toolbar.Group';
 // ToolbarButton
 // ============================================================================
 
-type ToolbarButtonBaseProps = Omit<ButtonProps, 'as' | 'asChild'>;
+type ToolbarButtonBaseProps = Omit<ButtonProps, 'as' | 'asChild' | 'variant' | 'emphasis'>;
 
 /** A labelled button: takes every `Button` prop. */
-type ToolbarTextButtonProps = ToolbarButtonBaseProps & {
+type ToolbarTextButtonProps = ToolbarButtonBaseProps &
+  ButtonRankProps & {
   iconOnly?: false;
 };
 
 /** An icon-only button: renders an `IconButton`, and the type requires an `aria-label`. */
-type ToolbarIconButtonProps = Omit<ToolbarButtonBaseProps, 'aria-label' | 'aria-labelledby' | 'overrideStyles'> & {
+type ToolbarIconButtonProps = Omit<ToolbarButtonBaseProps, 'aria-label' | 'aria-labelledby' | 'overrideStyles'> &
+  ButtonRankProps & {
   iconOnly: true;
   /** The control's accessible name. An icon has no words of its own, so this is required. */
   'aria-label': string;

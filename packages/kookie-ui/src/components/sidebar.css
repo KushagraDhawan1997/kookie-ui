@@ -1466,3 +1466,19 @@
   width: var(--content-icon-size-3);
   height: var(--content-icon-size-3);
 }
+
+/* In a Rail the fill is the icon tile, not the row. Under more contrast the tile goes solid and its icon
+   takes the solid ink, so the icon never sits in solid ink on a pale tile. */
+@media (prefers-contrast: more) {
+  :where(.rt-ShellRailContent :is(.rt-SidebarMenuButton[data-active], .rt-SidebarMenuButton[data-highlighted]:not([data-disabled]))) .rt-SidebarMenuIconWrapper {
+    background-color: var(--accent-solid);
+    color: var(--accent-solid-contrast);
+  }
+}
+
+@media (prefers-contrast: more) and (hover: hover) {
+  :where(.rt-ShellRailContent .rt-SidebarMenuButton:hover:not([data-disabled])) .rt-SidebarMenuIconWrapper {
+    background-color: var(--accent-solid);
+    color: var(--accent-solid-contrast);
+  }
+}
