@@ -6,6 +6,10 @@
 2. **No motion.** State changes are instant. Only spinners, skeletons and loading bars still move.
 3. **Sizes match.** Every size a component offers is styled, and Code, Kbd, Link and Blockquote share Text's scale.
 
+## 0.14.4 (October 19)
+
+1. **Two fixes for 0.14.** Buttons reject `emphasis` and `variant` together at compile time instead of crashing, and Rail icons stay visible when the system asks for more contrast.
+
 ## 0.14.3 (October 18)
 
 1. **Button emphasis.** `emphasis="loud"`, `"medium"` or `"quiet"` sets a button's rank: solid, raised or ghost. Use it or `variant`, not both.
