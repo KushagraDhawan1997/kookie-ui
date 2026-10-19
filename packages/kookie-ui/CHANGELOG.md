@@ -1,4 +1,4 @@
-## [0.15.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.14.3...v0.15.0) (2026-10-18)
+## [0.15.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.14.4...v0.15.0) (2026-10-18)
 
 The breaking release. Everything 0.14 deprecated is removed, and so is motion. There is one way to do each thing.
 
