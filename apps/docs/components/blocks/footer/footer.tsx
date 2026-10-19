@@ -106,8 +106,8 @@ type FooterSocialLinkProps = Omit<IconButtonProps, 'children' | 'aria-label' | '
 };
 
 const FooterSocialLink = React.forwardRef<HTMLButtonElement, FooterSocialLinkProps>(
-  ({ icon: Icon, label, href, variant = 'ghost', color = 'gray', size = '2', ...props }, ref) => (
-    <IconButton ref={ref} asChild variant={variant} color={color} size={size} aria-label={label} {...props}>
+  ({ icon: Icon, label, href, variant = 'ghost', emphasis, color = 'gray', size = '2', ...props }, ref) => (
+    <IconButton ref={ref} asChild {...(emphasis ? { emphasis } : { variant })} color={color} size={size} aria-label={label} {...props}>
       <a href={href} target="_blank" rel="noopener noreferrer">
         <Icon />
       </a>
