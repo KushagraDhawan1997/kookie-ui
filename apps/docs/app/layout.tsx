@@ -70,14 +70,8 @@ export const metadata: Metadata = {
       'max-video-preview': -1,
     },
   },
-  icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: '48x48' },
-      { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
-    ],
-    apple: '/apple-touch-icon.png',
-    shortcut: '/favicon.ico',
-  },
+  // Icons come from the app/ file convention: favicon.ico, icon.svg (its prefers-color-scheme style
+  // turns the mark white on a dark tab) and apple-icon.png. An `icons` key here would replace them.
   manifest: '/site.webmanifest',
 };
 
