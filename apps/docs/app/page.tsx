@@ -3,6 +3,7 @@
 import { Link as KUILink, Flex, Grid, Heading, Text } from '@kushagradhawan/kookie-ui';
 import Link from 'next/link';
 import { SiteDocsPage } from '@/components/site-docs-page';
+import { Hero } from '@/components/hero';
 import { SECTIONS, chaptersIn } from '@/lib/chapters';
 import { docsNavigation } from '../navigation-config';
 
@@ -20,6 +21,7 @@ export default function Home() {
   return (
     <SiteDocsPage meta={{ title: "Womp's Design System", description: DESCRIPTION }} showCopyButton={false}>
       <Flex direction="column" gap="9">
+        <Hero placement="inline" />
         <Grid columns={{ initial: '1', sm: '2' }} gapX="7" gapY="9">
           {SECTIONS.map((section) => (
             <Flex key={section.id} direction="column" gap="4">
