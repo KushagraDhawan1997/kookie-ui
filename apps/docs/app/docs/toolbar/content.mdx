@@ -68,13 +68,15 @@ The row spaces its direct children apart. Put controls that belong together in a
 
 | Part | Description |
 | ---- | ----------- |
-| `Toolbar` | The row. Takes `size` (`'1'`–`'4'`, default `'2'`), `orientation` (`'horizontal'` or `'vertical'`) and `aria-label`. |
+| `Toolbar` | The row. Takes `size` (`'1'`–`'4'`, default `'2'`), `orientation` (`'horizontal'` or `'vertical'`), `backdrop` and `aria-label`. |
 | `Toolbar.Button` | Takes every Button prop. Set `iconOnly` with an `aria-label` for an icon button. Set `aria-pressed` for a toggle. |
 | `Toolbar.Group` | A quiet gray well around related buttons. `disabled` turns them all off. |
 | `Toolbar.Separator` | A hairline between clusters. |
 | `Toolbar.Title` | One truncating line at the leading edge. |
 
 Buttons rest as gray `soft`, or gray `ghost` inside a group, and take the toolbar's size. A `size`, `variant` or `color` you set wins.
+
+Set `backdrop` when content passes behind the row, as in a floating `Shell.PaneHeader`. Buttons then rest `raised` and a group's well is raised too, so each control has a surface of its own.
 
 ## Accessibility
 

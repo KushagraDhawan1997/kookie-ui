@@ -35,6 +35,7 @@ type ToolbarOrientation = NonNullable<GetPropDefTypes<typeof toolbarRootPropDefs
 interface ToolbarContextValue {
   size: ToolbarSize;
   orientation: ToolbarOrientation;
+  backdrop: boolean;
 }
 
 const ToolbarContext = React.createContext<ToolbarContextValue | null>(null);
@@ -59,7 +60,14 @@ type ToolbarOwnProps = GetPropDefTypes<typeof toolbarRootPropDefs>;
 interface ToolbarProps
   extends ComponentPropsWithout<typeof ToolbarPrimitive.Root, RemovedProps | 'orientation'>,
     ToolbarOwnProps,
-    MarginProps {}
+    MarginProps {
+  /**
+   * Gives every control a surface of its own, for a row that content passes behind, such as
+   * `Shell.PaneHeader float`. Buttons rest `raised` instead of `soft`, and a group's well is
+   * solid and raised.
+   */
+  backdrop?: boolean;
+}
 
 /**
  * A row of controls with one keyboard tab stop. The arrow keys move focus between the controls.
@@ -82,19 +90,20 @@ interface ToolbarProps
 const ToolbarRoot = React.forwardRef<HTMLDivElement, ToolbarProps>((props, forwardedRef) => {
   const size: ToolbarSize = props.size ?? toolbarRootPropDefs.size.default;
   const orientation: ToolbarOrientation = props.orientation ?? toolbarRootPropDefs.orientation.default;
-  const { className, orientation: _orientation, children, ...rootProps } = extractProps(
+  const { className, orientation: _orientation, backdrop = false, children, ...rootProps } = extractProps(
     props,
     toolbarRootPropDefs,
     marginPropDefs,
   );
 
-  const context = React.useMemo(() => ({ size, orientation }), [size, orientation]);
+  const context = React.useMemo(() => ({ size, orientation, backdrop }), [size, orientation, backdrop]);
 
   return (
     <ToolbarPrimitive.Root
       {...rootProps}
       ref={forwardedRef}
       orientation={orientation}
+      data-backdrop={backdrop || undefined}
       className={classNames('rt-Toolbar', className)}
     >
       <ToolbarContext.Provider value={context}>{children}</ToolbarContext.Provider>
@@ -169,8 +178,8 @@ function isPressed(value: React.AriaAttributes['aria-pressed']) {
  * Set `iconOnly` (with an `aria-label`) for a symbol-only control. Set `aria-pressed` for a
  * control that toggles; a pressed button wears Button's pressed look.
  *
- * It takes the toolbar's `size`, and rests as a gray `soft` button (gray `ghost` inside a
- * `ToolbarGroup`). A stated `size`, `variant` or `color` wins; a stated `variant` without a
+ * It takes the toolbar's `size`, and rests as a gray `soft` button (`raised` in a toolbar with
+ * `backdrop`, gray `ghost` inside a `ToolbarGroup`). A stated `size`, `variant` or `color` wins; a stated `variant` without a
  * `color` takes Button's own default colour. It throws outside a `Toolbar`.
  */
 const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>((props, forwardedRef) => {
@@ -185,7 +194,7 @@ const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>((p
   const shared = {
     size: size ?? toolbar.size,
     // A caller states the look by `variant` or the rank by `emphasis`, never both.
-    ...(emphasis !== undefined ? { emphasis } : { variant: variant ?? (group ? 'ghost' : 'soft') }),
+    ...(emphasis !== undefined ? { emphasis } : { variant: variant ?? (group ? 'ghost' : toolbar.backdrop ? 'raised' : 'soft') }),
     // The gray rest is a pair with the default variant: a caller who states a variant or an
     // emphasis gets Button's own colour for it unless they state a colour too.
     color: color ?? (variant || emphasis ? undefined : 'gray'),
