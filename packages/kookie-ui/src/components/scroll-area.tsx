@@ -5,6 +5,7 @@ import { useComposedRefs } from 'radix-ui/internal';
 
 import { scrollAreaPropDefs } from './scroll-area.props.js';
 import { useScrollEdges } from '../hooks/use-scroll-edges.js';
+import { useThumbSync } from '../hooks/use-thumb-sync.js';
 import { extractMarginProps } from '../helpers/extract-margin-props.js';
 import { getMarginStyles } from '../helpers/get-margin-styles.js';
 import { getResponsiveClassNames } from '../helpers/get-responsive-styles.js';
@@ -41,7 +42,8 @@ const ScrollArea = React.forwardRef<ScrollAreaElement, ScrollAreaProps>((props, 
     ...viewportProps
   } = marginRest;
   const setEdgesElement = useScrollEdges<HTMLDivElement>(fade);
-  const viewportRef = useComposedRefs(forwardedRef, setEdgesElement);
+  const setThumbViewport = useThumbSync<HTMLDivElement>();
+  const viewportRef = useComposedRefs(forwardedRef, setEdgesElement, setThumbViewport);
 
   return (
     <ScrollAreaPrimitive.Root

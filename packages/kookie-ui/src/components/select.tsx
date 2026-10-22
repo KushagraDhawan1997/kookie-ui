@@ -14,6 +14,7 @@ import {
   selectContentPropDefs,
 } from './select.props.js';
 import { useThemeContext, Theme } from './theme.js';
+import { useThumbSync } from '../hooks/use-thumb-sync.js';
 
 import type { MarginProps } from '../props/margin.props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
@@ -141,6 +142,7 @@ const SelectContent = React.forwardRef<SelectContentElement, SelectContentProps>
     );
     const themeContext = useThemeContext();
     const resolvedColor = color || themeContext.accentColor;
+    const setThumbViewport = useThumbSync<HTMLDivElement>();
     return (
       <SelectPrimitive.Portal container={container}>
         <Theme asChild>
@@ -164,6 +166,7 @@ const SelectContent = React.forwardRef<SelectContentElement, SelectContentProps>
                 className={classNames('rt-BaseMenuViewport', 'rt-SelectViewport')}
               >
                 <ScrollAreaPrimitive.Viewport
+                  ref={setThumbViewport}
                   className="rt-ScrollAreaViewport"
                   style={{ overflowY: undefined }}
                 >
