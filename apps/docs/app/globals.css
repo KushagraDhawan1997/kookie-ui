@@ -128,10 +128,8 @@ h6 {
   height: clamp(440px, 45vw, 560px);
   overflow: clip;
   background-color: var(--gray-1);
-  background-image:
-    linear-gradient(var(--gray-a4) 1px, transparent 1px),
-    linear-gradient(90deg, var(--gray-a4) 1px, transparent 1px);
-  background-size: var(--space-6) var(--space-6);
+  background-image: radial-gradient(circle, var(--gray-a7) 1px, transparent 1.5px);
+  background-size: var(--space-5) var(--space-5);
   background-position: center;
 }
 
