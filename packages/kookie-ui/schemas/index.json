@@ -86,17 +86,16 @@
               ]
             },
             "variant": {
-              "default": "solid",
+              "default": "raised",
               "description": "Visual variant that determines the button's appearance and context",
               "type": "string",
               "enum": [
-                "classic",
+                "raised",
                 "solid",
                 "soft",
                 "surface",
                 "outline",
-                "ghost",
-                "override"
+                "ghost"
               ]
             },
             "color": {
@@ -147,21 +146,8 @@
               "description": "Loading state that shows a spinner and disables interaction",
               "type": "boolean"
             },
-            "fullWidth": {
-              "default": false,
-              "description": "Full width mode that expands the button to fill its container",
-              "type": "boolean"
-            },
             "material": {
               "description": "Material type for visual rendering and depth effects",
-              "type": "string",
-              "enum": [
-                "solid",
-                "translucent"
-              ]
-            },
-            "panelBackground": {
-              "description": "Panel background type (deprecated - use material instead)",
               "type": "string",
               "enum": [
                 "solid",
@@ -370,17 +356,16 @@
               ]
             },
             "variant": {
-              "default": "solid",
+              "default": "raised",
               "description": "Visual variant that determines the button's appearance and context",
               "type": "string",
               "enum": [
-                "classic",
+                "raised",
                 "solid",
                 "soft",
                 "surface",
                 "outline",
-                "ghost",
-                "override"
+                "ghost"
               ]
             },
             "color": {
@@ -431,21 +416,8 @@
               "description": "Loading state that shows a spinner and disables interaction",
               "type": "boolean"
             },
-            "fullWidth": {
-              "default": false,
-              "description": "Full width mode that expands the button to fill its container",
-              "type": "boolean"
-            },
             "material": {
               "description": "Material type for visual rendering and depth effects",
-              "type": "string",
-              "enum": [
-                "solid",
-                "translucent"
-              ]
-            },
-            "panelBackground": {
-              "description": "Panel background type (deprecated - use material instead)",
               "type": "string",
               "enum": [
                 "solid",
@@ -578,6 +550,25 @@
                 "left"
               ]
             },
+            "emphasis": {
+              "description": "The button's rank: loud (solid), medium (raised) or quiet (ghost). Not with variant.",
+              "type": "string",
+              "enum": [
+                "loud",
+                "medium",
+                "quiet"
+              ]
+            },
+            "iconOnly": {
+              "default": false,
+              "description": "Square button holding only an icon; needs aria-label",
+              "type": "boolean"
+            },
+            "fullWidth": {
+              "default": false,
+              "description": "Expands the button to fill its container",
+              "type": "boolean"
+            },
             "tooltipAlign": {
               "default": "center",
               "description": "Alignment of the tooltip relative to the button",
@@ -596,223 +587,6 @@
               "default": false,
               "description": "Whether to disable hoverable content behavior",
               "type": "boolean"
-            },
-            "overrideStyles": {
-              "description": "Override styles for different interaction states",
-              "type": "object",
-              "properties": {
-                "normal": {
-                  "type": "object",
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "background": {
-                      "type": "string"
-                    },
-                    "backgroundColor": {
-                      "type": "string"
-                    },
-                    "boxShadow": {
-                      "type": "string"
-                    },
-                    "filter": {
-                      "type": "string"
-                    },
-                    "outline": {
-                      "type": "string"
-                    },
-                    "outlineOffset": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": [
-                        "string",
-                        "number"
-                      ]
-                    }
-                  },
-                  "additionalProperties": false
-                },
-                "hover": {
-                  "type": "object",
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "background": {
-                      "type": "string"
-                    },
-                    "backgroundColor": {
-                      "type": "string"
-                    },
-                    "boxShadow": {
-                      "type": "string"
-                    },
-                    "filter": {
-                      "type": "string"
-                    },
-                    "outline": {
-                      "type": "string"
-                    },
-                    "outlineOffset": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": [
-                        "string",
-                        "number"
-                      ]
-                    }
-                  },
-                  "additionalProperties": false
-                },
-                "active": {
-                  "type": "object",
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "background": {
-                      "type": "string"
-                    },
-                    "backgroundColor": {
-                      "type": "string"
-                    },
-                    "boxShadow": {
-                      "type": "string"
-                    },
-                    "filter": {
-                      "type": "string"
-                    },
-                    "outline": {
-                      "type": "string"
-                    },
-                    "outlineOffset": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": [
-                        "string",
-                        "number"
-                      ]
-                    }
-                  },
-                  "additionalProperties": false
-                },
-                "pressed": {
-                  "type": "object",
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "background": {
-                      "type": "string"
-                    },
-                    "backgroundColor": {
-                      "type": "string"
-                    },
-                    "boxShadow": {
-                      "type": "string"
-                    },
-                    "filter": {
-                      "type": "string"
-                    },
-                    "outline": {
-                      "type": "string"
-                    },
-                    "outlineOffset": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": [
-                        "string",
-                        "number"
-                      ]
-                    }
-                  },
-                  "additionalProperties": false
-                },
-                "open": {
-                  "type": "object",
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "background": {
-                      "type": "string"
-                    },
-                    "backgroundColor": {
-                      "type": "string"
-                    },
-                    "boxShadow": {
-                      "type": "string"
-                    },
-                    "filter": {
-                      "type": "string"
-                    },
-                    "outline": {
-                      "type": "string"
-                    },
-                    "outlineOffset": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": [
-                        "string",
-                        "number"
-                      ]
-                    }
-                  },
-                  "additionalProperties": false
-                },
-                "disabled": {
-                  "type": "object",
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "background": {
-                      "type": "string"
-                    },
-                    "backgroundColor": {
-                      "type": "string"
-                    },
-                    "boxShadow": {
-                      "type": "string"
-                    },
-                    "filter": {
-                      "type": "string"
-                    },
-                    "outline": {
-                      "type": "string"
-                    },
-                    "outlineOffset": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": [
-                        "string",
-                        "number"
-                      ]
-                    }
-                  },
-                  "additionalProperties": false
-                },
-                "focus": {
-                  "type": "object",
-                  "properties": {
-                    "outline": {
-                      "type": "string"
-                    },
-                    "outlineOffset": {
-                      "type": "string"
-                    }
-                  },
-                  "additionalProperties": false
-                }
-              },
-              "additionalProperties": false
             }
           },
           "additionalProperties": false
@@ -905,17 +679,16 @@
               ]
             },
             "variant": {
-              "default": "solid",
+              "default": "raised",
               "description": "Visual variant that determines the button's appearance and context",
               "type": "string",
               "enum": [
-                "classic",
+                "raised",
                 "solid",
                 "soft",
                 "surface",
                 "outline",
-                "ghost",
-                "override"
+                "ghost"
               ]
             },
             "color": {
@@ -966,21 +739,8 @@
               "description": "Loading state that shows a spinner and disables interaction",
               "type": "boolean"
             },
-            "fullWidth": {
-              "default": false,
-              "description": "Full width mode that expands the button to fill its container",
-              "type": "boolean"
-            },
             "material": {
               "description": "Material type for visual rendering and depth effects",
-              "type": "string",
-              "enum": [
-                "solid",
-                "translucent"
-              ]
-            },
-            "panelBackground": {
-              "description": "Panel background type (deprecated - use material instead)",
               "type": "string",
               "enum": [
                 "solid",
@@ -1223,17 +983,16 @@
               ]
             },
             "variant": {
-              "default": "solid",
+              "default": "raised",
               "description": "Visual variant that determines the button's appearance and context",
               "type": "string",
               "enum": [
-                "classic",
+                "raised",
                 "solid",
                 "soft",
                 "surface",
                 "outline",
-                "ghost",
-                "override"
+                "ghost"
               ]
             },
             "color": {
@@ -1284,21 +1043,8 @@
               "description": "Loading state that shows a spinner and disables interaction",
               "type": "boolean"
             },
-            "fullWidth": {
-              "default": false,
-              "description": "Full width mode that expands the button to fill its container",
-              "type": "boolean"
-            },
             "material": {
               "description": "Material type for visual rendering and depth effects",
-              "type": "string",
-              "enum": [
-                "solid",
-                "translucent"
-              ]
-            },
-            "panelBackground": {
-              "description": "Panel background type (deprecated - use material instead)",
               "type": "string",
               "enum": [
                 "solid",
@@ -1431,6 +1177,25 @@
                 "left"
               ]
             },
+            "emphasis": {
+              "description": "The button's rank: loud (solid), medium (raised) or quiet (ghost). Not with variant.",
+              "type": "string",
+              "enum": [
+                "loud",
+                "medium",
+                "quiet"
+              ]
+            },
+            "iconOnly": {
+              "default": false,
+              "description": "Square button holding only an icon; needs aria-label",
+              "type": "boolean"
+            },
+            "fullWidth": {
+              "default": false,
+              "description": "Expands the button to fill its container",
+              "type": "boolean"
+            },
             "tooltipAlign": {
               "default": "center",
               "description": "Alignment of the tooltip relative to the button",
@@ -1449,223 +1214,6 @@
               "default": false,
               "description": "Whether to disable hoverable content behavior",
               "type": "boolean"
-            },
-            "overrideStyles": {
-              "description": "Override styles for different interaction states",
-              "type": "object",
-              "properties": {
-                "normal": {
-                  "type": "object",
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "background": {
-                      "type": "string"
-                    },
-                    "backgroundColor": {
-                      "type": "string"
-                    },
-                    "boxShadow": {
-                      "type": "string"
-                    },
-                    "filter": {
-                      "type": "string"
-                    },
-                    "outline": {
-                      "type": "string"
-                    },
-                    "outlineOffset": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": [
-                        "string",
-                        "number"
-                      ]
-                    }
-                  },
-                  "additionalProperties": false
-                },
-                "hover": {
-                  "type": "object",
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "background": {
-                      "type": "string"
-                    },
-                    "backgroundColor": {
-                      "type": "string"
-                    },
-                    "boxShadow": {
-                      "type": "string"
-                    },
-                    "filter": {
-                      "type": "string"
-                    },
-                    "outline": {
-                      "type": "string"
-                    },
-                    "outlineOffset": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": [
-                        "string",
-                        "number"
-                      ]
-                    }
-                  },
-                  "additionalProperties": false
-                },
-                "active": {
-                  "type": "object",
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "background": {
-                      "type": "string"
-                    },
-                    "backgroundColor": {
-                      "type": "string"
-                    },
-                    "boxShadow": {
-                      "type": "string"
-                    },
-                    "filter": {
-                      "type": "string"
-                    },
-                    "outline": {
-                      "type": "string"
-                    },
-                    "outlineOffset": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": [
-                        "string",
-                        "number"
-                      ]
-                    }
-                  },
-                  "additionalProperties": false
-                },
-                "pressed": {
-                  "type": "object",
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "background": {
-                      "type": "string"
-                    },
-                    "backgroundColor": {
-                      "type": "string"
-                    },
-                    "boxShadow": {
-                      "type": "string"
-                    },
-                    "filter": {
-                      "type": "string"
-                    },
-                    "outline": {
-                      "type": "string"
-                    },
-                    "outlineOffset": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": [
-                        "string",
-                        "number"
-                      ]
-                    }
-                  },
-                  "additionalProperties": false
-                },
-                "open": {
-                  "type": "object",
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "background": {
-                      "type": "string"
-                    },
-                    "backgroundColor": {
-                      "type": "string"
-                    },
-                    "boxShadow": {
-                      "type": "string"
-                    },
-                    "filter": {
-                      "type": "string"
-                    },
-                    "outline": {
-                      "type": "string"
-                    },
-                    "outlineOffset": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": [
-                        "string",
-                        "number"
-                      ]
-                    }
-                  },
-                  "additionalProperties": false
-                },
-                "disabled": {
-                  "type": "object",
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "background": {
-                      "type": "string"
-                    },
-                    "backgroundColor": {
-                      "type": "string"
-                    },
-                    "boxShadow": {
-                      "type": "string"
-                    },
-                    "filter": {
-                      "type": "string"
-                    },
-                    "outline": {
-                      "type": "string"
-                    },
-                    "outlineOffset": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": [
-                        "string",
-                        "number"
-                      ]
-                    }
-                  },
-                  "additionalProperties": false
-                },
-                "focus": {
-                  "type": "object",
-                  "properties": {
-                    "outline": {
-                      "type": "string"
-                    },
-                    "outlineOffset": {
-                      "type": "string"
-                    }
-                  },
-                  "additionalProperties": false
-                }
-              },
-              "additionalProperties": false
             },
             "pressed": {
               "description": "Controlled pressed state",
@@ -1766,17 +1314,16 @@
               ]
             },
             "variant": {
-              "default": "solid",
+              "default": "raised",
               "description": "Visual variant that determines the button's appearance and context",
               "type": "string",
               "enum": [
-                "classic",
+                "raised",
                 "solid",
                 "soft",
                 "surface",
                 "outline",
-                "ghost",
-                "override"
+                "ghost"
               ]
             },
             "color": {
@@ -1827,21 +1374,8 @@
               "description": "Loading state that shows a spinner and disables interaction",
               "type": "boolean"
             },
-            "fullWidth": {
-              "default": false,
-              "description": "Full width mode that expands the button to fill its container",
-              "type": "boolean"
-            },
             "material": {
               "description": "Material type for visual rendering and depth effects",
-              "type": "string",
-              "enum": [
-                "solid",
-                "translucent"
-              ]
-            },
-            "panelBackground": {
-              "description": "Panel background type (deprecated - use material instead)",
               "type": "string",
               "enum": [
                 "solid",
@@ -2035,6 +1569,16 @@
                 {
                   "type": "number"
                 }
+              ]
+            },
+            "size": {
+              "default": "2",
+              "description": "Index of the pane chrome and the Sidebar rows in it",
+              "type": "string",
+              "enum": [
+                "1",
+                "2",
+                "3"
               ]
             },
             "className": {
@@ -2776,7 +2320,6 @@
                   "type": "string",
                   "enum": [
                     "collapsed",
-                    "thin",
                     "expanded"
                   ],
                   "description": "Sidebar state"
@@ -2787,7 +2330,6 @@
                       "type": "string",
                       "enum": [
                         "collapsed",
-                        "thin",
                         "expanded"
                       ],
                       "description": "Sidebar state"
@@ -2799,7 +2341,6 @@
                           "type": "string",
                           "enum": [
                             "collapsed",
-                            "thin",
                             "expanded"
                           ],
                           "description": "Sidebar state"
@@ -2808,7 +2349,6 @@
                           "type": "string",
                           "enum": [
                             "collapsed",
-                            "thin",
                             "expanded"
                           ],
                           "description": "Sidebar state"
@@ -2817,7 +2357,6 @@
                           "type": "string",
                           "enum": [
                             "collapsed",
-                            "thin",
                             "expanded"
                           ],
                           "description": "Sidebar state"
@@ -2826,7 +2365,6 @@
                           "type": "string",
                           "enum": [
                             "collapsed",
-                            "thin",
                             "expanded"
                           ],
                           "description": "Sidebar state"
@@ -2835,7 +2373,6 @@
                           "type": "string",
                           "enum": [
                             "collapsed",
-                            "thin",
                             "expanded"
                           ],
                           "description": "Sidebar state"
@@ -2844,7 +2381,6 @@
                           "type": "string",
                           "enum": [
                             "collapsed",
-                            "thin",
                             "expanded"
                           ],
                           "description": "Sidebar state"
@@ -2864,7 +2400,6 @@
                   "type": "string",
                   "enum": [
                     "collapsed",
-                    "thin",
                     "expanded"
                   ],
                   "description": "Sidebar state"
@@ -2876,7 +2411,6 @@
                       "type": "string",
                       "enum": [
                         "collapsed",
-                        "thin",
                         "expanded"
                       ],
                       "description": "Sidebar state"
@@ -2885,7 +2419,6 @@
                       "type": "string",
                       "enum": [
                         "collapsed",
-                        "thin",
                         "expanded"
                       ],
                       "description": "Sidebar state"
@@ -2894,7 +2427,6 @@
                       "type": "string",
                       "enum": [
                         "collapsed",
-                        "thin",
                         "expanded"
                       ],
                       "description": "Sidebar state"
@@ -2903,7 +2435,6 @@
                       "type": "string",
                       "enum": [
                         "collapsed",
-                        "thin",
                         "expanded"
                       ],
                       "description": "Sidebar state"
@@ -2912,7 +2443,6 @@
                       "type": "string",
                       "enum": [
                         "collapsed",
-                        "thin",
                         "expanded"
                       ],
                       "description": "Sidebar state"
@@ -2921,7 +2451,6 @@
                       "type": "string",
                       "enum": [
                         "collapsed",
-                        "thin",
                         "expanded"
                       ],
                       "description": "Sidebar state"
@@ -2929,20 +2458,6 @@
                   },
                   "additionalProperties": false
                 }
-              ]
-            },
-            "thinSize": {
-              "default": 64,
-              "description": "Width in the thin state",
-              "type": "number"
-            },
-            "toggleModes": {
-              "default": "both",
-              "description": "`both` goes collapsed, thin, expanded; `single` goes between collapsed and one open state",
-              "type": "string",
-              "enum": [
-                "both",
-                "single"
               ]
             }
           },

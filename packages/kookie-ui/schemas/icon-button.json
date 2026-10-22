@@ -79,17 +79,16 @@
           ]
         },
         "variant": {
-          "default": "solid",
+          "default": "raised",
           "description": "Visual variant that determines the button's appearance and context",
           "type": "string",
           "enum": [
-            "classic",
+            "raised",
             "solid",
             "soft",
             "surface",
             "outline",
-            "ghost",
-            "override"
+            "ghost"
           ]
         },
         "color": {
@@ -140,21 +139,8 @@
           "description": "Loading state that shows a spinner and disables interaction",
           "type": "boolean"
         },
-        "fullWidth": {
-          "default": false,
-          "description": "Full width mode that expands the button to fill its container",
-          "type": "boolean"
-        },
         "material": {
           "description": "Material type for visual rendering and depth effects",
-          "type": "string",
-          "enum": [
-            "solid",
-            "translucent"
-          ]
-        },
-        "panelBackground": {
-          "description": "Panel background type (deprecated - use material instead)",
           "type": "string",
           "enum": [
             "solid",

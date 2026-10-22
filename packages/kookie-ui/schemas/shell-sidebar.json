@@ -190,7 +190,6 @@
               "type": "string",
               "enum": [
                 "collapsed",
-                "thin",
                 "expanded"
               ],
               "description": "Sidebar state"
@@ -201,7 +200,6 @@
                   "type": "string",
                   "enum": [
                     "collapsed",
-                    "thin",
                     "expanded"
                   ],
                   "description": "Sidebar state"
@@ -213,7 +211,6 @@
                       "type": "string",
                       "enum": [
                         "collapsed",
-                        "thin",
                         "expanded"
                       ],
                       "description": "Sidebar state"
@@ -222,7 +219,6 @@
                       "type": "string",
                       "enum": [
                         "collapsed",
-                        "thin",
                         "expanded"
                       ],
                       "description": "Sidebar state"
@@ -231,7 +227,6 @@
                       "type": "string",
                       "enum": [
                         "collapsed",
-                        "thin",
                         "expanded"
                       ],
                       "description": "Sidebar state"
@@ -240,7 +235,6 @@
                       "type": "string",
                       "enum": [
                         "collapsed",
-                        "thin",
                         "expanded"
                       ],
                       "description": "Sidebar state"
@@ -249,7 +243,6 @@
                       "type": "string",
                       "enum": [
                         "collapsed",
-                        "thin",
                         "expanded"
                       ],
                       "description": "Sidebar state"
@@ -258,7 +251,6 @@
                       "type": "string",
                       "enum": [
                         "collapsed",
-                        "thin",
                         "expanded"
                       ],
                       "description": "Sidebar state"
@@ -278,7 +270,6 @@
               "type": "string",
               "enum": [
                 "collapsed",
-                "thin",
                 "expanded"
               ],
               "description": "Sidebar state"
@@ -290,7 +281,6 @@
                   "type": "string",
                   "enum": [
                     "collapsed",
-                    "thin",
                     "expanded"
                   ],
                   "description": "Sidebar state"
@@ -299,7 +289,6 @@
                   "type": "string",
                   "enum": [
                     "collapsed",
-                    "thin",
                     "expanded"
                   ],
                   "description": "Sidebar state"
@@ -308,7 +297,6 @@
                   "type": "string",
                   "enum": [
                     "collapsed",
-                    "thin",
                     "expanded"
                   ],
                   "description": "Sidebar state"
@@ -317,7 +305,6 @@
                   "type": "string",
                   "enum": [
                     "collapsed",
-                    "thin",
                     "expanded"
                   ],
                   "description": "Sidebar state"
@@ -326,7 +313,6 @@
                   "type": "string",
                   "enum": [
                     "collapsed",
-                    "thin",
                     "expanded"
                   ],
                   "description": "Sidebar state"
@@ -335,7 +321,6 @@
                   "type": "string",
                   "enum": [
                     "collapsed",
-                    "thin",
                     "expanded"
                   ],
                   "description": "Sidebar state"
@@ -343,20 +328,6 @@
               },
               "additionalProperties": false
             }
-          ]
-        },
-        "thinSize": {
-          "default": 64,
-          "description": "Width in the thin state",
-          "type": "number"
-        },
-        "toggleModes": {
-          "default": "both",
-          "description": "`both` goes collapsed, thin, expanded; `single` goes between collapsed and one open state",
-          "type": "string",
-          "enum": [
-            "both",
-            "single"
           ]
         }
       },
