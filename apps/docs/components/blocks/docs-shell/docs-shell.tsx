@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Flex, IconButton, Shell } from '@kushagradhawan/kookie-ui';
+import { Box, Flex, IconButton, Shell } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { SidebarLeftIcon } from '@hugeicons/core-free-icons';
 import { createPortal } from 'react-dom';
@@ -24,6 +24,8 @@ export interface DocsShellProps {
   pathname?: string;
   /** Your router's link, e.g. `next/link`. Defaults to a plain anchor. */
   linkComponent?: DocsLinkComponent;
+  /** A band at the top of the content pane, edge to edge, with the top bar floating over it. */
+  hero?: React.ReactNode;
 }
 
 /** Where a page puts its own actions: the end of the shell's top bar. */
@@ -50,6 +52,7 @@ export function DocsShell({
   mobileTriggerIcon,
   pathname = '',
   linkComponent,
+  hero,
 }: DocsShellProps) {
   const [actionsSlot, setActionsSlot] = React.useState<HTMLElement | null>(null);
 
@@ -73,15 +76,29 @@ export function DocsShell({
       </Shell.Sidebar>
 
       <Shell.Content>
-        {/* The top bar: the sidebar button at the start, the current page's actions at the end. */}
-        <Flex align="center" justify="between" gap="3" px={{ initial: '4', sm: '5' }} pt="4">
-          <IconButton variant="ghost" size="3" color="gray" asChild aria-label="Toggle navigation">
-            <Shell.Trigger target="sidebar">
-              {mobileTriggerIcon ?? <HugeiconsIcon icon={SidebarLeftIcon} strokeWidth={1.75} />}
-            </Shell.Trigger>
-          </IconButton>
-          <Flex ref={setActionsSlot} align="center" gap="4" />
-        </Flex>
+        {/* The top bar: the sidebar button at the start, the current page's actions at the end.
+            With a hero, the bar floats over it, so the hero runs to the pane's top edge. */}
+        <Box position="relative">
+          {hero}
+          <Flex
+            align="center"
+            justify="between"
+            gap="3"
+            px={{ initial: '4', sm: '5' }}
+            pt="4"
+            position={hero ? 'absolute' : undefined}
+            top="0"
+            left="0"
+            right="0"
+          >
+            <IconButton variant="ghost" size="3" color="gray" asChild aria-label="Toggle navigation">
+              <Shell.Trigger target="sidebar">
+                {mobileTriggerIcon ?? <HugeiconsIcon icon={SidebarLeftIcon} strokeWidth={1.75} />}
+              </Shell.Trigger>
+            </IconButton>
+            <Flex ref={setActionsSlot} align="center" gap="4" />
+          </Flex>
+        </Box>
 
         <PageActionsSlot.Provider value={actionsSlot}>{children}</PageActionsSlot.Provider>
       </Shell.Content>

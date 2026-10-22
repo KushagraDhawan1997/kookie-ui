@@ -119,3 +119,58 @@ h6 {
 .playground-container {
   position: relative;
 }
+
+/* THE FRONT PAGE'S HERO (2026-10-22). The line grid, edge to edge across the content pane's top,
+   with a real builder made with this system standing on it, cropped by the band's bottom edge.
+   The same figure is on kushagradhawan.com's Womp's Design System page. */
+.kd-hero {
+  position: relative;
+  height: clamp(440px, 45vw, 560px);
+  overflow: clip;
+  background-color: var(--gray-1);
+  background-image:
+    linear-gradient(var(--gray-a4) 1px, transparent 1px),
+    linear-gradient(90deg, var(--gray-a4) 1px, transparent 1px);
+  background-size: var(--space-6) var(--space-6);
+  background-position: center;
+}
+
+.kd-hero-stage {
+  position: absolute;
+  inset-inline: 0;
+  top: calc(var(--space-9) + var(--space-4));
+  display: grid;
+  justify-items: center;
+}
+
+.kd-hero-window {
+  width: calc(30 * var(--space-6));
+  background-color: var(--color-background);
+  border: 1px solid var(--gray-a5);
+  border-radius: var(--radius-6);
+  overflow: clip;
+}
+
+/* v1's Shell draws no lines between panes; the hero's builder adds hairlines, as the app would. */
+.kd-hero .rt-ShellSidebar {
+  border-inline-end: 1px solid var(--gray-a5);
+}
+
+.kd-hero .rt-ShellInspector {
+  border-inline-start: 1px solid var(--gray-a5);
+}
+
+.kd-hero-selected {
+  border-radius: var(--radius-full);
+  outline: 1px solid var(--gray-12);
+  outline-offset: 4px;
+}
+
+/* On a phone the window is wider than the screen, so it starts at the reading column's edge and
+   runs off the right, instead of off both edges. */
+@media (max-width: 768px) {
+  .kd-hero-stage {
+    justify-items: start;
+    padding-inline-start: var(--space-5);
+  }
+}
