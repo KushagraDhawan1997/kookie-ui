@@ -136,7 +136,7 @@ h6 {
 .kd-hero-stage {
   position: absolute;
   inset-inline: 0;
-  top: calc(var(--space-9) + var(--space-4));
+  top: var(--space-7);
   display: grid;
   justify-items: center;
 }
@@ -173,29 +173,14 @@ h6 {
   }
 }
 
-/* On a phone the hero sits under the title and the intro, so the first screen says what the page
-   is (Kushagra, 2026-10-22). The top bar then sits in flow, and the inline hero reaches the
-   pane's edges through the page's own padding. */
-@media (max-width: 768px) {
-  .kd-hero[data-placement='top'] {
-    display: none;
-  }
-
-  .kd-shell-bar {
-    position: static !important;
-  }
-
-  .kd-hero[data-placement='inline'] {
-    margin-inline: calc(-1 * var(--space-5));
-  }
-
-  .kd-hero[data-placement='inline'] .kd-hero-stage {
-    top: var(--space-6);
-  }
+/* The hero breaks out of the reading column to the content pane's edges. The pane is the query
+   container and the column is centred in it, so half the column less half the pane is the
+   distance to each edge. */
+.kd-shell-content {
+  container-type: inline-size;
 }
 
-@media (min-width: 769px) {
-  .kd-hero[data-placement='inline'] {
-    display: none;
-  }
+.kd-hero {
+  margin-inline: calc(50% - 50cqi);
 }
+
