@@ -27,9 +27,9 @@ const invalidRailBoth: RailProps = { open: true, defaultOpen: true };
 
 // Sidebar XOR
 expectAssignable<SidebarProps>({ defaultState: 'expanded' });
-expectAssignable<SidebarProps>({ state: 'thin' });
+expectAssignable<SidebarProps>({ state: 'collapsed' });
 // @ts-expect-error
-const invalidSidebarBoth: SidebarProps = { state: 'thin', defaultState: 'expanded' };
+const invalidSidebarBoth: SidebarProps = { state: 'collapsed', defaultState: 'expanded' };
 
 // Inspector XOR
 expectAssignable<InspectorProps>({ defaultOpen: true });
