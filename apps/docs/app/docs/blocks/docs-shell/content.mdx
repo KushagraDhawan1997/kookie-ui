@@ -67,7 +67,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
 | File | Contains |
 | ---- | -------- |
 | `docs-shell.tsx` | `DocsShell`: the `Shell` layout and mobile trigger |
-| `docs-sidebar.tsx` | `DocsSidebar`: logo, search, grouped menu and footer. Usable on its own inside any `Shell.Sidebar` |
+| `docs-sidebar.tsx` | `DocsSidebar`: a floating header with the logo and search, the grouped menu, and a floating footer. Usable on its own inside any `Shell.Sidebar` |
 | `types.ts` | Navigation, logo and link types |
 
 ## Props
@@ -79,8 +79,8 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
 | `linkComponent` | `DocsLinkComponent` | `<a>` | Your router's link, such as `next/link`. |
 | `hero` | `ReactNode` | | A band at the top of the content pane, edge to edge. The top bar floats over it. |
 | `logo` | `DocsLogoConfig` | - | Logo in the sidebar header. |
-| `headerActions` | `ReactNode` | - | Beside the logo, e.g. a GitHub link or version badge. |
-| `sidebarFooter` | `ReactNode` | - | Bottom of the sidebar, e.g. a theme switch. |
+| `headerActions` | `ReactNode` | - | Toolbar buttons beside search, e.g. a GitHub link. |
+| `sidebarFooter` | `ReactNode` | - | The floating footer toolbar's contents, e.g. a theme switch. |
 | `sidebarResizable` | `boolean` | `true` | Let people drag the sidebar edge. |
 | `mobileTriggerIcon` | `ReactNode` | Menu icon | Icon for the small-screen menu button. |
 | `height` | `Shell.Root` height | - | Height of the shell. |

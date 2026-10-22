@@ -50,34 +50,62 @@ function useChromeClasses() {
   return ['rt-ShellPaneChrome', `rt-r-size-${size}`, `rt-menu-variant-${menuVariant}`];
 }
 
-interface PaneHeaderProps extends React.ComponentPropsWithoutRef<'div'> {}
+interface PaneHeaderProps extends React.ComponentPropsWithoutRef<'div'> {
+  /**
+   * Floats the row over the top of `Shell.Scroll`, so the list scrolls behind it. The list
+   * starts below the row, and `Shell.Scroll fade` fades it out under the row. The row paints
+   * nothing and lets clicks through between its controls; a `Toolbar backdrop` in it keeps
+   * the controls readable.
+   */
+  float?: boolean;
+}
 
 /** A pane's header row, pinned above its scrolling region. */
-const PaneHeader = React.forwardRef<HTMLDivElement, PaneHeaderProps>(({ className, ...props }, forwardedRef) => {
+const PaneHeader = React.forwardRef<HTMLDivElement, PaneHeaderProps>(({ className, float, ...props }, forwardedRef) => {
   const chrome = useChromeClasses();
-  return <div {...props} ref={forwardedRef} className={classNames('rt-ShellPaneHeader', 'rt-SidebarHeader', 'rt-SidebarHeader--container', ...chrome, className)} />;
+  return (
+    <div
+      {...props}
+      ref={forwardedRef}
+      data-float={float || undefined}
+      className={classNames('rt-ShellPaneHeader', 'rt-SidebarHeader', 'rt-SidebarHeader--container', ...chrome, className)}
+    />
+  );
 });
 PaneHeader.displayName = 'Shell.PaneHeader';
 
-interface PaneFooterProps extends React.ComponentPropsWithoutRef<'div'> {}
+interface PaneFooterProps extends React.ComponentPropsWithoutRef<'div'> {
+  /** Floats the row over the bottom of `Shell.Scroll`, the way `Shell.PaneHeader float` does at the top. */
+  float?: boolean;
+}
 
 /** A pane's footer row, pinned below its scrolling region. */
-const PaneFooter = React.forwardRef<HTMLDivElement, PaneFooterProps>(({ className, ...props }, forwardedRef) => {
+const PaneFooter = React.forwardRef<HTMLDivElement, PaneFooterProps>(({ className, float, ...props }, forwardedRef) => {
   const chrome = useChromeClasses();
-  return <div {...props} ref={forwardedRef} className={classNames('rt-ShellPaneFooter', 'rt-SidebarFooter', 'rt-SidebarFooter--container', ...chrome, className)} />;
+  return (
+    <div
+      {...props}
+      ref={forwardedRef}
+      data-float={float || undefined}
+      className={classNames('rt-ShellPaneFooter', 'rt-SidebarFooter', 'rt-SidebarFooter--container', ...chrome, className)}
+    />
+  );
 });
 PaneFooter.displayName = 'Shell.PaneFooter';
 
-interface ScrollProps extends React.ComponentPropsWithoutRef<'div'> {}
+interface ScrollProps extends React.ComponentPropsWithoutRef<'div'> {
+  /** Fades the list out toward an edge with more past it, and under a floating header or footer. */
+  fade?: boolean;
+}
 
 /**
  * The one region of a pane that scrolls; it takes the room the header and footer leave.
  * It is not a landmark: for navigation, pass `role="navigation"` and an `aria-label`.
  */
-const Scroll = React.forwardRef<HTMLDivElement, ScrollProps>(({ className, children, ...props }, forwardedRef) => {
+const Scroll = React.forwardRef<HTMLDivElement, ScrollProps>(({ className, children, fade = false, ...props }, forwardedRef) => {
   const chrome = useChromeClasses();
   return (
-    <ScrollArea type="hover" className="rt-ShellScroll">
+    <ScrollArea type="hover" fade={fade} className="rt-ShellScroll">
       <div {...props} ref={forwardedRef} className={classNames('rt-BaseMenuContent', 'rt-SidebarContent', ...chrome, className)}>
         <div className="rt-BaseMenuViewport">{children}</div>
       </div>

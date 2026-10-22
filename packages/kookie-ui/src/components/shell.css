@@ -96,6 +96,9 @@
  * property guaranteed-invalid, so the readers below fall back to the frame.
  */
 .rt-ShellPane {
+  /* A pane nested in a Shell.Scroll measures its own floating rows, not the outer ones. */
+  --rt-pane-inset-start: initial;
+  --rt-pane-inset-end: initial;
   --rt-shell-position: initial;
   --rt-shell-z: initial;
   --rt-shell-row: initial;
@@ -205,6 +208,112 @@
 .rt-ShellScroll {
   flex: 1;
   min-height: 0;
+}
+
+/* ── Floating header and footer ───────────────────────────────────────────── */
+
+/*
+ * A floating row sits over the scroller instead of above or below it, so the list runs the
+ * pane's full height and scrolls behind the row. The row paints nothing, so it catches no
+ * clicks either: each control in it takes the pointer back.
+ */
+.rt-ShellPaneHeader[data-float],
+.rt-ShellPaneFooter[data-float] {
+  position: absolute;
+  inset-inline: 0;
+  z-index: 1;
+  pointer-events: none;
+
+  & > :where(*),
+  & > :where(.rt-Toolbar) > :where(*) {
+    pointer-events: auto;
+  }
+  & > :where(.rt-Toolbar) {
+    pointer-events: none;
+  }
+}
+.rt-ShellPaneHeader[data-float] {
+  top: 0;
+}
+.rt-ShellPaneFooter[data-float] {
+  bottom: 0;
+}
+
+/* The row's containing block is the pane content around it. */
+:where(:has(> .rt-ShellPaneHeader[data-float], > .rt-ShellPaneFooter[data-float])) {
+  position: relative;
+}
+
+/*
+ * How tall the floating row is: one control row plus the row's padding on both sides, worked
+ * out in CSS so the first paint is right. A Toolbar in the row states its own control height.
+ */
+:has(> .rt-ShellPaneHeader[data-float]:where(.rt-r-size-1)) {
+  --rt-pane-row-start: var(--control-height-1);
+  --rt-pane-pad-start: var(--space-2);
+}
+:has(> .rt-ShellPaneHeader[data-float]:where(.rt-r-size-2)) {
+  --rt-pane-row-start: var(--control-height-2);
+  --rt-pane-pad-start: var(--space-3);
+}
+:has(> .rt-ShellPaneHeader[data-float]:where(.rt-r-size-3)) {
+  --rt-pane-row-start: var(--control-height-3);
+  --rt-pane-pad-start: var(--space-3);
+}
+:has(> .rt-ShellPaneFooter[data-float]:where(.rt-r-size-1)) {
+  --rt-pane-row-end: var(--control-height-1);
+  --rt-pane-pad-end: var(--space-2);
+}
+:has(> .rt-ShellPaneFooter[data-float]:where(.rt-r-size-2)) {
+  --rt-pane-row-end: var(--control-height-2);
+  --rt-pane-pad-end: var(--space-3);
+}
+:has(> .rt-ShellPaneFooter[data-float]:where(.rt-r-size-3)) {
+  --rt-pane-row-end: var(--control-height-3);
+  --rt-pane-pad-end: var(--space-3);
+}
+:has(> .rt-ShellPaneHeader[data-float] > .rt-Toolbar:where(.rt-r-size-1)) {
+  --rt-pane-row-start: var(--control-height-1);
+}
+:has(> .rt-ShellPaneHeader[data-float] > .rt-Toolbar:where(.rt-r-size-2)) {
+  --rt-pane-row-start: var(--control-height-2);
+}
+:has(> .rt-ShellPaneHeader[data-float] > .rt-Toolbar:where(.rt-r-size-3)) {
+  --rt-pane-row-start: var(--control-height-3);
+}
+:has(> .rt-ShellPaneHeader[data-float] > .rt-Toolbar:where(.rt-r-size-4)) {
+  --rt-pane-row-start: var(--control-height-4);
+}
+:has(> .rt-ShellPaneFooter[data-float] > .rt-Toolbar:where(.rt-r-size-1)) {
+  --rt-pane-row-end: var(--control-height-1);
+}
+:has(> .rt-ShellPaneFooter[data-float] > .rt-Toolbar:where(.rt-r-size-2)) {
+  --rt-pane-row-end: var(--control-height-2);
+}
+:has(> .rt-ShellPaneFooter[data-float] > .rt-Toolbar:where(.rt-r-size-3)) {
+  --rt-pane-row-end: var(--control-height-3);
+}
+:has(> .rt-ShellPaneFooter[data-float] > .rt-Toolbar:where(.rt-r-size-4)) {
+  --rt-pane-row-end: var(--control-height-4);
+}
+
+/*
+ * The scroller spends that height three ways: the list starts and ends clear of the rows, the
+ * scrollbar stays between them, and the fade (with `fade`) runs across them.
+ */
+:has(> .rt-ShellPaneHeader[data-float]) > .rt-ShellScroll {
+  --rt-pane-inset-start: calc(var(--rt-pane-row-start) + 2 * var(--rt-pane-pad-start));
+  --scroll-fade-start: var(--rt-pane-inset-start);
+  --scrollarea-scrollbar-vertical-margin-top: calc(var(--space-1) + var(--rt-pane-inset-start));
+}
+:has(> .rt-ShellPaneFooter[data-float]) > .rt-ShellScroll {
+  --rt-pane-inset-end: calc(var(--rt-pane-row-end) + 2 * var(--rt-pane-pad-end));
+  --scroll-fade-end: var(--rt-pane-inset-end);
+  --scrollarea-scrollbar-vertical-margin-bottom: calc(var(--space-1) + var(--rt-pane-inset-end));
+}
+.rt-ShellScroll > .rt-ScrollAreaViewport > * {
+  padding-top: var(--rt-pane-inset-start, 0px);
+  padding-bottom: var(--rt-pane-inset-end, 0px);
 }
 
 /* Closed is closed, in every posture: out of the layout, the tab order and the accessibility tree. */

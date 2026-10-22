@@ -1,9 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import { Avatar, Flex, Shell, Sidebar } from '@kushagradhawan/kookie-ui';
+import { Avatar, Shell, Sidebar, TextField, Toolbar, ToolbarButton } from '@kushagradhawan/kookie-ui';
 import { Logo } from '@/components/logo';
 import { HugeiconsIcon, type IconSvgElement } from '@hugeicons/react';
+import { Cancel01Icon, Search01Icon } from '@hugeicons/core-free-icons';
 import type {
   DocsLinkComponent,
   DocsLinkProps,
@@ -15,8 +16,9 @@ import type {
 export interface DocsSidebarProps {
   navigation: DocsNavigationConfig;
   logo?: DocsLogoConfig;
-  /** Rendered next to the logo, e.g. a GitHub link. */
+  /** Toolbar buttons beside search, e.g. a GitHub link. */
   headerActions?: React.ReactNode;
+  /** The footer toolbar's contents: toolbar buttons and groups. */
   footer?: React.ReactNode;
   /** Current path, used to mark the active item. */
   pathname?: string;
@@ -52,6 +54,7 @@ export function DocsSidebar({
   linkComponent: LinkComponent = Anchor,
 }: DocsSidebarProps) {
   const [searchQuery, setSearchQuery] = React.useState('');
+  const [searchOpen, setSearchOpen] = React.useState(false);
   const query = searchQuery.trim().toLowerCase();
   const isSearching = query.length > 0;
 
@@ -101,30 +104,62 @@ export function DocsSidebar({
 
   const flatResults = filteredGroups.flatMap((group) => group.items);
 
+  const closeSearch = () => {
+    setSearchOpen(false);
+    setSearchQuery('');
+  };
+
   return (
     <>
-      {(logo || headerActions) && (
-        <Shell.PaneHeader>
-          <Flex justify="between" align="center" width="100%">
-            {logo && (
-              <LinkComponent href={logo.href ?? '/'} aria-label={logo.alt ?? 'Home'}>
-                {logo.label ? (
-                  /* THE MARK ALONE (2026-09-27, Kushagra): the word said the name a second time
-                     in a row that is only ever glanced at. `label` stays the accessible name. */
-                  <Logo height="var(--line-height-7)" />
-                ) : (
-                  <Avatar fallback={logo.alt?.[0] ?? 'K'} size={logo.size ?? '3'} src={logo.src} />
-                )}
-              </LinkComponent>
-            )}
-            {headerActions && <Flex align="center">{headerActions}</Flex>}
-          </Flex>
-        </Shell.PaneHeader>
-      )}
+      {/* The rows float over the list, as in v2: the list runs the pane's full height, starts
+          clear of them, and fades out as it passes under them. */}
+      <Shell.PaneHeader float>
+        <Toolbar backdrop size="3" aria-label="Site" style={{ flex: 1 }}>
+          {searchOpen ? (
+            <>
+              <TextField.Root
+                size="3"
+                autoFocus
+                placeholder="Search..."
+                aria-label="Search the documentation"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Escape') closeSearch();
+                }}
+                style={{ flex: 1 }}
+              >
+                <TextField.Slot>
+                  <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
+                </TextField.Slot>
+              </TextField.Root>
+              <ToolbarButton iconOnly aria-label="Close search" onClick={closeSearch}>
+                <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
+              </ToolbarButton>
+            </>
+          ) : (
+            <>
+              {logo && (
+                <LinkComponent href={logo.href ?? '/'} aria-label={logo.alt ?? 'Home'}>
+                  {logo.label ? (
+                    /* THE MARK ALONE (2026-09-27, Kushagra): the word said the name a second time
+                       in a row that is only ever glanced at. `label` stays the accessible name. */
+                    <Logo height="var(--line-height-7)" />
+                  ) : (
+                    <Avatar fallback={logo.alt?.[0] ?? 'K'} size={logo.size ?? '3'} src={logo.src} />
+                  )}
+                </LinkComponent>
+              )}
+              <ToolbarButton iconOnly aria-label="Search" onClick={() => setSearchOpen(true)}>
+                <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
+              </ToolbarButton>
+              {headerActions}
+            </>
+          )}
+        </Toolbar>
+      </Shell.PaneHeader>
 
-      <Sidebar.Search value={searchQuery} onValueChange={setSearchQuery} placeholder="Search..." />
-
-      <Shell.Scroll role="navigation" aria-label="Documentation">
+      <Shell.Scroll fade role="navigation" aria-label="Documentation">
         {isSearching ? (
           <Sidebar.Menu>{flatResults.map((item) => renderItem(item, true))}</Sidebar.Menu>
         ) : (
@@ -139,7 +174,13 @@ export function DocsSidebar({
         )}
       </Shell.Scroll>
 
-      {footer && <Shell.PaneFooter>{footer}</Shell.PaneFooter>}
+      {footer && (
+        <Shell.PaneFooter float>
+          <Toolbar backdrop size="3" aria-label="Site settings" style={{ flex: 1 }}>
+            {footer}
+          </Toolbar>
+        </Shell.PaneFooter>
+      )}
     </>
   );
 }

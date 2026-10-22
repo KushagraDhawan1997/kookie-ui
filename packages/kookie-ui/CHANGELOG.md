@@ -1,3 +1,13 @@
+## [0.16.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.15.1...v0.16.0) (2026-10-22)
+
+A pane's header and footer can float over its list, as in v2.
+
+### Features
+
+* **shell:** `float` on `Shell.PaneHeader` and `Shell.PaneFooter` puts the row over `Shell.Scroll`. The list runs the pane's full height, starts and ends clear of the rows, and keeps its scrollbar between them. The row lets clicks through between its controls.
+* **shell:** `fade` on `Shell.Scroll` fades the list toward an edge with more past it, and across a floating row.
+* **toolbar:** `backdrop` gives each control a surface of its own for a row that content passes behind. Buttons rest `raised` and a group's well is raised.
+
 ## [0.15.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.15.0...v0.15.1) (2026-10-22)
 
 ### Bug Fixes

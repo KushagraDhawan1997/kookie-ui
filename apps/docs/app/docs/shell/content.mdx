@@ -62,6 +62,22 @@ Every part is optional except `Shell.Content`. The Root renders every child in t
 
 `Shell.Scroll` takes the room the header and footer leave. The [Sidebar](/docs/sidebar) rows inside take the Root's `size`.
 
+### Floating rows
+
+Set `float` on `Shell.PaneHeader` or `Shell.PaneFooter` and the list runs the pane's full height, scrolling behind the row. It starts and ends clear of the rows, and `fade` on `Shell.Scroll` fades it out as it passes under them. Put a `Toolbar backdrop` in a floating row so its buttons stay readable over the list.
+
+```tsx showLineNumbers
+<Shell.Sidebar>
+  <Shell.PaneHeader float>
+    <Toolbar backdrop size="3" aria-label="Site">{/* logo, search */}</Toolbar>
+  </Shell.PaneHeader>
+  <Shell.Scroll fade role="navigation" aria-label="Main">{/* Sidebar rows */}</Shell.Scroll>
+  <Shell.PaneFooter float>
+    <Toolbar backdrop size="3" aria-label="Settings">{/* settings */}</Toolbar>
+  </Shell.PaneFooter>
+</Shell.Sidebar>
+```
+
 A Panel with no `presentation` of its own takes the Rail's. In the server HTML it does so only when it comes after the Rail in the same parent; otherwise it follows the Rail once the page is hydrated.
 
 ## Props
@@ -363,6 +379,10 @@ The values are written to the pane as `data-presentation-<bp>` and `data-auto-<b
 - The resize handle is a focusable `role="separator"` with `aria-controls`, `aria-valuenow`, `aria-valuemin` and `aria-valuemax`. The arrow keys move it by 8px (32px with Shift), and Home and End go to the limits. It shows a focus line on `:focus-visible`.
 
 ## Changelog
+
+### 0.16.0
+
+- Added: `float` on `Shell.PaneHeader` and `Shell.PaneFooter`, and `fade` on `Shell.Scroll`.
 
 ### 0.15.0
 

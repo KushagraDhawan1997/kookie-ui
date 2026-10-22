@@ -77,6 +77,12 @@
   }
 }
 
+/* Over content, the well is a raised surface of its own, like a raised button beside it. */
+:where(.rt-Toolbar[data-backdrop]) .rt-ToolbarGroup {
+  background-color: var(--color-surface-solid);
+  box-shadow: var(--shadow-2);
+}
+
 /* A button in the group is hosted: the group's height minus the inset on both sides, and a
    concentric corner. Overriding the height variable (not `height`) keeps an icon button square. */
 .rt-ToolbarGroup > :where(.rt-BaseButton) {
