@@ -75,7 +75,7 @@ export function DocsShell({
         />
       </Shell.Sidebar>
 
-      <Shell.Content>
+      <Shell.Content className="kd-shell-content">
         {/* The top bar: the sidebar button at the start, the current page's actions at the end.
             With a hero, the bar floats over it, so the hero runs to the pane's top edge. */}
         <Box position="relative">
@@ -87,7 +87,6 @@ export function DocsShell({
             px={{ initial: '4', sm: '5' }}
             pt="4"
             position={hero ? 'absolute' : undefined}
-            className={hero ? 'kd-shell-bar' : undefined}
             top="0"
             left="0"
             right="0"

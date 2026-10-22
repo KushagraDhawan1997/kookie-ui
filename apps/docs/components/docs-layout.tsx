@@ -3,7 +3,6 @@
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { DocsShell } from '@/components/blocks/docs-shell/docs-shell';
-import { Hero } from './hero';
 import { docsNavigation } from '../navigation-config';
 import { DarkModeToggle } from './dark-mode';
 import { IconButton, Flex, Badge } from '@kushagradhawan/kookie-ui';
@@ -23,7 +22,6 @@ export function DocsLayout({ children }: { children: React.ReactNode }) {
       }}
       pathname={pathname}
       linkComponent={Link}
-      hero={pathname === '/' ? <Hero /> : undefined}
       sidebarFooter={
         <Flex gap="2" align="center">
           <DarkModeToggle />
