@@ -1,3 +1,9 @@
+## [0.15.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.15.0...v0.15.1) (2026-10-22)
+
+### Bug Fixes
+
+* **scroll-area:** the scrollbar thumb follows the scroll in production builds. Next's minifier removed the loop Radix moves the thumb with, so the thumb moved once per scroll and jumped at the next one. ScrollArea and Select now move it on every scroll.
+
 ## [0.15.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.14.4...v0.15.0) (2026-10-18)
 
 The breaking release. Everything 0.14 deprecated is removed, and so is motion. There is one way to do each thing.

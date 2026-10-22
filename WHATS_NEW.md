@@ -1,5 +1,9 @@
 # What's new in Womp's Design System
 
+## 0.15.1 (October 22)
+
+1. **Scrollbars keep up.** Scrollbar thumbs follow the scroll in production builds instead of jumping.
+
 ## 0.15.0 (October 18)
 
 1. **The cleanup (breaking).** Everything 0.14 warned about is gone: `classic`, `panelBackground`, `isInvalid`, the menu variants, Callout, AppBar, the UserCard export, `Sidebar.Root` and thin mode.
