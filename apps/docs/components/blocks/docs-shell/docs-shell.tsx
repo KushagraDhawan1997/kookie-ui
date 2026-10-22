@@ -87,6 +87,7 @@ export function DocsShell({
             px={{ initial: '4', sm: '5' }}
             pt="4"
             position={hero ? 'absolute' : undefined}
+            className={hero ? 'kd-shell-bar' : undefined}
             top="0"
             left="0"
             right="0"
