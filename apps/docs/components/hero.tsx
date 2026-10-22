@@ -151,7 +151,7 @@ function Builder() {
               </Toolbar.Root>
             </Flex>
             <Flex justify="center" style={{ paddingTop: 128 }}>
-              <Card size="3" variant="classic" style={{ width: 384 }}>
+              <Card size="3" style={{ width: 384 }}>
                 <Flex direction="column" gap="5">
                   <Flex direction="column" gap="2">
                     <Heading size="6">Sign in</Heading>
