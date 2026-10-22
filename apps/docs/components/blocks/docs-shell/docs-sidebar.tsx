@@ -1,22 +1,16 @@
 'use client';
 
 import * as React from 'react';
-import { Avatar, Shell, Sidebar, TextField, Toolbar, ToolbarButton } from '@kushagradhawan/kookie-ui';
+import { Avatar, Flex, Shell, Sidebar, TextField, Toolbar, ToolbarButton } from '@kushagradhawan/kookie-ui';
 import { Logo } from '@/components/logo';
 import { HugeiconsIcon, type IconSvgElement } from '@hugeicons/react';
 import { Cancel01Icon, Search01Icon } from '@hugeicons/core-free-icons';
-import type {
-  DocsLinkComponent,
-  DocsLinkProps,
-  DocsLogoConfig,
-  DocsNavigationConfig,
-  DocsNavigationItem,
-} from './types';
+import type { DocsLinkComponent, DocsLinkProps, DocsLogoConfig, DocsNavigationConfig, DocsNavigationItem } from './types';
 
 export interface DocsSidebarProps {
   navigation: DocsNavigationConfig;
   logo?: DocsLogoConfig;
-  /** Toolbar buttons beside search, e.g. a GitHub link. */
+  /** Beside the logo, e.g. a version badge. */
   headerActions?: React.ReactNode;
   /** The footer toolbar's contents: toolbar buttons and groups. */
   footer?: React.ReactNode;
@@ -45,14 +39,7 @@ function renderIcon(icon: DocsNavigationItem['icon']) {
   return null;
 }
 
-export function DocsSidebar({
-  navigation,
-  logo,
-  headerActions,
-  footer,
-  pathname = '',
-  linkComponent: LinkComponent = Anchor,
-}: DocsSidebarProps) {
+export function DocsSidebar({ navigation, logo, headerActions, footer, pathname = '', linkComponent: LinkComponent = Anchor }: DocsSidebarProps) {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [searchOpen, setSearchOpen] = React.useState(false);
   const query = searchQuery.trim().toLowerCase();
@@ -60,9 +47,7 @@ export function DocsSidebar({
 
   const filteredGroups = React.useMemo(() => {
     if (!query) return navigation.groups;
-    return navigation.groups
-      .map((group) => ({ ...group, items: group.items.filter((item) => item.title.toLowerCase().includes(query)) }))
-      .filter((group) => group.items.length > 0);
+    return navigation.groups.map((group) => ({ ...group, items: group.items.filter((item) => item.title.toLowerCase().includes(query)) })).filter((group) => group.items.length > 0);
   }, [navigation.groups, query]);
 
   const renderItem = (item: DocsNavigationItem, withBadge: boolean) => (
@@ -139,21 +124,23 @@ export function DocsSidebar({
             </>
           ) : (
             <>
-              {logo && (
-                <LinkComponent href={logo.href ?? '/'} aria-label={logo.alt ?? 'Home'}>
-                  {logo.label ? (
-                    /* THE MARK ALONE (2026-09-27, Kushagra): the word said the name a second time
+              <Flex align="center" gap="3">
+                {logo && (
+                  <LinkComponent href={logo.href ?? '/'} aria-label={logo.alt ?? 'Home'}>
+                    {logo.label ? (
+                      /* THE MARK ALONE (2026-09-27, Kushagra): the word said the name a second time
                        in a row that is only ever glanced at. `label` stays the accessible name. */
-                    <Logo height="var(--line-height-7)" />
-                  ) : (
-                    <Avatar fallback={logo.alt?.[0] ?? 'K'} size={logo.size ?? '3'} src={logo.src} />
-                  )}
-                </LinkComponent>
-              )}
+                      <Logo height="var(--line-height-7)" />
+                    ) : (
+                      <Avatar fallback={logo.alt?.[0] ?? 'K'} size={logo.size ?? '3'} src={logo.src} />
+                    )}
+                  </LinkComponent>
+                )}
+                {headerActions}
+              </Flex>
               <ToolbarButton iconOnly aria-label="Search" onClick={() => setSearchOpen(true)}>
                 <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
               </ToolbarButton>
-              {headerActions}
             </>
           )}
         </Toolbar>
