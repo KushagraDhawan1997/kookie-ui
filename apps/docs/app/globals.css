@@ -123,25 +123,50 @@ h6 {
 /* THE FRONT PAGE'S HERO (2026-10-22). The line grid, edge to edge across the content pane's top,
    with a real builder made with this system standing on it, cropped by the band's bottom edge.
    The same figure is on kushagradhawan.com's Womp's Design System page. */
+/* A 12px line grid, the same as kushagradhawan.com's figures (Kushagra, 2026-10-23). Everything
+   sits on it: the band is 44 cells tall, a line runs through the centre so the centred window's
+   edges land on lines, and the window is 4 cells down. Hairlines close the band at the top and
+   the bottom, drawn over the window that runs off it. */
 .kd-hero {
   position: relative;
-  height: clamp(440px, 45vw, 560px);
+  height: calc(44 * var(--space-4));
   overflow: clip;
   background-color: var(--neutral-1);
-  background-image: radial-gradient(circle, var(--neutral-a7) 1px, transparent 1.5px);
-  background-size: var(--space-6) var(--space-6);
-  background-position: center;
+  background-image:
+    linear-gradient(var(--neutral-a4) 1px, transparent 1px),
+    linear-gradient(90deg, var(--neutral-a4) 1px, transparent 1px);
+  background-size: var(--space-4) var(--space-4);
+  background-position: calc(50% + var(--space-4) / 2) 0;
+}
+
+.kd-hero::before,
+.kd-hero::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset-inline: 0;
+  height: 1px;
+  background-color: var(--neutral-a4);
+}
+
+.kd-hero::before {
+  top: 0;
+}
+
+.kd-hero::after {
+  bottom: 0;
 }
 
 .kd-hero-stage {
   position: absolute;
   inset-inline: 0;
-  top: var(--space-8);
+  top: var(--space-9);
   display: grid;
   justify-items: center;
 }
 
 .kd-hero-window {
+  box-sizing: border-box;
   width: calc(30 * var(--space-7));
   background-color: var(--color-page);
   border: 1px solid var(--neutral-a5);
@@ -170,6 +195,11 @@ h6 {
   .kd-hero-stage {
     justify-items: start;
     padding-inline-start: var(--space-6);
+  }
+
+  /* The grid follows the window to the start, so its edge still lands on a line. */
+  .kd-hero {
+    background-position: var(--space-6) 0;
   }
 }
 
