@@ -484,9 +484,8 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
   const ctx = useComboboxContext('Content');
   const themeContext = useThemeContext();
 
-  // Menus stop at size 3; a size 4 field opens a size 3 list.
-  const rootSize = ctx.size === '4' ? '3' : ctx.size;
-  const size = props.size ?? rootSize ?? comboboxContentPropDefs.size.default;
+  // The list takes the field's size.
+  const size = props.size ?? ctx.size ?? comboboxContentPropDefs.size.default;
 
   const {
     className,

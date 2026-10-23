@@ -97,7 +97,7 @@ function addPrefix(node, prefix) {
   // - followed by 2 or more prop selectors (lowercase, numbers, -)
   //
   // e.g. ".kui-DialogContent.kui-r-size-2.gray"
-  if (/\.rt-(?:[A-Z][a-z]+)+(?:\.[a-z0-9-]+){2,}/.test(node.selector)) {
+  if (/\.kui-(?:[A-Z][a-z]+)+(?:\.[a-z0-9-]+){2,}/.test(node.selector)) {
     throw Error(`
       "${node.selector}" looks like it uses compound props on a component.
       "@breakpoints" does not support compound props yet.

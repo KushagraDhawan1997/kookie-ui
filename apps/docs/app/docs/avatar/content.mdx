@@ -246,9 +246,9 @@ The `fit` prop also supports responsive values:
 
 Kookie UI extends Radix Themes Avatar with practical improvements:
 
-### Extended Sizes
+### Sizes
 
-Size scale of 9 values, with consistent radius-to-size mapping and two-letter fallback font sizes at every scale.
+Nine sizes, with two-letter fallback font sizes at every size. Sizes 1-3 take the control corner of their size; sizes 4-9 share the size 4 control corner.
 
 ### Additional Variants
 
@@ -274,8 +274,7 @@ When rendered as a `button`, `a`, or `[role="button"]` via `asChild`, avatars ga
 
 ### Added
 
-- Sizes 10, 11, 12 for larger avatar use cases
-- `classic`, `surface`, and `outline` variants
+- `raised`, `surface`, and `outline` variants
 - `status` prop for colored presence indicators
 - `badge` prop for custom indicator content
 - `fit` prop with responsive support for image scaling control
@@ -285,7 +284,7 @@ When rendered as a `button`, `a`, or `[role="button"]` via `asChild`, avatars ga
 
 ### Changed
 
-- Border-radius scale tightened to match size number (size 1 uses radius-1, etc.)
+- Sizes 1-3 take the control corner of their size; sizes 4-9 share the size 4 control corner (round when the theme radius is full)
 - Two-letter fallback font sizes defined for all sizes (Radix only defined sizes 1-4)
 - Soft variant uses solid colors (`--accent-3`) instead of alpha (`--accent-a3`) for better consistency
 - Solid gray fallback fills with step 12 and uses `--neutral-1` text

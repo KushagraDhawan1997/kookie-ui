@@ -167,8 +167,8 @@
 
   /* stylelint-disable-next-line selector-max-type */
   :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) :where(svg) {
-    width: var(--content-icon-size-5);
-    height: var(--content-icon-size-5);
+    width: var(--content-icon-size-4);
+    height: var(--content-icon-size-4);
   }
 }
 

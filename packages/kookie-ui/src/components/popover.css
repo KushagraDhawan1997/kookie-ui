@@ -10,6 +10,8 @@
   /* Default toolbar padding maps to content padding; overridden per size below */
   --popover-toolbar-padding: var(--popover-content-padding);
   padding: var(--popover-content-padding);
+  /* A surface publishes its padding, so m="bleed" pulls a child to its edge. */
+  --kui-sf-p: var(--popover-content-padding);
   box-sizing: border-box;
 
   transform-origin: var(--radix-popover-content-transform-origin);

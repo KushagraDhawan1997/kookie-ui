@@ -7,6 +7,7 @@ import { Button } from '../../../src/components/button';
 import * as TextField from '../../../src/components/text-field';
 import * as DropdownMenu from '../../../src/components/dropdown-menu';
 import { Chip } from '../../../src/components/chip';
+import { Avatar } from '../../../src/components/avatar';
 
 function button(container: HTMLElement, name = 'Go') {
   return Array.from(container.querySelectorAll('button')).find((el) => el.textContent?.includes(name)) as HTMLElement;
@@ -115,5 +116,30 @@ describe('Theme size', () => {
     );
     const chip = container.querySelector('.kui-Chip') as HTMLElement;
     expect(chip.classList.contains('kui-r-size-2')).toBe(true);
+  });
+
+  test('an unset avatar follows the theme size; an explicit one wins', () => {
+    const { container } = render(
+      <Theme size="4">
+        <Avatar fallback="A" />
+        <Theme size="1">
+          <Avatar fallback="B" />
+        </Theme>
+        <Avatar size="7" fallback="C" />
+      </Theme>,
+    );
+    const roots = Array.from(container.querySelectorAll('.kui-AvatarRoot'));
+    expect(roots[0].classList.contains('kui-r-size-4')).toBe(true);
+    expect(roots[1].classList.contains('kui-r-size-1')).toBe(true);
+    expect(roots[2].classList.contains('kui-r-size-7')).toBe(true);
+  });
+
+  test('an avatar rests at 2 under a Theme with no size', () => {
+    const { container } = render(
+      <Theme>
+        <Avatar fallback="A" />
+      </Theme>,
+    );
+    expect(container.querySelector('.kui-AvatarRoot')!.classList.contains('kui-r-size-2')).toBe(true);
   });
 });

@@ -30,7 +30,7 @@
 ## 0.17.0 (October 23)
 
 1. **v2's scale (breaking).** Spacing has v2's twelve steps, so every layout number moves up by one. A codemod in the package rewrites an app; MIGRATION.md has the details.
-2. **Solid only (breaking).** `material`, `panelBackground` and `Theme scaling` are gone.
+2. **Solid only (breaking).** `material` and `Theme scaling` are gone.
 3. **Roomier Shell panes.** Sidebars and panels pad 24px at the default size.
 
 ## 0.16.0 (October 22)

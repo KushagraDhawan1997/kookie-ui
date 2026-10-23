@@ -75,7 +75,7 @@ describe('chip ladder', () => {
 });
 
 describe('avatar ladder', () => {
-  it('follows v2: 28/32/40/48/56/64/80/96/128, default 40', () => {
+  it('follows v2: 28/32/40/48/56/64/80/96/128, unset follows the Theme (32)', () => {
     const sizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
     const { container } = render(
       <Theme>
@@ -86,7 +86,7 @@ describe('avatar ladder', () => {
       </Theme>,
     );
     const boxes = [...container.querySelectorAll('.kui-AvatarRoot')].map((el) => el.getBoundingClientRect());
-    expect(boxes.map((b) => b.height)).toEqual([28, 32, 40, 48, 56, 64, 80, 96, 128, 40]);
-    expect(boxes.map((b) => b.width)).toEqual([28, 32, 40, 48, 56, 64, 80, 96, 128, 40]);
+    expect(boxes.map((b) => b.height)).toEqual([28, 32, 40, 48, 56, 64, 80, 96, 128, 32]);
+    expect(boxes.map((b) => b.width)).toEqual([28, 32, 40, 48, 56, 64, 80, 96, 128, 32]);
   });
 });

@@ -2,6 +2,12 @@
 
 v1's core is becoming the same as v2's: the spacing scale, sizes, corners, type steps, token names, states and composition rules. Colours, fonts, roundness, shadows and variants stay v1's own. This guide lists every change an app has to make, release by release. Each release ships its section here.
 
+### Codemods
+
+Each codemod takes folders or single files. It skips `node_modules` and `.next` at any depth, and `build` and `dist` only directly inside a folder you name, where they are build output. A source folder deeper down, like `src/app/build`, is rewritten. They read `.ts`, `.tsx`, `.js`, `.jsx`, `.mdx`, `.css` and `.scss`; the space, type and names codemods also read `.mjs` and `.cjs`.
+
+No codemod can read a value that is not written out: a ternary (`mt={isMobile ? '2' : '4'}`), a variable, a spread (`{...props}`), a computed prop, or a template string (`` `var(--space-${n})` ``), also as one entry of a responsive object (`m={{ initial: '2', md: wide ? '3' : '4' }}`). Those keep their old value and still type-check. The space and type codemods print each prop they could not read, with its file and line. Check those by hand, then search for spreads into Kookie components and for `--space-${`, `--font-size-${` and `--font-weight-${`.
+
 ## 0.17.0: the scale, solid only, Shell panes
 
 ### Spacing scale
@@ -16,15 +22,17 @@ The space palette now has v2's twelve steps: 2, 4, 8, 12, 16, 24, 32, 40, 48, 64
 | `"12"` | 112 | `"11"` (96) |
 | `"0"` | 0 | `"0"` |
 
-This applies to every layout prop that reads the scale: `p`, `px`, `py`, `pt`, `pr`, `pb`, `pl`, `m`, `mx`, `my`, `mt`, `mr`, `mb`, `ml`, `gap`, `gapX`, `gapY`, `inset`, `top`, `right`, `bottom`, `left`, including negative margins (`"-3"` becomes `"-4"`) and responsive objects. It also applies to `var(--space-N)` in your own CSS.
+This applies to every layout prop that reads the scale: `p`, `px`, `py`, `pt`, `pr`, `pb`, `pl`, `m`, `mx`, `my`, `mt`, `mr`, `mb`, `ml`, `gap`, `gapX`, `gapY`, `inset`, `top`, `right`, `bottom`, `left`, including negative margins (`"-3"` becomes `"-4"`) and responsive objects. It also applies to `var(--space-N)` in your own CSS. `inset`, `top`, `right`, `bottom` and `left` now take steps `"10"` to `"12"` like padding, so an old `top="9"` (64px) becomes `top="10"` and keeps its 64px.
 
 `"10"` and `"12"` had no exact match and moved to the nearest smaller step, so layouts that used them get tighter.
 
-A codemod does all of it. Run it from the app's root, pointing at your source folders:
+A codemod rewrites every value written out as a literal, and `var(--scaling)` (with or without a fallback). Run it once from the app's root, pointing at your source folders:
 
 ```sh
 python3 node_modules/@kushagradhawan/kookie-ui/codemods/space-0.17.py src
 ```
+
+Run it exactly once. A second run shifts every step again, and nothing flags it. If a run stops partway, restore the files from git and run it again on the clean tree. Values it cannot read stay on the old scale: see [Codemods](#codemods).
 
 ### New tokens
 
@@ -39,6 +47,16 @@ These are new and safe to use: `--layout-space-1..12`, `--surface-p-1..4`, `--pa
 ### Solid only
 
 `material` and `panelBackground` are removed from every component and from `Theme`. Everything is solid. Delete both props wherever you pass them, and any CSS keyed on `[data-material]`. The `--opacity-N` and `--blur-N` tokens are removed too.
+
+The translucent colour tokens are removed. A `var()` that reads one is undefined, so the background turns transparent with no warning. Use the solid token:
+
+| Removed | Use |
+| --- | --- |
+| `--color-panel-translucent` | `--color-panel-solid` |
+| `--color-surface-translucent` | `--color-surface-solid` |
+| `--color-dialog-translucent` | `--color-dialog-solid` |
+
+The 0.22 codemod moves all six to `--color-surface`, so a leftover is fixed there too.
 
 ### Shell panes pad like surfaces
 
@@ -73,7 +91,7 @@ Checkbox, Radio, Switch and Slider moved to v2's sizes. At size 2 a Checkbox or 
 
 Badge now rests at size 2 (was 1): 4×8px padding and 12px text (was 2×6 and 10px). Pass `size="1"` to keep the old badge. Every Badge padding and gap is now 2, 4, 8 or 12px.
 
-Avatar sizes follow v2's ladder: 1–4 are 28/32/40/48px (size 1 was 24) and 5–9 are 56/64/80/96/128px (were 64/80/96/128/160). Size 3, the default, stays 40px. To keep an old size, raise sizes 5–8 by one. Old sizes 1 (24px) and 9 (160px) have no match.
+Avatar sizes follow v2's ladder: 1–4 are 28/32/40/48px (size 1 was 24) and 5–9 are 56/64/80/96/128px (were 64/80/96/128/160). (From 0.22.0 an Avatar with no `size` follows Theme size and rests at 2.) To keep an old size, raise sizes 5–8 by one. Old sizes 1 (24px) and 9 (160px) have no match.
 
 ### States
 
@@ -175,13 +193,13 @@ Code shrinks by one factor, `--mono-scale: 0.925`, in every variant. `--code-fon
 
 ### Codemod
 
-A codemod rewrites `size` and `weight` on Text, Heading, Link, Code, Kbd, Blockquote, Em, Strong and Quote, including responsive objects, and `var(--font-size-N)`, `var(--line-height-N)`, `var(--letter-spacing-N)` and `var(--font-weight-NAME)` in your CSS. Run it once from the app's root, pointing at your source folders:
+A codemod rewrites `size` and `weight` on Text, Heading, Link, Code, Kbd, Blockquote, Em, Strong and Quote, including responsive objects and tags that hold arrow functions or comparisons, and `var(--font-size-N)`, `var(--line-height-N)`, `var(--letter-spacing-N)` and `var(--font-weight-NAME)` in your CSS. Run it once from the app's root, pointing at your source folders:
 
 ```sh
 python3 node_modules/@kushagradhawan/kookie-ui/codemods/type-0.20.py src
 ```
 
-It maps `"8"` to `"7"`, so do not run it on code that already uses the new size 8.
+It maps `"8"` to `"7"`, so do not run it on code that already uses the new size 8. A `size` or `weight` it cannot read is printed: see [Codemods](#codemods).
 
 ### Menu rows
 
@@ -287,7 +305,7 @@ Their prop defs, props types and `rt-` classes are gone too.
 
 ### Codemod
 
-A codemod renames the four merged components: JSX tags, the import from `@kushagradhawan/kookie-ui`, other references to the imported name, and the Props types. It also moves `.rt-Badge` and `.rt-IconButton` selectors in your CSS. Run it from the app's root, pointing at your source folders:
+A codemod renames the four merged components: JSX tags (also under an import alias or `import * as`), the import from `@kushagradhawan/kookie-ui`, other code references to the imported name, and the Props types. Strings, comments and JSX text keep their words, so a label like `New Badge` stays. A reference to `IconButton` or `ToggleIconButton` outside a JSX tag, like `const Comp = IconButton`, is printed and left alone: rename it and add `iconOnly` where it renders. Under an alias (`const Comp = IB`) it is printed too, but it still type-checks, so the printed line is the only notice. It also moves `.rt-Badge` and `.rt-IconButton` selectors in your CSS. Run it from the app's root, pointing at your source folders:
 
 ```sh
 python3 node_modules/@kushagradhawan/kookie-ui/codemods/components-0.21.py src
@@ -310,6 +328,15 @@ python3 node_modules/@kushagradhawan/kookie-ui/codemods/names-0.22.py src
 | `--gray-1` … `--gray-12`, `--gray-a1` … `--gray-a12`, `--gray-contrast`, `--gray-surface`, `--gray-indicator`, `--gray-track` | `--neutral-…` |
 | `--color-background` | `--color-page` |
 | `--color-panel`, `--color-panel-solid`, `--color-surface-solid`, `--color-dialog`, `--color-dialog-solid` | `--color-surface` |
+| `--color-panel-translucent`, `--color-surface-translucent`, `--color-dialog-translucent` (removed in 0.17) | `--color-surface` |
 
 The `color="gray"` prop value does not change.
+
+### Fixes from the 0.22 audit
+
+- An `Avatar` with no `size` follows `Theme size` and rests at 2 (32px); it rested at 3 (40px). Pass `size="3"` to keep it.
+- A disabled Button rendered as a link (`as="a"` or `asChild`) no longer navigates; it carries `aria-disabled`.
+- A loading icon-only Button keeps its accessible name and sets `aria-busy`.
+- `m="bleed"` now works inside Dialog, AlertDialog, Sheet, Popover and Notice, not only Card.
+- With `class="dark"` on `<html>`, `--color-page` and `--color-surface` resolve outside a Theme again.
 

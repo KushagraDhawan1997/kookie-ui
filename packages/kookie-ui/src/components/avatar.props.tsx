@@ -10,7 +10,7 @@ const objectFitValues = ['cover', 'contain', 'fill', 'scale-down', 'none'] as co
 
 const avatarPropDefs = {
   ...asChildPropDef,
-  size: { type: 'enum', className: 'kui-r-size', values: sizes, default: '3', responsive: true },
+  size: { type: 'enum', className: 'kui-r-size', values: sizes, default: '2', responsive: true },
   variant: { type: 'enum', className: 'kui-variant', values: variants, default: 'raised' },
   ...grayAccentColorPropDef,
   ...radiusPropDef,

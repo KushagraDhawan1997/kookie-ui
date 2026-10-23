@@ -68,6 +68,8 @@
   gap: var(--layout-space-4);
   border-radius: var(--notice-radius);
   padding: var(--notice-padding);
+  /* A surface publishes its padding, so m="bleed" pulls a child to its edge. */
+  --kui-sf-p: var(--notice-padding);
 
   &:where(.kui-r-size-1) {
     --notice-padding: var(--surface-p-1);

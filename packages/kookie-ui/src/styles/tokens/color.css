@@ -45,9 +45,10 @@
 }
 :is(.dark, .dark-theme),
 :is(.dark, .dark-theme) :where(.kui-theme:not(.light, .light-theme)) {
-  --color-page: var(--neutral-1);
+  /* The gray fallback serves a bare .dark root outside any Theme, where --neutral-* is not declared. */
+  --color-page: var(--neutral-1, var(--gray-1));
   --color-overlay: var(--black-a8);
-  --color-surface: var(--neutral-2);
+  --color-surface: var(--neutral-2, var(--gray-2));
 }
 
 /*                                     */

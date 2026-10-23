@@ -24,4 +24,4 @@ pnpm --filter bench bench:update   # re-record the budget on purpose
 pnpm --filter bench bench:serve    # look at the screens: http://localhost:4173/?scene=table
 ```
 
-Counts (bytes, DOM nodes, leftovers after the cycles) fail on any increase. Times and heap sizes depend on the machine, so they are copied in from a CI run and fail only past 1.5× plus 16ms (one frame).
+Counts (bytes, DOM nodes, leftovers after the cycles) fail on any increase. Times, long frames and heap sizes depend on the machine, so they are copied in from a CI run and fail only past 1.5×. Times in ms also get 16ms (one frame) of slack. Long frames are a count and get none, so from a baseline of 0, one long frame fails.

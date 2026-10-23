@@ -16,12 +16,11 @@ Kookie UI starts earlier in the chain. It begins with patterns — the rules tha
 
 Kookie UI extends Radix Themes with:
 
-- **Material** — a Theme-level `material` prop for translucent or solid surfaces with backdrop blur, replacing `panelBackground`
 - **Shell architecture** — Complete layout engine with 7 slots (Header, Rail, Panel, Sidebar, Content, Inspector, Bottom), responsive presentation modes, and resize handles
 - **Navbar component** — Semantic slots for logo, navigation, and actions with fixed/sticky/static positioning
 - **Built-in tooltip support** — Native `tooltip` prop on Button, including `iconOnly` eliminates wrapper components
 - **Enhanced accessibility** — RTL layout support, Windows High Contrast mode, and no motion beyond busy indicators
-- **Extended token systems** — 12-step blur scale, 9-step opacity scale, enhanced 3D button effects
+- **Raised effects** — 3D depth on raised buttons
 
 Kookie UI started from Radix Themes, and its API has since diverged. Check the changelog before moving code across.
 
@@ -39,13 +38,13 @@ Kookie UI includes the same foundations you'd expect — spacing tokens and colo
 
 - **Size steps** shared by controls, so `size="2"` means the same height across them
 - **Shell architecture** with structural patterns for sidebars, panels, and toolbars that actually work together
-- **Material** for surfaces: solid or translucent
+- **Solid surfaces** everywhere: no translucency or backdrop blur
 - **Consistent sizing** where cards, buttons, dropdowns, selects, and avatars all follow the same scale
 - **Enhanced accessibility** with native tooltip support and stricter aria-label enforcement
 
 ## Components
 
-Each documented component has a page at [womp-ui.kookie.design/docs](https://womp-ui.kookie.design/docs), with chapters on colour, typography, radius, materials and depth.
+Each documented component has a page at [womp-ui.kookie.design/docs](https://womp-ui.kookie.design/docs), with chapters on colour, typography, radius and depth.
 
 For larger patterns such as code blocks, documentation layouts, and marketing sections, see [Blocks](https://womp-ui.kookie.design/docs/blocks). Blocks are copy-paste source, not a package: copy the files into your project and change them freely.
 

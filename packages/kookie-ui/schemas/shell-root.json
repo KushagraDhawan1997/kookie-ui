@@ -24,6 +24,16 @@
             }
           ]
         },
+        "size": {
+          "default": "2",
+          "description": "Index of the pane chrome and the Sidebar rows in it",
+          "type": "string",
+          "enum": [
+            "1",
+            "2",
+            "3"
+          ]
+        },
         "className": {
           "description": "Additional CSS class name",
           "type": "string"

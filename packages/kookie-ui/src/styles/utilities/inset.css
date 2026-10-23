@@ -38,6 +38,15 @@
   .kui-r-inset-9 {
     inset: var(--space-9);
   }
+  .kui-r-inset-10 {
+    inset: var(--space-10);
+  }
+  .kui-r-inset-11 {
+    inset: var(--space-11);
+  }
+  .kui-r-inset-12 {
+    inset: var(--space-12);
+  }
 }
 
 .kui-r-inset {
@@ -108,6 +117,15 @@
   }
   .kui-r-top-9 {
     top: var(--space-9);
+  }
+  .kui-r-top-10 {
+    top: var(--space-10);
+  }
+  .kui-r-top-11 {
+    top: var(--space-11);
+  }
+  .kui-r-top-12 {
+    top: var(--space-12);
   }
 }
 
@@ -180,6 +198,15 @@
   .kui-r-right-9 {
     right: var(--space-9);
   }
+  .kui-r-right-10 {
+    right: var(--space-10);
+  }
+  .kui-r-right-11 {
+    right: var(--space-11);
+  }
+  .kui-r-right-12 {
+    right: var(--space-12);
+  }
 }
 
 .kui-r-right {
@@ -251,6 +278,15 @@
   .kui-r-bottom-9 {
     bottom: var(--space-9);
   }
+  .kui-r-bottom-10 {
+    bottom: var(--space-10);
+  }
+  .kui-r-bottom-11 {
+    bottom: var(--space-11);
+  }
+  .kui-r-bottom-12 {
+    bottom: var(--space-12);
+  }
 }
 
 .kui-r-bottom {
@@ -321,6 +357,15 @@
   }
   .kui-r-left-9 {
     left: var(--space-9);
+  }
+  .kui-r-left-10 {
+    left: var(--space-10);
+  }
+  .kui-r-left-11 {
+    left: var(--space-11);
+  }
+  .kui-r-left-12 {
+    left: var(--space-12);
   }
 }
 

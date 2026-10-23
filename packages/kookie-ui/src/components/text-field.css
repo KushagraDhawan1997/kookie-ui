@@ -177,6 +177,11 @@
 .kui-TextFieldSlot > :where(.kui-BaseButton) {
   --base-button-height: var(--text-field-hosted-height);
   border-radius: max(0px, calc(var(--text-field-border-radius) - var(--text-field-slot-inset)));
+
+  /* The root's `contain: paint` clips anything past the slot inset, so the ring draws inside. */
+  &:where(:focus-visible) {
+    outline-offset: calc(-1 * var(--focus-ring-width));
+  }
 }
 
 /***************************************************************************************************

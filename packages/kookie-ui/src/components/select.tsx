@@ -66,18 +66,28 @@ const SelectTrigger = React.forwardRef<SelectTriggerElement, SelectTriggerProps>
     );
 
 
+    // The props win when set; otherwise a caller's own aria-* (a form library's aria-invalid)
+    // stays, so both paths reach the accessibility tree and the CSS, as on TextField.
+    const {
+      'aria-invalid': ariaInvalid,
+      'aria-busy': ariaBusy,
+      'aria-disabled': ariaDisabled,
+      'aria-readonly': ariaReadOnly,
+    } = triggerProps;
+    const isInvalid = Boolean(error) || ariaInvalid === true || ariaInvalid === 'true';
     const ariaProps = React.useMemo(
       () => ({
-        'aria-invalid': error || undefined,
-        'aria-busy': loading || undefined,
-        'aria-disabled': disabled || undefined,
-        'aria-readonly': readOnly || undefined,
+        'aria-invalid': isInvalid ? true : ariaInvalid,
+        'aria-busy': loading || ariaBusy,
+        'aria-disabled': disabled || ariaDisabled,
+        'aria-readonly': readOnly || ariaReadOnly,
       }),
-      [error, loading, disabled, readOnly],
+      [isInvalid, ariaInvalid, loading, ariaBusy, disabled, ariaDisabled, readOnly, ariaReadOnly],
     );
 
     return (
-      <SelectPrimitive.Trigger asChild>
+      // `disabled` goes to Radix, which merges it with Root's and sets the native attribute.
+      <SelectPrimitive.Trigger asChild disabled={disabled}>
         <button
           data-accent-color={color}
           data-radius={radius}

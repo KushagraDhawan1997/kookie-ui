@@ -1,6 +1,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { Slot } from 'radix-ui';
+import { useComposedRefs, useLayoutEffect } from 'radix-ui/internal';
 
 import { baseButtonPropDefs } from './base-button.props.js';
 import { Flex } from '../flex.js';
@@ -72,24 +73,32 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
 
   // Loading blocks activation but keeps the native `disabled` off, so the button keeps focus
   // and its place in the tab order (aria-disabled carries the state). An explicit `disabled`
-  // stays native.
+  // stays native on form controls; on anything else (a link, an asChild child) the `disabled`
+  // attribute does nothing, so aria-disabled carries the state and the click is stopped here.
   const loading = Boolean(props.loading);
   const disabled = Boolean(nativeDisabled) || loading;
-  const { onClick } = baseButtonProps as { onClick?: React.MouseEventHandler<HTMLElement> };
+  const { onClick, 'aria-describedby': ariaDescribedByProp } = baseButtonProps as {
+    onClick?: React.MouseEventHandler<HTMLElement>;
+    'aria-describedby'?: string;
+  };
   const handleClick = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
-      if (loading) {
+      if (disabled) {
         event.preventDefault();
         return;
       }
       onClick?.(event);
     },
-    [loading, onClick],
+    [disabled, onClick],
   );
 
   // Which edges start or end with an icon. A bare edge pads wider under a full radius; an edge
   // holding an icon keeps the plain padding (the icon already stands between text and curve).
-  const { iconStart, iconEnd } = React.useMemo(() => {
+  // Only an svg is an icon. Rendering reads the children for an svg element at either end, so
+  // the server output is right for inline svgs; after mount the rendered DOM settles it, which
+  // also catches icon components (they render an svg) and rules out wrapped text (`<Text>`,
+  // `<Kbd>`, `<Trans>`), whose first node is not an svg.
+  const childEdges = React.useMemo(() => {
     const content =
       asChild && React.isValidElement(children) ? (children.props as { children?: React.ReactNode }).children : children;
     // Fragments are see-through: their own first and last children are the edges.
@@ -100,11 +109,21 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
           : [node],
       );
     const items = flatten(content);
-    const isIcon = (node: React.ReactNode) =>
-      React.isValidElement(node) && (node.type === 'svg' || typeof node.type !== 'string');
+    const isIcon = (node: React.ReactNode) => React.isValidElement(node) && node.type === 'svg';
     return { iconStart: isIcon(items[0]), iconEnd: isIcon(items[items.length - 1]) };
   }, [asChild, children]);
-
+  const [domEdges, setDomEdges] = React.useState<{ iconStart: boolean; iconEnd: boolean } | null>(null);
+  const elementRef = React.useRef<HTMLElement>(null);
+  const composedRef = useComposedRefs(forwardedRef, elementRef as React.Ref<BaseButtonElement>);
+  useLayoutEffect(() => {
+    const element = elementRef.current;
+    // While loading the label sits in a wrapper; keep the edges read before it.
+    if (!element || loading) return;
+    const iconStart = edgeIsSvg(element, 'start');
+    const iconEnd = edgeIsSvg(element, 'end');
+    setDomEdges((prev) => (prev && prev.iconStart === iconStart && prev.iconEnd === iconEnd ? prev : { iconStart, iconEnd }));
+  });
+  const { iconStart, iconEnd } = domEdges ?? childEdges;
 
   // asChild takes precedence over as prop for Radix Slot integration
   // When asChild is true, we use Slot.Root to merge props onto the child element
@@ -126,28 +145,22 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
   const loadingId = React.useId();
   const describedById = loading ? `${loadingId}-loading` : undefined;
 
-  // Extract button text for accessibility announcements
-  const buttonText = React.useMemo(() => {
-    if (typeof children === 'string') return children;
-    if (React.isValidElement(children) && typeof (children.props as any)?.children === 'string') {
-      return (children.props as any).children;
-    }
-    return 'button';
-  }, [children]);
-
-  // Enhanced accessibility props for loading state
-  // These ensure screen readers announce the loading state properly
+  // Loading keeps the caller's name (aria-label, aria-labelledby or the label text) and adds
+  // aria-busy plus a description, as v2 does. A disabled element with no native `disabled`
+  // announces itself through aria-disabled.
   const accessibilityProps = React.useMemo(() => {
-    if (props.loading) {
+    if (loading) {
       return {
         'aria-busy': true,
         'aria-disabled': true,
-        'aria-describedby': describedById,
-        'aria-label': `${buttonText} (loading)`,
+        'aria-describedby': [ariaDescribedByProp, describedById].filter(Boolean).join(' '),
       };
     }
+    if (nativeDisabled && (!shouldPassDisabled || asChild)) {
+      return { 'aria-disabled': true };
+    }
     return {};
-  }, [props.loading, describedById, buttonText]);
+  }, [loading, describedById, ariaDescribedByProp, nativeDisabled, shouldPassDisabled, asChild]);
 
   return (
     <Comp
@@ -161,7 +174,7 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
       // Radix Toggle (asChild) passes `data-disabled={undefined}` that must not erase it.
       data-disabled={disabled || undefined}
       onClick={handleClick}
-      ref={forwardedRef}
+      ref={composedRef}
       className={classNames('kui-reset', 'kui-BaseButton', className)}
       {...(shouldPassDisabled && { disabled: nativeDisabled })}
       {...(isNativeButtonElement && !hasExplicitTypeAttribute ? { type: 'button' } : {})}
@@ -179,9 +192,11 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
             {children}
           </span>
 
-          {/* Enhanced accessibility for loading state */}
+          {/* The label stays the name; the hidden "Loading" only describes (aria-describedby reads hidden text). */}
           <VisuallyHidden>
-            <span id={describedById}>{buttonText} is loading, please wait...</span>
+            <span id={describedById} aria-hidden>
+              Loading
+            </span>
             {children}
           </VisuallyHidden>
 
@@ -199,6 +214,18 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
   );
 });
 BaseButton.displayName = 'BaseButton';
+
+/** Whether the first or last rendered node of `element` (blank text and comments skipped) is an svg. */
+function edgeIsSvg(element: Element, edge: 'start' | 'end'): boolean {
+  let node = edge === 'start' ? element.firstChild : element.lastChild;
+  while (node) {
+    const blank =
+      node.nodeType === Node.COMMENT_NODE || (node.nodeType === Node.TEXT_NODE && !node.textContent?.trim());
+    if (!blank) break;
+    node = edge === 'start' ? node.nextSibling : node.previousSibling;
+  }
+  return node?.nodeType === Node.ELEMENT_NODE && (node as Element).localName === 'svg';
+}
 
 export { BaseButton };
 export type { BaseButtonProps };

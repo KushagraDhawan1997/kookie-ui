@@ -41,7 +41,7 @@ const comboboxTriggerPropDefs = {
   placeholder: PropDef<string>;
 };
 
-// The list is a menu, and menus stop at size 3.
+// The list takes sizes 1 to 4, like every menu.
 const contentSizes = ['1', '2', '3', '4'] as const;
 
 /**

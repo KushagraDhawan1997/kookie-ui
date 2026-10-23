@@ -93,7 +93,7 @@ The Root component manages state and provides context to all child components.
 
 | Prop | Type | Description |
 | ---- | ---- | ----------- |
-| `size` | `'1' \| '2' \| '3' \| '4'` | Combobox density: 1 (28px) for toolbars, 2 (32px) for standard forms, 3 (40px) for prominent selections, 4 (48px) to match Button size 4; its list stops at size 3. Supports responsive objects |
+| `size` | `'1' \| '2' \| '3' \| '4'` | Combobox density: 1 (28px) for toolbars, 2 (32px) for standard forms, 3 (40px) for prominent selections, 4 (48px) to match Button size 4. The list takes the same size. Supports responsive objects |
 | `value` | `string \| null` | Controlled selection value |
 | `defaultValue` | `string \| null` | Initial selection value for uncontrolled usage |
 | `onValueChange` | `(value: string \| null) => void` | Callback fired when selection changes |
@@ -137,7 +137,7 @@ The Content component renders the dropdown surface containing the search input a
 
 | Prop | Type | Description |
 | ---- | ---- | ----------- |
-| `size` | `'1' \| '2' \| '3'` | Override size from Root. Affects padding and item height |
+| `size` | `'1' \| '2' \| '3' \| '4'` | Override size from Root. Affects padding and item height |
 | `color` | `AccentColor` | Semantic color for items. Falls back to Root color, then theme accent |
 | `width`, `minWidth`, `maxWidth` | `string` | Surface width. `minWidth` defaults to the trigger width, `maxWidth` to 480px |
 | `aria-label` | `string` | Accessible name for the popup, search field and list. Defaults to the trigger's name |
@@ -772,8 +772,7 @@ When the dropdown opens, the highlight starts on the selected option. Without a 
 - Initial Combobox component with search and filtering
 - Built on cmdk for fuzzy search and keyboard navigation
   - Trigger variants: raised, surface, soft, outline, ghost
-  - Content variants: solid, soft
-- Three sizes (1, 2, 3) with responsive support
+- Four sizes (1 to 4) with responsive support
 - Custom filter function support via `filter` prop
 - `displayValue` prop for showing labels without mounting items
 - Groups, labels, and separators for organization
@@ -786,7 +785,6 @@ When the dropdown opens, the highlight starts on the selected option. Without a 
 - Color prop for semantic styling
 - Margin props with responsive support
 - Windows High Contrast mode support
-- Reduced motion support for animations
 
 ### Removed
 

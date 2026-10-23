@@ -45,6 +45,8 @@
   overflow: auto;
 
   padding: var(--dialog-content-padding);
+  /* A surface publishes its padding, so m="bleed" pulls a child to its edge. */
+  --kui-sf-p: var(--dialog-content-padding);
   box-sizing: border-box;
 
   background-color: var(--color-surface);

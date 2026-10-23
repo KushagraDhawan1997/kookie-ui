@@ -7,12 +7,15 @@ import { Avatar as AvatarPrimitive } from 'radix-ui';
 import { avatarPropDefs } from './avatar.props.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { getSubtree } from '../helpers/get-subtree.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
 interface AvatarProps extends AvatarImplProps {}
-const Avatar = React.forwardRef<AvatarImplElement, AvatarProps>((props, forwardedRef) => {
+const Avatar = React.forwardRef<AvatarImplElement, AvatarProps>((ownProps, forwardedRef) => {
+  // An unset size follows the Theme, like a control. Sizes above 4 are only explicit.
+  const props = useThemeSizeProps(ownProps, avatarPropDefs.size);
   const {
     asChild,
     children,

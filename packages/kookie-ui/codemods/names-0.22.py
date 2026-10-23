@@ -6,14 +6,18 @@ Class names and private variables move from Radix Themes' prefix to Kookie's, as
 root class `radix-themes` -> `kui-theme`. The neutral scale's variables move from --gray-N to
 --neutral-N (the `color="gray"` prop value does not change). The page and surface colours take
 v2's names: --color-background -> --color-page, and --color-panel(-solid), --color-surface-solid
-and --color-dialog(-solid) -> --color-surface.
+and --color-dialog(-solid) -> --color-surface. The translucent tokens 0.17 removed
+(--color-panel-translucent, --color-surface-translucent, --color-dialog-translucent) also become
+--color-surface, the solid colour they fell back to.
 
-Usage: python3 names-0.22.py <folder> [<folder> ...]   Safe to run twice.
+Usage: python3 names-0.22.py <folder|file> [...]   Safe to run twice.
 """
-import glob
 import os
 import re
 import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _shared import files  # noqa: E402
 
 PREFIX = re.compile(r'(?<![A-Za-z0-9_])rt-(?=[A-Za-z-])')
 ROOT = re.compile(r'(?<![A-Za-z0-9_@/])radix-themes(?![A-Za-z0-9_-])')
@@ -23,11 +27,12 @@ COLORS = [
     ('--color-surface-solid', '--color-surface'),
     ('--color-dialog-solid', '--color-surface'),
     ('--color-panel-translucent', '--color-surface'),
+    ('--color-surface-translucent', '--color-surface'),
+    ('--color-dialog-translucent', '--color-surface'),
     ('--color-panel', '--color-surface'),
     ('--color-dialog', '--color-surface'),
     ('--color-background', '--color-page'),
 ]
-SKIP = ('node_modules', '/.next/', '/dist/', '/build/')
 EXT = ('.css', '.scss', '.ts', '.tsx', '.js', '.jsx', '.cjs', '.mjs', '.mdx', '.html')
 
 
@@ -41,20 +46,16 @@ def rewrite(text, neutral=True):
     return text
 
 
-def main(folders):
+def main(targets):
     changed = 0
-    for folder in folders:
-        paths = [folder] if os.path.isfile(folder) else glob.glob(os.path.join(folder, '**', '*'), recursive=True)
-        for path in paths:
-            if not os.path.isfile(path) or any(s in path for s in SKIP) or not path.endswith(EXT):
-                continue
-            with open(path) as f:
-                before = f.read()
-            after = rewrite(before)
-            if after != before:
-                with open(path, 'w') as f:
-                    f.write(after)
-                changed += 1
+    for path in files(targets, EXT):
+        with open(path) as f:
+            before = f.read()
+        after = rewrite(before)
+        if after != before:
+            with open(path, 'w') as f:
+                f.write(after)
+            changed += 1
     print('%d files rewritten' % changed)
 
 

@@ -463,6 +463,11 @@ describe('Combobox', () => {
       expect(document.querySelector('.kui-ComboboxContent')).toHaveClass('kui-r-size-1', 'md:kui-r-size-3');
     });
 
+    it('opens a size 4 list from a size 4 field', () => {
+      renderWithProviders(<FruitCombobox defaultOpen size="4" />);
+      expect(document.querySelector('.kui-ComboboxContent')).toHaveClass('kui-r-size-4');
+    });
+
     it('renders separators with base menu classes', () => {
       renderWithProviders(
         <Combobox.Root defaultOpen>

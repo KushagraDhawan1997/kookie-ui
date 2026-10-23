@@ -203,13 +203,22 @@ async function measureScene(browser, base, scene) {
 
 /*
  * Two kinds of number. COUNTS (bytes, DOM nodes, nodes and listeners a leak leaves behind) are
- * exact on any machine, so any increase fails. TIMES and heap sizes depend on the machine, so they are recorded from CI and
- * fail only past a margin. A time with no CI baseline yet is reported, never failed.
+ * exact on any machine, so any increase fails. TIMES, long frames and heap sizes depend on the
+ * machine, so they are recorded from CI and fail only past a margin. A time with no CI baseline
+ * yet is reported, never failed.
  */
 const TIME_KEYS = new Set(['mountMs', 'rerenderMs', 'interactionMs', 'longFrames', 'heapKB', 'heapGrowthKB']);
 const TIME_MARGIN = 1.5;
 // One frame: a difference under 16ms is noise on a shared CI runner, and no one can see it.
+// It applies to milliseconds only. longFrames counts frames and the heap is in KB, so they take
+// the margin alone: from a baseline of 0 long frames, one long frame fails.
+const MS_KEYS = new Set(['mountMs', 'rerenderMs', 'interactionMs']);
 const TIME_SLACK = 16;
+
+function limitFor(key, base) {
+  if (!TIME_KEYS.has(key)) return base;
+  return base * TIME_MARGIN + (MS_KEYS.has(key) ? TIME_SLACK : 0);
+}
 
 function compare(budget, results) {
   const failures = [];
@@ -219,7 +228,7 @@ function compare(budget, results) {
       const base = budget?.[group]?.[key];
       let verdict = 'new';
       if (typeof base === 'number') {
-        const limit = TIME_KEYS.has(key) ? base * TIME_MARGIN + TIME_SLACK : base;
+        const limit = limitFor(key, base);
         verdict = value > limit ? 'WORSE' : value < base ? 'better' : 'ok';
         if (verdict === 'WORSE') failures.push(`${group}.${key}: ${value} (baseline ${base}, limit ${round(limit)})`);
       }
