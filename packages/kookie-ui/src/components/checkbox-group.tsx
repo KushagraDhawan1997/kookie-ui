@@ -11,10 +11,8 @@ import { ThickCheckIcon } from './icons.js';
 import { Text } from './text.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSize } from '../helpers/theme-size.js';
-import { marginPropDefs } from '../props/margin.props.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
-import type { MarginProps } from '../props/margin.props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
 const CHECKBOX_GROUP_NAME = 'CheckboxGroup';
@@ -37,7 +35,6 @@ interface CheckboxGroupRootProps
       typeof CheckboxGroupPrimitive.Root,
       'asChild' | 'color' | 'defaultChecked'
     >,
-    MarginProps,
     CheckboxGroupRootOwnProps {}
 const CheckboxGroupRoot = React.forwardRef<CheckboxGroupRootElement, CheckboxGroupRootProps>(
   (
@@ -50,7 +47,7 @@ const CheckboxGroupRoot = React.forwardRef<CheckboxGroupRootElement, CheckboxGro
     forwardedRef,
   ) => {
     const size = useThemeSize(sizeProp, checkboxGroupRootPropDefs.size);
-    const { __scopeCheckboxGroup, className, ...rootProps } = extractProps(props, marginPropDefs);
+    const { __scopeCheckboxGroup, className, ...rootProps } = props;
     const checkboxGroupScope = useCheckboxGroupScope(__scopeCheckboxGroup);
     return (
       <CheckboxGroupProvider
@@ -73,8 +70,7 @@ CheckboxGroupRoot.displayName = 'CheckboxGroup.Root';
 
 type CheckboxGroupItemElement = React.ElementRef<typeof CheckboxGroupPrimitive.Item>;
 interface CheckboxGroupItemProps
-  extends ComponentPropsWithout<typeof CheckboxGroupPrimitive.Item, RemovedProps>,
-    MarginProps {}
+  extends ComponentPropsWithout<typeof CheckboxGroupPrimitive.Item, RemovedProps> {}
 const CheckboxGroupItem = React.forwardRef<CheckboxGroupItemElement, CheckboxGroupItemProps>(
   (_props: ScopedProps<CheckboxGroupItemProps>, forwardedRef) => {
     const { __scopeCheckboxGroup, children, className, style, ...props } = _props;
@@ -133,7 +129,6 @@ const CheckboxGroupItemCheckbox = React.forwardRef<
   const { color, className } = extractProps(
     { ...props, ...context },
     checkboxGroupRootPropDefs,
-    marginPropDefs,
   );
   return (
     <CheckboxGroupPrimitive.Item

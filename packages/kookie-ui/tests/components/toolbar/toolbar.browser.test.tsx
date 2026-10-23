@@ -4,7 +4,6 @@ import { render, screen } from '@testing-library/react';
 import { userEvent } from 'vitest/browser';
 import {
   Button,
-  IconButton,
   Separator,
   Theme,
   Toolbar,
@@ -143,7 +142,7 @@ describe('Toolbar orientation', () => {
 });
 
 describe('ToolbarButton', () => {
-  it('icon-only: renders an IconButton named by its aria-label, square like an IconButton', () => {
+  it('icon-only: renders an icon-only Button named by its aria-label, square like one', () => {
     render(
       <Theme>
         <Toolbar aria-label="Formatting">
@@ -151,14 +150,14 @@ describe('ToolbarButton', () => {
             <Glyph />
           </ToolbarButton>
         </Toolbar>
-        <IconButton aria-label="Twin" variant="soft" color="gray">
+        <Button iconOnly aria-label="Twin" variant="soft" color="gray">
           <Glyph />
-        </IconButton>
+        </Button>
       </Theme>,
     );
     const bold = screen.getByRole('button', { name: 'Bold' });
     const twin = screen.getByRole('button', { name: 'Twin' });
-    expect(bold.classList.contains('rt-IconButton')).toBe(true);
+    expect(bold.hasAttribute('data-icon-only')).toBe(true);
     expect(rect(bold).width).toBeCloseTo(rect(bold).height, 1);
     expect(rect(bold).width).toBeCloseTo(rect(twin).width, 1);
   });

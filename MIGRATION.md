@@ -218,3 +218,79 @@ At the default size 2 a cell pads 8×12px (was 12 all round) and a one-line row 
 ### Notice pads like a card
 
 A Notice pads and rounds like a Card of the same size: 24px and a 16px corner at size 2 (was 12px and a corner matched to its buttons). The gap stays 12px.
+
+## 0.21.0: the component list and composition
+
+### Merged components
+
+Four components merge into others. A codemod renames them.
+
+| Before | After |
+| --- | --- |
+| `IconButton` | `Button iconOnly` |
+| `ToggleButton` | `Toggle` |
+| `ToggleIconButton` | `Toggle iconOnly` |
+| `Badge` | `Chip` |
+
+Their types follow: `IconButtonProps` → `ButtonProps`, `ToggleButtonProps` and `ToggleIconButtonProps` → `ToggleProps`, `BadgeProps` → `ChipProps`, `badgePropDefs` → `chipPropDefs`. `iconButtonPropDefs` is gone. The zod schemas `IconButtonSchema`, `ToggleButtonSchema` and `ToggleIconButtonSchema` are now one `ToggleSchema`, with `parseToggleProps`.
+
+An `iconOnly` button or toggle needs `aria-label` or `aria-labelledby`. Visible text no longer counts as its name, and in development a missing name throws. An `iconOnly` button never takes `fullWidth`.
+
+The class names change. Move your selectors:
+
+| Before | After |
+| --- | --- |
+| `.rt-IconButton` | `.rt-Button[data-icon-only]` |
+| `.rt-Badge` | `.rt-Chip` |
+
+`Toggle` also adds `rt-Toggle`. Sidebar's `badge` prop and `BadgeConfig` keep their names; the slot now renders a `Chip`.
+
+### Dropped components
+
+These have no v2 counterpart and are gone. Replace each by hand.
+
+| Before | After |
+| --- | --- |
+| `Container` | `<Box maxWidth="688px" mx="auto">`. Sizes 1 to 4 were 448, 688, 880 and 1136px |
+| `Section` | `<Box py>` with the padding you need |
+| `Strong`, `Em`, `Quote` | Native `<strong>`, `<em>` and `<q>` inside `Text`. They lose their size and serif adjustments |
+| `Skeleton` | Your own placeholder markup, or a `Spinner` |
+| `HoverCard` | `Popover`, or `Tooltip` for a short label |
+| `TabNav` | `Tabs`, or a row of links |
+| `DataList` | `Table`, or a `Grid` of `Text` |
+| `AspectRatio` | A `div` with `aspect-ratio` in its style |
+| `Image` | Native `<img>` |
+| `CheckboxCards`, `RadioCards` | A `Card` holding a `Checkbox` or `Radio` |
+| `ThemePanel` | None |
+
+Their prop defs, props types and `rt-` classes are gone too.
+
+### Margin props live on layout only
+
+`m`, `mx`, `my`, `mt`, `mr`, `mb` and `ml` now work only on `Box`, `Flex` and `Grid`. Every other component drops them, including `Text`, `Heading`, `Button`, `Separator`, `Card` and Navbar's `Logo`, `Navigation` and `Actions`. Space components with the parent's `gap`, or wrap one in a `Box`:
+
+```tsx
+// Before
+<Heading size="3" mb="4">Settings</Heading>
+
+// After
+<Box mb="4">
+  <Heading size="3">Settings</Heading>
+</Box>
+```
+
+`Dialog.Title` and `AlertDialog.Title` no longer add 16px below themselves. Put the title and what follows in a `Flex direction="column"` with a `gap`.
+
+### Flush is gone
+
+`flush` is removed from `Button` and `Accordion.Root`, along with `data-flush`. Ghost buttons and ghost accordions no longer pull themselves out by their own padding. Where you relied on that, wrap the button in `<Box m="bleed">` inside a surface, or give the parent a negative margin.
+
+### Codemod
+
+A codemod renames the four merged components: JSX tags, the import from `@kushagradhawan/kookie-ui`, other references to the imported name, and the Props types. It also moves `.rt-Badge` and `.rt-IconButton` selectors in your CSS. Run it from the app's root, pointing at your source folders:
+
+```sh
+python3 node_modules/@kushagradhawan/kookie-ui/codemods/components-0.21.py src
+```
+
+It only renames, and it is safe to run twice. Dropped components, margin props, `flush` and icon-only buttons without `aria-label` need a person; TypeScript flags each one. Dialog title gaps do not show up as type errors, so check your dialogs.

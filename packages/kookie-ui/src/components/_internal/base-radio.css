@@ -7,13 +7,8 @@
   flex-shrink: 0;
   cursor: var(--cursor-radio);
 
-  /* Unless in a skeleton, align with text line height when possible and fall back to own height */
-  height: var(--skeleton-height, var(--line-height, var(--radio-size)));
-  --skeleton-height-override: var(--radio-size);
-
-  /* Set root radius when in a skeleton */
-  border-radius: var(--skeleton-radius);
-  --skeleton-radius-override: 100%;
+  /* Align with text line height when possible and fall back to own height */
+  height: var(--line-height, var(--radio-size));
 
   isolation: isolate;
 

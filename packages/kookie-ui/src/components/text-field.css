@@ -169,7 +169,7 @@
 }
 
 /*
- * A control hosted in a slot (IconButton, Button) is as tall as the field minus the slot inset on
+ * A control hosted in a slot (an icon-only Button, a Button) is as tall as the field minus the slot inset on
  * each side, and its corner is concentric with the field's. Overriding the height variable rather
  * than `height` keeps an icon button square. Wins over the button's own size rule on source order:
  * base-button.css is imported (through button.css) before this file.
@@ -660,7 +660,9 @@
   color: var(--red-11);
   font-size: var(--font-size-1);
   line-height: var(--line-height-1);
-  margin-top: var(--space-2);
+  /* The field is a row, so a gap on the root would sit beside the message, not above it. The
+     drop is inside the message's own box, never a margin on it. */
+  padding-top: var(--space-2);
   display: flex;
   align-items: center;
   gap: var(--space-2);

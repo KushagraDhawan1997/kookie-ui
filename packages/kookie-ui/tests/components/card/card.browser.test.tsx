@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 import { render } from '@testing-library/react';
-import { Box, Card, CheckboxCards, RadioCards, Theme } from '../../../src/components/index';
+import { Box, Card, Theme } from '../../../src/components/index';
 
 // Theme defaults: radius `full` (surface factor 1), scale 1, size 2.
 const PADDING = { '1': 16, '2': 24, '3': 32, '4': 40 } as const;
@@ -141,63 +141,5 @@ describe('bleed', () => {
       </Theme>,
     );
     expect(px(getComputedStyle(container.querySelector('[data-testid="b"]')!).marginTop)).toBe(0);
-  });
-});
-
-describe('CheckboxCards and RadioCards items', () => {
-  for (const size of SIZES) {
-    it(`size ${size} items sit on the surface ladder`, () => {
-      const { container } = render(
-        <Theme>
-          <CheckboxCards.Root size={size}>
-            <CheckboxCards.Item value="a">A</CheckboxCards.Item>
-          </CheckboxCards.Root>
-          <RadioCards.Root size={size}>
-            <RadioCards.Item value="a">A</RadioCards.Item>
-          </RadioCards.Root>
-        </Theme>,
-      );
-      for (const selector of ['.rt-CheckboxCardsItem', '.rt-RadioCardsItem']) {
-        const { pads, corner } = box(container.querySelector(selector)!);
-        expect(pads[0], selector).toBe(PADDING[size]);
-        expect(pads[2], selector).toBe(PADDING[size]);
-        expect(pads[3], selector).toBe(PADDING[size]);
-        expect(corner, selector).toBe(CORNER[size]);
-      }
-    });
-  }
-
-  it('unset items rest at size 2', () => {
-    const { container } = render(
-      <Theme>
-        <CheckboxCards.Root>
-          <CheckboxCards.Item value="a">A</CheckboxCards.Item>
-        </CheckboxCards.Root>
-        <RadioCards.Root>
-          <RadioCards.Item value="a">A</RadioCards.Item>
-        </RadioCards.Root>
-      </Theme>,
-    );
-    for (const selector of ['.rt-CheckboxCardsItem', '.rt-RadioCardsItem']) {
-      const { pads, corner } = box(container.querySelector(selector)!);
-      expect(pads[0], selector).toBe(24);
-      expect(corner, selector).toBe(16);
-    }
-  });
-
-  it('the checkbox sits inside the right padding', () => {
-    const { container } = render(
-      <Theme>
-        <CheckboxCards.Root size="2">
-          <CheckboxCards.Item value="a">A</CheckboxCards.Item>
-        </CheckboxCards.Root>
-      </Theme>,
-    );
-    const item = container.querySelector('.rt-CheckboxCardsItem')!;
-    const mark = item.querySelector('.rt-CheckboxCardCheckbox, .rt-BaseCheckboxRoot, button')!;
-    const itemRect = item.getBoundingClientRect();
-    const markRect = mark.getBoundingClientRect();
-    expect(markRect.right).toBeCloseTo(itemRect.right - 24, 0);
-    expect(itemRect.right - markRect.left).toBeLessThanOrEqual(px(getComputedStyle(item).paddingRight));
   });
 });

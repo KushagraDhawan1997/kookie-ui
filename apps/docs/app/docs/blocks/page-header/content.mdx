@@ -7,7 +7,7 @@ source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/comp
 import { BlockInstallation } from '@/components/block-doc-page';
 import { PageHeader } from '@/components/blocks/page-header/page-header';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
-import { Badge, Box, Button, Tabs, Text } from '@kushagradhawan/kookie-ui';
+import { Chip, Box, Button, Tabs, Text } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Add01Icon } from '@hugeicons/core-free-icons';
 
@@ -82,7 +82,7 @@ Every part accepts the props of the component it wraps. Only the additions and c
       <PageHeader.Main layout={{ initial: 'stacked', sm: 'inline' }} align={{ initial: 'start', sm: 'center' }}>
         <PageHeader.Content>
           <PageHeader.Meta>
-            <Badge color="green" variant="soft">Active</Badge>
+            <Chip color="green" variant="soft">Active</Chip>
             <Text size="2" emphasis="medium">Updated 2 hours ago</Text>
           </PageHeader.Meta>
           <PageHeader.Title as="h3" size="7">Website redesign</PageHeader.Title>
@@ -114,7 +114,7 @@ Every part accepts the props of the component it wraps. Only the additions and c
   >
     <PageHeader.Content>
       <PageHeader.Meta>
-        <Badge color="green" variant="soft">Active</Badge>
+        <Chip color="green" variant="soft">Active</Chip>
         <Text size="2" emphasis="medium">Updated 2 hours ago</Text>
       </PageHeader.Meta>
       <PageHeader.Title as="h3" size="7">Website redesign</PageHeader.Title>

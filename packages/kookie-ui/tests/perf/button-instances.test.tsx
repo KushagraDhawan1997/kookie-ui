@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { renderWithProviders, screen } from '../test-utils';
-import { Button, IconButton } from '../../src/components/index';
+import { Button } from '../../src/components/index';
 
 let observed: number;
 let RealMutationObserver: typeof MutationObserver;
@@ -92,9 +92,9 @@ describe('Button refs', () => {
     expect(ref.current).toBe(screen.getByTestId('btn'));
   });
 
-  test('IconButton forwards its ref too', () => {
+  test('an icon-only Button forwards its ref too', () => {
     const ref = React.createRef<HTMLButtonElement>();
-    renderWithProviders(<IconButton ref={ref} aria-label="act" data-testid="icon" />);
+    renderWithProviders(<Button iconOnly ref={ref} aria-label="act" data-testid="icon" />);
 
     expect(ref.current).toBe(screen.getByTestId('icon'));
   });

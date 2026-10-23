@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Flex, Theme, Button, Box, Text, SegmentedControl, Popover, IconButton, useAppearance } from '@kushagradhawan/kookie-ui';
+import { Flex, Theme, Button, Box, Text, SegmentedControl, Popover, useAppearance } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Copy01Icon, Sun01Icon, Moon02Icon, SlidersHorizontalIcon, Tick01Icon } from '@hugeicons/core-free-icons';
 import '@/components/blocks/preview-block/preview-block.css';
@@ -107,9 +107,9 @@ export default function Playground({ component, code, items, hint, showControls 
                 {!showControls && (
                   <Popover.Root>
                     <Popover.Trigger>
-                      <IconButton size="2" variant="ghost" color="gray" aria-label="Properties">
+                      <Button iconOnly size="2" variant="ghost" color="gray" aria-label="Properties">
                         <HugeiconsIcon icon={SlidersHorizontalIcon} strokeWidth={1.75} />
-                      </IconButton>
+                      </Button>
                     </Popover.Trigger>
                     <Popover.Content size="2" side="bottom" align="end" width="280px">
                       <PropertyControl.Group width="100%" items={items} />

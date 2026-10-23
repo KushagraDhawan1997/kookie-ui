@@ -4,9 +4,7 @@ import classNames from 'classnames';
 import { Flex } from './flex.js';
 import { spinnerPropDefs } from './spinner.props.js';
 import { extractProps } from '../helpers/extract-props.js';
-import { marginPropDefs } from '../props/margin.props.js';
 
-import type { MarginProps } from '../props/margin.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
@@ -14,13 +12,11 @@ type SpinnerElement = React.ElementRef<'span'>;
 type SpinnerOwnProps = GetPropDefTypes<typeof spinnerPropDefs>;
 interface SpinnerProps
   extends ComponentPropsWithout<'span', RemovedProps>,
-    MarginProps,
     SpinnerOwnProps {}
 const Spinner = React.forwardRef<SpinnerElement, SpinnerProps>((props, forwardedRef) => {
   const { className, children, loading, ...spinnerProps } = extractProps(
     props,
-    spinnerPropDefs,
-    marginPropDefs
+    spinnerPropDefs
   );
 
   if (!loading) return children;

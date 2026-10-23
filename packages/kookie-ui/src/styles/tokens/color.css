@@ -1056,7 +1056,7 @@
   --accent-solid-contrast: var(--accent-contrast);
   --accent-solid-selection: var(--accent-7);
   --accent-solid-selection-contrast: var(--accent-12);
-  /* Thin marks (Tabs indicator, RadioCards outline): light yellow uses step 10 here */
+  /* Thin marks (Tabs indicator): light yellow uses step 10 here */
   --accent-solid-indicator: var(--accent-indicator);
   /* Thumb that sits on a solid fill (Switch, Slider) */
   --accent-solid-thumb: white;

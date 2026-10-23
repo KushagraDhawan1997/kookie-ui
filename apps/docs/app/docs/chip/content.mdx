@@ -1,0 +1,181 @@
+---
+title: Chip
+description: A compact label component for categorization, status, and metadata display.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/chip.tsx
+---
+
+import { Notice } from '@kushagradhawan/kookie-ui';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Alert02Icon } from '@hugeicons/core-free-icons';
+
+<Notice icon={<HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />}>This component's API and documentation are under review and may change. Use with caution in production.</Notice>
+
+Chip is a small, inline element used to display labels, statuses, counts, or categories. It supports multiple variants, colors, and can include tooltips for additional context.
+
+Chip was called Badge before 0.21.0. It grows out of the Badge from [Radix Themes](https://www.radix-ui.com/themes/docs/components/badge).
+
+## Playground
+
+import ChipPlayground from '../../playground/chip-playground';
+
+<ChipPlayground />
+
+## Installation
+
+```bash
+npm install @kushagradhawan/kookie-ui
+```
+
+## Usage
+
+```tsx
+import { Chip, Flex } from '@kushagradhawan/kookie-ui';
+
+export function MyChips() {
+  return (
+    <Flex gap="3">
+      <Chip>Default</Chip>
+      <Chip color="green">Published</Chip>
+      <Chip color="amber">Pending</Chip>
+      <Chip color="red">Failed</Chip>
+    </Flex>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `size` | `'1' \| '2' \| '3' \| '4'` | `'2'` | Controls the size of the chip. Supports responsive values. |
+| `variant` | `'solid' \| 'soft' \| 'surface' \| 'outline' \| 'ghost' \| 'raised'` | `'raised'` | The visual style of the chip. |
+| `color` | `AccentColor` | `'gray'` | Rests gray. Set a color to mark a category. |
+| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | - | Override the default border radius. |
+| `tooltip` | `React.ReactNode` | - | Content to display in a tooltip on hover. |
+| `tooltipSide` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | Position of the tooltip. |
+| `tooltipAlign` | `'start' \| 'center' \| 'end'` | `'center'` | Alignment of the tooltip. |
+| `asChild` | `boolean` | `false` | Merge props onto the child element. |
+
+## Variants
+
+### Solid
+
+Bold, filled background for high emphasis.
+
+```tsx
+<Chip variant="solid" color="blue">Solid</Chip>
+```
+
+### Soft
+
+A subtle tinted background.
+
+```tsx
+<Chip variant="soft" color="blue">Soft</Chip>
+```
+
+### Surface
+
+Elevated appearance with subtle background.
+
+```tsx
+<Chip variant="surface" color="blue">Surface</Chip>
+```
+
+### Outline
+
+Bordered with transparent background.
+
+```tsx
+<Chip variant="outline" color="blue">Outline</Chip>
+```
+
+### Ghost
+
+Minimal styling, no background or border.
+
+```tsx
+<Chip variant="ghost" color="blue">Ghost</Chip>
+```
+
+### Raised
+
+A refined, subtle appearance.
+
+```tsx
+<Chip variant="raised" color="blue">Raised</Chip>
+```
+
+## Colors
+
+Chips support all accent colors for semantic meaning.
+
+```tsx
+<Flex gap="3" wrap="wrap">
+  <Chip color="gray">Neutral</Chip>
+  <Chip color="blue">Info</Chip>
+  <Chip color="green">Success</Chip>
+  <Chip color="amber">Warning</Chip>
+  <Chip color="red">Error</Chip>
+  <Chip color="violet">New</Chip>
+</Flex>
+```
+
+### Strong Ink
+
+Chip text always reads the strong ink for its color. Gray chips with a solid fill use step 12, so no extra prop is needed.
+
+```tsx
+<Flex gap="3">
+  <Chip color="gray" variant="solid">Draft</Chip>
+  <Chip color="red">Failed</Chip>
+</Flex>
+```
+
+## Sizes
+
+Control chip size with the `size` prop.
+
+```tsx
+<Flex gap="3" align="center">
+  <Chip size="1">Size 1</Chip>
+  <Chip size="2">Size 2</Chip>
+  <Chip size="3">Size 3</Chip>
+  <Chip size="4">Size 4</Chip>
+</Flex>
+```
+
+## With Tooltip
+
+Add tooltips to provide additional context.
+
+```tsx
+<Chip
+  color="amber"
+  tooltip="This item requires your attention before proceeding"
+  tooltipSide="right"
+>
+  Pending Review
+</Chip>
+```
+
+## Status Indicators
+
+Common pattern for displaying status with chips.
+
+```tsx
+<Flex direction="column" gap="3">
+  <Flex align="center" gap="3">
+    <Chip color="green">Published</Chip>
+    <Text size="2">Article is live</Text>
+  </Flex>
+  <Flex align="center" gap="3">
+    <Chip color="amber">Draft</Chip>
+    <Text size="2">Work in progress</Text>
+  </Flex>
+  <Flex align="center" gap="3">
+    <Chip color="red">Archived</Chip>
+    <Text size="2">No longer visible</Text>
+  </Flex>
+</Flex>
+```

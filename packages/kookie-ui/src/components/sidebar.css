@@ -307,7 +307,7 @@
 /* Solid variant icon wrapper states in thin mode */
 :where(.rt-ShellRailContent .rt-SidebarMenuBadge),
 :where(.rt-ShellRailContent .rt-SidebarMenuShortcut),
-:where(.rt-ShellRailContent .rt-Badge),
+:where(.rt-ShellRailContent .rt-Chip),
 :where(.rt-ShellRailContent .rt-Kbd) {
   display: none !important;
 }
@@ -718,12 +718,12 @@
       }
 
       /* Also target any element with data-accent-color="gray" */
-      & :where([data-accent-color='gray']:not(.rt-Badge)) {
+      & :where([data-accent-color='gray']:not(.rt-Chip)) {
         color: inherit !important;
       }
 
-      /* FIX: Ensure badges maintain their own styling and don't inherit hover colors */
-      & :where(.rt-Badge) {
+      /* FIX: Ensure chips maintain their own styling and don't inherit hover colors */
+      & :where(.rt-Chip) {
         color: var(--accent-solid-badge-contrast) !important;
         background-color: var(--accent-solid-badge) !important;
       }
@@ -740,12 +740,12 @@
         color: inherit !important;
       }
 
-      & :where([data-accent-color='gray']:not(.rt-Badge)) {
+      & :where([data-accent-color='gray']:not(.rt-Chip)) {
         color: inherit !important;
       }
 
-      /* FIX: Ensure badges maintain their own styling and don't inherit active colors */
-      & :where(.rt-Badge) {
+      /* FIX: Ensure chips maintain their own styling and don't inherit active colors */
+      & :where(.rt-Chip) {
         color: var(--accent-solid-badge-contrast) !important;
         background-color: var(--accent-solid-badge) !important;
       }
@@ -770,12 +770,12 @@
     }
 
     /* Also target any element with data-accent-color="gray" */
-    & :where([data-accent-color='gray']:not(.rt-Badge)) {
+    & :where([data-accent-color='gray']:not(.rt-Chip)) {
       color: inherit !important;
     }
 
-    /* FIX: Ensure badges maintain their own styling and don't inherit hover colors */
-    & :where(.rt-Badge) {
+    /* FIX: Ensure chips maintain their own styling and don't inherit hover colors */
+    & :where(.rt-Chip) {
       color: var(--accent-solid-badge-contrast) !important;
       background-color: var(--accent-solid-badge) !important;
     }

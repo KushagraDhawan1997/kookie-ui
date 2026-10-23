@@ -106,7 +106,7 @@ const ThemeRoot = React.forwardRef<ThemeImplElement, ThemeImplPublicProps>((prop
   } = props;
 
   // Each of these follows its prop but stays independently settable, so
-  // `ThemePanel` can change the theme at runtime. Syncing during render
+  // the context setters can change the theme at runtime. Syncing during render
   // rather than in an effect matters here: an effect would commit the old
   // theme first and re-render every consumer of the context a second time.
   const [appearance, setAppearance] = usePropSyncedState(appearanceProp);

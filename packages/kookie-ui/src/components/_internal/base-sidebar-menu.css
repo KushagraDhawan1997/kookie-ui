@@ -144,9 +144,10 @@
   user-select: none;
   cursor: default;
 
-  /* Add margin-top when following menu items - identical to BaseMenuLabel */
+  /* After items, the extra air is inside the label's own box - identical to BaseMenuLabel */
   :where(.rt-SidebarMenuItem) + & {
-    margin-top: var(--space-3);
+    min-height: calc(var(--base-menu-item-height) + var(--space-3));
+    padding-top: calc(var(--base-menu-item-padding-y) + var(--space-3));
   }
 }
 

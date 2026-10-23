@@ -53,7 +53,7 @@ Three weights: `regular` (400), `medium` (500) and `semibold` (600). Heading def
 
 ## Emphasis
 
-Use `emphasis` to rank text by colour. `Text`, `Heading`, `Blockquote`, `Code` and `DataList.Label` take it.
+Use `emphasis` to rank text by colour. `Text`, `Heading`, `Blockquote` and `Code` take it.
 
 - `loud` is the strong ink, and the default once a colour is set.
 - `medium` is for secondary copy.
@@ -69,12 +69,12 @@ With no `color`, emphasis uses the gray scale. With a `color`, it fades that col
 
 ## Formatting Components
 
-Compose formatting components to add emphasis and structure:
+Use the native `<em>` and `<strong>` inside `Text` for emphasis:
 
 ```tsx
 <Text>
-  The <Em>most</Em> important thing to remember is,{' '}
-  <Strong>stay positive</Strong>.
+  The <em>most</em> important thing to remember is,{' '}
+  <strong>stay positive</strong>.
 </Text>
 ```
 

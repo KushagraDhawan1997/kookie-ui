@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
 import { SectionHeader } from '@/components/blocks/section-header/section-header';
-import { Flex, Card, Text, Heading, Button, Box, Image } from '@kushagradhawan/kookie-ui';
+import { Flex, Card, Text, Heading, Button, Box } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ArrowRight01Icon } from '@hugeicons/core-free-icons';
 
@@ -27,11 +27,10 @@ export function CardExamples() {
           code={`<Card variant="raised" size="2" style={{ maxWidth: 320 }}>
   <Flex direction="column">
     <Box mx="bleed" mt="bleed" mb="5">
-      <Image
+      <img
         src="/path/to/image.jpg"
         alt="Card media"
-        radius="none"
-        style={{ height: 320, objectFit: 'cover' }}
+        style={{ display: 'block', width: '100%', height: 320, objectFit: 'cover' }}
       />
     </Box>
     <Flex direction="column" gap="5">
@@ -53,11 +52,12 @@ export function CardExamples() {
           <Card variant="raised" size="2" style={{ maxWidth: 320 }}>
             <Flex direction="column">
               <Box mx="bleed" mt="bleed" mb="5">
-                <Image
+                <img
                   src={IMAGE_URL}
                   alt="Abstract gradient"
-                  radius="none"
                   style={{
+                    display: 'block',
+                    width: '100%',
                     height: 320,
                     objectFit: 'cover',
                   }}

@@ -8,11 +8,7 @@ import * as Components from '../../../src/components/index';
 import { Theme } from '../../../src/components/theme';
 import { Card } from '../../../src/components/card';
 import { Box } from '../../../src/components/box';
-import * as CheckboxCards from '../../../src/components/checkbox-cards';
-import * as RadioCards from '../../../src/components/radio-cards';
 import { cardPropDefs } from '../../../src/components/card.props';
-import { checkboxCardsRootPropDefs } from '../../../src/components/checkbox-cards.props';
-import { radioCardsRootPropDefs } from '../../../src/components/radio-cards.props';
 import { marginPropDefs } from '../../../src/props/margin.props';
 
 const SRC = path.join(__dirname, '../../../src');
@@ -112,49 +108,11 @@ describe('Inset', () => {
   });
 });
 
-describe('CheckboxCards and RadioCards', () => {
-  test('sizes 1 to 4, rest 2', () => {
-    for (const defs of [checkboxCardsRootPropDefs, radioCardsRootPropDefs]) {
-      expect(defs.size.values).toEqual(['1', '2', '3', '4']);
-      expect(defs.size.default).toBe('2');
-    }
-  });
-
-  test('items take the resolved size, including the default and the Theme size', () => {
-    const { container } = render(
-      <>
-        <CheckboxCards.Root>
-          <CheckboxCards.Item value="a">A</CheckboxCards.Item>
-        </CheckboxCards.Root>
-        <Theme size="4">
-          <RadioCards.Root>
-            <RadioCards.Item value="a">A</RadioCards.Item>
-          </RadioCards.Root>
-        </Theme>
-      </>,
-    );
-    const checkboxItem = container.querySelector('.rt-CheckboxCardsItem') as HTMLElement;
-    const radioItem = container.querySelector('.rt-RadioCardsItem') as HTMLElement;
-    expect(checkboxItem.classList.contains('rt-r-size-2')).toBe(true);
-    expect(radioItem.classList.contains('rt-r-size-4')).toBe(true);
-  });
-
-  test('responsive size reaches the items', () => {
-    const { container } = render(
-      <RadioCards.Root size={{ initial: '1', md: '3' }}>
-        <RadioCards.Item value="a">A</RadioCards.Item>
-      </RadioCards.Root>,
-    );
-    const item = container.querySelector('.rt-RadioCardsItem') as HTMLElement;
-    expect(item.classList.contains('rt-r-size-1')).toBe(true);
-    expect(item.classList.contains('md:rt-r-size-3')).toBe(true);
-  });
-
-  test('item corners follow the surface ladder, no size 5', () => {
-    for (const file of ['components/checkbox-cards.css', 'components/radio-cards.css']) {
-      const css = read(file);
-      expect(css, file).not.toContain('rt-r-size-5');
-      expect(css, file).not.toContain('--base-card-border-radius');
+describe('CheckboxCards and RadioCards are gone', () => {
+  test('a Card holding a Checkbox or Radio takes their place', () => {
+    for (const name of ['CheckboxCards', 'RadioCards']) expect(name in Components).toBe(false);
+    for (const file of ['components/checkbox-cards.tsx', 'components/radio-cards.tsx', 'components/checkbox-cards.css', 'components/radio-cards.css']) {
+      expect(fs.existsSync(path.join(SRC, file)), file).toBe(false);
     }
   });
 });

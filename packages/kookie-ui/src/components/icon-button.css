@@ -1,9 +1,0 @@
-/**
- * IconButton Component Styles
- *
- * The square shape and the flush trim live with the shared control ladder in
- * _internal/base-button.css (`.rt-BaseButton:where(.rt-IconButton)`), so their order against
- * the padding rules never depends on import order.
- */
-
-@import './_internal/base-button.css';

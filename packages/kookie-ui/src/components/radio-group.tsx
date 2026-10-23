@@ -9,10 +9,8 @@ import { radioGroupRootPropDefs } from './radio-group.props.js';
 import { Text } from './text.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSize } from '../helpers/theme-size.js';
-import { marginPropDefs } from '../props/margin.props.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
-import type { MarginProps } from '../props/margin.props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
 const RADIO_GROUP_NAME = 'RadioGroup';
@@ -35,7 +33,6 @@ interface RadioGroupRootProps
       typeof RadioGroupPrimitive.Root,
       'asChild' | 'color' | 'defaultChecked'
     >,
-    MarginProps,
     RadioGroupRootOwnProps {}
 const RadioGroupRoot = React.forwardRef<RadioGroupRootElement, RadioGroupRootProps>(
   (
@@ -48,7 +45,7 @@ const RadioGroupRoot = React.forwardRef<RadioGroupRootElement, RadioGroupRootPro
     forwardedRef
   ) => {
     const size = useThemeSize(sizeProp, radioGroupRootPropDefs.size);
-    const { __scopeRadioGroup, className, ...rootProps } = extractProps(props, marginPropDefs);
+    const { __scopeRadioGroup, className, ...rootProps } = props;
     const radioGroupScope = useRadioGroupScope(__scopeRadioGroup);
     return (
       <RadioGroupProvider
@@ -71,8 +68,7 @@ RadioGroupRoot.displayName = 'RadioGroup.Root';
 
 type RadioGroupItemElement = React.ElementRef<typeof RadioGroupItemRadio>;
 interface RadioGroupItemProps
-  extends ComponentPropsWithout<typeof RadioGroupItemRadio, RemovedProps>,
-    MarginProps {}
+  extends ComponentPropsWithout<typeof RadioGroupItemRadio, RemovedProps> {}
 const RadioGroupItem = React.forwardRef<RadioGroupItemElement, RadioGroupItemProps>(
   (_props: ScopedProps<RadioGroupItemProps>, forwardedRef) => {
     const { __scopeRadioGroup, children, className, style, ...props } = _props;
@@ -122,8 +118,7 @@ const RadioGroupItemRadio = React.forwardRef<
   const radioGroupScope = useRadioGroupScope(__scopeRadioGroup);
   const { color, className } = extractProps(
     { ...props, ...context },
-    radioGroupRootPropDefs,
-    marginPropDefs
+    radioGroupRootPropDefs
   );
   return (
     <RadioGroupPrimitive.Item

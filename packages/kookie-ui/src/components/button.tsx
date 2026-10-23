@@ -49,15 +49,28 @@ type ButtonRankProps =
       variant?: never;
     };
 
-type ButtonOwnProps = Omit<BaseButtonProps, 'as' | 'variant'> &
-  ButtonRankProps &
-  ButtonTooltipProps & {
-    /**
-     * A square button holding only an icon. It needs an accessible name: `aria-label`,
-     * `aria-labelledby`, or visible text. `IconButton` is this button with `iconOnly` set.
-     */
-    iconOnly?: boolean;
-  };
+/**
+ * An icon-only button is square and holds only its icon, so it has no visible text: the type
+ * requires `aria-label` or `aria-labelledby`. It never takes the full width.
+ */
+type ButtonIconOnlyProps =
+  | {
+      /** Makes the button square and shows only the icon in `children`. Requires `aria-label` or `aria-labelledby`. */
+      iconOnly: true;
+      /** The button's name for screen readers. Required with `iconOnly` unless `aria-labelledby` is set. */
+      'aria-label': string;
+      fullWidth?: never;
+    }
+  | {
+      /** Makes the button square and shows only the icon in `children`. Requires `aria-label` or `aria-labelledby`. */
+      iconOnly: true;
+      /** The id of an element that names this button. Use it instead of `aria-label`. */
+      'aria-labelledby': string;
+      fullWidth?: never;
+    }
+  | { iconOnly?: false };
+
+type ButtonOwnProps = Omit<BaseButtonProps, 'as' | 'variant'> & ButtonRankProps & ButtonTooltipProps & ButtonIconOnlyProps;
 
 /**
  * Polymorphic Button props that support rendering as different HTML elements
@@ -78,12 +91,10 @@ type ButtonComponent = <C extends React.ElementType = 'button'>(props: ButtonPro
  * An icon-only button must have an accessible name. Throws in development, logs otherwise.
  */
 function validateIconButtonName(props: Record<string, unknown>) {
-  if (props['aria-label'] || props['aria-labelledby'] || props.children) return;
+  if (props['aria-label'] || props['aria-labelledby']) return;
   const errorMessage =
-    'IconButton: Icon buttons must have an accessible name. Please provide either:' +
-    '\n- aria-label prop with descriptive text' +
-    '\n- aria-labelledby prop referencing a label element' +
-    '\n- or visible text children';
+    'Button: an `iconOnly` button must have an accessible name. Pass `aria-label`, or ' +
+    '`aria-labelledby` referencing a label element.';
   if (process.env.NODE_ENV === 'development') throw new Error(errorMessage);
   console.error(errorMessage);
 }
@@ -109,6 +120,9 @@ function validateIconButtonName(props: Record<string, unknown>) {
  *
  * // Polymorphic button as link
  * <Button as="a" href="/dashboard">Go to Dashboard</Button>
+ *
+ * // Square, icon-only button: needs an accessible name
+ * <Button iconOnly aria-label="Settings"><Settings /></Button>
  * ```
  */
 const Button = React.forwardRef(
@@ -131,10 +145,10 @@ const Button = React.forwardRef(
     // Use shared tooltip wrapper hook for accessibility props
     const { tooltipId, hasTooltip, accessibilityProps: tooltipAccessibilityProps } = useTooltipWrapper(tooltip);
 
-    // An icon button is square, so it never takes the full width.
+    // An icon-only button is square, so it never takes the full width.
     if (iconOnly) {
-      validateIconButtonName(props);
-      props.fullWidth = false;
+      validateIconButtonName(props as Record<string, unknown>);
+      (props as { fullWidth?: boolean }).fullWidth = false;
     }
 
     if (emphasis !== undefined && variant !== undefined) {
@@ -148,7 +162,8 @@ const Button = React.forwardRef(
         variant={resolvedVariant}
         {...tooltipAccessibilityProps}
         ref={forwardedRef}
-        className={classNames(iconOnly ? 'rt-IconButton' : 'rt-Button', className)}
+        data-icon-only={iconOnly || undefined}
+        className={classNames('rt-Button', className)}
         style={style}
       />
     );
@@ -171,4 +186,4 @@ const Button = React.forwardRef(
 Button.displayName = 'Button';
 
 export { Button };
-export type { ButtonProps, ButtonEmphasis, ButtonRankProps };
+export type { ButtonProps, ButtonEmphasis, ButtonRankProps, ButtonIconOnlyProps };

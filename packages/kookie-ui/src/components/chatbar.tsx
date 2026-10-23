@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { useComposedRefs } from 'radix-ui/internal';
 import { useDropzone } from 'react-dropzone';
 
-import { IconButton, type IconButtonProps } from './icon-button.js';
+import { Button } from './button.js';
 import { CloseIcon, FileTextIcon } from './icons.js';
 import { Flex } from './flex.js';
 import { ScrollArea } from './scroll-area.js';
@@ -16,7 +16,7 @@ import { VisuallyHidden } from './visually-hidden.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { accentColors } from '../props/color.prop.js';
 import type { radii } from '../props/radius.prop.js';
-import type { ButtonRankProps } from './button.js';
+import type { ButtonProps, ButtonRankProps } from './button.js';
 
 // Avoid SSR warnings by using an isomorphic layout effect
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
@@ -1090,9 +1090,9 @@ const Pill: React.FC<{
         {detail ? <VisuallyHidden>, {detail}</VisuallyHidden> : null}
       </Text>
       {onRemove && (
-        <IconButton className="rt-ChatbarItemRemove" aria-label={removeLabel} size="1" variant="ghost" color="gray" onClick={onRemove}>
+        <Button iconOnly className="rt-ChatbarItemRemove" aria-label={removeLabel} size="1" variant="ghost" color="gray" onClick={onRemove}>
           <CloseIcon />
-        </IconButton>
+        </Button>
       )}
     </>
   );
@@ -1280,7 +1280,7 @@ RowEnd.displayName = 'Chatbar.RowEnd';
 
 type SendStatus = 'ready' | 'submitted' | 'streaming' | 'error';
 
-type SendProps = Omit<IconButtonProps, 'aria-label' | 'aria-labelledby' | 'variant' | 'emphasis'> &
+type SendProps = Omit<ButtonProps, 'aria-label' | 'aria-labelledby' | 'variant' | 'emphasis' | 'iconOnly' | 'fullWidth'> &
   ButtonRankProps & {
   /** Optional override for accessible name. Defaults to "Send". */
   'aria-label'?: string;
@@ -1388,7 +1388,8 @@ const Send = React.forwardRef<HTMLButtonElement, SendProps>((props, forwardedRef
     );
 
   return (
-    <IconButton
+    <Button
+      iconOnly
       {...buttonProps}
       ref={forwardedRef}
       size={sizeProp ?? ctx.size}
@@ -1406,7 +1407,7 @@ const Send = React.forwardRef<HTMLButtonElement, SendProps>((props, forwardedRef
       {...labelProps}
     >
       {glyph}
-    </IconButton>
+    </Button>
   );
 });
 Send.displayName = 'Chatbar.Send';

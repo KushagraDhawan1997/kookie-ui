@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
 import { SectionHeader } from '@/components/blocks/section-header/section-header';
-import { Flex, Avatar, Text, Card, Badge, Separator, Heading, IconButton, Button } from '@kushagradhawan/kookie-ui';
+import { Flex, Avatar, Text, Card, Chip, Separator, Heading, Button } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { MoreHorizontalIcon, Mail01Icon, Clock01Icon, Add01Icon } from '@hugeicons/core-free-icons';
 
@@ -37,7 +37,7 @@ export function AvatarExamples() {
           <Text size="1" emphasis="medium">Product Lead</Text>
         </Flex>
       </Flex>
-      <Badge size="1" color="violet" variant="soft">Admin</Badge>
+      <Chip size="1" color="violet" variant="soft">Admin</Chip>
     </Flex>
   </Flex>
 </Card>`}
@@ -56,9 +56,9 @@ export function AvatarExamples() {
                     </Text>
                   </Flex>
                 </Flex>
-                <Badge size="1" color="violet" variant="soft">
+                <Chip size="1" color="violet" variant="soft">
                   Admin
-                </Badge>
+                </Chip>
               </Flex>
               <Separator />
               <Flex justify="between" align="center">
@@ -73,9 +73,9 @@ export function AvatarExamples() {
                     </Text>
                   </Flex>
                 </Flex>
-                <Badge size="1" color="blue" variant="soft">
+                <Chip size="1" color="blue" variant="soft">
                   Member
-                </Badge>
+                </Chip>
               </Flex>
               <Separator />
               <Flex justify="between" align="center">
@@ -90,9 +90,9 @@ export function AvatarExamples() {
                     </Text>
                   </Flex>
                 </Flex>
-                <Badge size="1" color="green" variant="soft">
+                <Chip size="1" color="green" variant="soft">
                   Member
-                </Badge>
+                </Chip>
               </Flex>
             </Flex>
           </Card>
@@ -126,9 +126,9 @@ export function AvatarExamples() {
         <Text size="2" weight="medium">Mike Johnson</Text>
         <Text size="1" emphasis="medium">2 hours ago</Text>
       </Flex>
-      <IconButton variant="ghost" size="1" color="gray">
+      <Button iconOnly variant="ghost" size="1" color="gray" aria-label="More">
         <HugeiconsIcon icon={MoreHorizontalIcon} />
-      </IconButton>
+      </Button>
     </Flex>
     <Text size="2">This looks great!</Text>
   </Flex>
@@ -148,9 +148,9 @@ export function AvatarExamples() {
                         2 hours ago
                       </Text>
                     </Flex>
-                    <IconButton variant="ghost" size="1" color="gray" aria-label="More options">
+                    <Button iconOnly variant="ghost" size="1" color="gray" aria-label="More options">
                       <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
-                    </IconButton>
+                    </Button>
                   </Flex>
                   <Text size="2">This looks great! Love the new design direction.</Text>
                 </Flex>
@@ -168,9 +168,9 @@ export function AvatarExamples() {
                         1 hour ago
                       </Text>
                     </Flex>
-                    <IconButton variant="ghost" size="1" color="gray" aria-label="More options">
+                    <Button iconOnly variant="ghost" size="1" color="gray" aria-label="More options">
                       <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
-                    </IconButton>
+                    </Button>
                   </Flex>
                   <Text size="2">Thanks! We're excited about the direction too.</Text>
                 </Flex>
@@ -203,7 +203,7 @@ export function AvatarExamples() {
     <Flex direction="column" gap="2">
       <Flex align="center" justify="center" gap="3">
         <Heading size="4">Sarah Kim</Heading>
-        <Badge size="1" color="violet">Pro</Badge>
+        <Chip size="1" color="violet">Pro</Chip>
       </Flex>
       <Text size="2" emphasis="medium">Senior Product Designer</Text>
     </Flex>
@@ -225,9 +225,9 @@ export function AvatarExamples() {
               <Flex direction="column" gap="2">
                 <Flex align="center" justify="center" gap="3">
                   <Heading size="4">Sarah Kim</Heading>
-                  <Badge size="1" color="violet">
+                  <Chip size="1" color="violet">
                     Pro
-                  </Badge>
+                  </Chip>
                 </Flex>
                 <Text size="2" emphasis="medium">
                   Senior Product Designer
@@ -334,11 +334,11 @@ export function AvatarExamples() {
 
       <Separator />
 
-      {/* Example 5: Custom Badge */}
+      {/* Example 5: Custom Chip */}
       <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
-            <SectionHeader.Title>Custom Badge</SectionHeader.Title>
+            <SectionHeader.Title>Custom Chip</SectionHeader.Title>
             <SectionHeader.Description>Use the badge prop for custom content like notification counts or verification icons.</SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
@@ -349,9 +349,9 @@ export function AvatarExamples() {
   fallback="JD"
   variant="surface"
   badge={
-    <Badge size="2" color="red" variant="solid" radius="full">
+    <Chip size="2" color="red" variant="solid" radius="full">
       3
-    </Badge>
+    </Chip>
   }
 />`}
         >
@@ -360,9 +360,9 @@ export function AvatarExamples() {
             fallback="JD"
             variant="surface"
             badge={
-              <Badge size="2" color="red" variant="solid" radius="full">
+              <Chip size="2" color="red" variant="solid" radius="full">
                 3
-              </Badge>
+              </Chip>
             }
           />
         </PreviewBlock>
@@ -443,7 +443,7 @@ export function AvatarExamples() {
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Invite Members</SectionHeader.Title>
-            <SectionHeader.Description>Use IconButton with outline variant as an "add member" action that blends with existing avatars.</SectionHeader.Description>
+            <SectionHeader.Description>Use Button with outline variant as an "add member" action that blends with existing avatars.</SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
         <PreviewBlock
@@ -467,7 +467,7 @@ export function AvatarExamples() {
     variant="soft"
     radius="full"
   />
-  <IconButton
+  <Button iconOnly
     size="4"
     variant="outline"
     color="gray"
@@ -475,16 +475,16 @@ export function AvatarExamples() {
     aria-label="Add member"
   >
     <HugeiconsIcon icon={Add01Icon} />
-  </IconButton>
+  </Button>
 </Flex>`}
         >
           <Flex gap="4" align="center">
             <Avatar size="4" fallback="JD" variant="soft" radius="full" />
             <Avatar size="4" fallback="SK" variant="soft" radius="full" />
             <Avatar size="4" fallback="AL" variant="soft" radius="full" />
-            <IconButton size="4" variant="outline" color="gray" radius="full" aria-label="Add member">
+            <Button iconOnly size="4" variant="outline" color="gray" radius="full" aria-label="Add member">
               <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
-            </IconButton>
+            </Button>
           </Flex>
         </PreviewBlock>
       </Flex>

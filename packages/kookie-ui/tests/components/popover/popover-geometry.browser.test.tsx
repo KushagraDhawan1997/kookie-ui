@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 import { render } from '@testing-library/react';
-import { HoverCard, Popover, Theme } from '../../../src/components/index';
+import { Popover, Theme } from '../../../src/components/index';
 
 // A popover is a card that floats (v2): surface padding and surface corner, sizes 1-4, rest 2.
 const pad = { '1': 16, '2': 24, '3': 32, '4': 40 } as const;
@@ -29,26 +29,6 @@ describe('Popover geometry', () => {
       );
       const s: Size = size ?? '2';
       expect(measure('.rt-PopoverContent')).toEqual({ pad: pad[s], corner: corner[s] });
-      unmount();
-    });
-  }
-});
-
-describe('HoverCard geometry', () => {
-  for (const size of [undefined, '1', '2', '3', '4'] as const) {
-    it(`size ${size ?? 'default'}`, () => {
-      const { unmount } = render(
-        <Theme radius="full">
-          <HoverCard.Root open>
-            <HoverCard.Trigger>
-              <a href="#x">Hover</a>
-            </HoverCard.Trigger>
-            <HoverCard.Content size={size}>Body</HoverCard.Content>
-          </HoverCard.Root>
-        </Theme>,
-      );
-      const s: Size = size ?? '2';
-      expect(measure('.rt-HoverCardContent')).toEqual({ pad: pad[s], corner: corner[s] });
       unmount();
     });
   }

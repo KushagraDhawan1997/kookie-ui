@@ -22,7 +22,6 @@ import * as React from 'react';
 import classNames from 'classnames';
 
 import { Button } from './button.js';
-import { IconButton } from './icon-button.js';
 import { Text } from './text.js';
 import { useThemeSize } from '../helpers/theme-size.js';
 import { accentColorPropDef } from '../props/color.prop.js';
@@ -108,11 +107,11 @@ const Notice = React.forwardRef<HTMLDivElement, NoticeProps>(({ icon, action, on
       <span className="rt-NoticeActions">
         {action}
         {onDismiss ? (
-          <IconButton size={size} variant="ghost" color="gray" aria-label={dismissLabel} className="rt-NoticeDismiss" onClick={onDismiss}>
+          <Button iconOnly size={size} variant="ghost" color="gray" aria-label={dismissLabel} className="rt-NoticeDismiss" onClick={onDismiss}>
             <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden>
               <path d="M4 4l7 7M11 4l-7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
-          </IconButton>
+          </Button>
         ) : null}
       </span>
     ) : null;

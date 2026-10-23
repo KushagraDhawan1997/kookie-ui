@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
-import { IconButton, TextField, Theme } from '../../../src/components/index';
+import { Button, TextField, Theme } from '../../../src/components/index';
 
 const sizes = ['1', '2', '3', '4'] as const;
 const heights = { '1': 28, '2': 32, '3': 40, '4': 48 };
@@ -80,15 +80,15 @@ describe('TextField on the control ladder', () => {
           <Theme>
             <TextField.Root size={size} variant="outline" aria-label="query">
               <TextField.Slot side="right">
-                <IconButton size="2" variant="ghost" aria-label="Clear">
+                <Button iconOnly size="2" variant="ghost" aria-label="Clear">
                   <Glyph />
-                </IconButton>
+                </Button>
               </TextField.Slot>
             </TextField.Root>
           </Theme>,
         );
         const root = container.querySelector<HTMLElement>('.rt-TextFieldRoot')!;
-        const button = root.querySelector<HTMLElement>('.rt-IconButton')!;
+        const button = root.querySelector<HTMLElement>('[data-icon-only]')!;
         const r = rect(root);
         const b = rect(button);
         expect(r.height).toBe(heights[size]);
@@ -105,15 +105,15 @@ describe('TextField on the control ladder', () => {
           <Theme>
             <TextField.Root size={size} variant="outline" aria-label="query">
               <TextField.Slot side="left">
-                <IconButton size="2" variant="ghost" aria-label="Search">
+                <Button iconOnly size="2" variant="ghost" aria-label="Search">
                   <Glyph />
-                </IconButton>
+                </Button>
               </TextField.Slot>
             </TextField.Root>
           </Theme>,
         );
         const root = container.querySelector<HTMLElement>('.rt-TextFieldRoot')!;
-        const button = root.querySelector<HTMLElement>('.rt-IconButton')!;
+        const button = root.querySelector<HTMLElement>('[data-icon-only]')!;
         const r = rect(root);
         const b = rect(button);
         expect(b.height).toBe(heights[size] - 2 * inset[size]);

@@ -13,11 +13,9 @@ const accordionRootPropDefs = {
   variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised' },
   ...colorPropDef,
   ...radiusPropDef,
-  flush: { type: 'boolean', default: false },
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;
   variant: PropDef<(typeof variants)[number]>;
-  flush: PropDef<boolean>;
 };
 
 const accordionItemPropDefs = {
@@ -57,7 +55,6 @@ export type AccordionRootOwnProps = {
   variant?: (typeof variants)[number];
   color?: string;
   radius?: string;
-  flush?: boolean;
 };
 
 export type AccordionItemOwnProps = {

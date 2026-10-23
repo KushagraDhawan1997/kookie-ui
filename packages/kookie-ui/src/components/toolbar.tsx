@@ -6,16 +6,13 @@ import { Toolbar as ToolbarPrimitive } from 'radix-ui';
 
 import { toolbarRootPropDefs } from './toolbar.props.js';
 import { Button } from './button.js';
-import { IconButton } from './icon-button.js';
 import { Text } from './text.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSize } from '../helpers/theme-size.js';
-import { marginPropDefs } from '../props/margin.props.js';
 import { usePaneBandSize } from './_internal/pane-chrome.js';
 
 import type { ButtonProps } from './button.js';
 import type { TextProps } from './text.js';
-import type { MarginProps } from '../props/margin.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 import type { ButtonRankProps } from './button.js';
@@ -61,8 +58,7 @@ type ToolbarOwnProps = GetPropDefTypes<typeof toolbarRootPropDefs>;
 
 interface ToolbarProps
   extends ComponentPropsWithout<typeof ToolbarPrimitive.Root, RemovedProps | 'orientation'>,
-    ToolbarOwnProps,
-    MarginProps {
+    ToolbarOwnProps {
   /**
    * Gives every control a surface of its own, for a row that content passes behind, such as
    * `Shell.PaneHeader float`. Buttons rest `raised` instead of `soft`, and a group's well is
@@ -98,7 +94,6 @@ const ToolbarRoot = React.forwardRef<HTMLDivElement, ToolbarProps>((props, forwa
   const { className, orientation: _orientation, backdrop = false, children, ...rootProps } = extractProps(
     { ...props, size },
     toolbarRootPropDefs,
-    marginPropDefs,
   );
 
   const context = React.useMemo(() => ({ size, orientation, backdrop }), [size, orientation, backdrop]);
@@ -163,7 +158,7 @@ type ToolbarTextButtonProps = ToolbarButtonBaseProps &
   iconOnly?: false;
 };
 
-/** An icon-only button: renders an `IconButton`, and the type requires an `aria-label`. */
+/** An icon-only button: renders `Button iconOnly`, and the type requires an `aria-label`. */
 type ToolbarIconButtonProps = Omit<ToolbarButtonBaseProps, 'aria-label' | 'aria-labelledby' | 'fullWidth'> &
   ButtonRankProps & {
   iconOnly: true;
@@ -206,13 +201,12 @@ const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>((p
     ...stateProps,
   } as const;
 
+  // The text and icon-only branches share every prop but the name; one Button renders both.
+  const buttonProps = { ...rest, ...(iconOnly ? { iconOnly: true } : {}), ...shared } as ButtonProps;
+
   return (
     <ToolbarPrimitive.Button asChild ref={forwardedRef} disabled={disabled || group?.disabled || undefined}>
-      {iconOnly ? (
-        <IconButton {...(rest as Omit<ToolbarIconButtonProps, 'iconOnly' | 'variant' | 'emphasis'>)} {...shared} />
-      ) : (
-        <Button {...(rest as Omit<ToolbarTextButtonProps, 'iconOnly' | 'variant' | 'emphasis'>)} {...shared} />
-      )}
+      <Button {...buttonProps} />
     </ToolbarPrimitive.Button>
   );
 });

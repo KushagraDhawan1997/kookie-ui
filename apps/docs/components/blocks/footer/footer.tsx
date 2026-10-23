@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Flex, Heading, IconButton, Link, Text } from '@kushagradhawan/kookie-ui';
-import type { FlexProps, IconButtonProps, LinkProps, TextProps } from '@kushagradhawan/kookie-ui';
+import { Flex, Heading, Button, Link, Text } from '@kushagradhawan/kookie-ui';
+import type { FlexProps, ButtonProps, LinkProps, TextProps } from '@kushagradhawan/kookie-ui';
 
 type FooterRootProps = Omit<FlexProps, 'align'> & {
   /** @default "left" */
@@ -97,7 +97,7 @@ const FooterSocial = React.forwardRef<HTMLDivElement, FlexProps>(({ gap = '4', a
 ));
 FooterSocial.displayName = 'Footer.Social';
 
-type FooterSocialLinkProps = Omit<IconButtonProps, 'children' | 'aria-label' | 'aria-labelledby' | 'asChild'> & {
+type FooterSocialLinkProps = Omit<ButtonProps, 'children' | 'aria-label' | 'aria-labelledby' | 'asChild' | 'iconOnly' | 'fullWidth'> & {
   /** The icon to render, e.g. an SVG component. */
   icon: React.ComponentType;
   /** Accessible name, e.g. "GitHub". */
@@ -107,11 +107,11 @@ type FooterSocialLinkProps = Omit<IconButtonProps, 'children' | 'aria-label' | '
 
 const FooterSocialLink = React.forwardRef<HTMLButtonElement, FooterSocialLinkProps>(
   ({ icon: Icon, label, href, variant = 'ghost', emphasis, color = 'gray', size = '2', ...props }, ref) => (
-    <IconButton ref={ref} asChild {...(emphasis ? { emphasis } : { variant })} color={color} size={size} aria-label={label} {...props}>
+    <Button iconOnly ref={ref} asChild {...(emphasis ? { emphasis } : { variant })} color={color} size={size} aria-label={label} {...props}>
       <a href={href} target="_blank" rel="noopener noreferrer">
         <Icon />
       </a>
-    </IconButton>
+    </Button>
   ),
 );
 FooterSocialLink.displayName = 'Footer.SocialLink';

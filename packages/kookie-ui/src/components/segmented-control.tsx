@@ -9,9 +9,7 @@ import { useControllableState } from 'radix-ui/internal';
 import { segmentedControlRootPropDefs } from './segmented-control.props.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../helpers/theme-size.js';
-import { marginPropDefs } from '../props/margin.props.js';
 
-import type { MarginProps } from '../props/margin.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
@@ -19,8 +17,7 @@ type SegmentedControlRootOwnProps = GetPropDefTypes<typeof segmentedControlRootP
 
 interface SegmentedControlRootProps
   extends ComponentPropsWithout<'div', RemovedProps | 'dir'>,
-    SegmentedControlRootOwnProps,
-    MarginProps {
+    SegmentedControlRootOwnProps {
   value?: string;
   defaultValue?: string;
   onValueChange?(value: string): void;
@@ -37,7 +34,7 @@ const SegmentedControlRoot = React.forwardRef<HTMLDivElement, SegmentedControlRo
       defaultValue: defaultValueProp,
       onValueChange: onValueChangeProp,
       ...rootProps
-    } = extractProps(props, segmentedControlRootPropDefs, marginPropDefs);
+    } = extractProps(props, segmentedControlRootPropDefs);
 
     const [value, setValue] = useControllableState({
       prop: valueProp,

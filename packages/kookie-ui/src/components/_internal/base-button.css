@@ -3,7 +3,7 @@
  *
  * This file contains the foundational styling for all button components in the
  * Kookie User Interface design system. It provides the base styles that are
- * extended by Button, IconButton, and other button variants.
+ * extended by Button (including its icon-only form) and Toggle.
  *
  * ARCHITECTURE:
  * - Base styles: Layout, accessibility
@@ -130,7 +130,7 @@
 
 /* An icon-only button is square: no inline padding, and aspect-ratio rather than a width ladder,
    so a hosted icon button whose height comes from its container (Toolbar, Chatbar) stays square. */
-.rt-BaseButton:where(.rt-IconButton) {
+.rt-BaseButton:where([data-icon-only]) {
   padding-inline: 0;
   aspect-ratio: 1;
 }
@@ -347,40 +347,6 @@
   &:where([data-disabled], [aria-disabled='true']) {
     box-shadow: inset 0 0 0 1px var(--v-border-disabled);
   }
-}
-
-/* Ghost flush mode: pull the button out by its own padding so its content sits on the text line */
-.rt-BaseButton:where(.rt-variant-ghost[data-flush='true']) {
-  --margin-top: 0px;
-  --margin-right: 0px;
-  --margin-bottom: 0px;
-  --margin-left: 0px;
-
-  --button-padding-x: var(--base-button-px);
-  --button-padding-y: calc((var(--base-button-height) - 1lh) / 2);
-
-  --margin-top-override: calc(var(--margin-top) - var(--button-padding-y));
-  --margin-right-override: calc(var(--margin-right) - var(--button-padding-x));
-  --margin-bottom-override: calc(var(--margin-bottom) - var(--button-padding-y));
-  --margin-left-override: calc(var(--margin-left) - var(--button-padding-x));
-
-  margin-top: var(--margin-top-override);
-  margin-right: var(--margin-right-override);
-  margin-bottom: var(--margin-bottom-override);
-  margin-left: var(--margin-left-override);
-
-  :where(&) > * {
-    --margin-top-override: initial;
-    --margin-right-override: initial;
-    --margin-bottom-override: initial;
-    --margin-left-override: initial;
-  }
-}
-
-/* A flush ghost icon button pulls out by the space around its glyph */
-.rt-BaseButton:where(.rt-IconButton.rt-variant-ghost[data-flush='true']) {
-  --button-padding-x: calc((var(--base-button-height) - var(--base-button-icon-size)) / 2);
-  --button-padding-y: var(--button-padding-x);
 }
 
 /***************************************************************************************************

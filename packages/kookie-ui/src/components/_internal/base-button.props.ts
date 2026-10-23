@@ -27,7 +27,7 @@ const variants = ['raised', 'solid', 'soft', 'surface', 'outline', 'ghost'] as c
 /**
  * Base button prop definitions that define the component's API
  * 
- * These props are used by all button variants (Button, IconButton, etc.)
+ * These props are used by all button variants (Button and Toggle)
  * to ensure consistent behavior and styling across the design system.
  * 
  * Key features:
@@ -72,17 +72,11 @@ const baseButtonPropDefs = {
    * Useful for mobile layouts and form submissions
    */
   fullWidth: { type: 'boolean', className: 'rt-full-width', default: false },
-  /**
-   * Flush mode that removes visual padding for seamless text integration
-   * Only effective with ghost variant
-   */
-  flush: { type: 'boolean', default: false },
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;
   variant: PropDef<(typeof variants)[number]>;
   loading: PropDef<boolean>;
   fullWidth: PropDef<boolean>;
-  flush: PropDef<boolean>;
 };
 
 export { baseButtonPropDefs };

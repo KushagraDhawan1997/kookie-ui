@@ -68,7 +68,7 @@ The Navbar is a compound component with four parts:
 
 ### Logo, Navigation, Actions
 
-All slot components extend `FlexProps` and support all Flex layout properties.
+All slot components extend `FlexProps` and take every Flex layout prop except margin.
 
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
@@ -176,7 +176,7 @@ Add icons to navigation items for visual clarity:
 ```tsx showLineNumbers
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugeicons/core-free-icons';
-import { Navbar, Button, IconButton, Text } from '@kushagradhawan/kookie-ui';
+import { Navbar, Button, Text } from '@kushagradhawan/kookie-ui';
 
 export function IconNavbar() {
   return (
@@ -195,12 +195,12 @@ export function IconNavbar() {
         </Button>
       </Navbar.Navigation>
       <Navbar.Actions>
-        <IconButton variant="ghost" aria-label="Notifications">
+        <Button iconOnly variant="ghost" aria-label="Notifications">
           <HugeiconsIcon icon={Notification01Icon} />
-        </IconButton>
-        <IconButton variant="ghost" aria-label="Profile">
+        </Button>
+        <Button iconOnly variant="ghost" aria-label="Profile">
           <HugeiconsIcon icon={UserIcon} />
-        </IconButton>
+        </Button>
       </Navbar.Actions>
     </Navbar.Root>
   );

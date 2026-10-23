@@ -22,7 +22,6 @@ import {
   Card,
   Flex,
   Heading,
-  IconButton,
   SegmentedControl,
   Select,
   Shell,
@@ -96,9 +95,9 @@ function Builder() {
                 <SegmentedControl.Item value="layers">Layers</SegmentedControl.Item>
                 <SegmentedControl.Item value="add">Add</SegmentedControl.Item>
               </SegmentedControl.Root>
-              <IconButton variant="ghost" color="gray" size="2" aria-label="Search">
+              <Button iconOnly variant="ghost" color="gray" size="2" aria-label="Search">
                 {icon(Search01Icon)}
-              </IconButton>
+              </Button>
             </Flex>
             <Flex direction="column" gap="2">
               {LAYERS.map((layer, i) => (
@@ -204,9 +203,9 @@ function Builder() {
               <Text size="2" weight="medium">
                 Button
               </Text>
-              <IconButton variant="ghost" color="gray" size="2" aria-label="Show code">
+              <Button iconOnly variant="ghost" color="gray" size="2" aria-label="Show code">
                 {icon(SourceCodeIcon)}
-              </IconButton>
+              </Button>
             </Flex>
             <Flex direction="column" gap="6" px="3">
               <Field label="Label">

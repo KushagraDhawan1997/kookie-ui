@@ -30,7 +30,7 @@ interface AccordionRootProps
 const AccordionRoot = React.forwardRef<AccordionRootElement, AccordionRootProps>(
   (ownProps, forwardedRef) => {
     const props = useThemeSizeProps(ownProps, accordionRootPropDefs.size);
-    const { className, flush, radius, color, ...extractedRadixProps } =
+    const { className, radius, color, ...extractedRadixProps } =
       extractProps(props, accordionRootPropDefs);
 
     const radixProps = extractedRadixProps as React.ComponentPropsWithoutRef<
@@ -73,7 +73,6 @@ const AccordionRoot = React.forwardRef<AccordionRootElement, AccordionRootProps>
         ref={forwardedRef}
         className={classNames('rt-AccordionRoot', className)}
         data-accent-color={color}
-        data-flush={flush || undefined}
         data-radius={radius}
         onKeyDown={handleKeyDown}
       />

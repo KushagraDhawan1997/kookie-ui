@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
-import { Avatar, Badge, Progress, ScrollArea, Separator, Spinner, Theme } from '../../../src/components/index';
+import { Avatar, Chip, Progress, ScrollArea, Separator, Spinner, Theme } from '../../../src/components/index';
 
 const px = (el: Element, prop: string) => parseFloat(getComputedStyle(el).getPropertyValue(prop));
 
@@ -35,26 +35,26 @@ describe('sizeless primitives keep the old default look', () => {
   });
 });
 
-describe('badge ladder', () => {
+describe('chip ladder', () => {
   it('rests at size 2 and every padding and gap sits on 2/4/8/12', () => {
     const { container } = render(
       <Theme>
         {(['1', '2', '3', '4'] as const).flatMap((size) =>
           (['soft', 'ghost'] as const).map((variant) => (
-            <Badge key={size + variant} size={size} variant={variant}>
+            <Chip key={size + variant} size={size} variant={variant}>
               Label
-            </Badge>
+            </Chip>
           )),
         )}
-        <Badge>Rest</Badge>
+        <Chip>Rest</Chip>
       </Theme>,
     );
-    const badges = [...container.querySelectorAll('.rt-Badge')];
+    const chips = [...container.querySelectorAll('.rt-Chip')];
     const palette = [2, 4, 8, 12];
-    for (const b of badges) {
+    for (const b of chips) {
       for (const p of ['padding-top', 'padding-left', 'column-gap']) expect(palette).toContain(px(b, p));
     }
-    const rest = badges.at(-1)!;
+    const rest = chips.at(-1)!;
     expect(rest.className).toContain('rt-r-size-2');
     expect([px(rest, 'padding-top'), px(rest, 'padding-left'), px(rest, 'column-gap')]).toEqual([4, 8, 4]);
   });
@@ -62,12 +62,12 @@ describe('badge ladder', () => {
   it('disabled is a remap: default cursor, still hit-tests', () => {
     const { container } = render(
       <Theme>
-        <Badge variant="soft" data-disabled="">
+        <Chip variant="soft" data-disabled="">
           Off
-        </Badge>
+        </Chip>
       </Theme>,
     );
-    const b = container.querySelector('.rt-Badge')!;
+    const b = container.querySelector('.rt-Chip')!;
     expect(getComputedStyle(b).cursor).toBe('default');
     expect(getComputedStyle(b).pointerEvents).not.toBe('none');
     expect(getComputedStyle(b).opacity).toBe('1');

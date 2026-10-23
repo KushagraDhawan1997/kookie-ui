@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
-import { Checkbox, CheckboxCards, Radio, SegmentedControl, Slider, Switch, Tabs, Theme } from '../../../src/components/index';
+import { Checkbox, Radio, SegmentedControl, Slider, Switch, Tabs, Theme } from '../../../src/components/index';
 
 const box = (el: Element, pseudo = '::before') => {
   const style = getComputedStyle(el, pseudo);
@@ -67,19 +67,5 @@ describe('choice controls on the v2 ladders', () => {
       expect(getComputedStyle(el).cursor, selector).toBe('default');
       expect(getComputedStyle(el).opacity, selector).toBe('1');
     }
-  });
-
-  it('CheckboxCards rings its card, not the mark inside it', () => {
-    const { container } = render(
-      <Theme>
-        <CheckboxCards.Root defaultValue={[]}>
-          <CheckboxCards.Item value="a">A</CheckboxCards.Item>
-        </CheckboxCards.Root>
-      </Theme>,
-    );
-    const mark = container.querySelector<HTMLElement>('.rt-CheckboxCardCheckbox')!;
-    mark.focus();
-    expect(mark.matches(':focus-visible')).toBe(true);
-    expect(getComputedStyle(mark, '::before').outlineStyle).toBe('none');
   });
 });

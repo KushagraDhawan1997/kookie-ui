@@ -10,19 +10,19 @@ import * as Popover from './popover.js';
 import { Separator } from './separator.js';
 import { ThickChevronRightIcon } from './icons.js';
 import { Kbd } from './kbd.js';
-import { Badge } from './badge.js';
+import { Chip } from './chip.js';
 import { useSidebarVisual } from './_internal/pane-chrome.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
-import type { BadgeProps } from './badge.js';
+import type { ChipProps } from './chip.js';
 
-// Badge configuration type for sidebar menu buttons
+// Chip configuration for the `badge` slot of sidebar menu buttons
 type BadgeConfig = {
   content: React.ReactNode;
-  variant?: BadgeProps['variant'];
-  size?: BadgeProps['size'];
-  color?: BadgeProps['color'];
-  radius?: BadgeProps['radius'];
+  variant?: ChipProps['variant'];
+  size?: ChipProps['size'];
+  color?: ChipProps['color'];
+  radius?: ChipProps['radius'];
 };
 
 // Sidebar separator
@@ -148,13 +148,13 @@ const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonP
             {badge && (
               <div className="rt-SidebarMenuBadge">
                 {typeof badge === 'string' ? (
-                  <Badge size={sidebarSize} variant="soft">
+                  <Chip size={sidebarSize} variant="soft">
                     {badge}
-                  </Badge>
+                  </Chip>
                 ) : (
-                  <Badge size={badge.size || sidebarSize} variant={badge.variant || 'soft'} color={badge.color} radius={badge.radius}>
+                  <Chip size={badge.size || sidebarSize} variant={badge.variant || 'soft'} color={badge.color} radius={badge.radius}>
                     {badge.content}
-                  </Badge>
+                  </Chip>
                 )}
               </div>
             )}
@@ -202,13 +202,13 @@ const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonP
             {badge && (
               <div className="rt-SidebarMenuBadge">
                 {typeof badge === 'string' ? (
-                  <Badge size={sidebarSize} variant="soft">
+                  <Chip size={sidebarSize} variant="soft">
                     {badge}
-                  </Badge>
+                  </Chip>
                 ) : (
-                  <Badge size={badge.size || sidebarSize} variant={badge.variant || 'soft'} color={badge.color} radius={badge.radius}>
+                  <Chip size={badge.size || sidebarSize} variant={badge.variant || 'soft'} color={badge.color} radius={badge.radius}>
                     {badge.content}
-                  </Badge>
+                  </Chip>
                 )}
               </div>
             )}

@@ -9,9 +9,7 @@ import { checkboxPropDefs } from './checkbox.props.js';
 import { ThickCheckIcon, ThickDividerHorizontalIcon } from './icons.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../helpers/theme-size.js';
-import { marginPropDefs } from '../props/margin.props.js';
 
-import type { MarginProps } from '../props/margin.props.js';
 import type { ComponentPropsWithout } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
@@ -22,7 +20,6 @@ interface CheckboxProps
       typeof CheckboxPrimitive.Root,
       'asChild' | 'color' | 'defaultValue' | 'children'
     >,
-    MarginProps,
     CheckboxOwnProps {}
 const Checkbox = React.forwardRef<CheckboxElement, CheckboxProps>((ownProps, forwardedRef) => {
   const props = useThemeSizeProps(ownProps, checkboxPropDefs.size);
@@ -33,7 +30,7 @@ const Checkbox = React.forwardRef<CheckboxElement, CheckboxProps>((ownProps, for
     defaultChecked: defaultCheckedProp,
     onCheckedChange,
     ...checkboxProps
-  } = extractProps(props, checkboxPropDefs, marginPropDefs);
+  } = extractProps(props, checkboxPropDefs);
 
   const [checked, setChecked] = useControllableState({
     prop: checkedProp,

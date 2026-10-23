@@ -17,10 +17,6 @@ export const docsNavigation: DocsNavigationConfig = {
           title: 'Avatar',
         },
         {
-          href: '/docs/badge',
-          title: 'Badge',
-        },
-        {
           href: '/docs/button',
           title: 'Button',
         },
@@ -31,6 +27,10 @@ export const docsNavigation: DocsNavigationConfig = {
         {
           href: '/docs/chatbar',
           title: 'Chatbar',
+        },
+        {
+          href: '/docs/chip',
+          title: 'Chip',
         },
         {
           href: '/docs/combobox',
@@ -47,14 +47,6 @@ export const docsNavigation: DocsNavigationConfig = {
         {
           href: '/docs/heading',
           title: 'Heading',
-        },
-        {
-          href: '/docs/icon-button',
-          title: 'Icon Button',
-        },
-        {
-          href: '/docs/image',
-          title: 'Image',
         },
         {
           href: '/docs/navbar',
@@ -93,12 +85,8 @@ export const docsNavigation: DocsNavigationConfig = {
           title: 'Text Field',
         },
         {
-          href: '/docs/toggle-button',
-          title: 'Toggle Button',
-        },
-        {
-          href: '/docs/toggle-icon-button',
-          title: 'Toggle Icon Button',
+          href: '/docs/toggle',
+          title: 'Toggle',
         },
         {
           href: '/docs/toolbar',

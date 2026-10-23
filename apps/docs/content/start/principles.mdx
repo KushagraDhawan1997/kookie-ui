@@ -40,6 +40,9 @@ It is easy to tell the two apart, because the children of a component should nev
 their parent. Sometimes a child must change its parent, for example a sidebar that sets the margin of
 the page. Then you have a pattern. Build it in your app. Do not ask one component to hold it.
 
+The space between components belongs to their parent, too. Only `Box`, `Flex` and `Grid` take
+margin props. Space a `Text` or a `Button` with the parent's `gap`, or wrap it in a `Box`.
+
 ## Measurements and judgments
 
 Some design questions are a matter of taste. Others have been measured.

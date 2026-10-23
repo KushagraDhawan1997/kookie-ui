@@ -224,30 +224,23 @@ import '@kushagradhawan/kookie-ui/layout.css'; // Layout utilities
 - `Sidebar` - Collapsible sidebar navigation
 - `Flex` - Flexible container with gap support
 - `Grid` - CSS Grid container
-- `Container` - Responsive container with max-width
-- `Section` - Semantic section wrapper
 
 ### Navigation
 
 - `Tabs` - Tab navigation component
 - `SegmentedControl` - Segmented control for mutually exclusive options
-- `TabNav` - Tab navigation for page-level navigation
 
 ### Data Entry
 
 - `Button` - Primary action button
-- `IconButton` - Icon-only button
-- `ToggleButton` - Toggle state button
-- `ToggleIconButton` - Toggle state icon button
+- `Toggle` - Pressed or not; `iconOnly` for an icon
 - `TextField` - Text input field
 - `TextArea` - Multi-line text input
 - `Select` - Dropdown selection
 - `Checkbox` - Checkbox input
 - `CheckboxGroup` - Group of checkboxes
-- `CheckboxCards` - Card-based checkbox selection
 - `Radio` - Radio button input
 - `RadioGroup` - Group of radio buttons
-- `RadioCards` - Card-based radio selection
 - `Switch` - Toggle switch
 - `Slider` - Range slider input
 - `Progress` - Progress indicator
@@ -256,11 +249,8 @@ import '@kushagradhawan/kookie-ui/layout.css'; // Layout utilities
 
 - `Card` - Content card container
 - `Avatar` - User avatar image
-- `Badge` - Status badge
-- `Image` - Responsive image component
+- `Chip` - A short label
 - `Table` - Data table
-- `DataList` - List of data items
-- `Skeleton` - Loading skeleton placeholder
 
 ### Feedback
 
@@ -268,7 +258,6 @@ import '@kushagradhawan/kookie-ui/layout.css'; // Layout utilities
 - `Dialog` - Modal dialog
 - `Sheet` - Slide-out panel
 - `Popover` - Floating content panel
-- `HoverCard` - Hover-triggered card
 - `Tooltip` - Contextual tooltip
 - `Notice` - A message about a condition that is true now
 - `Spinner` - Loading spinner
@@ -286,14 +275,9 @@ import '@kushagradhawan/kookie-ui/layout.css'; // Layout utilities
 - `Code` - Inline code
 - `Kbd` - Keyboard key display
 - `Blockquote` - Block quote
-- `Quote` - Inline quote
-- `Em` - Emphasis
-- `Strong` - Strong emphasis
 
 ### Layout Utilities
 
-- `AspectRatio` - Maintain aspect ratio
-- `Inset` - Inset spacing
 - `Separator` - Visual separator
 - `ScrollArea` - Custom scrollable area
 

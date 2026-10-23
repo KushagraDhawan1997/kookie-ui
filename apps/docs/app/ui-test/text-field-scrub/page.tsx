@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { TextField, Text, Flex, Box, Heading, Code, Separator, Badge, Container } from '@kushagradhawan/kookie-ui';
+import { TextField, Text, Flex, Box, Heading, Code, Separator, Chip } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Rotate01Icon, TransitionTopIcon, TransitionBottomIcon, SquareIcon, CircleIcon } from '@hugeicons/core-free-icons';
 
@@ -30,14 +30,14 @@ export default function TextFieldScrubTest() {
   const [isScrubbing, setIsScrubbing] = React.useState(false);
 
   return (
-    <Container size="2" px="9" py="9">
+    <Box maxWidth="688px" mx="auto" px="9" py="9">
       <Flex direction="column" gap="9">
         {/* Header */}
         <Flex direction="column" gap="4">
         <Flex justify="between" align="center">
           <Heading size="9" weight="medium">TextField Scrubbing</Heading>
           {isScrubbing && (
-            <Badge variant="solid" size="2">Scrubbing</Badge>
+            <Chip variant="solid" size="2">Scrubbing</Chip>
           )}
         </Flex>
         <Text size="2" emphasis="medium">
@@ -50,7 +50,9 @@ export default function TextFieldScrubTest() {
       {/* Test 1: Basic Scrubbing */}
       <Flex direction="column" gap="6">
         <Box>
-          <Heading size="6" weight="medium" mb="3">1. Basic Scrubbing</Heading>
+          <Box mb="3">
+            <Heading size="6" weight="medium">1. Basic Scrubbing</Heading>
+          </Box>
           <Text size="2" emphasis="medium">
             Core functionality: drag the label to adjust value
           </Text>
@@ -88,7 +90,9 @@ export default function TextFieldScrubTest() {
       {/* Test 2: Constraints */}
       <Flex direction="column" gap="6">
         <Box>
-          <Heading size="6" weight="medium" mb="3">2. Min/Max Constraints</Heading>
+          <Box mb="3">
+            <Heading size="6" weight="medium">2. Min/Max Constraints</Heading>
+          </Box>
           <Text size="2" emphasis="medium">
             Boundary behavior: value clamped between 0-100
           </Text>
@@ -138,7 +142,9 @@ export default function TextFieldScrubTest() {
       {/* Test 3: Sensitivity */}
       <Flex direction="column" gap="6">
         <Box>
-          <Heading size="6" weight="medium" mb="3">3. Sensitivity Control</Heading>
+          <Box mb="3">
+            <Heading size="6" weight="medium">3. Sensitivity Control</Heading>
+          </Box>
           <Text size="2" emphasis="medium">
             Adjust how much mouse movement equals one step
           </Text>
@@ -146,7 +152,9 @@ export default function TextFieldScrubTest() {
         
         <Flex direction="column" gap="4">
           <Box>
-            <Text size="2" weight="medium" mb="3">Default (sensitivity = 1)</Text>
+            <Box mb="3">
+              <Text size="2" weight="medium">Default (sensitivity = 1)</Text>
+            </Box>
             <TextField.Root
               size="2"
               variant="soft"
@@ -167,7 +175,9 @@ export default function TextFieldScrubTest() {
           </Box>
 
           <Box>
-            <Text size="2" weight="medium" mb="3">High (sensitivity = 5)</Text>
+            <Box mb="3">
+              <Text size="2" weight="medium">High (sensitivity = 5)</Text>
+            </Box>
             <TextField.Root
               size="2"
               variant="soft"
@@ -200,7 +210,9 @@ export default function TextFieldScrubTest() {
       {/* Test 4: Modifiers */}
       <Flex direction="column" gap="6">
         <Box>
-          <Heading size="6" weight="medium" mb="3">4. Keyboard Modifiers</Heading>
+          <Box mb="3">
+            <Heading size="6" weight="medium">4. Keyboard Modifiers</Heading>
+          </Box>
           <Text size="2" emphasis="medium">
             Hold modifier keys while scrubbing for different speeds
           </Text>
@@ -252,7 +264,9 @@ export default function TextFieldScrubTest() {
       {/* Test 5: Real-World Application */}
       <Flex direction="column" gap="6">
         <Box>
-          <Heading size="6" weight="medium" mb="3">5. Real-World: Property Panel</Heading>
+          <Box mb="3">
+            <Heading size="6" weight="medium">5. Real-World: Property Panel</Heading>
+          </Box>
           <Text size="2" emphasis="medium">
             Design tool-style interface combining all features
           </Text>
@@ -406,6 +420,6 @@ export default function TextFieldScrubTest() {
         </Box>
       </Flex>
       </Flex>
-    </Container>
+    </Box>
   );
 }

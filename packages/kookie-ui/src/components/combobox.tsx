@@ -27,7 +27,6 @@ import { Command as CommandPrimitive, useCommandState } from 'cmdk';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSize } from '../helpers/theme-size.js';
 import { comboboxRootPropDefs, comboboxTriggerPropDefs, comboboxContentPropDefs } from './combobox.props.js';
-import { marginPropDefs } from '../props/margin.props.js';
 import { ChevronDownIcon, ThickCheckIcon } from './icons.js';
 import { Theme, useThemeContext } from './theme.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
@@ -36,7 +35,6 @@ import { Slottable } from './slot.js';
 import { VisuallyHidden } from './visually-hidden.js';
 
 import type { textFieldRootPropDefs } from './text-field.props.js';
-import type { MarginProps } from '../props/margin.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
@@ -319,7 +317,7 @@ ComboboxRoot.displayName = 'Combobox.Root';
 type ComboboxTriggerElement = HTMLButtonElement;
 type ComboboxTriggerOwnProps = GetPropDefTypes<typeof comboboxTriggerPropDefs>;
 type NativeTriggerProps = Omit<React.ComponentPropsWithoutRef<'button'>, 'color'>;
-interface ComboboxTriggerProps extends NativeTriggerProps, MarginProps, ComboboxTriggerOwnProps {}
+interface ComboboxTriggerProps extends NativeTriggerProps, ComboboxTriggerOwnProps {}
 
 const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTriggerProps>((props, forwardedRef) => {
   const ctx = useComboboxContext('Trigger');
@@ -338,7 +336,7 @@ const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTrigger
     onKeyDown,
     type: buttonType,
     ...triggerProps
-  } = extractProps({ size: ctx.size, ...props }, triggerSizingPropDefs, comboboxTriggerPropDefs, marginPropDefs);
+  } = extractProps({ size: ctx.size, ...props }, triggerSizingPropDefs, comboboxTriggerPropDefs);
 
   const isDisabled = disabled ?? ctx.disabled;
   const resolvedColor = color ?? ctx.color;

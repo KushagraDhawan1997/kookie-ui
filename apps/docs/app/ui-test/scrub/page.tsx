@@ -9,7 +9,7 @@ import {
   Heading,
   Card,
   Separator,
-  Badge,
+  Chip,
   Code,
   Slider,
   Switch,
@@ -41,9 +41,9 @@ export default function ScrubTestPage() {
       <Flex direction="column" gap="7">
         {/* Header */}
         <Flex direction="column" gap="3">
-          <Badge size="2" variant="soft" color="blue" style={{ alignSelf: 'flex-start' }}>
+          <Chip size="2" variant="soft" color="blue" style={{ alignSelf: 'flex-start' }}>
             New Feature
-          </Badge>
+          </Chip>
           <Heading size="7" weight="semibold">
             TextField Scrubbing
           </Heading>
@@ -143,9 +143,9 @@ export default function ScrubTestPage() {
                 }}
               />
               {isScrubbing && (
-                <Badge color="blue" variant="soft">
+                <Chip color="blue" variant="soft">
                   Scrubbing...
-                </Badge>
+                </Chip>
               )}
             </Flex>
           </Flex>

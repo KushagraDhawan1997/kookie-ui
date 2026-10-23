@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Button, IconButton, Link, ScrollArea, Text } from '@kushagradhawan/kookie-ui';
+import { Button, Link, ScrollArea, Text } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Copy01Icon, Tick01Icon } from '@hugeicons/core-free-icons';
 import type { BundledLanguage, BundledTheme, ShikiTransformer } from 'shiki';
@@ -312,7 +312,7 @@ export function CodeBlock({
         <div className="code-block-body">
           {showCopy && !hasHeader && (
             <div className="code-block-floating-actions">
-              <IconButton
+              <Button iconOnly
                 size="2"
                 variant="ghost"
                 color="gray"
@@ -322,7 +322,7 @@ export function CodeBlock({
                 className="code-block-copy"
               >
                 <HugeiconsIcon icon={copied ? Tick01Icon : Copy01Icon} strokeWidth={1.75} />
-              </IconButton>
+              </Button>
             </div>
           )}
           <ScrollArea type="hover" scrollbars="horizontal" style={{ maxHeight: collapsed ? collapsedHeight : undefined }}>

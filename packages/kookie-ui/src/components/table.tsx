@@ -5,26 +5,22 @@ import { tableRootPropDefs, tableRowPropDefs, tableCellPropDefs } from './table.
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { getResponsiveClassNames } from '../helpers/get-responsive-styles.js';
-import { marginPropDefs } from '../props/margin.props.js';
 import { ScrollArea } from './scroll-area.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
-import type { MarginProps } from '../props/margin.props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
 type TableRootElement = React.ElementRef<'div'>;
 type TableRootOwnProps = GetPropDefTypes<typeof tableRootPropDefs>;
 interface TableRootProps
   extends ComponentPropsWithout<'div', RemovedProps>,
-    MarginProps,
     TableRootOwnProps {}
 const TableRoot = React.forwardRef<TableRootElement, TableRootProps>((ownProps, forwardedRef) => {
   const props = useThemeSizeProps(ownProps, tableRootPropDefs.size);
   const { layout: layoutPropDef, ...rootPropDefs } = tableRootPropDefs;
   const { className, children, layout, ...rootProps } = extractProps(
     props,
-    rootPropDefs,
-    marginPropDefs
+    rootPropDefs
   );
   const tableLayoutClassNames = getResponsiveClassNames({
     value: layout,

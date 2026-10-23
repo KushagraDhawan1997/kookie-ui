@@ -6,7 +6,7 @@ source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/comp
 
 import { BlockInstallation } from '@/components/block-doc-page';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
-import { Badge, Button, Card, Flex, Text } from '@kushagradhawan/kookie-ui';
+import { Chip, Button, Card, Flex, Text } from '@kushagradhawan/kookie-ui';
 import { previewSources } from './snippets';
 
 Preview Block frames a live demo: a toolbar with a light/dark switch, a padded stage, and optionally the demo's source attached underneath, all in one outline. Every example on this site is one. The stage has its own `Theme`, so switching a preview to dark leaves the page alone.
@@ -76,7 +76,7 @@ Pin the stage to dark and hide the switch when a demo only makes sense one way.
 
 <PreviewBlock appearance="dark" showThemeToggle={false} code={previewSources.dark}>
   <Flex gap="3" align="center">
-    <Badge color="green" variant="soft">Live</Badge>
+    <Chip color="green" variant="soft">Live</Chip>
     <Text size="2">Deployed 2 minutes ago</Text>
   </Flex>
 </PreviewBlock>

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { renderWithProviders, screen, fireEvent, act } from '../../test-utils';
 import userEvent from '@testing-library/user-event';
-import { Chatbar, IconButton } from '../../../src/components/index';
+import { Button, Chatbar } from '../../../src/components/index';
 
 type RootProps = React.ComponentProps<typeof Chatbar.Root>;
 
@@ -15,7 +15,7 @@ function ChatbarFixture({ submitOnEnter, ...props }: RootProps & { submitOnEnter
         <Chatbar.Textarea aria-label="Message" submitOnEnter={submitOnEnter} />
         <Chatbar.Row>
           <Chatbar.AttachTrigger asChild>
-            <IconButton aria-label="Attach" />
+            <Button iconOnly aria-label="Attach" />
           </Chatbar.AttachTrigger>
           <Chatbar.Send>Send</Chatbar.Send>
         </Chatbar.Row>

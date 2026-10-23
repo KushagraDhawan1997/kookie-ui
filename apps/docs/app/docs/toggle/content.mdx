@@ -1,0 +1,48 @@
+---
+title: Toggle
+description: A button that stays pressed.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/toggle.tsx
+---
+
+Toggle is a button with two states: bold in a formatting bar, a filter that is on or off. It is a [Button](/docs/button) in every other respect and wears Button's pressed look while on. Picking one of several is a [Segmented Control](/docs/segmented-control).
+
+## Playground
+
+import TogglePlayground from '../../playground/toggle-playground';
+
+<TogglePlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Toggle } from '@kushagradhawan/kookie-ui';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { TextBoldIcon } from '@hugeicons/core-free-icons';
+
+export function Formatting({ bold, setBold }: { bold: boolean; setBold: (bold: boolean) => void }) {
+  return (
+    <>
+      <Toggle defaultPressed={false}>Show hidden</Toggle>
+      <Toggle iconOnly aria-label="Bold" pressed={bold} onPressedChange={setBold}>
+        <HugeiconsIcon icon={TextBoldIcon} strokeWidth={1.75} />
+      </Toggle>
+    </>
+  );
+}
+```
+
+## Props
+
+Toggle takes every [Button prop](/docs/button#props) except `as`, and these:
+
+| Prop | Type | Description |
+| ---- | ---- | ----------- |
+| `pressed` | `boolean` | Whether the toggle is on. The controlled counterpart of `defaultPressed` |
+| `onPressedChange` | `(pressed: boolean) => void` | Fires with the new state |
+| `defaultPressed` | `boolean` | Whether the toggle starts on |
+| `iconOnly` | `boolean` | Square, holding only an icon. Requires `aria-label` or `aria-labelledby` |
+
+## Accessibility
+
+- Toggle sets `aria-pressed` and announces the new state with its name when pressed.
+- An `iconOnly` toggle has no visible text, so the type requires `aria-label` or `aria-labelledby`.

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { DocsShell } from '@/components/blocks/docs-shell/docs-shell';
 import { docsNavigation } from '../navigation-config';
 import { DarkModeToggle } from './dark-mode';
-import { Badge, IconButton, ToolbarGroup } from '@kushagradhawan/kookie-ui';
+import { Chip, Button, ToolbarGroup } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { GithubIcon } from '@hugeicons/core-free-icons';
 
@@ -23,19 +23,19 @@ export function DocsLayout({ children }: { children: React.ReactNode }) {
       pathname={pathname}
       linkComponent={Link}
       headerActions={
-        <Badge variant="raised" color="gray" size="2">
+        <Chip variant="raised" color="gray" size="2">
           v{process.env.KOOKIE_UI_VERSION}
-        </Badge>
+        </Chip>
       }
       sidebarFooter={
         <>
           <DarkModeToggle />
           <ToolbarGroup>
-            <IconButton asChild variant="ghost" color="gray" size="3" aria-label="GitHub">
+            <Button iconOnly asChild variant="ghost" color="gray" size="3" aria-label="GitHub">
               <Link href="https://github.com/KushagraDhawan1997/kookie-ui" target="_blank" rel="noopener noreferrer">
                 <HugeiconsIcon icon={GithubIcon} strokeWidth={1.75} />
               </Link>
-            </IconButton>
+            </Button>
           </ToolbarGroup>
         </>
       }

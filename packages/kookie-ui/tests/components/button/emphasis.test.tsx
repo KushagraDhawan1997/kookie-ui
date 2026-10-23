@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { renderWithProviders, screen } from '../../test-utils';
-import { Button, IconButton, ToggleButton, ToggleIconButton, Toolbar } from '../../../src/components/index';
+import { Button, Toggle, Toolbar } from '../../../src/components/index';
 
 const RANKS = [
   ['loud', 'solid'],
@@ -16,9 +16,9 @@ describe('emphasis is a button rank, and the same thing as its variant', () => {
         <>
           <Button emphasis={emphasis}>A</Button>
           <Button variant={variant}>B</Button>
-          <IconButton emphasis={emphasis} aria-label="C">+</IconButton>
-          <ToggleButton emphasis={emphasis}>D</ToggleButton>
-          <ToggleIconButton emphasis={emphasis} aria-label="E">+</ToggleIconButton>
+          <Button iconOnly emphasis={emphasis} aria-label="C">+</Button>
+          <Toggle emphasis={emphasis}>D</Toggle>
+          <Toggle iconOnly emphasis={emphasis} aria-label="E">+</Toggle>
         </>,
       );
       const byName = (name: string) => screen.getByRole('button', { name });

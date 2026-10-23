@@ -5,10 +5,8 @@ import { Tabs as TabsPrimitive } from 'radix-ui';
 import { tabsListPropDefs } from './tabs.props.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../helpers/theme-size.js';
-import { marginPropDefs } from '../props/margin.props.js';
 
 import type { tabsContentPropDefs, tabsRootPropDefs } from './tabs.props.js';
-import type { MarginProps } from '../props/margin.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
@@ -16,10 +14,9 @@ type TabsRootElement = React.ElementRef<typeof TabsPrimitive.Root>;
 type TabsRootOwnProps = GetPropDefTypes<typeof tabsRootPropDefs>;
 interface TabsRootProps
   extends ComponentPropsWithout<typeof TabsPrimitive.Root, 'asChild' | 'color' | 'defaultChecked'>,
-    MarginProps,
     TabsRootOwnProps {}
 const TabsRoot = React.forwardRef<TabsRootElement, TabsRootProps>((props, forwardedRef) => {
-  const { className, ...rootProps } = extractProps(props, marginPropDefs);
+  const { className, ...rootProps } = props;
   return (
     <TabsPrimitive.Root
       {...rootProps}
@@ -34,14 +31,12 @@ type TabsListElement = React.ElementRef<typeof TabsPrimitive.List>;
 type TabsListOwnProps = GetPropDefTypes<typeof tabsListPropDefs>;
 interface TabsListProps
   extends ComponentPropsWithout<typeof TabsPrimitive.List, RemovedProps>,
-    MarginProps,
     TabsListOwnProps {}
 const TabsList = React.forwardRef<TabsListElement, TabsListProps>((ownProps, forwardedRef) => {
   const props = useThemeSizeProps(ownProps, tabsListPropDefs.size);
   const { className, color, ...listProps } = extractProps(
     props,
     tabsListPropDefs,
-    marginPropDefs,
   );
   return (
     <TabsPrimitive.List
@@ -82,11 +77,10 @@ type TabsContentElement = React.ElementRef<typeof TabsPrimitive.Content>;
 type TabsContentOwnProps = GetPropDefTypes<typeof tabsContentPropDefs>;
 interface TabsContentProps
   extends ComponentPropsWithout<typeof TabsPrimitive.Content, RemovedProps>,
-    MarginProps,
     TabsContentOwnProps {}
 const TabsContent = React.forwardRef<TabsContentElement, TabsContentProps>(
   (props, forwardedRef) => {
-    const { className, ...contentProps } = extractProps(props, marginPropDefs);
+    const { className, ...contentProps } = props;
     return (
       <TabsPrimitive.Content
         {...contentProps}

@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Box, Flex, IconButton, Shell } from '@kushagradhawan/kookie-ui';
+import { Box, Flex, Button, Shell } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { SidebarLeftIcon } from '@hugeicons/core-free-icons';
 import { createPortal } from 'react-dom';
@@ -91,11 +91,11 @@ export function DocsShell({
             left="0"
             right="0"
           >
-            <IconButton variant="ghost" size="3" color="gray" asChild aria-label="Toggle navigation">
+            <Button iconOnly variant="ghost" size="3" color="gray" asChild aria-label="Toggle navigation">
               <Shell.Trigger target="sidebar">
                 {mobileTriggerIcon ?? <HugeiconsIcon icon={SidebarLeftIcon} strokeWidth={1.75} />}
               </Shell.Trigger>
-            </IconButton>
+            </Button>
             <Flex ref={setActionsSlot} align="center" gap="5" />
           </Flex>
         </Box>
