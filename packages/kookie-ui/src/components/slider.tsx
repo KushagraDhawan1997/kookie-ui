@@ -146,7 +146,7 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
   }, []);
 
   return (
-    <div className="rt-SliderContainer">
+    <div className="kui-SliderContainer">
       {/* Live region for screen reader announcements */}
       <div
         ref={announceRef}
@@ -170,7 +170,7 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
         step={step}
         onValueChange={handleValueChange}
         asChild={false}
-        className={classNames('rt-SliderRoot', className)}
+        className={classNames('kui-SliderRoot', className)}
         // Essential ARIA attributes for WCAG 2.2 AA compliance
         aria-valuemin={min}
         aria-valuemax={max}
@@ -178,16 +178,16 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
         aria-valuetext={formatValueText(currentValue as number[])}
         aria-label={props['aria-label'] || `${isRange ? 'Range' : 'Value'} slider`}
       >
-        <SliderPrimitive.Track className="rt-SliderTrack">
+        <SliderPrimitive.Track className="kui-SliderTrack">
           <SliderPrimitive.Range
-            className="rt-SliderRange"
+            className="kui-SliderRange"
             data-inverted={sliderProps.inverted ? '' : undefined}
           />
         </SliderPrimitive.Track>
         {(sliderProps.value ?? sliderProps.defaultValue ?? []).map((value, index) => (
           <SliderPrimitive.Thumb
             key={index}
-            className="rt-SliderThumb"
+            className="kui-SliderThumb"
             {...(tabIndex !== undefined ? { tabIndex } : undefined)}
             aria-label={
               isRange
@@ -199,12 +199,12 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
         ))}
       </SliderPrimitive.Root>
       {tickElements && (
-        <div className="rt-SliderTicks" role="group" aria-label="Slider tick marks">
+        <div className="kui-SliderTicks" role="group" aria-label="Slider tick marks">
           {tickElements.map((tick) => {
             return (
               <button
                 key={tick.index}
-                className="rt-SliderTick"
+                className="kui-SliderTick"
                 style={{
                   left: `${tick.percentage}%`,
                   transform: 'translateX(-50%)',
@@ -221,9 +221,9 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
                 aria-describedby={tick.label ? undefined : `tick-${tick.index}-value`}
                 type="button"
               >
-                <div className="rt-SliderTickMark" />
+                <div className="kui-SliderTickMark" />
                 {tick.label && showTickLabels !== false && (
-                  <div className="rt-SliderTickLabel">{tick.label}</div>
+                  <div className="kui-SliderTickLabel">{tick.label}</div>
                 )}
                 {!tick.label && (
                   <span id={`tick-${tick.index}-value`} className="sr-only">

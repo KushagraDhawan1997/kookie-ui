@@ -14,7 +14,7 @@ describe('Inspector (stacked) data-open', () => {
       </Shell.Root>,
     );
 
-    const insp = document.querySelector('.rt-ShellInspector') as HTMLElement;
+    const insp = document.querySelector('.kui-ShellInspector') as HTMLElement;
     expect(insp).toBeTruthy();
     expect(insp.hasAttribute('data-open')).toBe(true);
   });
@@ -27,7 +27,7 @@ describe('Inspector (stacked) data-open', () => {
       </Shell.Root>,
     );
 
-    const insp = document.querySelector('.rt-ShellInspector') as HTMLElement;
+    const insp = document.querySelector('.kui-ShellInspector') as HTMLElement;
     expect(insp).toBeTruthy();
     expect(insp.hasAttribute('data-open')).toBe(false);
   });

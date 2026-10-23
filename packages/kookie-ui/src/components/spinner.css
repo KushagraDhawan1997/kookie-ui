@@ -1,19 +1,19 @@
-.radix-themes {
+.kui-theme {
   --spinner-animation-duration: 800ms;
   --spinner-opacity: 0.65;
 }
 
-.rt-Spinner {
+.kui-Spinner {
   display: block;
   position: relative;
   width: var(--space-5);
   height: var(--space-5);
   opacity: var(--spinner-opacity);
   /* Single GPU-composited rotation instead of 8 opacity animations */
-  animation: rt-spinner-rotate var(--spinner-animation-duration) steps(8, end) infinite;
+  animation: kui-spinner-rotate var(--spinner-animation-duration) steps(8, end) infinite;
 }
 
-.rt-SpinnerLeaf {
+.kui-SpinnerLeaf {
   position: absolute;
   top: 0;
   left: calc(50% - 12.5% / 2);
@@ -65,7 +65,7 @@
   }
 }
 
-@keyframes rt-spinner-rotate {
+@keyframes kui-spinner-rotate {
   to {
     transform: rotate(360deg);
   }
@@ -73,7 +73,7 @@
 
 /* A busy indicator keeps moving when motion is reduced, more slowly. */
 @media (prefers-reduced-motion: reduce) {
-  .rt-Spinner {
+  .kui-Spinner {
     animation-duration: calc(var(--spinner-animation-duration) * 3);
   }
 }

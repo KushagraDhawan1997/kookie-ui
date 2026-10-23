@@ -49,13 +49,13 @@ describe('Combobox', () => {
   describe('Root', () => {
     it('renders the trigger and keeps content unmounted while closed', () => {
       renderWithProviders(<FruitCombobox />);
-      expect(screen.getByTestId('trigger')).toHaveClass('rt-ComboboxTrigger', 'rt-SelectTrigger');
-      expect(document.querySelector('.rt-ComboboxContent')).not.toBeInTheDocument();
+      expect(screen.getByTestId('trigger')).toHaveClass('kui-ComboboxTrigger', 'kui-SelectTrigger');
+      expect(document.querySelector('.kui-ComboboxContent')).not.toBeInTheDocument();
     });
 
     it('keeps content mounted but closed with forceMount', () => {
       renderWithProviders(<FruitCombobox contentProps={{ forceMount: true }} />);
-      expect(document.querySelector('.rt-ComboboxContent')).toHaveAttribute('data-state', 'closed');
+      expect(document.querySelector('.kui-ComboboxContent')).toHaveAttribute('data-state', 'closed');
     });
 
     it('disables the trigger when Root is disabled', () => {
@@ -242,7 +242,7 @@ describe('Combobox', () => {
 
       expect(onValueChange).toHaveBeenCalledWith('cherry');
       expect(screen.getByTestId('trigger')).toHaveTextContent('Cherry');
-      expect(document.querySelector('.rt-ComboboxContent')).not.toBeInTheDocument();
+      expect(document.querySelector('.kui-ComboboxContent')).not.toBeInTheDocument();
     });
 
     it('selects with the keyboard', async () => {
@@ -395,7 +395,7 @@ describe('Combobox', () => {
         </Combobox.Root>,
       );
       expect(screen.getByRole('group', { name: 'React' })).toBeInTheDocument();
-      expect(screen.getByText('React')).toHaveClass('rt-ComboboxLabel', 'rt-BaseMenuLabel');
+      expect(screen.getByText('React')).toHaveClass('kui-ComboboxLabel', 'kui-BaseMenuLabel');
     });
 
     it('warns in development when the trigger has no accessible name', () => {
@@ -437,7 +437,7 @@ describe('Combobox', () => {
     it('applies variant, color and placeholder state', () => {
       renderWithProviders(<FruitCombobox triggerProps={{ variant: 'soft', color: 'jade' }} />);
       const trigger = screen.getByTestId('trigger');
-      expect(trigger).toHaveClass('rt-variant-soft');
+      expect(trigger).toHaveClass('kui-variant-soft');
       expect(trigger).toHaveAttribute('data-accent-color', 'jade');
       expect(trigger).toHaveAttribute('data-placeholder');
     });
@@ -458,9 +458,14 @@ describe('Combobox', () => {
       renderWithProviders(<FruitCombobox defaultOpen size={{ initial: '1', md: '3' }} />);
       const html = document.body.innerHTML;
       expect(html).not.toContain('[object Object]');
-      const inputRoot = document.querySelector('.rt-ComboboxInputRoot');
-      expect(inputRoot).toHaveClass('rt-r-size-1', 'md:rt-r-size-3');
-      expect(document.querySelector('.rt-ComboboxContent')).toHaveClass('rt-r-size-1', 'md:rt-r-size-3');
+      const inputRoot = document.querySelector('.kui-ComboboxInputRoot');
+      expect(inputRoot).toHaveClass('kui-r-size-1', 'md:kui-r-size-3');
+      expect(document.querySelector('.kui-ComboboxContent')).toHaveClass('kui-r-size-1', 'md:kui-r-size-3');
+    });
+
+    it('opens a size 4 list from a size 4 field', () => {
+      renderWithProviders(<FruitCombobox defaultOpen size="4" />);
+      expect(document.querySelector('.kui-ComboboxContent')).toHaveClass('kui-r-size-4');
     });
 
     it('renders separators with base menu classes', () => {
@@ -478,7 +483,7 @@ describe('Combobox', () => {
           </Combobox.Content>
         </Combobox.Root>,
       );
-      expect(screen.getByTestId('separator')).toHaveClass('rt-ComboboxSeparator', 'rt-BaseMenuSeparator');
+      expect(screen.getByTestId('separator')).toHaveClass('kui-ComboboxSeparator', 'kui-BaseMenuSeparator');
     });
   });
 

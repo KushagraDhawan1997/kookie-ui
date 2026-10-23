@@ -106,7 +106,7 @@ const PopoverContent = React.forwardRef<PopoverContentElement, PopoverContentPro
             {...contentProps}
             ref={combinedRef}
             aria-labelledby={labelId}
-            className={classNames('rt-PopperContent', 'rt-PopoverContent', className)}
+            className={classNames('kui-PopperContent', 'kui-PopoverContent', className)}
           >
             <PopoverContentContext.Provider value={React.useMemo(() => ({ contentRef, setToolbarOffset, setLabelId }), [setToolbarOffset])}>
               {props.children}
@@ -181,7 +181,7 @@ const PopoverToolbarBase = React.forwardRef<PopoverToolbarElement, PopoverToolba
     }, [ctx]);
 
     return (
-      <div {...props} ref={setRefs} className={classNames('rt-PopoverToolbar', className)}>
+      <div {...props} ref={setRefs} className={classNames('kui-PopoverToolbar', className)}>
         {children}
       </div>
     );
@@ -196,7 +196,7 @@ const PopoverToolbarLeft = React.forwardRef<HTMLDivElement, SectionProps>(
     <div
       {...props}
       ref={ref}
-      className={classNames('rt-PopoverToolbarSection', 'rt-PopoverToolbarLeft', className)}
+      className={classNames('kui-PopoverToolbarSection', 'kui-PopoverToolbarLeft', className)}
     />
   ),
 );
@@ -207,7 +207,7 @@ const PopoverToolbarCenter = React.forwardRef<HTMLDivElement, SectionProps>(
     <div
       {...props}
       ref={ref}
-      className={classNames('rt-PopoverToolbarSection', 'rt-PopoverToolbarCenter', className)}
+      className={classNames('kui-PopoverToolbarSection', 'kui-PopoverToolbarCenter', className)}
     />
   ),
 );
@@ -218,7 +218,7 @@ const PopoverToolbarRight = React.forwardRef<HTMLDivElement, SectionProps>(
     <div
       {...props}
       ref={ref}
-      className={classNames('rt-PopoverToolbarSection', 'rt-PopoverToolbarRight', className)}
+      className={classNames('kui-PopoverToolbarSection', 'kui-PopoverToolbarRight', className)}
     />
   ),
 );
@@ -229,7 +229,7 @@ const PopoverToolbarTitle = React.forwardRef<HTMLSpanElement, TitleProps>(
   ({ className, id: idProp, ...props }, ref) => {
     const ctx = usePopoverContentContext('Popover.Toolbar.Title');
     const reactId = React.useId();
-    const id = idProp ?? `rt-popover-toolbar-title-${reactId}`;
+    const id = idProp ?? `kui-popover-toolbar-title-${reactId}`;
     React.useEffect(() => {
       ctx?.setLabelId(id);
       return () => ctx?.setLabelId(undefined);
@@ -239,7 +239,7 @@ const PopoverToolbarTitle = React.forwardRef<HTMLSpanElement, TitleProps>(
         {...props}
         id={id}
         ref={ref}
-        className={classNames('rt-PopoverToolbarTitle', className)}
+        className={classNames('kui-PopoverToolbarTitle', className)}
       />
     );
   },

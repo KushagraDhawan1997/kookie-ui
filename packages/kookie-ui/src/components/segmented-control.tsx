@@ -47,7 +47,7 @@ const SegmentedControlRoot = React.forwardRef<HTMLDivElement, SegmentedControlRo
         data-disabled={props.disabled || undefined}
         data-radius={radius}
         ref={forwardedRef}
-        className={classNames('rt-SegmentedControlRoot', className)}
+        className={classNames('kui-SegmentedControlRoot', className)}
         onValueChange={(value) => {
           if (value) {
             setValue(value);
@@ -60,7 +60,7 @@ const SegmentedControlRoot = React.forwardRef<HTMLDivElement, SegmentedControlRo
         disabled={!!props.disabled}
       >
         {children}
-        <div className="rt-SegmentedControlIndicator" />
+        <div className="kui-SegmentedControlIndicator" />
       </ToggleGroupPrimitive.Root>
     );
   },
@@ -85,16 +85,16 @@ const SegmentedControlItem = React.forwardRef<HTMLButtonElement, SegmentedContro
   ({ children, className, iconOnly, ...props }, forwardedRef) => (
     <ToggleGroupPrimitive.Item
       ref={forwardedRef}
-      className={classNames('rt-reset', 'rt-SegmentedControlItem', className)}
+      className={classNames('kui-reset', 'kui-SegmentedControlItem', className)}
       data-icon-only={iconOnly || undefined}
       {...props}
       disabled={false}
       asChild={false}
     >
-      <span className="rt-SegmentedControlItemSeparator" />
-      <span className="rt-SegmentedControlItemLabel">
-        <span className="rt-SegmentedControlItemLabelActive">{children}</span>
-        <span className="rt-SegmentedControlItemLabelInactive" aria-hidden>
+      <span className="kui-SegmentedControlItemSeparator" />
+      <span className="kui-SegmentedControlItemLabel">
+        <span className="kui-SegmentedControlItemLabelActive">{children}</span>
+        <span className="kui-SegmentedControlItemLabelInactive" aria-hidden>
           {children}
         </span>
       </span>

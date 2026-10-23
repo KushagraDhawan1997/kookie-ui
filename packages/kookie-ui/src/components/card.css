@@ -4,11 +4,11 @@
 /* Disable selector-max-type rule to target `button` and `a` tags. */
 /* Make sure these tags are wrapped in `:where()` for 0 specificity. */
 
-.rt-Card {
+.kui-Card {
   --base-card-border-width: var(--card-border-width);
 
   /*
-   * A Card is a nesting surface (rt-SurfaceNest, tokens/radius.css): it pads by its own
+   * A Card is a nesting surface (kui-SurfaceNest, tokens/radius.css): it pads by its own
    * --kui-sf-p and draws --kui-sf-r, which inside another surface is the outer corner minus
    * the outer padding, so a Card in a Card stays concentric.
    */
@@ -30,5 +30,19 @@
         background-image: linear-gradient(var(--focus-a2), var(--focus-a2));
       }
     }
+  }
+}
+
+/*
+ * A CHOSEN card: a card that holds a checked Checkbox or Radio reads as picked, as in v2, so a
+ * Card holding a choice replaces CheckboxCards and RadioCards. Only the card's own control
+ * counts as a checkbox or radio; a Card holding a whole form of them is a form, not a choice.
+ */
+.kui-Card:where(:has(:is([role='checkbox'], [role='radio'])[data-state='checked'], input:is([type='checkbox'], [type='radio']):checked)) {
+  &::before {
+    background-image: linear-gradient(var(--accent-a2), var(--accent-a2));
+  }
+  &::after {
+    box-shadow: inset 0 0 0 1px var(--accent-a8);
   }
 }

@@ -80,16 +80,16 @@ const Strip = React.forwardRef<HTMLDivElement, StripProps & { kind: 'notice' | '
       aria-live="polite"
       {...props}
       ref={forwardedRef}
-      className={classNames('rt-NoticeRoot', `rt-r-size-${size}`, className)}
+      className={classNames('kui-NoticeRoot', `kui-r-size-${size}`, className)}
       data-kind={kind}
       data-accent-color={color}
     >
       {leading ? (
-        <span className="rt-NoticeIcon" aria-hidden>
+        <span className="kui-NoticeIcon" aria-hidden>
           {leading}
         </span>
       ) : null}
-      <Text as="div" size={size} className="rt-NoticeText">
+      <Text as="div" size={size} className="kui-NoticeText">
         {children}
       </Text>
       {trailing}
@@ -104,10 +104,10 @@ const Notice = React.forwardRef<HTMLDivElement, NoticeProps>(({ icon, action, on
   const size = useThemeSize(sizeProp ?? contextSize, noticeSizePropDef);
   const trailing =
     action || onDismiss ? (
-      <span className="rt-NoticeActions">
+      <span className="kui-NoticeActions">
         {action}
         {onDismiss ? (
-          <Button iconOnly size={size} variant="ghost" color="gray" aria-label={dismissLabel} className="rt-NoticeDismiss" onClick={onDismiss}>
+          <Button iconOnly size={size} variant="ghost" color="gray" aria-label={dismissLabel} className="kui-NoticeDismiss" onClick={onDismiss}>
             <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden>
               <path d="M4 4l7 7M11 4l-7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
@@ -132,7 +132,7 @@ const Confirmation = React.forwardRef<HTMLDivElement, ConfirmationProps>(
       ref={forwardedRef}
       kind="confirmation"
       trailing={
-        <span className="rt-NoticeActions">
+        <span className="kui-NoticeActions">
           <Button size={size} variant="ghost" color="gray" disabled={busy} onClick={onCancel}>
             {cancelLabel}
           </Button>

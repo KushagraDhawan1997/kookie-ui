@@ -99,7 +99,7 @@
 /*
  * 3. Nesting (v2 §6, §10)
  *
- * A surface opts in with `rt-SurfaceNest` next to its `rt-r-size-N` class. At its size it
+ * A surface opts in with `kui-SurfaceNest` next to its `kui-r-size-N` class. At its size it
  * publishes on ITSELF:
  *   --kui-sf-radius  its corner (--radius-surface-N)
  *   --kui-sf-p       its padding (--surface-p-N)
@@ -116,43 +116,43 @@
  * An element that states `--kui-nest: initial` hands the inner surface its own corner back.
  */
 @breakpoints {
-  .rt-SurfaceNest {
-    &:where(.rt-r-size-1) {
+  .kui-SurfaceNest {
+    &:where(.kui-r-size-1) {
       --kui-sf-radius: var(--radius-surface-1);
       --kui-sf-p: var(--surface-p-1);
     }
-    &:where(.rt-r-size-1) > * {
+    &:where(.kui-r-size-1) > * {
       --kui-nest: max(0px, calc(var(--radius-surface-1) - var(--surface-p-1)));
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       --kui-sf-radius: var(--radius-surface-2);
       --kui-sf-p: var(--surface-p-2);
     }
-    &:where(.rt-r-size-2) > * {
+    &:where(.kui-r-size-2) > * {
       --kui-nest: max(0px, calc(var(--radius-surface-2) - var(--surface-p-2)));
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       --kui-sf-radius: var(--radius-surface-3);
       --kui-sf-p: var(--surface-p-3);
     }
-    &:where(.rt-r-size-3) > * {
+    &:where(.kui-r-size-3) > * {
       --kui-nest: max(0px, calc(var(--radius-surface-3) - var(--surface-p-3)));
     }
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       --kui-sf-radius: var(--radius-surface-4);
       --kui-sf-p: var(--surface-p-4);
     }
-    &:where(.rt-r-size-4) > * {
+    &:where(.kui-r-size-4) > * {
       --kui-nest: max(0px, calc(var(--radius-surface-4) - var(--surface-p-4)));
     }
   }
 }
 
-.rt-SurfaceNest {
+.kui-SurfaceNest {
   --kui-sf-r: var(--kui-sf-radius, var(--radius-surface-2));
 }
 
-:where(.rt-SurfaceNest) .rt-SurfaceNest {
+:where(.kui-SurfaceNest) .kui-SurfaceNest {
   --kui-sf-r: min(
     var(--kui-nest, var(--kui-sf-radius, var(--radius-surface-2))),
     var(--kui-sf-radius, var(--radius-surface-2))

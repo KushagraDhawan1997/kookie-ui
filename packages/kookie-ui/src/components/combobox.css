@@ -9,7 +9,7 @@
 /* The surface renders Radix Popover content directly with the BaseMenu classes
  * only, so these are the popover behaviours it still needs. Padding lives on
  * the search row and the viewport. */
-.rt-ComboboxContent {
+.kui-ComboboxContent {
   --combobox-list-max-height: calc(300px * var(--scale));
 
   min-width: var(--radix-popover-trigger-width);
@@ -20,13 +20,13 @@
 
 /* forceMount keeps closed content in the DOM (and its positioning and dismiss
  * listeners running); hide it while closed. */
-.rt-ComboboxContent:where([data-state='closed']) {
+.kui-ComboboxContent:where([data-state='closed']) {
   visibility: hidden;
   position: absolute;
   pointer-events: none;
 }
 
-.rt-ComboboxCommand {
+.kui-ComboboxCommand {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -34,44 +34,44 @@
   outline: 0;
 }
 
-.rt-ComboboxViewport {
+.kui-ComboboxViewport {
   padding-top: 0;
-  /* The outer .rt-ComboboxScrollArea is the only scroller. */
+  /* The outer .kui-ComboboxScrollArea is the only scroller. */
   overflow: visible;
 }
 
 /* The search row owns the top padding, so without it the viewport needs it back. */
-:where(.rt-ComboboxCommand:not(:has(.rt-ComboboxSearch))) .rt-ComboboxViewport {
+:where(.kui-ComboboxCommand:not(:has(.kui-ComboboxSearch))) .kui-ComboboxViewport {
   padding-top: var(--base-menu-content-padding);
 }
 
-.rt-ComboboxScrollArea {
+.kui-ComboboxScrollArea {
   flex: 1;
   min-height: 0;
   overflow: auto;
   overscroll-behavior: contain;
   max-height: var(--combobox-list-max-height);
   scrollbar-width: thin;
-  scrollbar-color: var(--gray-a8) transparent;
+  scrollbar-color: var(--neutral-a8) transparent;
 }
 
-.rt-ComboboxList {
+.kui-ComboboxList {
   outline: 0;
 }
 
 /* cmdk sets data-disabled="false" on enabled items, and base-menu.css styles any
  * [data-disabled] as disabled. Restore the enabled look. */
-.rt-ComboboxItem:where([data-disabled='false']) {
+.kui-ComboboxItem:where([data-disabled='false']) {
   color: inherit;
   cursor: var(--cursor-menu-item);
 }
 
 /* Search row: shares the surface background, no second panel */
-.rt-ComboboxSearch {
+.kui-ComboboxSearch {
   padding: var(--base-menu-content-padding);
 }
 
-.rt-ComboboxSearch :where(.rt-ComboboxInputRoot) {
+.kui-ComboboxSearch :where(.kui-ComboboxInputRoot) {
   width: 100%;
 }
 
@@ -81,12 +81,12 @@
  */
 
 /* Soft variant */
-.rt-BaseMenuContent:where(.rt-variant-soft) :where(.rt-ComboboxItem[data-selected='true']) {
+.kui-BaseMenuContent:where(.kui-variant-soft) :where(.kui-ComboboxItem[data-selected='true']) {
   background-color: var(--accent-4);
 }
 
-:where(.rt-BaseMenuContent.rt-variant-soft) .rt-ComboboxItem:where([data-selected='true']) :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
-  color: var(--gray-11);
+:where(.kui-BaseMenuContent.kui-variant-soft) .kui-ComboboxItem:where([data-selected='true']) :where(.kui-Text.kui-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
+  color: var(--neutral-11);
 }
 
 /* =============================================================================
@@ -94,23 +94,23 @@
  * =============================================================================
  */
 
-.rt-ComboboxItem:where([data-disabled='true']) {
-  color: var(--gray-a8);
+.kui-ComboboxItem:where([data-disabled='true']) {
+  color: var(--neutral-a8);
   cursor: default;
   pointer-events: none;
 }
 
 /* Empty state */
-.rt-ComboboxEmpty {
+.kui-ComboboxEmpty {
   padding: var(--space-5);
   text-align: center;
-  color: var(--gray-a11);
+  color: var(--neutral-a11);
   font-size: var(--font-size-2);
 }
 
 /* Items never take DOM focus, so the base menu :focus-visible rule never matches. */
 @media (forced-colors: active) {
-  .rt-ComboboxItem:where([data-selected='true']) {
+  .kui-ComboboxItem:where([data-selected='true']) {
     outline: 2px solid Highlight;
     outline-offset: -2px;
   }
@@ -118,13 +118,13 @@
 
 /* The highlight is solid when the system asks for more contrast. Gray fills with step 12. */
 @media (prefers-contrast: more) {
-  .rt-BaseMenuContent:where(.rt-variant-soft) :where(.rt-ComboboxItem[data-selected='true']) {
+  .kui-BaseMenuContent:where(.kui-variant-soft) :where(.kui-ComboboxItem[data-selected='true']) {
     background-color: var(--accent-solid);
     color: var(--accent-solid-contrast);
   }
 
   /* Muted text follows the highlight colour. Chips keep their own colours. */
-  :where(.rt-BaseMenuContent.rt-variant-soft) .rt-ComboboxItem:where([data-selected='true']) :where(.rt-Text, [data-accent-color='gray']:not(.rt-Chip)) {
+  :where(.kui-BaseMenuContent.kui-variant-soft) .kui-ComboboxItem:where([data-selected='true']) :where(.kui-Text, [data-accent-color='gray']:not(.kui-Chip)) {
     color: inherit;
   }
 }

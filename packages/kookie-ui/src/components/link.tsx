@@ -19,7 +19,7 @@ const Link = React.forwardRef<LinkElement, LinkProps>((props, forwardedRef) => {
       data-accent-color={color}
       ref={forwardedRef}
       asChild
-      className={classNames('rt-reset', 'rt-Link', className)}
+      className={classNames('kui-reset', 'kui-Link', className)}
     >
       {asChild ? (
         children

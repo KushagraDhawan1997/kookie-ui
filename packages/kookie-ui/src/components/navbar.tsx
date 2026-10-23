@@ -54,11 +54,11 @@ const NavbarRoot = React.forwardRef<NavbarRootElement, NavbarRootProps>(
       <header
         {...rootProps}
         ref={forwardedRef}
-        className={classNames('rt-NavbarRoot', className)}
+        className={classNames('kui-NavbarRoot', className)}
         data-position={position}
         data-size={size}
       >
-        <div className="rt-NavbarContainer">{children}</div>
+        <div className="kui-NavbarContainer">{children}</div>
       </header>
     );
   },
@@ -76,7 +76,7 @@ const NavbarLogo = React.forwardRef<HTMLDivElement, NavbarLogoProps>(
       return (
         <Slot
           ref={ref}
-          className={classNames('rt-NavbarLogo', className)}
+          className={classNames('kui-NavbarLogo', className)}
           {...props}
         />
       );
@@ -88,7 +88,7 @@ const NavbarLogo = React.forwardRef<HTMLDivElement, NavbarLogoProps>(
         gap={gap}
         align={align}
         justify={justify}
-        className={classNames('rt-NavbarLogo', className)}
+        className={classNames('kui-NavbarLogo', className)}
         {...props}
       />
     );
@@ -107,7 +107,7 @@ const NavbarNavigation = React.forwardRef<HTMLDivElement, NavbarNavigationProps>
       return (
         <Slot
           ref={ref}
-          className={classNames('rt-NavbarNavigation', className)}
+          className={classNames('kui-NavbarNavigation', className)}
           role="navigation"
           {...props}
         />
@@ -120,7 +120,7 @@ const NavbarNavigation = React.forwardRef<HTMLDivElement, NavbarNavigationProps>
         gap={gap}
         align={align}
         justify={justify}
-        className={classNames('rt-NavbarNavigation', className)}
+        className={classNames('kui-NavbarNavigation', className)}
         role="navigation"
         {...props}
       />
@@ -140,7 +140,7 @@ const NavbarActions = React.forwardRef<HTMLDivElement, NavbarActionsProps>(
       return (
         <Slot
           ref={ref}
-          className={classNames('rt-NavbarActions', className)}
+          className={classNames('kui-NavbarActions', className)}
           {...props}
         />
       );
@@ -152,7 +152,7 @@ const NavbarActions = React.forwardRef<HTMLDivElement, NavbarActionsProps>(
         gap={gap}
         align={align}
         justify={justify}
-        className={classNames('rt-NavbarActions', className)}
+        className={classNames('kui-NavbarActions', className)}
         {...props}
       />
     );

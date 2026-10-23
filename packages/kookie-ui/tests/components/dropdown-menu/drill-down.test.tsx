@@ -45,13 +45,13 @@ function NestedMenu(props: {
 }
 
 function getRoot() {
-  const root = document.querySelector('.rt-DropdownMenuDrillDownRoot');
+  const root = document.querySelector('.kui-DropdownMenuDrillDownRoot');
   if (!root) throw new Error('drill-down root not rendered');
   return root;
 }
 
 function getActivePanel() {
-  return document.querySelector('.rt-DropdownMenuDrillDownPanel[data-drill-down-active]');
+  return document.querySelector('.kui-DropdownMenuDrillDownPanel[data-drill-down-active]');
 }
 
 async function openMenu(ui: React.ReactElement) {
@@ -75,7 +75,7 @@ describe('DropdownMenu drill-down', () => {
       // Submenu items are not mounted until their panel is on the stack.
       expect(screen.queryByText('Email')).toBeNull();
       expect(screen.queryByText('Notes')).toBeNull();
-      expect(document.querySelector('.rt-DropdownMenuDrillDownPanel')).toBeNull();
+      expect(document.querySelector('.kui-DropdownMenuDrillDownPanel')).toBeNull();
       expect(getRoot()).not.toHaveAttribute('data-drill-down-active');
       expect(getRoot()).toHaveAttribute('data-submenu-behavior', 'drill-down');
     });

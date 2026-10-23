@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ButtonSchema } from './button.schema.js';
+import { ButtonObjectSchema } from './button.schema.js';
 
 /**
  * Toggle Zod schema - Single source of truth for Toggle component props
@@ -14,7 +14,7 @@ import { ButtonSchema } from './button.schema.js';
  * const iconProps = ToggleSchema.parse({ iconOnly: true, 'aria-label': 'Bold' });
  * ```
  */
-export const ToggleSchema = ButtonSchema.extend({
+export const ToggleSchema = ButtonObjectSchema.extend({
   /**
    * Controlled pressed state
    * When provided, the component is controlled and the pressed state is managed externally

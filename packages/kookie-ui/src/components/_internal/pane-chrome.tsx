@@ -49,7 +49,7 @@ function useChromeClasses() {
   const shellSize = React.useContext(ShellSizeContext);
   const size = visual?.size ?? shellSize;
   const menuVariant = visual?.menuVariant ?? 'soft';
-  return ['rt-ShellPaneChrome', `rt-r-size-${size}`, `rt-menu-variant-${menuVariant}`];
+  return ['kui-ShellPaneChrome', `kui-r-size-${size}`, `kui-menu-variant-${menuVariant}`];
 }
 
 type BandSize = '1' | '2' | '3' | '4';
@@ -92,7 +92,7 @@ const PaneHeader = React.forwardRef<HTMLDivElement, PaneHeaderProps>(({ classNam
       {...props}
       ref={forwardedRef}
       data-float={float || undefined}
-      className={classNames('rt-ShellPaneHeader', 'rt-SidebarHeader', 'rt-SidebarHeader--container', ...chrome, className)}
+      className={classNames('kui-ShellPaneHeader', 'kui-SidebarHeader', 'kui-SidebarHeader--container', ...chrome, className)}
     >
       <PaneBandSizeContext.Provider value={band}>{children}</PaneBandSizeContext.Provider>
     </div>
@@ -114,7 +114,7 @@ const PaneFooter = React.forwardRef<HTMLDivElement, PaneFooterProps>(({ classNam
       {...props}
       ref={forwardedRef}
       data-float={float || undefined}
-      className={classNames('rt-ShellPaneFooter', 'rt-SidebarFooter', 'rt-SidebarFooter--container', ...chrome, className)}
+      className={classNames('kui-ShellPaneFooter', 'kui-SidebarFooter', 'kui-SidebarFooter--container', ...chrome, className)}
     >
       <PaneBandSizeContext.Provider value={band}>{children}</PaneBandSizeContext.Provider>
     </div>
@@ -134,11 +134,11 @@ interface ScrollProps extends React.ComponentPropsWithoutRef<'div'> {
 const Scroll = React.forwardRef<HTMLDivElement, ScrollProps>(({ className, children, fade = false, ...props }, forwardedRef) => {
   const chrome = useChromeClasses();
   return (
-    <ScrollArea type="hover" fade={fade} className="rt-ShellScroll">
-      <div {...props} ref={forwardedRef} className={classNames('rt-BaseMenuContent', 'rt-SidebarContent', ...chrome, className)}>
+    <ScrollArea type="hover" fade={fade} className="kui-ShellScroll">
+      <div {...props} ref={forwardedRef} className={classNames('kui-BaseMenuContent', 'kui-SidebarContent', ...chrome, className)}>
         {/* A header's band does not reach a Toolbar in the scrolling list. */}
         <PaneBandSizeContext.Provider value={null}>
-          <div className="rt-BaseMenuViewport">{children}</div>
+          <div className="kui-BaseMenuViewport">{children}</div>
         </PaneBandSizeContext.Provider>
       </div>
     </ScrollArea>

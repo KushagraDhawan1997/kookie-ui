@@ -134,7 +134,7 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
       {...withoutRemovedPaneProps(domProps)}
       id={pane.id}
       ref={composedRef}
-      className={classNames('rt-ShellPane', 'rt-ShellInspector', className)}
+      className={classNames('kui-ShellPane', 'kui-ShellInspector', className)}
       {...paneAttributes(pane, attributes)}
       data-inset={inset || undefined}
       tabIndex={pane.overlaying ? -1 : domProps.tabIndex}
@@ -147,7 +147,7 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
         } as CSSPropertiesWithVars
       }
     >
-      <div className="rt-ShellInspectorContent">{content}</div>
+      <div className="kui-ShellInspectorContent">{content}</div>
       {handle}
     </div>
   );

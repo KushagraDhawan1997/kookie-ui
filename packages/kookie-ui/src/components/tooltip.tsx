@@ -45,12 +45,12 @@ const Tooltip = React.forwardRef<TooltipElement, TooltipProps>((props, forwarded
             {...tooltipContentProps}
             asChild={false}
             ref={forwardedRef}
-            className={classNames('rt-TooltipContent', className)}
+            className={classNames('kui-TooltipContent', className)}
           >
-            <Text as="p" className="rt-TooltipText" size="1">
+            <Text as="p" className="kui-TooltipText" size="1">
               {content}
             </Text>
-            <TooltipPrimitive.Arrow className="rt-TooltipArrow" />
+            <TooltipPrimitive.Arrow className="kui-TooltipArrow" />
           </TooltipPrimitive.Content>
         </Theme>
       </TooltipPrimitive.Portal>

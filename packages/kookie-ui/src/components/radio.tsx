@@ -38,7 +38,7 @@ const Radio = React.forwardRef<RadioElement, RadioProps>((ownProps, forwardedRef
         onValueChange?.(event.currentTarget.value),
       )}
       ref={forwardedRef}
-      className={classNames('rt-reset', 'rt-BaseRadioRoot', 'rt-RadioRoot', className)}
+      className={classNames('kui-reset', 'kui-BaseRadioRoot', 'kui-RadioRoot', className)}
     />
   );
 });

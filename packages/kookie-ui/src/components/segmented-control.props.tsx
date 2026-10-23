@@ -7,10 +7,10 @@ const orientations = ['horizontal', 'vertical'] as const;
 
 const segmentedControlRootPropDefs = {
   disabled: { type: 'boolean', className: 'disabled', default: false },
-  size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
+  size: { type: 'enum', className: 'kui-r-size', values: sizes, default: '2', responsive: true },
   orientation: {
     type: 'enum',
-    className: 'rt-r-orientation',
+    className: 'kui-r-orientation',
     values: orientations,
     default: 'horizontal',
     responsive: true,

@@ -14,7 +14,7 @@ const linkPropDefs = {
   ...asChildPropDef,
   size: {
     type: 'enum',
-    className: 'rt-r-size',
+    className: 'kui-r-size',
     values: sizes,
     responsive: true,
   },
@@ -22,7 +22,7 @@ const linkPropDefs = {
   ...leadingTrimPropDef,
   ...truncatePropDef,
   ...textWrapPropDef,
-  underline: { type: 'enum', className: 'rt-underline', values: underline, default: 'auto' },
+  underline: { type: 'enum', className: 'kui-underline', values: underline, default: 'auto' },
   ...accentColorPropDef,
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;

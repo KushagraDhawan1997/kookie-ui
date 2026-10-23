@@ -10,8 +10,8 @@ const objectFitValues = ['cover', 'contain', 'fill', 'scale-down', 'none'] as co
 
 const avatarPropDefs = {
   ...asChildPropDef,
-  size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '3', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised' },
+  size: { type: 'enum', className: 'kui-r-size', values: sizes, default: '2', responsive: true },
+  variant: { type: 'enum', className: 'kui-variant', values: variants, default: 'raised' },
   ...grayAccentColorPropDef,
   ...radiusPropDef,
   fallback: { type: 'ReactNode', required: true },
@@ -30,7 +30,7 @@ const avatarPropDefs = {
    * Defaults to 'cover' which crops the image to fill the avatar.
    * Use 'contain' to show the full image without cropping.
    */
-  fit: { type: 'enum', className: 'rt-r-fit', values: objectFitValues, default: 'cover', responsive: true },
+  fit: { type: 'enum', className: 'kui-r-fit', values: objectFitValues, default: 'cover', responsive: true },
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;
   variant: PropDef<(typeof variants)[number]>;

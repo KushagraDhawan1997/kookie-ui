@@ -37,18 +37,18 @@ describe('a pane keeps its element across a breakpoint', () => {
       </Shell.Root>,
     );
 
-    const before = document.querySelector('.rt-ShellInspector');
+    const before = document.querySelector('.kui-ShellInspector');
     expect(before?.getAttribute('data-presentation')).toBe('overlay');
     fireEvent.click(screen.getByRole('button', { name: 'count 0' }));
     fireEvent.change(screen.getByRole('textbox', { name: 'note' }), { target: { value: 'kept' } });
 
     viewport.setWidth(1100);
-    const after = document.querySelector('.rt-ShellInspector');
+    const after = document.querySelector('.kui-ShellInspector');
     expect(after).toBe(before);
     expect(after?.getAttribute('data-presentation')).toBe('fixed');
 
     viewport.setWidth(300);
-    expect(document.querySelector('.rt-ShellInspector')).toBe(before);
+    expect(document.querySelector('.kui-ShellInspector')).toBe(before);
     expect(screen.getByRole('button', { name: 'count 1' })).toBeTruthy();
     expect((screen.getByRole('textbox', { name: 'note' }) as HTMLInputElement).value).toBe('kept');
     expect(onMount).toHaveBeenCalledTimes(1);

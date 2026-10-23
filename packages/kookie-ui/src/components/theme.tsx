@@ -264,7 +264,7 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
           ref={composedRef}
           {...themeProps}
           className={classNames(
-            'radix-themes',
+            'kui-theme',
             {
               light: appearance === 'light',
               dark: appearance === 'dark',

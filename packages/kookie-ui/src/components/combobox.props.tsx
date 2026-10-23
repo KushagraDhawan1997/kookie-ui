@@ -11,7 +11,7 @@ const sizes = ['1', '2', '3', '4'] as const;
  * Shared responsive sizing inherited by Combobox.Root.
  */
 const comboboxRootPropDefs = {
-  size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
+  size: { type: 'enum', className: 'kui-r-size', values: sizes, default: '2', responsive: true },
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;
 };
@@ -22,7 +22,7 @@ const triggerVariants = ['raised', 'surface', 'soft', 'outline', 'ghost'] as con
  * Token-aware props specific to Combobox.Trigger.
  */
 const comboboxTriggerPropDefs = {
-  variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'raised' },
+  variant: { type: 'enum', className: 'kui-variant', values: triggerVariants, default: 'raised' },
   error: { type: 'boolean' },
   loading: { type: 'boolean' },
   disabled: { type: 'boolean' },
@@ -41,14 +41,14 @@ const comboboxTriggerPropDefs = {
   placeholder: PropDef<string>;
 };
 
-// The list is a menu, and menus stop at size 3.
+// The list takes sizes 1 to 4, like every menu.
 const contentSizes = ['1', '2', '3', '4'] as const;
 
 /**
  * Styling props for the dropdown surface rendered by Combobox.Content.
  */
 const comboboxContentPropDefs = {
-  size: { type: 'enum', className: 'rt-r-size', values: contentSizes, default: '2', responsive: true },
+  size: { type: 'enum', className: 'kui-r-size', values: contentSizes, default: '2', responsive: true },
   ...colorPropDef,
   width: widthPropDefs.width,
   minWidth: widthPropDefs.minWidth,

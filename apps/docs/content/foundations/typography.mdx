@@ -1,4 +1,4 @@
-Typography system with a nine-step scale (1-9), three font weights, and formatting components. The token structure is from [Radix Themes](https://www.radix-ui.com/themes); the values are Kookie UI's own.
+Typography system with a nine-step scale (1-9) and three font weights. The token structure is from [Radix Themes](https://www.radix-ui.com/themes); the values are Kookie UI's own.
 
 ## Installation
 
@@ -67,7 +67,7 @@ Use `emphasis` to rank text by colour. `Text`, `Heading`, `Blockquote` and `Code
 
 With no `color`, emphasis uses the gray scale. With a `color`, it fades that colour. Text with neither inherits its colour from its parent.
 
-## Formatting Components
+## Formatting
 
 Use the native `<em>` and `<strong>` inside `Text` for emphasis:
 
@@ -93,23 +93,20 @@ Every typeface decision lives in two tiers, and nowhere else.
 ```css
 --font-sans   /* backs font="sans", and body text by default */
 --font-mono   /* backs font="mono" and Code */
---font-serif  /* backs font="serif", Em and Quote */
+--font-serif  /* backs font="serif" */
 ```
 
-**Roles** — which stack each kind of text uses. Declared on `.radix-themes`:
+**Roles** — which stack each kind of text uses. Declared on `.kui-theme`:
 
 ```css
 --font-body     /* Text, inputs, buttons, and anything that does not opt out */
 --font-heading  /* Heading — follows --font-body unless you set it */
 --font-code     /* Code */
---font-strong   /* Strong */
---font-em       /* Em */
---font-quote    /* Quote */
 ```
 
 Change a stack and every role using it moves with it. Change a role and only that role moves.
 
-The Radix Themes names (`--default-font-family`, `--heading-font-family`, `--code-font-family`, `--strong-font-family`, `--em-font-family`, `--quote-font-family`) are aliases of the roles above, kept so Radix documentation still applies. Overriding either spelling works.
+The Radix Themes names (`--default-font-family`, `--heading-font-family`, `--code-font-family`) are aliases of the roles above, kept so Radix documentation still applies. Overriding either spelling works.
 
 ## Loading Fonts
 
@@ -156,16 +153,16 @@ Swap a typeface everywhere it is used by overriding a stack at `:root`:
 }
 ```
 
-Give a single role its own typeface by overriding it at `.radix-themes`:
+Give a single role its own typeface by overriding it at `.kui-theme`:
 
 ```css showLineNumbers
 /* Serif headings over a sans body */
-.radix-themes {
+.kui-theme {
   --font-heading: var(--font-serif);
 }
 ```
 
-Roles are declared on `.radix-themes` rather than `:root` because `<Theme>` switches them per subtree — an override at `:root` sits on an ancestor and would be overruled. Stacks are the opposite: declare those at `:root`.
+Roles are declared on `.kui-theme` rather than `:root` because `<Theme>` switches them per subtree — an override at `:root` sits on an ancestor and would be overruled. Stacks are the opposite: declare those at `:root`.
 
 ## Theme Props
 
@@ -202,9 +199,6 @@ Individual pieces of text opt out with the `font` prop, which reads the stacks d
 | `--font-body` | `var(--font-sans)` |
 | `--font-heading` | `var(--font-body)` |
 | `--font-code` | `var(--font-mono)` |
-| `--font-strong` | `var(--font-body)` |
-| `--font-em` | `var(--font-serif)` |
-| `--font-quote` | `var(--font-serif)` |
 
 With `@kushagradhawan/kookie-ui/fonts.css` imported, the three stacks become Inter, JetBrains Mono and Playfair Display.
 

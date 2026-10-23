@@ -96,7 +96,7 @@ describe('useBreakpoint fallback to addListener/removeListener', () => {
     const el = await screen.findByTestId('bp');
     expect(el.textContent).toBe('initial');
 
-    const inspector = document.querySelector('.rt-ShellInspector') as HTMLElement;
+    const inspector = document.querySelector('.kui-ShellInspector') as HTMLElement;
     expect(inspector.getAttribute('data-presentation')).toBe('overlay');
 
     // Set md true and wait for update

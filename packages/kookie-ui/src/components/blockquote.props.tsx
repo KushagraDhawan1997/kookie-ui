@@ -13,7 +13,7 @@ const blockquotePropDefs = {
   ...asChildPropDef,
   size: {
     type: 'enum',
-    className: 'rt-r-size',
+    className: 'kui-r-size',
     values: sizes,
     responsive: true,
   },

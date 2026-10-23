@@ -18,7 +18,7 @@ const Kbd = React.forwardRef<KbdElement, KbdProps>((props, forwardedRef) => {
     <Comp
       {...kbdProps}
       ref={forwardedRef}
-      className={classNames('rt-reset', 'rt-Kbd', className)}
+      className={classNames('kui-reset', 'kui-Kbd', className)}
     />
   );
 });

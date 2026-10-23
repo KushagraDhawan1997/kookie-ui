@@ -15,7 +15,7 @@ const toolbarRootPropDefs = {
    * Matches Button's sizes: 1 (28px) to 4 (48px). Unset inside `Shell.PaneHeader` or
    * `Shell.PaneFooter`, it rests one step above the Shell's `size`.
    */
-  size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2' },
+  size: { type: 'enum', className: 'kui-r-size', values: sizes, default: '2' },
   /**
    * Direction of the row and of the arrow keys. Use `vertical` for a strip of tools along an edge.
    */

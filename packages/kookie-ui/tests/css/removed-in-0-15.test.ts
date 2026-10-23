@@ -44,7 +44,7 @@ describe('0.15.0 removed motion', () => {
 describe('0.15.0 removed the deprecated names', () => {
   it('no stylesheet or component reads panelBackground, classic or override', () => {
     for (const [file, text] of [...css, ...ts]) {
-      expect(text, file).not.toMatch(/panelBackground|panel-background|rt-variant-classic|rt-variant-override|--classic-/);
+      expect(text, file).not.toMatch(/panelBackground|panel-background|kui-variant-classic|kui-variant-override|--classic-/);
     }
   });
 });

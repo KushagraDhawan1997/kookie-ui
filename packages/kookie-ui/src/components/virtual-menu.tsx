@@ -148,7 +148,7 @@ const SimpleItem = React.memo(
       <div
         id={id}
         role="menuitem"
-        className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-VirtualMenuItem')}
+        className={classNames('kui-reset', 'kui-BaseMenuItem', 'kui-VirtualMenuItem')}
         style={style}
         tabIndex={tabIndex}
         data-highlighted={dataHighlighted}
@@ -377,10 +377,10 @@ function VirtualMenuRoot<T>({
       aria-activedescendant={safeHighlightedIndex >= 0 ? getItemId(safeHighlightedIndex) : undefined}
       tabIndex={0}
       onKeyDown={handleKeyDown}
-      className={classNames('rt-VirtualMenuRoot', className)}
+      className={classNames('kui-VirtualMenuRoot', className)}
       style={rootStyle}
     >
-      <div className="rt-VirtualMenuViewport" style={viewportStyle}>
+      <div className="kui-VirtualMenuViewport" style={viewportStyle}>
         {virtualItems.map((virtualRow) => {
           const item = items[virtualRow.index];
           const index = virtualRow.index;
@@ -449,7 +449,7 @@ const VirtualMenuItemInner = React.forwardRef<HTMLDivElement, VirtualMenuItemPro
       <div
         ref={forwardedRef}
         role="menuitem"
-        className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-VirtualMenuItem', className)}
+        className={classNames('kui-reset', 'kui-BaseMenuItem', 'kui-VirtualMenuItem', className)}
         {...props}
       >
         {children}

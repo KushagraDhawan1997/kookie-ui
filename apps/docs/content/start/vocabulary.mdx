@@ -9,8 +9,7 @@ matter.
 A screen has levels. The **page** is the bottom level. A **card** is an object with its own
 surface, such as `Card`. Anything behind a card stops at its edge.
 
-A card can be solid or translucent. `material` sets this, because a card is a surface, and a
-surface is made of something. Use one material for each kind of surface.
+Every card is solid.
 
 Do not put a Card inside a Card to make a quieter region. A card is an object, not a tint.
 
@@ -56,8 +55,7 @@ padding, a corner and a tap target. A link is a group of words in a sentence. It
 selectable, wrap across lines and stay on the same line as its paragraph. So a link has the hover
 and focus states, but no box of its own.
 
-**Layout** components paint nothing. `Box`, `Flex`, `Grid`, `Container` and `Section` place
-things and set the space between them.
+**Layout** components paint nothing. `Box`, `Flex` and `Grid` place things and set the space between them.
 
 **The frame** is `Shell`. It arranges the header, the sidebar and the content, and it doesn't own
 any of them. That makes it a pattern, not a component. The [Principles](/start/principles)

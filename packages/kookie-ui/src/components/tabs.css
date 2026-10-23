@@ -1,11 +1,11 @@
 @import './_internal/base-tab-list.css';
 
-.rt-TabsContent {
+.kui-TabsContent {
   position: relative;
   outline: 0;
 }
 
-.rt-TabsContent:where(:focus-visible) {
+.kui-TabsContent:where(:focus-visible) {
   outline: var(--focus-ring-width, 2px) solid var(--focus-8);
   outline-offset: var(--focus-ring-offset, 2px);
 }

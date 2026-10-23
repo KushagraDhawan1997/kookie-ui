@@ -32,7 +32,7 @@ const Heading = React.memo(
       ...headingProps
     } = extractProps(props, headingPropDefs);
 
-    const combinedClassName = className ? `rt-Heading ${className}` : 'rt-Heading';
+    const combinedClassName = className ? `kui-Heading ${className}` : 'kui-Heading';
 
     if (asChild) {
       return (

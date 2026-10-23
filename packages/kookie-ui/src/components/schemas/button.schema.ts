@@ -28,7 +28,11 @@ import { BaseButtonSchema } from './base-button.schema.js';
  * });
  * ```
  */
-export const ButtonSchema = BaseButtonSchema.extend({
+/**
+ * Button's own fields, before the rules that span fields. Toggle extends this, since a
+ * refined schema cannot be extended.
+ */
+export const ButtonObjectSchema = BaseButtonSchema.extend({
   /**
    * Content to display in the tooltip on hover/focus
    */
@@ -87,6 +91,14 @@ export const ButtonSchema = BaseButtonSchema.extend({
     .default(false)
     .describe('Whether to disable hoverable content behavior'),
 }).strict();
+
+export const ButtonSchema = ButtonObjectSchema.refine(
+  (data) => !data.iconOnly || Boolean(data['aria-label'] || data['aria-labelledby']),
+  {
+    message: "An iconOnly Button must have either 'aria-label' or 'aria-labelledby' for accessibility",
+    path: ['aria-label'],
+  },
+);
 
 /**
  * Type derived from Button Zod schema

@@ -7,69 +7,69 @@ describe('TextField', () => {
   describe('TextField.Root', () => {
     it('renders without crashing', () => {
       const { container } = renderWithProviders(<TextField.Root />);
-      expect(container.querySelector('.rt-TextFieldRoot')).toBeInTheDocument();
+      expect(container.querySelector('.kui-TextFieldRoot')).toBeInTheDocument();
     });
 
     it('renders with default size (2)', () => {
       const { container } = renderWithProviders(<TextField.Root />);
-      const root = container.querySelector('.rt-TextFieldRoot');
-      expect(root).toHaveClass('rt-r-size-2');
+      const root = container.querySelector('.kui-TextFieldRoot');
+      expect(root).toHaveClass('kui-r-size-2');
     });
 
     it('renders with custom size 1', () => {
       const { container } = renderWithProviders(<TextField.Root size="1" />);
-      const root = container.querySelector('.rt-TextFieldRoot');
-      expect(root).toHaveClass('rt-r-size-1');
+      const root = container.querySelector('.kui-TextFieldRoot');
+      expect(root).toHaveClass('kui-r-size-1');
     });
 
     it('renders with custom size 3', () => {
       const { container } = renderWithProviders(<TextField.Root size="3" />);
-      const root = container.querySelector('.rt-TextFieldRoot');
-      expect(root).toHaveClass('rt-r-size-3');
+      const root = container.querySelector('.kui-TextFieldRoot');
+      expect(root).toHaveClass('kui-r-size-3');
     });
 
     it('renders with default variant (raised)', () => {
       const { container } = renderWithProviders(<TextField.Root />);
-      const root = container.querySelector('.rt-TextFieldRoot');
-      expect(root).toHaveClass('rt-variant-raised');
+      const root = container.querySelector('.kui-TextFieldRoot');
+      expect(root).toHaveClass('kui-variant-raised');
     });
 
     it('renders the deprecated classic variant as raised, with a warning', () => {
       const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const { container } = renderWithProviders(<TextField.Root variant="classic" />);
-      const root = container.querySelector('.rt-TextFieldRoot');
-      expect(root).toHaveClass('rt-variant-raised');
-      expect(root).not.toHaveClass('rt-variant-classic');
+      const root = container.querySelector('.kui-TextFieldRoot');
+      expect(root).toHaveClass('kui-variant-raised');
+      expect(root).not.toHaveClass('kui-variant-classic');
       warn.mockRestore();
     });
 
     it('renders with soft variant', () => {
       const { container } = renderWithProviders(<TextField.Root variant="soft" />);
-      const root = container.querySelector('.rt-TextFieldRoot');
-      expect(root).toHaveClass('rt-variant-soft');
+      const root = container.querySelector('.kui-TextFieldRoot');
+      expect(root).toHaveClass('kui-variant-soft');
     });
 
     it('renders with ghost variant', () => {
       const { container } = renderWithProviders(<TextField.Root variant="ghost" />);
-      const root = container.querySelector('.rt-TextFieldRoot');
-      expect(root).toHaveClass('rt-variant-ghost');
+      const root = container.querySelector('.kui-TextFieldRoot');
+      expect(root).toHaveClass('kui-variant-ghost');
     });
 
     it('renders with outline variant', () => {
       const { container } = renderWithProviders(<TextField.Root variant="outline" />);
-      const root = container.querySelector('.rt-TextFieldRoot');
-      expect(root).toHaveClass('rt-variant-outline');
+      const root = container.querySelector('.kui-TextFieldRoot');
+      expect(root).toHaveClass('kui-variant-outline');
     });
 
     it('applies color prop', () => {
       const { container } = renderWithProviders(<TextField.Root color="red" />);
-      const root = container.querySelector('.rt-TextFieldRoot');
+      const root = container.querySelector('.kui-TextFieldRoot');
       expect(root).toHaveAttribute('data-accent-color', 'red');
     });
 
     it('applies radius prop', () => {
       const { container } = renderWithProviders(<TextField.Root radius="full" />);
-      const root = container.querySelector('.rt-TextFieldRoot');
+      const root = container.querySelector('.kui-TextFieldRoot');
       expect(root).toHaveAttribute('data-radius', 'full');
     });
 
@@ -129,8 +129,8 @@ describe('TextField', () => {
 
     it('renders with error state', () => {
       const { container } = renderWithProviders(<TextField.Root error />);
-      const root = container.querySelector('.rt-TextFieldRoot');
-      expect(root).toHaveClass('rt-error');
+      const root = container.querySelector('.kui-TextFieldRoot');
+      expect(root).toHaveClass('kui-error');
     });
 
     it('sets aria-invalid from the error prop', () => {
@@ -228,7 +228,7 @@ describe('TextField', () => {
         </TextField.Root>,
       );
       const slot = screen.getByTestId('slot');
-      expect(slot).toHaveClass('rt-TextFieldSlot');
+      expect(slot).toHaveClass('kui-TextFieldSlot');
     });
   });
 

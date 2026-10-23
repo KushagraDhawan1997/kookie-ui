@@ -22,7 +22,7 @@ const Card = React.forwardRef<CardElement, CardProps>((ownProps, forwardedRef) =
     <Comp
       ref={forwardedRef}
       {...cardProps}
-      className={classNames('rt-reset', 'rt-BaseCard', 'rt-Card', 'rt-SurfaceNest', className)}
+      className={classNames('kui-reset', 'kui-BaseCard', 'kui-Card', 'kui-SurfaceNest', className)}
     />
   );
 });

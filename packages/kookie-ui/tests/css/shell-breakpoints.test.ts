@@ -78,8 +78,8 @@ describe('the Shell stylesheet and its JS mirror agree on the breakpoints', () =
  */
 describe('the inset backdrop paints before hydration', () => {
   it('has a :has() arm sharing the data-has-inset rule', () => {
-    const rule = css.match(/([^{}]*\.rt-ShellRoot\[data-has-inset\]::before)\s*\{/);
+    const rule = css.match(/([^{}]*\.kui-ShellRoot\[data-has-inset\]::before)\s*\{/);
     expect(rule, 'the data-has-inset backdrop rule').not.toBeNull();
-    expect(rule?.[1]).toContain('.rt-ShellRoot:has(> [data-inset])::before');
+    expect(rule?.[1]).toContain('.kui-ShellRoot:has(> [data-inset])::before');
   });
 });

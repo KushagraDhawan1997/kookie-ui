@@ -83,7 +83,7 @@ const Toggle = React.forwardRef<ToggleElement, ToggleProps>(
 
     return (
       <TogglePrimitive.Root pressed={pressed} onPressedChange={handlePressedChange} defaultPressed={defaultPressed} asChild>
-        <Button {...(buttonProps as ButtonProps)} ref={forwardedRef} className={classNames('rt-Toggle', className)}>
+        <Button {...(buttonProps as ButtonProps)} ref={forwardedRef} className={classNames('kui-Toggle', className)}>
           {children}
         </Button>
       </TogglePrimitive.Root>

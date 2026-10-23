@@ -124,15 +124,15 @@ const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>
     return (
       <DialogPrimitive.Portal container={container} forceMount={forceMount}>
         <Theme asChild>
-          <DialogPrimitive.Overlay className="rt-BaseDialogOverlay rt-DialogOverlay">
-            <div className="rt-BaseDialogScroll rt-DialogScroll">
+          <DialogPrimitive.Overlay className="kui-BaseDialogOverlay kui-DialogOverlay">
+            <div className="kui-BaseDialogScroll kui-DialogScroll">
               <div
-                className={`rt-BaseDialogScrollPadding rt-DialogScrollPadding ${alignClassName}`}
+                className={`kui-BaseDialogScrollPadding kui-DialogScrollPadding ${alignClassName}`}
               >
                 <DialogPrimitive.Content
                   {...contentProps}
                   ref={combinedRef}
-                  className={classNames('rt-BaseDialogContent', 'rt-DialogContent', className)}
+                  className={classNames('kui-BaseDialogContent', 'kui-DialogContent', className)}
                   tabIndex={-1}
                   role="dialog"
                   aria-modal="true"
@@ -147,7 +147,7 @@ const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>
                 <div
                   aria-live="polite"
                   aria-atomic="true"
-                  className="rt-sr-only"
+                  className="kui-sr-only"
                   id="dialog-announcement"
                 />
               </div>

@@ -16,7 +16,7 @@ const shadowPropDefs = {
    */
   shadow: {
     type: 'enum',
-    className: 'rt-r-shadow',
+    className: 'kui-r-shadow',
     values: shadowValues,
     responsive: true,
   },

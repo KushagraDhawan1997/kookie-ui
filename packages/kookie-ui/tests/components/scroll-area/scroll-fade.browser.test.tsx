@@ -18,7 +18,7 @@ describe('scroll fade in a browser', () => {
         <ScrollArea style={{ height: 200 }}>{rows}</ScrollArea>
       </Theme>,
     );
-    const [faded, plain] = Array.from(document.querySelectorAll<HTMLElement>('.rt-ScrollAreaViewport'));
+    const [faded, plain] = Array.from(document.querySelectorAll<HTMLElement>('.kui-ScrollAreaViewport'));
     await frames();
     expect(vars(faded!).start).toBe('0px');
     expect(parseFloat(vars(faded!).end)).toBeGreaterThan(900);
@@ -42,7 +42,7 @@ describe('scroll fade in a browser', () => {
         </MessageScroller.Root>
       </Theme>,
     );
-    const viewport = document.querySelector<HTMLElement>('.rt-MessageScrollerViewport')!;
+    const viewport = document.querySelector<HTMLElement>('.kui-MessageScrollerViewport')!;
     await frames();
     await frames();
     expect(viewport.hasAttribute('data-fade')).toBe(true);
@@ -58,7 +58,7 @@ describe('scroll fade in a browser', () => {
         </ScrollArea>
       </Theme>,
     );
-    const inner = document.querySelectorAll<HTMLElement>('.rt-ScrollAreaViewport')[1]!;
+    const inner = document.querySelectorAll<HTMLElement>('.kui-ScrollAreaViewport')[1]!;
     expect(getComputedStyle(inner).getPropertyValue('--scroll-fade-start').trim()).toBe('');
   });
 });

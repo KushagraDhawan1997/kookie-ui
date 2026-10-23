@@ -1,16 +1,16 @@
-.rt-Text {
+.kui-Text {
   font-family: var(--default-font-family);
   line-height: var(--line-height, var(--default-line-height));
   letter-spacing: var(--letter-spacing, inherit);
 
   /* `font` prop — all three resolve through the same tier-1 stacks. */
-  &:where(.rt-r-ff-sans) {
+  &:where(.kui-r-ff-sans) {
     font-family: var(--font-sans);
   }
-  &:where(.rt-r-ff-mono) {
+  &:where(.kui-r-ff-mono) {
     font-family: var(--font-mono);
   }
-  &:where(.rt-r-ff-serif) {
+  &:where(.kui-r-ff-serif) {
     font-family: var(--font-serif);
   }
 
@@ -19,22 +19,22 @@
   }
 
   /* Emphasis ladder. No colour and no emphasis sets nothing, so the colour is inherited. */
-  &:where(.rt-emphasis-loud) {
-    color: var(--gray-ink);
+  &:where(.kui-emphasis-loud) {
+    color: var(--neutral-ink);
   }
-  &:where(.rt-emphasis-medium) {
-    color: var(--gray-ink-muted);
+  &:where(.kui-emphasis-medium) {
+    color: var(--neutral-ink-muted);
   }
-  &:where(.rt-emphasis-quiet) {
-    color: var(--gray-ink-faint);
+  &:where(.kui-emphasis-quiet) {
+    color: var(--neutral-ink-faint);
   }
   &:where([data-accent-color]) {
     color: var(--accent-ink);
   }
-  &:where([data-accent-color].rt-emphasis-medium) {
+  &:where([data-accent-color].kui-emphasis-medium) {
     color: var(--accent-ink-muted);
   }
-  &:where([data-accent-color].rt-emphasis-quiet) {
+  &:where([data-accent-color].kui-emphasis-quiet) {
     color: var(--accent-ink-faint);
   }
 
@@ -44,7 +44,7 @@
     @media (pointer: coarse) {
       -webkit-tap-highlight-color: transparent;
       &:where(:active) {
-        outline: 0.75em solid var(--gray-a4);
+        outline: 0.75em solid var(--neutral-a4);
         outline-offset: -0.6em;
       }
     }
@@ -58,48 +58,48 @@
  ***************************************************************************************************/
 
 @breakpoints {
-  .rt-Text {
-    &:where(.rt-r-size-1) {
+  .kui-Text {
+    &:where(.kui-r-size-1) {
       font-size: var(--font-size-1);
       --line-height: var(--line-height-1);
       --letter-spacing: var(--letter-spacing-1);
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       font-size: var(--font-size-2);
       --line-height: var(--line-height-2);
       --letter-spacing: var(--letter-spacing-2);
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       font-size: var(--font-size-3);
       --line-height: var(--line-height-3);
       --letter-spacing: var(--letter-spacing-3);
     }
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       font-size: var(--font-size-4);
       --line-height: var(--line-height-4);
       --letter-spacing: var(--letter-spacing-4);
     }
-    &:where(.rt-r-size-5) {
+    &:where(.kui-r-size-5) {
       font-size: var(--font-size-5);
       --line-height: var(--line-height-5);
       --letter-spacing: var(--letter-spacing-5);
     }
-    &:where(.rt-r-size-6) {
+    &:where(.kui-r-size-6) {
       font-size: var(--font-size-6);
       --line-height: var(--line-height-6);
       --letter-spacing: var(--letter-spacing-6);
     }
-    &:where(.rt-r-size-7) {
+    &:where(.kui-r-size-7) {
       font-size: var(--font-size-7);
       --line-height: var(--line-height-7);
       --letter-spacing: var(--letter-spacing-7);
     }
-    &:where(.rt-r-size-8) {
+    &:where(.kui-r-size-8) {
       font-size: var(--font-size-8);
       --line-height: var(--line-height-8);
       --letter-spacing: var(--letter-spacing-8);
     }
-    &:where(.rt-r-size-9) {
+    &:where(.kui-r-size-9) {
       font-size: var(--font-size-9);
       --line-height: var(--line-height-9);
       --letter-spacing: var(--letter-spacing-9);

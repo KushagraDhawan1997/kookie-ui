@@ -7,12 +7,15 @@ import { Avatar as AvatarPrimitive } from 'radix-ui';
 import { avatarPropDefs } from './avatar.props.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { getSubtree } from '../helpers/get-subtree.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
 interface AvatarProps extends AvatarImplProps {}
-const Avatar = React.forwardRef<AvatarImplElement, AvatarProps>((props, forwardedRef) => {
+const Avatar = React.forwardRef<AvatarImplElement, AvatarProps>((ownProps, forwardedRef) => {
+  // An unset size follows the Theme, like a control. Sizes above 4 are only explicit.
+  const props = useThemeSizeProps(ownProps, avatarPropDefs.size);
   const {
     asChild,
     children,
@@ -51,15 +54,15 @@ const Avatar = React.forwardRef<AvatarImplElement, AvatarProps>((props, forwarde
       data-radius={radius}
       data-disabled={isDisabled || undefined}
       data-has-indicator={hasIndicator || undefined}
-      className={classNames('rt-reset', 'rt-AvatarRoot', className)}
+      className={classNames('kui-reset', 'kui-AvatarRoot', className)}
       style={style}
       asChild={asChild}
     >
       {getSubtree({ asChild, children }, <AvatarImpl ref={forwardedRef} {...imageProps} />)}
       {badge !== undefined ? (
-        <span className="rt-AvatarBadge">{badge}</span>
+        <span className="kui-AvatarBadge">{badge}</span>
       ) : status !== undefined ? (
-        <span className="rt-AvatarStatus" data-accent-color={status} />
+        <span className="kui-AvatarStatus" data-accent-color={status} />
       ) : null}
     </AvatarPrimitive.Root>
   );
@@ -91,13 +94,13 @@ const AvatarImpl = React.memo(
 
       return (
         <>
-          {status === 'idle' || status === 'loading' ? <span className="rt-AvatarFallback" /> : null}
+          {status === 'idle' || status === 'loading' ? <span className="kui-AvatarFallback" /> : null}
 
           {status === 'error' ? (
             <AvatarPrimitive.Fallback
-              className={classNames('rt-AvatarFallback', {
-                'rt-one-letter': typeof fallback === 'string' && fallback.length === 1,
-                'rt-two-letters': typeof fallback === 'string' && fallback.length === 2,
+              className={classNames('kui-AvatarFallback', {
+                'kui-one-letter': typeof fallback === 'string' && fallback.length === 1,
+                'kui-two-letters': typeof fallback === 'string' && fallback.length === 2,
               })}
               delayMs={0}
             >
@@ -107,7 +110,7 @@ const AvatarImpl = React.memo(
 
           <AvatarPrimitive.Image
             ref={forwardedRef}
-            className="rt-AvatarImage"
+            className="kui-AvatarImage"
             {...imageProps}
             onLoadingStatusChange={handleLoadingStatusChange}
           />

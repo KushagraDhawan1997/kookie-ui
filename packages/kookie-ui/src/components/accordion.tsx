@@ -71,7 +71,7 @@ const AccordionRoot = React.forwardRef<AccordionRootElement, AccordionRootProps>
       <AccordionPrimitive.Root
         {...radixProps}
         ref={forwardedRef}
-        className={classNames('rt-AccordionRoot', className)}
+        className={classNames('kui-AccordionRoot', className)}
         data-accent-color={color}
         data-radius={radius}
         onKeyDown={handleKeyDown}
@@ -95,7 +95,7 @@ const AccordionItem = React.forwardRef<AccordionItemElement, AccordionItemProps>
       <AccordionPrimitive.Item
         {...itemProps}
         ref={forwardedRef}
-        className={classNames('rt-AccordionItem', className)}
+        className={classNames('kui-AccordionItem', className)}
       />
     );
   },
@@ -116,7 +116,7 @@ const AccordionHeader = React.forwardRef<AccordionHeaderElement, AccordionHeader
       <AccordionPrimitive.Header
         {...headerProps}
         ref={forwardedRef}
-        className={classNames('rt-AccordionHeader', className)}
+        className={classNames('kui-AccordionHeader', className)}
       />
     );
   },
@@ -147,7 +147,7 @@ const AccordionTrigger = React.forwardRef<AccordionTriggerElement, AccordionTrig
             forwardedRef.current = node;
           }
         }}
-        className={classNames('rt-AccordionTrigger', className)}
+        className={classNames('kui-AccordionTrigger', className)}
       >
         {children}
       </AccordionPrimitive.Trigger>
@@ -170,10 +170,10 @@ const AccordionContent = React.forwardRef<AccordionContentElement, AccordionCont
       <AccordionPrimitive.Content
         {...contentProps}
         ref={forwardedRef}
-        className={classNames('rt-AccordionContent', className)}
+        className={classNames('kui-AccordionContent', className)}
         aria-live="polite"
       >
-        <div className="rt-AccordionContentInner">{children}</div>
+        <div className="kui-AccordionContentInner">{children}</div>
       </AccordionPrimitive.Content>
     );
   },

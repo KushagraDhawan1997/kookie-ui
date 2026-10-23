@@ -28,7 +28,7 @@ describe('Popover geometry', () => {
         </Theme>,
       );
       const s: Size = size ?? '2';
-      expect(measure('.rt-PopoverContent')).toEqual({ pad: pad[s], corner: corner[s] });
+      expect(measure('.kui-PopoverContent')).toEqual({ pad: pad[s], corner: corner[s] });
       unmount();
     });
   }

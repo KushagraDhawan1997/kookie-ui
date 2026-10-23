@@ -1,4 +1,4 @@
-.rt-ProgressRoot {
+.kui-ProgressRoot {
   --progress-value: 0;
   --progress-max: 100;
   --progress-duration: var(--progress-default-duration);
@@ -15,7 +15,7 @@
   isolation: isolate;
 }
 
-.rt-ProgressIndicator {
+.kui-ProgressIndicator {
   display: block;
   height: var(--position-full);
   width: var(--position-full);
@@ -25,13 +25,13 @@
    * The bar is full width and slid into place rather than grown. `width` is a
    * layout property: animating it re-lays-out on every frame, and the
    * indeterminate animation never stops, so a visible bar reflowed forever.
-   * `.rt-ProgressRoot` clips the overhang. `max()` keeps a sliver of the bar
+   * `.kui-ProgressRoot` clips the overhang. `max()` keeps a sliver of the bar
    * visible at very low values, as the width form did.
    */
   transform: translateX(calc(-100% + max(calc(var(--progress-value) / var(--progress-max) * 100%), var(--progress-height))));
 
   &:where([data-state='indeterminate']) {
-    animation-name: rt-progress-indicator-indeterminate-grow;
+    animation-name: kui-progress-indicator-indeterminate-grow;
     animation-duration: var(--progress-duration);
     animation-iteration-count: infinite;
     animation-fill-mode: both;
@@ -39,7 +39,7 @@
   }
 }
 
-@keyframes rt-progress-indicator-indeterminate-grow {
+@keyframes kui-progress-indicator-indeterminate-grow {
   0% {
     transform: translateX(calc(-100% + var(--progress-scale-initial) * 100%));
   }
@@ -66,32 +66,32 @@
 
 /* surface */
 
-.rt-ProgressRoot:where(.rt-variant-surface) {
-  background-color: var(--gray-2);
-  box-shadow: inset 0 0 0 1px var(--gray-6);
+.kui-ProgressRoot:where(.kui-variant-surface) {
+  background-color: var(--neutral-2);
+  box-shadow: inset 0 0 0 1px var(--neutral-6);
 
-  & :where(.rt-ProgressIndicator) {
+  & :where(.kui-ProgressIndicator) {
     background-color: var(--accent-solid);
   }
 }
 
 /* soft */
 
-.rt-ProgressRoot:where(.rt-variant-soft) {
-  background-color: var(--gray-3);
+.kui-ProgressRoot:where(.kui-variant-soft) {
+  background-color: var(--neutral-3);
 
-  & :where(.rt-ProgressIndicator) {
+  & :where(.kui-ProgressIndicator) {
     background-color: var(--accent-solid);
   }
 }
 
 /* outline */
 
-.rt-ProgressRoot:where(.rt-variant-outline) {
+.kui-ProgressRoot:where(.kui-variant-outline) {
   /* Base state: no background, just border */
-  box-shadow: inset 0 0 0 1px var(--gray-6);
+  box-shadow: inset 0 0 0 1px var(--neutral-6);
 
-  & :where(.rt-ProgressIndicator) {
+  & :where(.kui-ProgressIndicator) {
     background-color: var(--accent-solid);
   }
 }

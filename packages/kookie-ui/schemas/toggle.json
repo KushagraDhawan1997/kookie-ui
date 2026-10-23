@@ -139,11 +139,6 @@
           "description": "Loading state that shows a spinner and disables interaction",
           "type": "boolean"
         },
-        "flush": {
-          "default": false,
-          "description": "Flush mode that removes visual padding for seamless text integration",
-          "type": "boolean"
-        },
         "disabled": {
           "default": false,
           "description": "Disabled state",

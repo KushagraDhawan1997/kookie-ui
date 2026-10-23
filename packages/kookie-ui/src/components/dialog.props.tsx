@@ -12,13 +12,13 @@ const dialogContentPropDefs = {
   ...asChildPropDef,
   align: {
     type: 'enum',
-    className: 'rt-r-align',
+    className: 'kui-r-align',
     values: ['start', 'center'],
     default: 'center',
   },
   size: {
     type: 'enum',
-    className: 'rt-r-size',
+    className: 'kui-r-size',
     values: contentSizes,
     default: '2',
     responsive: true,

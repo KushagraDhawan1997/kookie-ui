@@ -22,15 +22,15 @@ const Spinner = React.forwardRef<SpinnerElement, SpinnerProps>((props, forwarded
   if (!loading) return children;
 
   const spinner = (
-    <span {...spinnerProps} ref={forwardedRef} className={classNames('rt-Spinner', className)}>
-      <span className="rt-SpinnerLeaf" />
-      <span className="rt-SpinnerLeaf" />
-      <span className="rt-SpinnerLeaf" />
-      <span className="rt-SpinnerLeaf" />
-      <span className="rt-SpinnerLeaf" />
-      <span className="rt-SpinnerLeaf" />
-      <span className="rt-SpinnerLeaf" />
-      <span className="rt-SpinnerLeaf" />
+    <span {...spinnerProps} ref={forwardedRef} className={classNames('kui-Spinner', className)}>
+      <span className="kui-SpinnerLeaf" />
+      <span className="kui-SpinnerLeaf" />
+      <span className="kui-SpinnerLeaf" />
+      <span className="kui-SpinnerLeaf" />
+      <span className="kui-SpinnerLeaf" />
+      <span className="kui-SpinnerLeaf" />
+      <span className="kui-SpinnerLeaf" />
+      <span className="kui-SpinnerLeaf" />
     </span>
   );
 

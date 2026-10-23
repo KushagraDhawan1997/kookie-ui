@@ -1,4 +1,4 @@
-.rt-SelectTrigger {
+.kui-SelectTrigger {
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
@@ -15,7 +15,7 @@
 
   /* Selected values use medium font weight */
   &:where(:not([data-placeholder])) {
-    & :where(.rt-SelectTriggerInner) {
+    & :where(.kui-SelectTriggerInner) {
       font-weight: var(--font-weight-medium);
     }
   }
@@ -26,13 +26,13 @@
   }
 }
 
-.rt-SelectTriggerInner {
+.kui-SelectTriggerInner {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.rt-SelectIcon {
+.kui-SelectIcon {
   flex-shrink: 0;
   margin-left: auto;
   width: var(--trigger-icon-size-default);
@@ -44,7 +44,7 @@
  * every item a BaseMenuItem, so the panel pads --panel-p-N and a row hugs its line. What is
  * left here is the select's own: the check mark's box and rich rows.
  */
-.rt-SelectContent {
+.kui-SelectContent {
   --scrollarea-scrollbar-vertical-margin-top: var(--base-menu-content-padding);
   --scrollarea-scrollbar-vertical-margin-bottom: var(--base-menu-content-padding);
   --scrollarea-scrollbar-horizontal-margin-left: var(--base-menu-content-padding);
@@ -52,7 +52,7 @@
 
   overflow: hidden;
   z-index: 200; /* Above dialogs (100) so select inside dialogs/sheets work */
-  background-color: var(--color-panel);
+  background-color: var(--color-surface);
   box-shadow: var(--shadow-5);
 
   &:where([data-side]) {
@@ -62,25 +62,25 @@
   }
 }
 
-.rt-SelectViewport {
+.kui-SelectViewport {
   box-sizing: border-box;
 
-  :where(.rt-SelectContent:has(.rt-ScrollAreaScrollbar[data-orientation='vertical'])) & {
+  :where(.kui-SelectContent:has(.kui-ScrollAreaScrollbar[data-orientation='vertical'])) & {
     padding-right: var(--space-4);
   }
 }
 
 /* Rich content grows the row; the mark stays on the first line. */
-.rt-SelectItem:where(.rt-SelectItemRich) {
+.kui-SelectItem:where(.kui-SelectItemRich) {
   align-items: flex-start;
 
-  & :where(.rt-SelectItemIndicator) {
+  & :where(.kui-SelectItemIndicator) {
     bottom: auto;
     height: var(--base-menu-item-height);
   }
 }
 
-.rt-SelectItemIndicator {
+.kui-SelectItemIndicator {
   position: absolute;
   inset-inline-start: var(--base-menu-item-px);
   top: 0;
@@ -91,12 +91,12 @@
   justify-content: center;
 }
 
-.rt-SelectSeparator {
+.kui-SelectSeparator {
   height: var(--separator-height-thin);
 }
 
-.rt-SelectLabel {
-  color: var(--gray-a10);
+.kui-SelectLabel {
+  color: var(--neutral-a10);
 }
 
 /***************************************************************************************************
@@ -105,8 +105,8 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-SelectTrigger {
-  color: var(--gray-12);
+.kui-SelectTrigger {
+  color: var(--neutral-12);
   box-sizing: border-box;
   /* min-height, not height: a hard height clips text resized to 200%. */
   min-height: var(--select-trigger-height);
@@ -124,8 +124,8 @@
 }
 
 @breakpoints {
-  .rt-SelectTrigger {
-    &:where(.rt-r-size-1) {
+  .kui-SelectTrigger {
+    &:where(.kui-r-size-1) {
       --select-trigger-height: var(--control-height-1);
       --select-trigger-px: var(--control-px-1);
       --select-trigger-px-pill: var(--control-px-pill-1);
@@ -135,12 +135,12 @@
       letter-spacing: var(--letter-spacing-1);
       border-radius: var(--radius-control-1);
 
-      & :where(.rt-SelectIcon) {
+      & :where(.kui-SelectIcon) {
         width: var(--trigger-icon-size-1);
         height: var(--trigger-icon-size-1);
       }
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       --select-trigger-height: var(--control-height-2);
       --select-trigger-px: var(--control-px-2);
       --select-trigger-px-pill: var(--control-px-pill-2);
@@ -150,12 +150,12 @@
       letter-spacing: var(--letter-spacing-2);
       border-radius: var(--radius-control-2);
 
-      & :where(.rt-SelectIcon) {
+      & :where(.kui-SelectIcon) {
         width: var(--trigger-icon-size-2);
         height: var(--trigger-icon-size-2);
       }
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       --select-trigger-height: var(--control-height-3);
       --select-trigger-px: var(--control-px-3);
       --select-trigger-px-pill: var(--control-px-pill-3);
@@ -165,12 +165,12 @@
       letter-spacing: var(--letter-spacing-3);
       border-radius: var(--radius-control-3);
 
-      & :where(.rt-SelectIcon) {
+      & :where(.kui-SelectIcon) {
         width: var(--trigger-icon-size-3);
         height: var(--trigger-icon-size-3);
       }
     }
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       --select-trigger-height: var(--control-height-4);
       --select-trigger-px: var(--control-px-4);
       --select-trigger-px-pill: var(--control-px-pill-4);
@@ -180,7 +180,7 @@
       letter-spacing: var(--letter-spacing-4);
       border-radius: var(--radius-control-4);
 
-      & :where(.rt-SelectIcon) {
+      & :where(.kui-SelectIcon) {
         width: var(--trigger-icon-size-4);
         height: var(--trigger-icon-size-4);
       }
@@ -196,7 +196,7 @@
 
 /* raised */
 
-.rt-SelectTrigger:where(.rt-variant-raised) {
+.kui-SelectTrigger:where(.kui-variant-raised) {
   position: relative;
   top: var(--raised-elevation-offset);
   color: var(--accent-ink);
@@ -224,8 +224,8 @@
   }
 
   &:where(:disabled) {
-    color: var(--gray-a8);
-    background-color: var(--gray-a3);
+    color: var(--neutral-a8);
+    background-color: var(--neutral-a3);
     box-shadow: none;
     outline: none;
     cursor: default;
@@ -233,15 +233,15 @@
   }
 
   &:where([data-placeholder]) {
-    & :where(.rt-SelectTriggerInner) {
-      color: var(--gray-a10);
+    & :where(.kui-SelectTriggerInner) {
+      color: var(--neutral-a10);
     }
   }
 }
 
 /* soft */
 
-.rt-SelectTrigger:where(.rt-variant-soft) {
+.kui-SelectTrigger:where(.kui-variant-soft) {
   background-color: var(--accent-3);
   color: var(--accent-ink);
 
@@ -265,13 +265,13 @@
   }
 
   &:where(:disabled) {
-    color: var(--gray-a8);
-    background-color: var(--gray-a3);
+    color: var(--neutral-a8);
+    background-color: var(--neutral-a3);
     cursor: default;
   }
 
   &:where([data-placeholder]) {
-    & :where(.rt-SelectTriggerInner) {
+    & :where(.kui-SelectTriggerInner) {
       color: var(--accent-a11);
       opacity: 0.6;
       font-weight: var(--font-weight-regular);
@@ -281,13 +281,13 @@
 
 /* ghost */
 
-.rt-SelectTrigger:where(.rt-variant-ghost) {
+.kui-SelectTrigger:where(.kui-variant-ghost) {
   background-color: transparent;
   color: var(--accent-ink);
 
   &:where([data-placeholder]) {
-    & :where(.rt-SelectTriggerInner) {
-      color: var(--gray-a10);
+    & :where(.kui-SelectTriggerInner) {
+      color: var(--neutral-a10);
       font-weight: var(--font-weight-regular);
     }
   }
@@ -312,7 +312,7 @@
   }
 
   &:where(:disabled) {
-    color: var(--gray-a8);
+    color: var(--neutral-a8);
     background-color: transparent;
     cursor: default;
   }
@@ -320,7 +320,7 @@
 
 /* outline */
 
-.rt-SelectTrigger:where(.rt-variant-outline) {
+.kui-SelectTrigger:where(.kui-variant-outline) {
   box-shadow: inset 0 0 0 1px var(--accent-6);
   color: var(--accent-ink);
 
@@ -347,15 +347,15 @@
   }
 
   &:where(:disabled) {
-    color: var(--gray-a8);
-    box-shadow: inset 0 0 0 1px var(--gray-a7);
+    color: var(--neutral-a8);
+    box-shadow: inset 0 0 0 1px var(--neutral-a7);
     background-color: transparent;
     cursor: default;
   }
 
   &:where([data-placeholder]) {
-    & :where(.rt-SelectTriggerInner) {
-      color: var(--gray-a10);
+    & :where(.kui-SelectTriggerInner) {
+      color: var(--neutral-a10);
       font-weight: var(--font-weight-regular);
     }
   }
@@ -363,7 +363,7 @@
 
 /* surface */
 
-.rt-SelectTrigger:where(.rt-variant-surface) {
+.kui-SelectTrigger:where(.kui-variant-surface) {
   background-color: var(--accent-2);
   box-shadow: inset 0 0 0 1px var(--accent-6);
   color: var(--accent-ink);
@@ -391,28 +391,28 @@
   }
 
   &:where(:disabled) {
-    color: var(--gray-a8);
-    box-shadow: inset 0 0 0 1px var(--gray-a6);
-    background-color: var(--gray-a2);
+    color: var(--neutral-a8);
+    box-shadow: inset 0 0 0 1px var(--neutral-a6);
+    background-color: var(--neutral-a2);
     cursor: default;
   }
 
   &:where([data-placeholder]) {
-    & :where(.rt-SelectTriggerInner) {
-      color: var(--gray-a10);
+    & :where(.kui-SelectTriggerInner) {
+      color: var(--neutral-a10);
       font-weight: var(--font-weight-regular);
     }
   }
 }
 
 /* all disabled: a colour remap, never opacity, and the arrow cursor */
-.rt-SelectTrigger {
+.kui-SelectTrigger {
   &:where(:disabled) {
-    & :where(.rt-SelectIcon) {
-      color: var(--gray-a9);
+    & :where(.kui-SelectIcon) {
+      color: var(--neutral-a9);
     }
-    &:where([data-placeholder]) :where(.rt-SelectTriggerInner) {
-      color: var(--gray-a8);
+    &:where([data-placeholder]) :where(.kui-SelectTriggerInner) {
+      color: var(--neutral-a8);
       opacity: 1;
     }
   }
@@ -422,8 +422,8 @@
  * Invalid. Keyed on `aria-invalid`, which the `error` prop sets, so both paths style the same.
  * Only the border and the focus ring move; the fill stays the variant's.
  */
-.rt-SelectTrigger:where([aria-invalid='true']) {
-  &:where(:not(.rt-variant-raised)) {
+.kui-SelectTrigger:where([aria-invalid='true']) {
+  &:where(:not(.kui-variant-raised)) {
     box-shadow: inset 0 0 0 1px var(--red-6);
 
     @media (hover: hover) {
@@ -436,7 +436,7 @@
     }
   }
 
-  &:where(.rt-variant-raised) {
+  &:where(.kui-variant-raised) {
     box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-6);
 
     @media (hover: hover) {
@@ -452,20 +452,20 @@
 }
 
 /* Loading state styling */
-.rt-SelectLoadingIcon {
-  animation: rt-spin 1s linear infinite;
+.kui-SelectLoadingIcon {
+  animation: kui-spin 1s linear infinite;
 }
 
-.rt-SelectLoadingIconCircle {
-  animation: rt-dash 1.5s ease-in-out infinite;
+.kui-SelectLoadingIconCircle {
+  animation: kui-dash 1.5s ease-in-out infinite;
 }
 
-@keyframes rt-spin {
+@keyframes kui-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-@keyframes rt-dash {
+@keyframes kui-dash {
   0% {
     stroke-dasharray: 1, 150;
     stroke-dashoffset: 0;
@@ -482,7 +482,7 @@
 
 /* Forced colors support */
 @media (forced-colors: active) {
-  .rt-SelectTrigger:where([aria-invalid='true']) {
+  .kui-SelectTrigger:where([aria-invalid='true']) {
     border: 1px solid CanvasText;
   }
 }
@@ -493,45 +493,45 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-SelectItem:where([data-accent-color]) {
+.kui-SelectItem:where([data-accent-color]) {
   color: var(--accent-ink);
 }
-.rt-SelectItem:where([data-disabled]) {
-  color: var(--gray-a8);
+.kui-SelectItem:where([data-disabled]) {
+  color: var(--neutral-a8);
 }
 
-.rt-SelectSeparator {
-  background-color: var(--gray-a6);
+.kui-SelectSeparator {
+  background-color: var(--neutral-a6);
 }
 
 /* Muted text sits a step lower inside items */
-.rt-SelectItem :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
-  color: var(--gray-a10);
+.kui-SelectItem :where(.kui-Text.kui-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
+  color: var(--neutral-a10);
 }
 
 /* soft */
 
-.rt-SelectContent:where(.rt-variant-soft) {
-  & :where(.rt-SelectItem[data-highlighted]) {
+.kui-SelectContent:where(.kui-variant-soft) {
+  & :where(.kui-SelectItem[data-highlighted]) {
     background-color: var(--accent-a4);
 
     /* In soft variant, lift muted text a step while keeping the hierarchy */
-    & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
-      color: var(--gray-11) !important;
+    & :where(.kui-Text.kui-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
+      color: var(--neutral-11) !important;
     }
   }
 }
 
 /* The highlight is solid when the system asks for more contrast. */
 @media (prefers-contrast: more) {
-  .rt-SelectContent:where(.rt-variant-soft) {
+  .kui-SelectContent:where(.kui-variant-soft) {
     /* Gray fills with step 12 through the solid tokens */
-    & :where(.rt-SelectItem[data-highlighted]) {
+    & :where(.kui-SelectItem[data-highlighted]) {
       background-color: var(--accent-solid);
       color: var(--accent-solid-contrast);
 
       /* Force all text elements to inherit hover color, including those with color="gray" */
-      & :where(.rt-Text) {
+      & :where(.kui-Text) {
         color: inherit !important;
       }
 

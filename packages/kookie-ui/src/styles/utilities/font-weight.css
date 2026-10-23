@@ -1,13 +1,13 @@
 @breakpoints {
-  .rt-r-weight-regular {
+  .kui-r-weight-regular {
     font-weight: var(--font-weight-regular);
   }
 
-  .rt-r-weight-medium {
+  .kui-r-weight-medium {
     font-weight: var(--font-weight-medium);
   }
 
-  .rt-r-weight-semibold {
+  .kui-r-weight-semibold {
     font-weight: var(--font-weight-semibold);
   }
 }

@@ -7,16 +7,16 @@ const wrapValues = ['nowrap', 'wrap', 'wrap-reverse'] as const;
 const justifyValues = ['start', 'center', 'end'] as const;
 
 const baseTabListPropDefs = {
-  size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
+  size: { type: 'enum', className: 'kui-r-size', values: sizes, default: '2', responsive: true },
   wrap: {
     type: 'enum',
-    className: 'rt-r-fw',
+    className: 'kui-r-fw',
     values: wrapValues,
     responsive: true,
   },
   justify: {
     type: 'enum',
-    className: 'rt-r-jc',
+    className: 'kui-r-jc',
     values: justifyValues,
     responsive: true,
   },

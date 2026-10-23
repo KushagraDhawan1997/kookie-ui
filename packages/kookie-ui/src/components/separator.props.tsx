@@ -7,14 +7,14 @@ const orientationValues = ['horizontal', 'vertical'] as const;
 const separatorPropDefs = {
   orientation: {
     type: 'enum',
-    className: 'rt-r-orientation',
+    className: 'kui-r-orientation',
     values: orientationValues,
     default: 'horizontal',
     responsive: true,
   },
   color: { ...colorPropDef.color, default: 'gray' },
   decorative: { type: 'boolean', default: true },
-  light: { type: 'boolean', className: 'rt-light', default: false },
+  light: { type: 'boolean', className: 'kui-light', default: false },
 } satisfies {
   orientation: PropDef<(typeof orientationValues)[number]>;
   color: typeof colorPropDef.color;

@@ -40,8 +40,8 @@ describe('Sidebar parts inside Shell.Sidebar', () => {
         </Shell.Sidebar>
       </Shell.Root>,
     );
-    for (const selector of ['.rt-ShellPaneHeader', '.rt-SidebarContent', '.rt-ShellPaneFooter']) {
-      expect(container.querySelector(selector), selector).toHaveClass('rt-r-size-3', 'rt-menu-variant-soft');
+    for (const selector of ['.kui-ShellPaneHeader', '.kui-SidebarContent', '.kui-ShellPaneFooter']) {
+      expect(container.querySelector(selector), selector).toHaveClass('kui-r-size-3', 'kui-menu-variant-soft');
     }
     expect(screen.getByRole('navigation', { name: 'Main' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Home' })).toHaveAttribute('aria-current', 'page');
@@ -58,7 +58,7 @@ describe('Sidebar parts inside Shell.Sidebar', () => {
         </Shell.Panel>
       </Shell.Root>,
     );
-    expect(container.querySelector('.rt-SidebarContent')).toHaveClass('rt-r-size-2');
+    expect(container.querySelector('.kui-SidebarContent')).toHaveClass('kui-r-size-2');
   });
 
   it('Shell.Scroll is not a landmark unless asked', () => {
@@ -98,8 +98,8 @@ describe('Sidebar parts inside Shell.Sidebar', () => {
         </Shell.Sidebar>
       </Shell.Root>,
     );
-    expect(container.querySelector('.rt-ShellRail .rt-ShellPaneFooter .rt-SidebarMenuIconWrapper')).not.toBeNull();
-    expect(container.querySelector('.rt-ShellSidebar .rt-SidebarMenuIconWrapper')).toBeNull();
+    expect(container.querySelector('.kui-ShellRail .kui-ShellPaneFooter .kui-SidebarMenuIconWrapper')).not.toBeNull();
+    expect(container.querySelector('.kui-ShellSidebar .kui-SidebarMenuIconWrapper')).toBeNull();
   });
 });
 
@@ -115,8 +115,8 @@ describe('pane chrome in a pane with no Sidebar scope', () => {
         </Shell.Bottom>
       </Shell.Root>,
     );
-    expect(container.querySelector('.rt-ShellInspector .rt-ShellPaneHeader')).toHaveClass('rt-r-size-3');
-    expect(container.querySelector('.rt-ShellBottom .rt-ShellPaneFooter')).toHaveClass('rt-r-size-3');
+    expect(container.querySelector('.kui-ShellInspector .kui-ShellPaneHeader')).toHaveClass('kui-r-size-3');
+    expect(container.querySelector('.kui-ShellBottom .kui-ShellPaneFooter')).toHaveClass('kui-r-size-3');
   });
 });
 
@@ -144,10 +144,10 @@ describe('a Toolbar in pane chrome', () => {
           </Shell.Sidebar>
         </Shell.Root>,
       );
-      for (const selector of ['.rt-ShellPaneHeader .rt-Toolbar', '.rt-ShellPaneFooter .rt-Toolbar']) {
-        expect(container.querySelector(selector), selector).toHaveClass(`rt-r-size-${band}`);
+      for (const selector of ['.kui-ShellPaneHeader .kui-Toolbar', '.kui-ShellPaneFooter .kui-Toolbar']) {
+        expect(container.querySelector(selector), selector).toHaveClass(`kui-r-size-${band}`);
       }
-      expect(container.querySelector('.rt-ShellPaneHeader .rt-BaseButton')).toHaveClass(`rt-r-size-${band}`);
+      expect(container.querySelector('.kui-ShellPaneHeader .kui-BaseButton')).toHaveClass(`kui-r-size-${band}`);
     });
   }
 
@@ -161,7 +161,7 @@ describe('a Toolbar in pane chrome', () => {
         </Shell.Sidebar>
       </Shell.Root>,
     );
-    expect(container.querySelector('.rt-Toolbar')).toHaveClass('rt-r-size-1');
+    expect(container.querySelector('.kui-Toolbar')).toHaveClass('kui-r-size-1');
   });
 
   it('takes the step in an Inspector too, and not in the scrolling list or outside a pane', () => {
@@ -182,9 +182,9 @@ describe('a Toolbar in pane chrome', () => {
         <Band />
       </>,
     );
-    const toolbars = container.querySelectorAll('.rt-Toolbar');
-    expect(container.querySelector('.rt-ShellInspector .rt-Toolbar')).toHaveClass('rt-r-size-3');
-    expect(container.querySelector('.rt-ShellScroll .rt-Toolbar')).toHaveClass('rt-r-size-2');
-    expect(toolbars[toolbars.length - 1]).toHaveClass('rt-r-size-2');
+    const toolbars = container.querySelectorAll('.kui-Toolbar');
+    expect(container.querySelector('.kui-ShellInspector .kui-Toolbar')).toHaveClass('kui-r-size-3');
+    expect(container.querySelector('.kui-ShellScroll .kui-Toolbar')).toHaveClass('kui-r-size-2');
+    expect(toolbars[toolbars.length - 1]).toHaveClass('kui-r-size-2');
   });
 });

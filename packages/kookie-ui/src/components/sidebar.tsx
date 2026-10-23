@@ -29,7 +29,7 @@ type BadgeConfig = {
 interface SidebarSeparatorProps extends ComponentPropsWithout<typeof Separator, RemovedProps> {}
 
 const SidebarSeparator = React.forwardRef<React.ComponentRef<typeof Separator>, SidebarSeparatorProps>(({ className, ...props }, forwardedRef) => (
-  <Separator {...props} ref={forwardedRef} className={classNames('rt-SidebarSeparator', className)} />
+  <Separator {...props} ref={forwardedRef} className={classNames('kui-SidebarSeparator', className)} />
 ));
 SidebarSeparator.displayName = 'Sidebar.Separator';
 
@@ -38,14 +38,14 @@ SidebarSeparator.displayName = 'Sidebar.Separator';
 interface SidebarMenuProps extends React.ComponentPropsWithoutRef<'ul'> {}
 
 const SidebarMenu = React.forwardRef<HTMLUListElement, SidebarMenuProps>(({ className, ...props }, forwardedRef) => (
-  <ul {...props} ref={forwardedRef} className={classNames('rt-SidebarMenu', className)} />
+  <ul {...props} ref={forwardedRef} className={classNames('kui-SidebarMenu', className)} />
 ));
 SidebarMenu.displayName = 'Sidebar.Menu';
 
 interface SidebarMenuItemProps extends React.ComponentPropsWithoutRef<'li'> {}
 
 const SidebarMenuItem = React.forwardRef<HTMLLIElement, SidebarMenuItemProps>(({ className, ...props }, forwardedRef) => (
-  <li {...props} ref={forwardedRef} className={classNames('rt-SidebarMenuItem', className)} />
+  <li {...props} ref={forwardedRef} className={classNames('kui-SidebarMenuItem', className)} />
 ));
 SidebarMenuItem.displayName = 'Sidebar.MenuItem';
 
@@ -63,7 +63,7 @@ function separateIconsAndLabels(node: React.ReactNode): { icons: React.ReactNode
 
   React.Children.forEach(node, (child) => {
     if (typeof child === 'string' || typeof child === 'number') {
-      labels.push(<span key={labels.length} className="rt-SidebarMenuLabel">{child}</span>);
+      labels.push(<span key={labels.length} className="kui-SidebarMenuLabel">{child}</span>);
     } else if (React.isValidElement(child)) {
       const el = child as React.ReactElement<any>;
       if (el.type === 'svg' || (el.props && el.props.icon) || (typeof el.type === 'function' && ((el.type as any).displayName?.includes('Icon') || (el.type as any).name?.includes('Icon')))) {
@@ -81,7 +81,7 @@ function separateIconsAndLabels(node: React.ReactNode): { icons: React.ReactNode
 
 function wrapTextNodes(node: React.ReactNode): React.ReactNode {
   if (typeof node === 'string' || typeof node === 'number') {
-    return <span className="rt-SidebarMenuLabel">{node}</span>;
+    return <span className="kui-SidebarMenuLabel">{node}</span>;
   }
   if (Array.isArray(node)) {
     return node.map((child, index) => <React.Fragment key={index}>{wrapTextNodes(child)}</React.Fragment>);
@@ -89,7 +89,7 @@ function wrapTextNodes(node: React.ReactNode): React.ReactNode {
   if (React.isValidElement(node)) {
     const el = node as React.ReactElement<any>;
     const className: string = (el.props && (el.props as any).className) || '';
-    const isAlreadyLabel = typeof el.type === 'string' && className.split(' ').includes('rt-SidebarMenuLabel');
+    const isAlreadyLabel = typeof el.type === 'string' && className.split(' ').includes('kui-SidebarMenuLabel');
     if (isAlreadyLabel) return el;
     const newChildren = wrapTextNodes((el.props as any)?.children);
     return React.cloneElement(el, { ...(el.props as any) }, newChildren);
@@ -110,9 +110,9 @@ const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonP
     const handleKeyDown = React.useCallback(
       (event: React.KeyboardEvent<HTMLButtonElement>) => {
         if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-          const scope = event.currentTarget.closest('.rt-SidebarContent, .rt-SidebarSearchPopover');
+          const scope = event.currentTarget.closest('.kui-SidebarContent, .kui-SidebarSearchPopover');
           const buttons = scope
-            ? Array.from(scope.querySelectorAll<HTMLElement>('.rt-SidebarMenuButton')).filter((el) => el.offsetParent !== null)
+            ? Array.from(scope.querySelectorAll<HTMLElement>('.kui-SidebarMenuButton')).filter((el) => el.offsetParent !== null)
             : [];
           const index = buttons.indexOf(event.currentTarget);
           const next = buttons[index + (event.key === 'ArrowDown' ? 1 : -1)];
@@ -146,7 +146,7 @@ const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonP
           <>
             {originalInnerChildren}
             {badge && (
-              <div className="rt-SidebarMenuBadge">
+              <div className="kui-SidebarMenuBadge">
                 {typeof badge === 'string' ? (
                   <Chip size={sidebarSize} variant="soft">
                     {badge}
@@ -159,7 +159,7 @@ const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonP
               </div>
             )}
             {shortcut && (
-              <div className="rt-BaseMenuShortcut rt-SidebarMenuShortcut">
+              <div className="kui-BaseMenuShortcut kui-SidebarMenuShortcut">
                 <Kbd size={sidebarSize}>{shortcut}</Kbd>
               </div>
             )}
@@ -177,7 +177,7 @@ const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonP
         {...props}
         ref={forwardedRef}
         aria-current={isActive ? 'page' : undefined}
-        className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-SidebarMenuButton', className)}
+        className={classNames('kui-reset', 'kui-BaseMenuItem', 'kui-SidebarMenuButton', className)}
         data-active={isActive || undefined}
         onKeyDown={handleKeyDown}
       >
@@ -185,11 +185,11 @@ const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonP
           slottedChildren
         ) : isThinMode && icons.length > 0 ? (
           <>
-            <span className="rt-SidebarMenuIconWrapper">{icons}</span>
+            <span className="kui-SidebarMenuIconWrapper">{icons}</span>
             {labels.map((label, index) => (
               <React.Fragment key={index}>
                 {typeof label === 'string' || typeof label === 'number' ? (
-                  <span className="rt-SidebarMenuLabel">{label}</span>
+                  <span className="kui-SidebarMenuLabel">{label}</span>
                 ) : (
                   label
                 )}
@@ -200,7 +200,7 @@ const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonP
           <>
             {processedChildren}
             {badge && (
-              <div className="rt-SidebarMenuBadge">
+              <div className="kui-SidebarMenuBadge">
                 {typeof badge === 'string' ? (
                   <Chip size={sidebarSize} variant="soft">
                     {badge}
@@ -213,7 +213,7 @@ const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonP
               </div>
             )}
             {shortcut && (
-              <div className="rt-BaseMenuShortcut rt-SidebarMenuShortcut">
+              <div className="kui-BaseMenuShortcut kui-SidebarMenuShortcut">
                 <Kbd size={sidebarSize}>{shortcut}</Kbd>
               </div>
             )}
@@ -273,7 +273,7 @@ const SidebarMenuSubTrigger = React.forwardRef<React.ElementRef<typeof Accordion
             ref={forwardedRef as any}
             type="button"
             aria-haspopup="menu"
-            className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-SidebarMenuButton', 'rt-SidebarMenuSubTrigger', className)}
+            className={classNames('kui-reset', 'kui-BaseMenuItem', 'kui-SidebarMenuButton', 'kui-SidebarMenuSubTrigger', className)}
           >
             {children}
           </button>
@@ -288,14 +288,14 @@ const SidebarMenuSubTrigger = React.forwardRef<React.ElementRef<typeof Accordion
             {...props}
             ref={forwardedRef}
             asChild={asChild}
-            className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-SidebarMenuButton', 'rt-SidebarMenuSubTrigger', className)}
+            className={classNames('kui-reset', 'kui-BaseMenuItem', 'kui-SidebarMenuButton', 'kui-SidebarMenuSubTrigger', className)}
           >
             {asChild ? (
               children
             ) : (
               <>
                 {children}
-                <ThickChevronRightIcon className={classNames('rt-BaseMenuSubTriggerIcon', 'rt-SidebarMenuSubTriggerIcon')} />
+                <ThickChevronRightIcon className={classNames('kui-BaseMenuSubTriggerIcon', 'kui-SidebarMenuSubTriggerIcon')} />
               </>
             )}
           </Accordion.Trigger>
@@ -356,8 +356,8 @@ const SidebarMenuSubContent = React.forwardRef<React.ElementRef<typeof Accordion
   }
 
   return (
-    <Accordion.Content {...props} ref={forwardedRef} className={classNames('rt-SidebarMenuSubContent', className)}>
-      <div className="rt-SidebarMenuSubList">{children}</div>
+    <Accordion.Content {...props} ref={forwardedRef} className={classNames('kui-SidebarMenuSubContent', className)}>
+      <div className="kui-SidebarMenuSubList">{children}</div>
     </Accordion.Content>
   );
 });
@@ -367,7 +367,7 @@ SidebarMenuSubContent.displayName = 'Sidebar.MenuSubContent';
 interface SidebarGroupProps extends React.ComponentPropsWithoutRef<'div'> {}
 
 const SidebarGroup = React.forwardRef<HTMLDivElement, SidebarGroupProps>(({ className, ...props }, forwardedRef) => (
-  <div {...props} ref={forwardedRef} className={classNames('rt-BaseMenuGroup', 'rt-SidebarGroup', className)} />
+  <div {...props} ref={forwardedRef} className={classNames('kui-BaseMenuGroup', 'kui-SidebarGroup', className)} />
 ));
 SidebarGroup.displayName = 'Sidebar.Group';
 
@@ -378,14 +378,14 @@ interface SidebarGroupLabelProps extends React.ComponentPropsWithoutRef<'div'> {
 const SidebarGroupLabel = React.forwardRef<HTMLDivElement, SidebarGroupLabelProps>(({ asChild = false, className, ...props }, forwardedRef) => {
   const Comp = asChild ? Slot : 'div';
 
-  return <Comp {...props} ref={forwardedRef} className={classNames('rt-BaseMenuLabel', 'rt-SidebarGroupLabel', className)} />;
+  return <Comp {...props} ref={forwardedRef} className={classNames('kui-BaseMenuLabel', 'kui-SidebarGroupLabel', className)} />;
 });
 SidebarGroupLabel.displayName = 'Sidebar.GroupLabel';
 
 interface SidebarGroupContentProps extends React.ComponentPropsWithoutRef<'div'> {}
 
 const SidebarGroupContent = React.forwardRef<HTMLDivElement, SidebarGroupContentProps>(({ className, ...props }, forwardedRef) => (
-  <div {...props} ref={forwardedRef} className={classNames('rt-SidebarGroupContent', className)} />
+  <div {...props} ref={forwardedRef} className={classNames('kui-SidebarGroupContent', className)} />
 ));
 SidebarGroupContent.displayName = 'Sidebar.GroupContent';
 
@@ -513,34 +513,34 @@ const SidebarSearch = React.forwardRef<HTMLDivElement, SidebarSearchProps>(
 
     if (isThin) {
       return (
-        <div {...props} ref={forwardedRef} className={classNames('rt-SidebarSearch', 'rt-SidebarSearch--thin', className)}>
+        <div {...props} ref={forwardedRef} className={classNames('kui-SidebarSearch', 'kui-SidebarSearch--thin', className)}>
           <Popover.Root>
             <Popover.Trigger>
               <button
                 type="button"
-                className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-SidebarMenuButton', 'rt-SidebarSearchTrigger')}
+                className={classNames('kui-reset', 'kui-BaseMenuItem', 'kui-SidebarMenuButton', 'kui-SidebarSearchTrigger')}
                 aria-label={searchLabel}
               >
-                <span className="rt-SidebarMenuIconWrapper">
+                <span className="kui-SidebarMenuIconWrapper">
                   <SearchIcon />
                 </span>
-                <span className="rt-SidebarMenuLabel">Search</span>
+                <span className="kui-SidebarMenuLabel">Search</span>
               </button>
             </Popover.Trigger>
             <Popover.Content side="right" align="start" size="2" width="280px" aria-label={searchLabel}>
               {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- keyDown manages arrow-key navigation between input and results, which is accessibility-enhancing */}
               <div
                 ref={popoverRef}
-                className="rt-SidebarSearchPopover"
+                className="kui-SidebarSearchPopover"
                 role="search"
                 onKeyDown={handlePopoverKeyDown}
               >
-                <div className="rt-SidebarSearchInputWrapper">
-                  <SearchIcon className="rt-SidebarSearchIcon" />
+                <div className="kui-SidebarSearchInputWrapper">
+                  <SearchIcon className="kui-SidebarSearchIcon" />
                   <input
                     ref={inputRef}
                     type="search"
-                    className="rt-SidebarSearchInput"
+                    className="kui-SidebarSearchInput"
                     value={value}
                     onChange={(e) => onValueChange(e.target.value)}
                     onKeyDown={handleKeyDown}
@@ -553,7 +553,7 @@ const SidebarSearch = React.forwardRef<HTMLDivElement, SidebarSearchProps>(
                   {value && (
                     <button
                       type="button"
-                      className="rt-reset rt-SidebarSearchClear"
+                      className="kui-reset kui-SidebarSearchClear"
                       onClick={() => {
                         onValueChange('');
                         inputRef.current?.focus();
@@ -578,13 +578,13 @@ const SidebarSearch = React.forwardRef<HTMLDivElement, SidebarSearchProps>(
 
     // Expanded mode: inline input
     return (
-      <div {...props} ref={forwardedRef} className={classNames('rt-SidebarSearch', 'rt-SidebarSearch--expanded', 'rt-ShellPaneChrome', `rt-r-size-${visual?.size ?? '2'}`, className)} role="search">
-        <div className="rt-SidebarSearchInputWrapper">
-          <SearchIcon className="rt-SidebarSearchIcon" />
+      <div {...props} ref={forwardedRef} className={classNames('kui-SidebarSearch', 'kui-SidebarSearch--expanded', 'kui-ShellPaneChrome', `kui-r-size-${visual?.size ?? '2'}`, className)} role="search">
+        <div className="kui-SidebarSearchInputWrapper">
+          <SearchIcon className="kui-SidebarSearchIcon" />
           <input
             ref={inputRef}
             type="search"
-            className="rt-SidebarSearchInput"
+            className="kui-SidebarSearchInput"
             value={value}
             onChange={(e) => onValueChange(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -594,7 +594,7 @@ const SidebarSearch = React.forwardRef<HTMLDivElement, SidebarSearchProps>(
           {value && (
             <button
               type="button"
-              className="rt-reset rt-SidebarSearchClear"
+              className="kui-reset kui-SidebarSearchClear"
               onClick={() => {
                 onValueChange('');
                 inputRef.current?.focus();

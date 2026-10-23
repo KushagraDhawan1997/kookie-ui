@@ -52,7 +52,7 @@ Kookie UI is a fork of [Radix Themes](https://radix-ui.com/themes) that extends 
 ### Key Features
 
 - **Systematic Design Tokens** - 12-point progressions for spacing, radius, and shadows with predictable steps
-- **Material** - Surfaces are solid or translucent, with a theme-level default and per-surface overrides
+- **Solid surfaces** - Every surface is solid; there is no translucency or backdrop blur
 - **Shared Size Steps** - Controls share one set of size steps
 - **No motion** - State changes are instant; only busy indicators move
 - **Enhanced Accessibility** - Native tooltip support, stricter aria-label enforcement, and improved keyboard navigation
@@ -287,7 +287,6 @@ Kookie UI uses a comprehensive theming system with:
 
 - **Accent Colors** - Primary brand colors (blue, green, orange, etc.)
 - **Gray Colors** - Neutral color scales (gray, mauve, slate, etc.)
-- **Material System** - Translucent vs. solid surfaces
 - **Size Scales** - Consistent sizing across components
 - **Spacing System** - 12-point spacing progression
 - **Typography** - Font scales and weights

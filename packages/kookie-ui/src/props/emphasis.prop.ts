@@ -8,7 +8,7 @@ const emphases = ['loud', 'medium', 'quiet'] as const;
 const emphasisPropDef = {
   emphasis: {
     type: 'enum',
-    className: 'rt-emphasis',
+    className: 'kui-emphasis',
     values: emphases,
     default: undefined,
   },

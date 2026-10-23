@@ -1,5 +1,5 @@
 /* Accordion Root */
-.rt-AccordionRoot {
+.kui-AccordionRoot {
   overflow: hidden;
   contain: layout;
   isolation: isolate;
@@ -7,64 +7,64 @@
 
 /* Size-specific border radius — surface channel */
 @breakpoints {
-  .rt-AccordionRoot {
-    &:where(.rt-r-size-1) {
+  .kui-AccordionRoot {
+    &:where(.kui-r-size-1) {
       border-radius: var(--radius-surface-1);
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       border-radius: var(--radius-surface-1);
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       border-radius: var(--radius-surface-1);
     }
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       border-radius: var(--radius-surface-1);
     }
   }
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-surface)) {
+:where(.kui-AccordionRoot:where(.kui-variant-surface)) {
   background-color: var(--accent-2);
   box-shadow: inset 0 0 0 1px var(--accent-6);
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-raised)) {
-  background-color: var(--color-surface-solid);
+:where(.kui-AccordionRoot:where(.kui-variant-raised)) {
+  background-color: var(--color-surface);
   box-shadow: var(--shadow-2);
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-soft)) {
+:where(.kui-AccordionRoot:where(.kui-variant-soft)) {
   background-color: var(--accent-2);
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-outline)) {
+:where(.kui-AccordionRoot:where(.kui-variant-outline)) {
   box-shadow: inset 0 0 0 1px var(--accent-6);
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-ghost)) {
+:where(.kui-AccordionRoot:where(.kui-variant-ghost)) {
   background-color: transparent;
 }
 
 /* Accordion Item */
-.rt-AccordionItem {
+.kui-AccordionItem {
   overflow: hidden;
 }
 
-:where(.rt-AccordionItem:not(:last-child)) {
-  border-bottom: 1px solid var(--gray-a6);
+:where(.kui-AccordionItem:not(:last-child)) {
+  border-bottom: 1px solid var(--neutral-a6);
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-ghost)) :where(.rt-AccordionItem:not(:last-child)) {
-  border-bottom: 1px solid var(--gray-a4);
+:where(.kui-AccordionRoot:where(.kui-variant-ghost)) :where(.kui-AccordionItem:not(:last-child)) {
+  border-bottom: 1px solid var(--neutral-a4);
 }
 
 /* Accordion Header */
-.rt-AccordionHeader {
+.kui-AccordionHeader {
   display: flex;
 }
 
 /* Accordion Trigger */
-.rt-AccordionTrigger {
+.kui-AccordionTrigger {
   all: unset;
   font-family: inherit;
   display: flex;
@@ -75,111 +75,111 @@
   font-size: var(--font-size-2);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-3);
-  color: var(--gray-12);
+  color: var(--neutral-12);
   cursor: pointer;
 }
 
 /* Size variants */
-:where(.rt-AccordionRoot:where(.rt-r-size-1)) .rt-AccordionTrigger {
+:where(.kui-AccordionRoot:where(.kui-r-size-1)) .kui-AccordionTrigger {
   padding: var(--space-3) var(--space-4);
   font-size: var(--font-size-1);
 }
 
-:where(.rt-AccordionRoot:where(.rt-r-size-2)) .rt-AccordionTrigger {
+:where(.kui-AccordionRoot:where(.kui-r-size-2)) .kui-AccordionTrigger {
   padding: var(--space-4) var(--space-5);
   font-size: var(--font-size-2);
 }
 
-:where(.rt-AccordionRoot:where(.rt-r-size-3)) .rt-AccordionTrigger {
+:where(.kui-AccordionRoot:where(.kui-r-size-3)) .kui-AccordionTrigger {
   padding: var(--space-5) var(--space-6);
   font-size: var(--font-size-3);
 }
 
-:where(.rt-AccordionRoot:where(.rt-r-size-4)) .rt-AccordionTrigger {
+:where(.kui-AccordionRoot:where(.kui-r-size-4)) .kui-AccordionTrigger {
   padding: var(--space-6) var(--space-7);
   font-size: var(--font-size-4);
 }
 
 /* Trigger hover states */
 @media (hover: hover) {
-  :where(.rt-AccordionTrigger:hover) {
-    background-color: var(--gray-a3);
+  :where(.kui-AccordionTrigger:hover) {
+    background-color: var(--neutral-a3);
   }
 }
 
 /* Trigger colour reads the loud ink in every variant; gray resolves to step 12 */
-:where(.rt-AccordionRoot:where(.rt-variant-soft, .rt-variant-outline, .rt-variant-surface, .rt-variant-ghost, .rt-variant-raised)) .rt-AccordionTrigger {
+:where(.kui-AccordionRoot:where(.kui-variant-soft, .kui-variant-outline, .kui-variant-surface, .kui-variant-ghost, .kui-variant-raised)) .kui-AccordionTrigger {
   color: var(--accent-ink);
 }
 
 /* Raised variant shadow states */
 @media (hover: hover) {
-  :where(.rt-AccordionRoot:where(.rt-variant-raised):hover) {
+  :where(.kui-AccordionRoot:where(.kui-variant-raised):hover) {
     background-color: var(--accent-2);
     box-shadow: var(--shadow-2);
   }
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-raised):focus-within) {
+:where(.kui-AccordionRoot:where(.kui-variant-raised):focus-within) {
   outline: 2px solid var(--focus-8);
   outline-offset: 2px;
 }
 
 @media (hover: hover) {
-  :where(.rt-AccordionRoot:where(.rt-variant-soft)) :where(.rt-AccordionTrigger:hover) {
+  :where(.kui-AccordionRoot:where(.kui-variant-soft)) :where(.kui-AccordionTrigger:hover) {
     background-color: var(--accent-4);
   }
 }
 
 @media (hover: hover) {
-  :where(.rt-AccordionRoot:where(.rt-variant-outline)) :where(.rt-AccordionTrigger:hover) {
+  :where(.kui-AccordionRoot:where(.kui-variant-outline)) :where(.kui-AccordionTrigger:hover) {
     background-color: var(--accent-2);
     box-shadow: inset 0 0 0 1px var(--accent-7);
   }
 }
 
 @media (hover: hover) {
-  :where(.rt-AccordionRoot:where(.rt-variant-surface)) :where(.rt-AccordionTrigger:hover) {
+  :where(.kui-AccordionRoot:where(.kui-variant-surface)) :where(.kui-AccordionTrigger:hover) {
     background-color: var(--accent-3);
     box-shadow: inset 0 0 0 1px var(--accent-7);
   }
 }
 
 @media (hover: hover) {
-  :where(.rt-AccordionRoot:where(.rt-variant-ghost)) :where(.rt-AccordionTrigger:hover) {
+  :where(.kui-AccordionRoot:where(.kui-variant-ghost)) :where(.kui-AccordionTrigger:hover) {
     background-color: var(--accent-3);
   }
 }
 
 /* Trigger focus states */
-:where(.rt-AccordionTrigger:focus-visible) {
+:where(.kui-AccordionTrigger:focus-visible) {
   outline: var(--focus-outline-width) solid var(--focus-8);
   outline-offset: var(--focus-outline-offset-inset);
 }
 
 /* Variant-specific focus styles */
-:where(.rt-AccordionRoot:where(.rt-variant-soft):focus-within) {
+:where(.kui-AccordionRoot:where(.kui-variant-soft):focus-within) {
   outline: 2px solid var(--focus-8);
   outline-offset: 2px;
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-surface):focus-within) {
+:where(.kui-AccordionRoot:where(.kui-variant-surface):focus-within) {
   outline: 2px solid var(--focus-8);
   outline-offset: 2px;
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-outline):focus-within) {
+:where(.kui-AccordionRoot:where(.kui-variant-outline):focus-within) {
   outline: 2px solid var(--focus-8);
   outline-offset: 2px;
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-ghost):focus-within) {
+:where(.kui-AccordionRoot:where(.kui-variant-ghost):focus-within) {
   outline: 2px solid var(--focus-8);
   outline-offset: 2px;
 }
 
 /* Accordion Content */
-.rt-AccordionContent {
+.kui-AccordionContent {
   overflow: hidden;
   /* remove padding here */
   font-size: var(--font-size-2);
@@ -189,27 +189,27 @@
   will-change: height, opacity, transform;
 }
 
-.rt-AccordionContentInner {
+.kui-AccordionContentInner {
   padding: 0 var(--space-5) var(--space-4);
 }
 
 /* Size variants for content */
-:where(.rt-AccordionRoot:where(.rt-r-size-1)) .rt-AccordionContentInner {
+:where(.kui-AccordionRoot:where(.kui-r-size-1)) .kui-AccordionContentInner {
   padding: 0 var(--space-4) var(--space-3);
   font-size: var(--font-size-1);
 }
 
-:where(.rt-AccordionRoot:where(.rt-r-size-2)) .rt-AccordionContentInner {
+:where(.kui-AccordionRoot:where(.kui-r-size-2)) .kui-AccordionContentInner {
   padding: 0 var(--space-5) var(--space-4);
   font-size: var(--font-size-2);
 }
 
-:where(.rt-AccordionRoot:where(.rt-r-size-3)) .rt-AccordionContentInner {
+:where(.kui-AccordionRoot:where(.kui-r-size-3)) .kui-AccordionContentInner {
   padding: 0 var(--space-6) var(--space-5);
   font-size: var(--font-size-3);
 }
 
-:where(.rt-AccordionRoot:where(.rt-r-size-4)) .rt-AccordionContentInner {
+:where(.kui-AccordionRoot:where(.kui-r-size-4)) .kui-AccordionContentInner {
   padding: 0 var(--space-7) var(--space-6);
   font-size: var(--font-size-4);
 }
@@ -218,41 +218,41 @@
 
 /* Color accent support */
 @media (hover: hover) {
-  :where(.rt-AccordionRoot:where(.rt-variant-soft)[data-accent-color]) :where(.rt-AccordionTrigger:hover) {
+  :where(.kui-AccordionRoot:where(.kui-variant-soft)[data-accent-color]) :where(.kui-AccordionTrigger:hover) {
     background-color: var(--accent-a4);
   }
 }
 
 /* Forced colors support */
 @media (forced-colors: active) {
-  :where(.rt-AccordionTrigger) {
+  :where(.kui-AccordionTrigger) {
     border: 1px solid CanvasText;
   }
 
-  :where(.rt-AccordionTrigger:focus-visible) {
+  :where(.kui-AccordionTrigger:focus-visible) {
     outline: 2px solid CanvasText;
     outline-offset: 2px;
   }
 
-  :where(.rt-AccordionItem:not(:last-child)) {
+  :where(.kui-AccordionItem:not(:last-child)) {
     border-bottom: 1px solid CanvasText;
   }
 
-  :where(.rt-AccordionRoot) {
+  :where(.kui-AccordionRoot) {
     border: 1px solid CanvasText;
   }
 }
 
 /* Soft variant hover states */
 @media (hover: hover) {
-  :where(.rt-AccordionRoot.rt-variant-soft:hover) {
+  :where(.kui-AccordionRoot.kui-variant-soft:hover) {
     background-color: var(--accent-4);
   }
 }
 
 /* Outline variant hover states */
 @media (hover: hover) {
-  :where(.rt-AccordionRoot.rt-variant-outline:hover) {
+  :where(.kui-AccordionRoot.kui-variant-outline:hover) {
     background-color: var(--accent-2);
     box-shadow: inset 0 0 0 1px var(--accent-7);
   }
@@ -260,7 +260,7 @@
 
 /* Surface variant hover states */
 @media (hover: hover) {
-  :where(.rt-AccordionRoot.rt-variant-surface:hover) {
+  :where(.kui-AccordionRoot.kui-variant-surface:hover) {
     background-color: var(--accent-3);
     box-shadow: inset 0 0 0 1px var(--accent-7);
   }
@@ -268,13 +268,13 @@
 
 /* Ghost variant hover with lowered specificity */
 @media (hover: hover) {
-  :where(.rt-AccordionRoot.rt-variant-ghost:hover) {
+  :where(.kui-AccordionRoot.kui-variant-ghost:hover) {
     background-color: var(--accent-2);
   }
 }
 /* Disabled: the same treatment as a disabled menu item. It keeps no hover fill or lift. */
-.rt-AccordionTrigger:where([data-disabled]) {
-  color: var(--gray-a8);
+.kui-AccordionTrigger:where([data-disabled]) {
+  color: var(--neutral-a8);
   cursor: default;
   background-color: transparent;
   transform: none;

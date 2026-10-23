@@ -48,7 +48,7 @@ describe('Shell server markup', () => {
   });
 
   it('carries the default Sidebar answer at each breakpoint for the stylesheet', () => {
-    const sidebar = parse(renderToString(<App />)).querySelector('.rt-ShellSidebar') as HTMLElement;
+    const sidebar = parse(renderToString(<App />)).querySelector('.kui-ShellSidebar') as HTMLElement;
 
     expect(sidebar.getAttribute('data-state')).toBe('auto');
     // An overlay below 768px, resting closed; in the frame from 768px, open.
@@ -60,7 +60,7 @@ describe('Shell server markup', () => {
   });
 
   it('carries a responsive defaultOpen the same way', () => {
-    const inspector = parse(renderToString(<App />)).querySelector('.rt-ShellInspector') as HTMLElement;
+    const inspector = parse(renderToString(<App />)).querySelector('.kui-ShellInspector') as HTMLElement;
     expect(inspector.getAttribute('data-auto-md')).toBe('closed');
     expect(inspector.getAttribute('data-auto-lg')).toBe('open');
   });
@@ -79,7 +79,7 @@ describe('Shell hydration', () => {
     const element = <App onSidebar={onSidebar} onInspector={onInspector} />;
     const container = parse(renderToString(element));
     document.body.appendChild(container);
-    const sidebarBefore = container.querySelector('.rt-ShellSidebar');
+    const sidebarBefore = container.querySelector('.kui-ShellSidebar');
 
     const error = vi.spyOn(console, 'error').mockImplementation(() => {});
     let root: ReturnType<typeof hydrateRoot> | undefined;
@@ -92,7 +92,7 @@ describe('Shell hydration', () => {
       expect(onSidebar).not.toHaveBeenCalled();
       expect(onInspector).not.toHaveBeenCalled();
       // The server's element is kept, and the mirror fills in once the window is known.
-      expect(container.querySelector('.rt-ShellSidebar')).toBe(sidebarBefore);
+      expect(container.querySelector('.kui-ShellSidebar')).toBe(sidebarBefore);
       const trigger = [...container.querySelectorAll('button')].find((b) => b.textContent === 'sidebar');
       expect(trigger?.getAttribute('aria-expanded')).toBe('false');
     } finally {

@@ -2,7 +2,6 @@
   Base Sidebar Layout and Container Styles
   - Slot containers: Root, Container, Header, Content, Footer, Separator
   - No visual variants here; only structure and slot-level primitives
-  - Shared tokens defined/consumed: --sidebar-base-border-radius, etc.
 */
 
 /* Removed Sidebar Provider (unused) */
@@ -10,15 +9,14 @@
 /* Sidebar Root Container */
 /* Sidebar Container */
 /* Sidebar Header */
-.rt-SidebarHeader {
+.kui-SidebarHeader {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  border-radius: var(--sidebar-base-border-radius) var(--sidebar-base-border-radius) 0 0;
 }
 
-/* Sidebar Content - based on rt-BaseMenuContent */
-.rt-SidebarContent {
+/* Sidebar Content - based on kui-BaseMenuContent */
+.kui-SidebarContent {
   --scrollarea-scrollbar-vertical-margin-top: var(--base-menu-content-padding);
   --scrollarea-scrollbar-vertical-margin-bottom: var(--base-menu-content-padding);
   --scrollarea-scrollbar-horizontal-margin-left: var(--base-menu-content-padding);
@@ -41,20 +39,20 @@
 
   /* Add gap between groups using flex */
   /* stylelint-disable-next-line selector-max-specificity */
-  & .rt-BaseMenuViewport {
+  & .kui-BaseMenuViewport {
     /* gap: var(--base-menu-content-padding); */
     gap: var(--space-6);
   }
 
   /* Ensure ScrollArea takes full height within SidebarContent */
-  & :where(.rt-ScrollAreaRoot) {
+  & :where(.kui-ScrollAreaRoot) {
     flex: 1;
     display: flex;
     flex-direction: column;
     min-height: 0;
   }
 
-  & :where(.rt-ScrollAreaViewport) {
+  & :where(.kui-ScrollAreaViewport) {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -62,22 +60,21 @@
   }
 
   /* Isolate painting to prevent cross-layer nudges */
-  & :where(.rt-BaseMenuViewport) {
+  & :where(.kui-BaseMenuViewport) {
     contain: paint;
   }
 }
 
 /* Sidebar Footer */
-.rt-SidebarFooter {
+.kui-SidebarFooter {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   margin-top: auto;
-  border-radius: 0 0 var(--sidebar-base-border-radius) var(--sidebar-base-border-radius);
 }
 
 /* Sidebar Separator - ensure full width and proper spacing */
-.rt-SidebarSeparator {
+.kui-SidebarSeparator {
   width: 100%;
   margin: var(--space-3) 0;
 }

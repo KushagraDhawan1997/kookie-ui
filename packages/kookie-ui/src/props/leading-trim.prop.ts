@@ -5,7 +5,7 @@ const leadingTrimValues = ['normal', 'start', 'end', 'both'] as const;
 const leadingTrimPropDef = {
   trim: {
     type: 'enum',
-    className: 'rt-r-lt',
+    className: 'kui-r-lt',
     values: leadingTrimValues,
     responsive: true,
   },

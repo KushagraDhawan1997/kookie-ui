@@ -119,7 +119,7 @@ function clear(target: HTMLElement, variables: Record<string, string>) {
  */
 export function applyFontConfig(
   config: FontConfig,
-  { root = document.documentElement, themeElement = document.querySelector<HTMLElement>('.radix-themes') }: { root?: HTMLElement; themeElement?: HTMLElement | null } = {},
+  { root = document.documentElement, themeElement = document.querySelector<HTMLElement>('.kui-theme') }: { root?: HTMLElement; themeElement?: HTMLElement | null } = {},
 ): void {
   if (config.stacks) write(root, FONT_STACK_VARIABLES, config.stacks);
   if (config.roles && themeElement) write(themeElement, FONT_ROLE_VARIABLES, config.roles);
@@ -139,20 +139,20 @@ export function generateFontCSS(config: FontConfig): string {
 
   const roles = Object.entries(config.roles ?? {}).filter(([, value]) => value);
   if (roles.length) {
-    blocks.push(['.radix-themes {', ...roles.map(([key, value]) => `  ${FONT_ROLE_VARIABLES[key as keyof FontRoles]}: ${value};`), '}'].join('\n'));
+    blocks.push(['.kui-theme {', ...roles.map(([key, value]) => `  ${FONT_ROLE_VARIABLES[key as keyof FontRoles]}: ${value};`), '}'].join('\n'));
   }
 
   return blocks.join('\n\n');
 }
 
 /** Drop every inline font override, falling back to the stylesheet's defaults. */
-export function resetFonts({ root = document.documentElement, themeElement = document.querySelector<HTMLElement>('.radix-themes') }: { root?: HTMLElement; themeElement?: HTMLElement | null } = {}): void {
+export function resetFonts({ root = document.documentElement, themeElement = document.querySelector<HTMLElement>('.kui-theme') }: { root?: HTMLElement; themeElement?: HTMLElement | null } = {}): void {
   clear(root, FONT_STACK_VARIABLES);
   if (themeElement) clear(themeElement, FONT_ROLE_VARIABLES);
 }
 
 /** Read the stacks and roles currently in effect. */
-export function getCurrentFontConfig({ themeElement = document.querySelector<HTMLElement>('.radix-themes') }: { themeElement?: HTMLElement | null } = {}): Required<FontConfig> {
+export function getCurrentFontConfig({ themeElement = document.querySelector<HTMLElement>('.kui-theme') }: { themeElement?: HTMLElement | null } = {}): Required<FontConfig> {
   // Roles resolve against the theme element, so read both tiers from it — it inherits
   // the stacks from `:root` and is the only place the roles are declared.
   const computed = getComputedStyle(themeElement ?? document.documentElement);

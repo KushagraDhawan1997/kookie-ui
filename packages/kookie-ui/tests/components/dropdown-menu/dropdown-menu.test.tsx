@@ -61,7 +61,7 @@ describe('DropdownMenu', () => {
       color: 'red',
     });
     const menu = await screen.findByRole('menu');
-    expect(menu).toHaveClass('rt-r-size-1', 'rt-variant-soft');
+    expect(menu).toHaveClass('kui-r-size-1', 'kui-variant-soft');
     expect(menu).toHaveAttribute('data-accent-color', 'red');
     expect(menu).not.toHaveAttribute('data-material');
     expect(menu).not.toHaveAttribute('color');
@@ -81,7 +81,7 @@ describe('DropdownMenu', () => {
 
     const copy = await screen.findByRole('menuitem', { name: 'Copy' });
     expect(copy).toHaveAttribute('aria-keyshortcuts', 'Meta+C');
-    expect(copy.querySelector('.rt-BaseMenuShortcut')).toHaveAttribute('aria-hidden', 'true');
+    expect(copy.querySelector('.kui-BaseMenuShortcut')).toHaveAttribute('aria-hidden', 'true');
     expect(screen.getByRole('menuitemcheckbox', { name: 'Bold' })).toHaveAttribute('aria-keyshortcuts', 'Control+B');
   });
 
@@ -100,8 +100,8 @@ describe('DropdownMenu', () => {
 
     const item = await screen.findByRole('menuitemcheckbox', { name: 'Show grid' });
     expect(item).toHaveAttribute('aria-checked', 'true');
-    expect(item.querySelector('.rt-DropdownMenuItemIndicatorIcon')).not.toBeNull();
-    expect(item.querySelector('.rt-ContextMenuItemIndicatorIcon')).toBeNull();
+    expect(item.querySelector('.kui-DropdownMenuItemIndicatorIcon')).not.toBeNull();
+    expect(item.querySelector('.kui-ContextMenuItemIndicatorIcon')).toBeNull();
 
     await user.click(item);
     expect(onCheckedChange).toHaveBeenCalledWith(false);
@@ -118,7 +118,7 @@ describe('DropdownMenu', () => {
 
     const list = await screen.findByRole('menuitemradio', { name: 'List' });
     expect(list).toHaveAttribute('aria-checked', 'true');
-    expect(list.querySelector('.rt-BaseMenuItemIndicatorIcon')).not.toBeNull();
+    expect(list.querySelector('.kui-BaseMenuItemIndicatorIcon')).not.toBeNull();
 
     await user.click(screen.getByRole('menuitemradio', { name: 'Grid' }));
     expect(onValueChange).toHaveBeenCalledWith('grid');
@@ -126,7 +126,7 @@ describe('DropdownMenu', () => {
 
   it('merges the TriggerIcon className', () => {
     const { container } = render(<DropdownMenu.TriggerIcon className="custom" />);
-    expect(container.querySelector('svg')).toHaveClass('rt-DropdownMenuTriggerIcon', 'custom');
+    expect(container.querySelector('svg')).toHaveClass('kui-DropdownMenuTriggerIcon', 'custom');
   });
 
   describe('cascade submenus', () => {
@@ -147,7 +147,7 @@ describe('DropdownMenu', () => {
       await user.keyboard('{ArrowDown}{ArrowDown}');
       const trigger = screen.getByRole('menuitem', { name: 'Share' });
       expect(trigger).toHaveFocus();
-      expect(trigger.querySelector('.rt-DropdownMenuSubTriggerIcon')).not.toBeNull();
+      expect(trigger.querySelector('.kui-DropdownMenuSubTriggerIcon')).not.toBeNull();
 
       await user.keyboard('{ArrowRight}');
       expect(await screen.findByRole('menuitem', { name: 'Email' })).toBeInTheDocument();
@@ -170,7 +170,7 @@ describe('DropdownMenu', () => {
 
       await openFirstSub(user, 'Share');
       const sub = await screen.findByTestId('sub');
-      expect(sub).toHaveClass('rt-r-size-1');
+      expect(sub).toHaveClass('kui-r-size-1');
       expect(sub).toHaveAttribute('data-accent-color', 'red');
       expect(sub).not.toHaveAttribute('color');
     });
@@ -188,7 +188,7 @@ describe('DropdownMenu', () => {
 
       await openFirstSub(user, 'Share');
       const sub = await screen.findByTestId('sub');
-      expect(sub).toHaveClass('rt-r-size-1', 'rt-variant-soft');
+      expect(sub).toHaveClass('kui-r-size-1', 'kui-variant-soft');
       expect(sub).toHaveAttribute('data-accent-color', 'blue');
     });
 
@@ -217,8 +217,8 @@ describe('DropdownMenu', () => {
       });
 
       const menu = await screen.findByRole('menu');
-      expect(menu.querySelector('.rt-ScrollAreaRoot')).toBeNull();
-      expect(menu.querySelector('.rt-virtualized')).not.toBeNull();
+      expect(menu.querySelector('.kui-ScrollAreaRoot')).toBeNull();
+      expect(menu.querySelector('.kui-virtualized')).not.toBeNull();
       // The nested list is a group; the content owns role="menu".
       expect(screen.getAllByRole('menu')).toHaveLength(1);
       expect(menu).not.toHaveAttribute('virtualized');
@@ -227,8 +227,8 @@ describe('DropdownMenu', () => {
     it('uses a vertical-only ScrollArea when not virtualized', async () => {
       renderMenu(<DropdownMenu.Item>One</DropdownMenu.Item>);
       const menu = await screen.findByRole('menu');
-      expect(menu.querySelector('.rt-ScrollAreaRoot')).not.toBeNull();
-      expect(menu.querySelector('.rt-ScrollAreaScrollbar[data-orientation="horizontal"]')).toBeNull();
+      expect(menu.querySelector('.kui-ScrollAreaRoot')).not.toBeNull();
+      expect(menu.querySelector('.kui-ScrollAreaScrollbar[data-orientation="horizontal"]')).toBeNull();
     });
   });
 

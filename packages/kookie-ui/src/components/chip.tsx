@@ -52,7 +52,7 @@ const Chip = React.forwardRef<ChipElement, ChipProps>((props, forwardedRef) => {
       data-radius={radius}
       {...chipProps}
       ref={forwardedRef}
-      className={classNames('rt-reset', 'rt-Chip', className)}
+      className={classNames('kui-reset', 'kui-Chip', className)}
     >
       {children}
     </Comp>

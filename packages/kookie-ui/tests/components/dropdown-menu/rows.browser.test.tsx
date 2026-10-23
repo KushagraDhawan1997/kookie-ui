@@ -51,9 +51,9 @@ describe('menu rows hug their line inside a panel', () => {
   for (const size of sizes) {
     it(`size ${size}: ${rowHeight[size]}px rows, ${panelPadding[size]}px panel, ${px[size]}px / ${pill[size]}px at full`, () => {
       const { unmount } = render(<Menu size={size} radius="medium" />);
-      const content = document.querySelector<HTMLElement>('.rt-DropdownMenuContent')!;
-      const viewport = content.querySelector<HTMLElement>('.rt-BaseMenuViewport')!;
-      const item = content.querySelector<HTMLElement>('.rt-BaseMenuItem')!;
+      const content = document.querySelector<HTMLElement>('.kui-DropdownMenuContent')!;
+      const viewport = content.querySelector<HTMLElement>('.kui-BaseMenuViewport')!;
+      const item = content.querySelector<HTMLElement>('.kui-BaseMenuItem')!;
       const style = getComputedStyle(item);
 
       expect(item.getBoundingClientRect().height).toBe(rowHeight[size]);
@@ -66,7 +66,7 @@ describe('menu rows hug their line inside a panel', () => {
       unmount();
 
       render(<Menu size={size} radius="full" />);
-      const fullItem = document.querySelector<HTMLElement>('.rt-DropdownMenuContent .rt-BaseMenuItem')!;
+      const fullItem = document.querySelector<HTMLElement>('.kui-DropdownMenuContent .kui-BaseMenuItem')!;
       const fullStyle = getComputedStyle(fullItem);
       expect(px2n(fullStyle.paddingLeft)).toBe(pill[size]);
       expect(px2n(fullStyle.paddingRight)).toBe(pill[size]);
@@ -79,8 +79,8 @@ describe('menu rows hug their line inside a panel', () => {
     for (const radius of ['medium', 'full'] as const) {
       it(`size ${size}, radius ${radius}: a shortcut row keeps the row height and sits the row inset from the far edge`, () => {
         render(<Menu size={size} radius={radius} />);
-        const item = document.querySelectorAll<HTMLElement>('.rt-DropdownMenuContent .rt-BaseMenuItem')[1];
-        const shortcut = item.querySelector<HTMLElement>('.rt-BaseMenuShortcut')!;
+        const item = document.querySelectorAll<HTMLElement>('.kui-DropdownMenuContent .kui-BaseMenuItem')[1];
+        const shortcut = item.querySelector<HTMLElement>('.kui-BaseMenuShortcut')!;
         expect(item.getBoundingClientRect().height).toBe(rowHeight[size]);
         expect(item.getBoundingClientRect().right - shortcut.getBoundingClientRect().right).toBe(rowInset[size]);
       });
@@ -101,7 +101,7 @@ describe('menu rows hug their line inside a panel', () => {
           </DropdownMenu.Root>
         </Theme>,
       );
-      const row = document.querySelector<HTMLElement>('.rt-DropdownMenuContent .rt-VirtualMenuItem')!;
+      const row = document.querySelector<HTMLElement>('.kui-DropdownMenuContent .kui-VirtualMenuItem')!;
       expect(row.getBoundingClientRect().height).toBe(getMenuItemHeight(size));
       // Without the virtualizer's inline height, the CSS row is the same height.
       row.style.height = '';
@@ -122,7 +122,7 @@ describe('menu rows hug their line inside a panel', () => {
         </DropdownMenu.Root>
       </Theme>,
     );
-    const item = document.querySelector<HTMLElement>('.rt-DropdownMenuContent .rt-BaseMenuItem')!;
+    const item = document.querySelector<HTMLElement>('.kui-DropdownMenuContent .kui-BaseMenuItem')!;
     expect(px2n(getComputedStyle(item).paddingLeft)).toBe(px['2'] + icon['2'] + gap['2']);
     expect(item.getBoundingClientRect().height).toBe(rowHeight['2']);
   });
@@ -140,8 +140,8 @@ describe('menu rows hug their line inside a panel', () => {
         </DropdownMenu.Root>
       </Theme>,
     );
-    const item = document.querySelector<HTMLElement>('.rt-DropdownMenuContent .rt-BaseMenuItem')!;
-    const mark = item.querySelector<HTMLElement>('.rt-BaseMenuItemIndicator')!;
+    const item = document.querySelector<HTMLElement>('.kui-DropdownMenuContent .kui-BaseMenuItem')!;
+    const mark = item.querySelector<HTMLElement>('.kui-BaseMenuItemIndicator')!;
     expect(mark.getBoundingClientRect().left - item.getBoundingClientRect().left).toBe(px['2']);
     expect(mark.getBoundingClientRect().width).toBe(icon['2']);
     expect(px2n(getComputedStyle(item).paddingLeft)).toBe(px['2'] + icon['2'] + gap['2']);
@@ -163,7 +163,7 @@ describe('menu rows hug their line inside a panel', () => {
         </DropdownMenu.Root>
       </Theme>,
     );
-    const separator = document.querySelector<HTMLElement>('.rt-DropdownMenuContent .rt-BaseMenuSeparator')!;
+    const separator = document.querySelector<HTMLElement>('.kui-DropdownMenuContent .kui-BaseMenuSeparator')!;
     const style = getComputedStyle(separator);
     // The rhythm is the separator's own padding: a part never sets the space around itself.
     expect(px2n(style.marginTop)).toBe(0);
@@ -190,9 +190,9 @@ describe('select rows are menu rows', () => {
           </Select.Root>
         </Theme>,
       );
-      const content = document.querySelector<HTMLElement>('.rt-SelectContent')!;
-      const viewport = content.querySelector<HTMLElement>('.rt-SelectViewport')!;
-      const item = content.querySelector<HTMLElement>('.rt-SelectItem')!;
+      const content = document.querySelector<HTMLElement>('.kui-SelectContent')!;
+      const viewport = content.querySelector<HTMLElement>('.kui-SelectViewport')!;
+      const item = content.querySelector<HTMLElement>('.kui-SelectItem')!;
       expect(item.getBoundingClientRect().height).toBe(rowHeight[size]);
       expect(px2n(getComputedStyle(viewport).paddingTop)).toBe(panelPadding[size]);
       expect(px2n(getComputedStyle(item).paddingLeft)).toBe(px[size] + icon[size] + gap[size]);
@@ -211,7 +211,7 @@ describe('select rows are menu rows', () => {
         </Select.Root>
       </Theme>,
     );
-    const item = document.querySelector<HTMLElement>('.rt-SelectContent .rt-SelectItem')!;
+    const item = document.querySelector<HTMLElement>('.kui-SelectContent .kui-SelectItem')!;
     expect(item.getBoundingClientRect().height).toBe(rowHeight['2']);
     expect(px2n(getComputedStyle(item).paddingRight)).toBe(pill['2']);
     expect(px2n(getComputedStyle(item).borderTopLeftRadius)).toBe(rowHeight['2'] / 2);
@@ -233,7 +233,7 @@ describe('combobox rows are menu rows', () => {
           </Combobox.Root>
         </Theme>,
       );
-      const item = document.querySelector<HTMLElement>('.rt-ComboboxContent .rt-ComboboxItem')!;
+      const item = document.querySelector<HTMLElement>('.kui-ComboboxContent .kui-ComboboxItem')!;
       expect(item.getBoundingClientRect().height).toBe(rowHeight[size]);
       expect(px2n(getComputedStyle(item).paddingLeft)).toBe(px[size] + icon[size] + gap[size]);
     });
@@ -261,7 +261,7 @@ describe('a sidebar row stands level with a button, on the pill padding and gap 
           </Shell.Root>
         </Theme>,
       );
-      const row = container.querySelector<HTMLElement>('.rt-ShellSidebar .rt-SidebarMenuButton')!;
+      const row = container.querySelector<HTMLElement>('.kui-ShellSidebar .kui-SidebarMenuButton')!;
       const style = getComputedStyle(row);
       expect(row.getBoundingClientRect().height).toBe(controlHeight[size]);
       expect(px2n(style.paddingLeft)).toBe(pill[size]);
@@ -288,7 +288,7 @@ describe('a sidebar row stands level with a button, on the pill padding and gap 
           </Shell.Root>
         </Theme>,
       );
-      for (const row of container.querySelectorAll<HTMLElement>('.rt-ShellSidebar .rt-SidebarMenuButton')) {
+      for (const row of container.querySelectorAll<HTMLElement>('.kui-ShellSidebar .kui-SidebarMenuButton')) {
         expect(row.getBoundingClientRect().height).toBe(controlHeight[size]);
       }
     });
@@ -312,7 +312,7 @@ describe('table cells pad on the layout ladder', () => {
           </Table.Root>
         </Theme>,
       );
-      const cell = container.querySelector<HTMLElement>('.rt-TableCell')!;
+      const cell = container.querySelector<HTMLElement>('.kui-TableCell')!;
       const style = getComputedStyle(cell);
       expect(px2n(style.paddingTop)).toBe(py[size]);
       expect(px2n(style.paddingLeft)).toBe(cellPx[size]);

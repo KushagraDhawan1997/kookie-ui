@@ -110,10 +110,10 @@ function Builder() {
                   style={{
                     paddingInlineStart: 4 + layer.depth * 14,
                     borderRadius: "var(--radius-full)",
-                    background: layer.selected ? "var(--gray-a4)" : undefined,
+                    background: layer.selected ? "var(--neutral-a4)" : undefined,
                   }}
                 >
-                  <Box width="16px" style={{ color: "var(--gray-a10)", display: "grid" }}>
+                  <Box width="16px" style={{ color: "var(--neutral-a10)", display: "grid" }}>
                     {layer.open ? icon(ArrowDown01Icon, 14) : layer.closed ? icon(ArrowRight01Icon, 14) : null}
                   </Box>
                   <Text size="2">{layer.label}</Text>

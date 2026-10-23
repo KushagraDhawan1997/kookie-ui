@@ -11,7 +11,7 @@ describe('Shell inset prop', () => {
           <Shell.Content>content</Shell.Content>
         </Shell.Root>,
       );
-      const content = screen.getByText('content').closest('.rt-ShellContent') as HTMLElement;
+      const content = screen.getByText('content').closest('.kui-ShellContent') as HTMLElement;
       expect(content.hasAttribute('data-inset')).toBe(false);
     });
 
@@ -21,7 +21,7 @@ describe('Shell inset prop', () => {
           <Shell.Content inset>content</Shell.Content>
         </Shell.Root>,
       );
-      const content = screen.getByText('content').closest('.rt-ShellContent') as HTMLElement;
+      const content = screen.getByText('content').closest('.kui-ShellContent') as HTMLElement;
       expect(content.hasAttribute('data-inset')).toBe(true);
     });
   });
@@ -36,7 +36,7 @@ describe('Shell inset prop', () => {
           <Shell.Content>content</Shell.Content>
         </Shell.Root>,
       );
-      const sidebar = screen.getByText('sidebar').closest('.rt-ShellSidebar') as HTMLElement;
+      const sidebar = screen.getByText('sidebar').closest('.kui-ShellSidebar') as HTMLElement;
       expect(sidebar.hasAttribute('data-inset')).toBe(false);
     });
 
@@ -49,7 +49,7 @@ describe('Shell inset prop', () => {
           <Shell.Content>content</Shell.Content>
         </Shell.Root>,
       );
-      const sidebar = screen.getByText('sidebar').closest('.rt-ShellSidebar') as HTMLElement;
+      const sidebar = screen.getByText('sidebar').closest('.kui-ShellSidebar') as HTMLElement;
       expect(sidebar.hasAttribute('data-inset')).toBe(true);
     });
   });
@@ -64,7 +64,7 @@ describe('Shell inset prop', () => {
           </Shell.Inspector>
         </Shell.Root>,
       );
-      const inspector = screen.getByText('inspector').closest('.rt-ShellInspector') as HTMLElement;
+      const inspector = screen.getByText('inspector').closest('.kui-ShellInspector') as HTMLElement;
       expect(inspector.hasAttribute('data-inset')).toBe(false);
     });
 
@@ -77,7 +77,7 @@ describe('Shell inset prop', () => {
           </Shell.Inspector>
         </Shell.Root>,
       );
-      const inspector = screen.getByText('inspector').closest('.rt-ShellInspector') as HTMLElement;
+      const inspector = screen.getByText('inspector').closest('.kui-ShellInspector') as HTMLElement;
       expect(inspector.hasAttribute('data-inset')).toBe(true);
     });
   });
@@ -92,7 +92,7 @@ describe('Shell inset prop', () => {
           </Shell.Bottom>
         </Shell.Root>,
       );
-      const bottom = screen.getByText('bottom').closest('.rt-ShellBottom') as HTMLElement;
+      const bottom = screen.getByText('bottom').closest('.kui-ShellBottom') as HTMLElement;
       expect(bottom.hasAttribute('data-inset')).toBe(false);
     });
 
@@ -105,7 +105,7 @@ describe('Shell inset prop', () => {
           </Shell.Bottom>
         </Shell.Root>,
       );
-      const bottom = screen.getByText('bottom').closest('.rt-ShellBottom') as HTMLElement;
+      const bottom = screen.getByText('bottom').closest('.kui-ShellBottom') as HTMLElement;
       expect(bottom.hasAttribute('data-inset')).toBe(true);
     });
   });
@@ -120,8 +120,8 @@ describe('Shell inset prop', () => {
           <Shell.Content>content</Shell.Content>
         </Shell.Root>,
       );
-      expect((document.querySelector('.rt-ShellRail') as HTMLElement).hasAttribute('data-inset')).toBe(false);
-      expect((document.querySelector('.rt-ShellPanel') as HTMLElement).hasAttribute('data-inset')).toBe(false);
+      expect((document.querySelector('.kui-ShellRail') as HTMLElement).hasAttribute('data-inset')).toBe(false);
+      expect((document.querySelector('.kui-ShellPanel') as HTMLElement).hasAttribute('data-inset')).toBe(false);
     });
 
     it('has data-inset on the Rail when Rail has inset', () => {
@@ -132,8 +132,8 @@ describe('Shell inset prop', () => {
           <Shell.Content>content</Shell.Content>
         </Shell.Root>,
       );
-      expect((document.querySelector('.rt-ShellRail') as HTMLElement).hasAttribute('data-inset')).toBe(true);
-      expect((document.querySelector('.rt-ShellPanel') as HTMLElement).hasAttribute('data-inset')).toBe(false);
+      expect((document.querySelector('.kui-ShellRail') as HTMLElement).hasAttribute('data-inset')).toBe(true);
+      expect((document.querySelector('.kui-ShellPanel') as HTMLElement).hasAttribute('data-inset')).toBe(false);
     });
 
     it('has data-inset on the Panel when Panel has inset', () => {
@@ -144,7 +144,7 @@ describe('Shell inset prop', () => {
           <Shell.Content>content</Shell.Content>
         </Shell.Root>,
       );
-      expect((document.querySelector('.rt-ShellPanel') as HTMLElement).hasAttribute('data-inset')).toBe(true);
+      expect((document.querySelector('.kui-ShellPanel') as HTMLElement).hasAttribute('data-inset')).toBe(true);
     });
   });
 
@@ -156,7 +156,7 @@ describe('Shell inset prop', () => {
           <Shell.Content>content</Shell.Content>
         </Shell.Root>,
       );
-      const body = document.querySelector('.rt-ShellRoot') as HTMLElement;
+      const body = document.querySelector('.kui-ShellRoot') as HTMLElement;
       expect(body.hasAttribute('data-has-inset')).toBe(false);
     });
 
@@ -166,7 +166,7 @@ describe('Shell inset prop', () => {
           <Shell.Content inset>content</Shell.Content>
         </Shell.Root>,
       );
-      const body = document.querySelector('.rt-ShellRoot') as HTMLElement;
+      const body = document.querySelector('.kui-ShellRoot') as HTMLElement;
       expect(body.hasAttribute('data-has-inset')).toBe(true);
     });
 
@@ -179,7 +179,7 @@ describe('Shell inset prop', () => {
           <Shell.Content>content</Shell.Content>
         </Shell.Root>,
       );
-      const body = document.querySelector('.rt-ShellRoot') as HTMLElement;
+      const body = document.querySelector('.kui-ShellRoot') as HTMLElement;
       expect(body.hasAttribute('data-has-inset')).toBe(true);
     });
 
@@ -192,7 +192,7 @@ describe('Shell inset prop', () => {
           </Shell.Inspector>
         </Shell.Root>,
       );
-      const body = document.querySelector('.rt-ShellRoot') as HTMLElement;
+      const body = document.querySelector('.kui-ShellRoot') as HTMLElement;
       expect(body.hasAttribute('data-has-inset')).toBe(true);
     });
 
@@ -204,7 +204,7 @@ describe('Shell inset prop', () => {
           <Shell.Content>content</Shell.Content>
         </Shell.Root>,
       );
-      const body = document.querySelector('.rt-ShellRoot') as HTMLElement;
+      const body = document.querySelector('.kui-ShellRoot') as HTMLElement;
       expect(body.hasAttribute('data-has-inset')).toBe(true);
     });
 
@@ -220,7 +220,7 @@ describe('Shell inset prop', () => {
           </Shell.Inspector>
         </Shell.Root>,
       );
-      const body = document.querySelector('.rt-ShellRoot') as HTMLElement;
+      const body = document.querySelector('.kui-ShellRoot') as HTMLElement;
       expect(body.hasAttribute('data-has-inset')).toBe(true);
     });
   });
@@ -236,7 +236,7 @@ describe('Shell inset prop', () => {
           <Shell.Content>content</Shell.Content>
         </Shell.Root>,
       );
-      const offset = (document.querySelector('.rt-ShellRoot') as HTMLElement).style.getPropertyValue('--shell-rail-offset');
+      const offset = (document.querySelector('.kui-ShellRoot') as HTMLElement).style.getPropertyValue('--shell-rail-offset');
       expect(offset).toBe('calc(64px + 2 * var(--shell-inset-gap))');
     });
   });

@@ -87,8 +87,8 @@ describe('Shell callbacks are quiet until a user acts', () => {
     const on = spies();
     renderWithProviders(<Frame on={on} />);
     renderWithProviders(<SidebarFrame on={on} />);
-    expect(document.querySelector('.rt-ShellRail')?.getAttribute('data-mode')).toBe('expanded');
-    expect(document.querySelector('.rt-ShellSidebar')?.getAttribute('data-mode')).toBe('expanded');
+    expect(document.querySelector('.kui-ShellRail')?.getAttribute('data-mode')).toBe('expanded');
+    expect(document.querySelector('.kui-ShellSidebar')?.getAttribute('data-mode')).toBe('expanded');
     expect(calls(on)).toEqual({});
   });
 
@@ -105,8 +105,8 @@ describe('Shell callbacks are quiet until a user acts', () => {
   it('still follows the window while it stays quiet', () => {
     const on = spies();
     renderWithProviders(<Frame on={on} />);
-    const rail = document.querySelector('.rt-ShellRail') as HTMLElement;
-    const inspector = document.querySelector('.rt-ShellInspector') as HTMLElement;
+    const rail = document.querySelector('.kui-ShellRail') as HTMLElement;
+    const inspector = document.querySelector('.kui-ShellInspector') as HTMLElement;
     const railTrigger = screen.getByRole('button', { name: 'rail' });
 
     // Narrow: the Rail is an overlay, and an untouched overlay rests closed.
@@ -140,7 +140,7 @@ describe('Shell callbacks are quiet until a user acts', () => {
   it('a pane the user has set stays set across a resize, and reports nothing for it', () => {
     const on = spies();
     renderWithProviders(<Frame on={on} />);
-    const inspector = document.querySelector('.rt-ShellInspector') as HTMLElement;
+    const inspector = document.querySelector('.kui-ShellInspector') as HTMLElement;
 
     fireEvent.click(screen.getByRole('button', { name: 'inspector' }));
     on.inspector.mockClear();

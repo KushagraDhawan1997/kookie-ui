@@ -2,10 +2,10 @@
  * VirtualMenu - Virtualized menu component styles
  * 
  * Only positioning styles needed here.
- * Item appearance inherits from rt-BaseMenuItem in _internal/base-menu.css
+ * Item appearance inherits from kui-BaseMenuItem in _internal/base-menu.css
  */
 
-.rt-VirtualMenuRoot {
+.kui-VirtualMenuRoot {
   /* Scroll container */
   overflow: auto;
   position: relative;
@@ -24,13 +24,13 @@
   }
 }
 
-.rt-VirtualMenuViewport {
+.kui-VirtualMenuViewport {
   /* Container for absolutely positioned items */
   position: relative;
   width: 100%;
 }
 
-.rt-VirtualMenuItem {
+.kui-VirtualMenuItem {
   /* Absolute positioning for virtualization */
   position: absolute;
   top: 0;
@@ -40,8 +40,8 @@
   /* Ensure proper box model */
   box-sizing: border-box;
 
-  /* Inherit from rt-BaseMenuItem for consistent styling */
-  /* The rt-BaseMenuItem class provides: */
+  /* Inherit from kui-BaseMenuItem for consistent styling */
+  /* The kui-BaseMenuItem class provides: */
   /* - display: flex, align-items: center, gap */
   /* - min-height, padding */
   /* - cursor, user-select */

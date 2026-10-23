@@ -55,23 +55,23 @@ const baseButtonPropDefs = {
    * Button size for responsive design and interface density
    * Supports responsive objects: { initial: '1', sm: '2', md: '3', lg: '4' }
    */
-  size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
+  size: { type: 'enum', className: 'kui-r-size', values: sizes, default: '2', responsive: true },
   /**
    * Visual variant that determines the button's appearance and context
    */
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised' },
+  variant: { type: 'enum', className: 'kui-variant', values: variants, default: 'raised' },
   ...accentColorPropDef,
   ...radiusPropDef,
   /**
    * Loading state that shows a spinner and disables interaction
    * Automatically sets disabled=true and provides accessibility announcements
    */
-  loading: { type: 'boolean', className: 'rt-loading', default: false },
+  loading: { type: 'boolean', className: 'kui-loading', default: false },
   /**
    * Full width mode that expands the button to fill its container
    * Useful for mobile layouts and form submissions
    */
-  fullWidth: { type: 'boolean', className: 'rt-full-width', default: false },
+  fullWidth: { type: 'boolean', className: 'kui-full-width', default: false },
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;
   variant: PropDef<(typeof variants)[number]>;

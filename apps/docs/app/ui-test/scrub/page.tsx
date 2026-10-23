@@ -403,7 +403,7 @@ export default function ScrubTestPage() {
         </Card>
 
         {/* Instructions */}
-        <Card size="2" style={{ backgroundColor: 'var(--gray-a2)' }}>
+        <Card size="2" style={{ backgroundColor: 'var(--neutral-a2)' }}>
           <Flex direction="column" gap="3">
             <Heading size="3">How to Use</Heading>
             <Flex direction="column" gap="2" asChild>

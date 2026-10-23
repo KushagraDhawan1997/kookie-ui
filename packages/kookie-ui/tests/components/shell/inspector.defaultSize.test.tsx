@@ -17,7 +17,7 @@ function App({ defaultSize }: { defaultSize: string | number }) {
 }
 
 function getEl() {
-  return screen.getByText('inspector').closest('.rt-ShellInspector') as HTMLElement;
+  return screen.getByText('inspector').closest('.kui-ShellInspector') as HTMLElement;
 }
 
 describe('Inspector defaultSize normalization', () => {

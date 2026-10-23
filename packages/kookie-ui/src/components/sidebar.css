@@ -20,20 +20,20 @@
 
 /* Rail Layout Styling */
 /* A Rail's header and footer pad like its rows, and their buttons are tiles too. */
-:where(.rt-ShellRailContent .rt-ShellPaneChrome) {
+:where(.kui-ShellRailContent .kui-ShellPaneChrome) {
   --sidebar-base-padding: var(--space-3) !important;
 }
 
-:where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter)) {
+:where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter)) {
   padding: var(--space-3);
 }
 
-:where(.rt-ShellRailContent .rt-BaseMenuViewport) {
+:where(.kui-ShellRailContent .kui-BaseMenuViewport) {
   padding: var(--space-3) !important;
 }
 
 /* Enforce vertical stack and compact typography for all buttons in thin mode */
-:where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter)) :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
+:where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter)) :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) {
   justify-content: center !important;
   align-items: center !important;
   flex-direction: column !important;
@@ -49,23 +49,23 @@
 }
 
 /* Size-specific vertical padding for thin mode buttons */
-:where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-1) :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
+:where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-r-size-1) :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) {
   padding-top: var(--space-2) !important;
   padding-bottom: var(--space-2) !important;
 }
 
-:where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-2) :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
+:where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-r-size-2) :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) {
   padding-top: var(--space-2) !important;
   padding-bottom: var(--space-2) !important;
 }
 
-:where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-3) :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
+:where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-r-size-3) :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) {
   padding-top: var(--space-3) !important;
   padding-bottom: var(--space-3) !important;
 }
 
 /* Consolidated thin mode size blocks */
-:where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-1) {
+:where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-r-size-1) {
   /* Horizontal padding tokens to free space for text */
   --base-menu-item-padding-left: var(--space-2) !important;
   --base-menu-item-padding-right: var(--space-2) !important;
@@ -73,15 +73,15 @@
   --base-menu-item-padding-y: var(--space-3) !important;
 
   /* Override BaseMenu left padding resets */
-  &:where(:not(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem))) {
+  &:where(:not(:has(.kui-BaseMenuCheckboxItem, .kui-BaseMenuRadioItem))) {
     --base-menu-item-padding-left: var(--space-2) !important;
   }
-  &:where(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem)) {
+  &:where(:has(.kui-BaseMenuCheckboxItem, .kui-BaseMenuRadioItem)) {
     --base-menu-item-padding-left: var(--space-2) !important;
   }
 
   /* Button and subtrigger layout */
-  :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
+  :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) {
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -98,25 +98,25 @@
 
   /* Icon sizing */
   /* stylelint-disable-next-line selector-max-type */
-  :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) :where(svg) {
+  :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) :where(svg) {
     width: var(--content-icon-size-3);
     height: var(--content-icon-size-3);
   }
 }
 
-:where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-2) {
+:where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-r-size-2) {
   --base-menu-item-padding-left: var(--space-2) !important;
   --base-menu-item-padding-right: var(--space-2) !important;
   --base-menu-item-padding-y: var(--space-3) !important;
 
-  &:where(:not(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem))) {
+  &:where(:not(:has(.kui-BaseMenuCheckboxItem, .kui-BaseMenuRadioItem))) {
     --base-menu-item-padding-left: var(--space-2) !important;
   }
-  &:where(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem)) {
+  &:where(:has(.kui-BaseMenuCheckboxItem, .kui-BaseMenuRadioItem)) {
     --base-menu-item-padding-left: var(--space-2) !important;
   }
 
-  :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
+  :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) {
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -132,25 +132,25 @@
   }
 
   /* stylelint-disable-next-line selector-max-type */
-  :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) :where(svg) {
+  :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) :where(svg) {
     width: var(--content-icon-size-4);
     height: var(--content-icon-size-4);
   }
 }
 
-:where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-3) {
+:where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-r-size-3) {
   --base-menu-item-padding-left: var(--space-2) !important;
   --base-menu-item-padding-right: var(--space-2) !important;
   --base-menu-item-padding-y: var(--space-3) !important;
 
-  &:where(:not(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem))) {
+  &:where(:not(:has(.kui-BaseMenuCheckboxItem, .kui-BaseMenuRadioItem))) {
     --base-menu-item-padding-left: var(--space-2) !important;
   }
-  &:where(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem)) {
+  &:where(:has(.kui-BaseMenuCheckboxItem, .kui-BaseMenuRadioItem)) {
     --base-menu-item-padding-left: var(--space-2) !important;
   }
 
-  :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
+  :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) {
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -166,14 +166,14 @@
   }
 
   /* stylelint-disable-next-line selector-max-type */
-  :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) :where(svg) {
-    width: var(--content-icon-size-5);
-    height: var(--content-icon-size-5);
+  :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) :where(svg) {
+    width: var(--content-icon-size-4);
+    height: var(--content-icon-size-4);
   }
 }
 
 /* Ellipsis on root child content when using asChild (e.g., Next.js Link) */
-:where(.rt-ShellRailContent .rt-SidebarMenuButton > *) {
+:where(.kui-ShellRailContent .kui-SidebarMenuButton > *) {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -185,7 +185,7 @@
 }
 
 /* Ensure submenu trigger asChild containers also stack vertically */
-:where(.rt-ShellRailContent .rt-SidebarMenuSubTrigger > *) {
+:where(.kui-ShellRailContent .kui-SidebarMenuSubTrigger > *) {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -194,12 +194,12 @@
 }
 
 /* stylelint-disable-next-line selector-max-type */
-:where(.rt-ShellRailContent .rt-SidebarMenuButton > * > svg) {
+:where(.kui-ShellRailContent .kui-SidebarMenuButton > * > svg) {
   flex-shrink: 0;
 }
 
 /* Ensure submenu anchors also truncate */
-:where(.rt-ShellRailContent .rt-SidebarMenuSubContent .rt-SidebarMenuButton > *) {
+:where(.kui-ShellRailContent .kui-SidebarMenuSubContent .kui-SidebarMenuButton > *) {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -212,17 +212,17 @@
 
 /* Ensure icons remain visible at their token sizes in thin mode */
 /* stylelint-disable-next-line selector-max-type */
-:where(.rt-ShellRailContent .rt-SidebarMenuButton) :where(svg) {
+:where(.kui-ShellRailContent .kui-SidebarMenuButton) :where(svg) {
   /* svg size is already controlled by tokens; this ensures layout stability */
   display: block;
 }
 
 /* Icon wrapper for thin mode - receives hover/active background */
-:where(.rt-ShellRailContent .rt-SidebarMenuIconWrapper) {
+:where(.kui-ShellRailContent .kui-SidebarMenuIconWrapper) {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Override the 100% width from .rt-SidebarMenuButton > * - icon wrapper should fit content */
+  /* Override the 100% width from .kui-SidebarMenuButton > * - icon wrapper should fit content */
   width: auto;
   padding: var(--space-4) var(--space-3);
   border-radius: var(--radius-2);
@@ -230,25 +230,25 @@
 
 /* Size-specific icon wrapper padding */
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-1 .rt-SidebarMenuIconWrapper {
+.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-r-size-1 .kui-SidebarMenuIconWrapper {
   padding: var(--space-3) var(--space-3);
   border-radius: var(--radius-control-1);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-2 .rt-SidebarMenuIconWrapper {
+.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-r-size-2 .kui-SidebarMenuIconWrapper {
   padding: var(--space-3);
   border-radius: var(--radius-control-2);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-3 .rt-SidebarMenuIconWrapper {
+.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-r-size-3 .kui-SidebarMenuIconWrapper {
   padding: var(--space-4);
   border-radius: var(--radius-control-3);
 }
 
 /* Label styling in thin mode - outside the background area */
-:where(.rt-ShellRailContent .rt-SidebarMenuButton .rt-SidebarMenuLabel) {
+:where(.kui-ShellRailContent .kui-SidebarMenuButton .kui-SidebarMenuLabel) {
   display: block;
   max-width: 100%;
   min-width: 0;
@@ -256,74 +256,74 @@
   text-overflow: clip;
   white-space: nowrap;
   text-align: center;
-  color: var(--gray-11);
+  color: var(--neutral-11);
   font-size: var(--font-size-1);
   line-height: var(--line-height-1);
 }
 
 /* Active label gets accent color and medium weight */
-:where(.rt-ShellRailContent .rt-SidebarMenuButton[data-active] .rt-SidebarMenuLabel) {
+:where(.kui-ShellRailContent .kui-SidebarMenuButton[data-active] .kui-SidebarMenuLabel) {
   color: var(--accent-ink);
   font-weight: var(--font-weight-medium);
 }
 
 /* Highlighted label gets slightly darker color */
-:where(.rt-ShellRailContent .rt-SidebarMenuButton:where([data-highlighted]):not([data-disabled]) .rt-SidebarMenuLabel) {
+:where(.kui-ShellRailContent .kui-SidebarMenuButton:where([data-highlighted]):not([data-disabled]) .kui-SidebarMenuLabel) {
   color: var(--accent-ink);
 }
 
 @media (hover: hover) {
-  :where(.rt-ShellRailContent .rt-SidebarMenuButton:where(:hover):not([data-disabled]) .rt-SidebarMenuLabel) {
+  :where(.kui-ShellRailContent .kui-SidebarMenuButton:where(:hover):not([data-disabled]) .kui-SidebarMenuLabel) {
     color: var(--accent-ink);
   }
 }
 
 /* Remove background from button itself in thin mode - styles are on icon wrapper */
-:where(.rt-ShellRailContent .rt-SidebarMenuButton:where([data-highlighted]):not([data-disabled])), :where(.rt-ShellRailContent .rt-SidebarMenuButton[data-active]) {
+:where(.kui-ShellRailContent .kui-SidebarMenuButton:where([data-highlighted]):not([data-disabled])), :where(.kui-ShellRailContent .kui-SidebarMenuButton[data-active]) {
   background-color: transparent !important;
 }
 
 @media (hover: hover) {
-  :where(.rt-ShellRailContent .rt-SidebarMenuButton:where(:hover):not([data-disabled])) {
+  :where(.kui-ShellRailContent .kui-SidebarMenuButton:where(:hover):not([data-disabled])) {
     background-color: transparent !important;
   }
 }
 
 /* Soft variant icon wrapper states in thin mode */
-:where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-menu-variant-soft .rt-SidebarMenuButton:where([data-highlighted]):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
+:where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-menu-variant-soft .kui-SidebarMenuButton:where([data-highlighted]):not([data-disabled]) .kui-SidebarMenuIconWrapper) {
   background-color: var(--accent-4);
 }
 
 @media (hover: hover) {
-  :where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-menu-variant-soft .rt-SidebarMenuButton:where(:hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
+  :where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-menu-variant-soft .kui-SidebarMenuButton:where(:hover):not([data-disabled]) .kui-SidebarMenuIconWrapper) {
     background-color: var(--accent-4);
   }
 }
 
-:where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-menu-variant-soft .rt-SidebarMenuButton[data-active] .rt-SidebarMenuIconWrapper) {
+:where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-menu-variant-soft .kui-SidebarMenuButton[data-active] .kui-SidebarMenuIconWrapper) {
   background-color: var(--accent-3);
 }
 
 /* Solid variant icon wrapper states in thin mode */
-:where(.rt-ShellRailContent .rt-SidebarMenuBadge),
-:where(.rt-ShellRailContent .rt-SidebarMenuShortcut),
-:where(.rt-ShellRailContent .rt-Chip),
-:where(.rt-ShellRailContent .rt-Kbd) {
+:where(.kui-ShellRailContent .kui-SidebarMenuBadge),
+:where(.kui-ShellRailContent .kui-SidebarMenuShortcut),
+:where(.kui-ShellRailContent .kui-Chip),
+:where(.kui-ShellRailContent .kui-Kbd) {
   display: none !important;
 }
 
-:where(.rt-ShellRailContent .rt-SidebarGroupLabel) {
+:where(.kui-ShellRailContent .kui-SidebarGroupLabel) {
   display: none !important;
 }
 
 /* Hide submenu chevrons and flatten sublists in rail */
-:where(.rt-ShellRailContent .rt-SidebarMenuSubTriggerIcon),
-:where(.rt-ShellRailContent .rt-BaseMenuSubTriggerIcon) {
+:where(.kui-ShellRailContent .kui-SidebarMenuSubTriggerIcon),
+:where(.kui-ShellRailContent .kui-BaseMenuSubTriggerIcon) {
   display: none !important;
 }
 
-:where(.rt-ShellRailContent .rt-SidebarMenuSubList),
-:where(.rt-ShellRailContent .rt-BaseMenuSubList) {
+:where(.kui-ShellRailContent .kui-SidebarMenuSubList),
+:where(.kui-ShellRailContent .kui-BaseMenuSubList) {
   padding-left: 0 !important;
   margin-left: 0 !important;
   border-left: 0 !important;
@@ -334,19 +334,19 @@
 }
 
 /* Also remove any decorative rule on the submenu list in thin mode */
-:where(.rt-ShellRailContent .rt-SidebarMenuSubList::before),
-:where(.rt-ShellRailContent .rt-BaseMenuSubList::before) {
+:where(.kui-ShellRailContent .kui-SidebarMenuSubList::before),
+:where(.kui-ShellRailContent .kui-BaseMenuSubList::before) {
   content: none !important;
   display: none !important;
 }
 
 /* Ensure the Accordion content wrapper doesn't add indentation */
-:where(.rt-ShellRailContent .rt-SidebarMenuSubContent) {
+:where(.kui-ShellRailContent .kui-SidebarMenuSubContent) {
   padding-left: 0 !important;
   margin-left: 0 !important;
   border-left: 0 !important;
-  border-top: 1px solid var(--gray-a6) !important;
-  border-bottom: 1px solid var(--gray-a6) !important;
+  border-top: 1px solid var(--neutral-a6) !important;
+  border-bottom: 1px solid var(--neutral-a6) !important;
   margin-top: var(--space-3) !important;
   margin-bottom: var(--space-3) !important;
   /* background-color: var(--accent-3); */
@@ -356,7 +356,7 @@
 /* (intentionally no ::before) */
 
 /* Ensure submenu buttons also truncate */
-:where(.rt-ShellRailContent .rt-SidebarMenuSubContent .rt-SidebarMenuButton) {
+:where(.kui-ShellRailContent .kui-SidebarMenuSubContent .kui-SidebarMenuButton) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -366,7 +366,7 @@
 /* Panel Layout Styling (default) - inherits existing styles */
 
 /* Label truncation in expanded mode - prevents horizontal scrollbar on long names */
-.rt-SidebarMenuLabel {
+.kui-SidebarMenuLabel {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -378,7 +378,7 @@
 /* Base variables and panel background support (mirrors Card pattern) */
 /* Centralized borders: apply a consistent inset border; avoid context coupling */
 /* Container Variants (variables only) *//* Header/Footer Layout Utilities */
-.rt-SidebarHeader:where(.rt-SidebarHeader--container) {
+.kui-SidebarHeader:where(.kui-SidebarHeader--container) {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -387,12 +387,12 @@
   min-height: var(--sidebar-item-height);
 
   /* Make MenuButtons expand to full width */
-  & :where(.rt-SidebarMenuButton) {
+  & :where(.kui-SidebarMenuButton) {
     flex: 1;
   }
 }
 
-.rt-SidebarFooter:where(.rt-SidebarFooter--container) {
+.kui-SidebarFooter:where(.kui-SidebarFooter--container) {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -401,95 +401,95 @@
   min-height: var(--sidebar-item-height);
 
   /* Make MenuButtons expand to full width */
-  & :where(.rt-SidebarMenuButton) {
+  & :where(.kui-SidebarMenuButton) {
     flex: 1;
   }
 }
 
 /* Flex utilities for header/footer layouts */
-.rt-SidebarHeader:where(.rt-flex-row) {
+.kui-SidebarHeader:where(.kui-flex-row) {
   flex-direction: row;
 }
-.rt-SidebarHeader:where(.rt-flex-col) {
+.kui-SidebarHeader:where(.kui-flex-col) {
   flex-direction: column;
 }
-.rt-SidebarHeader:where(.rt-items-center) {
+.kui-SidebarHeader:where(.kui-items-center) {
   align-items: center;
 }
-.rt-SidebarHeader:where(.rt-items-start) {
+.kui-SidebarHeader:where(.kui-items-start) {
   align-items: flex-start;
 }
-.rt-SidebarHeader:where(.rt-items-end) {
+.kui-SidebarHeader:where(.kui-items-end) {
   align-items: flex-end;
 }
-.rt-SidebarHeader:where(.rt-justify-between) {
+.kui-SidebarHeader:where(.kui-justify-between) {
   justify-content: space-between;
 }
-.rt-SidebarHeader:where(.rt-justify-center) {
+.kui-SidebarHeader:where(.kui-justify-center) {
   justify-content: center;
 }
-.rt-SidebarHeader:where(.rt-justify-start) {
+.kui-SidebarHeader:where(.kui-justify-start) {
   justify-content: flex-start;
 }
-.rt-SidebarHeader:where(.rt-justify-end) {
+.kui-SidebarHeader:where(.kui-justify-end) {
   justify-content: flex-end;
 }
-.rt-SidebarHeader:where(.rt-gap-1) {
+.kui-SidebarHeader:where(.kui-gap-1) {
   gap: var(--space-2);
 }
-.rt-SidebarHeader:where(.rt-gap-2) {
+.kui-SidebarHeader:where(.kui-gap-2) {
   gap: var(--space-3);
 }
-.rt-SidebarHeader:where(.rt-gap-3) {
+.kui-SidebarHeader:where(.kui-gap-3) {
   gap: var(--space-4);
 }
-.rt-SidebarHeader:where(.rt-gap-4) {
+.kui-SidebarHeader:where(.kui-gap-4) {
   gap: var(--space-5);
 }
 
-.rt-SidebarFooter:where(.rt-flex-row) {
+.kui-SidebarFooter:where(.kui-flex-row) {
   flex-direction: row;
 }
-.rt-SidebarFooter:where(.rt-flex-col) {
+.kui-SidebarFooter:where(.kui-flex-col) {
   flex-direction: column;
 }
-.rt-SidebarFooter:where(.rt-items-center) {
+.kui-SidebarFooter:where(.kui-items-center) {
   align-items: center;
 }
-.rt-SidebarFooter:where(.rt-items-start) {
+.kui-SidebarFooter:where(.kui-items-start) {
   align-items: flex-start;
 }
-.rt-SidebarFooter:where(.rt-items-end) {
+.kui-SidebarFooter:where(.kui-items-end) {
   align-items: flex-end;
 }
-.rt-SidebarFooter:where(.rt-justify-between) {
+.kui-SidebarFooter:where(.kui-justify-between) {
   justify-content: space-between;
 }
-.rt-SidebarFooter:where(.rt-justify-center) {
+.kui-SidebarFooter:where(.kui-justify-center) {
   justify-content: center;
 }
-.rt-SidebarFooter:where(.rt-justify-start) {
+.kui-SidebarFooter:where(.kui-justify-start) {
   justify-content: flex-start;
 }
-.rt-SidebarFooter:where(.rt-justify-end) {
+.kui-SidebarFooter:where(.kui-justify-end) {
   justify-content: flex-end;
 }
-.rt-SidebarFooter:where(.rt-gap-1) {
+.kui-SidebarFooter:where(.kui-gap-1) {
   gap: var(--space-2);
 }
-.rt-SidebarFooter:where(.rt-gap-2) {
+.kui-SidebarFooter:where(.kui-gap-2) {
   gap: var(--space-3);
 }
-.rt-SidebarFooter:where(.rt-gap-3) {
+.kui-SidebarFooter:where(.kui-gap-3) {
   gap: var(--space-4);
 }
-.rt-SidebarFooter:where(.rt-gap-4) {
+.kui-SidebarFooter:where(.kui-gap-4) {
   gap: var(--space-5);
 }
 
 /* Header/Footer Menu Button Support */
-.rt-SidebarHeader :where(.rt-SidebarMenuButton),
-.rt-SidebarFooter :where(.rt-SidebarMenuButton) {
+.kui-SidebarHeader :where(.kui-SidebarMenuButton),
+.kui-SidebarFooter :where(.kui-SidebarMenuButton) {
   /* Inherit all base MenuButton styles */
   display: flex;
   align-items: center;
@@ -530,7 +530,7 @@
  ***************************************************************************************************/
 
 /* A sub-trigger's chevron sits at the row's end; its size comes from the size ladder below */
-.rt-SidebarMenuSubTriggerIcon {
+.kui-SidebarMenuSubTriggerIcon {
   flex-shrink: 0;
   margin-left: auto;
 }
@@ -543,35 +543,35 @@
   /* A Shell pane is a surface: its header, footer, search and scrolling list all pad by the
      surface padding at the Shell's index, so every row and every control in the pane starts on
      one line. The Rail is left out: its tiles keep their own tight padding (above). */
-  .rt-ShellPaneChrome {
-    &:where(.rt-r-size-1) {
+  .kui-ShellPaneChrome {
+    &:where(.kui-r-size-1) {
       --sidebar-base-padding: var(--surface-p-1);
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       --sidebar-base-padding: var(--surface-p-2);
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       --sidebar-base-padding: var(--surface-p-3);
     }
   }
 
   /* Two classes, so it beats base-menu's own content padding wherever the bundle places it. */
   /* stylelint-disable selector-max-specificity */
-  .rt-SidebarContent.rt-ShellPaneChrome:not(.rt-ShellRailContent *) {
-    &:where(.rt-r-size-1) {
+  .kui-SidebarContent.kui-ShellPaneChrome:not(.kui-ShellRailContent *) {
+    &:where(.kui-r-size-1) {
       --base-menu-content-padding: var(--surface-p-1);
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       --base-menu-content-padding: var(--surface-p-2);
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       --base-menu-content-padding: var(--surface-p-3);
     }
   }
   /* stylelint-enable selector-max-specificity */
 
-  .rt-SidebarHeader:where(.rt-r-size-1),
-  .rt-SidebarFooter:where(.rt-r-size-1) {
+  .kui-SidebarHeader:where(.kui-r-size-1),
+  .kui-SidebarFooter:where(.kui-r-size-1) {
     --base-menu-content-padding: var(--panel-p-1);
     --base-menu-item-padding-y: var(--row-inset-1);
     --base-menu-item-px: var(--control-px-1);
@@ -585,16 +585,16 @@
   }
 
   /* A sidebar row stands level with a button: control height, and the control's corner. */
-  .rt-SidebarContent:where(.rt-r-size-1),
-  .rt-SidebarHeader:where(.rt-r-size-1),
-  .rt-SidebarFooter:where(.rt-r-size-1) {
+  .kui-SidebarContent:where(.kui-r-size-1),
+  .kui-SidebarHeader:where(.kui-r-size-1),
+  .kui-SidebarFooter:where(.kui-r-size-1) {
     --base-menu-item-height: var(--control-height-1);
     --base-menu-item-radius: var(--radius-control-1);
     --sidebar-item-height: var(--control-height-1);
   }
 
-  .rt-SidebarHeader:where(.rt-r-size-2),
-  .rt-SidebarFooter:where(.rt-r-size-2) {
+  .kui-SidebarHeader:where(.kui-r-size-2),
+  .kui-SidebarFooter:where(.kui-r-size-2) {
     --base-menu-content-padding: var(--panel-p-2);
     --base-menu-item-padding-y: var(--row-inset-2);
     --base-menu-item-px: var(--control-px-2);
@@ -608,16 +608,16 @@
   }
 
   /* A sidebar row stands level with a button: control height, and the control's corner. */
-  .rt-SidebarContent:where(.rt-r-size-2),
-  .rt-SidebarHeader:where(.rt-r-size-2),
-  .rt-SidebarFooter:where(.rt-r-size-2) {
+  .kui-SidebarContent:where(.kui-r-size-2),
+  .kui-SidebarHeader:where(.kui-r-size-2),
+  .kui-SidebarFooter:where(.kui-r-size-2) {
     --base-menu-item-height: var(--control-height-2);
     --base-menu-item-radius: var(--radius-control-2);
     --sidebar-item-height: var(--control-height-2);
   }
 
-  .rt-SidebarHeader:where(.rt-r-size-3),
-  .rt-SidebarFooter:where(.rt-r-size-3) {
+  .kui-SidebarHeader:where(.kui-r-size-3),
+  .kui-SidebarFooter:where(.kui-r-size-3) {
     --base-menu-content-padding: var(--panel-p-3);
     --base-menu-item-padding-y: var(--row-inset-3);
     --base-menu-item-px: var(--control-px-3);
@@ -631,9 +631,9 @@
   }
 
   /* A sidebar row stands level with a button: control height, and the control's corner. */
-  .rt-SidebarContent:where(.rt-r-size-3),
-  .rt-SidebarHeader:where(.rt-r-size-3),
-  .rt-SidebarFooter:where(.rt-r-size-3) {
+  .kui-SidebarContent:where(.kui-r-size-3),
+  .kui-SidebarHeader:where(.kui-r-size-3),
+  .kui-SidebarFooter:where(.kui-r-size-3) {
     --base-menu-item-height: var(--control-height-3);
     --base-menu-item-radius: var(--radius-control-3);
     --sidebar-item-height: var(--control-height-3);
@@ -647,105 +647,105 @@
  ***************************************************************************************************/
 
 /* Menu Variant: Soft - EXACT match to base menu */
-.rt-SidebarHeader:where(.rt-menu-variant-soft),
-.rt-SidebarContent:where(.rt-menu-variant-soft),
-.rt-SidebarFooter:where(.rt-menu-variant-soft) {
+.kui-SidebarHeader:where(.kui-menu-variant-soft),
+.kui-SidebarContent:where(.kui-menu-variant-soft),
+.kui-SidebarFooter:where(.kui-menu-variant-soft) {
   /* Sub-trigger transitions - match base menu */
 
   /* Sub-trigger open state - match base menu */
-  & :where(.rt-SidebarMenuSubTrigger[data-state='open']) {
+  & :where(.kui-SidebarMenuSubTrigger[data-state='open']) {
     background-color: var(--accent-3);
   }
 
   /* Menu item transitions - match base menu */
 
   /* Hover/highlighted state for soft variant - EXACT match to base menu */
-  & :where(.rt-SidebarMenuButton:where([data-highlighted]):not([data-disabled])) {
+  & :where(.kui-SidebarMenuButton:where([data-highlighted]):not([data-disabled])) {
     background-color: var(--accent-4);
 
     /* In soft variant, lift muted text a step while keeping the hierarchy */
-    & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
-      color: var(--gray-11) !important;
+    & :where(.kui-Text.kui-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
+      color: var(--neutral-11) !important;
     }
   }
 
   @media (hover: hover) {
-    & :where(.rt-SidebarMenuButton:where(:hover):not([data-disabled])) {
+    & :where(.kui-SidebarMenuButton:where(:hover):not([data-disabled])) {
       background-color: var(--accent-4);
 
       /* In soft variant, lift muted text a step while keeping the hierarchy */
-      & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
-        color: var(--gray-11) !important;
+      & :where(.kui-Text.kui-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
+        color: var(--neutral-11) !important;
       }
     }
   }
 
   /* Active navigation state for soft variant - use accent-3 like sub-trigger */
-  & :where(.rt-SidebarMenuButton[data-active]) {
+  & :where(.kui-SidebarMenuButton[data-active]) {
     background-color: var(--accent-3);
     color: var(--accent-12);
     font-weight: var(--font-weight-medium);
 
     /* In soft variant, lift muted text a step while keeping the hierarchy */
-    & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
-      color: var(--gray-11) !important;
+    & :where(.kui-Text.kui-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
+      color: var(--neutral-11) !important;
     }
   }
 }
 
 /* Rows use the soft highlight. When the system asks for more contrast, they take the solid one. */
 @media (prefers-contrast: more) {
-  .rt-SidebarHeader:where(.rt-menu-variant-soft),
-  .rt-SidebarContent:where(.rt-menu-variant-soft),
-  .rt-SidebarFooter:where(.rt-menu-variant-soft) {
+  .kui-SidebarHeader:where(.kui-menu-variant-soft),
+  .kui-SidebarContent:where(.kui-menu-variant-soft),
+  .kui-SidebarFooter:where(.kui-menu-variant-soft) {
     /* Sub-trigger open state - match base menu */
-    & :where(.rt-SidebarMenuSubTrigger[data-state='open']) {
-      background-color: var(--gray-3);
+    & :where(.kui-SidebarMenuSubTrigger[data-state='open']) {
+      background-color: var(--neutral-3);
     }
 
     /* Hover/highlighted state for solid variant - EXACT match to base menu */
-    & :where(.rt-SidebarMenuButton:where([data-highlighted]):not([data-disabled])) {
+    & :where(.kui-SidebarMenuButton:where([data-highlighted]):not([data-disabled])) {
       background-color: var(--accent-solid);
       color: var(--accent-solid-contrast);
 
-      & :where(.rt-BaseMenuSubTriggerIcon) {
+      & :where(.kui-BaseMenuSubTriggerIcon) {
         color: var(--accent-solid-contrast);
       }
 
       /* Force all text elements to inherit hover color, including those with color="gray" */
-      & :where(.rt-Text) {
+      & :where(.kui-Text) {
         color: inherit !important;
       }
 
       /* Also target any element with data-accent-color="gray" */
-      & :where([data-accent-color='gray']:not(.rt-Chip)) {
+      & :where([data-accent-color='gray']:not(.kui-Chip)) {
         color: inherit !important;
       }
 
       /* FIX: Ensure chips maintain their own styling and don't inherit hover colors */
-      & :where(.rt-Chip) {
+      & :where(.kui-Chip) {
         color: var(--accent-solid-badge-contrast) !important;
         background-color: var(--accent-solid-badge) !important;
       }
     }
 
     /* Active navigation state for solid variant - same as highlighted */
-    & :where(.rt-SidebarMenuButton[data-active]) {
+    & :where(.kui-SidebarMenuButton[data-active]) {
       background-color: var(--accent-solid);
       color: var(--accent-solid-contrast);
       font-weight: var(--font-weight-medium);
 
       /* Force all text elements to inherit active color */
-      & :where(.rt-Text) {
+      & :where(.kui-Text) {
         color: inherit !important;
       }
 
-      & :where([data-accent-color='gray']:not(.rt-Chip)) {
+      & :where([data-accent-color='gray']:not(.kui-Chip)) {
         color: inherit !important;
       }
 
       /* FIX: Ensure chips maintain their own styling and don't inherit active colors */
-      & :where(.rt-Chip) {
+      & :where(.kui-Chip) {
         color: var(--accent-solid-badge-contrast) !important;
         background-color: var(--accent-solid-badge) !important;
       }
@@ -754,28 +754,28 @@
 }
 
 @media (prefers-contrast: more) and (hover: hover) {
-  .rt-SidebarHeader:where(.rt-menu-variant-soft) :where(.rt-SidebarMenuButton:where(:hover):not([data-disabled])),
-  .rt-SidebarContent:where(.rt-menu-variant-soft) :where(.rt-SidebarMenuButton:where(:hover):not([data-disabled])),
-  .rt-SidebarFooter:where(.rt-menu-variant-soft) :where(.rt-SidebarMenuButton:where(:hover):not([data-disabled])) {
+  .kui-SidebarHeader:where(.kui-menu-variant-soft) :where(.kui-SidebarMenuButton:where(:hover):not([data-disabled])),
+  .kui-SidebarContent:where(.kui-menu-variant-soft) :where(.kui-SidebarMenuButton:where(:hover):not([data-disabled])),
+  .kui-SidebarFooter:where(.kui-menu-variant-soft) :where(.kui-SidebarMenuButton:where(:hover):not([data-disabled])) {
     background-color: var(--accent-solid);
     color: var(--accent-solid-contrast);
 
-    & :where(.rt-BaseMenuSubTriggerIcon) {
+    & :where(.kui-BaseMenuSubTriggerIcon) {
       color: var(--accent-solid-contrast);
     }
 
     /* Force all text elements to inherit hover color, including those with color="gray" */
-    & :where(.rt-Text) {
+    & :where(.kui-Text) {
       color: inherit !important;
     }
 
     /* Also target any element with data-accent-color="gray" */
-    & :where([data-accent-color='gray']:not(.rt-Chip)) {
+    & :where([data-accent-color='gray']:not(.kui-Chip)) {
       color: inherit !important;
     }
 
     /* FIX: Ensure chips maintain their own styling and don't inherit hover colors */
-    & :where(.rt-Chip) {
+    & :where(.kui-Chip) {
       color: var(--accent-solid-badge-contrast) !important;
       background-color: var(--accent-solid-badge) !important;
     }
@@ -786,42 +786,42 @@
 
 /* ===== Sidebar Search ===== */
 
-.rt-SidebarSearch {
+.kui-SidebarSearch {
   flex-shrink: 0;
   padding: var(--space-3) var(--sidebar-base-padding);
 }
 
 /* Thin mode: compact padding to match content area */
-:where(.rt-ShellRailContent) .rt-SidebarSearch {
+:where(.kui-ShellRailContent) .kui-SidebarSearch {
   padding: var(--space-3);
 }
 
 /* Expanded mode: inline input wrapper */
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-SidebarSearch--expanded .rt-SidebarSearchInputWrapper {
+.kui-SidebarSearch--expanded .kui-SidebarSearchInputWrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: var(--space-3);
-  background-color: var(--gray-a3);
+  background-color: var(--neutral-a3);
   border-radius: var(--radius-2);
   padding: var(--space-2) var(--space-3);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-SidebarSearch--expanded .rt-SidebarSearchInputWrapper:focus-within {
+.kui-SidebarSearch--expanded .kui-SidebarSearchInputWrapper:focus-within {
   box-shadow: inset 0 0 0 1px var(--accent-a7);
 }
 
 /* Thin mode: search trigger container */
-.rt-SidebarSearch--thin {
+.kui-SidebarSearch--thin {
   display: flex;
   justify-content: center;
 }
 
 /* Thin mode: search trigger layout (mirrors Content-scoped menu button rules) */
-/* Uses !important to override base .rt-SidebarMenuButton specificity, matching the existing thin mode pattern */
-:where(.rt-ShellRailContent) :where(.rt-SidebarSearchTrigger) {
+/* Uses !important to override base .kui-SidebarMenuButton specificity, matching the existing thin mode pattern */
+:where(.kui-ShellRailContent) :where(.kui-SidebarSearchTrigger) {
   justify-content: center !important;
   align-items: center !important;
   flex-direction: column !important;
@@ -836,17 +836,17 @@
 }
 
 /* Size-specific vertical padding for thin search trigger */
-:where(.rt-ShellRailContent.rt-r-size-1) :where(.rt-SidebarSearchTrigger) {
+:where(.kui-ShellRailContent.kui-r-size-1) :where(.kui-SidebarSearchTrigger) {
   padding-top: var(--space-2) !important;
   padding-bottom: var(--space-2) !important;
 }
 
-:where(.rt-ShellRailContent.rt-r-size-2) :where(.rt-SidebarSearchTrigger) {
+:where(.kui-ShellRailContent.kui-r-size-2) :where(.kui-SidebarSearchTrigger) {
   padding-top: var(--space-2) !important;
   padding-bottom: var(--space-2) !important;
 }
 
-:where(.rt-ShellRailContent.rt-r-size-3) :where(.rt-SidebarSearchTrigger) {
+:where(.kui-ShellRailContent.kui-r-size-3) :where(.kui-SidebarSearchTrigger) {
   padding-top: var(--space-3) !important;
   padding-bottom: var(--space-3) !important;
 }
@@ -854,56 +854,56 @@
 /* Size-specific icon sizing for thin search trigger */
 /* Matches the effective icon size of other menu buttons (expanded-mode rules win on specificity) */
 /* stylelint-disable-next-line selector-max-type, selector-max-specificity */
-.rt-ShellRailContent.rt-r-size-1 .rt-SidebarSearchTrigger svg {
+.kui-ShellRailContent.kui-r-size-1 .kui-SidebarSearchTrigger svg {
   width: var(--content-icon-size-2);
   height: var(--content-icon-size-2);
 }
 
 /* stylelint-disable-next-line selector-max-type, selector-max-specificity */
-.rt-ShellRailContent.rt-r-size-2 .rt-SidebarSearchTrigger svg {
+.kui-ShellRailContent.kui-r-size-2 .kui-SidebarSearchTrigger svg {
   width: var(--content-icon-size-3);
   height: var(--content-icon-size-3);
 }
 
 /* stylelint-disable-next-line selector-max-type, selector-max-specificity */
-.rt-ShellRailContent.rt-r-size-3 .rt-SidebarSearchTrigger svg {
+.kui-ShellRailContent.kui-r-size-3 .kui-SidebarSearchTrigger svg {
   width: var(--content-icon-size-3);
   height: var(--content-icon-size-3);
 }
 
 /* Remove hover background from thin trigger button itself (styles live on icon wrapper) */
-:where(.rt-ShellRailContent) :where(.rt-SidebarSearchTrigger:where([data-state='open'])) {
+:where(.kui-ShellRailContent) :where(.kui-SidebarSearchTrigger:where([data-state='open'])) {
   background-color: transparent !important;
 }
 
 @media (hover: hover) {
-  :where(.rt-ShellRailContent) :where(.rt-SidebarSearchTrigger:where(:hover)) {
+  :where(.kui-ShellRailContent) :where(.kui-SidebarSearchTrigger:where(:hover)) {
     background-color: transparent !important;
   }
 }
 
 /* Search trigger icon wrapper - size-specific padding (mirrors Content-scoped rules) */
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-ShellRailContent.rt-r-size-1 .rt-SidebarSearchTrigger .rt-SidebarMenuIconWrapper {
+.kui-ShellRailContent.kui-r-size-1 .kui-SidebarSearchTrigger .kui-SidebarMenuIconWrapper {
   padding: var(--space-3) var(--space-3);
   border-radius: var(--radius-control-1);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-ShellRailContent.rt-r-size-2 .rt-SidebarSearchTrigger .rt-SidebarMenuIconWrapper {
+.kui-ShellRailContent.kui-r-size-2 .kui-SidebarSearchTrigger .kui-SidebarMenuIconWrapper {
   padding: var(--space-3);
   border-radius: var(--radius-control-2);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-ShellRailContent.rt-r-size-3 .rt-SidebarSearchTrigger .rt-SidebarMenuIconWrapper {
+.kui-ShellRailContent.kui-r-size-3 .kui-SidebarSearchTrigger .kui-SidebarMenuIconWrapper {
   padding: var(--space-4);
   border-radius: var(--radius-control-3);
 }
 
 /* Search trigger icon wrapper hover (soft variant) */
 @media (hover: hover) {
-  :where(.rt-ShellRailContent.rt-menu-variant-soft) :where(.rt-SidebarSearchTrigger:where(:hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
+  :where(.kui-ShellRailContent.kui-menu-variant-soft) :where(.kui-SidebarSearchTrigger:where(:hover):not([data-disabled]) .kui-SidebarMenuIconWrapper) {
     background-color: var(--accent-4);
   }
 }
@@ -911,7 +911,7 @@
 /* Search trigger icon wrapper hover (solid variant) */
 
 /* Popover inner wrapper - provide base menu tokens for portal-rendered items */
-.rt-SidebarSearchPopover {
+.kui-SidebarSearchPopover {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
@@ -930,36 +930,36 @@
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-SidebarSearchPopover .rt-SidebarSearchInputWrapper {
+.kui-SidebarSearchPopover .kui-SidebarSearchInputWrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: var(--space-3);
-  background-color: var(--gray-a3);
+  background-color: var(--neutral-a3);
   border-radius: var(--radius-2);
   padding: var(--space-2) var(--space-3);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-SidebarSearchPopover .rt-SidebarSearchInputWrapper:focus-within {
+.kui-SidebarSearchPopover .kui-SidebarSearchInputWrapper:focus-within {
   box-shadow: inset 0 0 0 1px var(--accent-a7);
 }
 
 /* Popover menu list reset */
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-SidebarSearchPopover .rt-SidebarMenu {
+.kui-SidebarSearchPopover .kui-SidebarMenu {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-SidebarSearchPopover .rt-SidebarMenuItem {
+.kui-SidebarSearchPopover .kui-SidebarMenuItem {
   list-style: none;
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-SidebarSearchPopover .rt-SidebarMenuButton {
+.kui-SidebarSearchPopover .kui-SidebarMenuButton {
   font-weight: var(--font-weight-regular);
   margin-top: 1px;
   margin-bottom: 1px;
@@ -968,21 +968,21 @@
 /* Popover menu button hover (soft variant) */
 @media (hover: hover) {
   /* stylelint-disable-next-line selector-max-specificity */
-  .rt-SidebarSearchPopover .rt-SidebarMenuButton:where(:hover):not([data-disabled]) {
+  .kui-SidebarSearchPopover .kui-SidebarMenuButton:where(:hover):not([data-disabled]) {
     background-color: var(--accent-a4);
   }
 }
 
 /* Popover menu button focus (arrow-key navigation) */
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-SidebarSearchPopover .rt-SidebarMenuButton:where(:focus-visible) {
+.kui-SidebarSearchPopover .kui-SidebarMenuButton:where(:focus-visible) {
   outline: 2px solid var(--focus-8);
   outline-offset: -2px;
 }
 
 /* Popover menu button active state */
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-SidebarSearchPopover .rt-SidebarMenuButton[data-active] {
+.kui-SidebarSearchPopover .kui-SidebarMenuButton[data-active] {
   background-color: var(--accent-a3);
   color: var(--accent-a12);
   font-weight: var(--font-weight-medium);
@@ -990,7 +990,7 @@
 
 /* Popover menu label truncation */
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-SidebarSearchPopover .rt-SidebarMenuLabel {
+.kui-SidebarSearchPopover .kui-SidebarMenuLabel {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -998,15 +998,15 @@
 }
 
 /* Search icon */
-.rt-SidebarSearchIcon {
+.kui-SidebarSearchIcon {
   flex-shrink: 0;
-  color: var(--gray-a9);
+  color: var(--neutral-a9);
   width: var(--content-icon-size-2);
   height: var(--content-icon-size-2);
 }
 
 /* Search input */
-.rt-SidebarSearchInput {
+.kui-SidebarSearchInput {
   flex: 1;
   min-width: 0;
   background: transparent;
@@ -1018,57 +1018,57 @@
   color: inherit;
 }
 
-.rt-SidebarSearchInput::placeholder {
-  color: var(--gray-a9);
+.kui-SidebarSearchInput::placeholder {
+  color: var(--neutral-a9);
 }
 
 /* Hide native search clear button */
-.rt-SidebarSearchInput::-webkit-search-cancel-button,
-.rt-SidebarSearchInput::-webkit-search-decoration {
+.kui-SidebarSearchInput::-webkit-search-cancel-button,
+.kui-SidebarSearchInput::-webkit-search-decoration {
   -webkit-appearance: none;
   appearance: none;
 }
 
 /* Clear button */
-.rt-SidebarSearchClear {
+.kui-SidebarSearchClear {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--space-2);
   border-radius: var(--radius-1);
-  color: var(--gray-a9);
+  color: var(--neutral-a9);
   cursor: pointer;
 }
 
 @media (hover: hover) {
   /* stylelint-disable-next-line selector-max-specificity */
-  .rt-SidebarSearchClear:hover {
-    color: var(--gray-a11);
+  .kui-SidebarSearchClear:hover {
+    color: var(--neutral-a11);
   }
 }
 
-/* Size-specific overrides (need real selectors to beat base .rt-SidebarSearchIcon / .rt-SidebarSearchInput) */
+/* Size-specific overrides (need real selectors to beat base .kui-SidebarSearchIcon / .kui-SidebarSearchInput) */
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-SidebarSearch.rt-r-size-1 .rt-SidebarSearchInput {
+.kui-SidebarSearch.kui-r-size-1 .kui-SidebarSearchInput {
   font-size: var(--font-size-1);
   line-height: var(--line-height-1);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-SidebarSearch.rt-r-size-1 .rt-SidebarSearchIcon {
+.kui-SidebarSearch.kui-r-size-1 .kui-SidebarSearchIcon {
   width: var(--content-icon-size-1);
   height: var(--content-icon-size-1);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-SidebarSearch.rt-r-size-3 .rt-SidebarSearchInput {
+.kui-SidebarSearch.kui-r-size-3 .kui-SidebarSearchInput {
   font-size: var(--font-size-3);
   line-height: var(--line-height-3);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-SidebarSearch.rt-r-size-3 .rt-SidebarSearchIcon {
+.kui-SidebarSearch.kui-r-size-3 .kui-SidebarSearchIcon {
   width: var(--content-icon-size-3);
   height: var(--content-icon-size-3);
 }
@@ -1076,14 +1076,14 @@
 /* In a Rail the fill is the icon tile, not the row. Under more contrast the tile goes solid and its icon
    takes the solid ink, so the icon never sits in solid ink on a pale tile. */
 @media (prefers-contrast: more) {
-  :where(.rt-ShellRailContent :is(.rt-SidebarMenuButton[data-active], .rt-SidebarMenuButton[data-highlighted]:not([data-disabled]))) .rt-SidebarMenuIconWrapper {
+  :where(.kui-ShellRailContent :is(.kui-SidebarMenuButton[data-active], .kui-SidebarMenuButton[data-highlighted]:not([data-disabled]))) .kui-SidebarMenuIconWrapper {
     background-color: var(--accent-solid);
     color: var(--accent-solid-contrast);
   }
 }
 
 @media (prefers-contrast: more) and (hover: hover) {
-  :where(.rt-ShellRailContent .rt-SidebarMenuButton:hover:not([data-disabled])) .rt-SidebarMenuIconWrapper {
+  :where(.kui-ShellRailContent .kui-SidebarMenuButton:hover:not([data-disabled])) .kui-SidebarMenuIconWrapper {
     background-color: var(--accent-solid);
     color: var(--accent-solid-contrast);
   }

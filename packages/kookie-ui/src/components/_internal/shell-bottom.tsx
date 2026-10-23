@@ -132,7 +132,7 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((props
       {...withoutRemovedPaneProps(domProps)}
       id={pane.id}
       ref={composedRef}
-      className={classNames('rt-ShellPane', 'rt-ShellBottom', className)}
+      className={classNames('kui-ShellPane', 'kui-ShellBottom', className)}
       {...paneAttributes(pane, attributes)}
       data-inset={inset || undefined}
       tabIndex={pane.overlaying ? -1 : domProps.tabIndex}
@@ -145,7 +145,7 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((props
         } as CSSPropertiesWithVars
       }
     >
-      <div className="rt-ShellBottomContent">{content}</div>
+      <div className="kui-ShellBottomContent">{content}</div>
       {handle}
     </div>
   );

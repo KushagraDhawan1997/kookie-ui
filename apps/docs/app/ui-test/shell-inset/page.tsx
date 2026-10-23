@@ -67,7 +67,7 @@ export default function ShellInsetTest() {
           </Box>
 
           {/* Inset Controls */}
-          <Box mb="7" p="5" style={{ background: 'var(--gray-a3)', borderRadius: 'var(--radius-3)' }}>
+          <Box mb="7" p="5" style={{ background: 'var(--neutral-a3)', borderRadius: 'var(--radius-3)' }}>
             <Box mb="5">
               <Heading size="3">Inset Controls</Heading>
             </Box>
@@ -124,13 +124,13 @@ export default function ShellInsetTest() {
           </Box>
 
           {/* Current State */}
-          <Box p="5" style={{ background: 'var(--gray-a3)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--neutral-a3)', borderRadius: 'var(--radius-3)' }}>
             <Box mb="3">
               <Heading size="3">How Inset Works</Heading>
             </Box>
             <Box mb="3">
               <Text as="div" size="2">
-                • The Shell root paints <code>var(--gray-2)</code> behind the middle row when any pane has inset
+                • The Shell root paints <code>var(--neutral-2)</code> behind the middle row when any pane has inset
               </Text>
             </Box>
             <Box mb="3">

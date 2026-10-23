@@ -1,4 +1,4 @@
-.rt-BaseDialogOverlay {
+.kui-BaseDialogOverlay {
   position: fixed;
   inset: 0;
   z-index: 100; /* Above shell header (50) and shell stacked panes (30-40) */
@@ -11,14 +11,14 @@
   }
 }
 
-.rt-BaseDialogScroll {
+.kui-BaseDialogScroll {
   display: flex;
   overflow: auto;
   position: absolute;
   inset: 0;
 }
 
-.rt-BaseDialogScrollPadding {
+.kui-BaseDialogScrollPadding {
   flex-grow: 1;
   margin: auto;
   padding-top: var(--space-7);
@@ -28,15 +28,15 @@
 }
 
 @breakpoints {
-  .rt-BaseDialogScrollPadding:where(.rt-r-align-start) {
+  .kui-BaseDialogScrollPadding:where(.kui-r-align-start) {
     margin-top: 0;
   }
-  .rt-BaseDialogScrollPadding:where(.rt-r-align-center) {
+  .kui-BaseDialogScrollPadding:where(.kui-r-align-center) {
     margin-top: auto;
   }
 }
 
-.rt-BaseDialogContent {
+.kui-BaseDialogContent {
   margin: auto;
   width: 100%;
   z-index: 1;
@@ -45,9 +45,11 @@
   overflow: auto;
 
   padding: var(--dialog-content-padding);
+  /* A surface publishes its padding, so m="bleed" pulls a child to its edge. */
+  --kui-sf-p: var(--dialog-content-padding);
   box-sizing: border-box;
 
-  background-color: var(--color-dialog-solid);
+  background-color: var(--color-surface);
   box-shadow: var(--shadow-6);
   outline: none;
 }
@@ -65,23 +67,23 @@
  * maxWidth prop wins, because the max-width utility comes later in the cascade.
  */
 @breakpoints {
-  .rt-BaseDialogContent {
-    &:where(.rt-r-size-1) {
+  .kui-BaseDialogContent {
+    &:where(.kui-r-size-1) {
       --dialog-content-padding: var(--surface-p-2);
       --overlay-w: var(--overlay-w-1);
       border-radius: var(--radius-overlay-1);
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       --dialog-content-padding: var(--surface-p-3);
       --overlay-w: var(--overlay-w-2);
       border-radius: var(--radius-overlay-2);
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       --dialog-content-padding: var(--surface-p-4);
       --overlay-w: var(--overlay-w-3);
       border-radius: var(--radius-overlay-3);
     }
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       --dialog-content-padding: var(--surface-p-4);
       --overlay-w: var(--overlay-w-4);
       border-radius: var(--radius-overlay-4);
@@ -91,16 +93,16 @@
 
 /* Forced colors support */
 @media (forced-colors: active) {
-  .rt-BaseDialogContent {
+  .kui-BaseDialogContent {
     border: 1px solid CanvasText;
   }
-  .rt-BaseDialogOverlay::before {
+  .kui-BaseDialogOverlay::before {
     background-color: Canvas;
   }
 }
 
 /* Screen reader only content */
-.rt-sr-only {
+.kui-sr-only {
   position: absolute;
   width: 1px;
   height: 1px;

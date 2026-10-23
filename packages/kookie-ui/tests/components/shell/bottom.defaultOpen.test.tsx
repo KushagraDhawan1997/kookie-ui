@@ -32,14 +32,14 @@ function App({ defaultOpen }: { defaultOpen?: boolean }) {
 describe('Bottom defaultOpen (uncontrolled)', () => {
   it('is closed by default when defaultOpen not provided', () => {
     renderWithProviders(<App />);
-    const el = screen.getByText('bottom').closest('.rt-ShellBottom') as HTMLElement;
+    const el = screen.getByText('bottom').closest('.kui-ShellBottom') as HTMLElement;
     expect(el).toHaveAttribute('data-mode', 'collapsed');
   });
 
   it('is open on mount when defaultOpen is true', async () => {
     renderWithProviders(<App defaultOpen />);
     await waitFor(() => {
-      const el = screen.getByText('bottom').closest('.rt-ShellBottom') as HTMLElement;
+      const el = screen.getByText('bottom').closest('.kui-ShellBottom') as HTMLElement;
       expect(el).toHaveAttribute('data-mode', 'expanded');
     });
   });
@@ -47,7 +47,7 @@ describe('Bottom defaultOpen (uncontrolled)', () => {
   it('toggles internally via shell.togglePane("bottom") without props', async () => {
     renderWithProviders(<App />);
     const btn = screen.getByRole('button', { name: /toggle bottom/i });
-    const el = () => screen.getByText('bottom').closest('.rt-ShellBottom') as HTMLElement;
+    const el = () => screen.getByText('bottom').closest('.kui-ShellBottom') as HTMLElement;
     expect(el()).toHaveAttribute('data-mode', 'collapsed');
     await userEvent.click(btn);
     expect(el()).toHaveAttribute('data-mode', 'expanded');

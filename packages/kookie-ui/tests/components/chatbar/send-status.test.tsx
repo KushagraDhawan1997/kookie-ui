@@ -54,7 +54,7 @@ describe('Chatbar.Send status', () => {
 
   it('is an ordinary send when ready', () => {
     renderWithProviders(<Fixture status="ready" />);
-    const button = document.querySelector('.rt-ChatbarSend');
+    const button = document.querySelector('.kui-ChatbarSend');
     expect(button).toHaveAttribute('data-mode', 'send');
     expect(button).toBeDisabled();
   });

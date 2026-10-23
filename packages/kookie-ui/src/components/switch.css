@@ -1,4 +1,4 @@
-.rt-SwitchRoot {
+.kui-SwitchRoot {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -29,7 +29,7 @@
   }
 }
 
-.rt-SwitchThumb {
+.kui-SwitchThumb {
   background-color: white;
   position: absolute;
   left: var(--switch-thumb-inset);
@@ -55,20 +55,20 @@
  * one step taller than the checkbox beside it. Its width is v2's own ladder (34/40/44/48).
  */
 @breakpoints {
-  .rt-SwitchRoot {
-    &:where(.rt-r-size-1) {
+  .kui-SwitchRoot {
+    &:where(.kui-r-size-1) {
       --switch-height: var(--mark-2, calc(20px * var(--scale)));
       --switch-width: var(--switch-w-1, calc(34px * var(--scale)));
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       --switch-height: var(--mark-3, calc(24px * var(--scale)));
       --switch-width: var(--switch-w-2, calc(40px * var(--scale)));
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       --switch-height: var(--mark-4, calc(26px * var(--scale)));
       --switch-width: var(--switch-w-3, calc(44px * var(--scale)));
     }
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       --switch-height: var(--mark-5, calc(28px * var(--scale)));
       --switch-width: var(--switch-w-4, calc(48px * var(--scale)));
     }
@@ -83,10 +83,10 @@
 
 /* surface */
 
-.rt-SwitchRoot:where(.rt-variant-surface) {
+.kui-SwitchRoot:where(.kui-variant-surface) {
   &::before {
-    background-color: var(--gray-2);
-    box-shadow: inset 0 0 0 1px var(--gray-6);
+    background-color: var(--neutral-2);
+    box-shadow: inset 0 0 0 1px var(--neutral-6);
   }
 
   &:where([data-state='checked'])::before {
@@ -97,9 +97,9 @@
 
 /* soft */
 
-.rt-SwitchRoot:where(.rt-variant-soft) {
+.kui-SwitchRoot:where(.kui-variant-soft) {
   &::before {
-    background-color: var(--gray-3);
+    background-color: var(--neutral-3);
   }
 
   &:where([data-state='checked'])::before {
@@ -109,10 +109,10 @@
 
 /* outline */
 
-.rt-SwitchRoot:where(.rt-variant-outline) {
+.kui-SwitchRoot:where(.kui-variant-outline) {
   &::before {
     /* Base state: no background, just border */
-    box-shadow: inset 0 0 0 1px var(--gray-6);
+    box-shadow: inset 0 0 0 1px var(--neutral-6);
   }
 
   &:where([data-state='checked'])::before {
@@ -123,17 +123,17 @@
 
 /* Hover is one step up the variant's own ramp, press two. Disabled switches take neither. */
 
-.rt-SwitchRoot {
-  --switch-off-hover: var(--gray-a2);
-  --switch-off-active: var(--gray-a3);
+.kui-SwitchRoot {
+  --switch-off-hover: var(--neutral-a2);
+  --switch-off-active: var(--neutral-a3);
 
-  &:where(.rt-variant-surface) {
-    --switch-off-hover: var(--gray-3);
-    --switch-off-active: var(--gray-4);
+  &:where(.kui-variant-surface) {
+    --switch-off-hover: var(--neutral-3);
+    --switch-off-active: var(--neutral-4);
   }
-  &:where(.rt-variant-soft) {
-    --switch-off-hover: var(--gray-4);
-    --switch-off-active: var(--gray-5);
+  &:where(.kui-variant-soft) {
+    --switch-off-hover: var(--neutral-4);
+    --switch-off-active: var(--neutral-5);
   }
 
   @media (hover: hover) {
@@ -155,16 +155,16 @@
 /* all disabled Switches: a colour remap, never opacity, and a default cursor */
 
 [data-disabled] {
-  .rt-SwitchRoot:where(&) {
+  .kui-SwitchRoot:where(&) {
     cursor: default;
   }
-  .rt-SwitchRoot:where(&)::before {
+  .kui-SwitchRoot:where(&)::before {
     cursor: default;
-    background-color: var(--gray-a3) !important;
+    background-color: var(--neutral-a3) !important;
     box-shadow: none !important;
     outline: none !important;
   }
-  .rt-SwitchThumb:where(&) {
+  .kui-SwitchThumb:where(&) {
     cursor: default;
     box-shadow: none !important;
     outline: none !important;
@@ -172,6 +172,6 @@
 }
 
 /* Disabled checked state - lighter accent color */
-.rt-SwitchRoot:where([data-disabled][data-state='checked'])::before {
+.kui-SwitchRoot:where([data-disabled][data-state='checked'])::before {
   background-color: var(--accent-a3) !important;
 }

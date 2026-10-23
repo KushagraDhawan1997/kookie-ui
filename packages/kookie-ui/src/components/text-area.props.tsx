@@ -9,9 +9,9 @@ const resizeValues = ['none', 'vertical', 'horizontal', 'both'] as const;
 
 // prettier-ignore
 const textAreaPropDefs = {
-  size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised' },
-  resize: { type: 'enum', className: 'rt-r-resize', values: resizeValues,  responsive: true },
+  size: { type: 'enum', className: 'kui-r-size', values: sizes, default: '2', responsive: true },
+  variant: { type: 'enum', className: 'kui-variant', values: variants, default: 'raised' },
+  resize: { type: 'enum', className: 'kui-r-resize', values: resizeValues,  responsive: true },
   // Error and validation props
   error: { type: 'boolean', default: false },
   errorMessage: { type: 'string', default: undefined },

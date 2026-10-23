@@ -1,7 +1,7 @@
 /* stylelint-disable selector-max-type */
 /* Disable selector-max-type rule to target individual element types. */
 
-.rt-Code {
+.kui-Code {
   font-family: var(--code-font-family);
   font-size: calc(var(--mono-scale) * 1em);
   font-style: var(--code-font-style);
@@ -31,48 +31,48 @@
  ***************************************************************************************************/
 
 @breakpoints {
-  .rt-Code {
-    &:where(.rt-r-size-1) {
+  .kui-Code {
+    &:where(.kui-r-size-1) {
       font-size: calc(var(--font-size-1) * var(--mono-scale));
       line-height: var(--line-height-1);
       --letter-spacing: var(--letter-spacing-1);
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       font-size: calc(var(--font-size-2) * var(--mono-scale));
       line-height: var(--line-height-2);
       --letter-spacing: var(--letter-spacing-2);
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       font-size: calc(var(--font-size-3) * var(--mono-scale));
       line-height: var(--line-height-3);
       --letter-spacing: var(--letter-spacing-3);
     }
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       font-size: calc(var(--font-size-4) * var(--mono-scale));
       line-height: var(--line-height-4);
       --letter-spacing: var(--letter-spacing-4);
     }
-    &:where(.rt-r-size-5) {
+    &:where(.kui-r-size-5) {
       font-size: calc(var(--font-size-5) * var(--mono-scale));
       line-height: var(--line-height-5);
       --letter-spacing: var(--letter-spacing-5);
     }
-    &:where(.rt-r-size-6) {
+    &:where(.kui-r-size-6) {
       font-size: calc(var(--font-size-6) * var(--mono-scale));
       line-height: var(--line-height-6);
       --letter-spacing: var(--letter-spacing-6);
     }
-    &:where(.rt-r-size-7) {
+    &:where(.kui-r-size-7) {
       font-size: calc(var(--font-size-7) * var(--mono-scale));
       line-height: var(--line-height-7);
       --letter-spacing: var(--letter-spacing-7);
     }
-    &:where(.rt-r-size-8) {
+    &:where(.kui-r-size-8) {
       font-size: calc(var(--font-size-8) * var(--mono-scale));
       line-height: var(--line-height-8);
       --letter-spacing: var(--letter-spacing-8);
     }
-    &:where(.rt-r-size-9) {
+    &:where(.kui-r-size-9) {
       font-size: calc(var(--font-size-9) * var(--mono-scale));
       line-height: var(--line-height-9);
       --letter-spacing: var(--letter-spacing-9);
@@ -88,33 +88,33 @@
 
 /* ghost */
 
-.rt-Code:where(.rt-variant-ghost) {
+.kui-Code:where(.kui-variant-ghost) {
   padding: 0;
 
   /* Same ladder as Text. No colour and no emphasis inherits the surrounding colour. */
-  &:where(.rt-emphasis-loud) {
-    color: var(--gray-ink);
+  &:where(.kui-emphasis-loud) {
+    color: var(--neutral-ink);
   }
-  &:where(.rt-emphasis-medium) {
-    color: var(--gray-ink-muted);
+  &:where(.kui-emphasis-medium) {
+    color: var(--neutral-ink-muted);
   }
-  &:where(.rt-emphasis-quiet) {
-    color: var(--gray-ink-faint);
+  &:where(.kui-emphasis-quiet) {
+    color: var(--neutral-ink-faint);
   }
   &:where([data-accent-color]) {
     color: var(--accent-ink);
   }
-  &:where([data-accent-color].rt-emphasis-medium) {
+  &:where([data-accent-color].kui-emphasis-medium) {
     color: var(--accent-ink-muted);
   }
-  &:where([data-accent-color].rt-emphasis-quiet) {
+  &:where([data-accent-color].kui-emphasis-quiet) {
     color: var(--accent-ink-faint);
   }
 }
 
 /* solid */
 
-.rt-Code:where(.rt-variant-solid) {
+.kui-Code:where(.kui-variant-solid) {
   /* Text sits on a fill, so emphasis does not change it. Gray fills with step 12 via the tokens. */
   background-color: var(--accent-solid-a);
   color: var(--accent-solid-contrast);
@@ -124,7 +124,7 @@
     color: var(--accent-solid-selection-contrast);
   }
 
-  :where(.rt-Link) &,
+  :where(.kui-Link) &,
   &:where(:any-link, button) {
     /* Create a new stacking context (otherwise, `filter` may do it on hover) */
     isolation: isolate;
@@ -139,11 +139,11 @@
 
 /* soft */
 
-.rt-Code:where(.rt-variant-soft) {
+.kui-Code:where(.kui-variant-soft) {
   background-color: var(--accent-a2);
   color: var(--accent-ink);
 
-  :where(.rt-Link) &,
+  :where(.kui-Link) &,
   &:where(:any-link, button) {
     isolation: isolate;
     @media (hover: hover) {
@@ -156,11 +156,11 @@
 
 /* outline */
 
-.rt-Code:where(.rt-variant-outline) {
+.kui-Code:where(.kui-variant-outline) {
   box-shadow: inset 0 0 0 max(1px, 0.033em) var(--accent-a8);
   color: var(--accent-ink);
 
-  :where(.rt-Link) &,
+  :where(.kui-Link) &,
   &:where(:any-link, button) {
     isolation: isolate;
     @media (hover: hover) {
@@ -173,11 +173,11 @@
 
 /* soft and outline: emphasis fades the text along the accent ink ladder; the tint and border stay */
 
-.rt-Code:where(.rt-variant-soft, .rt-variant-outline) {
-  &:where(.rt-emphasis-medium) {
+.kui-Code:where(.kui-variant-soft, .kui-variant-outline) {
+  &:where(.kui-emphasis-medium) {
     color: var(--accent-ink-muted);
   }
-  &:where(.rt-emphasis-quiet) {
+  &:where(.kui-emphasis-quiet) {
     color: var(--accent-ink-faint);
   }
 }

@@ -1,3 +1,30 @@
+## [0.22.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.21.0...v0.22.0) (2026-10-23)
+
+v2's names. Release 5b, the last of the core plan. See MIGRATION.md.
+
+### Breaking changes
+
+* **classes:** `rt-` becomes `kui-` on every class and private variable, and the root class `radix-themes` becomes `kui-theme`.
+* **colour tokens:** the neutral scale is `--neutral-N` (was `--gray-N`). The page is `--color-page` and every surface is `--color-surface`, replacing `--color-background`, `--color-panel(-solid)`, `--color-surface-solid` and `--color-dialog(-solid)`.
+* **codemod:** `codemods/names-0.22.py` rewrites an app.
+
+### Fixes (ultracode audit of 0.17–0.22, 38 confirmed defects)
+
+* **bleed:** `m="bleed"` works in Dialog, AlertDialog, Sheet, Popover and Notice, not only Card.
+* **dark root:** `--color-page` and `--color-surface` resolve on a bare `.dark` root outside a Theme.
+* **button:** a disabled link-button does not navigate; a loading icon-only button keeps its name (`aria-busy`); only an svg or a library icon counts as an icon edge.
+* **select and combobox:** Select's trigger honours `disabled` and `aria-invalid`; a size-4 combobox opens a size-4 list.
+* **avatar:** an Avatar with no `size` follows Theme size and rests at 2.
+* **focus:** a button in a TextField slot keeps its whole focus ring.
+* **schemas:** the published JSON schemas match the Zod source again.
+* **codemods:** position props take 10–12 so the space codemod's output is valid; the type codemod reads tags with arrow functions; the components codemod renames only code, not text; nothing is skipped for containing `/build/`.
+* **tokens:** three undefined variables are gone, and a law now fails on any `var()` naming an undefined property.
+* **docs:** chapter examples renumbered for 0.17, redirects for every removed page, and stale pages corrected.
+
+### Features
+
+* **card:** a Card holding a checked Checkbox or Radio reads as chosen (an accent tint and ring), so a Card with a choice inside replaces CheckboxCards and RadioCards fully.
+
 ## [0.21.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.20.0...v0.21.0) (2026-10-23)
 
 The component list and composition rules become v2's. Release 5a. See MIGRATION.md.

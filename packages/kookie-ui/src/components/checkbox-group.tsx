@@ -60,7 +60,7 @@ const CheckboxGroupRoot = React.forwardRef<CheckboxGroupRootElement, CheckboxGro
           {...checkboxGroupScope}
           {...rootProps}
           ref={forwardedRef}
-          className={classNames('rt-CheckboxGroupRoot', className)}
+          className={classNames('kui-CheckboxGroupRoot', className)}
         />
       </CheckboxGroupProvider>
     );
@@ -91,7 +91,7 @@ const CheckboxGroupItem = React.forwardRef<CheckboxGroupItemElement, CheckboxGro
         <Text
           as="label"
           size={getTextSize(size)}
-          className={classNames('rt-CheckboxGroupItem', className)}
+          className={classNames('kui-CheckboxGroupItem', className)}
           style={style}
         >
           <CheckboxGroupItemCheckbox
@@ -99,7 +99,7 @@ const CheckboxGroupItem = React.forwardRef<CheckboxGroupItemElement, CheckboxGro
             {...props}
             ref={forwardedRef}
           />
-          {children && <span className="rt-CheckboxGroupItemInner">{children}</span>}
+          {children && <span className="kui-CheckboxGroupItemInner">{children}</span>}
         </Text>
       );
     }
@@ -137,16 +137,16 @@ const CheckboxGroupItemCheckbox = React.forwardRef<
       {...props}
       ref={forwardedRef}
       className={classNames(
-        'rt-reset',
-        'rt-BaseCheckboxRoot',
-        'rt-CheckboxGroupItemCheckbox',
+        'kui-reset',
+        'kui-BaseCheckboxRoot',
+        'kui-CheckboxGroupItemCheckbox',
         className,
       )}
     >
       <CheckboxGroupPrimitive.Indicator
         {...checkboxGroupScope}
         asChild
-        className="rt-BaseCheckboxIndicator"
+        className="kui-BaseCheckboxIndicator"
       >
         <ThickCheckIcon />
       </CheckboxGroupPrimitive.Indicator>

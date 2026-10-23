@@ -102,7 +102,7 @@ export function useResizablePane(options: ResizableOptions): PaneResizeContextVa
       const el = elementRef.current;
       if (!el) return;
       el.style.setProperty(cssVarName, `${value}px`);
-      for (const handle of el.querySelectorAll(':scope > .rt-ShellResizer')) handle.setAttribute('aria-valuenow', String(Math.round(value)));
+      for (const handle of el.querySelectorAll(':scope > .kui-ShellResizer')) handle.setAttribute('aria-valuenow', String(Math.round(value)));
       if (own) ownedRef.current = true;
     },
     [elementRef, cssVarName],

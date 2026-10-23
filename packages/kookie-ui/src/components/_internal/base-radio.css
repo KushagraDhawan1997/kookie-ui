@@ -1,4 +1,4 @@
-.rt-BaseRadioRoot {
+.kui-BaseRadioRoot {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -55,17 +55,17 @@
 
 /* The box is v2's mark ladder (16/20/24/26), the same box Checkbox has at each size. */
 @breakpoints {
-  .rt-BaseRadioRoot {
-    &:where(.rt-r-size-1) {
+  .kui-BaseRadioRoot {
+    &:where(.kui-r-size-1) {
       --radio-size: var(--mark-1, calc(16px * var(--scale)));
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       --radio-size: var(--mark-2, calc(20px * var(--scale)));
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       --radio-size: var(--mark-3, calc(24px * var(--scale)));
     }
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       --radio-size: var(--mark-4, calc(26px * var(--scale)));
     }
   }
@@ -79,7 +79,7 @@
 
 /* solid */
 
-.rt-BaseRadioRoot:where(.rt-variant-solid) {
+.kui-BaseRadioRoot:where(.kui-variant-solid) {
   &:where(:not(:checked), [data-state='unchecked'])::before {
     background-color: transparent;
     box-shadow: inset 0 0 0 1px var(--accent-9);
@@ -93,23 +93,23 @@
   }
 
   &:where(:disabled, [data-disabled])::before {
-    box-shadow: inset 0 0 0 1px var(--gray-a6);
-    background-color: var(--gray-a3);
+    box-shadow: inset 0 0 0 1px var(--neutral-a6);
+    background-color: var(--neutral-a3);
   }
   &:where(:disabled, [data-disabled])::after {
-    background-color: var(--gray-a8);
+    background-color: var(--neutral-a8);
   }
 }
 
 /* raised */
 
-.rt-BaseRadioRoot:where(.rt-variant-raised) {
+.kui-BaseRadioRoot:where(.kui-variant-raised) {
   position: relative;
   top: var(--raised-elevation-offset);
 
   &:where(:not(:checked), [data-state='unchecked'])::before {
     color: var(--accent-ink);
-    background-color: var(--color-surface-solid);
+    background-color: var(--color-surface);
     box-shadow: var(--shadow-2);
   }
 
@@ -129,12 +129,12 @@
   }
 
   &:where(:disabled, [data-disabled])::before {
-    background-color: var(--gray-a3);
+    background-color: var(--neutral-a3);
     box-shadow: none;
     background-image: none;
   }
   &:where(:disabled, [data-disabled])::after {
-    background-color: var(--gray-a8);
+    background-color: var(--neutral-a8);
   }
   &:where(:disabled, [data-disabled]) {
     top: 0;
@@ -143,7 +143,7 @@
 
 /* soft */
 
-.rt-BaseRadioRoot:where(.rt-variant-soft) {
+.kui-BaseRadioRoot:where(.kui-variant-soft) {
   &::before {
     background-color: var(--accent-3);
   }
@@ -157,16 +157,16 @@
   }
 
   &:where(:disabled, [data-disabled])::before {
-    background-color: var(--gray-a3);
+    background-color: var(--neutral-a3);
   }
   &:where(:disabled, [data-disabled])::after {
-    background-color: var(--gray-a8);
+    background-color: var(--neutral-a8);
   }
 }
 
 /* outline */
 
-.rt-BaseRadioRoot:where(.rt-variant-outline) {
+.kui-BaseRadioRoot:where(.kui-variant-outline) {
   &:where(:not(:checked), [data-state='unchecked'])::before {
     box-shadow: inset 0 0 0 1px var(--accent-6);
     color: var(--accent-ink);
@@ -181,17 +181,17 @@
   }
 
   &:where(:disabled, [data-disabled])::before {
-    box-shadow: inset 0 0 0 1px var(--gray-a7);
+    box-shadow: inset 0 0 0 1px var(--neutral-a7);
     background-color: transparent;
   }
   &:where(:disabled, [data-disabled])::after {
-    background-color: var(--gray-a8);
+    background-color: var(--neutral-a8);
   }
 }
 
 /* surface */
 
-.rt-BaseRadioRoot:where(.rt-variant-surface) {
+.kui-BaseRadioRoot:where(.kui-variant-surface) {
   &:where(:not(:checked), [data-state='unchecked'])::before {
     background-color: var(--accent-2);
     box-shadow: inset 0 0 0 1px var(--accent-6);
@@ -206,11 +206,11 @@
   }
 
   &:where(:disabled, [data-disabled])::before {
-    box-shadow: inset 0 0 0 1px var(--gray-a6);
-    background-color: var(--gray-a2);
+    box-shadow: inset 0 0 0 1px var(--neutral-a6);
+    background-color: var(--neutral-a2);
   }
   &:where(:disabled, [data-disabled])::after {
-    background-color: var(--gray-a8);
+    background-color: var(--neutral-a8);
   }
 }
 
@@ -222,29 +222,29 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-BaseRadioRoot {
+.kui-BaseRadioRoot {
   --radio-unchecked-hover: var(--accent-a2);
   --radio-unchecked-active: var(--accent-a3);
   --radio-checked-hover: var(--accent-4);
   --radio-checked-active: var(--accent-5);
 
-  &:where(.rt-variant-solid) {
+  &:where(.kui-variant-solid) {
     --radio-checked-hover: var(--accent-solid-hover);
     --radio-checked-active: var(--accent-solid-active);
   }
-  &:where(.rt-variant-raised) {
-    --radio-unchecked-hover: var(--color-surface-solid);
+  &:where(.kui-variant-raised) {
+    --radio-unchecked-hover: var(--color-surface);
     --radio-unchecked-active: var(--accent-3);
   }
-  &:where(.rt-variant-soft) {
+  &:where(.kui-variant-soft) {
     --radio-unchecked-hover: var(--accent-4);
     --radio-unchecked-active: var(--accent-5);
   }
-  &:where(.rt-variant-outline) {
+  &:where(.kui-variant-outline) {
     --radio-checked-hover: var(--accent-3);
     --radio-checked-active: var(--accent-4);
   }
-  &:where(.rt-variant-surface) {
+  &:where(.kui-variant-surface) {
     --radio-unchecked-hover: var(--accent-3);
     --radio-unchecked-active: var(--accent-4);
   }
@@ -256,7 +256,7 @@
     &:where(:hover:not(:disabled, [data-disabled])):where(:checked, [data-state='checked'])::before {
       background-color: var(--radio-checked-hover);
     }
-    &:where(.rt-variant-solid:hover:not(:disabled, [data-disabled])):where(:checked, [data-state='checked'])::before {
+    &:where(.kui-variant-solid:hover:not(:disabled, [data-disabled])):where(:checked, [data-state='checked'])::before {
       box-shadow: inset 0 0 0 1px var(--radio-checked-hover);
     }
   }
@@ -266,7 +266,7 @@
   &:where(:active:not(:disabled, [data-disabled])):where(:checked, [data-state='checked'])::before {
     background-color: var(--radio-checked-active);
   }
-  &:where(.rt-variant-solid:active:not(:disabled, [data-disabled])):where(:checked, [data-state='checked'])::before {
+  &:where(.kui-variant-solid:active:not(:disabled, [data-disabled])):where(:checked, [data-state='checked'])::before {
     box-shadow: inset 0 0 0 1px var(--radio-checked-active);
   }
 }

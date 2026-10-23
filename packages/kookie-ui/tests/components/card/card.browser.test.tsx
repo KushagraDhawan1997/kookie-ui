@@ -26,7 +26,7 @@ describe('Card geometry', () => {
         <Card />
       </Theme>,
     );
-    const { pads, corner } = box(container.querySelector('.rt-Card')!);
+    const { pads, corner } = box(container.querySelector('.kui-Card')!);
     expect(pads).toEqual([24, 24, 24, 24]);
     expect(corner).toBe(16);
   });
@@ -38,7 +38,7 @@ describe('Card geometry', () => {
           <Card size={size} />
         </Theme>,
       );
-      const { pads, corner } = box(container.querySelector('.rt-Card')!);
+      const { pads, corner } = box(container.querySelector('.kui-Card')!);
       expect(pads).toEqual(Array(4).fill(PADDING[size]));
       expect(corner).toBe(CORNER[size]);
     });
@@ -50,7 +50,7 @@ describe('Card geometry', () => {
         <Card />
       </Theme>,
     );
-    const { pads, corner } = box(container.querySelector('.rt-Card')!);
+    const { pads, corner } = box(container.querySelector('.kui-Card')!);
     expect(pads[0]).toBe(40);
     expect(corner).toBe(28);
   });
@@ -65,7 +65,7 @@ describe('Card geometry', () => {
             </Card>
           </Theme>,
         );
-        const [, nested] = container.querySelectorAll('.rt-Card');
+        const [, nested] = container.querySelectorAll('.kui-Card');
         const expected = Math.min(Math.max(0, CORNER[outer] - PADDING[outer]), CORNER[inner]);
         const { pads, corner } = box(nested);
         expect(corner, `${outer} > ${inner}`).toBe(expected);
@@ -85,7 +85,7 @@ describe('Card geometry', () => {
         </Card>
       </Theme>,
     );
-    const [, nested] = container.querySelectorAll('.rt-Card');
+    const [, nested] = container.querySelectorAll('.kui-Card');
     expect(box(nested).corner).toBe(0);
   });
 });
@@ -101,7 +101,7 @@ describe('bleed', () => {
           </Card>
         </Theme>,
       );
-      const cardRect = container.querySelector('.rt-Card')!.getBoundingClientRect();
+      const cardRect = container.querySelector('.kui-Card')!.getBoundingClientRect();
       const bled = container.querySelector('[data-testid="b"]')!.getBoundingClientRect();
       expect(bled.left).toBeCloseTo(cardRect.left, 1);
       expect(bled.right).toBeCloseTo(cardRect.right, 1);

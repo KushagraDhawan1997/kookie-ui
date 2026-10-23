@@ -1,28 +1,28 @@
-.rt-r-w {
+.kui-r-w {
   width: var(--width);
 }
 @media (--xs) {
-  .xs\:rt-r-w {
+  .xs\:kui-r-w {
     width: var(--width-xs);
   }
 }
 @media (--sm) {
-  .sm\:rt-r-w {
+  .sm\:kui-r-w {
     width: var(--width-sm);
   }
 }
 @media (--md) {
-  .md\:rt-r-w {
+  .md\:kui-r-w {
     width: var(--width-md);
   }
 }
 @media (--lg) {
-  .lg\:rt-r-w {
+  .lg\:kui-r-w {
     width: var(--width-lg);
   }
 }
 @media (--xl) {
-  .xl\:rt-r-w {
+  .xl\:kui-r-w {
     width: var(--width-xl);
   }
 }

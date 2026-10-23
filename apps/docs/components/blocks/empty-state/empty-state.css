@@ -1,7 +1,7 @@
 /* Override --empty-state-icon-size on EmptyState.Icon to resize the icon. */
 .empty-state-icon {
   --empty-state-icon-size: var(--space-7);
-  color: var(--gray-a9);
+  color: var(--neutral-a9);
 }
 
 .empty-state-icon :where(svg) {

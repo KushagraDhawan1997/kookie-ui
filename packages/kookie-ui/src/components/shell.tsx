@@ -70,12 +70,12 @@ let pageLockHolders = 0;
 function updatePageLock(delta: 1 | -1) {
   pageLockHolders = Math.max(0, pageLockHolders + delta);
   const doc = document.documentElement;
-  if (pageLockHolders > 0) doc.setAttribute('data-rt-shell-lock', '');
-  else doc.removeAttribute('data-rt-shell-lock');
+  if (pageLockHolders > 0) doc.setAttribute('data-kui-shell-lock', '');
+  else doc.removeAttribute('data-kui-shell-lock');
 }
 
 /** Marks a child the Root made inert, so closing removes only what the Root added. */
-const INERT_MARK = 'data-rt-shell-inert';
+const INERT_MARK = 'data-kui-shell-inert';
 
 /** How many frames a focus rescue watches after an overlay opens or closes. */
 const RESCUE_FRAMES = 30;
@@ -164,7 +164,7 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
     if (!rootEl) return;
     const liveEls = livePanes().map((pane) => pane.el);
     for (const child of rootEl.children) {
-      if (!(child instanceof HTMLElement) || child.classList.contains('rt-ShellScrim')) continue;
+      if (!(child instanceof HTMLElement) || child.classList.contains('kui-ShellScrim')) continue;
       const holdsLive = liveEls.some((el) => child === el || child.contains(el));
       if (liveEls.length === 0 || holdsLive) {
         if (child.hasAttribute(INERT_MARK)) {
@@ -372,7 +372,7 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
         <div
           {...props}
           ref={composedRef}
-          className={classNames('rt-ShellRoot', className)}
+          className={classNames('kui-ShellRoot', className)}
           data-height={height === 'auto' ? 'auto' : undefined}
           data-has-inset={insetPanes.size > 0 || undefined}
           data-overlay-live={liveCount > 0 || undefined}
@@ -384,7 +384,7 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
           {/* Root-owned and always mounted. The stylesheet shows it while an
               overlay is live; containment takes the rest of the frame out of
               the accessibility tree, so the scrim itself is hidden from it. */}
-          <div className="rt-ShellScrim" aria-hidden onClick={closeOverlays} />
+          <div className="kui-ShellScrim" aria-hidden onClick={closeOverlays} />
         </div>
       </ShellInsetContext.Provider>
       </ShellSizeContext.Provider>
@@ -403,7 +403,7 @@ const Header = React.forwardRef<HTMLElement, ShellHeaderProps>(({ className, hei
   <header
     {...props}
     ref={ref}
-    className={classNames('rt-ShellHeader', className)}
+    className={classNames('kui-ShellHeader', className)}
     style={
       {
         ...style,
@@ -486,7 +486,7 @@ const Rail = React.forwardRef<HTMLDivElement, RailProps>((props, ref) => {
       {...domProps}
       id={pane.id}
       ref={composedRef}
-      className={classNames('rt-ShellPane', 'rt-ShellRail', className)}
+      className={classNames('kui-ShellPane', 'kui-ShellRail', className)}
       {...paneAttributes(pane, attributes)}
       data-inset={inset || undefined}
       tabIndex={pane.overlaying ? -1 : domProps.tabIndex}
@@ -502,7 +502,7 @@ Rail.displayName = 'Shell.Rail';
 function RailContent({ children }: { children: React.ReactNode }) {
   const size = React.useContext(ShellSizeContext);
   return (
-    <div className={classNames('rt-ShellRailContent', `rt-r-size-${size}`)}>
+    <div className={classNames('kui-ShellRailContent', `kui-r-size-${size}`)}>
       <PaneChromeScope presentation="thin">{children}</PaneChromeScope>
     </div>
   );
@@ -651,7 +651,7 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
       {...withoutRemovedPaneProps(domProps)}
       id={pane.id}
       ref={composedRef}
-      className={classNames('rt-ShellPane', 'rt-ShellPanel', className)}
+      className={classNames('kui-ShellPane', 'kui-ShellPanel', className)}
       {...paneAttributes(pane, presentationAttributes)}
       data-inset={inset || undefined}
       tabIndex={pane.overlaying ? -1 : domProps.tabIndex}
@@ -662,7 +662,7 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
         } as CSSPropertiesWithVars
       }
     >
-      <div className="rt-ShellPanelContent">
+      <div className="kui-ShellPanelContent">
         <PaneChromeScope>{content}</PaneChromeScope>
       </div>
       {handle}
@@ -681,7 +681,7 @@ interface ShellContentProps extends React.ComponentPropsWithoutRef<'main'> {
 
 const Content = React.forwardRef<HTMLElement, ShellContentProps>(({ className, inset, ...props }, ref) => {
   useInsetRegistration('content', inset);
-  return <main {...props} ref={ref} className={classNames('rt-ShellContent', className)} data-inset={inset || undefined} />;
+  return <main {...props} ref={ref} className={classNames('kui-ShellContent', className)} data-inset={inset || undefined} />;
 });
 Content.displayName = 'Shell.Content';
 

@@ -130,7 +130,7 @@ const CASES: Case[] = [
   {
     name: 'Avatar',
     render: () => <Avatar size="3" variant="soft" fallback="A" />,
-    selector: '.rt-AvatarRoot',
+    selector: '.kui-AvatarRoot',
   },
   { name: 'TextField.Root', render: () => <TextField.Root data-testid={TID} size="2" variant="surface" /> },
   { name: 'TextArea', render: () => <TextArea data-testid={TID} size="2" variant="surface" /> },
@@ -156,14 +156,14 @@ describe('styling props produce class names', () => {
     renderWithProviders(<Flex data-testid={TID} direction="column" gap="3" p="4" />);
     const classes = screen.getByTestId(TID).className.split(' ');
 
-    expect(classes).toEqual(expect.arrayContaining(['rt-r-fd-column', 'rt-r-gap-3', 'rt-r-p-4']));
+    expect(classes).toEqual(expect.arrayContaining(['kui-r-fd-column', 'kui-r-gap-3', 'kui-r-p-4']));
   });
 
   test('arbitrary values become a bare class plus a custom property', () => {
     renderWithProviders(<Box data-testid={TID} width="37px" />);
     const element = screen.getByTestId(TID);
 
-    expect(element.className.split(' ')).toContain('rt-r-w');
+    expect(element.className.split(' ')).toContain('kui-r-w');
     expect(element.style.getPropertyValue('--width')).toBe('37px');
   });
 
@@ -171,15 +171,15 @@ describe('styling props produce class names', () => {
     renderWithProviders(<Flex data-testid={TID} direction={{ initial: 'column', md: 'row' }} />);
     const classes = screen.getByTestId(TID).className.split(' ');
 
-    expect(classes).toContain('rt-r-fd-column');
-    expect(classes).toContain('md:rt-r-fd-row');
+    expect(classes).toContain('kui-r-fd-column');
+    expect(classes).toContain('md:kui-r-fd-row');
   });
 
   test('a caller className is kept alongside the generated ones', () => {
     renderWithProviders(<Box data-testid={TID} p="2" className="mine" />);
     const classes = screen.getByTestId(TID).className.split(' ');
 
-    expect(classes).toContain('rt-r-p-2');
+    expect(classes).toContain('kui-r-p-2');
     expect(classes).toContain('mine');
   });
 
@@ -229,7 +229,7 @@ describe('a hoisted responsive value survives repeated renders', () => {
 
     expect(size).toEqual({ md: '3' });
     expect(screen.getByTestId(TID).className).toBe(firstClassName);
-    expect(firstClassName.split(' ')).toEqual(expect.arrayContaining(['rt-r-size-2', 'md:rt-r-size-3']));
+    expect(firstClassName.split(' ')).toEqual(expect.arrayContaining(['kui-r-size-2', 'md:kui-r-size-3']));
   });
 });
 
@@ -284,14 +284,14 @@ describe('margin props live only on layout primitives', () => {
     renderWithProviders(<Text data-testid={TID} {...props} />);
     const classes = screen.getByTestId(TID).className.split(' ');
 
-    expect(classes.filter((name) => /^rt-r-m[xytrbl]?-/.test(name))).toEqual([]);
+    expect(classes.filter((name) => /^kui-r-m[xytrbl]?-/.test(name))).toEqual([]);
   });
 
   test('Box still turns margin props into margin classes', () => {
     renderWithProviders(<Box data-testid={TID} m="2" mt="3" />);
     const classes = screen.getByTestId(TID).className.split(' ');
 
-    expect(classes).toEqual(expect.arrayContaining(['rt-r-m-2', 'rt-r-mt-3']));
+    expect(classes).toEqual(expect.arrayContaining(['kui-r-m-2', 'kui-r-mt-3']));
   });
 
   test('Accordion has no flush mode: the parent bleed covers it', () => {

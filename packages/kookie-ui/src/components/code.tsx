@@ -26,7 +26,7 @@ const Code = React.forwardRef<CodeElement, CodeProps>((props, forwardedRef) => {
       data-accent-color={resolvedColor}
       {...codeProps}
       ref={forwardedRef}
-      className={classNames('rt-reset', 'rt-Code', className)}
+      className={classNames('kui-reset', 'kui-Code', className)}
     />
   );
 });

@@ -121,9 +121,9 @@ export default function SheetPlayground({
                 gap="3"
                 p="5"
                 style={{
-                  border: '1px dashed var(--gray-6)',
+                  border: '1px dashed var(--neutral-6)',
                   borderRadius: 'var(--radius-2)',
-                  background: 'var(--gray-2)',
+                  background: 'var(--neutral-2)',
                   minHeight: '200px',
                 }}
               >

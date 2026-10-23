@@ -109,7 +109,7 @@ function toAriaKeyShortcuts(shortcut: string): string | undefined {
  */
 function MenuShortcut({ shortcut, className }: { shortcut: string; className?: string }) {
   return (
-    <div aria-hidden className={classNames('rt-BaseMenuShortcut', className)}>
+    <div aria-hidden className={classNames('kui-BaseMenuShortcut', className)}>
       <Kbd size="1">{shortcut}</Kbd>
     </div>
   );

@@ -1,4 +1,4 @@
-.rt-TextFieldRoot {
+.kui-TextFieldRoot {
   display: flex;
   align-items: stretch;
   contain: paint;
@@ -11,7 +11,7 @@
   isolation: isolate;
 
   @supports selector(:has(*)) {
-    &:where(:has(.rt-TextFieldInput:focus)) {
+    &:where(:has(.kui-TextFieldInput:focus)) {
       outline: 2px solid var(--text-field-focus-color);
       outline-offset: -1px;
     }
@@ -28,7 +28,7 @@
   }
 }
 
-.rt-TextFieldInput {
+.kui-TextFieldInput {
   /*
    * Flex layout edge case: when the parent container of TextFieldRoot
    * is smaller than the intrinsic width of TextFieldInput with all the slots,
@@ -84,7 +84,7 @@
   }
   @media (hover: hover) {
     &::-webkit-calendar-picker-indicator:where(:hover) {
-      background-color: var(--gray-a3);
+      background-color: var(--neutral-a3);
     }
   }
   &::-webkit-calendar-picker-indicator:where(:focus-visible) {
@@ -112,12 +112,12 @@
     &:where(:autofill, [data-com-onepassword-filled]) {
       /* Reliably removes native autofill colors */
       background-clip: text;
-      -webkit-text-fill-color: var(--gray-12);
+      -webkit-text-fill-color: var(--neutral-12);
     }
   }
 }
 
-.rt-TextFieldSlot {
+.kui-TextFieldSlot {
   box-sizing: border-box;
   flex-shrink: 0;
   display: flex;
@@ -145,7 +145,7 @@
     padding-right: var(--text-field-gap);
 
     /* A hosted control sits the slot inset from the edge, the same distance as above and below. */
-    &:where(:has(> .rt-BaseButton)) {
+    &:where(:has(> .kui-BaseButton)) {
       padding-left: var(--text-field-slot-inset);
     }
   }
@@ -162,7 +162,7 @@
     padding-left: var(--text-field-gap);
     padding-right: var(--text-field-px);
 
-    &:where(:has(> .rt-BaseButton)) {
+    &:where(:has(> .kui-BaseButton)) {
       padding-right: var(--text-field-slot-inset);
     }
   }
@@ -174,9 +174,14 @@
  * than `height` keeps an icon button square. Wins over the button's own size rule on source order:
  * base-button.css is imported (through button.css) before this file.
  */
-.rt-TextFieldSlot > :where(.rt-BaseButton) {
+.kui-TextFieldSlot > :where(.kui-BaseButton) {
   --base-button-height: var(--text-field-hosted-height);
   border-radius: max(0px, calc(var(--text-field-border-radius) - var(--text-field-slot-inset)));
+
+  /* The root's `contain: paint` clips anything past the slot inset, so the ring draws inside. */
+  &:where(:focus-visible) {
+    outline-offset: calc(-1 * var(--focus-ring-width));
+  }
 }
 
 /***************************************************************************************************
@@ -185,7 +190,7 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-TextFieldRoot {
+.kui-TextFieldRoot {
   box-sizing: border-box;
   /* min-height, not height: a hard height clips text resized to 200%. */
   min-height: var(--text-field-height);
@@ -202,7 +207,7 @@
   );
   --text-field-hosted-height: calc(var(--text-field-height) - 2 * var(--text-field-slot-inset));
 }
-.rt-TextFieldInput {
+.kui-TextFieldInput {
   /* Clip text to the border radius of the Root */
   border-radius: calc(var(--text-field-border-radius) - var(--text-field-border-width));
 
@@ -217,7 +222,7 @@
   }
 
   /* Remove border-radius and text-indent/padding on the left if there's a left-side slot */
-  &:where(:has(~ .rt-TextFieldSlot:not([data-side='right']))) {
+  &:where(:has(~ .kui-TextFieldSlot:not([data-side='right']))) {
     text-indent: 0;
     padding-left: 0;
     border-top-left-radius: 0;
@@ -227,8 +232,8 @@
   /* Remove border-radius and padding on the right if there's a right-side slot */
   /* prettier-ignore */
   &:where(:has(
-    ~ .rt-TextFieldSlot[data-side='right'],
-    ~ .rt-TextFieldSlot:not([data-side='right']) ~ .rt-TextFieldSlot:not([data-side='left'])
+    ~ .kui-TextFieldSlot[data-side='right'],
+    ~ .kui-TextFieldSlot:not([data-side='right']) ~ .kui-TextFieldSlot:not([data-side='left'])
   )) {
     padding-right: 0;
     border-top-right-radius: 0;
@@ -237,8 +242,8 @@
 }
 
 @breakpoints {
-  .rt-TextFieldRoot {
-    &:where(.rt-r-size-1) {
+  .kui-TextFieldRoot {
+    &:where(.kui-r-size-1) {
       --text-field-height: var(--control-height-1);
       --text-field-px: var(--control-px-1);
       --text-field-px-pill: var(--control-px-pill-1);
@@ -250,7 +255,7 @@
       font-size: var(--font-size-1);
       letter-spacing: var(--letter-spacing-1);
 
-      & :where(.rt-TextFieldInput) {
+      & :where(.kui-TextFieldInput) {
         /* Reset size 2 padding bottom */
         padding-bottom: 0px;
 
@@ -262,7 +267,7 @@
       }
     }
 
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       --text-field-height: var(--control-height-2);
       --text-field-px: var(--control-px-2);
       --text-field-px-pill: var(--control-px-pill-2);
@@ -274,7 +279,7 @@
       font-size: var(--font-size-2);
       letter-spacing: var(--letter-spacing-2);
 
-      & :where(.rt-TextFieldInput) {
+      & :where(.kui-TextFieldInput) {
         /* Avoid 1px baseline jitter when layout around the text field is subpixel-sized (e.g. vh units). */
         /* Works because as of Nov 2023, Chrome computes input text bounding box height as 16.5px on @2x screens. */
         padding-bottom: 0.5px;
@@ -287,7 +292,7 @@
       }
     }
 
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       --text-field-height: var(--control-height-3);
       --text-field-px: var(--control-px-3);
       --text-field-px-pill: var(--control-px-pill-3);
@@ -299,7 +304,7 @@
       font-size: var(--font-size-3);
       letter-spacing: var(--letter-spacing-3);
 
-      & :where(.rt-TextFieldInput) {
+      & :where(.kui-TextFieldInput) {
         /* Reset size 2 padding bottom */
         padding-bottom: 0px;
 
@@ -311,7 +316,7 @@
       }
     }
 
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       --text-field-height: var(--control-height-4);
       --text-field-px: var(--control-px-4);
       --text-field-px-pill: var(--control-px-pill-4);
@@ -323,7 +328,7 @@
       font-size: var(--font-size-4);
       letter-spacing: var(--letter-spacing-4);
 
-      & :where(.rt-TextFieldInput) {
+      & :where(.kui-TextFieldInput) {
         padding-bottom: 0px;
 
         /* Safari credentials autofill icon */
@@ -344,7 +349,7 @@
 
 /* surface */
 
-.rt-TextFieldRoot:where(.rt-variant-outline) {
+.kui-TextFieldRoot:where(.kui-variant-outline) {
   --text-field-selection-color: var(--focus-a5);
   --text-field-focus-color: var(--focus-8);
   --text-field-border-width: 1px;
@@ -353,20 +358,20 @@
 
   /* Hover effects */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextFieldInput:where(:focus, :disabled)))) {
+    &:where(:hover:not(:has(.kui-TextFieldInput:where(:focus, :disabled)))) {
       background-color: var(--accent-2);
       box-shadow: inset 0 0 0 1px var(--accent-7);
     }
   }
 
-  & :where(.rt-TextFieldInput) {
+  & :where(.kui-TextFieldInput) {
     &::placeholder {
-      color: var(--gray-a10);
+      color: var(--neutral-a10);
     }
   }
 
-  & :where(.rt-TextFieldSlot) {
-    color: var(--gray-a11);
+  & :where(.kui-TextFieldSlot) {
+    color: var(--neutral-a11);
 
     &:where([data-accent-color]) {
       color: var(--accent-a11);
@@ -374,50 +379,50 @@
   }
 
   /* prettier-ignore */
-  &:where(:has(.rt-TextFieldInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
+  &:where(:has(.kui-TextFieldInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
     /* Blend with focus color */
     background-image: linear-gradient(var(--focus-a2), var(--focus-a2));
     box-shadow: inset 0 0 0 1px var(--focus-a5);
   }
 
-  &:where(:has(.rt-TextFieldInput:where(:disabled, :read-only))) {
+  &:where(:has(.kui-TextFieldInput:where(:disabled, :read-only))) {
     /* Blend with grey */
-    background-image: linear-gradient(var(--gray-a2), var(--gray-a2));
-    box-shadow: inset 0 0 0 var(--text-field-border-width) var(--gray-a6);
+    background-image: linear-gradient(var(--neutral-a2), var(--neutral-a2));
+    box-shadow: inset 0 0 0 var(--text-field-border-width) var(--neutral-a6);
   }
 }
 
 /* raised */
 
-.rt-TextFieldRoot:where(.rt-variant-raised) {
+.kui-TextFieldRoot:where(.kui-variant-raised) {
   --text-field-selection-color: var(--focus-a5);
   --text-field-focus-color: var(--focus-8);
   --text-field-border-width: 0px;
 
-  background-color: var(--color-surface-solid);
+  background-color: var(--color-surface);
   box-shadow: var(--shadow-2);
 
   /* Hover effects */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextFieldInput:where(:focus, :disabled)))) {
+    &:where(:hover:not(:has(.kui-TextFieldInput:where(:focus, :disabled)))) {
       background-color: var(--accent-2);
       box-shadow: var(--shadow-2);
     }
   }
 
   /* Focus state - accent ring with minimal inset */
-  &:where(:has(.rt-TextFieldInput:focus)) {
+  &:where(:has(.kui-TextFieldInput:focus)) {
     box-shadow: var(--shadow-2), 0 0 0 2px var(--focus-8);
   }
 
-  & :where(.rt-TextFieldInput) {
+  & :where(.kui-TextFieldInput) {
     &::placeholder {
-      color: var(--gray-a10);
+      color: var(--neutral-a10);
     }
   }
 
-  & :where(.rt-TextFieldSlot) {
-    color: var(--gray-a11);
+  & :where(.kui-TextFieldSlot) {
+    color: var(--neutral-a11);
 
     &:where([data-accent-color]) {
       color: var(--accent-a11);
@@ -425,21 +430,21 @@
   }
 
   /* prettier-ignore */
-  &:where(:has(.rt-TextFieldInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
+  &:where(:has(.kui-TextFieldInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
     /* Blend with focus color */
     background-image: linear-gradient(var(--focus-a2), var(--focus-a2));
     box-shadow: var(--shadow-2);
   }
 
-  &:where(:has(.rt-TextFieldInput:where(:disabled, :read-only))) {
+  &:where(:has(.kui-TextFieldInput:where(:disabled, :read-only))) {
     /* Blend with grey */
-    background-image: linear-gradient(var(--gray-a2), var(--gray-a2));
+    background-image: linear-gradient(var(--neutral-a2), var(--neutral-a2));
   }
 }
 
 /* soft */
 
-.rt-TextFieldRoot:where(.rt-variant-soft) {
+.kui-TextFieldRoot:where(.kui-variant-soft) {
   --text-field-selection-color: var(--accent-a5);
   --text-field-focus-color: var(--accent-8);
   --text-field-border-width: 0px;
@@ -448,19 +453,19 @@
 
   /* Hover effects */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextFieldInput:where(:focus, :disabled)))) {
+    &:where(:hover:not(:has(.kui-TextFieldInput:where(:focus, :disabled)))) {
       background-color: var(--accent-4);
     }
   }
 
-  & :where(.rt-TextFieldInput) {
+  & :where(.kui-TextFieldInput) {
     &::placeholder {
       color: var(--accent-12);
       opacity: 0.6;
     }
   }
 
-  & :where(.rt-TextFieldSlot) {
+  & :where(.kui-TextFieldSlot) {
     color: var(--accent-12);
 
     &:where([data-accent-color]) {
@@ -469,34 +474,34 @@
   }
 
   /* prettier-ignore */
-  &:where(:has(.rt-TextFieldInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
+  &:where(:has(.kui-TextFieldInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
     /* Use gray autofill color when component color is gray */
-    box-shadow: inset 0 0 0 1px var(--accent-a5), inset 0 0 0 1px var(--gray-a4);
+    box-shadow: inset 0 0 0 1px var(--accent-a5), inset 0 0 0 1px var(--neutral-a4);
   }
 
-  &:where(:has(.rt-TextFieldInput:where(:disabled, :read-only))) {
-    background-color: var(--gray-a3);
+  &:where(:has(.kui-TextFieldInput:where(:disabled, :read-only))) {
+    background-color: var(--neutral-a3);
   }
 }
 
 /* ghost */
 
-.rt-TextFieldRoot:where(.rt-variant-ghost) {
+.kui-TextFieldRoot:where(.kui-variant-ghost) {
   --text-field-selection-color: var(--accent-a5);
   --text-field-focus-color: var(--accent-8);
   --text-field-border-width: 0px;
 
   background-color: transparent;
-  color: var(--gray-12);
+  color: var(--neutral-12);
 
-  & :where(.rt-TextFieldInput) {
+  & :where(.kui-TextFieldInput) {
     &::placeholder {
-      color: var(--gray-a10);
+      color: var(--neutral-a10);
     }
   }
 
-  & :where(.rt-TextFieldSlot) {
-    color: var(--gray-a11);
+  & :where(.kui-TextFieldSlot) {
+    color: var(--neutral-a11);
 
     &:where([data-accent-color]) {
       color: var(--accent-a11);
@@ -505,7 +510,7 @@
 
   /* Hover effects */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextFieldInput:where(:focus, :disabled)))) {
+    &:where(:hover:not(:has(.kui-TextFieldInput:where(:focus, :disabled)))) {
       background-color: var(--accent-3);
     }
   }
@@ -516,20 +521,20 @@
   }
 
   /* prettier-ignore */
-  &:where(:has(.rt-TextFieldInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
+  &:where(:has(.kui-TextFieldInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
     background-color: var(--accent-a2);
-    box-shadow: inset 0 0 0 1px var(--accent-a5), inset 0 0 0 1px var(--gray-a4);
+    box-shadow: inset 0 0 0 1px var(--accent-a5), inset 0 0 0 1px var(--neutral-a4);
   }
 
-  &:where(:has(.rt-TextFieldInput:where(:disabled, :read-only))) {
-    background-color: var(--gray-a2);
-    color: var(--gray-a8);
+  &:where(:has(.kui-TextFieldInput:where(:disabled, :read-only))) {
+    background-color: var(--neutral-a2);
+    color: var(--neutral-a8);
   }
 }
 
 /* outline */
 
-.rt-TextFieldRoot:where(.rt-variant-surface) {
+.kui-TextFieldRoot:where(.kui-variant-surface) {
   --text-field-selection-color: var(--accent-a5);
   --text-field-focus-color: var(--accent-8);
   --text-field-border-width: 1px;
@@ -537,14 +542,14 @@
   background-color: var(--accent-2);
   box-shadow: inset 0 0 0 1px var(--accent-6);
 
-  & :where(.rt-TextFieldInput) {
+  & :where(.kui-TextFieldInput) {
     &::placeholder {
-      color: var(--gray-a10);
+      color: var(--neutral-a10);
     }
   }
 
-  & :where(.rt-TextFieldSlot) {
-    color: var(--gray-a11);
+  & :where(.kui-TextFieldSlot) {
+    color: var(--neutral-a11);
 
     &:where([data-accent-color]) {
       color: var(--accent-a11);
@@ -553,7 +558,7 @@
 
   /* Hover effects */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextFieldInput:where(:focus, :disabled)))) {
+    &:where(:hover:not(:has(.kui-TextFieldInput:where(:focus, :disabled)))) {
       background-color: var(--accent-3);
       box-shadow: inset 0 0 0 1px var(--accent-7);
     }
@@ -566,28 +571,28 @@
   }
 
   /* prettier-ignore */
-  &:where(:has(.rt-TextFieldInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
+  &:where(:has(.kui-TextFieldInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
     background-color: var(--accent-a2);
-    box-shadow: inset 0 0 0 1px var(--accent-a5), inset 0 0 0 1px var(--gray-a4);
+    box-shadow: inset 0 0 0 1px var(--accent-a5), inset 0 0 0 1px var(--neutral-a4);
   }
 
-  &:where(:has(.rt-TextFieldInput:where(:disabled, :read-only))) {
-    background-color: var(--gray-a2);
-    box-shadow: inset 0 0 0 var(--text-field-border-width) var(--gray-a6);
-    color: var(--gray-a8);
+  &:where(:has(.kui-TextFieldInput:where(:disabled, :read-only))) {
+    background-color: var(--neutral-a2);
+    box-shadow: inset 0 0 0 var(--text-field-border-width) var(--neutral-a6);
+    color: var(--neutral-a8);
   }
 }
 
 /* Read-only text fields: the value stays selectable, so the caret cursor stays. */
-.rt-TextFieldInput {
+.kui-TextFieldInput {
   &:where(:read-only:not(:disabled)) {
-    color: var(--gray-a11);
+    color: var(--neutral-a11);
     /* Safari */
-    -webkit-text-fill-color: var(--gray-a11);
+    -webkit-text-fill-color: var(--neutral-a11);
 
-    .rt-TextFieldRoot:where(:has(&)) {
-      --text-field-selection-color: var(--gray-a5);
-      --text-field-focus-color: var(--gray-8);
+    .kui-TextFieldRoot:where(:has(&)) {
+      --text-field-selection-color: var(--neutral-a5);
+      --text-field-focus-color: var(--neutral-8);
     }
   }
 }
@@ -596,27 +601,27 @@
  * Disabled is a colour remap, never opacity: value, placeholder and slots take the disabled ink,
  * and the cursor goes back to the arrow.
  */
-.rt-TextFieldInput {
+.kui-TextFieldInput {
   &:where(:disabled) {
     cursor: default;
-    color: var(--gray-a8);
+    color: var(--neutral-a8);
     /* Safari */
-    -webkit-text-fill-color: var(--gray-a8);
+    -webkit-text-fill-color: var(--neutral-a8);
 
     &::placeholder {
-      color: var(--gray-a8);
-      -webkit-text-fill-color: var(--gray-a8);
+      color: var(--neutral-a8);
+      -webkit-text-fill-color: var(--neutral-a8);
       opacity: 1;
     }
 
-    .rt-TextFieldRoot:where(:has(&)) {
-      --text-field-selection-color: var(--gray-a5);
-      --text-field-focus-color: var(--gray-8);
+    .kui-TextFieldRoot:where(:has(&)) {
+      --text-field-selection-color: var(--neutral-a5);
+      --text-field-focus-color: var(--neutral-8);
       cursor: default;
     }
 
-    & ~ :where(.rt-TextFieldSlot) {
-      color: var(--gray-a8);
+    & ~ :where(.kui-TextFieldSlot) {
+      color: var(--neutral-a8);
       cursor: default;
     }
   }
@@ -626,37 +631,37 @@
  * Invalid. Keyed on the input's `aria-invalid`, which the `error` prop also sets, so both paths
  * style the same. Only the border and the focus ring move; the fill stays the variant's.
  */
-.rt-TextFieldRoot:where(:has(> .rt-TextFieldInput[aria-invalid='true'])) {
+.kui-TextFieldRoot:where(:has(> .kui-TextFieldInput[aria-invalid='true'])) {
   --text-field-focus-color: var(--red-8);
 
-  &:where(.rt-variant-outline, .rt-variant-surface, .rt-variant-soft, .rt-variant-ghost) {
+  &:where(.kui-variant-outline, .kui-variant-surface, .kui-variant-soft, .kui-variant-ghost) {
     box-shadow: inset 0 0 0 1px var(--red-6);
 
     @media (hover: hover) {
-      &:where(:hover:not(:has(.rt-TextFieldInput:where(:focus, :disabled)))) {
+      &:where(:hover:not(:has(.kui-TextFieldInput:where(:focus, :disabled)))) {
         box-shadow: inset 0 0 0 1px var(--red-7);
       }
     }
   }
 
-  &:where(.rt-variant-raised) {
+  &:where(.kui-variant-raised) {
     box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-6);
 
     @media (hover: hover) {
-      &:where(:hover:not(:has(.rt-TextFieldInput:where(:focus, :disabled)))) {
+      &:where(:hover:not(:has(.kui-TextFieldInput:where(:focus, :disabled)))) {
         box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-7);
       }
     }
 
     /* The raised focus ring is a box-shadow, not the outline */
-    &:where(:has(.rt-TextFieldInput:focus)) {
+    &:where(:has(.kui-TextFieldInput:focus)) {
       box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-6), 0 0 0 2px var(--red-8);
     }
   }
 }
 
 /* Error message styling */
-.rt-TextFieldErrorMessage {
+.kui-TextFieldErrorMessage {
   color: var(--red-11);
   font-size: var(--font-size-1);
   line-height: var(--line-height-1);
@@ -668,7 +673,7 @@
   gap: var(--space-2);
 }
 
-.rt-TextFieldErrorMessage::before {
+.kui-TextFieldErrorMessage::before {
   content: "⚠";
   color: var(--red-9);
   font-size: var(--font-size-1);
@@ -682,43 +687,43 @@
  ***************************************************************************************************/
 
 /* Scrub-enabled slot hover state */
-.rt-TextFieldSlot:where([data-scrub]) {
+.kui-TextFieldSlot:where([data-scrub]) {
   cursor: ew-resize !important;
   user-select: none;
   position: relative;
 }
 
 /* Ensure children also show ew-resize cursor */
-.rt-TextFieldSlot:where([data-scrub]) * {
+.kui-TextFieldSlot:where([data-scrub]) * {
   cursor: ew-resize !important;
 }
 
 /* Active scrubbing state - hide real cursor */
-.rt-TextFieldSlot:where([data-scrubbing]) {
+.kui-TextFieldSlot:where([data-scrubbing]) {
   cursor: none;
 }
 
 /* Hide cursor on entire document body during scrubbing via pointer capture */
-.rt-TextFieldSlot:where([data-scrubbing]) * {
+.kui-TextFieldSlot:where([data-scrubbing]) * {
   cursor: none;
 }
 
 /* Virtual cursor indicator - viewport-wide floating cursor */
-.rt-TextFieldSlotScrubCursor {
+.kui-TextFieldSlotScrubCursor {
   /* Position is set inline via JS */
   pointer-events: none;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 /* Visual feedback during scrubbing - subtle highlight on the slot */
-.rt-TextFieldSlot:where([data-scrubbing]) {
+.kui-TextFieldSlot:where([data-scrubbing]) {
   background-color: var(--accent-a3);
   border-radius: calc(var(--text-field-border-radius, var(--radius-2)) - 2px);
 }
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  .rt-TextFieldSlotScrubCursor {
+  .kui-TextFieldSlotScrubCursor {
     filter: none;
   }
 }

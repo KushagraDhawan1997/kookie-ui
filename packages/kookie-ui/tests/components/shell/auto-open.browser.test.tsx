@@ -16,7 +16,7 @@ describe('an untouched pane follows its responsive default', () => {
         </Shell.Root>
       </Theme>,
     );
-    const sidebar = container.querySelector<HTMLElement>('.rt-ShellSidebar')!;
+    const sidebar = container.querySelector<HTMLElement>('.kui-ShellSidebar')!;
     expect(sidebar.dataset.state).toBe('auto');
     expect(getComputedStyle(sidebar).display).not.toBe('none');
     expect(sidebar.getBoundingClientRect().width).toBeGreaterThan(200);

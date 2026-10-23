@@ -35,7 +35,7 @@ describe('Dialog geometry', () => {
         </Theme>,
       );
       const s: Size = size ?? '2';
-      expect(measure('.rt-DialogContent')).toEqual({ pad: pad[s], corner: corner[s], width: width[s] });
+      expect(measure('.kui-DialogContent')).toEqual({ pad: pad[s], corner: corner[s], width: width[s] });
     });
   }
 
@@ -49,7 +49,7 @@ describe('Dialog geometry', () => {
         </Dialog.Root>
       </Theme>,
     );
-    expect(measure('.rt-DialogContent')).toEqual({ pad: 40, corner: 28, width: 720 });
+    expect(measure('.kui-DialogContent')).toEqual({ pad: 40, corner: 28, width: 720 });
   });
 
   it('an explicit maxWidth wins over the overlay width', () => {
@@ -62,7 +62,7 @@ describe('Dialog geometry', () => {
         </Dialog.Root>
       </Theme>,
     );
-    expect(measure('.rt-DialogContent').width).toBe(300);
+    expect(measure('.kui-DialogContent').width).toBe(300);
   });
 });
 
@@ -79,7 +79,7 @@ describe('AlertDialog geometry', () => {
         </Theme>,
       );
       const s: Size = size ?? '2';
-      expect(measure('.rt-AlertDialogContent')).toEqual({
+      expect(measure('.kui-AlertDialogContent')).toEqual({
         pad: pad[s],
         corner: corner[s],
         width: width[s],
@@ -99,7 +99,7 @@ describe('Sheet geometry', () => {
         </Sheet.Root>
       </Theme>,
     );
-    const m = measure('.rt-SheetContent');
+    const m = measure('.kui-SheetContent');
     expect(m.pad).toBe(32);
     expect(m.width).toBe(440);
   });
@@ -114,7 +114,7 @@ describe('Sheet geometry', () => {
         </Sheet.Root>
       </Theme>,
     );
-    expect(measure('.rt-SheetContent').width).toBe(600);
+    expect(measure('.kui-SheetContent').width).toBe(600);
   });
 
   it('bottom side spans the window', () => {
@@ -127,6 +127,6 @@ describe('Sheet geometry', () => {
         </Sheet.Root>
       </Theme>,
     );
-    expect(measure('.rt-SheetContent').width).toBe(window.innerWidth);
+    expect(measure('.kui-SheetContent').width).toBe(window.innerWidth);
   });
 });

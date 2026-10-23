@@ -123,15 +123,15 @@ const AlertDialogContent = React.forwardRef<AlertDialogContentElement, AlertDial
     return (
       <AlertDialogPrimitive.Portal container={container} forceMount={forceMount}>
         <Theme asChild>
-          <AlertDialogPrimitive.Overlay className="rt-BaseDialogOverlay rt-AlertDialogOverlay">
-            <div className="rt-BaseDialogScroll rt-AlertDialogScroll">
+          <AlertDialogPrimitive.Overlay className="kui-BaseDialogOverlay kui-AlertDialogOverlay">
+            <div className="kui-BaseDialogScroll kui-AlertDialogScroll">
               <div
-                className={`rt-BaseDialogScrollPadding rt-AlertDialogScrollPadding ${alignClassName}`}
+                className={`kui-BaseDialogScrollPadding kui-AlertDialogScrollPadding ${alignClassName}`}
               >
                 <AlertDialogPrimitive.Content
                   {...contentProps}
                   ref={combinedRef}
-                  className={classNames('rt-BaseDialogContent', 'rt-AlertDialogContent', className)}
+                  className={classNames('kui-BaseDialogContent', 'kui-AlertDialogContent', className)}
                   tabIndex={-1}
                   role="alertdialog"
                   aria-modal="true"
@@ -147,7 +147,7 @@ const AlertDialogContent = React.forwardRef<AlertDialogContentElement, AlertDial
                 <div
                   aria-live="assertive"
                   aria-atomic="true"
-                  className="rt-sr-only"
+                  className="kui-sr-only"
                   id="alert-dialog-announcement"
                 />
               </div>

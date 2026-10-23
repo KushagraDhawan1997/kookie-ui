@@ -1,4 +1,4 @@
-.radix-themes {
+.kui-theme {
   --scrollarea-scrollbar-horizontal-margin-top: var(--space-2);
   --scrollarea-scrollbar-horizontal-margin-bottom: var(--space-2);
   --scrollarea-scrollbar-horizontal-margin-left: var(--space-2);
@@ -11,7 +11,7 @@
   --scrollarea-scrollbar-border-radius: var(--radius-control-1);
 }
 
-.rt-ScrollAreaRoot {
+.kui-ScrollAreaRoot {
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -19,7 +19,7 @@
   height: 100%;
 }
 
-.rt-ScrollAreaViewport {
+.kui-ScrollAreaViewport {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -27,7 +27,7 @@
   /* iOS momentum scrolling */
   -webkit-overflow-scrolling: touch;
 
-  &:where(:focus-visible) + :where(.rt-ScrollAreaViewportFocusRing) {
+  &:where(:focus-visible) + :where(.kui-ScrollAreaViewportFocusRing) {
     position: absolute;
     inset: 0;
     pointer-events: none;
@@ -36,18 +36,18 @@
   }
 
   /* Stop Chrome back/forward two-finger swipe when there is a horizontal scrollbar */
-  &:where(:has(.rt-ScrollAreaScrollbar[data-orientation='horizontal'])) {
+  &:where(:has(.kui-ScrollAreaScrollbar[data-orientation='horizontal'])) {
     overscroll-behavior-x: contain;
   }
 }
 
-.rt-ScrollAreaViewport > * {
+.kui-ScrollAreaViewport > * {
   display: block !important;
   min-width: 0;
   flex-grow: 1;
 }
 
-.rt-ScrollAreaScrollbar {
+.kui-ScrollAreaScrollbar {
   display: flex;
   /* Ensures no selection */
   user-select: none;
@@ -64,7 +64,7 @@
   }
 }
 
-.rt-ScrollAreaThumb {
+.kui-ScrollAreaThumb {
   position: relative;
 
   &::before {
@@ -86,7 +86,7 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-ScrollAreaScrollbar {
+.kui-ScrollAreaScrollbar {
   border-radius: var(--scrollarea-scrollbar-border-radius);
   &:where([data-orientation='horizontal']) {
     margin-top: var(--scrollarea-scrollbar-horizontal-margin-top);
@@ -102,13 +102,13 @@
   }
 }
 
-.rt-ScrollAreaThumb {
-  background-color: var(--gray-a6);
+.kui-ScrollAreaThumb {
+  background-color: var(--neutral-a6);
   border-radius: inherit;
 
   @media (hover: hover) {
     &:where(:hover) {
-      background-color: var(--gray-a8);
+      background-color: var(--neutral-a8);
     }
   }
 }
@@ -132,8 +132,8 @@
  * Shared by ScrollArea (on its viewport) and MessageScroller (on its viewport). Scrollbars are
  * siblings of the viewport, outside the mask, so the thumb stays crisp.
  */
-:where(.rt-ScrollAreaRoot[data-fade]) > .rt-ScrollAreaViewport,
-.rt-MessageScrollerViewport:where([data-fade]) {
+:where(.kui-ScrollAreaRoot[data-fade]) > .kui-ScrollAreaViewport,
+.kui-MessageScrollerViewport:where([data-fade]) {
   mask-image: linear-gradient(
     to bottom,
     transparent 0%,
@@ -144,7 +144,7 @@
 }
 
 :root,
-.radix-themes {
+.kui-theme {
   --scroll-fade-size: var(--space-7);
 }
 
@@ -152,7 +152,7 @@
  * A band is above the scroller it floats over and above nothing else. The reach hooks inherit,
  * so a scroller nested inside another takes the designed length, not its ancestor's band.
  */
-:where(.rt-ScrollAreaViewport, .rt-MessageScrollerViewport) :where(.rt-ScrollAreaRoot, .rt-MessageScrollerViewport) {
+:where(.kui-ScrollAreaViewport, .kui-MessageScrollerViewport) :where(.kui-ScrollAreaRoot, .kui-MessageScrollerViewport) {
   --scroll-fade-start: initial;
   --scroll-fade-end: initial;
 }

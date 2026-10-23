@@ -29,9 +29,9 @@ const Switch = React.forwardRef<SwitchElement, SwitchProps>((ownProps, forwarded
       {...switchProps}
       asChild={false}
       ref={forwardedRef}
-      className={classNames('rt-reset', 'rt-SwitchRoot', className)}
+      className={classNames('kui-reset', 'kui-SwitchRoot', className)}
     >
-      <SwitchPrimitive.Thumb className="rt-SwitchThumb" />
+      <SwitchPrimitive.Thumb className="kui-SwitchThumb" />
     </SwitchPrimitive.Root>
   );
 });
