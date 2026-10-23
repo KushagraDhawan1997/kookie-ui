@@ -36,7 +36,6 @@ const accentColors = [
 const variants = ['raised', 'solid', 'soft', 'surface', 'outline', 'ghost'] as const;
 const sizes = ['1', '2', '3', '4'] as const;
 const radiusOptions = ['none', 'small', 'medium', 'large', 'full'] as const;
-const materials = ['solid', 'translucent'] as const;
 
 type ToggleButtonPlaygroundProps = {
   showControls?: boolean;
@@ -53,7 +52,6 @@ export default function ToggleButtonPlayground({
   const [color, setColor] = React.useState<string>('theme');
   const [radius, setRadius] = React.useState<string>('theme');
   const [size, setSize] = React.useState<string>('2');
-  const [material, setMaterial] = React.useState<string>('theme');
   const [pressed, setPressed] = React.useState<boolean>(false);
 
   const items = [
@@ -101,15 +99,6 @@ export default function ToggleButtonPlayground({
       value: pressed,
       onChange: setPressed,
     },
-    {
-      id: 'material',
-      label: 'Material',
-      type: 'select' as const,
-      value: material,
-      onChange: setMaterial,
-      options: [{ label: 'Theme', value: 'theme' }, ...materials.map((m) => ({ label: m, value: m }))],
-      placeholder: 'Theme',
-    },
   ];
 
   const generateCode = () => {
@@ -117,7 +106,6 @@ export default function ToggleButtonPlayground({
 
     if (color !== 'theme') props.push(`color="${color}"`);
     if (radius !== 'theme') props.push(`radius="${radius}"`);
-    if (material !== 'theme') props.push(`material="${material}"`);
     if (pressed) props.push('pressed');
 
     const propsString = props.length > 0 ? `\n  ${props.join('\n  ')}` : '';
@@ -135,7 +123,6 @@ export default function ToggleButtonPlayground({
           variant={variant as any}
           color={color === 'theme' ? undefined : (color as any)}
           radius={radius === 'theme' ? undefined : (radius as any)}
-          material={material === 'theme' ? undefined : (material as any)}
           pressed={pressed}
           onPressedChange={setPressed}
         >
@@ -144,8 +131,6 @@ export default function ToggleButtonPlayground({
       }
       code={generateCode()}
       items={items}
-      showBackground={material === 'translucent'}
-      hint={material === 'translucent' ? 'Translucent material is best observed with soft or surface variants.' : undefined}
       showControls={showControls}
       showToolbar={showToolbar}
       height={height}

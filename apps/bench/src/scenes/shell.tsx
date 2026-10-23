@@ -43,12 +43,12 @@ export function ShellScene() {
         </Shell.Scroll>
       </Shell.Sidebar>
       <Shell.Content>
-        <Flex direction="column" gap="4" p="5">
+        <Flex direction="column" gap="5" p="6">
           <Heading>Dashboard {version}</Heading>
-          <Grid columns="3" gap="4">
+          <Grid columns="3" gap="5">
             {Array.from({ length: 60 }, (_, i) => (
               <Card key={i}>
-                <Flex direction="column" gap="1">
+                <Flex direction="column" gap="2">
                   <Text weight="medium">Metric {i}</Text>
                   <Heading size="6">{(i * 37 + version) % 1000}</Heading>
                   <Badge color={i % 2 ? 'green' : 'red'}>{i % 2 ? '+' : '-'}{i % 9}%</Badge>

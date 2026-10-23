@@ -12,25 +12,7 @@
   font-style: normal;
   text-align: start;
 
-  /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
-
-  /* Prevent backdrop-filter stacking with parents */
   isolation: isolate;
-
-  /* Component-level overrides */
-  &:where([data-material='solid']) {
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-  
-  &:where([data-material='translucent']) {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 
   /* Selected values use medium font weight */
   &:where(:not([data-placeholder])) {
@@ -43,8 +25,6 @@
     outline: var(--focus-outline-width) solid var(--focus-8);
     outline-offset: var(--focus-outline-offset-inset);
   }
-
-  /* Reduced motion support */
 }
 
 .rt-SelectTriggerInner {
@@ -61,13 +41,6 @@
 }
 
 .rt-SelectContent {
-  /*
-   * This surface blurs its own backdrop, which makes it the backdrop root for
-   * everything inside it. A component nested here would re-blur an already
-   * blurred, already flat surface for the full cost of another blur pass, so
-   * switch the component filter off for the subtree. See tokens/blur.css.
-   */
-  --backdrop-filter-components-enabled: none;
   --scrollarea-scrollbar-vertical-margin-top: var(--select-content-padding);
   --scrollarea-scrollbar-vertical-margin-bottom: var(--select-content-padding);
   --scrollarea-scrollbar-horizontal-margin-left: var(--select-content-padding);
@@ -76,7 +49,6 @@
   overflow: hidden;
   z-index: 200; /* Above dialogs (100) so select inside dialogs/sheets work */
   background-color: var(--color-panel);
-  backdrop-filter: var(--backdrop-filter-panel);
   box-shadow: var(--shadow-5);
 
   &:where([data-side]) {
@@ -91,7 +63,7 @@
   padding: var(--select-content-padding);
 
   :where(.rt-SelectContent:has(.rt-ScrollAreaScrollbar[data-orientation='vertical'])) & {
-    padding-right: var(--space-3);
+    padding-right: var(--space-4);
   }
 }
 
@@ -120,8 +92,8 @@
     height: auto;
     min-height: var(--select-item-height);
     align-items: flex-start;
-    padding-top: var(--space-2);
-    padding-bottom: var(--space-2);
+    padding-top: var(--space-3);
+    padding-bottom: var(--space-3);
   }
 }
 
@@ -136,8 +108,8 @@
 
 .rt-SelectSeparator {
   height: var(--separator-height-thin);
-  margin-top: var(--space-2);
-  margin-bottom: var(--space-2);
+  margin-top: var(--space-3);
+  margin-bottom: var(--space-3);
   margin-left: var(--select-item-indicator-width);
   margin-right: var(--select-separator-margin-right);
 }
@@ -153,7 +125,7 @@
   cursor: default;
 
   :where(.rt-SelectItem) + & {
-    margin-top: var(--space-2);
+    margin-top: var(--space-3);
   }
 }
 
@@ -174,7 +146,6 @@
     box-sizing: border-box;
     height: var(--select-trigger-height);
     padding: 0 var(--select-trigger-ghost-padding-x);
-
   }
 }
 
@@ -189,12 +160,12 @@
       border-radius: var(--radius-pill-1);
 
       &:where(:not(.rt-variant-ghost)) {
-        padding-left: var(--space-2);
-        padding-right: var(--space-2);
+        padding-left: var(--space-3);
+        padding-right: var(--space-3);
       }
       &:where(.rt-variant-ghost) {
         gap: var(--component-gap-ghost-1);
-        --select-trigger-ghost-padding-x: var(--space-2);
+        --select-trigger-ghost-padding-x: var(--space-3);
       }
       & :where(.rt-SelectIcon) {
         width: var(--trigger-icon-size-1);
@@ -210,12 +181,12 @@
       border-radius: var(--radius-pill-2);
 
       &:where(:not(.rt-variant-ghost)) {
-        padding-left: var(--space-3);
-        padding-right: var(--space-3);
+        padding-left: var(--space-4);
+        padding-right: var(--space-4);
       }
       &:where(.rt-variant-ghost) {
         gap: var(--component-gap-ghost-2);
-        --select-trigger-ghost-padding-x: var(--space-2);
+        --select-trigger-ghost-padding-x: var(--space-3);
       }
       & :where(.rt-SelectIcon) {
         width: var(--trigger-icon-size-2);
@@ -231,12 +202,12 @@
       border-radius: var(--radius-pill-3);
 
       &:where(:not(.rt-variant-ghost)) {
-        padding-left: var(--space-4);
-        padding-right: var(--space-4);
+        padding-left: var(--space-5);
+        padding-right: var(--space-5);
       }
       &:where(.rt-variant-ghost) {
         gap: var(--component-gap-ghost-3);
-        --select-trigger-ghost-padding-x: var(--space-3);
+        --select-trigger-ghost-padding-x: var(--space-4);
       }
       & :where(.rt-SelectIcon) {
         width: var(--trigger-icon-size-3);
@@ -252,12 +223,12 @@
       border-radius: var(--radius-pill-4);
 
       &:where(:not(.rt-variant-ghost)) {
-        padding-left: var(--space-4);
-        padding-right: var(--space-4);
+        padding-left: var(--space-5);
+        padding-right: var(--space-5);
       }
       &:where(.rt-variant-ghost) {
         gap: var(--component-gap-ghost-4);
-        --select-trigger-ghost-padding-x: var(--space-3);
+        --select-trigger-ghost-padding-x: var(--space-4);
       }
       & :where(.rt-SelectIcon) {
         width: var(--trigger-icon-size-4);
@@ -276,10 +247,10 @@
 @breakpoints {
   .rt-SelectContent {
     &:where(.rt-r-size-1) {
-      --select-content-padding: var(--space-1);
+      --select-content-padding: var(--space-2);
       --select-item-height: var(--control-height-1);
-      --select-item-indicator-width: calc(var(--space-5) / var(--select-item-indicator-width-factor));
-      --select-separator-margin-right: var(--space-2);
+      --select-item-indicator-width: calc(var(--space-6) / var(--select-item-indicator-width-factor));
+      --select-separator-margin-right: var(--space-3);
       border-radius: var(--radius-surface-3);
 
       & :where(.rt-SelectLabel) {
@@ -299,9 +270,9 @@
       }
     }
     &:where(.rt-r-size-2, .rt-r-size-3, .rt-r-size-4) {
-      --select-content-padding: var(--space-2);
-      --select-item-indicator-width: var(--space-5);
-      --select-separator-margin-right: var(--space-3);
+      --select-content-padding: var(--space-3);
+      --select-item-indicator-width: var(--space-6);
+      --select-separator-margin-right: var(--space-4);
       border-radius: var(--radius-surface-4);
 
       & :where(.rt-SelectLabel) {
@@ -368,20 +339,6 @@
   background-color: var(--color-surface);
   box-shadow: var(--shadow-2);
 
-  /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    background-color: var(--color-surface);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-material='solid']) {
-    background-color: var(--color-surface);
-  }
-
-  &:where([data-material='translucent']) {
-    background-color: var(--color-surface);
-  }
-
   &:where(:focus-visible) {
     outline: 2px solid var(--focus-8);
     outline-offset: 2px;
@@ -391,57 +348,15 @@
     &:where(:hover) {
       background-color: var(--accent-2);
       box-shadow: var(--shadow-2);
-
-      /* Theme-level translucent override for hover */
-      :where([data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      }
-
-      /* Component-level overrides for hover */
-      &:where([data-material='solid']) {
-        background-color: var(--accent-2);
-      }
-
-      &:where([data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      }
     }
   }
 
   &:where([data-state='open']) {
     background-color: var(--accent-3);
-
-    /* Theme-level translucent override for open */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
-
-    /* Component-level overrides for open */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-3);
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
   }
 
   &:where(:active:not([data-state='open'], [data-disabled])) {
     background-color: var(--accent-3);
-
-    /* Theme-level translucent override for active */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
-
-    /* Component-level overrides for active */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-3);
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
   }
 
   &:where(:disabled) {
@@ -464,23 +379,8 @@
 /* soft */
 
 .rt-SelectTrigger:where(.rt-variant-soft) {
-  /* Base state: solid accent for solid panels */
   background-color: var(--accent-3);
   color: var(--accent-ink);
-
-  /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-material='solid']) {
-    background-color: var(--accent-3);
-  }
-
-  &:where([data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-  }
 
   &:where(:focus-visible) {
     outline: 2px solid var(--accent-8);
@@ -490,57 +390,15 @@
   @media (hover: hover) {
     &:where(:hover) {
       background-color: var(--accent-4);
-      
-      /* Theme-level translucent override for hover */
-      :where([data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-      }
-
-      /* Component-level overrides for hover */
-      &:where([data-material='solid']) {
-        background-color: var(--accent-4);
-      }
-
-      &:where([data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-      }
     }
   }
 
   &:where([data-state='open']) {
     background-color: var(--accent-4);
-    
-    /* Theme-level translucent override for open */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-    }
-
-    /* Component-level overrides for open */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-4);
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-    }
   }
 
   &:where(:active:not([data-state='open'])) {
     background-color: var(--accent-5);
-    
-    /* Theme-level translucent override for active */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a5), var(--accent-5) 60%);
-    }
-
-    /* Component-level overrides for active */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-5);
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a5), var(--accent-5) 60%);
-    }
   }
 
   &:where(:disabled) {
@@ -574,27 +432,7 @@
 
   @media (hover: hover) {
     &:where(:hover) {
-      /* Base state: solid accent for solid panels */
       background-color: var(--accent-3);
-      
-      /* Theme-level translucent override for hover */
-      :where([data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      }
-
-      /* Component-level overrides for hover */
-      &:where([data-material='solid']) {
-        background-color: var(--accent-3);
-      }
-
-      &:where([data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      }
-
-      /* Disable backdrop-filter when inside elements that already have backdrop-filter */
-      /* :where(.rt-PopoverContent, .rt-BaseDialogContent, .rt-BaseMenuContent, .rt-DropdownMenuContent, .rt-ContextMenuContent, .rt-AlertDialogContent, .rt-HoverCardContent, .rt-TooltipContent, .rt-Card) & {
-        backdrop-filter: none !important;
-      } */
     }
   }
 
@@ -604,51 +442,11 @@
   }
 
   &:where([data-state='open']) {
-    /* Base state: solid accent for solid panels */
     background-color: var(--accent-3);
-    
-    /* Theme-level translucent override for open */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
-
-    /* Component-level overrides for open */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-3);
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
-
-    /* Disable backdrop-filter when inside elements that already have backdrop-filter */
-    /* :where(.rt-PopoverContent, .rt-BaseDialogContent, .rt-BaseMenuContent, .rt-DropdownMenuContent, .rt-ContextMenuContent, .rt-AlertDialogContent, .rt-HoverCardContent, .rt-TooltipContent, .rt-Card) & {
-      backdrop-filter: none !important;
-    } */
   }
 
   &:where(:active:not([data-state='open'])) {
-    /* Base state: solid accent for solid panels */
     background-color: var(--accent-4);
-    
-    /* Theme-level translucent override for active */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-    }
-
-    /* Component-level overrides for active */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-4);
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-    }
-
-    /* Disable backdrop-filter when inside elements that already have backdrop-filter */
-    /* :where(.rt-PopoverContent, .rt-BaseDialogContent, .rt-BaseMenuContent, .rt-DropdownMenuContent, .rt-ContextMenuContent, .rt-AlertDialogContent, .rt-HoverCardContent, .rt-TooltipContent, .rt-Card) & {
-      backdrop-filter: none !important;
-    } */
   }
 
   &:where(:disabled) {
@@ -662,90 +460,24 @@
 /* outline */
 
 .rt-SelectTrigger:where(.rt-variant-outline) {
-  /* Base state: solid colors for solid panels */
   box-shadow: inset 0 0 0 1px var(--accent-6);
   color: var(--accent-ink);
-
-  /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-material='solid']) {
-    box-shadow: inset 0 0 0 1px var(--accent-6);
-  }
-
-  &:where([data-material='translucent']) {
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-  }
 
   @media (hover: hover) {
     &:where(:hover) {
       background-color: var(--accent-2);
       box-shadow: inset 0 0 0 1px var(--accent-7);
-      
-      /* Theme-level translucent override for hover */
-      :where([data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-        box-shadow: inset 0 0 0 1px var(--accent-a7);
-      }
-
-      /* Component-level overrides for hover */
-      &:where([data-material='solid']) {
-        background-color: var(--accent-2);
-        box-shadow: inset 0 0 0 1px var(--accent-7);
-      }
-
-      &:where([data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-        box-shadow: inset 0 0 0 1px var(--accent-a7);
-      }
     }
   }
 
   &:where([data-state='open']) {
     background-color: var(--accent-2);
     box-shadow: inset 0 0 0 1px var(--accent-7);
-    
-    /* Theme-level translucent override for open */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a7);
-    }
-
-    /* Component-level overrides for open */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-2);
-      box-shadow: inset 0 0 0 1px var(--accent-7);
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a7);
-    }
   }
 
   &:where(:active:not([data-state='open'])) {
     background-color: var(--accent-3);
     box-shadow: inset 0 0 0 1px var(--accent-8);
-    
-    /* Theme-level translucent override for active */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a8);
-    }
-
-    /* Component-level overrides for active */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-3);
-      box-shadow: inset 0 0 0 1px var(--accent-8);
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a8);
-    }
   }
 
   &:where(:focus-visible) {
@@ -772,94 +504,25 @@
 /* surface */
 
 .rt-SelectTrigger:where(.rt-variant-surface) {
-  /* Base state: solid accent for solid panels */
   background-color: var(--accent-2);
   box-shadow: inset 0 0 0 1px var(--accent-6);
   color: var(--accent-ink);
-
-  /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-material='solid']) {
-    background-color: var(--accent-2);
-    box-shadow: inset 0 0 0 1px var(--accent-6);
-  }
-
-  &:where([data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-  }
 
   @media (hover: hover) {
     &:where(:hover) {
       background-color: var(--accent-3);
       box-shadow: inset 0 0 0 1px var(--accent-7);
-      
-      /* Theme-level translucent override for hover */
-      :where([data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-        box-shadow: inset 0 0 0 1px var(--accent-a7);
-      }
-
-      /* Component-level overrides for hover */
-      &:where([data-material='solid']) {
-        background-color: var(--accent-3);
-        box-shadow: inset 0 0 0 1px var(--accent-7);
-      }
-
-      &:where([data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-        box-shadow: inset 0 0 0 1px var(--accent-a7);
-      }
     }
   }
 
   &:where([data-state='open']) {
     background-color: var(--accent-3);
     box-shadow: inset 0 0 0 1px var(--accent-8);
-    
-    /* Theme-level translucent override for open */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a8);
-    }
-
-    /* Component-level overrides for open */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-3);
-      box-shadow: inset 0 0 0 1px var(--accent-8);
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a8);
-    }
   }
 
   &:where(:active:not([data-state='open'])) {
     background-color: var(--accent-4);
     box-shadow: inset 0 0 0 1px var(--accent-8);
-    
-    /* Theme-level translucent override for active */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a8);
-    }
-
-    /* Component-level overrides for active */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-4);
-      box-shadow: inset 0 0 0 1px var(--accent-a8);
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a8);
-    }
   }
 
   &:where(:focus-visible) {
@@ -929,8 +592,6 @@
     stroke-dashoffset: -124;
   }
 }
-
-/* Reduced motion support */
 
 /* Forced colors support */
 @media (forced-colors: active) {

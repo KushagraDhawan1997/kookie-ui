@@ -21,9 +21,9 @@ import { TableOfContents } from '@/components/blocks/table-of-contents/table-of-
 
 export function Article({ children }: { children: React.ReactNode }) {
   return (
-    <Flex gap="6">
+    <Flex gap="7">
       <Box data-content-area>{children}</Box>
-      <Box width="240px" position="sticky" top="8">
+      <Box width="240px" position="sticky" top="9">
         <TableOfContents />
       </Box>
     </Flex>

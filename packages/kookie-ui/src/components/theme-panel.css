@@ -24,13 +24,13 @@
 }
 
 .rt-ThemePanelSwatch {
-  width: var(--space-4);
-  height: var(--space-4);
+  width: var(--space-5);
+  height: var(--space-5);
   border-radius: 100%;
 
   @media (--sm) {
-    width: var(--space-5);
-    height: var(--space-5);
+    width: var(--space-6);
+    height: var(--space-6);
   }
 }
 

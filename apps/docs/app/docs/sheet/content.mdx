@@ -96,7 +96,6 @@ The panel that slides in from the specified side.
 | `height` | `string \| number \| Responsive<string \| number>` | Height of the sheet. Supports responsive objects |
 | `minHeight` | `string \| number \| Responsive<string \| number>` | Minimum height |
 | `maxHeight` | `string \| number \| Responsive<string \| number>` | Maximum height |
-| `material` | `'solid' \| 'translucent'` | Background appearance. Choose `solid` for opaque backgrounds, `translucent` for depth over dynamic backgrounds |
 | `forceMount` | `boolean` | Force mounting when used with animation libraries |
 | `container` | `HTMLElement` | DOM container to portal into. Defaults to `document.body` |
 | `children` | `React.ReactNode` | Sheet content |
@@ -216,44 +215,6 @@ Control size boundaries.
 </Sheet.Content>
 ```
 
-## Material
-
-Use the `material` prop to set sheet appearance. Choose `solid` for opaque backgrounds, or `translucent` for depth and separation over images or dynamic backgrounds.
-
-### Theme
-
-Sheets automatically inherit the theme's material setting.
-
-```tsx
-<Theme material="translucent">
-  <Sheet.Root>
-    <Sheet.Trigger>
-      <Button>Open</Button>
-    </Sheet.Trigger>
-    <Sheet.Content side="end">
-      <Sheet.Title>Translucent Sheet</Sheet.Title>
-    </Sheet.Content>
-  </Sheet.Root>
-</Theme>
-```
-
-### Custom
-
-Override the theme's material for specific effects.
-
-```tsx
-<Theme material="solid">
-  <Sheet.Root>
-    <Sheet.Trigger>
-      <Button>Open</Button>
-    </Sheet.Trigger>
-    <Sheet.Content side="end" material="translucent">
-      <Sheet.Title>Custom Material</Sheet.Title>
-    </Sheet.Content>
-  </Sheet.Root>
-</Theme>
-```
-
 ## Examples
 
 ### Navigation Drawer
@@ -269,7 +230,7 @@ A common pattern for mobile navigation.
   </Sheet.Trigger>
   <Sheet.Content side="start" width="280px">
     <Sheet.Title>Navigation</Sheet.Title>
-    <Flex direction="column" gap="2" p="4">
+    <Flex direction="column" gap="3" p="5">
       <Button variant="ghost" fullWidth>Home</Button>
       <Button variant="ghost" fullWidth>Products</Button>
       <Button variant="ghost" fullWidth>About</Button>
@@ -296,10 +257,10 @@ A right-side panel for showing item details.
   <Sheet.Content side="end" width={{ initial: '100%', sm: '400px' }}>
     <Sheet.Title>Item Details</Sheet.Title>
     <Sheet.Description>View and edit item properties.</Sheet.Description>
-    <Flex direction="column" gap="4" p="4">
+    <Flex direction="column" gap="5" p="5">
       <TextField label="Name" defaultValue="Example Item" />
       <TextField label="Description" />
-      <Flex gap="2" justify="end">
+      <Flex gap="3" justify="end">
         <Sheet.Close>
           <Button variant="soft">Cancel</Button>
         </Sheet.Close>
@@ -321,7 +282,7 @@ A mobile-friendly action sheet pattern.
   </Sheet.Trigger>
   <Sheet.Content side="bottom" height="auto">
     <Sheet.Title>Share</Sheet.Title>
-    <Flex direction="column" gap="2" p="4">
+    <Flex direction="column" gap="3" p="5">
       <Button variant="ghost" fullWidth>Copy Link</Button>
       <Button variant="ghost" fullWidth>Share to Twitter</Button>
       <Button variant="ghost" fullWidth>Share to Facebook</Button>
@@ -403,16 +364,16 @@ Always provide an accessible name via `Sheet.Title` or `aria-label` on `Sheet.Co
 - `Sheet.Title` now renders as a Heading component with sensible defaults (`size="4"`, `weight="medium"`)
 - `Sheet.Description` now renders as a Text component with sensible defaults (`size="2"`, `color="gray"`)
 
+### Removed
+
+- `material` and `panelBackground` props. Every surface is solid.
+
 ### Added
 
 - Initial Sheet component built on Radix Dialog
 - Side placement with RTL-aware aliases (`left` → `start`, `right` → `end`)
 - Slide animation for each side direction
-- Material prop for solid/translucent backgrounds
 - Responsive width/height support
 - Focus management and keyboard navigation
 - Development warning for missing accessible name
 
-### Deprecated
-
-- `panelBackground` prop in favor of `material` prop

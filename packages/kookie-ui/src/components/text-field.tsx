@@ -24,8 +24,7 @@ type TextFieldInputProps = ComponentPropsWithout<'input', NotInputTextualAttribu
 interface TextFieldRootProps extends TextFieldInputProps, MarginProps, TextFieldRootOwnProps {}
 const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>((props, forwardedRef) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const { children, className, color, radius, material, style, ...inputProps } = extractProps(props, textFieldRootPropDefs, marginPropDefs);
-  const effectiveMaterial = material;
+  const { children, className, color, radius, style, ...inputProps } = extractProps(props, textFieldRootPropDefs, marginPropDefs);
 
   // Generate unique IDs for accessibility
   const errorId = React.useId();
@@ -86,7 +85,6 @@ const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>
     <div
       data-accent-color={color}
       data-radius={radius}
-      data-material={effectiveMaterial}
       style={style}
       className={classNames('rt-TextFieldRoot', className, {
         'rt-error': isInvalid,

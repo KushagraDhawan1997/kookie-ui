@@ -1,34 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * */
 
 :where(.radix-themes) {
-  /* Backdrop blur constants - using new blur tokens */
-  --backdrop-blur-components: var(--blur-4);
-  --backdrop-blur-panel: var(--blur-5);
-  --backdrop-blur-dialog: var(--blur-6);
-
-  /*
-   * The filter a translucent surface uses when blur is enabled. Everything that
-   * opts into a backdrop filter reads one of these rather than writing
-   * `blur(...)` itself, so `[data-blur='none']` and
-   * `prefers-reduced-transparency` can switch the property off entirely — see
-   * tokens/blur.css.
-   */
-  --backdrop-filter-components-enabled: blur(var(--backdrop-blur-components));
-  --backdrop-filter-panel-enabled: blur(var(--backdrop-blur-panel));
-  --backdrop-filter-dialog-enabled: blur(var(--backdrop-blur-dialog));
-
-  /* Dialog background opacity constants (stronger than panel) */
-  --dialog-opacity: var(--opacity-9);
-  --dialog-opacity-percentage: calc(var(--dialog-opacity) * 100%);
-
-  /* Panel background opacity constants */
-  --panel-opacity: var(--opacity-8);
-  --panel-opacity-percentage: calc(var(--panel-opacity) * 100%);
-
-  /* Surface background opacity constants */
-  --surface-opacity: var(--opacity-7);
-  --surface-opacity-percentage: calc(var(--surface-opacity) * 100%);
-
   /* Standard border width constants */
   --border-width-standard: 1px;
 
@@ -53,21 +25,21 @@
   --trigger-icon-size-4: 12px;
 
   /* Content icon size constants (for buttons, menu items) */
-  --content-icon-size-1: calc(var(--space-5) * 0.55);
-  --content-icon-size-2: calc(var(--space-6) * 0.525);
-  --content-icon-size-3: calc(var(--space-7) * 0.5125);
-  --content-icon-size-4: calc(var(--space-8) * 0.5);
+  --content-icon-size-1: calc(var(--space-6) * 0.55);
+  --content-icon-size-2: calc(var(--space-7) * 0.525);
+  --content-icon-size-3: calc(var(--space-8) * 0.5125);
+  --content-icon-size-4: calc(var(--space-9) * 0.5);
 
   /* Indicator icon size constants (for checkboxes, radio, sub-triggers) */
-  --indicator-icon-size-1: calc(9px * var(--scaling));
-  --indicator-icon-size-2: calc(10px * var(--scaling));
-  --indicator-icon-size-3: calc(12px * var(--scaling));
+  --indicator-icon-size-1: calc(9px * var(--scale));
+  --indicator-icon-size-2: calc(10px * var(--scale));
+  --indicator-icon-size-3: calc(12px * var(--scale));
 
   /* Select-specific indicator icon sizes */
-  --select-indicator-icon-size-1: calc(8px * var(--scaling));
-  --select-indicator-icon-size-2: calc(10px * var(--scaling));
-  --select-indicator-icon-size-3: calc(10px * var(--scaling));
-  --select-indicator-icon-size-4: calc(12px * var(--scaling));
+  --select-indicator-icon-size-1: calc(8px * var(--scale));
+  --select-indicator-icon-size-2: calc(10px * var(--scale));
+  --select-indicator-icon-size-3: calc(10px * var(--scale));
+  --select-indicator-icon-size-4: calc(12px * var(--scale));
 
   /* Select component specific constants */
   --select-item-indicator-width-factor: 1.2;
@@ -92,10 +64,10 @@
   --slider-focus-ring-outer: 5px;
 
   /* Shared Progress and Slider sizing tokens */
-  --progress-slider-height-1: var(--space-1);
-  --progress-slider-height-2: calc(var(--space-1) * 1.5);
-  --progress-slider-height-3: var(--space-2);
-  --progress-slider-height-4: calc(var(--space-2) * 1.25);
+  --progress-slider-height-1: var(--space-2);
+  --progress-slider-height-2: calc(var(--space-2) * 1.5);
+  --progress-slider-height-3: var(--space-3);
+  --progress-slider-height-4: calc(var(--space-3) * 1.25);
 
   /* Shared Progress and Slider radius tokens */
   --progress-slider-radius-1: var(--radius-1);
@@ -113,16 +85,16 @@
   --spacing-multiplier-large: 1.25;
 
   /* Component gap spacing constants (shared between Button, Select, etc.) */
-  --component-gap-1: var(--space-1);
-  --component-gap-2: var(--space-1);
-  --component-gap-3: calc(var(--space-1) * 1.5);
-  --component-gap-4: var(--space-2);
+  --component-gap-1: var(--space-2);
+  --component-gap-2: var(--space-2);
+  --component-gap-3: calc(var(--space-2) * 1.5);
+  --component-gap-4: var(--space-3);
 
   /* Ghost variant gap constants */
-  --component-gap-ghost-1: var(--space-1);
-  --component-gap-ghost-2: calc(var(--space-1) * 1.5);
-  --component-gap-ghost-3: calc(var(--space-1) * 1.5);
-  --component-gap-ghost-4: var(--space-2);
+  --component-gap-ghost-1: var(--space-2);
+  --component-gap-ghost-2: calc(var(--space-2) * 1.5);
+  --component-gap-ghost-3: calc(var(--space-2) * 1.5);
+  --component-gap-ghost-4: var(--space-3);
 
   /* Focus outline constants */
   --focus-outline-width: 2px;

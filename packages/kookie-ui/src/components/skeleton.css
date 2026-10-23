@@ -36,7 +36,7 @@
 
 :where(.rt-Skeleton:empty) {
   display: block;
-  height: var(--space-3);
+  height: var(--space-4);
 }
 
 .rt-Skeleton > *,

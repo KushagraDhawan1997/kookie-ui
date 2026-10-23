@@ -61,7 +61,7 @@ const FooterLinkGroup = React.forwardRef<HTMLDivElement, FooterLinkGroupProps>(
       <Heading as="h3" size="2" weight="medium">
         {title}
       </Heading>
-      <Flex direction="column" gap="2">
+      <Flex direction="column" gap="3">
         {children}
       </Flex>
     </Flex>

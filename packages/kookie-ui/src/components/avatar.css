@@ -2,7 +2,7 @@
  * Avatar Component Styles
  *
  * ARCHITECTURE:
- * - Base styles: Layout, accessibility, material system
+ * - Base styles: Layout, accessibility
  * - Sizes: Responsive avatar dimensions and border-radius
  * - Variant palettes: Each variant defines its color scale as CSS variables
  * - Shared state logic: Single set of hover/active/disabled selectors
@@ -17,10 +17,6 @@
  ***************************************************************************************************/
 
 .rt-AvatarRoot {
-  /* Avatar takes no material: it stays solid inside a translucent theme or surface. */
-  --material-blend: 100%;
-  --material-alpha: 0;
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -31,12 +27,7 @@
   flex-shrink: 0;
   position: relative;
 
-  /* Theme-level translucent override */
-
-  /* Prevent backdrop-filter stacking with parents */
-  isolation: isolate
-
-  /* Component-level overrides */
+  isolation: isolate;
 }
 
 /* Interactive states for avatars used as buttons/links */
@@ -45,8 +36,6 @@
 .rt-AvatarRoot:where(a),
 .rt-AvatarRoot:where([role="button"]) {
   cursor: pointer;
-
-  /* Reduced motion support */
 
   &:where(:focus-visible) {
     outline: var(--focus-outline-width) solid var(--focus-8);
@@ -136,35 +125,35 @@
 @breakpoints {
   .rt-AvatarRoot {
     &:where(.rt-r-size-1) {
-      --avatar-size: var(--space-5);
+      --avatar-size: var(--space-6);
       --avatar-fallback-one-letter-font-size: var(--font-size-2);
       --avatar-fallback-two-letters-font-size: var(--font-size-1);
       border-radius: var(--radius-pill-1);
       letter-spacing: var(--letter-spacing-1);
     }
     &:where(.rt-r-size-2) {
-      --avatar-size: var(--space-6);
+      --avatar-size: var(--space-7);
       --avatar-fallback-one-letter-font-size: var(--font-size-3);
       --avatar-fallback-two-letters-font-size: var(--font-size-2);
       border-radius: var(--radius-pill-2);
       letter-spacing: var(--letter-spacing-2);
     }
     &:where(.rt-r-size-3) {
-      --avatar-size: var(--space-7);
+      --avatar-size: var(--space-8);
       --avatar-fallback-one-letter-font-size: var(--font-size-4);
       --avatar-fallback-two-letters-font-size: var(--font-size-3);
       border-radius: var(--radius-pill-3);
       letter-spacing: var(--letter-spacing-3);
     }
     &:where(.rt-r-size-4) {
-      --avatar-size: var(--space-8);
+      --avatar-size: var(--space-9);
       --avatar-fallback-one-letter-font-size: var(--font-size-5);
       --avatar-fallback-two-letters-font-size: var(--font-size-4);
       border-radius: var(--radius-pill-4);
       letter-spacing: var(--letter-spacing-4);
     }
     &:where(.rt-r-size-5) {
-      --avatar-size: var(--space-9);
+      --avatar-size: var(--space-10);
       --avatar-fallback-one-letter-font-size: var(--font-size-6);
       --avatar-fallback-two-letters-font-size: var(--font-size-5);
       border-radius: var(--radius-pill-5);
@@ -273,11 +262,7 @@
 .rt-AvatarRoot:where(.rt-variant-soft, .rt-variant-outline, .rt-variant-surface) {
   & :where(.rt-AvatarFallback) {
     color: var(--v-color);
-    background-color: color-mix(
-      in srgb,
-      var(--v-bg-a) calc(var(--material-alpha) * 100%),
-      var(--v-bg) var(--material-blend)
-    );
+    background-color: var(--v-bg);
   }
 
   &:where([data-disabled]) :where(.rt-AvatarFallback) {
@@ -289,11 +274,7 @@
 /* Border variants: outline and surface */
 .rt-AvatarRoot:where(.rt-variant-outline, .rt-variant-surface) {
   & :where(.rt-AvatarFallback) {
-    box-shadow: inset 0 0 0 1px color-mix(
-      in srgb,
-      var(--v-border-a) calc(var(--material-alpha) * 100%),
-      var(--v-border) var(--material-blend)
-    );
+    box-shadow: inset 0 0 0 1px var(--v-border);
   }
 
   &:where([data-disabled]) :where(.rt-AvatarFallback) {
@@ -307,11 +288,7 @@
   /* Hover state */
   @media (hover: hover) {
     &:where(:hover:not(:disabled, [data-disabled])) {
-      background-color: color-mix(
-        in srgb,
-        var(--v-bg-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-bg-hover) var(--material-blend)
-      );
+      background-color: var(--v-bg-hover);
 
       & :where(.rt-AvatarFallback) {
         background-color: inherit;
@@ -321,11 +298,7 @@
 
   /* Active state */
   &:where(:active:not(:disabled, [data-disabled])) {
-    background-color: color-mix(
-      in srgb,
-      var(--v-bg-active-a) calc(var(--material-alpha) * 100%),
-      var(--v-bg-active) var(--material-blend)
-    );
+    background-color: var(--v-bg-active);
 
     & :where(.rt-AvatarFallback) {
       background-color: inherit;
@@ -338,11 +311,7 @@
   /* Hover border */
   @media (hover: hover) {
     &:where(:hover:not(:disabled, [data-disabled])) {
-      box-shadow: inset 0 0 0 1px color-mix(
-        in srgb,
-        var(--v-border-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-border-hover) var(--material-blend)
-      );
+      box-shadow: inset 0 0 0 1px var(--v-border-hover);
 
       & :where(.rt-AvatarFallback) {
         box-shadow: inherit;
@@ -352,11 +321,7 @@
 
   /* Active border */
   &:where(:active:not(:disabled, [data-disabled])) {
-    box-shadow: inset 0 0 0 1px color-mix(
-      in srgb,
-      var(--v-border-active-a) calc(var(--material-alpha) * 100%),
-      var(--v-border-active) var(--material-blend)
-    );
+    box-shadow: inset 0 0 0 1px var(--v-border-active);
 
     & :where(.rt-AvatarFallback) {
       box-shadow: inherit;
@@ -372,12 +337,9 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* Solid variant - uses 10% blend for translucent (more opaque than other variants) */
 .rt-AvatarRoot:where(.rt-variant-solid) {
-  --solid-blend: calc(100% - (var(--material-alpha) * 90%));
-
   & :where(.rt-AvatarFallback) {
-    background-color: color-mix(in srgb, var(--accent-solid-a) calc(var(--material-alpha) * 100%), var(--accent-solid) var(--solid-blend));
+    background-color: var(--accent-solid);
     color: var(--accent-solid-contrast);
   }
 
@@ -392,7 +354,7 @@
 .rt-AvatarRoot:where(button, a, [role="button"]):where(.rt-variant-solid) {
   @media (hover: hover) {
     &:where(:hover:not(:disabled, [data-disabled])) {
-      background-color: color-mix(in srgb, var(--accent-solid-hover-a) calc(var(--material-alpha) * 100%), var(--accent-solid-hover) var(--solid-blend));
+      background-color: var(--accent-solid-hover);
 
       /* Filter the fallback, not the root, so the status dot and badge stay untouched */
       & :where(.rt-AvatarFallback) {
@@ -403,7 +365,7 @@
   }
 
   &:where(:active:not(:disabled, [data-disabled])) {
-    background-color: color-mix(in srgb, var(--accent-solid-active-a) calc(var(--material-alpha) * 100%), var(--accent-solid-active) var(--solid-blend));
+    background-color: var(--accent-solid-active);
 
     & :where(.rt-AvatarFallback) {
       background-color: inherit;
@@ -420,7 +382,7 @@
     position: relative;
     top: 0;
     color: var(--accent-ink);
-    background-color: color-mix(in srgb, var(--color-surface-translucent) calc(var(--material-alpha) * 100%), var(--color-surface-solid) var(--material-blend));
+    background-color: var(--color-surface-solid);
     box-shadow: var(--shadow-2);
   }
 
@@ -436,7 +398,7 @@
 .rt-AvatarRoot:where(button, a, [role="button"]):where(.rt-variant-raised) {
   @media (hover: hover) {
     &:where(:hover:not(:disabled, [data-disabled])) {
-      background-color: color-mix(in srgb, var(--gray-a2) calc(var(--material-alpha) * 100%), var(--gray-2) var(--material-blend));
+      background-color: var(--gray-2);
       box-shadow: var(--shadow-2);
 
       & :where(.rt-AvatarFallback) {
@@ -449,7 +411,7 @@
   &:where(:active:not(:disabled, [data-disabled])) {
     padding-top: var(--raised-active-padding-offset-2);
     padding-bottom: 0;
-    background-color: color-mix(in srgb, var(--gray-a3) calc(var(--material-alpha) * 100%), var(--gray-3) var(--material-blend));
+    background-color: var(--gray-3);
 
     & :where(.rt-AvatarFallback) {
       padding-top: inherit;

@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { afterEach, describe, it, expect, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
-import { renderWithProviders, render, screen, fireEvent } from '../../test-utils';
+import { renderWithProviders, screen, fireEvent } from '../../test-utils';
 import * as ContextMenu from '../../../src/components/context-menu';
-import { Theme } from '../../../src/components/theme';
 import { VirtualMenu } from '../../../src/components/virtual-menu';
 
 function renderContextMenu(content: React.ReactNode, contentProps: Partial<ContextMenu.ContentProps> = {}) {
@@ -53,35 +52,17 @@ describe('ContextMenu', () => {
       size: '1',
       variant: 'soft',
       color: 'red',
-      material: 'solid',
     });
 
     const menu = await openAt();
     expect(menu).toHaveClass('rt-r-size-1', 'rt-variant-soft');
     expect(menu).toHaveAttribute('data-accent-color', 'red');
-    expect(menu).toHaveAttribute('data-material', 'solid');
+    expect(menu).not.toHaveAttribute('data-material');
     expect(menu).not.toHaveAttribute('submenubehavior');
     expect(menu).not.toHaveAttribute('color');
     expect(propWarnings(error)).toEqual([]);
   });
 
-  it('follows the nearest Theme material', async () => {
-    render(
-      <Theme material="translucent">
-        <Theme material="solid">
-          <ContextMenu.Root>
-            <ContextMenu.Trigger>
-              <div data-testid="area">Area</div>
-            </ContextMenu.Trigger>
-            <ContextMenu.Content>
-              <ContextMenu.Item>One</ContextMenu.Item>
-            </ContextMenu.Content>
-          </ContextMenu.Root>
-        </Theme>
-      </Theme>,
-    );
-    expect(await openAt()).toHaveAttribute('data-material', 'solid');
-  });
 
   it('never produces a NaN offset for a responsive size', async () => {
     renderContextMenu(<ContextMenu.Item>One</ContextMenu.Item>, { size: { initial: '1', md: '2' } });

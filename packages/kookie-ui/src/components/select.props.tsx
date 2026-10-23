@@ -17,7 +17,6 @@ const triggerVariants = ['raised', 'surface', 'soft', 'outline', 'ghost'] as con
 
 const selectTriggerPropDefs = {
   variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'raised' },
-  material: { type: 'enum', values: ['solid', 'translucent'] },
   error: { type: 'boolean' },
   loading: { type: 'boolean' },
   disabled: { type: 'boolean' },
@@ -27,7 +26,6 @@ const selectTriggerPropDefs = {
   placeholder: { type: 'ReactNode' },
 } satisfies {
   variant: PropDef<(typeof triggerVariants)[number]>;
-  material: PropDef<'solid' | 'translucent'>;
   error: PropDef<boolean>;
   loading: PropDef<boolean>;
   disabled: PropDef<boolean>;

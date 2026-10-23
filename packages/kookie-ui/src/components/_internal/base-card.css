@@ -5,7 +5,7 @@
  * Kookie User Interface design system.
  *
  * ARCHITECTURE (matching base-button.css):
- * 1. Base styles: Layout, material system, pseudo-element setup
+ * 1. Base styles: Layout, pseudo-element setup
  * 2. Sizes: Responsive padding and border-radius
  * 3. Variant palettes: Each variant defines its color variables
  * 4. Shared state logic: Single set of hover/active/open selectors (outline, soft, surface)
@@ -23,20 +23,6 @@
  ***************************************************************************************************/
 
 .rt-BaseCard {
-  /* Material system - defaults to solid behavior */
-  --material-blend: 100%;
-  --material-alpha: 0;
-
-  &:where([data-material='solid']) {
-    --material-blend: 100%;
-    --material-alpha: 0;
-  }
-
-  &:where([data-material='translucent']) {
-    --material-blend: 60%;
-    --material-alpha: 1;
-  }
-
   /* Layout */
   display: block;
   position: relative;
@@ -83,21 +69,6 @@
     z-index: -1;
   }
 
-  /* Backdrop-filter for ::before - applies to outline, soft, surface */
-  :where([data-material='translucent']) &::before {
-    backdrop-filter: var(--backdrop-filter-panel);
-    --backdrop-filter-panel: var(--backdrop-filter-panel-enabled);
-  }
-
-  &:where([data-material='solid'])::before {
-    backdrop-filter: none;
-  }
-
-  &:where([data-material='translucent'])::before {
-    backdrop-filter: var(--backdrop-filter-panel);
-    --backdrop-filter-panel: var(--backdrop-filter-panel-enabled);
-  }
-
   &:where(:any-link, button, label) {
     cursor: pointer;
   }
@@ -112,39 +83,39 @@
 @breakpoints {
   .rt-BaseCard {
     &:where(.rt-r-size-1) {
-      --base-card-padding-top: var(--space-2);
-      --base-card-padding-right: var(--space-2);
-      --base-card-padding-bottom: var(--space-2);
-      --base-card-padding-left: var(--space-2);
-      --base-card-border-radius: min(var(--radius-surface-5), calc(var(--radius-surface-1) + var(--space-1)));
-    }
-    &:where(.rt-r-size-2) {
       --base-card-padding-top: var(--space-3);
       --base-card-padding-right: var(--space-3);
       --base-card-padding-bottom: var(--space-3);
       --base-card-padding-left: var(--space-3);
-      --base-card-border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-2) + var(--space-2)));
+      --base-card-border-radius: min(var(--radius-surface-5), calc(var(--radius-surface-1) + var(--space-2)));
     }
-    &:where(.rt-r-size-3) {
+    &:where(.rt-r-size-2) {
       --base-card-padding-top: var(--space-4);
       --base-card-padding-right: var(--space-4);
       --base-card-padding-bottom: var(--space-4);
       --base-card-padding-left: var(--space-4);
-      --base-card-border-radius: min(var(--radius-surface-7), calc(var(--radius-surface-3) + var(--space-3)));
+      --base-card-border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-2) + var(--space-3)));
     }
-    &:where(.rt-r-size-4) {
+    &:where(.rt-r-size-3) {
       --base-card-padding-top: var(--space-5);
       --base-card-padding-right: var(--space-5);
       --base-card-padding-bottom: var(--space-5);
       --base-card-padding-left: var(--space-5);
-      --base-card-border-radius: min(var(--radius-surface-8), calc(var(--radius-surface-4) + var(--space-4)));
+      --base-card-border-radius: min(var(--radius-surface-7), calc(var(--radius-surface-3) + var(--space-4)));
     }
-    &:where(.rt-r-size-5) {
+    &:where(.rt-r-size-4) {
       --base-card-padding-top: var(--space-6);
       --base-card-padding-right: var(--space-6);
       --base-card-padding-bottom: var(--space-6);
       --base-card-padding-left: var(--space-6);
-      --base-card-border-radius: min(var(--radius-surface-9), calc(var(--radius-surface-5) + var(--space-5)));
+      --base-card-border-radius: min(var(--radius-surface-8), calc(var(--radius-surface-4) + var(--space-5)));
+    }
+    &:where(.rt-r-size-5) {
+      --base-card-padding-top: var(--space-7);
+      --base-card-padding-right: var(--space-7);
+      --base-card-padding-bottom: var(--space-7);
+      --base-card-padding-left: var(--space-7);
+      --base-card-border-radius: min(var(--radius-surface-9), calc(var(--radius-surface-5) + var(--space-6)));
     }
   }
 }
@@ -173,17 +144,11 @@
 .rt-BaseCard:where(.rt-variant-outline) {
   --card-border-width: 1px;
   --v-bg: transparent;
-  --v-bg-a: transparent;
   --v-bg-hover: var(--gray-2);
-  --v-bg-hover-a: var(--gray-a2);
   --v-bg-active: var(--gray-3);
-  --v-bg-active-a: var(--gray-a3);
   --v-border: var(--gray-6);
-  --v-border-a: var(--gray-a6);
   --v-border-hover: var(--gray-7);
-  --v-border-hover-a: var(--gray-a7);
   --v-border-active: var(--gray-8);
-  --v-border-active-a: var(--gray-a8);
   --v-focus-color: var(--focus-8);
   --v-focus-offset: -1px;
 }
@@ -191,11 +156,8 @@
 .rt-BaseCard:where(.rt-variant-soft) {
   --card-border-width: 0px;
   --v-bg: var(--gray-2);
-  --v-bg-a: var(--gray-a2);
   --v-bg-hover: var(--gray-3);
-  --v-bg-hover-a: var(--gray-a3);
   --v-bg-active: var(--gray-3);
-  --v-bg-active-a: var(--gray-a3);
   --v-focus-color: var(--gray-8);
   --v-focus-offset: -1px;
 }
@@ -203,17 +165,11 @@
 .rt-BaseCard:where(.rt-variant-surface) {
   --card-border-width: 1px;
   --v-bg: var(--gray-1);
-  --v-bg-a: var(--gray-a1);
   --v-bg-hover: var(--gray-2);
-  --v-bg-hover-a: var(--gray-a2);
   --v-bg-active: var(--gray-3);
-  --v-bg-active-a: var(--gray-a3);
   --v-border: var(--gray-6);
-  --v-border-a: var(--gray-a6);
   --v-border-hover: var(--gray-7);
-  --v-border-hover-a: var(--gray-a7);
   --v-border-active: var(--gray-7);
-  --v-border-active-a: var(--gray-a7);
   --v-focus-color: var(--focus-8);
   --v-focus-offset: -1px;
 }
@@ -230,11 +186,7 @@
 .rt-BaseCard:where(.rt-variant-outline, .rt-variant-soft, .rt-variant-surface) {
   /* Rest state */
   &::before {
-    background-color: color-mix(
-      in srgb,
-      var(--v-bg-a) calc(var(--material-alpha) * 40%),
-      var(--v-bg) var(--material-blend)
-    );
+    background-color: var(--v-bg);
   }
 
   /* Focus */
@@ -255,28 +207,16 @@
   &:where(:any-link, button, label) {
     @media (hover: hover) {
       &:where(:hover)::before {
-        background-color: color-mix(
-          in srgb,
-          var(--v-bg-hover-a) calc(var(--material-alpha) * 40%),
-          var(--v-bg-hover) var(--material-blend)
-        );
+        background-color: var(--v-bg-hover);
       }
     }
 
     &:where([data-state='open'])::before {
-      background-color: color-mix(
-        in srgb,
-        var(--v-bg-hover-a) calc(var(--material-alpha) * 40%),
-        var(--v-bg-hover) var(--material-blend)
-      );
+      background-color: var(--v-bg-hover);
     }
 
     &:where(:active:not([data-state='open']))::before {
-      background-color: color-mix(
-        in srgb,
-        var(--v-bg-active-a) calc(var(--material-alpha) * 40%),
-        var(--v-bg-active) var(--material-blend)
-      );
+      background-color: var(--v-bg-active);
     }
   }
 
@@ -303,11 +243,7 @@
 
 /* Outline uses direct box-shadow on element */
 .rt-BaseCard:where(.rt-variant-outline) {
-  box-shadow: inset 0 0 0 1px color-mix(
-    in srgb,
-    var(--v-border-a) calc(var(--material-alpha) * 40%),
-    var(--v-border) var(--material-blend)
-  );
+  box-shadow: inset 0 0 0 1px var(--v-border);
 
   &::after {
     box-shadow: none;
@@ -316,59 +252,35 @@
   &:where(:any-link, button, label) {
     @media (hover: hover) {
       &:where(:hover) {
-        box-shadow: inset 0 0 0 1px color-mix(
-          in srgb,
-          var(--v-border-hover-a) calc(var(--material-alpha) * 40%),
-          var(--v-border-hover) var(--material-blend)
-        );
+        box-shadow: inset 0 0 0 1px var(--v-border-hover);
       }
     }
 
     &:where([data-state='open']) {
-      box-shadow: inset 0 0 0 1px color-mix(
-        in srgb,
-        var(--v-border-hover-a) calc(var(--material-alpha) * 40%),
-        var(--v-border-hover) var(--material-blend)
-      );
+      box-shadow: inset 0 0 0 1px var(--v-border-hover);
     }
 
     &:where(:active:not([data-state='open'])) {
-      box-shadow: inset 0 0 0 1px color-mix(
-        in srgb,
-        var(--v-border-active-a) calc(var(--material-alpha) * 40%),
-        var(--v-border-active) var(--material-blend)
-      );
+      box-shadow: inset 0 0 0 1px var(--v-border-active);
     }
   }
 }
 
 /* Surface uses ::after for border ON TOP of children */
 .rt-BaseCard:where(.rt-variant-surface)::after {
-  box-shadow: inset 0 0 0 var(--base-card-border-width) color-mix(
-    in srgb,
-    var(--v-border-a) calc(var(--material-alpha) * 40%),
-    var(--v-border) var(--material-blend)
-  );
+  box-shadow: inset 0 0 0 var(--base-card-border-width) var(--v-border);
 }
 
 .rt-BaseCard:where(.rt-variant-surface):where(:any-link, button, label) {
   @media (hover: hover) {
     &:where(:hover)::after {
-      box-shadow: inset 0 0 0 var(--base-card-border-width) color-mix(
-        in srgb,
-        var(--v-border-hover-a) calc(var(--material-alpha) * 40%),
-        var(--v-border-hover) var(--material-blend)
-      );
+      box-shadow: inset 0 0 0 var(--base-card-border-width) var(--v-border-hover);
     }
   }
 
   &:where([data-state='open'])::after,
   &:where(:active:not([data-state='open']))::after {
-    box-shadow: inset 0 0 0 var(--base-card-border-width) color-mix(
-      in srgb,
-      var(--v-border-active-a) calc(var(--material-alpha) * 40%),
-      var(--v-border-active) var(--material-blend)
-    );
+    box-shadow: inset 0 0 0 var(--base-card-border-width) var(--v-border-active);
   }
 }
 
@@ -377,31 +289,13 @@
  * GHOST VARIANT                                                                                   *
  *                                                                                                 *
  * Ghost applies styles directly to the element (not ::before) for different visual behavior.      *
- * Backdrop-filter is on the element itself, not the pseudo-element.                               *
  *                                                                                                 *
  ***************************************************************************************************/
 
 .rt-BaseCard:where(.rt-variant-ghost) {
-  /*
-   * Ghost is the only card variant whose backdrop filter sits on the element
-   * rather than on ::before, which makes it — and only it — the backdrop root
-   * for its contents. A component nested here would re-blur an already blurred
-   * surface, so switch the component filter off for the subtree.
-   *
-   * The other variants deliberately do not do this: their filter is on
-   * ::before, so the card element is not a backdrop root and a nested
-   * component is still blurring the page itself. Measured over a textured
-   * background, dropping it there is a visible change (max 82/255 channel
-   * delta) rather than the imperceptible one it is on a real backdrop root
-   * (max 7/255).
-   */
-  --backdrop-filter-components-enabled: none;
-
   --card-border-width: 0px;
   --v-bg-hover: var(--gray-3);
-  --v-bg-hover-a: var(--gray-a3);
   --v-bg-active: var(--gray-4);
-  --v-bg-active-a: var(--gray-a4);
   --v-focus-color: var(--focus-8);
   --v-focus-offset: -1px;
 
@@ -435,30 +329,11 @@
     outline-offset: var(--v-focus-offset);
   }
 
-  /* Backdrop-filter handling for ghost - on element, not ::before */
-  :where([data-material='translucent']) & {
-    backdrop-filter: var(--backdrop-filter-panel);
-    --backdrop-filter-panel: var(--backdrop-filter-panel-enabled);
-  }
-
-  &:where([data-material='solid']) {
-    backdrop-filter: none;
-  }
-
-  &:where([data-material='translucent']) {
-    backdrop-filter: var(--backdrop-filter-panel);
-    --backdrop-filter-panel: var(--backdrop-filter-panel-enabled);
-  }
-
   /* Interactive states - background on element, not ::before */
   &:where(:any-link, button, label) {
     @media (hover: hover) {
       &:where(:hover) {
-        background-color: color-mix(
-          in srgb,
-          var(--v-bg-hover-a) calc(var(--material-alpha) * 40%),
-          var(--v-bg-hover) var(--material-blend)
-        );
+        background-color: var(--v-bg-hover);
 
         &:where(:focus-visible) {
           background-color: var(--focus-a2);
@@ -467,11 +342,7 @@
     }
 
     &:where([data-state='open']) {
-      background-color: color-mix(
-        in srgb,
-        var(--v-bg-hover-a) calc(var(--material-alpha) * 40%),
-        var(--v-bg-hover) var(--material-blend)
-      );
+      background-color: var(--v-bg-hover);
 
       &:where(:focus-visible) {
         background-color: var(--focus-a2);
@@ -479,11 +350,7 @@
     }
 
     &:where(:active:not([data-state='open'])) {
-      background-color: color-mix(
-        in srgb,
-        var(--v-bg-active-a) calc(var(--material-alpha) * 40%),
-        var(--v-bg-active) var(--material-blend)
-      );
+      background-color: var(--v-bg-active);
 
       &:where(:focus-visible) {
         background-color: var(--focus-a2);
@@ -496,11 +363,6 @@
     &:where(:any-link, button, label):where(:active:not([data-state='open']))::before {
       background-image: linear-gradient(var(--gray-a4), var(--gray-a4));
     }
-  }
-
-  /* Prevent backdrop-filter stacking inside overlay components */
-  :where(.rt-PopoverContent, .rt-BaseDialogContent, .rt-BaseMenuContent, .rt-DropdownMenuContent, .rt-ContextMenuContent, .rt-AlertDialogContent, .rt-HoverCardContent, .rt-TooltipContent, .rt-Card) & {
-    backdrop-filter: none !important;
   }
 }
 
@@ -518,18 +380,6 @@
   position: relative;
   top: var(--raised-elevation-offset);
   box-shadow: var(--shadow-2);
-
-  :where([data-material='translucent']) & {
-    --card-background-color: var(--color-surface-translucent);
-  }
-
-  &:where([data-material='solid']) {
-    --card-background-color: var(--color-surface-solid);
-  }
-
-  &:where([data-material='translucent']) {
-    --card-background-color: var(--color-surface-translucent);
-  }
 
   &::before {
     background-color: var(--card-background-color);
@@ -550,11 +400,7 @@
         box-shadow: var(--shadow-2);
 
         &::before {
-          background-color: color-mix(
-            in srgb,
-            var(--gray-a2) calc(var(--material-alpha) * 40%),
-            var(--gray-2) var(--material-blend)
-          );
+          background-color: var(--gray-2);
         }
 
         &::after {
@@ -565,11 +411,7 @@
 
     &:where([data-state='open']) {
       &::before {
-        background-color: color-mix(
-          in srgb,
-          var(--gray-a3) calc(var(--material-alpha) * 40%),
-          var(--gray-3) var(--material-blend)
-        );
+        background-color: var(--gray-3);
       }
 
       &::after {
@@ -579,11 +421,7 @@
 
     &:where(:active:not([data-state='open'])) {
       &::before {
-        background-color: color-mix(
-          in srgb,
-          var(--gray-a3) calc(var(--material-alpha) * 40%),
-          var(--gray-3) var(--material-blend)
-        );
+        background-color: var(--gray-3);
       }
 
       &::after {

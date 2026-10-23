@@ -26,7 +26,7 @@
   font-size: var(--font-size-1);
   line-height: var(--line-height-1);
   letter-spacing: var(--letter-spacing-1);
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-2) var(--space-3);
 
   /* Make sure that the height is not stretched in a Flex/Grid layout */
   height: fit-content;
@@ -140,91 +140,91 @@
       font-size: var(--font-size-0);
       line-height: var(--line-height-0);
       letter-spacing: var(--letter-spacing-0);
-      padding: calc(var(--space-1) * 0.5) calc(var(--space-1) * 1.5);
+      padding: calc(var(--space-2) * 0.5) calc(var(--space-2) * 1.5);
       border-radius: var(--radius-pill-1);
     }
     &:where(.rt-r-size-1) {
       font-size: var(--font-size-1);
       line-height: var(--line-height-1);
       letter-spacing: var(--letter-spacing-1);
-      padding: var(--space-1) var(--space-2);
+      padding: var(--space-2) var(--space-3);
       border-radius: var(--radius-pill-2);
     }
     &:where(.rt-r-size-2) {
       font-size: var(--font-size-2);
       line-height: var(--line-height-2);
       letter-spacing: var(--letter-spacing-2);
-      padding: var(--space-1) calc(var(--space-2) * 1.25);
+      padding: var(--space-2) calc(var(--space-3) * 1.25);
       border-radius: var(--radius-pill-2);
     }
     &:where(.rt-r-size-3) {
       font-size: var(--font-size-3);
       line-height: var(--line-height-3);
       letter-spacing: var(--letter-spacing-3);
-      padding: calc(var(--space-1) * 1.25) calc(var(--space-2) * 1.5);
+      padding: calc(var(--space-2) * 1.25) calc(var(--space-3) * 1.5);
       border-radius: var(--radius-pill-3);
     }
     &:where(.rt-r-size-4) {
       font-size: var(--font-size-4);
       line-height: var(--line-height-4);
       letter-spacing: var(--letter-spacing-4);
-      padding: calc(var(--space-1) * 1.5) var(--space-3);
+      padding: calc(var(--space-2) * 1.5) var(--space-4);
       border-radius: var(--radius-pill-3);
     }
     &:where(.rt-r-size-5) {
       font-size: var(--font-size-5);
       line-height: var(--line-height-5);
       letter-spacing: var(--letter-spacing-5);
-      padding: calc(var(--space-1) * 1.75) calc(var(--space-3) * 1.25);
+      padding: calc(var(--space-2) * 1.75) calc(var(--space-4) * 1.25);
       border-radius: var(--radius-pill-4);
     }
     &:where(.rt-r-size-6) {
       font-size: var(--font-size-6);
       line-height: var(--line-height-6);
       letter-spacing: var(--letter-spacing-6);
-      padding: var(--space-2) calc(var(--space-3) * 1.5);
+      padding: var(--space-3) calc(var(--space-4) * 1.5);
       border-radius: var(--radius-pill-4);
     }
     &:where(.rt-r-size-7) {
       font-size: var(--font-size-7);
       line-height: var(--line-height-7);
       letter-spacing: var(--letter-spacing-7);
-      padding: calc(var(--space-2) * 1.25) var(--space-4);
+      padding: calc(var(--space-3) * 1.25) var(--space-5);
       border-radius: var(--radius-pill-5);
     }
     &:where(.rt-r-size-8) {
       font-size: var(--font-size-8);
       line-height: var(--line-height-8);
       letter-spacing: var(--letter-spacing-8);
-      padding: calc(var(--space-2) * 1.5) calc(var(--space-4) * 1.25);
+      padding: calc(var(--space-3) * 1.5) calc(var(--space-5) * 1.25);
       border-radius: var(--radius-pill-5);
     }
     &:where(.rt-r-size-9) {
       font-size: var(--font-size-9);
       line-height: var(--line-height-9);
       letter-spacing: var(--letter-spacing-9);
-      padding: calc(var(--space-2) * 1.75) calc(var(--space-4) * 1.5);
+      padding: calc(var(--space-3) * 1.75) calc(var(--space-5) * 1.5);
       border-radius: var(--radius-pill-6);
     }
     &:where(.rt-r-size-10) {
       font-size: var(--font-size-10);
       line-height: var(--line-height-10);
       letter-spacing: var(--letter-spacing-10);
-      padding: calc(var(--space-2) * 2.0) calc(var(--space-4) * 1.75);
+      padding: calc(var(--space-3) * 2.0) calc(var(--space-5) * 1.75);
       border-radius: var(--radius-pill-6);
     }
     &:where(.rt-r-size-11) {
       font-size: var(--font-size-11);
       line-height: var(--line-height-11);
       letter-spacing: var(--letter-spacing-11);
-      padding: calc(var(--space-2) * 2.25) calc(var(--space-4) * 2.0);
+      padding: calc(var(--space-3) * 2.25) calc(var(--space-5) * 2.0);
       border-radius: var(--radius-pill-6);
     }
     &:where(.rt-r-size-12) {
       font-size: var(--font-size-12);
       line-height: var(--line-height-12);
       letter-spacing: var(--letter-spacing-12);
-      padding: calc(var(--space-2) * 2.5) calc(var(--space-4) * 2.25);
+      padding: calc(var(--space-3) * 2.5) calc(var(--space-5) * 2.25);
       border-radius: var(--radius-pill-6);
     }
   }

@@ -9,9 +9,9 @@ import { Settings01Icon, Notification01Icon, Search01Icon, MoreHorizontalIcon, C
 
 export function IconButtonExamples() {
   return (
-    <Flex direction="column" gap="9">
+    <Flex direction="column" gap="10">
       {/* Example 1: Toolbar Actions */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Toolbar Actions</SectionHeader.Title>
@@ -21,9 +21,9 @@ export function IconButtonExamples() {
         <PreviewBlock
           background="none"
           code={`<Card variant="raised" size="2">
-  <Flex justify="between" align="center" p="1">
+  <Flex justify="between" align="center" p="2">
     <Skeleton width="80px" height="14px" />
-    <Flex gap="1" align="center">
+    <Flex gap="2" align="center">
       <IconButton variant="soft" size="2" color="gray" aria-label="Search" tooltip="Search">
         <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
       </IconButton>
@@ -38,9 +38,9 @@ export function IconButtonExamples() {
 </Card>`}
         >
           <Card variant="raised" size="2" style={{ width: '100%', maxWidth: 400 }}>
-            <Flex justify="between" align="center" p="1">
+            <Flex justify="between" align="center" p="2">
               <Skeleton width="80px" height="14px" />
-              <Flex gap="1" align="center">
+              <Flex gap="2" align="center">
                 <IconButton variant="soft" size="2" color="gray" aria-label="Search" tooltip="Search">
                   <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
                 </IconButton>
@@ -59,7 +59,7 @@ export function IconButtonExamples() {
       <Separator size="4" />
 
       {/* Example 2: Card Actions */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Card Actions</SectionHeader.Title>
@@ -69,8 +69,8 @@ export function IconButtonExamples() {
         <PreviewBlock
           background="none"
           code={`<Card variant="raised" size="2" style={{ maxWidth: 320 }}>
-  <Flex direction="column" gap="3" p="1">
-    <Flex direction="column" gap="1">
+  <Flex direction="column" gap="4" p="2">
+    <Flex direction="column" gap="2">
       <Skeleton width="140px" height="12px" />
       <Skeleton width="200px" height="10px" />
     </Flex>
@@ -86,8 +86,8 @@ export function IconButtonExamples() {
 </Card>`}
         >
           <Card variant="raised" size="2" style={{ maxWidth: 320 }}>
-            <Flex direction="column" gap="3" p="1">
-              <Flex direction="column" gap="1">
+            <Flex direction="column" gap="4" p="2">
+              <Flex direction="column" gap="2">
                 <Skeleton width="140px" height="12px" />
                 <Skeleton width="200px" height="10px" />
               </Flex>
@@ -107,7 +107,7 @@ export function IconButtonExamples() {
       <Separator size="4" />
 
       {/* Example 3: Compact Data Table Controls */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Data Table Controls</SectionHeader.Title>
@@ -117,9 +117,9 @@ export function IconButtonExamples() {
         <PreviewBlock
           background="none"
           code={`<Card variant="raised" size="1">
-  <Flex justify="between" align="center" p="1">
+  <Flex justify="between" align="center" p="2">
     <Skeleton width="60px" height="12px" />
-    <Flex gap="1" align="center">
+    <Flex gap="2" align="center">
       <IconButton variant="soft" size="1" color="gray" aria-label="Add" tooltip="Add">
         <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
       </IconButton>
@@ -134,9 +134,9 @@ export function IconButtonExamples() {
 </Card>`}
         >
           <Card variant="raised" size="1" style={{ width: '100%', maxWidth: 400 }}>
-            <Flex justify="between" align="center" p="1">
+            <Flex justify="between" align="center" p="2">
               <Skeleton width="60px" height="12px" />
-              <Flex gap="1" align="center">
+              <Flex gap="2" align="center">
                 <IconButton variant="soft" size="1" color="gray" aria-label="Add" tooltip="Add">
                   <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
                 </IconButton>
@@ -155,7 +155,7 @@ export function IconButtonExamples() {
       <Separator size="4" />
 
       {/* Example 4: Dialog Close */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Dialog Close</SectionHeader.Title>
@@ -165,24 +165,24 @@ export function IconButtonExamples() {
         <PreviewBlock
           background="none"
           code={`<Card variant="raised" size="2" style={{ maxWidth: 400, position: 'relative' }}>
-  <Flex position="absolute" top="2" right="2">
+  <Flex position="absolute" top="3" right="3">
     <IconButton color="gray" variant="ghost" size="2" aria-label="Close dialog" tooltip="Close">
       <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
     </IconButton>
   </Flex>
-  <Flex direction="column" gap="1" p="1" pr="6">
+  <Flex direction="column" gap="2" p="2" pr="7">
     <Skeleton width="120px" height="16px" />
     <Skeleton width="180px" height="12px" />
   </Flex>
 </Card>`}
         >
           <Card variant="raised" size="2" style={{ maxWidth: 400, position: 'relative' }}>
-            <Flex position="absolute" top="2" right="2">
+            <Flex position="absolute" top="3" right="3">
               <IconButton color="gray" variant="ghost" size="2" aria-label="Close dialog" tooltip="Close">
                 <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
               </IconButton>
             </Flex>
-            <Flex direction="column" gap="1" p="1" pr="6">
+            <Flex direction="column" gap="2" p="2" pr="7">
               <Skeleton width="120px" height="16px" />
               <Skeleton width="180px" height="12px" />
             </Flex>

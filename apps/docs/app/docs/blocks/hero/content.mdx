@@ -47,11 +47,11 @@ Every part accepts the props of the component it wraps. Only the additions and c
 
 | Part | Wraps | Adds or changes |
 | ---- | ----- | --------------- |
-| `Root` | `Flex` | `layout?: Responsive<'stacked' \| 'split'>` (`'stacked'`). `align="center"`, `gap="6"` |
-| `Meta` | `Flex` | `gap="2"`, `align="center"` |
+| `Root` | `Flex` | `layout?: Responsive<'stacked' \| 'split'>` (`'stacked'`). `align="center"`, `gap="7"` |
+| `Meta` | `Flex` | `gap="3"`, `align="center"` |
 | `Title` | `Heading` | `size="9"`, `weight="medium"`, `align="center"` |
 | `Description` | `Text` | `size="4"`, `align="center"` |
-| `Actions` | `Flex` | `direction="row"`, `gap="2"`, `align="center"` |
+| `Actions` | `Flex` | `direction="row"`, `gap="3"`, `align="center"` |
 | `Media` | `Flex` | - |
 
 `stacked` sets `direction="column"`; `split` sets `direction="row"`. Pass `direction` to override either.
@@ -63,7 +63,7 @@ Every part accepts the props of the component it wraps. Only the additions and c
 ### Product Launch
 
 <PreviewBlock background="dots" height="auto">
-  <Box py="8" px="4">
+  <Box py="9" px="5">
     <Hero.Root>
       <Hero.Meta>
         <Badge variant="soft" color="gray">New in 2.0</Badge>
@@ -99,9 +99,9 @@ Every part accepts the props of the component it wraps. Only the additions and c
 Copy on the left, product shot on the right from `md` up. Align the text to the start when splitting.
 
 <PreviewBlock background="none" height="auto">
-  <Box p="5" width="100%">
+  <Box p="6" width="100%">
     <Hero.Root layout={{ initial: 'stacked', md: 'split' }} align={{ initial: 'start', md: 'center' }}>
-      <Flex direction="column" gap="4" flexGrow="1" flexBasis="0">
+      <Flex direction="column" gap="5" flexGrow="1" flexBasis="0">
         <Hero.Title as="h3" size="7" align="left">Plan less. Build more.</Hero.Title>
         <Hero.Description size="3" emphasis="medium" align="left">Roadmaps, issues and releases in one place.</Hero.Description>
         <Hero.Actions>
@@ -110,7 +110,7 @@ Copy on the left, product shot on the right from `md` up. Align the text to the 
       </Flex>
       <Hero.Media flexGrow="1" flexBasis="0" width="100%">
         <Card variant="raised" size="3" style={{ width: '100%' }}>
-          <Flex direction="column" gap="2">
+          <Flex direction="column" gap="3">
             <Text size="2" weight="medium">Sprint 14</Text>
             <Text size="2" emphasis="medium">12 of 18 issues done</Text>
           </Flex>
@@ -125,7 +125,7 @@ Copy on the left, product shot on the right from `md` up. Align the text to the 
   layout={{ initial: 'stacked', md: 'split' }}
   align={{ initial: 'start', md: 'center' }}
 >
-  <Flex direction="column" gap="4" flexGrow="1" flexBasis="0">
+  <Flex direction="column" gap="5" flexGrow="1" flexBasis="0">
     <Hero.Title size="7" align="left">Plan less. Build more.</Hero.Title>
     <Hero.Description size="3" emphasis="medium" align="left">
       Roadmaps, issues and releases in one place.

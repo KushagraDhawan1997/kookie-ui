@@ -20,9 +20,8 @@ interface TextAreaProps
     TextAreaOwnProps {}
 
 const TextArea = React.forwardRef<TextAreaElement, TextAreaProps>((props, forwardedRef) => {
-  const { className, color, radius, material, style, ...textAreaProps } =
+  const { className, color, radius, style, ...textAreaProps } =
     extractProps(props, textAreaPropDefs, marginPropDefs);
-  const effectiveMaterial = material;
 
   // Generate unique IDs for accessibility
   const errorId = React.useId();
@@ -65,7 +64,6 @@ const TextArea = React.forwardRef<TextAreaElement, TextAreaProps>((props, forwar
     <div
       data-accent-color={color}
       data-radius={radius}
-      data-material={effectiveMaterial}
       className={classNames('rt-TextAreaRoot', className, {
         'rt-error': isInvalid,
       })}

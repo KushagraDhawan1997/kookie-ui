@@ -44,10 +44,8 @@ interface BaseButtonProps extends PolymorphicBaseButtonProps {}
  *
  * Key features:
  * - Loading state with spinner and accessibility announcements
- * - Performance optimizations for backdrop-filter effects
  * - Comprehensive accessibility support
  * - Polymorphic rendering support
- * - Material/panel background handling
  *
  * @example
  * ```tsx
@@ -72,14 +70,11 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((props, 
     as,
     color,
     radius,
-    material,
     flush,
     disabled = props.loading, // Loading state automatically disables the button
     ...baseButtonProps
   } = extractProps(props, baseButtonPropDefs, marginPropDefs);
 
-
-  const effectiveMaterial = material;
 
   // asChild takes precedence over as prop for Radix Slot integration
   // When asChild is true, we use Slot.Root to merge props onto the child element
@@ -130,7 +125,6 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((props, 
       data-disabled={disabled || undefined}
       data-accent-color={color}
       data-radius={radius}
-      data-material={effectiveMaterial}
       data-flush={flush ? 'true' : undefined}
       {...baseButtonProps}
       {...accessibilityProps}

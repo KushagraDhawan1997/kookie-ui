@@ -16,9 +16,9 @@ export function ToggleIconButtonExamples() {
   const [underline, setUnderline] = React.useState(false);
 
   return (
-    <Flex direction="column" gap="9">
+    <Flex direction="column" gap="10">
       {/* Example 1: Like Button */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Like Button</SectionHeader.Title>
@@ -50,7 +50,7 @@ export function ToggleIconButtonExamples() {
       <Separator size="4" />
 
       {/* Example 2: Card Actions */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Card Actions</SectionHeader.Title>
@@ -63,8 +63,8 @@ export function ToggleIconButtonExamples() {
 const [pinned, setPinned] = React.useState(false);
 
 <Card variant="raised" size="2">
-  <Flex direction="column" gap="3" p="1">
-    <Flex direction="column" gap="1">
+  <Flex direction="column" gap="4" p="2">
+    <Flex direction="column" gap="2">
       <Skeleton width="140px" height="12px" />
       <Skeleton width="200px" height="10px" />
     </Flex>
@@ -96,8 +96,8 @@ const [pinned, setPinned] = React.useState(false);
 </Card>`}
         >
           <Card variant="raised" size="2" style={{ maxWidth: 320 }}>
-            <Flex direction="column" gap="3" p="1">
-              <Flex direction="column" gap="1">
+            <Flex direction="column" gap="4" p="2">
+              <Flex direction="column" gap="2">
                 <Skeleton width="140px" height="12px" />
                 <Skeleton width="200px" height="10px" />
               </Flex>
@@ -133,7 +133,7 @@ const [pinned, setPinned] = React.useState(false);
       <Separator size="4" />
 
       {/* Example 3: Formatting Toolbar */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Formatting Toolbar</SectionHeader.Title>
@@ -147,8 +147,8 @@ const [italic, setItalic] = React.useState(false);
 const [underline, setUnderline] = React.useState(false);
 
 <Card variant="raised" size="2">
-  <Flex direction="column" gap="3" p="1">
-    <Flex gap="1" align="center">
+  <Flex direction="column" gap="4" p="2">
+    <Flex gap="2" align="center">
       <ToggleIconButton
         variant="ghost"
         size="2"
@@ -177,7 +177,7 @@ const [underline, setUnderline] = React.useState(false);
         <HugeiconsIcon icon={TextUnderlineIcon} strokeWidth={1.75} />
       </ToggleIconButton>
     </Flex>
-    <Flex direction="column" gap="1">
+    <Flex direction="column" gap="2">
       <Skeleton width="100%" height="12px" />
       <Skeleton width="80%" height="12px" />
       <Skeleton width="60%" height="12px" />
@@ -186,8 +186,8 @@ const [underline, setUnderline] = React.useState(false);
 </Card>`}
         >
           <Card variant="raised" size="2" style={{ width: '100%', maxWidth: 320 }}>
-            <Flex direction="column" gap="3" p="1">
-              <Flex gap="1" align="center">
+            <Flex direction="column" gap="4" p="2">
+              <Flex gap="2" align="center">
                 <ToggleIconButton variant="ghost" size="2" pressed={bold} onPressedChange={setBold} aria-label={bold ? 'Remove bold' : 'Bold'}>
                   <HugeiconsIcon icon={TextBoldIcon} strokeWidth={1.75} />
                 </ToggleIconButton>
@@ -198,7 +198,7 @@ const [underline, setUnderline] = React.useState(false);
                   <HugeiconsIcon icon={TextUnderlineIcon} strokeWidth={1.75} />
                 </ToggleIconButton>
               </Flex>
-              <Flex direction="column" gap="1">
+              <Flex direction="column" gap="2">
                 <Skeleton width="100%" height="12px" />
                 <Skeleton width="80%" height="12px" />
                 <Skeleton width="60%" height="12px" />

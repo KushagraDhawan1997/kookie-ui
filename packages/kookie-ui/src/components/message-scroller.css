@@ -40,7 +40,7 @@
    would be replaced by it. */
 .rt-MessageScrollerButton {
   position: absolute;
-  bottom: var(--space-3);
+  bottom: var(--space-4);
   left: 0;
   right: 0;
   margin-inline: auto;

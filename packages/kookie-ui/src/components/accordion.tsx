@@ -28,15 +28,13 @@ interface AccordionRootProps
 
 const AccordionRoot = React.forwardRef<AccordionRootElement, AccordionRootProps>(
   (props, forwardedRef) => {
-    const { className, material, flush, radius, color, ...extractedRadixProps } =
+    const { className, flush, radius, color, ...extractedRadixProps } =
       extractProps(props, accordionRootPropDefs);
 
     const radixProps = extractedRadixProps as React.ComponentPropsWithoutRef<
       typeof AccordionPrimitive.Root
     >;
 
-
-    const effectiveMaterial = material;
 
     // Ensure single accordions can collapse by default unless explicitly set
     if (radixProps.type === 'single' && radixProps.collapsible === undefined) {
@@ -73,7 +71,6 @@ const AccordionRoot = React.forwardRef<AccordionRootElement, AccordionRootProps>
         ref={forwardedRef}
         className={classNames('rt-AccordionRoot', className)}
         data-accent-color={color}
-        data-material={effectiveMaterial}
         data-flush={flush || undefined}
         data-radius={radius}
         onKeyDown={handleKeyDown}

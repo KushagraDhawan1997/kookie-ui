@@ -20,6 +20,6 @@ export const previewSources = {
   }}
   code={source}
 >
-  <Button variant="soft" material="translucent">Action</Button>
+  <Button variant="soft">Action</Button>
 </PreviewBlock>`,
 };

@@ -258,7 +258,7 @@ They are not called on mount, and not called when the window crosses a breakpoin
 ```tsx showLineNumbers
 <Shell.Root>
   <Shell.Header>
-    <Flex align="center" gap="2" px="3" height="100%">
+    <Flex align="center" gap="3" px="4" height="100%">
       <IconButton variant="ghost" color="gray" aria-label="Toggle navigation" asChild>
         <Shell.Trigger target="sidebar">
           <HugeiconsIcon icon={SidebarLeft01Icon} strokeWidth={1.75} />
@@ -351,7 +351,7 @@ Change the gap on the Root:
 
 ```css
 .rt-ShellRoot {
-  --shell-inset-gap: var(--space-3);
+  --shell-inset-gap: var(--space-4);
 }
 ```
 

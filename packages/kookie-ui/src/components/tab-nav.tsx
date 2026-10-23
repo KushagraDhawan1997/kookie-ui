@@ -20,12 +20,11 @@ interface TabNavRootProps
     MarginProps,
     TabNavOwnProps {}
 const TabNavRoot = React.forwardRef<TabNavRootElement, TabNavRootProps>((props, forwardedRef) => {
-  const { children, className, color, material: materialProp, ...rootProps } = extractProps(
+  const { children, className, color, ...rootProps } = extractProps(
     props,
     tabNavRootPropDefs,
     marginPropDefs,
   );
-  const material = materialProp;
   return (
     <NavigationMenu.Root
       className="rt-TabNavRoot"
@@ -36,7 +35,6 @@ const TabNavRoot = React.forwardRef<TabNavRootElement, TabNavRootProps>((props, 
     >
       <NavigationMenu.List
         className={classNames('rt-reset', 'rt-BaseTabList', 'rt-TabNavList', className)}
-        data-material={material}
       >
         {children}
       </NavigationMenu.List>

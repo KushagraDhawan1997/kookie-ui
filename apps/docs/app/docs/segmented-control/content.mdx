@@ -60,7 +60,6 @@ The Root component manages the selected value and provides context to child item
 | `disabled` | `boolean` | Disables all items when true. Use for unavailable functionality or during loading states |
 | `orientation` | `'horizontal' \| 'vertical'` | Layout direction. Horizontal (default) for most cases, vertical for icon-only sidebars and compact interfaces. Supports responsive objects |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Corner radius scale. Controls the roundness of the entire control |
-| `material` | `'solid' \| 'translucent'` | Background appearance: solid for opaque backgrounds, translucent for depth over images or dynamic backgrounds |
 
 ## Item Props
 
@@ -122,36 +121,6 @@ Extra large for hero sections and maximum visual impact.
   <SegmentedControl.Item value="week">Week</SegmentedControl.Item>
   <SegmentedControl.Item value="month">Month</SegmentedControl.Item>
 </SegmentedControl.Root>
-```
-
-## Material
-
-Use the `material` prop to set control appearance. Choose `solid` for opaque backgrounds, or `translucent` for depth and separation over images or dynamic backgrounds.
-
-### Theme
-
-Controls automatically inherit the theme's material setting.
-
-```tsx
-<Theme material="translucent">
-  <SegmentedControl.Root defaultValue="grid">
-    <SegmentedControl.Item value="list">List</SegmentedControl.Item>
-    <SegmentedControl.Item value="grid">Grid</SegmentedControl.Item>
-  </SegmentedControl.Root>
-</Theme>
-```
-
-### Custom
-
-Override the theme's material for specific effects.
-
-```tsx
-<Theme material="solid">
-  <SegmentedControl.Root material="translucent" defaultValue="grid">
-    <SegmentedControl.Item value="list">List</SegmentedControl.Item>
-    <SegmentedControl.Item value="grid">Grid</SegmentedControl.Item>
-  </SegmentedControl.Root>
-</Theme>
 ```
 
 ## Orientation
@@ -465,10 +434,6 @@ New `orientation` prop supports both horizontal and vertical layouts. Vertical o
 
 Icons automatically scale based on control size using consistent `--content-icon-size-N` tokens. Ensures visual harmony with Button and IconButton components across your interface.
 
-### Material System Support
-
-Full integration with Kookie UI's material system for solid and translucent appearances. Inherits theme material setting or overrides locally for specific effects.
-
 ## Changelog
 
 ### Added
@@ -477,8 +442,11 @@ Full integration with Kookie UI's material system for solid and translucent appe
 - `orientation` prop for horizontal and vertical layouts
 - Automatic icon sizing based on control size
 - Responsive size and orientation support with breakpoint objects
-- Material system support for solid and translucent appearances
 - Smooth spring-based animations for indicator transitions in both orientations
+
+### Removed
+
+- `material` prop. Every surface is solid.
 
 ### Changed
 

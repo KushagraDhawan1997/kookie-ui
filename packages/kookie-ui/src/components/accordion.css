@@ -3,26 +3,6 @@
   overflow: hidden;
   contain: layout;
   isolation: isolate;
-
-  /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
-
-  /* Prevent backdrop-filter stacking with parents */
-  isolation: isolate;
-
-  /* Component-level overrides */
-  &:where([data-material='solid']) {
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-  
-  &:where([data-material='translucent']) {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 }
 
 /* Size-specific border radius — surface channel */
@@ -44,103 +24,21 @@
 }
 
 :where(.rt-AccordionRoot:where(.rt-variant-surface)) {
-  /* Base state: solid accent for solid panels */
   background-color: var(--accent-2);
   box-shadow: inset 0 0 0 1px var(--accent-6);
-
-  /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-    backdrop-filter: var(--backdrop-filter-components);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-material='solid']) {
-    background-color: var(--accent-2);
-    box-shadow: inset 0 0 0 1px var(--accent-6);
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-
-  &:where([data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 }
 
 :where(.rt-AccordionRoot:where(.rt-variant-raised)) {
-  /* Base state: solid surface for solid panels */
   background-color: var(--color-surface-solid);
   box-shadow: var(--shadow-2);
-
-  /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    background-color: var(--color-surface-translucent);
-    backdrop-filter: var(--backdrop-filter-components);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-material='solid']) {
-    background-color: var(--color-surface-solid);
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-
-  &:where([data-material='translucent']) {
-    background-color: var(--color-surface-translucent);
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 }
 
 :where(.rt-AccordionRoot:where(.rt-variant-soft)) {
-  /* Base state: solid color for solid panels */
   background-color: var(--accent-2);
-
-  /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    backdrop-filter: var(--backdrop-filter-components);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-material='solid']) {
-    background-color: var(--accent-2);
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-
-  &:where([data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 }
 
 :where(.rt-AccordionRoot:where(.rt-variant-outline)) {
-  /* Base state: solid colors for solid panels */
   box-shadow: inset 0 0 0 1px var(--accent-6);
-
-  /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-material='solid']) {
-    box-shadow: inset 0 0 0 1px var(--accent-6);
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-
-  &:where([data-material='translucent']) {
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 }
 
 :where(.rt-AccordionRoot:where(.rt-variant-ghost)) {
@@ -157,8 +55,8 @@
   --margin-left: 0px;
 
   /* Calculate padding values for different accordion sizes */
-  --accordion-padding-x: calc(var(--space-4) * var(--padding-ratio-horizontal) / 4);
-  --accordion-padding-y: calc(var(--space-3) / 8);
+  --accordion-padding-x: calc(var(--space-5) * var(--padding-ratio-horizontal) / 4);
+  --accordion-padding-y: calc(var(--space-4) / 8);
 
   /* Define the overrides to incorporate the negative margins */
   --margin-top-override: calc(var(--margin-top) - var(--accordion-padding-y));
@@ -206,7 +104,7 @@
   flex: 1;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-4) var(--space-5);
   font-size: var(--font-size-2);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-3);
@@ -216,22 +114,22 @@
 
 /* Size variants */
 :where(.rt-AccordionRoot:where(.rt-r-size-1)) .rt-AccordionTrigger {
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-4);
   font-size: var(--font-size-1);
 }
 
 :where(.rt-AccordionRoot:where(.rt-r-size-2)) .rt-AccordionTrigger {
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-4) var(--space-5);
   font-size: var(--font-size-2);
 }
 
 :where(.rt-AccordionRoot:where(.rt-r-size-3)) .rt-AccordionTrigger {
-  padding: var(--space-4) var(--space-5);
+  padding: var(--space-5) var(--space-6);
   font-size: var(--font-size-3);
 }
 
 :where(.rt-AccordionRoot:where(.rt-r-size-4)) .rt-AccordionTrigger {
-  padding: var(--space-5) var(--space-6);
+  padding: var(--space-6) var(--space-7);
   font-size: var(--font-size-4);
 }
 
@@ -252,20 +150,6 @@
   :where(.rt-AccordionRoot:where(.rt-variant-raised):hover) {
     background-color: var(--accent-2);
     box-shadow: var(--shadow-2);
-  
-    /* Theme-level translucent override for hover */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    }
-  
-    /* Component-level overrides for hover */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-2);
-    }
-  
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    }
   }
 }
 
@@ -277,20 +161,6 @@
 @media (hover: hover) {
   :where(.rt-AccordionRoot:where(.rt-variant-soft)) :where(.rt-AccordionTrigger:hover) {
     background-color: var(--accent-4);
-    
-    /* Theme-level translucent override for hover */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-    }
-  
-    /* Component-level overrides for hover */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-4);
-    }
-  
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-    }
   }
 }
 
@@ -298,23 +168,6 @@
   :where(.rt-AccordionRoot:where(.rt-variant-outline)) :where(.rt-AccordionTrigger:hover) {
     background-color: var(--accent-2);
     box-shadow: inset 0 0 0 1px var(--accent-7);
-    
-    /* Theme-level translucent override for hover */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a7);
-    }
-  
-    /* Component-level overrides for hover */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-2);
-      box-shadow: inset 0 0 0 1px var(--accent-7);
-    }
-  
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a7);
-    }
   }
 }
 
@@ -322,49 +175,12 @@
   :where(.rt-AccordionRoot:where(.rt-variant-surface)) :where(.rt-AccordionTrigger:hover) {
     background-color: var(--accent-3);
     box-shadow: inset 0 0 0 1px var(--accent-7);
-    
-    /* Theme-level translucent override for hover */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a7);
-    }
-  
-    /* Component-level overrides for hover */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-3);
-      box-shadow: inset 0 0 0 1px var(--accent-7);
-    }
-  
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a7);
-    }
   }
 }
 
 @media (hover: hover) {
   :where(.rt-AccordionRoot:where(.rt-variant-ghost)) :where(.rt-AccordionTrigger:hover) {
-    /* Base state: solid accent for solid panels */
     background-color: var(--accent-3);
-    
-    /* Theme-level translucent override for hover */
-    :where([data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
-  
-    /* Component-level overrides for hover */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-3);
-    }
-  
-    &:where([data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
-  
-    /* Disable backdrop-filter when inside elements that already have backdrop-filter */
-    /* :where(.rt-PopoverContent, .rt-BaseDialogContent, .rt-BaseMenuContent, .rt-DropdownMenuContent, .rt-ContextMenuContent, .rt-AlertDialogContent, .rt-HoverCardContent, .rt-TooltipContent, .rt-Card) & {
-    backdrop-filter: none !important;
-  } */
   }
 }
 
@@ -407,27 +223,27 @@
 }
 
 .rt-AccordionContentInner {
-  padding: 0 var(--space-4) var(--space-3);
+  padding: 0 var(--space-5) var(--space-4);
 }
 
 /* Size variants for content */
 :where(.rt-AccordionRoot:where(.rt-r-size-1)) .rt-AccordionContentInner {
-  padding: 0 var(--space-3) var(--space-2);
+  padding: 0 var(--space-4) var(--space-3);
   font-size: var(--font-size-1);
 }
 
 :where(.rt-AccordionRoot:where(.rt-r-size-2)) .rt-AccordionContentInner {
-  padding: 0 var(--space-4) var(--space-3);
+  padding: 0 var(--space-5) var(--space-4);
   font-size: var(--font-size-2);
 }
 
 :where(.rt-AccordionRoot:where(.rt-r-size-3)) .rt-AccordionContentInner {
-  padding: 0 var(--space-5) var(--space-4);
+  padding: 0 var(--space-6) var(--space-5);
   font-size: var(--font-size-3);
 }
 
 :where(.rt-AccordionRoot:where(.rt-r-size-4)) .rt-AccordionContentInner {
-  padding: 0 var(--space-6) var(--space-5);
+  padding: 0 var(--space-7) var(--space-6);
   font-size: var(--font-size-4);
 }
 
@@ -440,59 +256,30 @@
   }
 }
 
-/* Reduced motion */
-
-/* Safari backdrop-filter fallback */
-@supports not (backdrop-filter: blur(1px)) {
-  :where(.rt-AccordionRoot[data-material='translucent']) {
-    background-color: var(--accent-2);
-  }
-  
-  @media (hover: hover) {
-    :where(.rt-AccordionRoot[data-material='translucent']) :where(.rt-AccordionTrigger:hover) {
-      background-color: var(--accent-4);
-    }
-  }
-}
-
 /* Forced colors support */
 @media (forced-colors: active) {
   :where(.rt-AccordionTrigger) {
     border: 1px solid CanvasText;
   }
-  
+
   :where(.rt-AccordionTrigger:focus-visible) {
     outline: 2px solid CanvasText;
     outline-offset: 2px;
   }
-  
+
   :where(.rt-AccordionItem:not(:last-child)) {
     border-bottom: 1px solid CanvasText;
   }
-  
+
   :where(.rt-AccordionRoot) {
     border: 1px solid CanvasText;
   }
-  
-  :where(.rt-AccordionRoot[data-material='translucent']) {
-    background-color: Canvas;
-    backdrop-filter: none;
-  }
-} 
+}
 
 /* Soft variant hover states */
 @media (hover: hover) {
   :where(.rt-AccordionRoot.rt-variant-soft:hover) {
     background-color: var(--accent-4);
-  }
-  :where([data-material='translucent']) :where(.rt-AccordionRoot.rt-variant-soft:hover) {
-    background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-  }
-  :where(.rt-AccordionRoot.rt-variant-soft[data-material='solid'], .rt-AccordionRoot.rt-variant-soft[data-material='solid']:hover) {
-    background-color: var(--accent-4);
-  }
-  :where(.rt-AccordionRoot.rt-variant-soft[data-material='translucent'], .rt-AccordionRoot.rt-variant-soft[data-material='translucent']:hover) {
-    background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
   }
 }
 
@@ -502,18 +289,6 @@
     background-color: var(--accent-2);
     box-shadow: inset 0 0 0 1px var(--accent-7);
   }
-  :where([data-material='translucent']) :where(.rt-AccordionRoot.rt-variant-outline:hover) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a7);
-  }
-  :where(.rt-AccordionRoot.rt-variant-outline[data-material='solid'], .rt-AccordionRoot.rt-variant-outline[data-material='solid']:hover) {
-    background-color: var(--accent-2);
-    box-shadow: inset 0 0 0 1px var(--accent-7);
-  }
-  :where(.rt-AccordionRoot.rt-variant-outline[data-material='translucent'], .rt-AccordionRoot.rt-variant-outline[data-material='translucent']:hover) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a7);
-  }
 }
 
 /* Surface variant hover states */
@@ -522,18 +297,6 @@
     background-color: var(--accent-3);
     box-shadow: inset 0 0 0 1px var(--accent-7);
   }
-  :where([data-material='translucent']) :where(.rt-AccordionRoot.rt-variant-surface:hover) {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a7);
-  }
-  :where(.rt-AccordionRoot.rt-variant-surface[data-material='solid'], .rt-AccordionRoot.rt-variant-surface[data-material='solid']:hover) {
-    background-color: var(--accent-3);
-    box-shadow: inset 0 0 0 1px var(--accent-7);
-  }
-  :where(.rt-AccordionRoot.rt-variant-surface[data-material='translucent'], .rt-AccordionRoot.rt-variant-surface[data-material='translucent']:hover) {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a7);
-  }
 }
 
 /* Ghost variant hover with lowered specificity */
@@ -541,16 +304,7 @@
   :where(.rt-AccordionRoot.rt-variant-ghost:hover) {
     background-color: var(--accent-2);
   }
-  :where([data-material='translucent']) :where(.rt-AccordionRoot.rt-variant-ghost:hover) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-  }
-  :where(.rt-AccordionRoot.rt-variant-ghost[data-material='solid'], .rt-AccordionRoot.rt-variant-ghost[data-material='solid']:hover) {
-    background-color: var(--accent-2);
-  }
-  :where(.rt-AccordionRoot.rt-variant-ghost[data-material='translucent'], .rt-AccordionRoot.rt-variant-ghost[data-material='translucent']:hover) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-  }
-} 
+}
 /* Disabled: the same treatment as a disabled menu item. It keeps no hover fill or lift. */
 .rt-AccordionTrigger:where([data-disabled]) {
   color: var(--gray-a8);

@@ -59,15 +59,15 @@ Every part accepts the props of the component it wraps. Only the additions and c
 
 | Part | Wraps | Adds or changes |
 | ---- | ----- | --------------- |
-| `Root` | `Flex` | `separator?: boolean` draws a line underneath. `direction="column"`, `gap="4"` |
+| `Root` | `Flex` | `separator?: boolean` draws a line underneath. `direction="column"`, `gap="5"` |
 | `Banner` | `Box` | `src: string`, `alt?: string`, `height?: string` (`'200px'`). A cover image with rounded corners |
-| `Main` | `Flex` | `layout?: Responsive<'inline' \| 'stacked'>` (`'inline'`). `align="center"`, `justify="between"`, `gap="4"` |
+| `Main` | `Flex` | `layout?: Responsive<'inline' \| 'stacked'>` (`'inline'`). `align="center"`, `justify="between"`, `gap="5"` |
 | `Media` | `Avatar` | `type?: 'logo' \| 'avatar'` (`'avatar'`), `overlap?: boolean`. `size="6"` |
-| `Content` | `Flex` | `direction="column"`, `gap="2"`, `flexGrow="1"` |
-| `Meta` | `Flex` | `gap="2"`, `align="center"`, `wrap="wrap"` |
+| `Content` | `Flex` | `direction="column"`, `gap="3"`, `flexGrow="1"` |
+| `Meta` | `Flex` | `gap="3"`, `align="center"`, `wrap="wrap"` |
 | `Title` | `Heading` | `as="h1"`, `size="9"`, `weight="medium"` |
 | `Description` | `Text` | `size="4"`, `emphasis="medium"` |
-| `Actions` | `Flex` | `gap="2"`, `align="center"` |
+| `Actions` | `Flex` | `gap="3"`, `align="center"` |
 | `Tabs` | `Flex` | `direction="column"`, `width="100%"` |
 
 `Media` with `type="logo"` is square-cornered; `avatar` is round. `overlap` pulls an avatar up over a `Banner`, and does nothing without one.
@@ -77,7 +77,7 @@ Every part accepts the props of the component it wraps. Only the additions and c
 ### Project Overview
 
 <PreviewBlock background="none" height="auto">
-  <Box width="100%" p="5">
+  <Box width="100%" p="6">
     <PageHeader.Root>
       <PageHeader.Main layout={{ initial: 'stacked', sm: 'inline' }} align={{ initial: 'start', sm: 'center' }}>
         <PageHeader.Content>
@@ -145,10 +145,10 @@ Every part accepts the props of the component it wraps. Only the additions and c
 ### Profile With Banner
 
 <PreviewBlock background="none" height="auto">
-  <Box width="100%" p="5">
+  <Box width="100%" p="6">
     <PageHeader.Root>
       <PageHeader.Banner src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=1200&auto=format&fit=crop" alt="" height="140px" />
-      <PageHeader.Main align="end" px="4">
+      <PageHeader.Main align="end" px="5">
         <PageHeader.Media overlap fallback="MR" size="7" />
         <PageHeader.Content>
           <PageHeader.Title as="h3" size="6">Maya Rao</PageHeader.Title>
@@ -165,7 +165,7 @@ Every part accepts the props of the component it wraps. Only the additions and c
 ```tsx showLineNumbers
 <PageHeader.Root>
   <PageHeader.Banner src="/cover.jpg" alt="" height="140px" />
-  <PageHeader.Main align="end" px="4">
+  <PageHeader.Main align="end" px="5">
     <PageHeader.Media overlap fallback="MR" size="7" />
     <PageHeader.Content>
       <PageHeader.Title as="h3" size="6">Maya Rao</PageHeader.Title>

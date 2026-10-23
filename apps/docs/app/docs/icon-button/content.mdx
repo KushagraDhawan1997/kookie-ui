@@ -45,7 +45,6 @@ export function MyComponent() {
 | `size`         | `'1' \| '2' \| '3' \| '4'`                                            | Button density: 1 (24px) for toolbars, 2 (32px) standard, 3 (40px) for important actions, 4 (48px) for hero sections. Supports responsive objects |
 | `color`        | `AccentColor`                                                         | Semantic color to communicate action intent. Gray fills with step 12 on its own |
 | `radius`       | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'`                  | Corner radius scale: none for sharp edges, small/medium/large for progressive rounding, full for circular |
-| `material`     | `'solid' \| 'translucent'`                                            | Background appearance: solid for opaque backgrounds, translucent for depth over images or dynamic backgrounds |
 | `loading`      | `boolean`                                                             | Shows spinner and disables button automatically. No need to set disabled manually               |
 | `disabled`     | `boolean`                                                             | Prevents interaction when action is unavailable                                                 |
 | `aria-label`   | `string`                                                              | Required accessibility label describing the button's action                                     |
@@ -384,7 +383,6 @@ Loading state automatically disables interaction and displays spinner with prope
 
 - Built-in tooltip support through `tooltip`, `tooltipSide`, `tooltipAlign` props
 - Runtime accessibility validation for missing accessible names
-- New `material` prop for solid/translucent theme contexts
 - Enhanced form integration with complete HTML form attribute support
 
 ### Changed
@@ -395,6 +393,7 @@ Loading state automatically disables interaction and displays spinner with prope
 ### Removed
 
 - `highContrast` prop. Gray fills with step 12 on its own, and icons read the strong ink by default.
+- `material` prop. Every surface is solid.
 
 ### Fixed
 

@@ -14,7 +14,6 @@
  * - Side: set with `side` on `Sheet.Content`. Aliases: `left` → `start`, `right` → `end`.
  * - Sizing: reuses Dialog content prop defs (width/min/max/height/size). Default Dialog
  *   maxWidth clamping is removed for Sheets.
- * - Material: use `material` (solid | translucent).
  * - A11y: provide an accessible name via `Sheet.Title` or `aria-label` on `Sheet.Content`.
  *
  * Example
@@ -84,20 +83,14 @@ Trigger.displayName = 'Sheet.Trigger';
 
 // Content
 /** Element type for `Sheet.Content`. */
-// Reuse dialog content prop defs for size/width/height tokens, but handle
-// material explicitly to avoid forwarding unknown DOM props.
+// Reuse dialog content prop defs for size/width/height tokens.
 // Built once at module scope: `extractProps` memoises on the identity of the
 // prop def objects it is handed, so rebuilding these per render would recompile
 // them every time a sheet renders.
 const {
   align: _alignPropDef,
-  material: materialPropDef,
   ...dialogPropDefsForSheet
 } = dialogContentPropDefs;
-
-const materialPropDefs = {
-  material: materialPropDef,
-};
 
 // Override dialog's default maxWidth (600px) to avoid clamping Sheet by default
 const { default: _mwDefault, ...maxWidthWithoutDefault } = dialogPropDefsForSheet.maxWidth;
@@ -128,7 +121,6 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>(
       forceMount,
       container,
       className,
-      material: materialProp,
       ...restProps
     } = allProps;
     const normalizedSideMap: Record<SheetSide, 'start' | 'end' | 'top' | 'bottom'> = {
@@ -140,14 +132,6 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>(
       bottom: 'bottom',
     };
     const normalizedSide = normalizedSideMap[side];
-    const { material: resolvedMaterial } = extractProps(
-      { material: materialProp },
-      materialPropDefs,
-    );
-
-
-    const materialValue = resolvedMaterial;
-
     // Size/width/height class names come from the dialog defs — see `sheetPropDefs`.
     const { className: extractedClassName, ...contentProps } = extractProps(
       restProps,
@@ -240,7 +224,6 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>(
                 extractedClassName,
               )}
               data-side={normalizedSide}
-              data-material={materialValue}
               tabIndex={-1}
               role="dialog"
               aria-modal="true"

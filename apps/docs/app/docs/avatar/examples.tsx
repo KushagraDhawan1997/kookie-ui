@@ -9,9 +9,9 @@ import { MoreHorizontalIcon, Mail01Icon, Clock01Icon, Add01Icon } from '@hugeico
 
 export function AvatarExamples() {
   return (
-    <Flex direction="column" gap="9">
+    <Flex direction="column" gap="10">
       {/* Example 1: Team Members */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Team Members</SectionHeader.Title>
@@ -23,9 +23,9 @@ export function AvatarExamples() {
         <PreviewBlock
           background="none"
           code={`<Card variant="raised" size="2" style={{ minWidth: 320 }}>
-  <Flex direction="column" gap="3">
+  <Flex direction="column" gap="4">
     <Flex justify="between" align="center">
-      <Flex gap="3" align="center">
+      <Flex gap="4" align="center">
         <Avatar
           size="4"
           fallback="SK"
@@ -43,9 +43,9 @@ export function AvatarExamples() {
 </Card>`}
         >
           <Card variant="raised" size="2" style={{ minWidth: 320, maxWidth: 400 }}>
-            <Flex direction="column" gap="3">
+            <Flex direction="column" gap="4">
               <Flex justify="between" align="center">
-                <Flex gap="3" align="center">
+                <Flex gap="4" align="center">
                   <Avatar size="4" fallback="SK" color="violet" variant="solid" />
                   <Flex direction="column" gap="0">
                     <Text size="2" weight="medium">
@@ -62,7 +62,7 @@ export function AvatarExamples() {
               </Flex>
               <Separator size="4" />
               <Flex justify="between" align="center">
-                <Flex gap="3" align="center">
+                <Flex gap="4" align="center">
                   <Avatar size="4" fallback="JD" color="blue" variant="solid" />
                   <Flex direction="column" gap="0">
                     <Text size="2" weight="medium">
@@ -79,7 +79,7 @@ export function AvatarExamples() {
               </Flex>
               <Separator size="4" />
               <Flex justify="between" align="center">
-                <Flex gap="3" align="center">
+                <Flex gap="4" align="center">
                   <Avatar size="4" fallback="AL" color="green" variant="solid" />
                   <Flex direction="column" gap="0">
                     <Text size="2" weight="medium">
@@ -102,7 +102,7 @@ export function AvatarExamples() {
       <Separator size="4" />
 
       {/* Example 2: Messages */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Messages</SectionHeader.Title>
@@ -113,7 +113,7 @@ export function AvatarExamples() {
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
-          code={`<Flex gap="3" align="start">
+          code={`<Flex gap="4" align="start">
   <Avatar
     size="3"
     fallback="MJ"
@@ -122,7 +122,7 @@ export function AvatarExamples() {
   />
   <Flex direction="column" gap="0" style={{ flex: 1 }}>
     <Flex justify="between" align="center">
-      <Flex gap="2" align="center">
+      <Flex gap="3" align="center">
         <Text size="2" weight="medium">Mike Johnson</Text>
         <Text size="1" emphasis="medium">2 hours ago</Text>
       </Flex>
@@ -135,12 +135,12 @@ export function AvatarExamples() {
 </Flex>`}
         >
           <Card variant="raised" size="2" style={{ maxWidth: 440 }}>
-            <Flex direction="column" gap="4">
-              <Flex gap="3" align="start">
+            <Flex direction="column" gap="5">
+              <Flex gap="4" align="start">
                 <Avatar size="3" fallback="MJ" color="blue" variant="soft" />
                 <Flex direction="column" gap="0" style={{ flex: 1 }}>
                   <Flex justify="between" align="center">
-                    <Flex gap="2" align="center">
+                    <Flex gap="3" align="center">
                       <Text size="2" weight="medium">
                         Mike Johnson
                       </Text>
@@ -156,11 +156,11 @@ export function AvatarExamples() {
                 </Flex>
               </Flex>
               <Separator size="4" />
-              <Flex gap="3" align="start">
+              <Flex gap="4" align="start">
                 <Avatar size="3" fallback="EW" color="pink" variant="soft" />
                 <Flex direction="column" gap="0" style={{ flex: 1 }}>
                   <Flex justify="between" align="center">
-                    <Flex gap="2" align="center">
+                    <Flex gap="3" align="center">
                       <Text size="2" weight="medium">
                         Emma Wilson
                       </Text>
@@ -183,7 +183,7 @@ export function AvatarExamples() {
       <Separator size="4" />
 
       {/* Example 3: Profile Header */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Profile Header</SectionHeader.Title>
@@ -193,21 +193,21 @@ export function AvatarExamples() {
         <PreviewBlock
           background="none"
           code={`<Card variant="raised" size="3">
-  <Flex direction="column" gap="5" align="center" p="1">
+  <Flex direction="column" gap="6" align="center" p="2">
     <Avatar
       size="6"
       fallback="SK"
       color="violet"
       variant="solid"
     />
-    <Flex direction="column" gap="1">
-      <Flex align="center" justify="center" gap="2">
+    <Flex direction="column" gap="2">
+      <Flex align="center" justify="center" gap="3">
         <Heading size="4">Sarah Kim</Heading>
         <Badge size="1" color="violet">Pro</Badge>
       </Flex>
       <Text size="2" emphasis="medium">Senior Product Designer</Text>
     </Flex>
-    <Flex gap="2">
+    <Flex gap="3">
       <Button variant="solid" size="2">
         <HugeiconsIcon icon={Mail01Icon} />
         Message
@@ -220,10 +220,10 @@ export function AvatarExamples() {
 </Card>`}
         >
           <Card variant="raised" size="3" style={{ maxWidth: 360 }}>
-            <Flex direction="column" gap="5" align="center" p="1" style={{ textAlign: 'center' }}>
+            <Flex direction="column" gap="6" align="center" p="2" style={{ textAlign: 'center' }}>
               <Avatar size="6" fallback="SK" color="violet" variant="solid" />
-              <Flex direction="column" gap="1">
-                <Flex align="center" justify="center" gap="2">
+              <Flex direction="column" gap="2">
+                <Flex align="center" justify="center" gap="3">
                   <Heading size="4">Sarah Kim</Heading>
                   <Badge size="1" color="violet">
                     Pro
@@ -232,14 +232,14 @@ export function AvatarExamples() {
                 <Text size="2" emphasis="medium">
                   Senior Product Designer
                 </Text>
-                <Flex gap="1" align="center" justify="center">
+                <Flex gap="2" align="center" justify="center">
                   <HugeiconsIcon icon={Clock01Icon} strokeWidth={1.75} size={14} />
                   <Text size="1" emphasis="medium">
                     Joined March 2023
                   </Text>
                 </Flex>
               </Flex>
-              <Flex gap="2">
+              <Flex gap="3">
                 <Button variant="solid" size="2">
                   <HugeiconsIcon icon={Mail01Icon} strokeWidth={1.75} />
                   Message
@@ -256,7 +256,7 @@ export function AvatarExamples() {
       <Separator size="4" />
 
       {/* Example 4: Status Indicators */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Status Indicators</SectionHeader.Title>
@@ -285,9 +285,9 @@ export function AvatarExamples() {
 />`}
         >
           <Card variant="raised" size="2" style={{ maxWidth: 340 }}>
-            <Flex direction="column" gap="3">
+            <Flex direction="column" gap="4">
               <Flex justify="between" align="center">
-                <Flex gap="3" align="center">
+                <Flex gap="4" align="center">
                   <Avatar size="4" fallback="JD" variant="soft" status="green" />
                   <Flex direction="column" gap="0">
                     <Text size="2" weight="medium">
@@ -301,7 +301,7 @@ export function AvatarExamples() {
               </Flex>
               <Separator size="4" />
               <Flex justify="between" align="center">
-                <Flex gap="3" align="center">
+                <Flex gap="4" align="center">
                   <Avatar size="4" fallback="AB" variant="soft" status="amber" />
                   <Flex direction="column" gap="0">
                     <Text size="2" weight="medium">
@@ -315,7 +315,7 @@ export function AvatarExamples() {
               </Flex>
               <Separator size="4" />
               <Flex justify="between" align="center">
-                <Flex gap="3" align="center">
+                <Flex gap="4" align="center">
                   <Avatar size="4" fallback="CD" variant="soft" status="gray" />
                   <Flex direction="column" gap="0">
                     <Text size="2" weight="medium">
@@ -335,7 +335,7 @@ export function AvatarExamples() {
       <Separator size="4" />
 
       {/* Example 5: Custom Badge */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Custom Badge</SectionHeader.Title>
@@ -371,7 +371,7 @@ export function AvatarExamples() {
       <Separator size="4" />
 
       {/* Example 6: Company Logos */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Company Logos</SectionHeader.Title>
@@ -389,9 +389,9 @@ export function AvatarExamples() {
 />`}
         >
           <Card variant="raised" size="2" style={{ minWidth: 320, maxWidth: 400 }}>
-            <Flex direction="column" gap="3">
+            <Flex direction="column" gap="4">
               <Flex justify="between" align="center">
-                <Flex gap="3" align="center">
+                <Flex gap="4" align="center">
                   <Avatar size="4" src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" fallback="AZ" fit="contain" variant="surface" />
                   <Flex direction="column" gap="0">
                     <Text size="2" weight="medium">
@@ -405,7 +405,7 @@ export function AvatarExamples() {
               </Flex>
               <Separator size="4" />
               <Flex justify="between" align="center">
-                <Flex gap="3" align="center">
+                <Flex gap="4" align="center">
                   <Avatar size="4" src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" fallback="GO" fit="contain" variant="surface" />
                   <Flex direction="column" gap="0">
                     <Text size="2" weight="medium">
@@ -419,7 +419,7 @@ export function AvatarExamples() {
               </Flex>
               <Separator size="4" />
               <Flex justify="between" align="center">
-                <Flex gap="3" align="center">
+                <Flex gap="4" align="center">
                   <Avatar size="4" src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" fallback="AP" fit="contain" variant="surface" />
                   <Flex direction="column" gap="0">
                     <Text size="2" weight="medium">
@@ -439,7 +439,7 @@ export function AvatarExamples() {
       <Separator size="4" />
 
       {/* Example 7: Invite Members */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Invite Members</SectionHeader.Title>
@@ -448,7 +448,7 @@ export function AvatarExamples() {
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
-          code={`<Flex gap="3" align="center">
+          code={`<Flex gap="4" align="center">
   <Avatar
     size="4"
     fallback="JD"
@@ -478,7 +478,7 @@ export function AvatarExamples() {
   </IconButton>
 </Flex>`}
         >
-          <Flex gap="3" align="center">
+          <Flex gap="4" align="center">
             <Avatar size="4" fallback="JD" variant="soft" radius="full" />
             <Avatar size="4" fallback="SK" variant="soft" radius="full" />
             <Avatar size="4" fallback="AL" variant="soft" radius="full" />

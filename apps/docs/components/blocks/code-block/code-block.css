@@ -7,8 +7,8 @@
   --code-block-background: var(--gray-a2);
   --code-block-font-size: var(--font-size-2);
   --code-block-line-height: 1.7;
-  --code-block-padding-x: var(--space-4);
-  --code-block-padding-y: var(--space-3);
+  --code-block-padding-x: var(--space-5);
+  --code-block-padding-y: var(--space-4);
 
   position: relative;
   display: flex;
@@ -25,9 +25,9 @@
 .code-block-header {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  min-height: var(--space-7);
-  padding: 0 var(--space-2) 0 var(--code-block-padding-x);
+  gap: var(--space-4);
+  min-height: var(--space-8);
+  padding: 0 var(--space-3) 0 var(--code-block-padding-x);
   border-bottom: 1px solid var(--code-block-border);
 }
 
@@ -49,10 +49,10 @@
   display: flex;
   align-items: center;
   height: calc(var(--code-block-padding-y) * 2 + 1lh);
-  padding: 0 var(--space-2) 0 var(--space-5);
+  padding: 0 var(--space-3) 0 var(--space-6);
   line-height: var(--code-block-line-height);
   font-size: var(--code-block-font-size);
-  background: linear-gradient(to right, transparent, var(--color-background) var(--space-4));
+  background: linear-gradient(to right, transparent, var(--color-background) var(--space-5));
 }
 
 /* Re-apply the frame's tint over the opaque page color. */
@@ -61,7 +61,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(to right, transparent, var(--code-block-background) var(--space-4));
+  background: linear-gradient(to right, transparent, var(--code-block-background) var(--space-5));
 }
 
 /* ---------------------------------------------------------------------------------------------
@@ -84,7 +84,7 @@
 
 /* Keep one-line code clear of the floating copy button. */
 .code-block-body:has(.code-block-floating-actions) .code-block-content pre {
-  padding-right: calc(var(--code-block-padding-x) + var(--space-7));
+  padding-right: calc(var(--code-block-padding-x) + var(--space-8));
 }
 
 .code-block-content pre code {
@@ -105,7 +105,7 @@
   content: counter(line);
   display: inline-block;
   width: 2ch;
-  margin-right: var(--space-4);
+  margin-right: var(--space-5);
   text-align: right;
   color: var(--gray-a8);
   user-select: none;
@@ -141,12 +141,12 @@
  * -------------------------------------------------------------------------------------------*/
 
 .code-block[data-collapsed] .code-block-body {
-  mask-image: linear-gradient(to bottom, black calc(100% - var(--space-9)), transparent);
+  mask-image: linear-gradient(to bottom, black calc(100% - var(--space-10)), transparent);
 }
 
 .code-block-footer {
   display: flex;
   justify-content: center;
-  padding: var(--space-3);
+  padding: var(--space-4);
   border-top: 1px solid var(--code-block-border);
 }

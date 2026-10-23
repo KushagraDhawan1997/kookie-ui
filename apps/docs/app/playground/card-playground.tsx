@@ -6,7 +6,6 @@ import Playground from '@/components/playground';
 
 const variants = ['surface', 'outline', 'raised', 'ghost', 'soft'] as const;
 const sizes = ['1', '2', '3', '4', '5'] as const;
-const materials = ['solid', 'translucent'] as const;
 
 type CardPlaygroundProps = {
   showControls?: boolean;
@@ -21,7 +20,6 @@ export default function CardPlayground({
 }: CardPlaygroundProps = {}) {
   const [variant, setVariant] = React.useState<string>('raised');
   const [size, setSize] = React.useState<string>('2');
-  const [material, setMaterial] = React.useState<string>('theme');
   const [interactive, setInteractive] = React.useState<boolean>(false);
 
   const items = [
@@ -44,15 +42,6 @@ export default function CardPlayground({
       placeholder: 'Select size',
     },
     {
-      id: 'material',
-      label: 'Material',
-      type: 'select' as const,
-      value: material,
-      onChange: setMaterial,
-      options: [{ label: 'Theme', value: 'theme' }, ...materials.map((m) => ({ label: m, value: m }))],
-      placeholder: 'Theme',
-    },
-    {
       id: 'interactive',
       label: 'Interactive (asChild)',
       type: 'switch' as const,
@@ -64,7 +53,6 @@ export default function CardPlayground({
   const generateCode = () => {
     const props = [`variant="${variant}"`, `size="${size}"`];
 
-    if (material !== 'theme') props.push(`material="${material}"`);
     if (interactive) props.push('asChild');
 
     const propsString = props.length > 0 ? `\n  ${props.join('\n  ')}` : '';
@@ -78,7 +66,7 @@ export default function CardPlayground({
     }
 
     return `<Card${propsString}>
-  <Flex direction="column" gap="2">
+  <Flex direction="column" gap="3">
     <Heading size="3">Card Title</Heading>
     <Text size="2">Card content goes here.</Text>
   </Flex>
@@ -91,8 +79,8 @@ export default function CardPlayground({
   const innerContent = (
     <Flex
       direction="column"
-      gap="2"
-      p="2"
+      gap="3"
+      p="3"
       width="100%"
       height={contentHeight}
       style={{
@@ -110,7 +98,6 @@ export default function CardPlayground({
           asChild={interactive}
           size={size as any}
           variant={variant as any}
-          material={material === 'theme' ? undefined : (material as any)}
           style={{ width: 280 }}
         >
           {interactive ? (
@@ -124,13 +111,10 @@ export default function CardPlayground({
       }
       code={generateCode()}
       items={items}
-      showBackground={material === 'translucent'}
       hint={
         interactive
           ? 'Click the card to test. Hover and active states are styled automatically.'
-          : material === 'translucent'
-            ? 'Translucent material is best observed with surface or soft variants.'
-            : undefined
+          : undefined
       }
       showControls={showControls}
       showToolbar={showToolbar}

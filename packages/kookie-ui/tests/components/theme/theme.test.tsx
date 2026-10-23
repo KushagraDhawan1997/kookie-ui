@@ -16,13 +16,14 @@ function readContext() {
 
 describe('Theme attributes', () => {
   test('the root theme carries the resolved values', () => {
-    const { container } = render(<Theme appearance="dark" accentColor="crimson" radius="large" scaling="105%" />);
+    const { container } = render(<Theme appearance="dark" accentColor="crimson" radius="large" />);
     const root = container.querySelector('.radix-themes') as HTMLElement;
 
     expect(root.dataset.isRootTheme).toBe('true');
     expect(root.dataset.accentColor).toBe('crimson');
     expect(root.dataset.radius).toBe('large');
-    expect(root.dataset.scaling).toBe('105%');
+    // The scale is fixed, so nothing is written for it.
+    expect(root.dataset.scaling).toBeUndefined();
     expect(root.classList.contains('dark')).toBe(true);
   });
 
@@ -227,11 +228,11 @@ describe('Theme values follow their props', () => {
     expect(seen.at(-1)?.accentColor).toBe('crimson');
   });
 
-  test('material is settled on the first commit, not corrected afterwards', () => {
-    const { container } = render(<Theme material="solid" />);
+  test('solid is the only material, so no material attribute is written', () => {
+    const { container } = render(<Theme />);
     const root = container.querySelector('.radix-themes') as HTMLElement;
 
-    expect(root.dataset.material).toBe('solid');
+    expect(root.dataset.material).toBeUndefined();
   });
 });
 

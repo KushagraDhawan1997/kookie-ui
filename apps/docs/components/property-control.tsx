@@ -13,7 +13,7 @@ interface RootProps {
 function Root({ width, style, children }: RootProps) {
   return (
     <Card size="2" variant="ghost" style={{ width: width || 'fit-content', height: 'fit-content', ...style }}>
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         {children}
       </Flex>
     </Card>
@@ -26,7 +26,7 @@ interface FieldProps {
 
 function Field({ children }: FieldProps) {
   return (
-    <Flex align="center" justify="between" gap="4" style={{ minHeight: 'var(--space-5)' }}>
+    <Flex align="center" justify="between" gap="5" style={{ minHeight: 'var(--space-6)' }}>
       {children}
     </Flex>
   );
@@ -84,8 +84,8 @@ function Swatch({ value }: { value: string }) {
   return (
     <Box
       as="span"
-      width="var(--space-3)"
-      height="var(--space-3)"
+      width="var(--space-4)"
+      height="var(--space-4)"
       style={{
         borderRadius: '9999px',
         background: getSwatchVar(value),
@@ -97,7 +97,7 @@ function Swatch({ value }: { value: string }) {
 function Group({ width, items, style }: { width?: string | number; items: Item[]; style?: React.CSSProperties }) {
   return (
     <Root width={width} style={style}>
-      <Flex direction="column" gap="1">
+      <Flex direction="column" gap="2">
         {items.map((item) => (
           <Field key={item.id}>
             <PropertyLabel htmlFor={item.id}>{item.label}</PropertyLabel>
@@ -115,7 +115,7 @@ function Group({ width, items, style }: { width?: string | number; items: Item[]
                       {item.options.map((opt) => (
                         <DropdownMenu.RadioItem key={opt.value} value={opt.value}>
                           {item.appearance === 'swatch' ? (
-                            <Flex align="center" gap="2">
+                            <Flex align="center" gap="3">
                               <Swatch value={opt.value} />
                               <Text size="2" style={{ textTransform: 'capitalize' }}>
                                 {opt.label}

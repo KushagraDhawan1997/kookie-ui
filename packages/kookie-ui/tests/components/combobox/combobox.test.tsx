@@ -447,11 +447,9 @@ describe('Combobox', () => {
       expect(screen.getByTestId('trigger')).not.toHaveAttribute('data-placeholder');
     });
 
-    it('does not leak material onto the button', () => {
-      renderWithProviders(<FruitCombobox triggerProps={{ material: 'translucent' }} />);
-      const trigger = screen.getByTestId('trigger');
-      expect(trigger).not.toHaveAttribute('material');
-      expect(trigger).toHaveAttribute('data-material', 'translucent');
+    it('carries no material attribute', () => {
+      renderWithProviders(<FruitCombobox />);
+      expect(screen.getByTestId('trigger')).not.toHaveAttribute('data-material');
     });
   });
 
@@ -463,12 +461,6 @@ describe('Combobox', () => {
       const inputRoot = document.querySelector('.rt-ComboboxInputRoot');
       expect(inputRoot).toHaveClass('rt-r-size-1', 'md:rt-r-size-3');
       expect(document.querySelector('.rt-ComboboxContent')).toHaveClass('rt-r-size-1', 'md:rt-r-size-3');
-    });
-
-    it('applies material to the surface and search field', () => {
-      renderWithProviders(<FruitCombobox defaultOpen contentProps={{ material: 'solid' }} />);
-      expect(document.querySelector('.rt-ComboboxContent')).toHaveAttribute('data-material', 'solid');
-      expect(document.querySelector('.rt-ComboboxInputRoot')).toHaveAttribute('data-material', 'solid');
     });
 
     it('renders separators with base menu classes', () => {

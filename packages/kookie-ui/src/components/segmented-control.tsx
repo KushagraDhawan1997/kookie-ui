@@ -34,11 +34,8 @@ const SegmentedControlRoot = React.forwardRef<HTMLDivElement, SegmentedControlRo
       value: valueProp,
       defaultValue: defaultValueProp,
       onValueChange: onValueChangeProp,
-      material: materialProp,
       ...rootProps
     } = extractProps(props, segmentedControlRootPropDefs, marginPropDefs);
-    const material = materialProp;
-
 
     const [value, setValue] = useControllableState({
       prop: valueProp,
@@ -50,7 +47,6 @@ const SegmentedControlRoot = React.forwardRef<HTMLDivElement, SegmentedControlRo
       <ToggleGroupPrimitive.Root
         data-disabled={props.disabled || undefined}
         data-radius={radius}
-        data-material={material}
         ref={forwardedRef}
         className={classNames('rt-SegmentedControlRoot', className)}
         onValueChange={(value) => {

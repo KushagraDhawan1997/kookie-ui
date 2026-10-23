@@ -38,7 +38,6 @@ const accentColors = [
 const variants = ['raised', 'solid', 'soft', 'surface', 'outline', 'ghost'] as const;
 const sizes = ['1', '2', '3', '4'] as const;
 const radiusOptions = ['none', 'small', 'medium', 'large', 'full'] as const;
-const materials = ['solid', 'translucent'] as const;
 const states = ['default', 'disabled', 'loading'] as const;
 
 type ButtonPlaygroundProps = {
@@ -56,7 +55,6 @@ export default function ButtonPlayground({
   const [color, setColor] = React.useState<string>('theme');
   const [radius, setRadius] = React.useState<string>('theme');
   const [size, setSize] = React.useState<string>('3');
-  const [material, setMaterial] = React.useState<string>('theme');
   const [state, setState] = React.useState<string>('default');
   const [iconPosition, setIconPosition] = React.useState<string>('none');
 
@@ -102,15 +100,6 @@ export default function ButtonPlayground({
       placeholder: 'Select size',
     },
     {
-      id: 'material',
-      label: 'Material',
-      type: 'select' as const,
-      value: material,
-      onChange: setMaterial,
-      options: [{ label: 'Theme', value: 'theme' }, ...materials.map((m) => ({ label: m, value: m }))],
-      placeholder: 'Theme',
-    },
-    {
       id: 'state',
       label: 'State',
       type: 'select' as const,
@@ -142,7 +131,6 @@ export default function ButtonPlayground({
     // Add non-theme props
     if (color !== 'theme') props.push(`color="${color}"`);
     if (radius !== 'theme') props.push(`radius="${radius}"`);
-    if (material !== 'theme') props.push(`material="${material}"`);
 
     // Add boolean props
     if (isDisabled) props.push('disabled');
@@ -177,7 +165,6 @@ export default function ButtonPlayground({
           variant={variant as any}
           color={color === 'theme' ? ('' as any) : (color as any)}
           radius={radius === 'theme' ? undefined : (radius as any)}
-          material={material === 'theme' ? undefined : (material as any)}
           disabled={isDisabled}
           loading={isLoading}
         >
@@ -188,8 +175,6 @@ export default function ButtonPlayground({
       }
       code={generateCode()}
       items={items}
-      showBackground={material === 'translucent'}
-      hint={material === 'translucent' ? 'Translucent material is best observed with soft or surface variants.' : undefined}
       showControls={showControls}
       showToolbar={showToolbar}
       height={height}

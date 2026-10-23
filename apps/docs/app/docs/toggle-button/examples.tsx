@@ -13,9 +13,9 @@ export function ToggleButtonExamples() {
   const [notificationsOn, setNotificationsOn] = React.useState(true);
 
   return (
-    <Flex direction="column" gap="9">
+    <Flex direction="column" gap="10">
       {/* Example 1: Follow Button */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Follow Button</SectionHeader.Title>
@@ -50,7 +50,7 @@ export function ToggleButtonExamples() {
       <Separator size="4" />
 
       {/* Example 2: Bookmark Action */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Bookmark Action</SectionHeader.Title>
@@ -85,7 +85,7 @@ export function ToggleButtonExamples() {
       <Separator size="4" />
 
       {/* Example 3: Notification Toggle */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Notification Toggle</SectionHeader.Title>

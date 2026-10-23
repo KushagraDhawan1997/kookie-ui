@@ -34,7 +34,7 @@ export function TableScene() {
                   <Checkbox aria-label={`Select row ${i}`} defaultChecked={n === 0} />
                 </Table.Cell>
                 <Table.RowHeaderCell>
-                  <Flex align="center" gap="2">
+                  <Flex align="center" gap="3">
                     <Avatar size="1" fallback={String.fromCharCode(65 + (i % 26))} />
                     <Text>Person {i + version}</Text>
                   </Flex>

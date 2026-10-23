@@ -8,25 +8,7 @@
   font-style: normal;
   text-align: start;
 
-    /* Theme-level translucent override */
-    :where([data-material='translucent']) & {
-      backdrop-filter: var(--backdrop-filter-components);
-      --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-    }
-
-  /* Prevent backdrop-filter stacking with parents */
   isolation: isolate;
-
-  /* Component-level overrides */
-  &:where([data-material='solid']) {
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-  
-  &:where([data-material='translucent']) {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 
   @supports selector(:has(*)) {
     &:where(:has(.rt-TextFieldInput:focus)) {
@@ -44,8 +26,6 @@
   &::selection {
     background-color: var(--text-field-selection-color);
   }
-
-  /* Reduced motion support */
 }
 
 .rt-TextFieldInput {
@@ -93,14 +73,14 @@
     box-sizing: content-box;
     width: var(--text-field-native-icon-size);
     height: var(--text-field-native-icon-size);
-    padding: var(--space-1);
+    padding: var(--space-2);
     margin-left: 0;
-    margin-right: calc(var(--space-1) * -1);
+    margin-right: calc(var(--space-2) * -1);
     border-radius: calc(var(--text-field-border-radius) - 2px);
   }
   /* Chrome's calendar icon */
   &:where(:not([type='time']))::-webkit-calendar-picker-indicator {
-    margin-left: var(--space-1);
+    margin-left: var(--space-2);
   }
   @media (hover: hover) {
     &::-webkit-calendar-picker-indicator:where(:hover) {
@@ -213,21 +193,21 @@
   .rt-TextFieldRoot {
     &:where(.rt-r-size-1) {
       --text-field-height: var(--control-height-1);
-      --text-field-padding: calc(var(--space-1) * 1.5 - var(--text-field-border-width));
+      --text-field-padding: calc(var(--space-2) * 1.5 - var(--text-field-border-width));
       --text-field-border-radius: var(--radius-pill-1);
-      --text-field-native-icon-size: var(--space-3);
+      --text-field-native-icon-size: var(--space-4);
       font-size: var(--font-size-1);
       letter-spacing: var(--letter-spacing-1);
 
       & :where(.rt-TextFieldSlot) {
-        gap: var(--space-2);
-        padding-left: var(--space-1);
-        padding-right: var(--space-1);
+        gap: var(--space-3);
+        padding-left: var(--space-2);
+        padding-right: var(--space-2);
 
         /* stylelint-disable-next-line selector-max-type */
         & :where(svg) {
-          width: calc(var(--space-3) * 1.175);
-          height: calc(var(--space-3) * 1.175);
+          width: calc(var(--space-4) * 1.175);
+          height: calc(var(--space-4) * 1.175);
           flex-shrink: 0;
         }
       }
@@ -246,9 +226,9 @@
 
     &:where(.rt-r-size-2) {
       --text-field-height: var(--control-height-2);
-      --text-field-padding: calc(var(--space-2) - var(--text-field-border-width));
+      --text-field-padding: calc(var(--space-3) - var(--text-field-border-width));
       --text-field-border-radius: var(--radius-pill-2);
-      --text-field-native-icon-size: var(--space-4);
+      --text-field-native-icon-size: var(--space-5);
       font-size: var(--font-size-2);
       letter-spacing: var(--letter-spacing-2);
 
@@ -265,14 +245,14 @@
       }
 
       & :where(.rt-TextFieldSlot) {
-        gap: var(--space-2);
-        padding-left: var(--space-2);
-        padding-right: var(--space-2);
+        gap: var(--space-3);
+        padding-left: var(--space-3);
+        padding-right: var(--space-3);
 
         /* stylelint-disable-next-line selector-max-type */
         & :where(svg) {
-          width: var(--space-4);
-          height: var(--space-4);
+          width: var(--space-5);
+          height: var(--space-5);
           flex-shrink: 0;
         }
       }
@@ -280,9 +260,9 @@
 
     &:where(.rt-r-size-3) {
       --text-field-height: var(--control-height-3);
-      --text-field-padding: calc(var(--space-3) - var(--text-field-border-width));
+      --text-field-padding: calc(var(--space-4) - var(--text-field-border-width));
       --text-field-border-radius: var(--radius-pill-3);
-      --text-field-native-icon-size: var(--space-4);
+      --text-field-native-icon-size: var(--space-5);
       font-size: var(--font-size-3);
       letter-spacing: var(--letter-spacing-3);
 
@@ -298,14 +278,14 @@
       }
 
       & :where(.rt-TextFieldSlot) {
-        gap: var(--space-3);
-        padding-left: var(--space-3);
-        padding-right: var(--space-3);
+        gap: var(--space-4);
+        padding-left: var(--space-4);
+        padding-right: var(--space-4);
 
         /* stylelint-disable-next-line selector-max-type */
         & :where(svg) {
-          width: calc(var(--space-4) * 1.175);
-          height: calc(var(--space-4) * 1.175);
+          width: calc(var(--space-5) * 1.175);
+          height: calc(var(--space-5) * 1.175);
           flex-shrink: 0;
         }
       }
@@ -314,9 +294,9 @@
     /* Size 4 sits on the same ladder step as Button size 4. */
     &:where(.rt-r-size-4) {
       --text-field-height: var(--control-height-4);
-      --text-field-padding: calc(var(--space-4) - var(--text-field-border-width));
+      --text-field-padding: calc(var(--space-5) - var(--text-field-border-width));
       --text-field-border-radius: var(--radius-pill-4);
-      --text-field-native-icon-size: var(--space-5);
+      --text-field-native-icon-size: var(--space-6);
       font-size: var(--font-size-4);
       letter-spacing: var(--letter-spacing-4);
 
@@ -331,9 +311,9 @@
       }
 
       & :where(.rt-TextFieldSlot) {
-        gap: var(--space-3);
-        padding-left: var(--space-4);
-        padding-right: var(--space-4);
+        gap: var(--space-4);
+        padding-left: var(--space-5);
+        padding-right: var(--space-5);
 
         /* stylelint-disable-next-line selector-max-type */
         & :where(svg) {
@@ -359,45 +339,13 @@
   --text-field-focus-color: var(--focus-8);
   --text-field-border-width: 1px;
 
-  /* Base state: solid colors for solid panels */
   box-shadow: inset 0 0 0 1px var(--accent-6);
-
-  /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-material='solid']) {
-    box-shadow: inset 0 0 0 1px var(--accent-6);
-  }
-
-  &:where([data-material='translucent']) {
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-  }
 
   /* Hover effects */
   @media (hover: hover) {
     &:where(:hover:not(:has(.rt-TextFieldInput:focus))) {
       background-color: var(--accent-2);
       box-shadow: inset 0 0 0 1px var(--accent-7);
-      
-      /* Theme-level translucent override for hover */
-      :where([data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-        box-shadow: inset 0 0 0 1px var(--accent-a7);
-      }
-
-      /* Component-level overrides for hover */
-      &:where([data-material='solid']) {
-        background-color: var(--accent-2);
-        box-shadow: inset 0 0 0 1px var(--accent-7);
-      }
-
-      &:where([data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-        box-shadow: inset 0 0 0 1px var(--accent-a7);
-      }
     }
   }
 
@@ -436,43 +384,14 @@
   --text-field-focus-color: var(--focus-8);
   --text-field-border-width: 0px;
 
-  /* Base state: solid surface for solid panels */
   background-color: var(--color-surface-solid);
   box-shadow: var(--shadow-2);
-
-  /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    background-color: var(--color-surface-translucent);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-material='solid']) {
-    background-color: var(--color-surface-solid);
-  }
-
-  &:where([data-material='translucent']) {
-    background-color: var(--color-surface-translucent);
-  }
 
   /* Hover effects */
   @media (hover: hover) {
     &:where(:hover:not(:has(.rt-TextFieldInput:focus))) {
       background-color: var(--accent-2);
       box-shadow: var(--shadow-2);
-
-      /* Theme-level translucent override for hover */
-      :where([data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      }
-
-      /* Component-level overrides for hover */
-      &:where([data-material='solid']) {
-        background-color: var(--accent-2);
-      }
-
-      &:where([data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      }
     }
   }
 
@@ -515,41 +434,12 @@
   --text-field-focus-color: var(--accent-8);
   --text-field-border-width: 0px;
 
-  /* Base state: solid color for solid panels */
   background-color: var(--accent-3);
-
-  /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-material='solid']) {
-    background-color: var(--accent-3);
-  }
-
-  &:where([data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-  }
 
   /* Hover effects */
   @media (hover: hover) {
     &:where(:hover:not(:has(.rt-TextFieldInput:focus))) {
       background-color: var(--accent-4);
-      
-      /* Theme-level translucent override for hover */
-      :where([data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-      }
-
-      /* Component-level overrides for hover */
-      &:where([data-material='solid']) {
-        background-color: var(--accent-4);
-      }
-
-      &:where([data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-      }
     }
   }
 
@@ -606,53 +496,13 @@
   /* Hover effects */
   @media (hover: hover) {
     &:where(:hover:not(:has(.rt-TextFieldInput:focus))) {
-      /* Base state: solid accent for solid panels */
       background-color: var(--accent-3);
-      
-      /* Theme-level translucent override for hover */
-      :where([data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      }
-
-      /* Component-level overrides for hover */
-      &:where([data-material='solid']) {
-        background-color: var(--accent-3);
-      }
-
-      &:where([data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      }
-
-      /* Disable backdrop-filter when inside elements that already have backdrop-filter */
-      /* :where(.rt-PopoverContent, .rt-BaseDialogContent, .rt-BaseMenuContent, .rt-DropdownMenuContent, .rt-ContextMenuContent, .rt-AlertDialogContent, .rt-HoverCardContent, .rt-TooltipContent, .rt-Card) & {
-        backdrop-filter: none !important;
-      } */
     }
   }
 
   /* Show styling only on focus/interaction */
   &:where(:focus-within) {
-    /* Base state: solid accent for solid panels */
     background-color: var(--accent-2);
-
-    /* Theme-level translucent override */
-    :where([data-material='translucent']) & {
-      background-color: var(--accent-a2);
-    }
-
-    /* Component-level overrides */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-2);
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: var(--accent-a2);
-    }
-
-    /* Disable backdrop-filter when inside elements that already have backdrop-filter */
-    /* :where(.rt-PopoverContent, .rt-BaseDialogContent, .rt-BaseMenuContent, .rt-DropdownMenuContent, .rt-ContextMenuContent, .rt-AlertDialogContent, .rt-HoverCardContent, .rt-TooltipContent, .rt-Card) & {
-      backdrop-filter: none !important;
-    } */
   }
 
   /* prettier-ignore */
@@ -674,26 +524,8 @@
   --text-field-focus-color: var(--accent-8);
   --text-field-border-width: 1px;
 
-  /* Base state: solid accent for solid panels */
   background-color: var(--accent-2);
   box-shadow: inset 0 0 0 1px var(--accent-6);
-
-  /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-material='solid']) {
-    background-color: var(--accent-2);
-    box-shadow: inset 0 0 0 1px var(--accent-6);
-  }
-
-  &:where([data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-  }
 
   & :where(.rt-TextFieldInput) {
     &::placeholder {
@@ -714,53 +546,13 @@
     &:where(:hover:not(:has(.rt-TextFieldInput:focus))) {
       background-color: var(--accent-3);
       box-shadow: inset 0 0 0 1px var(--accent-7);
-      
-      /* Theme-level translucent override for hover */
-      :where([data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-        box-shadow: inset 0 0 0 1px var(--accent-a7);
-      }
-
-      /* Component-level overrides for hover */
-      &:where([data-material='solid']) {
-        background-color: var(--accent-3);
-        box-shadow: inset 0 0 0 1px var(--accent-7);
-      }
-
-      &:where([data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-        box-shadow: inset 0 0 0 1px var(--accent-a7);
-      }
     }
   }
 
   /* Interaction states get light background */
   &:where(:focus-within) {
-    /* Base state: solid accent for solid panels */
     background-color: var(--accent-2);
     box-shadow: inset 0 0 0 var(--text-field-border-width) var(--accent-8);
-
-    /* Theme-level translucent override */
-    :where([data-material='translucent']) & {
-      background-color: var(--accent-a2);
-      box-shadow: inset 0 0 0 var(--text-field-border-width) var(--accent-a8);
-    }
-
-    /* Component-level overrides */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-2);
-      box-shadow: inset 0 0 0 var(--text-field-border-width) var(--accent-8);
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: var(--accent-a2);
-      box-shadow: inset 0 0 0 var(--text-field-border-width) var(--accent-a8);
-    }
-
-    /* Disable backdrop-filter when inside elements that already have backdrop-filter */
-    /* :where(.rt-PopoverContent, .rt-BaseDialogContent, .rt-BaseMenuContent, .rt-DropdownMenuContent, .rt-ContextMenuContent, .rt-AlertDialogContent, .rt-HoverCardContent, .rt-TooltipContent, .rt-Card) & {
-      backdrop-filter: none !important;
-    } */
   }
 
   /* prettier-ignore */
@@ -811,7 +603,7 @@
 
 .rt-TextFieldRoot:where(.rt-error.rt-variant-outline) {
   box-shadow: inset 0 0 0 1px var(--red-6);
-  
+
   @media (hover: hover) {
     &:where(:hover:not(:has(.rt-TextFieldInput:focus))) {
       box-shadow: inset 0 0 0 1px var(--red-7);
@@ -821,7 +613,7 @@
 
 .rt-TextFieldRoot:where(.rt-error.rt-variant-surface) {
   box-shadow: inset 0 0 0 1px var(--red-6);
-  
+
   @media (hover: hover) {
     &:where(:hover:not(:has(.rt-TextFieldInput:focus))) {
       box-shadow: inset 0 0 0 1px var(--red-7);
@@ -831,7 +623,7 @@
 
 .rt-TextFieldRoot:where(.rt-error.rt-variant-raised) {
   box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-6);
-  
+
   @media (hover: hover) {
     &:where(:hover:not(:has(.rt-TextFieldInput:focus))) {
       box-shadow: var(--shadow-3), inset 0 0 0 1px var(--red-7);
@@ -841,7 +633,7 @@
 
 .rt-TextFieldRoot:where(.rt-error.rt-variant-soft) {
   background-color: var(--red-2);
-  
+
   @media (hover: hover) {
     &:where(:hover:not(:has(.rt-TextFieldInput:focus))) {
       background-color: var(--red-4);
@@ -855,7 +647,7 @@
       background-color: var(--red-3);
     }
   }
-  
+
   &:where(:focus-within) {
     background-color: var(--red-2);
   }
@@ -866,10 +658,10 @@
   color: var(--red-11);
   font-size: var(--font-size-1);
   line-height: var(--line-height-1);
-  margin-top: var(--space-1);
+  margin-top: var(--space-2);
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-2);
 }
 
 .rt-TextFieldErrorMessage::before {

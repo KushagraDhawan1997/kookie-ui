@@ -9,14 +9,6 @@ const switchPropDefs = {
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
   variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'surface' },
   ...colorPropDef,
-  /**
-   * Material type for visual rendering and depth effects
-   * Controls how the switch renders its visual elements
-   */
-  /**
-   * Panel background type (deprecated)
-   * @deprecated Use `material` prop instead. This prop will be removed in a future version.
-   */
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;
   variant: PropDef<(typeof variants)[number]>;

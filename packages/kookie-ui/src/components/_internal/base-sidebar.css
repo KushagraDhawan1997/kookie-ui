@@ -32,7 +32,6 @@
 
   /* Override base menu styling that's not appropriate for sidebars */
   background-color: transparent !important;
-  backdrop-filter: none !important;
   box-shadow: none !important;
   border-radius: 0 !important;
 
@@ -44,7 +43,7 @@
   /* stylelint-disable-next-line selector-max-specificity */
   & .rt-BaseMenuViewport {
     /* gap: var(--base-menu-content-padding); */
-    gap: var(--space-5);
+    gap: var(--space-6);
   }
 
   /* Ensure ScrollArea takes full height within SidebarContent */
@@ -80,7 +79,7 @@
 /* Sidebar Separator - ensure full width and proper spacing */
 .rt-SidebarSeparator {
   width: 100%;
-  margin: var(--space-2) 0;
+  margin: var(--space-3) 0;
 }
 
 /* Removed mobile hide rule; Shell handles overlay vs inline */

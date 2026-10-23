@@ -40,7 +40,6 @@ The TextArea component is the textarea element that accepts multi-line text inpu
 | `variant` | `'raised' \| 'surface' \| 'soft' \| 'ghost' \| 'outline'` | Input style variant: raised for elevated, surface for standard forms, soft for subtle integration, outline for defined boundaries, ghost for minimal inline editing |
 | `color` | `AccentColor` | Semantic color for focus state and validation feedback. Use for visual categorization or status communication |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Corner radius scale: none for sharp edges, small/medium/large for progressive rounding, full for maximum rounding |
-| `material` | `'solid' \| 'translucent'` | Background appearance: solid for opaque backgrounds, translucent for depth over images or dynamic backgrounds |
 | `resize` | `'none' \| 'vertical' \| 'horizontal' \| 'both'` | Controls textarea resizing behavior. Default: user agent default (usually 'vertical') |
 | `error` | `boolean` | Marks field as invalid. Use with errorMessage for accessibility |
 | `errorMessage` | `string` | Error message displayed below textarea. Automatically connected via ARIA attributes for screen readers |
@@ -138,30 +137,6 @@ Use the `color` prop with semantic colors to communicate textarea purpose or sta
 <TextArea size="2" color="blue" placeholder="Description" />
 <TextArea size="2" color="green" placeholder="Approved comment" />
 <TextArea size="2" color="red" placeholder="Error feedback" />
-```
-
-## Material
-
-Use the `material` prop to set textarea appearance. Choose `solid` for opaque backgrounds, or `translucent` for depth and separation over images or dynamic backgrounds.
-
-### Theme
-
-TextArea automatically inherits the theme's material setting.
-
-```tsx
-<Theme material="translucent">
-  <TextArea placeholder="Enter description" />
-</Theme>
-```
-
-### Custom
-
-Override the theme's material for specific effects.
-
-```tsx
-<Theme material="solid">
-  <TextArea material="translucent" placeholder="Enter description" />
-</Theme>
 ```
 
 ## Resize
@@ -428,10 +403,6 @@ Kookie UI extends the native textarea with practical improvements:
 
 Rich error handling with `error` and `errorMessage` props. Error messages automatically associate with textarea via `aria-describedby` for screen reader accessibility. Visual error indicators appear in both light and dark themes.
 
-### Material System
-
-Full integration with the material system for solid and translucent backgrounds. Automatic backdrop blur on translucent materials for depth and visual hierarchy.
-
 ### Advanced Validation
 
 Built-in support for required fields, min/max length validation, and character counting. Form integration with native HTML validation attributes and proper error messaging.
@@ -446,21 +417,20 @@ Size prop supports responsive objects for adaptive sizing across breakpoints. Mo
 
 - **Error validation system** with `error` and `errorMessage` props
 - **Automatic ARIA attributes** for error messages and validation states
-- **Material prop** for solid/translucent theme contexts
 - **Resize control** with `resize` prop for user resizing behavior
 - **Responsive size support** with breakpoint objects
 - **Enhanced focus states** with better contrast
 - **Character limit support** with `maxLength` and `minLength` props
+
+### Removed
+
+- `material` and `panelBackground` props. Every surface is solid.
 
 ### Changed
 
 - Enhanced focus states with better contrast
 - Improved error state styling with clearer visual feedback
 - Better placeholder styling for all variants
-
-### Deprecated
-
-- `panelBackground` prop in favor of `material` prop
 
 ### Fixed
 

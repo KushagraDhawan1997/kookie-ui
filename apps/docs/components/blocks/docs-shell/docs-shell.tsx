@@ -83,9 +83,9 @@ export function DocsShell({
           <Flex
             align="center"
             justify="between"
-            gap="3"
-            px={{ initial: '4', sm: '5' }}
-            pt="4"
+            gap="4"
+            px={{ initial: '5', sm: '6' }}
+            pt="5"
             position={hero ? 'absolute' : undefined}
             top="0"
             left="0"
@@ -96,7 +96,7 @@ export function DocsShell({
                 {mobileTriggerIcon ?? <HugeiconsIcon icon={SidebarLeftIcon} strokeWidth={1.75} />}
               </Shell.Trigger>
             </IconButton>
-            <Flex ref={setActionsSlot} align="center" gap="4" />
+            <Flex ref={setActionsSlot} align="center" gap="5" />
           </Flex>
         </Box>
 

@@ -3,17 +3,17 @@
 import * as React from 'react';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
 import { SectionHeader } from '@/components/blocks/section-header/section-header';
-import { Flex, Card, Text, Heading, Button, Inset, Separator, Image } from '@kushagradhawan/kookie-ui';
+import { Flex, Card, Text, Heading, Button, Inset, Image } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { ArrowRight01Icon, Book02Icon } from '@hugeicons/core-free-icons';
+import { ArrowRight01Icon } from '@hugeicons/core-free-icons';
 
 const IMAGE_URL = 'https://images.unsplash.com/photo-1745613944320-1f14580bb0db?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDQ5fHx8ZW58MHx8fHx8';
 
 export function CardExamples() {
   return (
-    <Flex direction="column" gap="9">
+    <Flex direction="column" gap="10">
       {/* Example 1: Content Card with Media */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Content Card</SectionHeader.Title>
@@ -34,8 +34,8 @@ export function CardExamples() {
         style={{ height: 320, objectFit: 'cover' }}
       />
     </Inset>
-    <Flex direction="column" gap="4" p="2">
-      <Flex direction="column" gap="2">
+    <Flex direction="column" gap="5" p="3">
+      <Flex direction="column" gap="3">
         <Heading size="6" weight="medium">Getting Started</Heading>
         <Text size="3" emphasis="medium">
           Learn the fundamentals of building modern interfaces
@@ -63,8 +63,8 @@ export function CardExamples() {
                   }}
                 />
               </Inset>
-              <Flex direction="column" gap="4" p="2">
-                <Flex direction="column" gap="2">
+              <Flex direction="column" gap="5" p="3">
+                <Flex direction="column" gap="3">
                   <Heading size="6" weight="medium">
                     Getting Started
                   </Heading>
@@ -77,73 +77,6 @@ export function CardExamples() {
                   <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={1.75} />
                 </Button>
               </Flex>
-            </Flex>
-          </Card>
-        </PreviewBlock>
-      </Flex>
-
-      <Separator size="4" />
-
-      {/* Example 2: Translucent Material */}
-      <Flex direction="column" gap="4">
-        <SectionHeader.Root>
-          <SectionHeader.Content>
-            <SectionHeader.Title>Translucent Material</SectionHeader.Title>
-            <SectionHeader.Description>
-              The translucent material creates depth over images and dynamic backgrounds. Soft buttons keep their text on the strong ink, so they stay readable on complex surfaces.
-            </SectionHeader.Description>
-          </SectionHeader.Content>
-        </SectionHeader.Root>
-        <PreviewBlock
-          showThemeToggle={false}
-          appearance="dark"
-          background={{
-            backgroundImage: `url(${IMAGE_URL})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-          code={`<Card variant="raised" material="translucent" size="3" style={{ maxWidth: 320 }}>
-  <Flex direction="column" gap="8">
-    <Flex direction="column" gap="4">
-      <HugeiconsIcon icon={Book02Icon} size={24} strokeWidth={1.75} />
-      <Heading size="6" weight="medium">Getting Started</Heading>
-      <Text size="3" emphasis="medium">
-        Learn the fundamentals of building modern interfaces
-        with our comprehensive guide. This tutorial covers
-        components, layouts, and best practices for creating
-        beautiful user experiences.
-      </Text>
-      <Text size="3" emphasis="medium">
-        Whether you're new to design systems or looking to
-        refine your skills, this guide has everything you need.
-      </Text>
-    </Flex>
-    <Button variant="solid" size="2" color="gray">
-      Read More
-      <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={1.75} />
-    </Button>
-  </Flex>
-</Card>`}
-        >
-          <Card variant="raised" material="translucent" size="3" style={{ maxWidth: 320 }}>
-            <Flex direction="column" gap="8">
-              <Flex direction="column" gap="4">
-                <HugeiconsIcon icon={Book02Icon} size={24} strokeWidth={1.75} />
-                <Heading size="6" weight="medium">
-                  Getting Started
-                </Heading>
-                <Text size="3" emphasis="medium">
-                  Learn the fundamentals of building modern interfaces with our comprehensive guide. This tutorial covers components, layouts, and best practices for creating beautiful user
-                  experiences.
-                </Text>
-                <Text size="3" emphasis="medium">
-                  Whether you're new to design systems or looking to refine your skills, this guide has everything you need.
-                </Text>
-              </Flex>
-              <Button variant="solid" size="2" color="gray">
-                Read More
-                <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={1.75} />
-              </Button>
             </Flex>
           </Card>
         </PreviewBlock>

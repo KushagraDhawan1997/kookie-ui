@@ -78,7 +78,7 @@ export function DocsPageHeader({ meta, actions, showCopyButton = true, tabs, sep
         )}
       </DocsShellPageActions>
 
-      <PageHeader.Content gap="5">
+      <PageHeader.Content gap="6">
         <PageHeader.Title size={{ initial: '8', sm: '9' }}>{meta.title}</PageHeader.Title>
         {meta.description && (
           <PageHeader.Description size={{ initial: '3', sm: '4' }} emphasis="loud">{meta.description}</PageHeader.Description>
@@ -86,9 +86,9 @@ export function DocsPageHeader({ meta, actions, showCopyButton = true, tabs, sep
       </PageHeader.Content>
 
       {tabs ? (
-        <PageHeader.Tabs mt="6">{tabs}</PageHeader.Tabs>
+        <PageHeader.Tabs mt="7">{tabs}</PageHeader.Tabs>
       ) : (
-        separator && <Separator size="4" mt="6" />
+        separator && <Separator size="4" mt="7" />
       )}
     </PageHeader.Root>
   );

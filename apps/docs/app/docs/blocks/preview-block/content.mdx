@@ -52,7 +52,7 @@ The toolbar only renders when there is a switch or a label.
 | -------- | ------- |
 | `--preview-block-radius` | `var(--radius-surface-4)` |
 | `--preview-block-border` | `var(--gray-a4)` |
-| `--preview-block-padding` | `var(--space-6)`, `var(--space-4)` on small screens |
+| `--preview-block-padding` | `var(--space-7)`, `var(--space-5)` on small screens |
 | `--preview-block-min-height` | `10rem` |
 
 ## Examples
@@ -63,7 +63,7 @@ A grid suits layout demos, where alignment matters.
 
 <PreviewBlock background="grid" label="Storage card" code={previewSources.grid}>
   <Card variant="raised" size="2">
-    <Flex direction="column" gap="1" width="240px">
+    <Flex direction="column" gap="2" width="240px">
       <Text size="2" weight="medium">Storage</Text>
       <Text size="2" emphasis="medium">18.4 GB of 50 GB used</Text>
     </Flex>
@@ -75,7 +75,7 @@ A grid suits layout demos, where alignment matters.
 Pin the stage to dark and hide the switch when a demo only makes sense one way.
 
 <PreviewBlock appearance="dark" showThemeToggle={false} code={previewSources.dark}>
-  <Flex gap="2" align="center">
+  <Flex gap="3" align="center">
     <Badge color="green" variant="soft">Live</Badge>
     <Text size="2">Deployed 2 minutes ago</Text>
   </Flex>
@@ -90,7 +90,7 @@ Pass styles instead of a preset for gradients or images.
   background={{ backgroundImage: 'linear-gradient(135deg, var(--iris-4), var(--pink-4))' }}
   code={previewSources.gradient}
 >
-  <Button variant="soft" material="translucent">Action</Button>
+  <Button variant="soft">Action</Button>
 </PreviewBlock>
 
 ## Accessibility

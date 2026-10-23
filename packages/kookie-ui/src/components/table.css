@@ -60,9 +60,9 @@
 @breakpoints {
   .rt-TableRoot {
     &:where(.rt-r-size-1) {
-      --table-border-radius: min(var(--radius-surface-5), calc(var(--radius-surface-1) + var(--space-1)));
-      --table-cell-padding: var(--space-2);
-      --table-cell-min-height: calc(36px * var(--scaling));
+      --table-border-radius: min(var(--radius-surface-5), calc(var(--radius-surface-1) + var(--space-2)));
+      --table-cell-padding: var(--space-3);
+      --table-cell-min-height: calc(36px * var(--scale));
 
       & :where(.rt-TableRootTable) {
         font-size: var(--font-size-2);
@@ -70,9 +70,9 @@
       }
     }
     &:where(.rt-r-size-2) {
-      --table-border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-2) + var(--space-2)));
-      --table-cell-padding: var(--space-3);
-      --table-cell-min-height: calc(44px * var(--scaling));
+      --table-border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-2) + var(--space-3)));
+      --table-cell-padding: var(--space-4);
+      --table-cell-min-height: calc(44px * var(--scale));
 
       & :where(.rt-TableRootTable) {
         font-size: var(--font-size-2);
@@ -80,9 +80,9 @@
       }
     }
     &:where(.rt-r-size-3) {
-      --table-border-radius: min(var(--radius-surface-7), calc(var(--radius-surface-3) + var(--space-3)));
-      --table-cell-padding: var(--space-4);
-      --table-cell-min-height: var(--space-8);
+      --table-border-radius: min(var(--radius-surface-7), calc(var(--radius-surface-3) + var(--space-4)));
+      --table-cell-padding: var(--space-5);
+      --table-cell-min-height: var(--space-9);
 
       & :where(.rt-TableRootTable) {
         font-size: var(--font-size-3);
@@ -101,18 +101,10 @@
 /* surface */
 
 .rt-TableRoot:where(.rt-variant-surface) {
-  /*
-   * This surface blurs its own backdrop, which makes it the backdrop root for
-   * everything inside it. A component nested here would re-blur an already
-   * blurred, already flat surface for the full cost of another blur pass, so
-   * switch the component filter off for the subtree. See tokens/blur.css.
-   */
-  --backdrop-filter-components-enabled: none;
   box-sizing: border-box;
   border: 1px solid var(--gray-a5);
   border-radius: var(--table-border-radius);
-  background-color: var(--color-panel);
-  backdrop-filter: var(--backdrop-filter-panel);
+  background-color: var(--color-panel-solid);
   background-clip: padding-box;
   position: relative;
 

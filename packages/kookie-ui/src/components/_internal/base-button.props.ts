@@ -25,18 +25,6 @@ const sizes = ['1', '2', '3', '4'] as const;
 const variants = ['raised', 'solid', 'soft', 'surface', 'outline', 'ghost'] as const;
 
 /**
- * Available panel background options (deprecated)
- * @deprecated Use `materials` instead
- */
-
-/**
- * Available material options for visual rendering
- * - solid: Opaque backgrounds and borders
- * - translucent: Elevated effects with depth and visual separation
- */
-const materials = ['solid', 'translucent'] as const;
-
-/**
  * Base button prop definitions that define the component's API
  * 
  * These props are used by all button variants (Button, IconButton, etc.)
@@ -47,7 +35,6 @@ const materials = ['solid', 'translucent'] as const;
  * - Six visual variants for different interface contexts
  * - Comprehensive color system with semantic meanings
  * - Loading states with automatic accessibility
- * - Material system for visual depth and elevation
  * - Polymorphic rendering support via asChild
  * 
  * @example
@@ -60,9 +47,6 @@ const materials = ['solid', 'translucent'] as const;
  * 
  * // Button with loading state
  * <BaseButton loading>Processing...</BaseButton>
- * 
- * // Button with translucent material
- * <BaseButton material="translucent">Elevated Button</BaseButton>
  * ```
  */
 const baseButtonPropDefs = {
@@ -89,15 +73,6 @@ const baseButtonPropDefs = {
    */
   fullWidth: { type: 'boolean', className: 'rt-full-width', default: false },
   /**
-   * Material type for visual rendering and depth effects
-   * Controls how the button renders its visual elements
-   */
-  material: { type: 'enum', values: materials, default: undefined },
-  /**
-   * Panel background type (deprecated)
-   * @deprecated Use `material` prop instead. This prop will be removed in a future version.
-   */
-  /**
    * Flush mode that removes visual padding for seamless text integration
    * Only effective with ghost variant
    */
@@ -107,7 +82,6 @@ const baseButtonPropDefs = {
   variant: PropDef<(typeof variants)[number]>;
   loading: PropDef<boolean>;
   fullWidth: PropDef<boolean>;
-  material: PropDef<(typeof materials)[number] | undefined>;
   flush: PropDef<boolean>;
 };
 

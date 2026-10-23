@@ -82,9 +82,9 @@
       line-height: var(--line-height-1);
       letter-spacing: var(--letter-spacing-1);
       --tab-height: var(--control-height-1);
-      --tab-padding-x: var(--space-1);
-      --tab-inner-padding-x: var(--space-1);
-      --tab-inner-padding-y: calc(var(--space-1) * var(--spacing-multiplier-small));
+      --tab-padding-x: var(--space-2);
+      --tab-inner-padding-x: var(--space-2);
+      --tab-inner-padding-y: calc(var(--space-2) * var(--spacing-multiplier-small));
       --tab-inner-border-radius: var(--radius-1);
 
       /* Icon sizing for size 1 */
@@ -103,9 +103,9 @@
       line-height: var(--line-height-2);
       letter-spacing: var(--letter-spacing-2);
       --tab-height: var(--control-height-2);
-      --tab-padding-x: var(--space-2);
-      --tab-inner-padding-x: var(--space-2);
-      --tab-inner-padding-y: var(--space-1);
+      --tab-padding-x: var(--space-3);
+      --tab-inner-padding-x: var(--space-3);
+      --tab-inner-padding-y: var(--space-2);
       --tab-inner-border-radius: var(--radius-2);
 
       /* Icon sizing for size 2 */
@@ -124,9 +124,9 @@
       line-height: var(--line-height-3);
       letter-spacing: var(--letter-spacing-3);
       --tab-height: var(--control-height-3);
-      --tab-padding-x: var(--space-3);
-      --tab-inner-padding-x: var(--space-3);
-      --tab-inner-padding-y: var(--space-2);
+      --tab-padding-x: var(--space-4);
+      --tab-inner-padding-x: var(--space-4);
+      --tab-inner-padding-y: var(--space-3);
       --tab-inner-border-radius: var(--radius-3);
 
       /* Icon sizing for size 3 */
@@ -145,9 +145,9 @@
       line-height: var(--line-height-4);
       letter-spacing: var(--letter-spacing-4);
       --tab-height: var(--control-height-4);
-      --tab-padding-x: var(--space-3);
-      --tab-inner-padding-x: var(--space-4);
-      --tab-inner-padding-y: var(--space-2);
+      --tab-padding-x: var(--space-4);
+      --tab-inner-padding-x: var(--space-5);
+      --tab-inner-padding-y: var(--space-3);
       --tab-inner-border-radius: var(--radius-4);
 
       /* Icon sizing for size 4 */
@@ -182,55 +182,10 @@
       color: var(--gray-12);
     }
     &:where(:hover) :where(.rt-BaseTabListTriggerInner) {
-      /* Base state: solid gray for solid panels */
       background-color: var(--gray-a3);
-
-      /* Theme-level translucent override for hover */
-      :where([data-material='translucent']) & {
-        background-color: var(--gray-a3);
-        backdrop-filter: var(--backdrop-filter-components);
-      }
-
-      /* Component-level overrides for hover */
-      :where(.rt-BaseTabList[data-material='solid']) & {
-        background-color: var(--gray-a3);
-        backdrop-filter: none;
-        --backdrop-filter-components: none;
-      }
-
-      :where(.rt-BaseTabList[data-material='translucent']) & {
-        background-color: var(--gray-a3);
-        backdrop-filter: var(--backdrop-filter-components);
-        --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-      }
-
-      /* Disable backdrop-filter when inside elements that already have backdrop-filter */
-      :where(.rt-PopoverContent, .rt-BaseDialogContent, .rt-BaseMenuContent, .rt-DropdownMenuContent, .rt-ContextMenuContent, .rt-AlertDialogContent, .rt-HoverCardContent, .rt-TooltipContent, .rt-Card) & {
-        backdrop-filter: none !important;
-      }
     }
     &:where(:focus-visible:hover) :where(.rt-BaseTabListTriggerInner) {
-      /* Base state: solid accent for solid panels */
       background-color: var(--accent-a3);
-
-      /* Theme-level translucent override for focus+hover */
-      :where([data-material='translucent']) & {
-        background-color: var(--accent-a3);
-        backdrop-filter: var(--backdrop-filter-components);
-      }
-
-      /* Component-level overrides for focus+hover */
-      :where(.rt-BaseTabList[data-material='solid']) & {
-        background-color: var(--accent-a3);
-        backdrop-filter: none;
-        --backdrop-filter-components: none;
-      }
-
-      :where(.rt-BaseTabList[data-material='translucent']) & {
-        background-color: var(--accent-a3);
-        backdrop-filter: var(--backdrop-filter-components);
-        --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-      }
     }
   }
   &:where([data-state='active'], [data-active]) {
@@ -239,7 +194,7 @@
   &:where(:focus-visible) :where(.rt-BaseTabListTriggerInner) {
     outline: var(--focus-outline-width) solid var(--focus-8);
     outline-offset: var(--focus-outline-offset-inset);
-    scroll-margin: var(--space-2);
+    scroll-margin: var(--space-3);
   }
   &:where([data-state='active'], [data-active])::before {
     box-sizing: border-box;
@@ -260,14 +215,12 @@
   .rt-TabNavLink:where([data-active])::before {
     background-color: Highlight;
   }
-  
+
   .rt-BaseTabListTrigger:where(:focus-visible) :where(.rt-BaseTabListTriggerInner) {
     outline: 2px solid Highlight;
     outline-offset: 2px;
   }
 }
-
-
 
 /* Disabled: the same treatment as a disabled menu item. It keeps no hover fill. */
 .rt-BaseTabListTrigger:where([data-disabled]) {

@@ -26,7 +26,6 @@ import { MenuProvider } from './_internal/menu-context.js';
 import {
   MenuShortcut,
   getMenuAlignOffset,
-  resolveMenuMaterial,
   toAriaKeyShortcuts,
   useResolvedResponsiveValue,
 } from './_internal/base-menu.utils.js';
@@ -59,7 +58,6 @@ type ContextMenuSurfaceProps = GetPropDefTypes<typeof contextMenuContentPropDefs
 type ContextMenuContentContextValue = {
   size?: ContextMenuSurfaceProps['size'];
   color?: ContextMenuSurfaceProps['color'];
-  material?: ContextMenuSurfaceProps['material'];
 };
 const ContextMenuContentContext = React.createContext<ContextMenuContentContextValue>({});
 type ContextMenuContentElement = React.ElementRef<typeof ContextMenuPrimitive.Content>;
@@ -80,9 +78,6 @@ interface ContextMenuContentProps
 const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMenuContentProps>(
   (props, forwardedRef) => {
     const themeContext = useThemeContext();
-
-
-    const material = resolveMenuMaterial(props.material, themeContext);
     const {
       size = contextMenuContentPropDefs.size.default,
     } = props;
@@ -92,7 +87,6 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
       color,
       container,
       forceMount,
-      material: _material,
       submenuBehavior: _submenuBehavior,
       virtualized = false,
       ...contentProps
@@ -102,8 +96,8 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
     const scalarSize = useResolvedResponsiveValue(size, contextMenuContentPropDefs.size.default);
 
     const contextValue = React.useMemo(
-      () => ({ size, color: resolvedColor, material }),
-      [size, resolvedColor, material],
+      () => ({ size, color: resolvedColor }),
+      [size, resolvedColor],
     );
 
     const body = (
@@ -117,8 +111,7 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
         <Theme asChild>
           <ContextMenuPrimitive.Content
             data-accent-color={resolvedColor}
-            data-material={material}
-            alignOffset={getMenuAlignOffset(scalarSize, themeContext.scaling)}
+            alignOffset={getMenuAlignOffset(scalarSize)}
             collisionPadding={10}
             {...contentProps}
             asChild={false}
@@ -355,14 +348,10 @@ const ContextMenuSubContent = React.forwardRef<
   ContextMenuSubContentProps
 >((props, forwardedRef) => {
   const parent = React.useContext(ContextMenuContentContext);
-  const themeContext = useThemeContext();
-
 
   // A submenu inherits the parent surface, and its own props win.
   const size = props.size ?? parent.size;
   const color = props.color ?? parent.color;
-  const material =
-    props.material ?? parent.material ?? resolveMenuMaterial(undefined, themeContext);
 
   const {
     className,
@@ -370,7 +359,6 @@ const ContextMenuSubContent = React.forwardRef<
     container,
     forceMount,
     color: _color,
-    material: _material,
     virtualized = false,
     ...subContentProps
   } = extractProps({ ...props, size }, contextMenuSubContentPropDefs);
@@ -378,8 +366,8 @@ const ContextMenuSubContent = React.forwardRef<
   const scalarSize = useResolvedResponsiveValue(size, contextMenuSubContentPropDefs.size.default);
 
   const contextValue = React.useMemo(
-    () => ({ size, color, material }),
-    [size, color, material],
+    () => ({ size, color }),
+    [size, color],
   );
 
   const body = (
@@ -393,8 +381,7 @@ const ContextMenuSubContent = React.forwardRef<
       <Theme asChild>
         <ContextMenuPrimitive.SubContent
           data-accent-color={color}
-          data-material={material}
-          alignOffset={getMenuAlignOffset(scalarSize, themeContext.scaling)}
+          alignOffset={getMenuAlignOffset(scalarSize)}
           // Side offset accounts for the outer solid box-shadow
           sideOffset={1}
           collisionPadding={10}

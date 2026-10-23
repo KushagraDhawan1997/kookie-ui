@@ -15,9 +15,9 @@ function Rows() {
   );
 }
 
-function renderPane(toolbarSize?: '1' | '2' | '3' | '4') {
+function renderPane(toolbarSize?: '1' | '2' | '3' | '4' | 'band', shellSize: '1' | '2' | '3' = '2') {
   const row = toolbarSize ? (
-    <Toolbar size={toolbarSize} backdrop aria-label="Pane">
+    <Toolbar size={toolbarSize === 'band' ? undefined : toolbarSize} backdrop aria-label="Pane">
       <ToolbarButton>Search</ToolbarButton>
     </Toolbar>
   ) : (
@@ -25,7 +25,7 @@ function renderPane(toolbarSize?: '1' | '2' | '3' | '4') {
   );
   return render(
     <Theme>
-      <Shell.Root size="2" height="400px">
+      <Shell.Root size={shellSize} height="400px">
         <Shell.Sidebar defaultState="expanded" presentation="fixed">
           <Shell.PaneHeader float>{row}</Shell.PaneHeader>
           <Shell.Scroll fade>
@@ -39,7 +39,7 @@ function renderPane(toolbarSize?: '1' | '2' | '3' | '4') {
 }
 
 describe('floating pane rows', () => {
-  for (const toolbarSize of [undefined, '3', '4'] as const) {
+  for (const toolbarSize of [undefined, 'band', '1', '3', '4'] as const) {
     it(`the list runs under the rows and starts clear of them (toolbar ${toolbarSize ?? 'none'})`, () => {
       const { container } = renderPane(toolbarSize);
       const header = container.querySelector<HTMLElement>('.rt-ShellPaneHeader')!.getBoundingClientRect();
@@ -65,5 +65,71 @@ describe('floating pane rows', () => {
   it('a backdrop toolbar rests its buttons raised', () => {
     const { container } = renderPane('3');
     expect(container.querySelector('.rt-ShellPaneHeader .rt-BaseButton')!.className).toContain('rt-variant-raised');
+  });
+
+  // The pane pads by --surface-p-N at the Shell's index: 16, 24, 32.
+  for (const [shellSize, pad, band] of [['1', 16, 32], ['2', 24, 40], ['3', 32, 48]] as const) {
+    it(`a floating row pads by the surface padding, and a band toolbar is one step up (size ${shellSize})`, () => {
+      const { container } = renderPane('band', shellSize);
+      const header = container.querySelector<HTMLElement>('.rt-ShellPaneHeader')!;
+      const style = getComputedStyle(header);
+      expect(parseFloat(style.paddingTop)).toBe(pad);
+      expect(parseFloat(style.paddingInlineStart)).toBe(pad);
+      const toolbar = header.querySelector<HTMLElement>('.rt-Toolbar')!.getBoundingClientRect();
+      expect(toolbar.height).toBe(band);
+      expect(header.getBoundingClientRect().height).toBe(band + 2 * pad);
+    });
+  }
+});
+
+describe('pane chrome pads as a surface', () => {
+  for (const [shellSize, pad] of [['1', 16], ['2', 24], ['3', 32]] as const) {
+    it(`rows start on the header's inset (size ${shellSize})`, () => {
+      const { container } = render(
+        <Theme>
+          <Shell.Root size={shellSize} height="400px">
+            <Shell.Sidebar defaultState="expanded" presentation="fixed">
+              <Shell.PaneHeader>
+                <Toolbar aria-label="Pane">
+                  <ToolbarButton>Search</ToolbarButton>
+                </Toolbar>
+              </Shell.PaneHeader>
+              <Shell.Scroll>
+                <Rows />
+              </Shell.Scroll>
+              <Shell.PaneFooter>
+                <span>Footer</span>
+              </Shell.PaneFooter>
+            </Shell.Sidebar>
+          </Shell.Root>
+        </Theme>,
+      );
+      const pane = container.querySelector<HTMLElement>('.rt-ShellSidebar')!.getBoundingClientRect();
+      const control = container.querySelector<HTMLElement>('.rt-ShellPaneHeader .rt-BaseButton')!.getBoundingClientRect();
+      const row = container.querySelector<HTMLElement>('.rt-ShellScroll .rt-SidebarMenuButton')!.getBoundingClientRect();
+      const footer = getComputedStyle(container.querySelector<HTMLElement>('.rt-ShellPaneFooter')!);
+      expect(control.left - pane.left).toBe(pad);
+      expect(row.left).toBe(control.left);
+      expect(parseFloat(footer.paddingInlineStart)).toBe(pad);
+    });
+  }
+
+  it('a Rail keeps its tight tiles', () => {
+    const { container } = render(
+      <Theme>
+        <Shell.Root size="2" height="400px">
+          <Shell.Rail defaultOpen>
+            <Shell.PaneHeader>
+              <span>Logo</span>
+            </Shell.PaneHeader>
+            <Shell.Scroll>
+              <Rows />
+            </Shell.Scroll>
+          </Shell.Rail>
+        </Shell.Root>
+      </Theme>,
+    );
+    expect(parseFloat(getComputedStyle(container.querySelector<HTMLElement>('.rt-ShellRail .rt-ShellPaneHeader')!).paddingTop)).toBe(8);
+    expect(parseFloat(getComputedStyle(container.querySelector<HTMLElement>('.rt-ShellRail .rt-BaseMenuViewport')!).paddingTop)).toBe(8);
   });
 });

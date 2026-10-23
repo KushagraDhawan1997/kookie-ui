@@ -9,31 +9,7 @@
   height: var(--progress-height);
   border-radius: var(--progress-radius);
 
-  /* 
-   * Theme-level translucent override
-   * Applies backdrop filter for elevated visual effects
-   */
-  :where([data-material='translucent']) & {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
-
-  /* Prevent backdrop-filter stacking with parent elements */
   isolation: isolate;
-
-  /* 
-   * Component-level material overrides
-   * These ensure proper rendering based on material setting
-   */
-  &:where([data-material='solid']) {
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-  
-  &:where([data-material='translucent']) {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 }
 
 .rt-ProgressIndicator {
@@ -126,23 +102,6 @@
   background-color: var(--gray-2);
   box-shadow: inset 0 0 0 1px var(--gray-6);
 
-  /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--gray-a2), var(--gray-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--gray-a6);
-  }
-
-  /* Component-level overrides */
-  &:where([data-material='solid']) {
-    background-color: var(--gray-2);
-    box-shadow: inset 0 0 0 1px var(--gray-6);
-  }
-
-  &:where([data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--gray-a2), var(--gray-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--gray-a6);
-  }
-
   & :where(.rt-ProgressIndicator) {
     background-color: var(--accent-solid);
   }
@@ -152,20 +111,6 @@
 
 .rt-ProgressRoot:where(.rt-variant-soft) {
   background-color: var(--gray-3);
-
-  /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--gray-a3), var(--gray-3) 60%);
-  }
-
-  /* Component-level overrides */
-  &:where([data-material='solid']) {
-    background-color: var(--gray-3);
-  }
-
-  &:where([data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--gray-a3), var(--gray-3) 60%);
-  }
 
   & :where(.rt-ProgressIndicator) {
     background-color: var(--accent-solid);
@@ -177,20 +122,6 @@
 .rt-ProgressRoot:where(.rt-variant-outline) {
   /* Base state: no background, just border */
   box-shadow: inset 0 0 0 1px var(--gray-6);
-
-  /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    box-shadow: inset 0 0 0 1px var(--gray-a6);
-  }
-
-  /* Component-level overrides */
-  &:where([data-material='solid']) {
-    box-shadow: inset 0 0 0 1px var(--gray-6);
-  }
-
-  &:where([data-material='translucent']) {
-    box-shadow: inset 0 0 0 1px var(--gray-a6);
-  }
 
   & :where(.rt-ProgressIndicator) {
     background-color: var(--accent-solid);

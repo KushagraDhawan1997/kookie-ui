@@ -37,10 +37,10 @@ export default function ScrubTestPage() {
   const [maxBound, setMaxBound] = useState(100);
 
   return (
-    <Box p="6" style={{ maxWidth: 900, margin: '0 auto' }}>
-      <Flex direction="column" gap="6">
+    <Box p="7" style={{ maxWidth: 900, margin: '0 auto' }}>
+      <Flex direction="column" gap="7">
         {/* Header */}
-        <Flex direction="column" gap="2">
+        <Flex direction="column" gap="3">
           <Badge size="2" variant="soft" color="blue" style={{ alignSelf: 'flex-start' }}>
             New Feature
           </Badge>
@@ -57,8 +57,8 @@ export default function ScrubTestPage() {
 
         {/* Basic Example */}
         <Card size="3">
-          <Flex direction="column" gap="4">
-            <Flex align="center" gap="2">
+          <Flex direction="column" gap="5">
+            <Flex align="center" gap="3">
               <Ruler size={18} />
               <Heading size="4">Basic Example</Heading>
             </Flex>
@@ -66,7 +66,7 @@ export default function ScrubTestPage() {
               Drag on &quot;Width&quot; or &quot;Height&quot; labels to scrub the values.
             </Text>
 
-            <Flex gap="4" wrap="wrap">
+            <Flex gap="5" wrap="wrap">
               <Box style={{ width: 160 }}>
                 <TextField.Root
                   type="number"
@@ -127,7 +127,7 @@ export default function ScrubTestPage() {
             </Flex>
 
             {/* Preview box */}
-            <Flex align="center" gap="3">
+            <Flex align="center" gap="4">
               <Box
                 style={{
                   width: width,
@@ -153,8 +153,8 @@ export default function ScrubTestPage() {
 
         {/* Advanced Example */}
         <Card size="3">
-          <Flex direction="column" gap="4">
-            <Flex align="center" gap="2">
+          <Flex direction="column" gap="5">
+            <Flex align="center" gap="3">
               <Move size={18} />
               <Heading size="4">Transform Controls</Heading>
             </Flex>
@@ -162,7 +162,7 @@ export default function ScrubTestPage() {
               Fine-grained control with different step values and bounds.
             </Text>
 
-            <Flex gap="4" wrap="wrap">
+            <Flex gap="5" wrap="wrap">
               <Box style={{ width: 180 }}>
                 <TextField.Root
                   type="number"
@@ -238,8 +238,8 @@ export default function ScrubTestPage() {
 
         {/* Configurable Demo */}
         <Card size="3">
-          <Flex direction="column" gap="4">
-            <Flex align="center" gap="2">
+          <Flex direction="column" gap="5">
+            <Flex align="center" gap="3">
               <Settings2 size={18} />
               <Heading size="4">Configurable Demo</Heading>
             </Flex>
@@ -247,10 +247,10 @@ export default function ScrubTestPage() {
               Adjust the scrubbing parameters to see how they affect the behavior.
             </Text>
 
-            <Flex gap="6" wrap="wrap">
+            <Flex gap="7" wrap="wrap">
               {/* The scrub input */}
               <Box style={{ flex: '1 1 200px' }}>
-                <Flex direction="column" gap="3">
+                <Flex direction="column" gap="4">
                   <TextField.Root
                     type="number"
                     size="3"
@@ -275,7 +275,7 @@ export default function ScrubTestPage() {
                     </TextField.Slot>
                   </TextField.Root>
 
-                  <Flex align="center" gap="2">
+                  <Flex align="center" gap="3">
                     <Zap size={14} />
                     <Text size="1" emphasis="medium">
                       Current: <Code>{demoValue}</Code>
@@ -286,8 +286,8 @@ export default function ScrubTestPage() {
 
               {/* Controls */}
               <Box style={{ flex: '1 1 300px' }}>
-                <Flex direction="column" gap="4">
-                  <Flex direction="column" gap="2">
+                <Flex direction="column" gap="5">
+                  <Flex direction="column" gap="3">
                     <Flex justify="between">
                       <Text size="2" weight="medium">
                         Sensitivity
@@ -305,7 +305,7 @@ export default function ScrubTestPage() {
                     />
                   </Flex>
 
-                  <Flex direction="column" gap="2">
+                  <Flex direction="column" gap="3">
                     <Flex justify="between">
                       <Text size="2" weight="medium">
                         Step
@@ -323,7 +323,7 @@ export default function ScrubTestPage() {
                     />
                   </Flex>
 
-                  <Flex direction="column" gap="2">
+                  <Flex direction="column" gap="3">
                     <Flex justify="between">
                       <Text size="2" weight="medium">
                         Shift Multiplier
@@ -341,7 +341,7 @@ export default function ScrubTestPage() {
                     />
                   </Flex>
 
-                  <Flex direction="column" gap="2">
+                  <Flex direction="column" gap="3">
                     <Flex justify="between">
                       <Text size="2" weight="medium">
                         Alt Multiplier
@@ -369,7 +369,7 @@ export default function ScrubTestPage() {
                   </Flex>
 
                   {useBounds && (
-                    <Flex gap="3">
+                    <Flex gap="4">
                       <Box style={{ flex: 1 }}>
                         <TextField.Root
                           type="number"
@@ -404,9 +404,9 @@ export default function ScrubTestPage() {
 
         {/* Instructions */}
         <Card size="2" style={{ backgroundColor: 'var(--gray-a2)' }}>
-          <Flex direction="column" gap="2">
+          <Flex direction="column" gap="3">
             <Heading size="3">How to Use</Heading>
-            <Flex direction="column" gap="1" asChild>
+            <Flex direction="column" gap="2" asChild>
               <ul style={{ margin: 0, paddingLeft: 20 }}>
                 <li>
                   <Text size="2">

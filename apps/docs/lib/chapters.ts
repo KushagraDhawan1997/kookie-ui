@@ -38,7 +38,7 @@ export const SECTIONS: readonly Section[] = [
     id: 'foundations',
     title: 'Foundations',
     blurb:
-      'These chapters cover colour, type, radius, material and depth. Every other decision in the system is built from them.',
+      'These chapters cover colour, type, radius and depth. Every other decision in the system is built from them.',
   },
 ];
 
@@ -67,7 +67,7 @@ export const CHAPTERS: readonly Chapter[] = [
     title: 'Theming',
     section: 'start',
     blurb:
-      'A Theme sets the values that apply to your whole app, such as its appearance, accent colour, radius and scaling.',
+      'A Theme sets the values that apply to your whole app, such as its appearance, accent colour, radius and fonts.',
   },
   {
     slug: 'foundations/color',
@@ -87,12 +87,6 @@ export const CHAPTERS: readonly Chapter[] = [
     title: 'Radius',
     section: 'foundations',
     blurb: 'One setting controls how round the corners are across your app. Controls and surfaces each get corners that suit them.',
-  },
-  {
-    slug: 'foundations/materials',
-    title: 'Materials',
-    section: 'foundations',
-    blurb: 'A material decides whether a surface is solid or translucent. This chapter covers each material and where it fits.',
   },
   {
     slug: 'foundations/depth',

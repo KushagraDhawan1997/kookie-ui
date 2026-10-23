@@ -215,8 +215,6 @@ interface ChatbarRootBaseProps {
   color?: (typeof accentColors)[number];
   /** Optional radius override (matches TextArea) */
   radius?: (typeof radii)[number];
-  /** Panel/material translucency flags (matches TextArea) */
-  material?: 'solid' | 'translucent';
 
   width?: React.CSSProperties['width'];
   maxWidth?: React.CSSProperties['maxWidth'];
@@ -321,7 +319,6 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
     variant,
     color,
     radius,
-    material,
     width,
     maxWidth,
     attachments: attachmentsProp,
@@ -342,7 +339,6 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
     context,
     ...divProps
   } = props;
-  const effectiveMaterial = material;
 
   const isValueControlled = valueProp != null;
   const [valueUncontrolled, setValueUncontrolled] = React.useState<string>(defaultValue);
@@ -703,7 +699,6 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
               data-drop-active={dragActive ? '' : undefined}
               data-accent-color={color}
               data-radius={radius}
-              data-material={effectiveMaterial}
               onBlurCapture={handleBlurCapture}
             >
               <input
@@ -725,7 +720,6 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
                   style={{ position: 'relative' }}
                   data-accent-color={color}
                   data-radius={radius}
-                  data-material={effectiveMaterial}
                 >
                   <div className="rt-ChatbarGrid">
                     {children}
@@ -1040,7 +1034,7 @@ const AttachmentsRow = React.forwardRef<HTMLDivElement, AttachmentsRowProps>((pr
     <div>
       <Comp {...divProps} ref={forwardedRef} className={classNames('rt-ChatbarAttachmentsRow', className)} role="list" aria-label={divProps['aria-label'] ?? 'Attachments'}>
         <ScrollArea className="rt-ChatbarScrollArea" scrollbars="horizontal" size="1">
-          <Flex align="center" gap="2" minWidth="fit-content">
+          <Flex align="center" gap="3" minWidth="fit-content">
             {ctx.attachments.map((att) => (
               <Attachment key={att.id} attachment={att} asChild={!!renderAttachment}>
                 {renderAttachment?.(att)}

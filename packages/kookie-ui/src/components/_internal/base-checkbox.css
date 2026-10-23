@@ -29,12 +29,7 @@
   --checkbox-radius-ratio-max: 0.4;
   --checkbox-radius-max: calc(var(--checkbox-size) * var(--checkbox-radius-ratio-max));
 
-  /* Theme-level translucent override */
-
-  /* Prevent backdrop-filter stacking with parents */
   isolation: isolate;
-
-  /* Component-level overrides */
 
   &::before {
     content: '';
@@ -53,10 +48,10 @@
   /* Required for subpixel alignment in Safari */
   transform: translate(-50%, -50%);
   top: 50%;
-  left: 50%
-  
+  left: 50%;
+
   /* Smooth color transitions for the indicator icon */
-  
+
   /* Respect user preference for reduced motion */
 }
 
@@ -69,17 +64,17 @@
 @breakpoints {
   .rt-BaseCheckboxRoot {
     &:where(.rt-r-size-1) {
-      --checkbox-size: calc(var(--space-4) * var(--spacing-multiplier-medium));
+      --checkbox-size: calc(var(--space-5) * var(--spacing-multiplier-medium));
       --checkbox-indicator-size: var(--indicator-icon-size-1);
       --checkbox-border-radius: min(calc(var(--radius-1) * var(--spacing-multiplier-small)), var(--checkbox-radius-max));
     }
     &:where(.rt-r-size-2) {
-      --checkbox-size: var(--space-4);
+      --checkbox-size: var(--space-5);
       --checkbox-indicator-size: var(--indicator-icon-size-2);
       --checkbox-border-radius: min(calc(var(--radius-1) * var(--spacing-multiplier-medium)), var(--checkbox-radius-max));
     }
     &:where(.rt-r-size-3) {
-      --checkbox-size: calc(var(--space-4) * var(--spacing-multiplier-large));
+      --checkbox-size: calc(var(--space-5) * var(--spacing-multiplier-large));
       --checkbox-indicator-size: var(--indicator-icon-size-3);
       --checkbox-border-radius: min(calc(var(--radius-1) * var(--spacing-multiplier-medium)), var(--checkbox-radius-max));
     }
@@ -128,26 +123,18 @@
 .rt-BaseCheckboxRoot:where(.rt-variant-raised) {
   position: relative;
   top: var(--raised-elevation-offset);
-  
+
   &:where([data-state='unchecked']) {
     &::before {
       color: var(--accent-ink);
       background-color: var(--color-surface-solid);
-      box-shadow: var(--shadow-2)
-
-      /* Theme-level translucent override */
-
-      /* Component-level overrides (higher specificity) */
+      box-shadow: var(--shadow-2);
     }
   }
 
   &:where([data-state='checked'], [data-state='indeterminate']) {
     &::before {
-      background-color: var(--accent-3)
-
-      /* Theme-level translucent override */
-
-      /* Component-level overrides (higher specificity) */
+      background-color: var(--accent-3);
     }
     & :where(.rt-BaseCheckboxIndicator) {
       color: var(--accent-ink);
@@ -156,13 +143,9 @@
 
   &:where(:active:not(:disabled)) {
     top: calc(var(--raised-elevation-offset) + var(--raised-active-padding-offset-1));
-    
+
     &::before {
-      background-color: var(--accent-3)
-
-      /* Theme-level translucent override for active */
-
-      /* Component-level overrides for active */
+      background-color: var(--accent-3);
     }
   }
 
@@ -183,11 +166,7 @@
 
 .rt-BaseCheckboxRoot:where(.rt-variant-soft) {
   &::before {
-    background-color: var(--accent-3)
-
-    /* Theme-level translucent override */
-
-    /* Component-level overrides (higher specificity) */
+    background-color: var(--accent-3);
   }
 
   &:where([data-state='checked'], [data-state='indeterminate']) {
@@ -212,22 +191,14 @@
   &:where([data-state='unchecked']) {
     &::before {
       box-shadow: inset 0 0 0 1px var(--accent-6);
-      color: var(--accent-ink)
-
-      /* Theme-level translucent override */
-
-      /* Component-level overrides (higher specificity) */
+      color: var(--accent-ink);
     }
   }
 
   &:where([data-state='checked'], [data-state='indeterminate']) {
     &::before {
       background-color: var(--accent-2);
-      box-shadow: inset 0 0 0 1px var(--accent-7)
-
-      /* Theme-level translucent override */
-
-      /* Component-level overrides (higher specificity) */
+      box-shadow: inset 0 0 0 1px var(--accent-7);
     }
     & :where(.rt-BaseCheckboxIndicator) {
       color: var(--accent-ink);
@@ -251,22 +222,14 @@
   &:where([data-state='unchecked']) {
     &::before {
       background-color: var(--accent-2);
-      box-shadow: inset 0 0 0 1px var(--accent-6)
-
-      /* Theme-level translucent override */
-
-      /* Component-level overrides (higher specificity) */
+      box-shadow: inset 0 0 0 1px var(--accent-6);
     }
   }
 
   &:where([data-state='checked'], [data-state='indeterminate']) {
     &::before {
       background-color: var(--accent-3);
-      box-shadow: inset 0 0 0 1px var(--accent-8)
-
-      /* Theme-level translucent override */
-
-      /* Component-level overrides (higher specificity) */
+      box-shadow: inset 0 0 0 1px var(--accent-8);
     }
     & :where(.rt-BaseCheckboxIndicator) {
       color: var(--accent-ink);

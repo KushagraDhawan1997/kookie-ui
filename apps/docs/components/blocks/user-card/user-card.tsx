@@ -28,7 +28,7 @@ export const UserCard = React.forwardRef<HTMLDivElement, UserCardProps>(({ name,
   const [avatarSize, nameSize, descriptionSize] = SIZES[size];
   return (
     <Card size={size} {...props} ref={ref}>
-      <Flex align="center" gap="3">
+      <Flex align="center" gap="4">
         <Avatar size={avatarSize} src={src} fallback={fallback} />
         <Flex direction="column" minWidth="0">
           <Text size={nameSize} weight="medium" truncate>

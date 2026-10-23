@@ -32,7 +32,7 @@ type User = { id: string; name: string; email: string; avatar?: string };
 const UserMenuItem = React.memo(function UserMenuItem({ item, style, isHighlighted: _isHighlighted, ...props }: VirtualMenuRenderItemProps<User>) {
   return (
     <VirtualMenu.Item {...props} style={style}>
-      <Flex gap="3" align="center" width="100%">
+      <Flex gap="4" align="center" width="100%">
         <Avatar size="1" fallback={item.name.charAt(0)} src={item.avatar} />
         <Flex direction="column" gap="0">
           <Text size="2" weight="medium">
@@ -65,9 +65,9 @@ export function DropdownMenuExamples() {
   }, []);
 
   return (
-    <Flex direction="column" gap="9">
+    <Flex direction="column" gap="10">
       {/* Example 1: Basic Actions Menu */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Basic Actions</SectionHeader.Title>
@@ -111,8 +111,8 @@ export function DropdownMenuExamples() {
 </DropdownMenu.Root>`}
         >
           <Card variant="raised" size="2" style={{ width: 320 }}>
-            <Flex justify="between" align="center" p="2">
-              <Flex gap="3" align="center">
+            <Flex justify="between" align="center" p="3">
+              <Flex gap="4" align="center">
                 <Avatar fallback="D" size="2" color="blue" />
                 <Flex direction="column" gap="0">
                   <Text size="2" weight="medium">
@@ -157,7 +157,7 @@ export function DropdownMenuExamples() {
       <Separator size="4" />
 
       {/* Example 2: User Account Menu */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>User Account</SectionHeader.Title>
@@ -237,7 +237,7 @@ export function DropdownMenuExamples() {
       <Separator size="4" />
 
       {/* Example 3: Settings with Checkboxes and Radio */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Settings Menu</SectionHeader.Title>
@@ -331,7 +331,7 @@ const [theme, setTheme] = React.useState('system');
       <Separator size="4" />
 
       {/* Example 4: Drill-Down Navigation */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Drill-Down Navigation</SectionHeader.Title>
@@ -431,7 +431,7 @@ const [theme, setTheme] = React.useState('system');
       <Separator size="4" />
 
       {/* Example 5: Responsive Submenu Behavior */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Responsive Submenus</SectionHeader.Title>
@@ -516,7 +516,7 @@ const [theme, setTheme] = React.useState('system');
       <Separator size="4" />
 
       {/* Example 6: Virtualized Menu for Large Lists */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Large Data Set (VirtualMenu)</SectionHeader.Title>
@@ -538,7 +538,7 @@ const UserMenuItem = React.memo(function UserMenuItem({
 }: VirtualMenuRenderItemProps<User>) {
   return (
     <VirtualMenu.Item {...props} style={style}>
-      <Flex gap="3" align="center" width="100%">
+      <Flex gap="4" align="center" width="100%">
         <Avatar size="1" fallback={item.name.charAt(0)} src={item.avatar} />
         <Flex direction="column" gap="0">
           <Text size="2" weight="medium">{item.name}</Text>
@@ -570,7 +570,7 @@ const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
   </DropdownMenu.Content>
 </DropdownMenu.Root>`}
         >
-          <Flex gap="3" align="center">
+          <Flex gap="4" align="center">
             <DropdownMenu.Root>
               <DropdownMenu.Trigger>
                 <Button variant="soft" size="2" color="gray">
@@ -594,7 +594,7 @@ const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
       <Separator size="4" />
 
       {/* Example 7: Simple Virtualized List */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Simple Virtualized List</SectionHeader.Title>

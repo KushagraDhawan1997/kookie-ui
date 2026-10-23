@@ -45,9 +45,32 @@ function PaneChromeScope({ children, presentation }: { children: React.ReactNode
 
 function useChromeClasses() {
   const visual = useSidebarVisual();
-  const size = visual?.size ?? '2';
+  // A pane with no scope (Inspector, Bottom) still takes the Shell's index.
+  const shellSize = React.useContext(ShellSizeContext);
+  const size = visual?.size ?? shellSize;
   const menuVariant = visual?.menuVariant ?? 'soft';
   return ['rt-ShellPaneChrome', `rt-r-size-${size}`, `rt-menu-variant-${menuVariant}`];
+}
+
+type BandSize = '1' | '2' | '3' | '4';
+
+/**
+ * The index a Toolbar in a pane's header or footer rests at when it states none: one step above
+ * the Shell's, so the band reads as chrome over the rows (v2 BAND_STEP). 4 has no step above.
+ */
+const BAND_STEP = { '1': '2', '2': '3', '3': '4', '4': '4' } as const satisfies Record<BandSize, BandSize>;
+
+/** Set by `Shell.PaneHeader` and `Shell.PaneFooter`; read by Toolbar as its fallback size. Null elsewhere. */
+const PaneBandSizeContext = React.createContext<BandSize | null>(null);
+
+function usePaneBandSize() {
+  return React.useContext(PaneBandSizeContext);
+}
+
+function useBandSize(): BandSize {
+  const visual = useSidebarVisual();
+  const shellSize = React.useContext(ShellSizeContext);
+  return BAND_STEP[visual?.size ?? shellSize];
 }
 
 interface PaneHeaderProps extends React.ComponentPropsWithoutRef<'div'> {
@@ -61,15 +84,18 @@ interface PaneHeaderProps extends React.ComponentPropsWithoutRef<'div'> {
 }
 
 /** A pane's header row, pinned above its scrolling region. */
-const PaneHeader = React.forwardRef<HTMLDivElement, PaneHeaderProps>(({ className, float, ...props }, forwardedRef) => {
+const PaneHeader = React.forwardRef<HTMLDivElement, PaneHeaderProps>(({ className, float, children, ...props }, forwardedRef) => {
   const chrome = useChromeClasses();
+  const band = useBandSize();
   return (
     <div
       {...props}
       ref={forwardedRef}
       data-float={float || undefined}
       className={classNames('rt-ShellPaneHeader', 'rt-SidebarHeader', 'rt-SidebarHeader--container', ...chrome, className)}
-    />
+    >
+      <PaneBandSizeContext.Provider value={band}>{children}</PaneBandSizeContext.Provider>
+    </div>
   );
 });
 PaneHeader.displayName = 'Shell.PaneHeader';
@@ -80,15 +106,18 @@ interface PaneFooterProps extends React.ComponentPropsWithoutRef<'div'> {
 }
 
 /** A pane's footer row, pinned below its scrolling region. */
-const PaneFooter = React.forwardRef<HTMLDivElement, PaneFooterProps>(({ className, float, ...props }, forwardedRef) => {
+const PaneFooter = React.forwardRef<HTMLDivElement, PaneFooterProps>(({ className, float, children, ...props }, forwardedRef) => {
   const chrome = useChromeClasses();
+  const band = useBandSize();
   return (
     <div
       {...props}
       ref={forwardedRef}
       data-float={float || undefined}
       className={classNames('rt-ShellPaneFooter', 'rt-SidebarFooter', 'rt-SidebarFooter--container', ...chrome, className)}
-    />
+    >
+      <PaneBandSizeContext.Provider value={band}>{children}</PaneBandSizeContext.Provider>
+    </div>
   );
 });
 PaneFooter.displayName = 'Shell.PaneFooter';
@@ -107,12 +136,15 @@ const Scroll = React.forwardRef<HTMLDivElement, ScrollProps>(({ className, child
   return (
     <ScrollArea type="hover" fade={fade} className="rt-ShellScroll">
       <div {...props} ref={forwardedRef} className={classNames('rt-BaseMenuContent', 'rt-SidebarContent', ...chrome, className)}>
-        <div className="rt-BaseMenuViewport">{children}</div>
+        {/* A header's band does not reach a Toolbar in the scrolling list. */}
+        <PaneBandSizeContext.Provider value={null}>
+          <div className="rt-BaseMenuViewport">{children}</div>
+        </PaneBandSizeContext.Provider>
       </div>
     </ScrollArea>
   );
 });
 Scroll.displayName = 'Shell.Scroll';
 
-export { SidebarVisualContext, useSidebarVisual, ShellSizeContext, PaneChromeScope, PaneHeader, PaneFooter, Scroll };
-export type { SidebarVisualContextValue, PaneSize, PaneHeaderProps, PaneFooterProps, ScrollProps };
+export { SidebarVisualContext, useSidebarVisual, ShellSizeContext, PaneChromeScope, PaneHeader, PaneFooter, Scroll, BAND_STEP, usePaneBandSize };
+export type { SidebarVisualContextValue, PaneSize, BandSize, PaneHeaderProps, PaneFooterProps, ScrollProps };

@@ -52,7 +52,6 @@ export function MyComponent() {
 | `fullWidth`    | `boolean`                                                             | Makes button fill its container width. Useful for mobile layouts and form submissions          |
 | `flush`        | `boolean`                                                             | Removes padding for seamless text integration. Use with ghost variant to blend with text while staying interactive |
 | `radius`       | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'`                  | Corner radius scale: none for sharp edges, small/medium/large for progressive rounding, full for pill-shaped |
-| `material`     | `'solid' \| 'translucent'`                                            | Background appearance: solid for opaque backgrounds, translucent for depth over images or dynamic backgrounds |
 | `loading`      | `boolean`                                                             | Replaces all content with a centered spinner and disables button automatically. For visible text during loading, use Spinner component around icons instead |
 | `disabled`     | `boolean`                                                             | Prevents interaction when action is unavailable, such as during form validation or when authentication is required |
 | `as`           | `ElementType`                                                         | Renders button as different HTML element while maintaining button styling. Useful for navigation links or routing integration |
@@ -174,39 +173,6 @@ Use the `color` prop with semantic colors to communicate the action's intent to 
 </Button>
 ```
 
-## Material
-
-Use the `material` prop to set button appearance. Choose `solid` for opaque backgrounds, or `translucent` for depth and separation over images or dynamic backgrounds. Avoid `outline` and `ghost` variants with translucent material, as they may lack contrast.
-
-### Theme
-
-Buttons automatically inherit the theme's material setting. Wrap your interface in a `Theme` component to control material globally:
-
-```tsx
-<Theme material="translucent">
-  <Button size="3" color="gray" variant="soft">
-    Button
-  </Button>
-</Theme>
-```
-
-### Custom
-
-Override the theme's material for a button when you need a specific effect. Translucent effects only show over backgrounds. Text on them reads the strong ink by default.
-
-```tsx
-<Theme material="solid">
-  <Button
-    material="translucent"
-    size="3"
-    color="gray"
-    variant="soft"
-  >
-    Button
-  </Button>
-</Theme>
-```
-
 ## States
 
 ### Loading
@@ -268,7 +234,7 @@ Buttons handle focus for keyboard navigation. For complex patterns, use `data-st
 Set the `fullWidth` prop to `true` to make the button fill its container. This is useful for mobile layouts and form submissions.
 
 ```tsx
-<Flex direction="column" gap="2" width="300px">
+<Flex direction="column" gap="3" width="300px">
   <Button size="3" variant="soft" color="gray" fullWidth>
     Complete
   </Button>
@@ -280,7 +246,7 @@ Set the `fullWidth` prop to `true` to make the button fill its container. This i
 Use the `flush` prop with the `ghost` variant to remove padding, making the button blend with text while staying interactive.
 
 ```tsx
-<Flex gap="2" align="center">
+<Flex gap="3" align="center">
   <Button size="3" variant="ghost" flush>
     Learn
   </Button>{' '}
@@ -293,10 +259,10 @@ Use the `flush` prop with the `ghost` variant to remove padding, making the butt
 Use margin props for spacing around buttons. All margin props are responsive and accept design tokens or CSS values.
 
 ```tsx
-<Button size="3" variant="soft" mx="2">
+<Button size="3" variant="soft" mx="3">
   Button
 </Button>
-<Button size="3" variant="soft" mx="2">
+<Button size="3" variant="soft" mx="3">
   Button
 </Button>
 ```
@@ -434,7 +400,6 @@ Loading state replaces all button content with a centered spinner and disables i
 
 - Enhanced loading state accessibility with `aria-busy`, `aria-disabled`, and `aria-describedby` attributes
 - Built-in tooltip support through `tooltip`, `tooltipSide`, `tooltipAlign` props
-- New `material` prop for solid/translucent theme contexts
 - `flush` prop for seamless text integration with ghost variants
 - Full margin prop system with responsive support
 - Enhanced form integration with complete HTML form attribute support
@@ -455,10 +420,7 @@ Loading state replaces all button content with a centered spinner and disables i
 ### Removed
 
 - `highContrast` prop. Gray fills with step 12 on its own, and text reads the strong ink by default.
-
-### Deprecated
-
-- `panelBackground` prop in favor of `material` prop
+- `material` and `panelBackground` props. Every surface is solid.
 
 ### Fixed
 

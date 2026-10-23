@@ -33,8 +33,8 @@ export default function ShellInsetTest() {
         presentation={{ initial: 'overlay', md: 'fixed' }}
         inset={insetConfig.sidebar}
       >
-        <Flex direction="column" gap="4" p="4" style={{ height: '100%' }}>
-          <Flex align="center" gap="2">
+        <Flex direction="column" gap="5" p="5" style={{ height: '100%' }}>
+          <Flex align="center" gap="3">
             <IconButton variant="ghost" size="2" asChild>
               <Shell.Trigger target="sidebar">
                 <HugeiconsIcon icon={Menu01Icon} size={18} />
@@ -47,7 +47,7 @@ export default function ShellInsetTest() {
             {insetConfig.sidebar ? '✓ Inset enabled' : '✗ Inset disabled'}
           </Text>
           
-          <Flex direction="column" gap="2" style={{ flex: 1 }}>
+          <Flex direction="column" gap="3" style={{ flex: 1 }}>
             <Text size="2">Navigation items...</Text>
           </Flex>
         </Flex>
@@ -55,17 +55,17 @@ export default function ShellInsetTest() {
 
       {/* Content with inset */}
       <Shell.Content inset={insetConfig.content}>
-        <Box p="6" style={{ height: '100%' }}>
-          <Heading size="6" mb="4">Shell Inset Test</Heading>
+        <Box p="7" style={{ height: '100%' }}>
+          <Heading size="6" mb="5">Shell Inset Test</Heading>
           
-          <Text size="2" emphasis="medium" mb="6">
+          <Text size="2" emphasis="medium" mb="7">
             The inset prop creates floating panes with a gray backdrop. Toggle each pane's inset below.
           </Text>
 
           {/* Inset Controls */}
-          <Box mb="6" p="4" style={{ background: 'var(--gray-a3)', borderRadius: 'var(--radius-3)' }}>
-            <Heading size="3" mb="4">Inset Controls</Heading>
-            <Flex gap="3" wrap="wrap">
+          <Box mb="7" p="5" style={{ background: 'var(--gray-a3)', borderRadius: 'var(--radius-3)' }}>
+            <Heading size="3" mb="5">Inset Controls</Heading>
+            <Flex gap="4" wrap="wrap">
               <Button
                 variant={insetConfig.sidebar ? 'solid' : 'outline'}
                 onClick={() => toggleInset('sidebar')}
@@ -94,9 +94,9 @@ export default function ShellInsetTest() {
           </Box>
 
           {/* Pane Controls */}
-          <Box mb="6" p="4" style={{ background: 'var(--blue-a3)', borderRadius: 'var(--radius-3)' }}>
-            <Heading size="3" mb="4">Pane Toggles</Heading>
-            <Flex gap="3" wrap="wrap">
+          <Box mb="7" p="5" style={{ background: 'var(--blue-a3)', borderRadius: 'var(--radius-3)' }}>
+            <Heading size="3" mb="5">Pane Toggles</Heading>
+            <Flex gap="4" wrap="wrap">
               <IconButton variant="soft" size="3" asChild>
                 <Shell.Trigger target="sidebar">
                   <HugeiconsIcon icon={SidebarLeft01Icon} size={20} />
@@ -116,15 +116,15 @@ export default function ShellInsetTest() {
           </Box>
 
           {/* Current State */}
-          <Box p="4" style={{ background: 'var(--gray-a3)', borderRadius: 'var(--radius-3)' }}>
-            <Heading size="3" mb="2">How Inset Works</Heading>
-            <Text as="div" size="2" mb="2">
+          <Box p="5" style={{ background: 'var(--gray-a3)', borderRadius: 'var(--radius-3)' }}>
+            <Heading size="3" mb="3">How Inset Works</Heading>
+            <Text as="div" size="2" mb="3">
               • The Shell root paints <code>var(--gray-2)</code> behind the middle row when any pane has inset
             </Text>
-            <Text as="div" size="2" mb="2">
+            <Text as="div" size="2" mb="3">
               • Each inset pane gets a margin, rounded corners, a background and a shadow
             </Text>
-            <Text as="div" size="2" mb="2">
+            <Text as="div" size="2" mb="3">
               • The backdrop is painted from the server HTML, before hydration
             </Text>
             <Text as="div" size="2">
@@ -141,7 +141,7 @@ export default function ShellInsetTest() {
         presentation={{ initial: 'overlay', lg: 'fixed' }}
         inset={insetConfig.inspector}
       >
-        <Flex direction="column" gap="4" p="4" style={{ height: '100%' }}>
+        <Flex direction="column" gap="5" p="5" style={{ height: '100%' }}>
           <Heading size="4">Inspector</Heading>
           <Text size="2" emphasis="medium">
             {insetConfig.inspector ? '✓ Inset enabled' : '✗ Inset disabled'}
@@ -156,7 +156,7 @@ export default function ShellInsetTest() {
         expandedSize={200}
         inset={insetConfig.bottom}
       >
-        <Flex direction="column" gap="2" p="4" style={{ height: '100%' }}>
+        <Flex direction="column" gap="3" p="5" style={{ height: '100%' }}>
           <Heading size="4">Bottom Panel</Heading>
           <Text size="2" emphasis="medium">
             {insetConfig.bottom ? '✓ Inset enabled' : '✗ Inset disabled'}

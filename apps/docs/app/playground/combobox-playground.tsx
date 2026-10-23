@@ -111,7 +111,7 @@ ${group.countries
     (country) => {
       const iconName = iconNameMap.get(country.icon) || 'Location01Icon';
       return `            <Combobox.Item value="${country.value}">
-              <Flex gap="2" align="center">
+              <Flex gap="3" align="center">
                 <HugeiconsIcon icon={${iconName}} strokeWidth={1.75} />
                 ${country.label}
               </Flex>
@@ -233,7 +233,7 @@ ${listMarkup}
                 const Icon = country.icon;
                 return (
                   <Combobox.Item key={country.value} value={country.value}>
-                    <Flex gap="2" align="center">
+                    <Flex gap="3" align="center">
                       <HugeiconsIcon icon={Icon} strokeWidth={1.75} />
                       {country.label}
                     </Flex>

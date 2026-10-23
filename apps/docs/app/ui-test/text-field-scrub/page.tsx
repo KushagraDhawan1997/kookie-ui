@@ -30,10 +30,10 @@ export default function TextFieldScrubTest() {
   const [isScrubbing, setIsScrubbing] = React.useState(false);
 
   return (
-    <Container size="2" px="8" py="8">
-      <Flex direction="column" gap="8">
+    <Container size="2" px="9" py="9">
+      <Flex direction="column" gap="9">
         {/* Header */}
-        <Flex direction="column" gap="3">
+        <Flex direction="column" gap="4">
         <Flex justify="between" align="center">
           <Heading size="9" weight="medium">TextField Scrubbing</Heading>
           {isScrubbing && (
@@ -48,9 +48,9 @@ export default function TextFieldScrubTest() {
       <Separator size="4" />
 
       {/* Test 1: Basic Scrubbing */}
-      <Flex direction="column" gap="5">
+      <Flex direction="column" gap="6">
         <Box>
-          <Heading size="6" weight="medium" mb="2">1. Basic Scrubbing</Heading>
+          <Heading size="6" weight="medium" mb="3">1. Basic Scrubbing</Heading>
           <Text size="2" emphasis="medium">
             Core functionality: drag the label to adjust value
           </Text>
@@ -76,7 +76,7 @@ export default function TextFieldScrubTest() {
           </TextField.Slot>
         </TextField.Root>
 
-        <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+        <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
           <Text size="2" emphasis="medium">
             <Code variant="soft">scrub</Code> enabled, <Code variant="soft">scrubStep={'{1}'}</Code>, no constraints
           </Text>
@@ -86,9 +86,9 @@ export default function TextFieldScrubTest() {
       <Separator size="4" />
 
       {/* Test 2: Constraints */}
-      <Flex direction="column" gap="5">
+      <Flex direction="column" gap="6">
         <Box>
-          <Heading size="6" weight="medium" mb="2">2. Min/Max Constraints</Heading>
+          <Heading size="6" weight="medium" mb="3">2. Min/Max Constraints</Heading>
           <Text size="2" emphasis="medium">
             Boundary behavior: value clamped between 0-100
           </Text>
@@ -116,7 +116,7 @@ export default function TextFieldScrubTest() {
           </TextField.Slot>
         </TextField.Root>
 
-        <Box p="5" style={{ 
+        <Box p="6" style={{ 
           width: '100%',
           height: 80,
           background: 'var(--accent-9)',
@@ -126,7 +126,7 @@ export default function TextFieldScrubTest() {
           <Text size="5" style={{ color: 'white' }}>{constrainedValue}%</Text>
         </Box>
 
-        <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+        <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
           <Text size="2" emphasis="medium">
             <Code variant="soft">scrubMin={'{0}'}</Code>, <Code variant="soft">scrubMax={'{100}'}</Code> — Delta becomes 0 at boundaries
           </Text>
@@ -136,17 +136,17 @@ export default function TextFieldScrubTest() {
       <Separator size="4" />
 
       {/* Test 3: Sensitivity */}
-      <Flex direction="column" gap="5">
+      <Flex direction="column" gap="6">
         <Box>
-          <Heading size="6" weight="medium" mb="2">3. Sensitivity Control</Heading>
+          <Heading size="6" weight="medium" mb="3">3. Sensitivity Control</Heading>
           <Text size="2" emphasis="medium">
             Adjust how much mouse movement equals one step
           </Text>
         </Box>
         
-        <Flex direction="column" gap="3">
+        <Flex direction="column" gap="4">
           <Box>
-            <Text size="2" weight="medium" mb="2">Default (sensitivity = 1)</Text>
+            <Text size="2" weight="medium" mb="3">Default (sensitivity = 1)</Text>
             <TextField.Root
               size="2"
               variant="soft"
@@ -167,7 +167,7 @@ export default function TextFieldScrubTest() {
           </Box>
 
           <Box>
-            <Text size="2" weight="medium" mb="2">High (sensitivity = 5)</Text>
+            <Text size="2" weight="medium" mb="3">High (sensitivity = 5)</Text>
             <TextField.Root
               size="2"
               variant="soft"
@@ -188,7 +188,7 @@ export default function TextFieldScrubTest() {
           </Box>
         </Flex>
 
-        <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+        <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
           <Text size="2" emphasis="medium">
             <Code variant="soft">scrubSensitivity</Code> controls pixels per step. Higher = more movement required
           </Text>
@@ -198,9 +198,9 @@ export default function TextFieldScrubTest() {
       <Separator size="4" />
 
       {/* Test 4: Modifiers */}
-      <Flex direction="column" gap="5">
+      <Flex direction="column" gap="6">
         <Box>
-          <Heading size="6" weight="medium" mb="2">4. Keyboard Modifiers</Heading>
+          <Heading size="6" weight="medium" mb="3">4. Keyboard Modifiers</Heading>
           <Text size="2" emphasis="medium">
             Hold modifier keys while scrubbing for different speeds
           </Text>
@@ -225,22 +225,22 @@ export default function TextFieldScrubTest() {
           </TextField.Slot>
         </TextField.Root>
 
-        <Flex direction="column" gap="2">
-          <Flex gap="2" align="center">
+        <Flex direction="column" gap="3">
+          <Flex gap="3" align="center">
             <Code variant="soft">Drag</Code>
             <Text size="2" emphasis="medium">Normal speed (step × 1)</Text>
           </Flex>
-          <Flex gap="2" align="center">
+          <Flex gap="3" align="center">
             <Code variant="soft">Shift + Drag</Code>
             <Text size="2" emphasis="medium">Fast (step × 10)</Text>
           </Flex>
-          <Flex gap="2" align="center">
+          <Flex gap="3" align="center">
             <Code variant="soft">Alt + Drag</Code>
             <Text size="2" emphasis="medium">Slow (step × 0.1)</Text>
           </Flex>
         </Flex>
 
-        <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+        <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
           <Text size="2" emphasis="medium">
             <Code variant="soft">scrubShiftMultiplier</Code> and <Code variant="soft">scrubAltMultiplier</Code> customize modifier behavior
           </Text>
@@ -250,16 +250,16 @@ export default function TextFieldScrubTest() {
       <Separator size="4" />
 
       {/* Test 5: Real-World Application */}
-      <Flex direction="column" gap="5">
+      <Flex direction="column" gap="6">
         <Box>
-          <Heading size="6" weight="medium" mb="2">5. Real-World: Property Panel</Heading>
+          <Heading size="6" weight="medium" mb="3">5. Real-World: Property Panel</Heading>
           <Text size="2" emphasis="medium">
             Design tool-style interface combining all features
           </Text>
         </Box>
 
-        <Flex direction="column" gap="2">
-          <Flex gap="2">
+        <Flex direction="column" gap="3">
+          <Flex gap="3">
             <TextField.Root
               size="2"
               variant="soft"
@@ -301,7 +301,7 @@ export default function TextFieldScrubTest() {
             </TextField.Root>
           </Flex>
 
-          <Flex gap="2">
+          <Flex gap="3">
             <TextField.Root
               size="2"
               variant="soft"
@@ -388,7 +388,7 @@ export default function TextFieldScrubTest() {
           </TextField.Root>
         </Flex>
 
-        <Box p="6" style={{ minHeight: 200, background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+        <Box p="7" style={{ minHeight: 200, background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
           <Box style={{ 
             width: width, 
             height: height, 
@@ -399,7 +399,7 @@ export default function TextFieldScrubTest() {
           }} />
         </Box>
 
-        <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+        <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
           <Text size="2" emphasis="medium">
             Combined implementation: compact size, constraints, modifiers, and visual feedback
           </Text>

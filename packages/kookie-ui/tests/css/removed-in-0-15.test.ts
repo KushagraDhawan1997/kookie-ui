@@ -48,3 +48,23 @@ describe('0.15.0 removed the deprecated names', () => {
     }
   });
 });
+
+describe('0.15.0 is solid only, at a fixed scale', () => {
+  it('no stylesheet keys on material, blur, the opacity palette or scaling', () => {
+    for (const [file, text] of css) {
+      expect(text, file).not.toMatch(/data-material|translucent|backdrop-filter|--blur-|--opacity-\d|data-scaling|--scaling\b/);
+    }
+  });
+
+  it('no component accepts material or scaling', () => {
+    for (const [file, text] of ts) {
+      expect(text, file).not.toMatch(/\bmaterial\??\s*:|data-material|['"]translucent['"]|\bscaling\??\s*:|data-scaling/);
+    }
+  });
+
+  it('the scaling, blur and opacity token files are gone', () => {
+    for (const name of ['scaling.css', 'blur.css', 'opacity.css']) {
+      expect(fs.existsSync(path.join(SRC, 'styles/tokens', name)), name).toBe(false);
+    }
+  });
+});

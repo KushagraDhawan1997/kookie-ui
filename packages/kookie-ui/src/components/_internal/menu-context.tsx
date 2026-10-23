@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 
-import { useThemeContext } from '../theme.js';
 import { useResolvedResponsiveValue } from './base-menu.utils.js';
 
 import type { Responsive } from '../../props/prop-def.js';
@@ -34,22 +33,19 @@ interface MenuProviderProps {
   size?: Responsive<MenuSize>;
 }
 
-/** Map menu size to item height in pixels at 100% scaling */
+/** Menu item height in pixels per size: the control height ladder (--control-height-N). */
 export const menuSizeToItemHeight: Record<MenuSize, number> = {
-  '1': 24, // --space-5
-  '2': 32, // --space-6
+  '1': 28,
+  '2': 32,
 };
 
-/** Item height in px for a size at the given theme scaling ("100%", "110%"…). */
-export function getMenuItemHeight(size: MenuSize, scaling: string | undefined): number {
-  const scale = scaling ? parseFloat(scaling) / 100 : 1;
-  return menuSizeToItemHeight[size] * (Number.isFinite(scale) ? scale : 1);
+export function getMenuItemHeight(size: MenuSize): number {
+  return menuSizeToItemHeight[size];
 }
 
 export function MenuProvider({ children, size }: MenuProviderProps) {
   const resolvedSize = useResolvedResponsiveValue<MenuSize | undefined>(size, undefined);
-  const { scaling } = useThemeContext();
-  const itemHeight = resolvedSize ? getMenuItemHeight(resolvedSize, scaling) : undefined;
+  const itemHeight = resolvedSize ? getMenuItemHeight(resolvedSize) : undefined;
   const value = React.useMemo(
     () => ({ isInsideMenu: true, size: resolvedSize, itemHeight }),
     [resolvedSize, itemHeight],

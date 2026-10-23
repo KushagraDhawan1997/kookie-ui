@@ -58,14 +58,3 @@
   border-end-end-radius: 0;
 }
 
-/* Overlay adjustments: avoid double-fade jank from base dialog */
-.rt-SheetOverlay::before {
-  backdrop-filter: var(--backdrop-filter-components) !important;
-}
-
-/* Safari backdrop-filter fallback */
-@supports not (backdrop-filter: blur(1px)) {
-  .rt-SheetOverlay::before {
-    backdrop-filter: none !important;
-  }
-}

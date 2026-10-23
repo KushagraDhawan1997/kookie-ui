@@ -152,22 +152,6 @@
               "description": "Full width mode that expands the button to fill its container",
               "type": "boolean"
             },
-            "material": {
-              "description": "Material type for visual rendering and depth effects",
-              "type": "string",
-              "enum": [
-                "solid",
-                "translucent"
-              ]
-            },
-            "panelBackground": {
-              "description": "Panel background type (deprecated - use material instead)",
-              "type": "string",
-              "enum": [
-                "solid",
-                "translucent"
-              ]
-            },
             "flush": {
               "default": false,
               "description": "Flush mode that removes visual padding for seamless text integration",
@@ -435,22 +419,6 @@
               "default": false,
               "description": "Full width mode that expands the button to fill its container",
               "type": "boolean"
-            },
-            "material": {
-              "description": "Material type for visual rendering and depth effects",
-              "type": "string",
-              "enum": [
-                "solid",
-                "translucent"
-              ]
-            },
-            "panelBackground": {
-              "description": "Panel background type (deprecated - use material instead)",
-              "type": "string",
-              "enum": [
-                "solid",
-                "translucent"
-              ]
             },
             "flush": {
               "default": false,
@@ -971,22 +939,6 @@
               "description": "Full width mode that expands the button to fill its container",
               "type": "boolean"
             },
-            "material": {
-              "description": "Material type for visual rendering and depth effects",
-              "type": "string",
-              "enum": [
-                "solid",
-                "translucent"
-              ]
-            },
-            "panelBackground": {
-              "description": "Panel background type (deprecated - use material instead)",
-              "type": "string",
-              "enum": [
-                "solid",
-                "translucent"
-              ]
-            },
             "flush": {
               "default": false,
               "description": "Flush mode that removes visual padding for seamless text integration",
@@ -1288,22 +1240,6 @@
               "default": false,
               "description": "Full width mode that expands the button to fill its container",
               "type": "boolean"
-            },
-            "material": {
-              "description": "Material type for visual rendering and depth effects",
-              "type": "string",
-              "enum": [
-                "solid",
-                "translucent"
-              ]
-            },
-            "panelBackground": {
-              "description": "Panel background type (deprecated - use material instead)",
-              "type": "string",
-              "enum": [
-                "solid",
-                "translucent"
-              ]
             },
             "flush": {
               "default": false,
@@ -1831,22 +1767,6 @@
               "default": false,
               "description": "Full width mode that expands the button to fill its container",
               "type": "boolean"
-            },
-            "material": {
-              "description": "Material type for visual rendering and depth effects",
-              "type": "string",
-              "enum": [
-                "solid",
-                "translucent"
-              ]
-            },
-            "panelBackground": {
-              "description": "Panel background type (deprecated - use material instead)",
-              "type": "string",
-              "enum": [
-                "solid",
-                "translucent"
-              ]
             },
             "flush": {
               "default": false,

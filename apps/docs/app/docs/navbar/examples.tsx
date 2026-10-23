@@ -9,9 +9,9 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon, Menu01Icon } 
 
 export function NavbarExamples() {
   return (
-    <Flex direction="column" gap="9">
+    <Flex direction="column" gap="10">
       {/* Example 1: Basic Navbar */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Basic</SectionHeader.Title>
@@ -54,7 +54,7 @@ export function NavbarExamples() {
       <Separator size="4" />
 
       {/* Example 2: Marketing Navbar */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Marketing</SectionHeader.Title>
@@ -75,7 +75,7 @@ export function NavbarExamples() {
     <Button variant="ghost" size="2">Blog</Button>
   </Navbar.Navigation>
 
-  <Navbar.Actions gap="2">
+  <Navbar.Actions gap="3">
     <Button variant="ghost" size="2">Sign In</Button>
     <Button variant="solid" size="2">Get Started</Button>
   </Navbar.Actions>
@@ -98,7 +98,7 @@ export function NavbarExamples() {
               </Button>
             </Navbar.Navigation>
 
-            <Navbar.Actions gap="2">
+            <Navbar.Actions gap="3">
               <Button variant="ghost" size="2">
                 Sign In
               </Button>
@@ -113,7 +113,7 @@ export function NavbarExamples() {
       <Separator size="4" />
 
       {/* Example 3: Slot Architecture */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Slot Architecture</SectionHeader.Title>
@@ -130,19 +130,19 @@ export function NavbarExamples() {
 
 <Navbar.Root position="static">
   <Navbar.Logo>
-    <Flex p="3" align="center" justify="center" style={slotStyle}>
+    <Flex p="4" align="center" justify="center" style={slotStyle}>
       <Text size="2" emphasis="medium">Logo Slot</Text>
     </Flex>
   </Navbar.Logo>
 
   <Navbar.Navigation style={{ flex: 1 }}>
-    <Flex py="3" px="6" align="center" justify="center" width="100%" style={slotStyle}>
+    <Flex py="4" px="7" align="center" justify="center" width="100%" style={slotStyle}>
       <Text size="2" emphasis="medium">Navigation Slot (expands)</Text>
     </Flex>
   </Navbar.Navigation>
 
   <Navbar.Actions>
-    <Flex p="3" align="center" justify="center" style={slotStyle}>
+    <Flex p="4" align="center" justify="center" style={slotStyle}>
       <Text size="2" emphasis="medium">Actions Slot</Text>
     </Flex>
   </Navbar.Actions>
@@ -151,7 +151,7 @@ export function NavbarExamples() {
           <Navbar.Root position="static">
             <Navbar.Logo>
               <Flex
-                p="3"
+                p="4"
                 align="center"
                 justify="center"
                 style={{
@@ -167,8 +167,8 @@ export function NavbarExamples() {
 
             <Navbar.Navigation style={{ flex: 1 }}>
               <Flex
-                py="3"
-                px="6"
+                py="4"
+                px="7"
                 align="center"
                 justify="center"
                 width="100%"
@@ -185,7 +185,7 @@ export function NavbarExamples() {
 
             <Navbar.Actions>
               <Flex
-                p="3"
+                p="4"
                 align="center"
                 justify="center"
                 style={{
@@ -205,7 +205,7 @@ export function NavbarExamples() {
       <Separator size="4" />
 
       {/* Example 4: With Icons */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>With Icons</SectionHeader.Title>
@@ -232,7 +232,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
       Settings
     </Button>
   </Navbar.Navigation>
-  <Navbar.Actions gap="1">
+  <Navbar.Actions gap="2">
     <IconButton variant="ghost" size="2" aria-label="Notifications">
       <HugeiconsIcon icon={Notification01Icon} strokeWidth={1.75} />
     </IconButton>
@@ -256,7 +256,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
                 Settings
               </Button>
             </Navbar.Navigation>
-            <Navbar.Actions gap="1">
+            <Navbar.Actions gap="2">
               <IconButton variant="ghost" size="2" aria-label="Notifications">
                 <HugeiconsIcon icon={Notification01Icon} strokeWidth={1.75} />
               </IconButton>
@@ -271,7 +271,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
       <Separator size="4" />
 
       {/* Example 5: Dashboard with User Menu */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Dashboard</SectionHeader.Title>
@@ -344,7 +344,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
       <Separator size="4" />
 
       {/* Example 6: Minimal */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Minimal</SectionHeader.Title>
@@ -379,7 +379,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
       <Separator size="4" />
 
       {/* Example 7: Size Variations */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Size Variations</SectionHeader.Title>
@@ -410,7 +410,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
   </Navbar.Logo>
 </Navbar.Root>`}
         >
-          <Flex direction="column" gap="4" width="100%">
+          <Flex direction="column" gap="5" width="100%">
             <Navbar.Root position="static" size="1">
               <Navbar.Logo>
                 <Avatar src="/logos/kookie-ui/kookie-ui.png" fallback="K" size="1" />
@@ -457,7 +457,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
       <Separator size="4" />
 
       {/* Example 8: Logo Only (Centered) */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Logo Only</SectionHeader.Title>

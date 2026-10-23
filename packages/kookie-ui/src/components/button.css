@@ -36,7 +36,7 @@
  * This creates a more subtle, text-like appearance
  */
 .rt-Button {
-  --button-padding-icon-trim: max(calc(var(--button-padding-inline-base) * 0.35), var(--space-1));
+  --button-padding-icon-trim: max(calc(var(--button-padding-inline-base) * 0.35), var(--space-2));
 
   &:where(.rt-variant-ghost) {
     padding: var(--button-ghost-padding-y) var(--button-ghost-padding-x);
@@ -50,7 +50,7 @@
      * Designed for toolbars, dense interfaces, and space-constrained contexts
      */
     &:where(.rt-r-size-1) {
-      --button-padding-inline-base: var(--space-2);
+      --button-padding-inline-base: var(--space-3);
       gap: var(--component-gap-1);
       font-size: var(--font-size-1);
       line-height: var(--line-height-1);
@@ -81,8 +81,8 @@
        */
       &:where(.rt-variant-ghost) {
         gap: var(--component-gap-ghost-1);
-        --button-ghost-padding-x: var(--space-2);
-        --button-ghost-padding-y: var(--space-1);
+        --button-ghost-padding-x: var(--space-3);
+        --button-ghost-padding-y: var(--space-2);
         --button-padding-inline-base: var(--button-ghost-padding-x);
       }
     }
@@ -92,7 +92,7 @@
      * Default size for most interface contexts and general use
      */
     &:where(.rt-r-size-2) {
-      --button-padding-inline-base: var(--space-3);
+      --button-padding-inline-base: var(--space-4);
       gap: var(--component-gap-2);
       font-size: var(--font-size-2);
       line-height: var(--line-height-2);
@@ -114,8 +114,8 @@
       /* Ghost variant padding for size 2 */
       &:where(.rt-variant-ghost) {
         gap: var(--component-gap-ghost-2);
-        --button-ghost-padding-x: var(--space-2);
-        --button-ghost-padding-y: var(--space-1);
+        --button-ghost-padding-x: var(--space-3);
+        --button-ghost-padding-y: var(--space-2);
         --button-padding-inline-base: var(--button-ghost-padding-x);
       }
     }
@@ -125,7 +125,7 @@
      * Recommended for important actions and mobile touch targets
      */
     &:where(.rt-r-size-3) {
-      --button-padding-inline-base: var(--space-3);
+      --button-padding-inline-base: var(--space-4);
       gap: var(--component-gap-3);
       font-size: var(--font-size-3);
       line-height: var(--line-height-3);
@@ -147,8 +147,8 @@
       /* Ghost variant padding for size 3 */
       &:where(.rt-variant-ghost) {
         gap: var(--component-gap-ghost-3);
-        --button-ghost-padding-x: var(--space-3);
-        --button-ghost-padding-y: calc(var(--space-1) * 1.5);
+        --button-ghost-padding-x: var(--space-4);
+        --button-ghost-padding-y: calc(var(--space-2) * 1.5);
         --button-padding-inline-base: var(--button-ghost-padding-x);
       }
     }
@@ -158,7 +158,7 @@
      * Designed for hero sections and maximum visual impact
      */
     &:where(.rt-r-size-4) {
-      --button-padding-inline-base: var(--space-4);
+      --button-padding-inline-base: var(--space-5);
       gap: var(--component-gap-4);
       font-size: var(--font-size-4);
       line-height: var(--line-height-4);
@@ -180,8 +180,8 @@
       /* Ghost variant padding for size 4 */
       &:where(.rt-variant-ghost) {
         gap: var(--component-gap-ghost-4);
-        --button-ghost-padding-x: var(--space-4);
-        --button-ghost-padding-y: var(--space-2);
+        --button-ghost-padding-x: var(--space-5);
+        --button-ghost-padding-y: var(--space-3);
         --button-padding-inline-base: var(--button-ghost-padding-x);
       }
     }

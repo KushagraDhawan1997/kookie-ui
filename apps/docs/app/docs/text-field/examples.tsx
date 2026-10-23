@@ -30,9 +30,9 @@ export function TextFieldExamples() {
   };
 
   return (
-    <Flex direction="column" gap="9">
+    <Flex direction="column" gap="10">
       {/* Example 1: Search Interface */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Search Interface</SectionHeader.Title>
@@ -66,7 +66,7 @@ export function TextFieldExamples() {
       <Separator size="4" />
 
       {/* Example 2: Login Form */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Login Form</SectionHeader.Title>
@@ -88,14 +88,14 @@ export function TextFieldExamples() {
         style={{ height: 240, objectFit: 'cover' }}
       />
     </Inset>
-    <Flex direction="column" gap="6" p="2">
-      <Flex direction="column" gap="1">
+    <Flex direction="column" gap="7" p="3">
+      <Flex direction="column" gap="2">
         <Heading size="6" weight="medium">Welcome back</Heading>
         <Text size="3" emphasis="medium">
           Sign in to continue to your account.
         </Text>
       </Flex>
-      <Flex direction="column" gap="2">
+      <Flex direction="column" gap="3">
         <TextField.Root
           variant="surface"
           size="2"
@@ -144,8 +144,8 @@ export function TextFieldExamples() {
                   style={{ height: 240, objectFit: 'cover' }}
                 />
               </Inset>
-              <Flex direction="column" gap="6" p="2">
-                <Flex direction="column" gap="1">
+              <Flex direction="column" gap="7" p="3">
+                <Flex direction="column" gap="2">
                   <Heading size="6" weight="medium">
                     Welcome back
                   </Heading>
@@ -153,7 +153,7 @@ export function TextFieldExamples() {
                     Sign in to continue to your account.
                   </Text>
                 </Flex>
-                <Flex direction="column" gap="2">
+                <Flex direction="column" gap="3">
                   <TextField.Root
                     variant="surface"
                     size="2"
@@ -204,7 +204,7 @@ export function TextFieldExamples() {
       <Separator size="4" />
 
       {/* Example 3: Property Panel */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Property Panel</SectionHeader.Title>
@@ -247,11 +247,11 @@ const [height, setHeight] = React.useState(1080);
 </TextField.Root>`}
         >
           <Card variant="raised" size="1" style={{ width: 200 }}>
-            <Flex direction="column" gap="2" p="2">
+            <Flex direction="column" gap="3" p="3">
               <Text size="1" weight="medium" emphasis="medium">
                 Dimensions
               </Text>
-              <Flex direction="column" gap="1">
+              <Flex direction="column" gap="2">
                 <TextField.Root variant="soft" size="1" type="number" value={width} onChange={(e) => setWidth(Number(e.target.value) || 0)}>
                   <TextField.Slot scrub scrubValue={width} scrubMin={1} scrubMax={7680} scrubStep={1} scrubSensitivity={2} onScrub={(delta) => setWidth((prev) => prev + delta)}>
                     <Text size="1" weight="medium" style={{ width: 12 }}>
@@ -285,7 +285,7 @@ const [height, setHeight] = React.useState(1080);
       <Separator size="4" />
 
       {/* Example 4: Profile Settings */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Profile Settings</SectionHeader.Title>
@@ -296,7 +296,7 @@ const [height, setHeight] = React.useState(1080);
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
-          code={`<Flex direction="column" gap="3">
+          code={`<Flex direction="column" gap="4">
   <TextField.Root
     variant="outline"
     size="2"
@@ -331,7 +331,7 @@ const [height, setHeight] = React.useState(1080);
   </TextField.Root>
 </Flex>`}
         >
-          <Flex direction="column" gap="3" style={{ width: 320 }}>
+          <Flex direction="column" gap="4" style={{ width: 320 }}>
             <TextField.Root variant="outline" size="2" color="gray" placeholder="Display name">
               <TextField.Slot>
                 <HugeiconsIcon icon={UserIcon} strokeWidth={1.75} />
@@ -348,46 +348,6 @@ const [height, setHeight] = React.useState(1080);
               </TextField.Slot>
             </TextField.Root>
           </Flex>
-        </PreviewBlock>
-      </Flex>
-
-      <Separator size="4" />
-
-      {/* Example 5: Translucent Material */}
-      <Flex direction="column" gap="4">
-        <SectionHeader.Root>
-          <SectionHeader.Content>
-            <SectionHeader.Title>Translucent Material</SectionHeader.Title>
-            <SectionHeader.Description>
-              The translucent material creates depth over images and dynamic backgrounds. Use the soft variant for subtle integration that doesn't compete with visual content.
-            </SectionHeader.Description>
-          </SectionHeader.Content>
-        </SectionHeader.Root>
-        <PreviewBlock
-          showThemeToggle={false}
-          appearance="dark"
-          background={{
-            backgroundColor: 'hsl(220, 20%, 10%)',
-            backgroundImage: 'url(https://images.unsplash.com/photo-1765568562586-6a6a0e961582?q=80&w=3432&auto=format&fit=crop)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-          code={`<Theme appearance="dark" material="translucent">
-  <TextField.Root
-    size="2"
-    placeholder="Search the universe..."
-  >
-    <TextField.Slot>
-      <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
-    </TextField.Slot>
-  </TextField.Root>
-</Theme>`}
-        >
-          <TextField.Root variant="soft" size="2" material="translucent" placeholder="Search the universe..." style={{ width: 320 }}>
-            <TextField.Slot>
-              <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
-            </TextField.Slot>
-          </TextField.Root>
         </PreviewBlock>
       </Flex>
     </Flex>

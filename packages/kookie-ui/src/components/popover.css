@@ -1,14 +1,5 @@
 .rt-PopoverContent {
-  /*
-   * This surface blurs its own backdrop, which makes it the backdrop root for
-   * everything inside it. A component nested here would re-blur an already
-   * blurred, already flat surface for the full cost of another blur pass, so
-   * switch the component filter off for the subtree. See tokens/blur.css.
-   */
-  --backdrop-filter-components-enabled: none;
-  /* Base state: use --color-panel which adapts to theme context */
-  background-color: var(--color-panel);
-  backdrop-filter: var(--backdrop-filter-panel);
+  background-color: var(--color-panel-solid);
   box-shadow: var(--shadow-5);
   min-width: var(--radix-popover-trigger-width);
   outline: 0;
@@ -27,19 +18,6 @@
 
   transform-origin: var(--radix-popover-content-transform-origin);
 
-  /* Reduced motion support */
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-material='solid']) {
-    background-color: var(--color-panel-solid);
-    backdrop-filter: none;
-  }
-
-  &:where([data-material='translucent']) {
-    background-color: var(--color-panel-translucent);
-    backdrop-filter: var(--backdrop-filter-panel);
-  }
-
   /* Toolbar integration */
   &:where([data-has-toolbar]) {
     /* When toolbar is present, top padding equals toolbar height */
@@ -56,15 +34,15 @@
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  column-gap: var(--space-1);
+  column-gap: var(--space-2);
   padding: var(--popover-toolbar-padding);
-  background-color: var(--color-panel);
+  background-color: var(--color-panel-solid);
 }
 
 .rt-PopoverToolbarSection {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 .rt-PopoverToolbarLeft { justify-self: start; }
@@ -89,24 +67,24 @@
 @breakpoints {
   .rt-PopoverContent {
     &:where(.rt-r-size-1) {
-      --popover-content-padding: var(--space-3);
-      --popover-toolbar-padding: var(--space-2);
-      border-radius: min(var(--radius-surface-3), calc(var(--radius-surface-1) + var(--space-2)));
+      --popover-content-padding: var(--space-4);
+      --popover-toolbar-padding: var(--space-3);
+      border-radius: min(var(--radius-surface-3), calc(var(--radius-surface-1) + var(--space-3)));
     }
     &:where(.rt-r-size-2) {
-      --popover-content-padding: var(--space-4);
-      --popover-toolbar-padding: var(--space-2);
-      border-radius: min(var(--radius-surface-4), calc(var(--radius-surface-2) + var(--space-3)));
-    }
-    &:where(.rt-r-size-3) {
       --popover-content-padding: var(--space-5);
       --popover-toolbar-padding: var(--space-3);
-      border-radius: min(var(--radius-surface-5), calc(var(--radius-surface-3) + var(--space-4)));
+      border-radius: min(var(--radius-surface-4), calc(var(--radius-surface-2) + var(--space-4)));
     }
-    &:where(.rt-r-size-4) {
+    &:where(.rt-r-size-3) {
       --popover-content-padding: var(--space-6);
       --popover-toolbar-padding: var(--space-4);
-      border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-4) + var(--space-5)));
+      border-radius: min(var(--radius-surface-5), calc(var(--radius-surface-3) + var(--space-5)));
+    }
+    &:where(.rt-r-size-4) {
+      --popover-content-padding: var(--space-7);
+      --popover-toolbar-padding: var(--space-5);
+      border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-4) + var(--space-6)));
     }
   }
 }

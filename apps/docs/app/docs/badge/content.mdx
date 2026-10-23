@@ -33,7 +33,7 @@ import { Badge, Flex } from '@kushagradhawan/kookie-ui';
 
 export function MyBadges() {
   return (
-    <Flex gap="2">
+    <Flex gap="3">
       <Badge>Default</Badge>
       <Badge color="green">Published</Badge>
       <Badge color="amber">Pending</Badge>
@@ -111,7 +111,7 @@ A refined, subtle appearance.
 Badges support all accent colors for semantic meaning.
 
 ```tsx
-<Flex gap="2" wrap="wrap">
+<Flex gap="3" wrap="wrap">
   <Badge color="gray">Neutral</Badge>
   <Badge color="blue">Info</Badge>
   <Badge color="green">Success</Badge>
@@ -126,7 +126,7 @@ Badges support all accent colors for semantic meaning.
 Badge text always reads the strong ink for its color. Gray badges with a solid fill use step 12, so no extra prop is needed.
 
 ```tsx
-<Flex gap="2">
+<Flex gap="3">
   <Badge color="gray" variant="solid">Draft</Badge>
   <Badge color="red">Failed</Badge>
 </Flex>
@@ -137,7 +137,7 @@ Badge text always reads the strong ink for its color. Gray badges with a solid f
 Control badge size with the `size` prop.
 
 ```tsx
-<Flex gap="2" align="center">
+<Flex gap="3" align="center">
   <Badge size="1">Size 1</Badge>
   <Badge size="2">Size 2</Badge>
   <Badge size="3">Size 3</Badge>
@@ -164,16 +164,16 @@ Add tooltips to provide additional context.
 Common pattern for displaying status with badges.
 
 ```tsx
-<Flex direction="column" gap="2">
-  <Flex align="center" gap="2">
+<Flex direction="column" gap="3">
+  <Flex align="center" gap="3">
     <Badge color="green">Published</Badge>
     <Text size="2">Article is live</Text>
   </Flex>
-  <Flex align="center" gap="2">
+  <Flex align="center" gap="3">
     <Badge color="amber">Draft</Badge>
     <Text size="2">Work in progress</Text>
   </Flex>
-  <Flex align="center" gap="2">
+  <Flex align="center" gap="3">
     <Badge color="red">Archived</Badge>
     <Text size="2">No longer visible</Text>
   </Flex>

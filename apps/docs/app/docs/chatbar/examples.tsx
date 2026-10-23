@@ -14,9 +14,9 @@ const releasePreviews = (attachments: Chatbar.ChatbarAttachment[]) => {
 
 export function ChatbarExamples() {
   return (
-    <Flex direction="column" gap="9">
+    <Flex direction="column" gap="10">
       {/* Example 1: File Upload Flow */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>File Upload Flow</SectionHeader.Title>
@@ -142,7 +142,7 @@ export function ChatbarExamples() {
       <Separator size="4" />
 
       {/* Example 2: AI Assistant Interface */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>AI Assistant Interface</SectionHeader.Title>
@@ -159,7 +159,7 @@ export function ChatbarExamples() {
   <Hero.Meta>
     <HugeiconsIcon icon={SparklesIcon} strokeWidth={1.75} />
   </Hero.Meta>
-  <Flex direction="column" gap="2">
+  <Flex direction="column" gap="3">
     <Hero.Title size="8">What are you working on today?</Hero.Title>
     <Hero.Description emphasis="medium">
       Ask me anything about your projects, code, or ideas.
@@ -214,7 +214,7 @@ export function ChatbarExamples() {
             <Hero.Meta>
               <HugeiconsIcon icon={SparklesIcon} strokeWidth={1.75} />
             </Hero.Meta>
-            <Flex direction="column" gap="2">
+            <Flex direction="column" gap="3">
               <Hero.Title size="8">What are you working on today?</Hero.Title>
               <Hero.Description emphasis="medium">Ask me anything about your projects, code, or ideas.</Hero.Description>
             </Flex>
@@ -249,112 +249,6 @@ export function ChatbarExamples() {
               </Chatbar.Row>
             </Chatbar.Root>
           </Hero.Root>
-        </PreviewBlock>
-      </Flex>
-
-      <Separator size="4" />
-
-      {/* Example 3: Translucent Hero Chat */}
-      <Flex direction="column" gap="4">
-        <SectionHeader.Root>
-          <SectionHeader.Content>
-            <SectionHeader.Title>Translucent Hero</SectionHeader.Title>
-            <SectionHeader.Description>
-              The translucent material creates depth over dynamic backgrounds. The raised variant keeps text on the strong ink, so it stays readable on complex surfaces.
-            </SectionHeader.Description>
-          </SectionHeader.Content>
-        </SectionHeader.Root>
-        <PreviewBlock
-          showThemeToggle={false}
-          appearance="dark"
-          height="30rem"
-          background={{
-            backgroundImage:
-              'url(https://images.unsplash.com/photo-1765684145185-387b6c69bef1?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-          code={`<Theme appearance="dark">
-  <Chatbar.Root
-    open
-    size="2"
-    color="gray"
-    material="translucent"
-    sendMode="always"
-    minLines={3}
-    maxLines={16}
-    width="100%"
-    maxWidth="600px"
-    onSubmit={handleSubmit}
-  >
-    <Chatbar.Textarea
-      aria-label="Ask anything"
-      placeholder="Ask me anything..."
-      submitOnEnter
-    />
-    <Chatbar.Row>
-      <Chatbar.RowStart>
-        <Chatbar.AttachTrigger asChild>
-          <IconButton
-            variant="ghost"
-            size="2"
-            color="gray"
-            aria-label="Attach file"
-            tooltip="Attach file"
-          >
-            <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
-          </IconButton>
-        </Chatbar.AttachTrigger>
-        <IconButton
-          variant="ghost"
-          size="2"
-          color="gray"
-          aria-label="Select model"
-          tooltip="Select model"
-        >
-          <HugeiconsIcon icon={AiBrain01Icon} strokeWidth={1.75} />
-        </IconButton>
-      </Chatbar.RowStart>
-      <Chatbar.RowEnd>
-        <Chatbar.Send />
-      </Chatbar.RowEnd>
-    </Chatbar.Row>
-  </Chatbar.Root>
-</Theme>`}
-        >
-          <Chatbar.Root
-            open
-            variant="raised"
-            size="2"
-            color="gray"
-            material="translucent"
-            sendMode="always"
-            minLines={3}
-            maxLines={16}
-            width="100%"
-            maxWidth="600px"
-            onSubmit={({ value, attachments }) => {
-              console.log('Ask:', value);
-              releasePreviews(attachments);
-            }}
-          >
-            <Chatbar.Textarea aria-label="Ask anything" placeholder="Ask me anything..." submitOnEnter />
-            <Chatbar.Row>
-              <Chatbar.RowStart>
-                <Chatbar.AttachTrigger asChild>
-                  <IconButton variant="ghost" size="2" color="gray" aria-label="Attach file" tooltip="Attach file">
-                    <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
-                  </IconButton>
-                </Chatbar.AttachTrigger>
-                <IconButton variant="ghost" size="2" color="gray" aria-label="Select model" tooltip="Select model">
-                  <HugeiconsIcon icon={AiBrain01Icon} strokeWidth={1.75} />
-                </IconButton>
-              </Chatbar.RowStart>
-              <Chatbar.RowEnd>
-                <Chatbar.Send />
-              </Chatbar.RowEnd>
-            </Chatbar.Row>
-          </Chatbar.Root>
         </PreviewBlock>
       </Flex>
     </Flex>
