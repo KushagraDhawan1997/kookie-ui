@@ -132,8 +132,8 @@ const CASES: Case[] = [
   },
   { name: 'Badge', render: () => <Badge data-testid={TID} size="2" variant="soft" color="gray" m="1" /> },
   { name: 'Card', render: () => <Card data-testid={TID} size="2" variant="classic" m="2" /> },
-  { name: 'Separator', render: () => <Separator data-testid={TID} size="2" my="2" /> },
-  { name: 'Spinner', render: () => <Spinner data-testid={TID} size="2" m="1" /> },
+  { name: 'Separator', render: () => <Separator data-testid={TID} my="2" /> },
+  { name: 'Spinner', render: () => <Spinner data-testid={TID} m="1" /> },
   { name: 'Skeleton', render: () => <Skeleton data-testid={TID} width="100px" height="20px" /> },
   {
     name: 'Avatar',

@@ -21,6 +21,7 @@ import {
 import { Theme, useThemeContext } from './theme.js';
 import { ThickCheckIcon, ThickChevronRightIcon, ThickDotIcon } from './icons.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
 import { MenuProvider } from './_internal/menu-context.js';
 import {
@@ -76,7 +77,8 @@ interface ContextMenuContentProps
   submenuBehavior?: Responsive<'cascade' | 'drill-down'>;
 }
 const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMenuContentProps>(
-  (props, forwardedRef) => {
+  (ownProps, forwardedRef) => {
+    const props = useThemeSizeProps(ownProps, contextMenuContentPropDefs.size);
     const themeContext = useThemeContext();
     const {
       size = contextMenuContentPropDefs.size.default,

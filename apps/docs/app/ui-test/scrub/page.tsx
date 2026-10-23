@@ -53,7 +53,7 @@ export default function ScrubTestPage() {
           </Text>
         </Flex>
 
-        <Separator size="4" />
+        <Separator />
 
         {/* Basic Example */}
         <Card size="3">

@@ -8,6 +8,7 @@ import { useControllableState } from 'radix-ui/internal';
 import { checkboxPropDefs } from './checkbox.props.js';
 import { ThickCheckIcon, ThickDividerHorizontalIcon } from './icons.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { marginPropDefs } from '../props/margin.props.js';
 
 import type { MarginProps } from '../props/margin.props.js';
@@ -23,7 +24,8 @@ interface CheckboxProps
     >,
     MarginProps,
     CheckboxOwnProps {}
-const Checkbox = React.forwardRef<CheckboxElement, CheckboxProps>((props, forwardedRef) => {
+const Checkbox = React.forwardRef<CheckboxElement, CheckboxProps>((ownProps, forwardedRef) => {
+  const props = useThemeSizeProps(ownProps, checkboxPropDefs.size);
   const {
     className,
     color,

@@ -1,3 +1,15 @@
+## [0.18.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.17.0...v0.18.0) (2026-10-23)
+
+Controls take v2's ladder. Release 2 of 5. See MIGRATION.md.
+
+### Breaking changes
+
+* **theme:** `Theme size` (1 to 4, default 2) sizes every control that sets no `size` of its own.
+* **controls:** Button, IconButton, the Toggles, TextField, TextArea, Select, Combobox, SegmentedControl and Tabs share one ladder: heights 28/32/40/48 as a minimum, side padding 8/10/13/16, 12/14/17/20 on a bare edge at radius `full`, gap 4/8/8/12, icons 16/16/20/24. Icon-only buttons are square. A button in a TextField slot is the field's height less the slot inset.
+* **marks:** Checkbox and Radio are 16/20/24/26px at sizes 1 to 4; Switch and Slider follow v2's tracks. Checkbox, Radio, RadioGroup and Table accept size 4.
+* **sizes:** Spinner, ScrollArea, Separator and Progress take no `size`. Separator fills its container. Badge rests at size 2. Avatar follows v2's 1 to 9 ladder.
+* **states:** disabled is colour only, with the arrow cursor; loading buttons stay focusable with `aria-disabled`; invalid fields key on `aria-invalid`; every button variant has one focus ring.
+
 ## [0.17.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.16.0...v0.17.0) (2026-10-23)
 
 v1's scale becomes v2's. The first of five releases that make v1's core match v2. See MIGRATION.md.

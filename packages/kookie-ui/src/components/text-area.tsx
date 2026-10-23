@@ -3,6 +3,7 @@ import classNames from 'classnames';
 
 import { textAreaPropDefs } from './text-area.props.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { marginPropDefs } from '../props/margin.props.js';
 
 import type { MarginProps } from '../props/margin.props.js';
@@ -19,17 +20,18 @@ interface TextAreaProps
     MarginProps,
     TextAreaOwnProps {}
 
-const TextArea = React.forwardRef<TextAreaElement, TextAreaProps>((props, forwardedRef) => {
+const TextArea = React.forwardRef<TextAreaElement, TextAreaProps>((ownProps, forwardedRef) => {
+  const props = useThemeSizeProps(ownProps, textAreaPropDefs.size);
   const { className, color, radius, style, ...textAreaProps } =
     extractProps(props, textAreaPropDefs, marginPropDefs);
 
   // Generate unique IDs for accessibility
   const errorId = React.useId();
 
-  const { 'aria-describedby': ariaDescribedby, 'aria-labelledby': ariaLabelledby } = textAreaProps;
+  const { 'aria-describedby': ariaDescribedby, 'aria-labelledby': ariaLabelledby, 'aria-invalid': ariaInvalid } = textAreaProps;
 
-  // Determine invalid state
-  const isInvalid = textAreaProps.error;
+  // Invalid when `error` is set or the caller passes aria-invalid; the CSS keys on aria-invalid only.
+  const isInvalid = Boolean(textAreaProps.error) || ariaInvalid === true || ariaInvalid === 'true';
 
   // Build aria-describedby string
   const describedBy = React.useMemo(() => {
@@ -42,11 +44,11 @@ const TextArea = React.forwardRef<TextAreaElement, TextAreaProps>((props, forwar
   // Build aria attributes
   const ariaProps = React.useMemo(
     () => ({
-      'aria-invalid': isInvalid,
+      'aria-invalid': isInvalid ? true : ariaInvalid,
       'aria-describedby': describedBy,
       'aria-labelledby': ariaLabelledby,
     }),
-    [isInvalid, describedBy, ariaLabelledby],
+    [isInvalid, ariaInvalid, describedBy, ariaLabelledby],
   );
 
   // Filter out our custom props to avoid DOM warnings

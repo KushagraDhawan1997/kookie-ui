@@ -4,7 +4,7 @@ import { colorPropDef } from '../props/color.prop.js';
 
 import type { PropDef } from '../props/prop-def.js';
 
-const sizes = ['1', '2', '3'] as const;
+const sizes = ['1', '2', '3', '4'] as const;
 // The same list as Radio: a group offers exactly what its items can draw.
 const variants = baseRadioPropDefs.variant.values;
 

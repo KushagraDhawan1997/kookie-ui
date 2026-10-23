@@ -9,6 +9,7 @@ import { Flex } from './flex.js';
 import { ScrollArea } from './scroll-area.js';
 import { Slot } from './slot.js';
 import { NoticeSizeContext } from './notice.js';
+import { useThemeSize } from '../helpers/theme-size.js';
 import { Spinner } from './spinner.js';
 import { Text } from './text.js';
 import { VisuallyHidden } from './visually-hidden.js';
@@ -124,6 +125,9 @@ interface ChatbarContextValue {
   /** Guards blur-collapse between pointerdown on a picker trigger and its click */
   beginFilePickerPress(): void;
 }
+
+/** Chatbar's own range; a Theme size of 4 maps to 3. */
+const chatbarSizePropDef = { values: ['1', '2', '3'] as const };
 
 const ChatbarContext = React.createContext<ChatbarContextValue | null>(null);
 // Value lives in its own context so keystrokes only re-render parts that read it
@@ -315,7 +319,7 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
     disabled,
     readOnly,
     onSubmit,
-    size = '2',
+    size: sizeProp,
     variant,
     color,
     radius,
@@ -339,6 +343,7 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
     context,
     ...divProps
   } = props;
+  const size = useThemeSize(sizeProp, chatbarSizePropDef);
 
   const isValueControlled = valueProp != null;
   const [valueUncontrolled, setValueUncontrolled] = React.useState<string>(defaultValue);
@@ -1033,7 +1038,7 @@ const AttachmentsRow = React.forwardRef<HTMLDivElement, AttachmentsRowProps>((pr
   return (
     <div>
       <Comp {...divProps} ref={forwardedRef} className={classNames('rt-ChatbarAttachmentsRow', className)} role="list" aria-label={divProps['aria-label'] ?? 'Attachments'}>
-        <ScrollArea className="rt-ChatbarScrollArea" scrollbars="horizontal" size="1">
+        <ScrollArea className="rt-ChatbarScrollArea" scrollbars="horizontal">
           <Flex align="center" gap="3" minWidth="fit-content">
             {ctx.attachments.map((att) => (
               <Attachment key={att.id} attachment={att} asChild={!!renderAttachment}>
@@ -1117,7 +1122,7 @@ const Attachment = React.forwardRef<HTMLDivElement, AttachmentProps>((props, for
 
   const lead =
     attachment.status === 'uploading' ? (
-      <Spinner size="1" />
+      <Spinner />
     ) : isImage ? (
       <img className="rt-ChatbarAttachmentImage" src={attachment.url} alt="" />
     ) : (
@@ -1361,7 +1366,7 @@ const Send = React.forwardRef<HTMLButtonElement, SendProps>((props, forwardedRef
 
   const glyph =
     mode === 'stop' ? (
-      stopIcon ?? (status === 'submitted' ? <Spinner size={ctx.size} /> : (
+      stopIcon ?? (status === 'submitted' ? <Spinner /> : (
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
           <rect x="7" y="7" width="10" height="10" rx="2" />
         </svg>

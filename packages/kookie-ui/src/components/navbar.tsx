@@ -9,6 +9,7 @@ import type { FlexProps } from './flex.js';
 
 import { navbarRootPropDefs } from './navbar.props.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
@@ -35,7 +36,8 @@ interface NavbarRootProps
     NavbarRootOwnProps {}
 
 const NavbarRoot = React.forwardRef<NavbarRootElement, NavbarRootProps>(
-  (props, forwardedRef) => {
+  (ownProps, forwardedRef) => {
+    const props = useThemeSizeProps(ownProps, navbarRootPropDefs.size);
     const { children, className, ...rootProps } = extractProps(
       props,
       navbarRootPropDefs,

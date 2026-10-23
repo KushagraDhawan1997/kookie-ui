@@ -1,4 +1,4 @@
-Control your app's visual appearance with six configuration options. Kookie UI Theme is a fork of [Radix Themes](https://www.radix-ui.com/themes), offering the same foundation with custom enhancements for theming and accessibility.
+Control your app's visual appearance with seven configuration options. Kookie UI Theme is a fork of [Radix Themes](https://www.radix-ui.com/themes), offering the same foundation with custom enhancements for theming and accessibility.
 
 This is an enhanced version of the Theme component from [Radix Themes](https://www.radix-ui.com/themes). For the original API reference, see the [Radix Themes Theme documentation](https://www.radix-ui.com/themes/docs/theme/overview).
 
@@ -68,6 +68,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 | `accentColor` | `AccentColor` | Primary accent used for interactive components. Default: `'gray'` |
 | `grayColor` | `GrayColor` | Neutral gray scale for backgrounds and text. Default: `'gray'` |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Global corner radius scale. Default: `'full'` |
+| `size` | `'1' \| '2' \| '3' \| '4'` | Size for controls that set none of their own. Default: `'2'` |
 | `fontFamily` | `'sans' \| 'mono' \| 'serif'` | Font family for body text. Default: `'sans'` |
 | `headingFontFamily` | `'sans' \| 'mono' \| 'serif'` | Font family for `Heading`, set independently of body text. Follows `fontFamily` when unset |
 | `hasBackground` | `boolean` | Whether to apply background color to the Theme element. Default: `true` for root Theme |
@@ -144,6 +145,16 @@ Available values: `none`, `small`, `medium`, `large`, `full` (default).
 ```tsx
 <Theme radius="large"><YourApp /></Theme>
 ```
+
+## Size
+
+Set `size` to size every control inside the Theme at once. Heights are 28, 32, 40 and 48px for sizes 1 to 4. A control's own `size` still wins, and a control with fewer sizes takes its nearest one.
+
+```tsx
+<Theme size="3"><YourApp /></Theme>
+```
+
+Badge does not follow it.
 
 ## Font Family
 

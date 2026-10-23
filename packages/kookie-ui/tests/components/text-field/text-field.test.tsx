@@ -133,6 +133,21 @@ describe('TextField', () => {
       expect(root).toHaveClass('rt-error');
     });
 
+    it('sets aria-invalid from the error prop', () => {
+      renderWithProviders(<TextField.Root error />);
+      expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true');
+    });
+
+    it('passes a caller aria-invalid through', () => {
+      renderWithProviders(<TextField.Root aria-invalid />);
+      expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true');
+    });
+
+    it('leaves aria-invalid off when valid', () => {
+      renderWithProviders(<TextField.Root />);
+      expect(screen.getByRole('textbox')).not.toHaveAttribute('aria-invalid');
+    });
+
     it('renders error message when provided', () => {
       renderWithProviders(<TextField.Root error errorMessage="This field is required" />);
       expect(screen.getByText('This field is required')).toBeInTheDocument();
