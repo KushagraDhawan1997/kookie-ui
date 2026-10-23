@@ -1,8 +1,8 @@
 /**
  * TextArea Component Styles
- * 
+ *
  * ARCHITECTURE (following base-button pattern):
- * - Base styles: Layout, accessibility, material system
+ * - Base styles: Layout, accessibility
  * - Sizes: Responsive sizing and typography
  * - Variant palettes: Each variant defines its color scale as CSS variables
  * - Shared state logic: Single set of hover/focus/disabled selectors
@@ -17,20 +17,6 @@
  ***************************************************************************************************/
 
 .rt-TextAreaRoot {
-  /*
-   * Component-level material override
-   * When component has explicit material prop, override the inherited theme values.
-   */
-  &:where([data-material='solid']) {
-    --material-blend: 100%;
-    --material-alpha: 0;
-  }
-
-  &:where([data-material='translucent']) {
-    --material-blend: 60%;
-    --material-alpha: 1;
-  }
-
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -43,25 +29,7 @@
   /* Allows the `resize` property to work on the div */
   overflow: hidden;
 
-  /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
-
-  /* Prevent backdrop-filter stacking with parents */
   isolation: isolate;
-
-  /* Component-level overrides */
-  &:where([data-material='solid']) {
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-  
-  &:where([data-material='translucent']) {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 
   &:where(:focus-within) {
     outline: 2px solid var(--v-focus-color, var(--focus-8));
@@ -94,14 +62,14 @@
     cursor: auto;
   }
   &::-webkit-scrollbar {
-    width: var(--space-3);
-    height: var(--space-3);
+    width: var(--space-4);
+    height: var(--space-4);
   }
   &::-webkit-scrollbar-track,
   &::-webkit-scrollbar-thumb {
     background-clip: content-box;
-    border: var(--space-1) solid transparent;
-    border-radius: var(--space-3);
+    border: var(--space-2) solid transparent;
+    border-radius: var(--space-4);
   }
   &::-webkit-scrollbar-track {
     background-color: var(--gray-a3);
@@ -142,26 +110,26 @@
 @breakpoints {
   .rt-TextAreaRoot {
     &:where(.rt-r-size-1) {
-      min-height: var(--space-8);
+      min-height: var(--space-9);
       border-radius: var(--radius-1);
 
       & :where(.rt-TextAreaInput) {
         /* Clip text to border */
-        --text-area-padding-y: calc(var(--space-2) - var(--text-area-border-width));
-        --text-area-padding-x: calc(var(--space-2) - var(--text-area-border-width));
+        --text-area-padding-y: calc(var(--space-3) - var(--text-area-border-width));
+        --text-area-padding-x: calc(var(--space-3) - var(--text-area-border-width));
         font-size: var(--font-size-1);
         line-height: var(--line-height-1);
         letter-spacing: var(--letter-spacing-1);
       }
     }
     &:where(.rt-r-size-2) {
-      min-height: var(--space-9);
+      min-height: var(--space-10);
       border-radius: var(--radius-2);
 
       & :where(.rt-TextAreaInput) {
         /* Clip text to border */
-        --text-area-padding-y: calc(var(--space-2) - var(--text-area-border-width));
-        --text-area-padding-x: calc(var(--space-2) - var(--text-area-border-width));
+        --text-area-padding-y: calc(var(--space-3) - var(--text-area-border-width));
+        --text-area-padding-x: calc(var(--space-3) - var(--text-area-border-width));
         font-size: var(--font-size-2);
         line-height: var(--line-height-2);
         letter-spacing: var(--letter-spacing-2);
@@ -173,8 +141,8 @@
 
       & :where(.rt-TextAreaInput) {
         /* Clip text to border */
-        --text-area-padding-y: calc(var(--space-3) - var(--text-area-border-width));
-        --text-area-padding-x: calc(var(--space-3) - var(--text-area-border-width));
+        --text-area-padding-y: calc(var(--space-4) - var(--text-area-border-width));
+        --text-area-padding-x: calc(var(--space-4) - var(--text-area-border-width));
         font-size: var(--font-size-3);
         line-height: var(--line-height-3);
         letter-spacing: var(--letter-spacing-3);
@@ -186,8 +154,8 @@
 
       & :where(.rt-TextAreaInput) {
         /* Clip text to border */
-        --text-area-padding-y: calc(var(--space-3) - var(--text-area-border-width));
-        --text-area-padding-x: calc(var(--space-4) - var(--text-area-border-width));
+        --text-area-padding-y: calc(var(--space-4) - var(--text-area-border-width));
+        --text-area-padding-x: calc(var(--space-5) - var(--text-area-border-width));
         font-size: var(--font-size-4);
         line-height: var(--line-height-4);
         letter-spacing: var(--letter-spacing-4);
@@ -280,11 +248,7 @@
 
 .rt-TextAreaRoot:where(.rt-variant-soft, .rt-variant-ghost, .rt-variant-outline, .rt-variant-surface) {
   /* Rest state */
-  background-color: color-mix(
-    in srgb,
-    var(--v-bg-a) calc(var(--material-alpha) * 100%),
-    var(--v-bg) var(--material-blend)
-  );
+  background-color: var(--v-bg);
 
   /* Placeholder styling */
   & :where(.rt-TextAreaInput) {
@@ -297,11 +261,7 @@
   /* Hover state */
   @media (hover: hover) {
     &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      background-color: color-mix(
-        in srgb,
-        var(--v-bg-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-bg-hover) var(--material-blend)
-      );
+      background-color: var(--v-bg-hover);
     }
   }
 
@@ -322,20 +282,12 @@
 /* Border variants: outline and surface */
 .rt-TextAreaRoot:where(.rt-variant-outline, .rt-variant-surface) {
   /* Rest state border */
-  box-shadow: inset 0 0 0 1px color-mix(
-    in srgb,
-    var(--v-border-a) calc(var(--material-alpha) * 100%),
-    var(--v-border) var(--material-blend)
-  );
+  box-shadow: inset 0 0 0 1px var(--v-border);
 
   /* Hover state border */
   @media (hover: hover) {
     &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      box-shadow: inset 0 0 0 1px color-mix(
-        in srgb,
-        var(--v-border-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-border-hover) var(--material-blend)
-      );
+      box-shadow: inset 0 0 0 1px var(--v-border-hover);
     }
   }
 
@@ -348,27 +300,15 @@
 /* Ghost focus state - needs background on focus */
 .rt-TextAreaRoot:where(.rt-variant-ghost) {
   &:where(:focus-within) {
-    background-color: color-mix(
-      in srgb,
-      var(--v-bg-focus-a, var(--v-bg-a)) calc(var(--material-alpha) * 100%),
-      var(--v-bg-focus, var(--v-bg)) var(--material-blend)
-    );
+    background-color: var(--v-bg-focus, var(--v-bg));
   }
 }
 
 /* Surface focus state - border changes on focus */
 .rt-TextAreaRoot:where(.rt-variant-surface) {
   &:where(:focus-within) {
-    background-color: color-mix(
-      in srgb,
-      var(--v-bg-focus-a, var(--v-bg-a)) calc(var(--material-alpha) * 100%),
-      var(--v-bg-focus, var(--v-bg)) var(--material-blend)
-    );
-    box-shadow: inset 0 0 0 var(--text-area-border-width) color-mix(
-      in srgb,
-      var(--v-border-focus-a) calc(var(--material-alpha) * 100%),
-      var(--v-border-focus) var(--material-blend)
-    );
+    background-color: var(--v-bg-focus, var(--v-bg));
+    box-shadow: inset 0 0 0 var(--text-area-border-width) var(--v-border-focus);
   }
 }
 
@@ -429,11 +369,6 @@
   background-color: var(--color-surface-solid);
   box-shadow: var(--shadow-2);
 
-  /* Translucent theme override */
-  &:where([data-material='translucent']) {
-    background-color: var(--color-surface-translucent);
-  }
-
   & :where(.rt-TextAreaInput) {
     &::placeholder {
       color: var(--gray-a10);
@@ -443,11 +378,7 @@
   /* Hover effects */
   @media (hover: hover) {
     &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      background-color: color-mix(
-        in srgb,
-        var(--accent-a2) calc(var(--material-alpha) * 100%),
-        var(--accent-2) var(--material-blend)
-      );
+      background-color: var(--accent-2);
       box-shadow: var(--shadow-2);
     }
   }
@@ -516,24 +447,12 @@
   --v-border-hover: var(--red-7);
   --v-border-hover-a: var(--red-a7);
 
-  box-shadow: inset 0 0 0 1px color-mix(
-    in srgb,
-    var(--v-border-a) calc(var(--material-alpha) * 100%),
-    var(--v-border) var(--material-blend)
-  );
+  box-shadow: inset 0 0 0 1px var(--v-border);
 
   @media (hover: hover) {
     &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      background-color: color-mix(
-        in srgb,
-        var(--v-bg-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-bg-hover) var(--material-blend)
-      );
-      box-shadow: inset 0 0 0 1px color-mix(
-        in srgb,
-        var(--v-border-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-border-hover) var(--material-blend)
-      );
+      background-color: var(--v-bg-hover);
+      box-shadow: inset 0 0 0 1px var(--v-border-hover);
     }
   }
 }
@@ -549,29 +468,13 @@
   --v-border-hover: var(--red-7);
   --v-border-hover-a: var(--red-a7);
 
-  background-color: color-mix(
-    in srgb,
-    var(--v-bg-a) calc(var(--material-alpha) * 100%),
-    var(--v-bg) var(--material-blend)
-  );
-  box-shadow: inset 0 0 0 1px color-mix(
-    in srgb,
-    var(--v-border-a) calc(var(--material-alpha) * 100%),
-    var(--v-border) var(--material-blend)
-  );
+  background-color: var(--v-bg);
+  box-shadow: inset 0 0 0 1px var(--v-border);
 
   @media (hover: hover) {
     &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      background-color: color-mix(
-        in srgb,
-        var(--v-bg-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-bg-hover) var(--material-blend)
-      );
-      box-shadow: inset 0 0 0 1px color-mix(
-        in srgb,
-        var(--v-border-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-border-hover) var(--material-blend)
-      );
+      background-color: var(--v-bg-hover);
+      box-shadow: inset 0 0 0 1px var(--v-border-hover);
     }
   }
 }
@@ -579,7 +482,7 @@
 /* Error raised variant */
 .rt-TextAreaRoot:where(.rt-error.rt-variant-raised) {
   box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-6);
-  
+
   @media (hover: hover) {
     &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
       box-shadow: var(--shadow-3), inset 0 0 0 1px var(--red-7);
@@ -593,20 +496,12 @@
   --v-bg-a: var(--red-a2);
   --v-bg-hover: var(--red-4);
   --v-bg-hover-a: var(--red-a4);
-  
-  background-color: color-mix(
-    in srgb,
-    var(--v-bg-a) calc(var(--material-alpha) * 100%),
-    var(--v-bg) var(--material-blend)
-  );
-  
+
+  background-color: var(--v-bg);
+
   @media (hover: hover) {
     &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      background-color: color-mix(
-        in srgb,
-        var(--v-bg-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-bg-hover) var(--material-blend)
-      );
+      background-color: var(--v-bg-hover);
     }
   }
 }
@@ -620,20 +515,12 @@
 
   @media (hover: hover) {
     &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      background-color: color-mix(
-        in srgb,
-        var(--v-bg-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-bg-hover) var(--material-blend)
-      );
+      background-color: var(--v-bg-hover);
     }
   }
-  
+
   &:where(:focus-within) {
-    background-color: color-mix(
-      in srgb,
-      var(--v-bg-focus-a) calc(var(--material-alpha) * 100%),
-      var(--v-bg-focus) var(--material-blend)
-    );
+    background-color: var(--v-bg-focus);
   }
 }
 
@@ -647,10 +534,10 @@
   color: var(--red-11);
   font-size: var(--font-size-1);
   line-height: var(--line-height-1);
-  margin-top: var(--space-1);
+  margin-top: var(--space-2);
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-2);
 }
 
 .rt-TextAreaErrorMessage::before {

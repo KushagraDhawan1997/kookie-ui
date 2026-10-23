@@ -127,7 +127,7 @@ const PageHeaderMedia = React.forwardRef<HTMLImageElement, PageHeaderMediaProps>
         size={size}
         style={{
           ...(shouldOverlap && {
-            marginTop: 'calc(var(--space-9) * -1)',
+            marginTop: 'calc(var(--space-10) * -1)',
             border: '4px solid var(--color-background)',
           }),
           ...style,

@@ -4,15 +4,12 @@ import * as React from 'react';
 import { useCallbackRef } from 'radix-ui/internal';
 import { flushSync } from 'react-dom';
 
-import { AccessibleIcon } from './accessible-icon.js';
 import { Box } from './box.js';
 import { Button } from './button.js';
 import { Flex } from './flex.js';
 import { Grid } from './grid.js';
 import { Heading } from './heading.js';
-import { IconButton } from './icon-button.js';
 import { Kbd } from './kbd.js';
-import * as Popover from './popover.js';
 import { ScrollArea } from './scroll-area.js';
 import { Text } from './text.js';
 import { Tooltip } from './tooltip.js';
@@ -112,22 +109,22 @@ const ThemePanelImpl = React.forwardRef<ThemePanelImplElement, ThemePanelImplPro
     const { open, onAppearanceChange, shortcut, triggerRef, ...panelProps } = props;
     const themeContext = useThemeContext();
     return (
-      <Theme asChild radius="medium" scaling="100%">
+      <Theme asChild radius="medium">
         <Flex
           direction="column"
           position="fixed"
           top="0"
           right="0"
-          mr={{ initial: '2', sm: '4' }}
-          mt={{ initial: '2', sm: '4' }}
+          mr={{ initial: '3', sm: '5' }}
+          mt={{ initial: '3', sm: '5' }}
           width={{ initial: '360px' }}
           maxHeight={{
-            initial: 'calc(100svh - var(--space-2) - var(--space-2))',
-            sm: 'calc(100svh - var(--space-4) - var(--space-4))',
+            initial: 'calc(100svh - var(--space-3) - var(--space-3))',
+            sm: 'calc(100svh - var(--space-5) - var(--space-5))',
           }}
           maxWidth={{
-            initial: 'calc(100svw - var(--space-2) - var(--space-2))',
-            sm: 'calc(100svw - var(--space-4) - var(--space-4))',
+            initial: 'calc(100svw - var(--space-3) - var(--space-3))',
+            sm: 'calc(100svw - var(--space-5) - var(--space-5))',
           }}
           inert={open ? undefined : inert}
           {...panelProps}
@@ -144,9 +141,9 @@ const ThemePanelImpl = React.forwardRef<ThemePanelImplElement, ThemePanelImplPro
           }}
         >
           <ScrollArea>
-            <Box flexGrow="1" p={{ initial: '4', xs: '5' }} position="relative">
+            <Box flexGrow="1" p={{ initial: '5', xs: '6' }} position="relative">
               {!!shortcut && (
-                <Box position="absolute" top="0" right="0" m="2">
+                <Box position="absolute" top="0" right="0" m="3">
                   {shortcut}
                 </Box>
               )}
@@ -185,12 +182,8 @@ const ThemePanelContent = React.forwardRef<ThemePanelContentElement, ThemePanelC
       onAccentColorChange,
       grayColor,
       onGrayColorChange,
-      material,
-      onMaterialChange,
       radius,
       onRadiusChange,
-      scaling,
-      onScalingChange,
     } = contextProp ?? themeContext;
 
     const [resolvedAppearance, setResolvedAppearance] = React.useState<'light' | 'dark' | null>(
@@ -228,9 +221,7 @@ const ThemePanelContent = React.forwardRef<ThemePanelContentElement, ThemePanelC
         appearance: appearance === themePropDefs.appearance.default ? undefined : appearance,
         accentColor: accentColor === themePropDefs.accentColor.default ? undefined : accentColor,
         grayColor: grayColor === themePropDefs.grayColor.default ? undefined : grayColor,
-        material: material === themePropDefs.material.default ? undefined : material,
         radius: radius === themePropDefs.radius.default ? undefined : radius,
-        scaling: scaling === themePropDefs.scaling.default ? undefined : scaling,
       } satisfies GetPropDefTypes<typeof themePropDefs>;
 
       const props = Object.keys(theme)
@@ -298,15 +289,15 @@ const ThemePanelContent = React.forwardRef<ThemePanelContentElement, ThemePanelC
     }, [appearance]);
 
     return (
-      <Flex direction="column" gap="5" {...contentProps} ref={forwardedRef}>
+      <Flex direction="column" gap="6" {...contentProps} ref={forwardedRef}>
         <Heading size={{ initial: '3', sm: '5' }} trim="both" as="h2">
           Theme
         </Heading>
-        <Flex direction="column" gap="5">
+        <Flex direction="column" gap="6">
           {/* Accent color */}
           <ThemePanelSection>
             <ThemePanelHeading id="accent-color-title">Accent color</ThemePanelHeading>
-            <Flex wrap="wrap" gap="2" role="group" aria-labelledby="accent-color-title">
+            <Flex wrap="wrap" gap="3" role="group" aria-labelledby="accent-color-title">
               {themePropDefs.accentColor.values.map((color) => (
                 <Box asChild key={color}>
                   <label
@@ -341,7 +332,7 @@ const ThemePanelContent = React.forwardRef<ThemePanelContentElement, ThemePanelC
           {/* Gray color */}
           <ThemePanelSection>
             <ThemePanelHeading id="gray-color-title">Gray color</ThemePanelHeading>
-            <Flex wrap="wrap" gap="2" role="group" aria-labelledby="gray-color-title">
+            <Flex wrap="wrap" gap="3" role="group" aria-labelledby="gray-color-title">
               {themePropDefs.grayColor.values.map((gray) => (
                 <Flex key={gray} asChild align="center" justify="center">
                   <label
@@ -384,7 +375,7 @@ const ThemePanelContent = React.forwardRef<ThemePanelContentElement, ThemePanelC
           {/* Appearance */}
           <ThemePanelSection>
             <ThemePanelHeading id="appearance-title">Appearance</ThemePanelHeading>
-            <Grid columns="2" gap="2" role="group" aria-labelledby="appearance-title">
+            <Grid columns="2" gap="3" role="group" aria-labelledby="appearance-title">
               {(['light', 'dark'] as const).map((value) => (
                 <label key={value} className="rt-ThemePanelRadioCard">
                   <input
@@ -397,7 +388,7 @@ const ThemePanelContent = React.forwardRef<ThemePanelContentElement, ThemePanelC
                       handleAppearanceChange(event.target.value as 'light' | 'dark')
                     }
                   />
-                  <Flex align="center" justify="center" height="32px" gap="2">
+                  <Flex align="center" justify="center" height="32px" gap="3">
                     {value === 'light' ? (
                       <svg
                         width="15"
@@ -443,7 +434,7 @@ const ThemePanelContent = React.forwardRef<ThemePanelContentElement, ThemePanelC
           {/* Radius */}
           <ThemePanelSection>
             <ThemePanelHeading id="radius-title">Radius</ThemePanelHeading>
-            <Flex gap="2" role="group" aria-labelledby="radius-title" wrap="wrap">
+            <Flex gap="3" role="group" aria-labelledby="radius-title" wrap="wrap">
               {themePropDefs.radius.values.map((value) => (
                 <Flex key={value} direction="column" align="center">
                   <label className="rt-ThemePanelRadioCard">
@@ -458,7 +449,7 @@ const ThemePanelContent = React.forwardRef<ThemePanelContentElement, ThemePanelC
                     />
                     <Theme asChild radius={value}>
                       <Box
-                        m="3"
+                        m="4"
                         width={{ initial: '24px', sm: '32px' }}
                         height={{ initial: '24px', sm: '32px' }}
                         style={{
@@ -471,7 +462,7 @@ const ThemePanelContent = React.forwardRef<ThemePanelContentElement, ThemePanelC
                       />
                     </Theme>
                   </label>
-                  <Box asChild pt="2">
+                  <Box asChild pt="3">
                     <Text asChild size="1" emphasis="medium">
                       <label htmlFor={`theme-panel-radius-${value}`}>{upperFirst(value)}</label>
                     </Text>
@@ -479,214 +470,6 @@ const ThemePanelContent = React.forwardRef<ThemePanelContentElement, ThemePanelC
                 </Flex>
               ))}
             </Flex>
-          </ThemePanelSection>
-
-          {/* Scaling */}
-          <ThemePanelSection>
-            <ThemePanelHeading id="scaling-title">Scaling</ThemePanelHeading>
-            <Grid
-              columns={{
-                initial: 'repeat(3, 1fr)',
-                sm: '5',
-              }}
-              gap="2"
-              role="group"
-              aria-labelledby="scaling-title"
-            >
-              {themePropDefs.scaling.values.map((value) => (
-                <label key={value} className="rt-ThemePanelRadioCard" aria-label={`Scaling ${value}`}>
-                  <input
-                    className="rt-ThemePanelRadioCardInput"
-                    type="radio"
-                    name="scaling"
-                    value={value}
-                    checked={scaling === value}
-                    onChange={(event) => onScalingChange(event.target.value as typeof scaling)}
-                  />
-
-                  <Flex align="center" justify="center" height="32px">
-                    <Theme asChild scaling={value}>
-                      <Flex align="center" justify="center">
-                        <Text size="1" weight="medium">
-                          {upperFirst(value)}
-                        </Text>
-                      </Flex>
-                    </Theme>
-                  </Flex>
-                </label>
-              ))}
-            </Grid>
-          </ThemePanelSection>
-
-          {/* Panel background */}
-          <ThemePanelSection>
-            <Flex align="center" gap="2">
-              <ThemePanelHeading id="material-title">Material</ThemePanelHeading>
-              <Popover.Root>
-                <Popover.Trigger>
-                  <IconButton size="1" variant="ghost" color="gray">
-                    <AccessibleIcon label="Learn more about panel background options">
-                      <svg
-                        width="15"
-                        height="15"
-                        viewBox="0 0 15 15"
-                        fill="currentColor"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M7.49991 0.876892C3.84222 0.876892 0.877075 3.84204 0.877075 7.49972C0.877075 11.1574 3.84222 14.1226 7.49991 14.1226C11.1576 14.1226 14.1227 11.1574 14.1227 7.49972C14.1227 3.84204 11.1576 0.876892 7.49991 0.876892ZM1.82707 7.49972C1.82707 4.36671 4.36689 1.82689 7.49991 1.82689C10.6329 1.82689 13.1727 4.36671 13.1727 7.49972C13.1727 10.6327 10.6329 13.1726 7.49991 13.1726C4.36689 13.1726 1.82707 10.6327 1.82707 7.49972ZM8.24992 4.49999C8.24992 4.9142 7.91413 5.24999 7.49992 5.24999C7.08571 5.24999 6.74992 4.9142 6.74992 4.49999C6.74992 4.08577 7.08571 3.74999 7.49992 3.74999C7.91413 3.74999 8.24992 4.08577 8.24992 4.49999ZM6.00003 5.99999H6.50003H7.50003C7.77618 5.99999 8.00003 6.22384 8.00003 6.49999V9.99999H8.50003H9.00003V11H8.50003H7.50003H6.50003H6.00003V9.99999H6.50003H7.00003V6.99999H6.50003H6.00003V5.99999Z"
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </AccessibleIcon>
-                  </IconButton>
-                </Popover.Trigger>
-                <Popover.Content
-                  size="1"
-                  width="220px"
-                  maxWidth="90svw"
-                  minWidth="0"
-                  side="top"
-                  align="center"
-                >
-                  <Text as="p" size="1">
-                    Whether Card and Table panels are translucent, showing some of the background
-                    behind them.
-                  </Text>
-                </Popover.Content>
-              </Popover.Root>
-            </Flex>
-            <Grid
-              columns={{ initial: '1', sm: '2' }}
-              rows={{ initial: '2', sm: '1' }}
-              gap="2"
-              role="group"
-              aria-labelledby="material-title"
-            >
-              {themePropDefs.material.values.map((value) => (
-                <label key={value} className="rt-ThemePanelRadioCard">
-                  <input
-                    className="rt-ThemePanelRadioCardInput"
-                    type="radio"
-                    name="material"
-                    value={value}
-                    checked={material === value}
-                    onChange={(event) =>
-                      onMaterialChange(event.target.value as typeof material)
-                    }
-                  />
-                  <Flex align="center" justify="center" height="32px" gap="2">
-                    {value === 'solid' ? (
-                      <svg
-                        width="15"
-                        height="15"
-                        viewBox="0 0 15 15"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        style={{ margin: '0 -2px' }}
-                      >
-                        <path
-                          d="M0.877075 7.49988C0.877075 3.84219 3.84222 0.877045 7.49991 0.877045C11.1576 0.877045 14.1227 3.84219 14.1227 7.49988C14.1227 11.1575 11.1576 14.1227 7.49991 14.1227C3.84222 14.1227 0.877075 11.1575 0.877075 7.49988ZM7.49991 1.82704C4.36689 1.82704 1.82708 4.36686 1.82708 7.49988C1.82708 10.6329 4.36689 13.1727 7.49991 13.1727C10.6329 13.1727 13.1727 10.6329 13.1727 7.49988C13.1727 4.36686 10.6329 1.82704 7.49991 1.82704Z"
-                          fill="currentColor"
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                    ) : (
-                      <svg
-                        width="15"
-                        height="15"
-                        viewBox="0 0 15 15"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        style={{ margin: '0 -2px' }}
-                      >
-                        <path
-                          opacity=".05"
-                          d="M6.78296 13.376C8.73904 9.95284 8.73904 5.04719 6.78296 1.62405L7.21708 1.37598C9.261 4.95283 9.261 10.0472 7.21708 13.624L6.78296 13.376Z"
-                          fill="currentColor"
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                        ></path>
-                        <path
-                          opacity=".1"
-                          d="M7.28204 13.4775C9.23929 9.99523 9.23929 5.00475 7.28204 1.52248L7.71791 1.2775C9.76067 4.9119 9.76067 10.0881 7.71791 13.7225L7.28204 13.4775Z"
-                          fill="currentColor"
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                        ></path>
-                        <path
-                          opacity=".15"
-                          d="M7.82098 13.5064C9.72502 9.99523 9.72636 5.01411 7.82492 1.50084L8.26465 1.26285C10.2465 4.92466 10.2451 10.085 8.26052 13.7448L7.82098 13.5064Z"
-                          fill="currentColor"
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                        ></path>
-                        <path
-                          opacity=".2"
-                          d="M8.41284 13.429C10.1952 9.92842 10.1957 5.07537 8.41435 1.57402L8.85999 1.34729C10.7139 4.99113 10.7133 10.0128 8.85841 13.6559L8.41284 13.429Z"
-                          fill="currentColor"
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                        ></path>
-                        <path
-                          opacity=".25"
-                          d="M9.02441 13.2956C10.6567 9.8379 10.6586 5.17715 9.03005 1.71656L9.48245 1.50366C11.1745 5.09919 11.1726 9.91629 9.47657 13.5091L9.02441 13.2956Z"
-                          fill="currentColor"
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                        ></path>
-                        <path
-                          opacity=".3"
-                          d="M9.66809 13.0655C11.1097 9.69572 11.1107 5.3121 9.67088 1.94095L10.1307 1.74457C11.6241 5.24121 11.6231 9.76683 10.1278 13.2622L9.66809 13.0655Z"
-                          fill="currentColor"
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                        ></path>
-                        <path
-                          opacity=".35"
-                          d="M10.331 12.7456C11.5551 9.52073 11.5564 5.49103 10.3347 2.26444L10.8024 2.0874C12.0672 5.42815 12.0659 9.58394 10.7985 12.9231L10.331 12.7456Z"
-                          fill="currentColor"
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                        ></path>
-                        <path
-                          opacity=".4"
-                          d="M11.0155 12.2986C11.9938 9.29744 11.9948 5.71296 11.0184 2.71067L11.4939 2.55603C12.503 5.6589 12.502 9.35178 11.4909 12.4535L11.0155 12.2986Z"
-                          fill="currentColor"
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                        ></path>
-                        <path
-                          opacity=".45"
-                          d="M11.7214 11.668C12.4254 9.01303 12.4262 5.99691 11.7237 3.34116L12.2071 3.21329C12.9318 5.95292 12.931 9.05728 12.2047 11.7961L11.7214 11.668Z"
-                          fill="currentColor"
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                        ></path>
-                        <path
-                          opacity=".5"
-                          d="M12.4432 10.752C12.8524 8.63762 12.8523 6.36089 12.4429 4.2466L12.9338 4.15155C13.3553 6.32861 13.3554 8.66985 12.9341 10.847L12.4432 10.752Z"
-                          fill="currentColor"
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                        ></path>
-                        <path
-                          d="M0.877075 7.49988C0.877075 3.84219 3.84222 0.877045 7.49991 0.877045C11.1576 0.877045 14.1227 3.84219 14.1227 7.49988C14.1227 11.1575 11.1576 14.1227 7.49991 14.1227C3.84222 14.1227 0.877075 11.1575 0.877075 7.49988ZM7.49991 1.82704C4.36689 1.82704 1.82708 4.36686 1.82708 7.49988C1.82708 10.6329 4.36689 13.1727 7.49991 13.1727C10.6329 13.1727 13.1727 10.6329 13.1727 7.49988C13.1727 4.36686 10.6329 1.82704 7.49991 1.82704Z"
-                          fill="currentColor"
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
-                    )}
-                    <Text size="1" weight="medium">
-                      {upperFirst(value)}
-                    </Text>
-                  </Flex>
-                </label>
-              ))}
-            </Grid>
           </ThemePanelSection>
         </Flex>
         <Button style={{ width: '100%' }} onClick={handleCopyThemeConfig}>
@@ -702,7 +485,7 @@ function ThemePanelSection(
   props: Omit<React.ComponentPropsWithoutRef<typeof Flex>, 'asChild' | 'direction' | 'gap'>,
 ) {
   return (
-    <Flex direction="column" gap="3" asChild {...props}>
+    <Flex direction="column" gap="4" asChild {...props}>
       <section>{props.children}</section>
     </Flex>
   );

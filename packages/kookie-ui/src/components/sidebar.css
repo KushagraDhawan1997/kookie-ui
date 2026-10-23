@@ -21,15 +21,15 @@
 /* Rail Layout Styling */
 /* A Rail's header and footer pad like its rows, and their buttons are tiles too. */
 :where(.rt-ShellRailContent .rt-ShellPaneChrome) {
-  --sidebar-base-padding: var(--space-2) !important;
+  --sidebar-base-padding: var(--space-3) !important;
 }
 
 :where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter)) {
-  padding: var(--space-2);
+  padding: var(--space-3);
 }
 
 :where(.rt-ShellRailContent .rt-BaseMenuViewport) {
-  padding: var(--space-2) !important;
+  padding: var(--space-3) !important;
 }
 
 /* Enforce vertical stack and compact typography for all buttons in thin mode */
@@ -37,12 +37,12 @@
   justify-content: center !important;
   align-items: center !important;
   flex-direction: column !important;
-  gap: var(--space-1) !important;
+  gap: var(--space-2) !important;
   text-align: center !important;
   font-size: var(--font-size-0) !important;
   line-height: var(--line-height-0) !important;
-  padding-inline-start: var(--space-1) !important;
-  padding-inline-end: var(--space-1) !important;
+  padding-inline-start: var(--space-2) !important;
+  padding-inline-end: var(--space-2) !important;
   /* Add margin for balanced spacing like normal variant */
   margin-top: 1px;
   margin-bottom: 1px;
@@ -50,34 +50,34 @@
 
 /* Size-specific vertical padding for thin mode buttons */
 :where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-1) :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
-  padding-top: var(--space-1) !important;
-  padding-bottom: var(--space-1) !important;
+  padding-top: var(--space-2) !important;
+  padding-bottom: var(--space-2) !important;
 }
 
 :where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-2) :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
-  padding-top: var(--space-1) !important;
-  padding-bottom: var(--space-1) !important;
+  padding-top: var(--space-2) !important;
+  padding-bottom: var(--space-2) !important;
 }
 
 :where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-3) :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
-  padding-top: var(--space-2) !important;
-  padding-bottom: var(--space-2) !important;
+  padding-top: var(--space-3) !important;
+  padding-bottom: var(--space-3) !important;
 }
 
 /* Consolidated thin mode size blocks */
 :where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-1) {
   /* Horizontal padding tokens to free space for text */
-  --base-menu-item-padding-left: var(--space-1) !important;
-  --base-menu-item-padding-right: var(--space-1) !important;
+  --base-menu-item-padding-left: var(--space-2) !important;
+  --base-menu-item-padding-right: var(--space-2) !important;
   /* Unify vertical padding via tokens (used by BaseMenuItem) */
-  --base-menu-item-padding-y: var(--space-2) !important;
+  --base-menu-item-padding-y: var(--space-3) !important;
 
   /* Override BaseMenu left padding resets */
   &:where(:not(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem))) {
-    --base-menu-item-padding-left: var(--space-1) !important;
+    --base-menu-item-padding-left: var(--space-2) !important;
   }
   &:where(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem)) {
-    --base-menu-item-padding-left: var(--space-1) !important;
+    --base-menu-item-padding-left: var(--space-2) !important;
   }
 
   /* Button and subtrigger layout */
@@ -85,7 +85,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: var(--space-1);
+    gap: var(--space-2);
     text-align: center;
     font-size: var(--font-size-0);
     line-height: var(--line-height-0);
@@ -105,22 +105,22 @@
 }
 
 :where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-2) {
-  --base-menu-item-padding-left: var(--space-1) !important;
-  --base-menu-item-padding-right: var(--space-1) !important;
-  --base-menu-item-padding-y: var(--space-2) !important;
+  --base-menu-item-padding-left: var(--space-2) !important;
+  --base-menu-item-padding-right: var(--space-2) !important;
+  --base-menu-item-padding-y: var(--space-3) !important;
 
   &:where(:not(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem))) {
-    --base-menu-item-padding-left: var(--space-1) !important;
+    --base-menu-item-padding-left: var(--space-2) !important;
   }
   &:where(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem)) {
-    --base-menu-item-padding-left: var(--space-1) !important;
+    --base-menu-item-padding-left: var(--space-2) !important;
   }
 
   :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: var(--space-1);
+    gap: var(--space-2);
     text-align: center;
     font-size: var(--font-size-0);
     line-height: var(--line-height-0);
@@ -139,22 +139,22 @@
 }
 
 :where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-3) {
-  --base-menu-item-padding-left: var(--space-1) !important;
-  --base-menu-item-padding-right: var(--space-1) !important;
-  --base-menu-item-padding-y: var(--space-2) !important;
+  --base-menu-item-padding-left: var(--space-2) !important;
+  --base-menu-item-padding-right: var(--space-2) !important;
+  --base-menu-item-padding-y: var(--space-3) !important;
 
   &:where(:not(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem))) {
-    --base-menu-item-padding-left: var(--space-1) !important;
+    --base-menu-item-padding-left: var(--space-2) !important;
   }
   &:where(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem)) {
-    --base-menu-item-padding-left: var(--space-1) !important;
+    --base-menu-item-padding-left: var(--space-2) !important;
   }
 
   :where(.rt-SidebarMenuButton, .rt-SidebarMenuSubTrigger) {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: var(--space-1);
+    gap: var(--space-2);
     text-align: center;
     font-size: var(--font-size-0);
     line-height: var(--line-height-0);
@@ -224,26 +224,26 @@
   justify-content: center;
   /* Override the 100% width from .rt-SidebarMenuButton > * - icon wrapper should fit content */
   width: auto;
-  padding: var(--space-3) var(--space-2);
+  padding: var(--space-4) var(--space-3);
   border-radius: var(--radius-2);
 }
 
 /* Size-specific icon wrapper padding */
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-1 .rt-SidebarMenuIconWrapper {
-  padding: var(--space-2) var(--space-2);
+  padding: var(--space-3) var(--space-3);
   border-radius: var(--radius-pill-1);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-2 .rt-SidebarMenuIconWrapper {
-  padding: var(--space-2);
+  padding: var(--space-3);
   border-radius: var(--radius-pill-2);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-3 .rt-SidebarMenuIconWrapper {
-  padding: var(--space-3);
+  padding: var(--space-4);
   border-radius: var(--radius-pill-3);
 }
 
@@ -304,21 +304,6 @@
   background-color: var(--accent-3);
 }
 
-/* Translucent panel support for soft variant */
-:where([data-material='translucent']) :where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-menu-variant-soft .rt-SidebarMenuButton:where([data-highlighted]):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
-  background-color: var(--accent-a4);
-}
-
-@media (hover: hover) {
-  :where([data-material='translucent']) :where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-menu-variant-soft .rt-SidebarMenuButton:where(:hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
-    background-color: var(--accent-a4);
-  }
-}
-
-:where([data-material='translucent']) :where(.rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-menu-variant-soft .rt-SidebarMenuButton[data-active] .rt-SidebarMenuIconWrapper) {
-  background-color: var(--accent-a3);
-}
-
 /* Solid variant icon wrapper states in thin mode */
 :where(.rt-ShellRailContent .rt-SidebarMenuBadge),
 :where(.rt-ShellRailContent .rt-SidebarMenuShortcut),
@@ -362,8 +347,8 @@
   border-left: 0 !important;
   border-top: 1px solid var(--gray-a6) !important;
   border-bottom: 1px solid var(--gray-a6) !important;
-  margin-top: var(--space-2) !important;
-  margin-bottom: var(--space-2) !important;
+  margin-top: var(--space-3) !important;
+  margin-bottom: var(--space-3) !important;
   /* background-color: var(--accent-3); */
 }
 
@@ -397,7 +382,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
   padding: var(--sidebar-base-padding);
   min-height: var(--sidebar-item-height);
 
@@ -411,7 +396,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
   padding: var(--sidebar-base-padding);
   min-height: var(--sidebar-item-height);
 
@@ -450,16 +435,16 @@
   justify-content: flex-end;
 }
 .rt-SidebarHeader:where(.rt-gap-1) {
-  gap: var(--space-1);
-}
-.rt-SidebarHeader:where(.rt-gap-2) {
   gap: var(--space-2);
 }
-.rt-SidebarHeader:where(.rt-gap-3) {
+.rt-SidebarHeader:where(.rt-gap-2) {
   gap: var(--space-3);
 }
-.rt-SidebarHeader:where(.rt-gap-4) {
+.rt-SidebarHeader:where(.rt-gap-3) {
   gap: var(--space-4);
+}
+.rt-SidebarHeader:where(.rt-gap-4) {
+  gap: var(--space-5);
 }
 
 .rt-SidebarFooter:where(.rt-flex-row) {
@@ -490,16 +475,16 @@
   justify-content: flex-end;
 }
 .rt-SidebarFooter:where(.rt-gap-1) {
-  gap: var(--space-1);
-}
-.rt-SidebarFooter:where(.rt-gap-2) {
   gap: var(--space-2);
 }
-.rt-SidebarFooter:where(.rt-gap-3) {
+.rt-SidebarFooter:where(.rt-gap-2) {
   gap: var(--space-3);
 }
-.rt-SidebarFooter:where(.rt-gap-4) {
+.rt-SidebarFooter:where(.rt-gap-3) {
   gap: var(--space-4);
+}
+.rt-SidebarFooter:where(.rt-gap-4) {
+  gap: var(--space-5);
 }
 
 /* Header/Footer Menu Button Support */
@@ -508,7 +493,7 @@
   /* Inherit all base MenuButton styles */
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
   min-height: var(--base-menu-item-height);
   padding-top: var(--base-menu-item-padding-y);
   padding-bottom: var(--base-menu-item-padding-y);
@@ -563,23 +548,42 @@
      menu item or TextField of size N. Content is a BaseMenuContent, so it takes
      every size value from base-menu.css. Header and Footer are not, so they
      restate base-menu's values here; keep the two in step. */
-  /* In a Shell pane, the header, footer and search pad by the rows' own inset, so every row
-     and every control in the pane starts on one line. */
+  /* A Shell pane is a surface: its header, footer, search and scrolling list all pad by the
+     surface padding at the Shell's index, so every row and every control in the pane starts on
+     one line. The Rail is left out: its tiles keep their own tight padding (above). */
   .rt-ShellPaneChrome {
     &:where(.rt-r-size-1) {
-      --sidebar-base-padding: var(--space-2);
+      --sidebar-base-padding: var(--surface-p-1);
     }
-    &:where(.rt-r-size-2, .rt-r-size-3) {
-      --sidebar-base-padding: var(--space-3);
+    &:where(.rt-r-size-2) {
+      --sidebar-base-padding: var(--surface-p-2);
+    }
+    &:where(.rt-r-size-3) {
+      --sidebar-base-padding: var(--surface-p-3);
     }
   }
 
+  /* Two classes, so it beats base-menu's own content padding wherever the bundle places it. */
+  /* stylelint-disable selector-max-specificity */
+  .rt-SidebarContent.rt-ShellPaneChrome:not(.rt-ShellRailContent *) {
+    &:where(.rt-r-size-1) {
+      --base-menu-content-padding: var(--surface-p-1);
+    }
+    &:where(.rt-r-size-2) {
+      --base-menu-content-padding: var(--surface-p-2);
+    }
+    &:where(.rt-r-size-3) {
+      --base-menu-content-padding: var(--surface-p-3);
+    }
+  }
+  /* stylelint-enable selector-max-specificity */
+
   .rt-SidebarHeader:where(.rt-r-size-1),
   .rt-SidebarFooter:where(.rt-r-size-1) {
-    --base-menu-content-padding: var(--space-2);
-    --base-menu-item-padding-left: var(--space-2);
-    --base-menu-item-padding-right: var(--space-2);
-    --base-menu-item-padding-y: var(--space-1);
+    --base-menu-content-padding: var(--space-3);
+    --base-menu-item-padding-left: var(--space-3);
+    --base-menu-item-padding-right: var(--space-3);
+    --base-menu-item-padding-y: var(--space-2);
     --base-menu-item-height: var(--control-height-1);
     --sidebar-item-height: var(--base-menu-item-height);
 
@@ -608,10 +612,10 @@
 
   .rt-SidebarHeader:where(.rt-r-size-2),
   .rt-SidebarFooter:where(.rt-r-size-2) {
-    --base-menu-content-padding: var(--space-3);
-    --base-menu-item-padding-left: var(--space-3);
-    --base-menu-item-padding-right: var(--space-3);
-    --base-menu-item-padding-y: var(--space-1);
+    --base-menu-content-padding: var(--space-4);
+    --base-menu-item-padding-left: var(--space-4);
+    --base-menu-item-padding-right: var(--space-4);
+    --base-menu-item-padding-y: var(--space-2);
     --base-menu-item-height: var(--control-height-2);
     --sidebar-item-height: var(--base-menu-item-height);
 
@@ -640,10 +644,10 @@
 
   .rt-SidebarHeader:where(.rt-r-size-3),
   .rt-SidebarFooter:where(.rt-r-size-3) {
-    --base-menu-content-padding: var(--space-3);
-    --base-menu-item-padding-left: var(--space-3);
-    --base-menu-item-padding-right: var(--space-3);
-    --base-menu-item-padding-y: var(--space-2);
+    --base-menu-content-padding: var(--space-4);
+    --base-menu-item-padding-left: var(--space-4);
+    --base-menu-item-padding-right: var(--space-4);
+    --base-menu-item-padding-y: var(--space-3);
     --base-menu-item-height: var(--control-height-3);
     --sidebar-item-height: var(--base-menu-item-height);
 
@@ -685,48 +689,14 @@
 
   /* Sub-trigger open state - match base menu */
   & :where(.rt-SidebarMenuSubTrigger[data-state='open']) {
-    /* Base state: solid accent for solid panels */
     background-color: var(--accent-3);
-
-    /* Theme-level translucent override */
-    :where([data-material='translucent']) & {
-      background-color: var(--accent-a3);
-    }
-
-    /* Component-level overrides (higher specificity) */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-3);
-      backdrop-filter: none;
-      --backdrop-filter-components: none;
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: var(--accent-a3);
-    }
   }
 
   /* Menu item transitions - match base menu */
 
   /* Hover/highlighted state for soft variant - EXACT match to base menu */
   & :where(.rt-SidebarMenuButton:where([data-highlighted]):not([data-disabled])) {
-    /* Base state: solid accent for solid panels */
     background-color: var(--accent-4);
-
-    /* Theme-level translucent override */
-    :where([data-material='translucent']) & {
-      background-color: var(--accent-a4);
-    }
-
-    /* Component-level overrides (higher specificity) */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-4);
-      backdrop-filter: none;
-      --backdrop-filter-components: none;
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: var(--accent-a4);
-    }
 
     /* In soft variant, lift muted text a step while keeping the hierarchy */
     & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
@@ -736,25 +706,8 @@
 
   @media (hover: hover) {
     & :where(.rt-SidebarMenuButton:where(:hover):not([data-disabled])) {
-      /* Base state: solid accent for solid panels */
       background-color: var(--accent-4);
-  
-      /* Theme-level translucent override */
-      :where([data-material='translucent']) & {
-        background-color: var(--accent-a4);
-      }
-  
-      /* Component-level overrides (higher specificity) */
-      &:where([data-material='solid']) {
-        background-color: var(--accent-4);
-        backdrop-filter: none;
-        --backdrop-filter-components: none;
-      }
-  
-      &:where([data-material='translucent']) {
-        background-color: var(--accent-a4);
-      }
-  
+
       /* In soft variant, lift muted text a step while keeping the hierarchy */
       & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
         color: var(--gray-11) !important;
@@ -764,29 +717,9 @@
 
   /* Active navigation state for soft variant - use accent-3 like sub-trigger */
   & :where(.rt-SidebarMenuButton[data-active]) {
-    /* Base state: solid accent for solid panels */
     background-color: var(--accent-3);
     color: var(--accent-12);
     font-weight: var(--font-weight-medium);
-
-    /* Theme-level translucent override */
-    :where([data-material='translucent']) & {
-      background-color: var(--accent-a3);
-      color: var(--accent-a12);
-    }
-
-    /* Component-level overrides (higher specificity) */
-    &:where([data-material='solid']) {
-      background-color: var(--accent-3);
-      color: var(--accent-12);
-      backdrop-filter: none;
-      --backdrop-filter-components: none;
-    }
-
-    &:where([data-material='translucent']) {
-      background-color: var(--accent-a3);
-      color: var(--accent-a12);
-    }
 
     /* In soft variant, lift muted text a step while keeping the hierarchy */
     & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
@@ -802,24 +735,7 @@
   .rt-SidebarFooter:where(.rt-menu-variant-soft) {
     /* Sub-trigger open state - match base menu */
     & :where(.rt-SidebarMenuSubTrigger[data-state='open']) {
-      /* Base state: solid gray for solid panels */
       background-color: var(--gray-3);
-
-      /* Theme-level translucent override */
-      :where([data-material='translucent']) & {
-        background-color: var(--gray-a3);
-      }
-
-      /* Component-level overrides (higher specificity) */
-      &:where([data-material='solid']) {
-        background-color: var(--gray-3);
-        backdrop-filter: none;
-        --backdrop-filter-components: none;
-      }
-
-      &:where([data-material='translucent']) {
-        background-color: var(--gray-a3);
-      }
     }
 
     /* Hover/highlighted state for solid variant - EXACT match to base menu */
@@ -907,12 +823,12 @@
 
 .rt-SidebarSearch {
   flex-shrink: 0;
-  padding: var(--space-2) var(--sidebar-base-padding);
+  padding: var(--space-3) var(--sidebar-base-padding);
 }
 
 /* Thin mode: compact padding to match content area */
 :where(.rt-ShellRailContent) .rt-SidebarSearch {
-  padding: var(--space-2);
+  padding: var(--space-3);
 }
 
 /* Expanded mode: inline input wrapper */
@@ -921,10 +837,10 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
   background-color: var(--gray-a3);
   border-radius: var(--radius-2);
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-2) var(--space-3);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
@@ -944,30 +860,30 @@
   justify-content: center !important;
   align-items: center !important;
   flex-direction: column !important;
-  gap: var(--space-1) !important;
+  gap: var(--space-2) !important;
   text-align: center !important;
   font-size: var(--font-size-0) !important;
   line-height: var(--line-height-0) !important;
-  padding-inline-start: var(--space-1) !important;
-  padding-inline-end: var(--space-1) !important;
+  padding-inline-start: var(--space-2) !important;
+  padding-inline-end: var(--space-2) !important;
   margin-top: 1px;
   margin-bottom: 1px;
 }
 
 /* Size-specific vertical padding for thin search trigger */
 :where(.rt-ShellRailContent.rt-r-size-1) :where(.rt-SidebarSearchTrigger) {
-  padding-top: var(--space-1) !important;
-  padding-bottom: var(--space-1) !important;
+  padding-top: var(--space-2) !important;
+  padding-bottom: var(--space-2) !important;
 }
 
 :where(.rt-ShellRailContent.rt-r-size-2) :where(.rt-SidebarSearchTrigger) {
-  padding-top: var(--space-1) !important;
-  padding-bottom: var(--space-1) !important;
+  padding-top: var(--space-2) !important;
+  padding-bottom: var(--space-2) !important;
 }
 
 :where(.rt-ShellRailContent.rt-r-size-3) :where(.rt-SidebarSearchTrigger) {
-  padding-top: var(--space-2) !important;
-  padding-bottom: var(--space-2) !important;
+  padding-top: var(--space-3) !important;
+  padding-bottom: var(--space-3) !important;
 }
 
 /* Size-specific icon sizing for thin search trigger */
@@ -1004,19 +920,19 @@
 /* Search trigger icon wrapper - size-specific padding (mirrors Content-scoped rules) */
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-ShellRailContent.rt-r-size-1 .rt-SidebarSearchTrigger .rt-SidebarMenuIconWrapper {
-  padding: var(--space-2) var(--space-2);
+  padding: var(--space-3) var(--space-3);
   border-radius: var(--radius-pill-1);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-ShellRailContent.rt-r-size-2 .rt-SidebarSearchTrigger .rt-SidebarMenuIconWrapper {
-  padding: var(--space-2);
+  padding: var(--space-3);
   border-radius: var(--radius-pill-2);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-ShellRailContent.rt-r-size-3 .rt-SidebarSearchTrigger .rt-SidebarMenuIconWrapper {
-  padding: var(--space-3);
+  padding: var(--space-4);
   border-radius: var(--radius-pill-3);
 }
 
@@ -1027,23 +943,17 @@
   }
 }
 
-@media (hover: hover) {
-  :where([data-material='translucent']) :where(.rt-ShellRailContent.rt-menu-variant-soft) :where(.rt-SidebarSearchTrigger:where(:hover):not([data-disabled]) .rt-SidebarMenuIconWrapper) {
-    background-color: var(--accent-a4);
-  }
-}
-
 /* Search trigger icon wrapper hover (solid variant) */
 
 /* Popover inner wrapper - provide base menu tokens for portal-rendered items */
 .rt-SidebarSearchPopover {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  --base-menu-item-height: var(--space-7);
-  --base-menu-item-padding-y: var(--space-1);
-  --base-menu-item-padding-left: var(--space-3);
-  --base-menu-item-padding-right: var(--space-3);
+  gap: var(--space-4);
+  --base-menu-item-height: var(--space-8);
+  --base-menu-item-padding-y: var(--space-2);
+  --base-menu-item-padding-left: var(--space-4);
+  --base-menu-item-padding-right: var(--space-4);
   --base-menu-content-padding: 0;
 }
 
@@ -1052,10 +962,10 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
   background-color: var(--gray-a3);
   border-radius: var(--radius-2);
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-2) var(--space-3);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
@@ -1166,7 +1076,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-1);
+  padding: var(--space-2);
   border-radius: var(--radius-1);
   color: var(--gray-a9);
   cursor: pointer;

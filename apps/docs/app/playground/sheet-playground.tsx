@@ -6,7 +6,6 @@ import Playground from '@/components/playground';
 
 const sides = ['start', 'end', 'top', 'bottom'] as const;
 const sizes = ['1', '2', '3', '4'] as const;
-const materials = ['solid', 'translucent'] as const;
 const widths = ['280px', '320px', '400px', '50%'] as const;
 const heights = ['200px', '300px', '400px', '50%'] as const;
 
@@ -23,7 +22,6 @@ export default function SheetPlayground({
 }: SheetPlaygroundProps = {}) {
   const [side, setSide] = React.useState<string>('end');
   const [size, setSize] = React.useState<string>('3');
-  const [material, setMaterial] = React.useState<string>('theme');
   const [width, setWidth] = React.useState<string>('320px');
   const [height, setHeight] = React.useState<string>('300px');
   const [open, setOpen] = React.useState(false);
@@ -72,15 +70,6 @@ export default function SheetPlayground({
             placeholder: 'Select height',
           },
         ]),
-    {
-      id: 'material',
-      label: 'Material',
-      type: 'select' as const,
-      value: material,
-      onChange: setMaterial,
-      options: [{ label: 'Theme', value: 'theme' }, ...materials.map((m) => ({ label: m, value: m }))],
-      placeholder: 'Theme',
-    },
   ];
 
   const generateCode = () => {
@@ -88,7 +77,6 @@ export default function SheetPlayground({
     if (size !== '3') contentProps.push(`size="${size}"`);
     if (isHorizontal && width !== '320px') contentProps.push(`width="${width}"`);
     if (!isHorizontal && height !== '300px') contentProps.push(`height="${height}"`);
-    if (material !== 'theme') contentProps.push(`material="${material}"`);
 
     const contentPropsString = contentProps.length > 0 ? ` ${contentProps.join(' ')}` : '';
 
@@ -120,10 +108,9 @@ export default function SheetPlayground({
             size={size as any}
             width={isHorizontal ? width : undefined}
             height={!isHorizontal ? height : undefined}
-            material={material === 'theme' ? undefined : (material as any)}
           >
-            <Flex direction="column" gap="4">
-              <Flex direction="column" gap="1">
+            <Flex direction="column" gap="5">
+              <Flex direction="column" gap="2">
                 <Sheet.Title>Sheet Title</Sheet.Title>
                 <Sheet.Description>
                   This is a sheet panel that slides in from the {side} side.
@@ -131,8 +118,8 @@ export default function SheetPlayground({
               </Flex>
               <Flex
                 direction="column"
-                gap="2"
-                p="4"
+                gap="3"
+                p="5"
                 style={{
                   border: '1px dashed var(--gray-6)',
                   borderRadius: 'var(--radius-2)',
@@ -144,7 +131,7 @@ export default function SheetPlayground({
                   Sheet content area
                 </Text>
               </Flex>
-              <Flex gap="2" justify="end">
+              <Flex gap="3" justify="end">
                 <Sheet.Close>
                   <Button variant="soft" color="gray">
                     Cancel
@@ -160,8 +147,6 @@ export default function SheetPlayground({
       }
       code={generateCode()}
       items={items}
-      showBackground={material === 'translucent'}
-      hint={material === 'translucent' ? 'Translucent material creates a frosted glass effect over backgrounds.' : undefined}
       showControls={showControls}
       showToolbar={showToolbar}
       height={playgroundHeight}

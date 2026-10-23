@@ -9,7 +9,6 @@ import Playground from '@/components/playground';
 const variants = ['raised', 'surface', 'soft', 'outline'] as const;
 const sizes = ['1', '2', '3'] as const;
 const radiusOptions = ['none', 'small', 'medium', 'large', 'full'] as const;
-const materials = ['solid', 'translucent'] as const;
 
 type TextFieldPlaygroundProps = {
   showControls?: boolean;
@@ -25,7 +24,6 @@ export default function TextFieldPlayground({
   const [variant, setVariant] = React.useState<string>('soft');
   const [size, setSize] = React.useState<string>('2');
   const [radius, setRadius] = React.useState<string>('theme');
-  const [material, setMaterial] = React.useState<string>('theme');
   const [disabled, setDisabled] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [showIcon, setShowIcon] = React.useState<boolean>(false);
@@ -59,15 +57,6 @@ export default function TextFieldPlayground({
       value: radius,
       onChange: setRadius,
       options: [{ label: 'Theme', value: 'theme' }, ...radiusOptions.map((r) => ({ label: r, value: r }))],
-      placeholder: 'Theme',
-    },
-    {
-      id: 'material',
-      label: 'Material',
-      type: 'select' as const,
-      value: material,
-      onChange: setMaterial,
-      options: [{ label: 'Theme', value: 'theme' }, ...materials.map((m) => ({ label: m, value: m }))],
       placeholder: 'Theme',
     },
     {
@@ -112,7 +101,6 @@ export default function TextFieldPlayground({
     }
 
     if (radius !== 'theme') props.push(`radius="${radius}"`);
-    if (material !== 'theme') props.push(`material="${material}"`);
     if (disabled) props.push('disabled');
     if (error) props.push('error');
 
@@ -150,7 +138,6 @@ export default function TextFieldPlayground({
           variant={variant as any}
           size={size as any}
           radius={radius === 'theme' ? undefined : (radius as any)}
-          material={material === 'theme' ? undefined : (material as any)}
           disabled={disabled}
           error={error}
           type={scrub ? 'number' : 'text'}
@@ -187,13 +174,10 @@ export default function TextFieldPlayground({
       }
       code={generateCode()}
       items={items}
-      showBackground={material === 'translucent'}
       hint={
         scrub
           ? 'Drag the label horizontally to adjust the value. Hold Shift for 10x speed, Alt/Option for fine control.'
-          : material === 'translucent'
-            ? 'Translucent material adds backdrop blur for depth over complex backgrounds.'
-            : undefined
+          : undefined
       }
       showControls={showControls}
       showToolbar={showToolbar}

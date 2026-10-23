@@ -9,7 +9,7 @@ export function DialogsScene() {
   useScene(api);
 
   return (
-    <Flex p="5" gap="3">
+    <Flex p="6" gap="4">
       <Dialog.Root>
         <Dialog.Trigger>
           <Button data-bench="dialog">Edit profile</Button>
@@ -17,10 +17,10 @@ export function DialogsScene() {
         <Dialog.Content>
           <Dialog.Title>Edit profile {version}</Dialog.Title>
           <Dialog.Description>Change your name and email.</Dialog.Description>
-          <Flex direction="column" gap="3" mt="3">
+          <Flex direction="column" gap="4" mt="4">
             <TextField.Root defaultValue="Ada" aria-label="Name" />
             <TextField.Root defaultValue="ada@example.com" aria-label="Email" />
-            <Flex gap="2" justify="end">
+            <Flex gap="3" justify="end">
               <Dialog.Close>
                 <Button variant="soft" color="gray">
                   Cancel

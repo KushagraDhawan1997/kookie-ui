@@ -32,10 +32,10 @@ export default function SegmentedControlTest() {
   const [verticalText, setVerticalText] = React.useState('day');
 
   return (
-    <Container size="2" px="8" py="8">
-      <Flex direction="column" gap="8">
+    <Container size="2" px="9" py="9">
+      <Flex direction="column" gap="9">
         {/* Header */}
-        <Flex direction="column" gap="3">
+        <Flex direction="column" gap="4">
           <Heading size="9" weight="medium">SegmentedControl</Heading>
           <Text size="2" emphasis="medium">
             Testing icon-only mode and vertical orientation
@@ -45,17 +45,17 @@ export default function SegmentedControlTest() {
         <Separator size="4" />
 
         {/* Test 1: Basic Text vs Icon-Only Comparison */}
-        <Flex direction="column" gap="5">
+        <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="2">1. Text vs Icon-Only Comparison</Heading>
+            <Heading size="6" weight="medium" mb="3">1. Text vs Icon-Only Comparison</Heading>
             <Text size="2" emphasis="medium">
               Compare standard text segments with icon-only fixed-width segments
             </Text>
           </Box>
           
-          <Flex direction="column" gap="4">
+          <Flex direction="column" gap="5">
             <Box>
-              <Text size="2" weight="medium" mb="2">Text Labels (default)</Text>
+              <Text size="2" weight="medium" mb="3">Text Labels (default)</Text>
               <SegmentedControl.Root defaultValue="grid">
                 <SegmentedControl.Item value="list">List</SegmentedControl.Item>
                 <SegmentedControl.Item value="grid">Grid</SegmentedControl.Item>
@@ -64,7 +64,7 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="2">Icon-Only (fixed width)</Text>
+              <Text size="2" weight="medium" mb="3">Icon-Only (fixed width)</Text>
               <SegmentedControl.Root value={view} onValueChange={setView}>
                 <SegmentedControl.Item value="list" iconOnly aria-label="List view">
                   <HugeiconsIcon icon={Menu01Icon} strokeWidth={1.75} />
@@ -79,7 +79,7 @@ export default function SegmentedControlTest() {
             </Box>
           </Flex>
 
-          <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               <Code variant="soft">iconOnly</Code> applies fixed square width = height, with no horizontal padding
             </Text>
@@ -89,16 +89,16 @@ export default function SegmentedControlTest() {
         <Separator size="4" />
 
         {/* Test 2: All Sizes Icon-Only */}
-        <Flex direction="column" gap="5">
+        <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="2">2. Icon-Only Across All Sizes</Heading>
+            <Heading size="6" weight="medium" mb="3">2. Icon-Only Across All Sizes</Heading>
             <Text size="2" emphasis="medium">
               Each size maintains square aspect ratio
             </Text>
           </Box>
           
-          <Flex direction="column" gap="4">
-            <Flex align="center" gap="4">
+          <Flex direction="column" gap="5">
+            <Flex align="center" gap="5">
               <Text size="2" style={{ width: 60 }}>Size 1</Text>
               <SegmentedControl.Root size="1" value={size1Value} onValueChange={setSize1Value}>
                 <SegmentedControl.Item value="a" iconOnly aria-label="Option A">
@@ -114,7 +114,7 @@ export default function SegmentedControlTest() {
               <Code size="1" variant="soft">24px × 24px</Code>
             </Flex>
 
-            <Flex align="center" gap="4">
+            <Flex align="center" gap="5">
               <Text size="2" style={{ width: 60 }}>Size 2</Text>
               <SegmentedControl.Root size="2" value={size2Value} onValueChange={setSize2Value}>
                 <SegmentedControl.Item value="a" iconOnly aria-label="Option A">
@@ -130,7 +130,7 @@ export default function SegmentedControlTest() {
               <Code size="1" variant="soft">32px × 32px</Code>
             </Flex>
 
-            <Flex align="center" gap="4">
+            <Flex align="center" gap="5">
               <Text size="2" style={{ width: 60 }}>Size 3</Text>
               <SegmentedControl.Root size="3" value={size3Value} onValueChange={setSize3Value}>
                 <SegmentedControl.Item value="a" iconOnly aria-label="Option A">
@@ -146,7 +146,7 @@ export default function SegmentedControlTest() {
               <Code size="1" variant="soft">40px × 40px</Code>
             </Flex>
 
-            <Flex align="center" gap="4">
+            <Flex align="center" gap="5">
               <Text size="2" style={{ width: 60 }}>Size 4</Text>
               <SegmentedControl.Root size="4" value={size4Value} onValueChange={setSize4Value}>
                 <SegmentedControl.Item value="a" iconOnly aria-label="Option A">
@@ -163,7 +163,7 @@ export default function SegmentedControlTest() {
             </Flex>
           </Flex>
 
-          <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               Uses <Code variant="soft">--segmented-control-height</Code> for both width and height
             </Text>
@@ -173,17 +173,17 @@ export default function SegmentedControlTest() {
         <Separator size="4" />
 
         {/* Test 3: Real-World Use Cases */}
-        <Flex direction="column" gap="5">
+        <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="2">3. Real-World Use Cases</Heading>
+            <Heading size="6" weight="medium" mb="3">3. Real-World Use Cases</Heading>
             <Text size="2" emphasis="medium">
               Common icon-only segmented control patterns
             </Text>
           </Box>
           
-          <Flex direction="column" gap="4">
+          <Flex direction="column" gap="5">
             <Box>
-              <Text size="2" weight="medium" mb="2">View Mode</Text>
+              <Text size="2" weight="medium" mb="3">View Mode</Text>
               <SegmentedControl.Root value={alignment} onValueChange={setAlignment}>
                 <SegmentedControl.Item value="left" iconOnly aria-label="Code view">
                   <HugeiconsIcon icon={CodeIcon} strokeWidth={1.75} />
@@ -201,7 +201,7 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="2">Tool Picker</Text>
+              <Text size="2" weight="medium" mb="3">Tool Picker</Text>
               <SegmentedControl.Root value={theme} onValueChange={setTheme}>
                 <SegmentedControl.Item value="light" iconOnly aria-label="Search">
                   <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
@@ -216,7 +216,7 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="2">Style Picker</Text>
+              <Text size="2" weight="medium" mb="3">Style Picker</Text>
               <SegmentedControl.Root value={direction} onValueChange={setDirection}>
                 <SegmentedControl.Item value="left" iconOnly aria-label="Colors">
                   <HugeiconsIcon icon={ColorsIcon} strokeWidth={1.75} />
@@ -234,7 +234,7 @@ export default function SegmentedControlTest() {
             </Box>
           </Flex>
 
-          <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               Always include <Code variant="soft">aria-label</Code> for accessibility when using icon-only segments
             </Text>
@@ -244,23 +244,23 @@ export default function SegmentedControlTest() {
         <Separator size="4" />
 
         {/* Test 4: Visual Preview */}
-        <Flex direction="column" gap="5">
+        <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="2">4. Interactive Preview</Heading>
+            <Heading size="6" weight="medium" mb="3">4. Interactive Preview</Heading>
             <Text size="2" emphasis="medium">
               See the selected values reflected in real-time
             </Text>
           </Box>
           
           <Box 
-            p="6" 
+            p="7" 
             style={{ 
               background: 'var(--gray-a2)', 
               borderRadius: 'var(--radius-3)',
               minHeight: 120,
             }}
           >
-            <Flex gap="4" wrap="wrap">
+            <Flex gap="5" wrap="wrap">
               <Code variant="soft">View: {view}</Code>
               <Code variant="soft">Mode: {alignment}</Code>
               <Code variant="soft">Tool: {theme}</Code>
@@ -272,15 +272,15 @@ export default function SegmentedControlTest() {
         <Separator size="4" />
 
         {/* Test 5: Indicator Animation */}
-        <Flex direction="column" gap="5">
+        <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="2">5. Indicator Animation</Heading>
+            <Heading size="6" weight="medium" mb="3">5. Indicator Animation</Heading>
             <Text size="2" emphasis="medium">
               The sliding indicator works correctly with equal-width icon-only items
             </Text>
           </Box>
           
-          <Flex gap="4" wrap="wrap">
+          <Flex gap="5" wrap="wrap">
             <SegmentedControl.Root defaultValue="1" size="3">
               <SegmentedControl.Item value="1" iconOnly aria-label="Option 1">
                 <Text size="3" weight="bold">1</Text>
@@ -300,7 +300,7 @@ export default function SegmentedControlTest() {
             </SegmentedControl.Root>
           </Flex>
 
-          <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               Click different segments to see the smooth sliding animation
             </Text>
@@ -310,17 +310,17 @@ export default function SegmentedControlTest() {
         <Separator size="4" />
 
         {/* Test 6: Full Width Icon-Only */}
-        <Flex direction="column" gap="5">
+        <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="2">6. Full Width Icon-Only</Heading>
+            <Heading size="6" weight="medium" mb="3">6. Full Width Icon-Only</Heading>
             <Text size="2" emphasis="medium">
               Icon-only items grow to fill available space while keeping icons centered
             </Text>
           </Box>
           
-          <Flex direction="column" gap="4">
+          <Flex direction="column" gap="5">
             <Box>
-              <Text size="2" weight="medium" mb="2">Narrow container (default)</Text>
+              <Text size="2" weight="medium" mb="3">Narrow container (default)</Text>
               <SegmentedControl.Root defaultValue="list" size="2">
                 <SegmentedControl.Item value="list" iconOnly aria-label="List view">
                   <HugeiconsIcon icon={Menu01Icon} strokeWidth={1.75} />
@@ -335,7 +335,7 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="2">Full width container</Text>
+              <Text size="2" weight="medium" mb="3">Full width container</Text>
               <Box style={{ width: '100%' }}>
                 <SegmentedControl.Root defaultValue="list" size="2" style={{ width: '100%' }}>
                   <SegmentedControl.Item value="list" iconOnly aria-label="List view">
@@ -352,7 +352,7 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="2">Wide container with 2 items</Text>
+              <Text size="2" weight="medium" mb="3">Wide container with 2 items</Text>
               <Box style={{ width: '400px', maxWidth: '100%' }}>
                 <SegmentedControl.Root defaultValue="light" size="3" style={{ width: '100%' }}>
                   <SegmentedControl.Item value="light" iconOnly aria-label="Light mode">
@@ -366,7 +366,7 @@ export default function SegmentedControlTest() {
             </Box>
           </Flex>
 
-          <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               Items maintain minimum square dimensions but grow equally to fill container. Icons stay perfectly centered using <Code variant="soft">minmax(height, 1fr)</Code> grid columns.
             </Text>
@@ -376,17 +376,17 @@ export default function SegmentedControlTest() {
         <Separator size="4" />
 
         {/* Test 7: Vertical Orientation - Icon-Only (Recommended) */}
-        <Flex direction="column" gap="5">
+        <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="2">7. Vertical Orientation - Icon-Only (Recommended)</Heading>
+            <Heading size="6" weight="medium" mb="3">7. Vertical Orientation - Icon-Only (Recommended)</Heading>
             <Text size="2" emphasis="medium">
               Vertical orientation works best with icon-only segments for compact toolbars and sidebars
             </Text>
           </Box>
           
-          <Flex gap="6" wrap="wrap" align="start">
+          <Flex gap="7" wrap="wrap" align="start">
             <Box>
-              <Text size="2" weight="medium" mb="2">Size 1</Text>
+              <Text size="2" weight="medium" mb="3">Size 1</Text>
               <SegmentedControl.Root orientation="vertical" size="1" defaultValue="code">
                 <SegmentedControl.Item value="code" iconOnly aria-label="Code view">
                   <HugeiconsIcon icon={CodeIcon} strokeWidth={1.75} />
@@ -401,7 +401,7 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="2">Size 2</Text>
+              <Text size="2" weight="medium" mb="3">Size 2</Text>
               <SegmentedControl.Root orientation="vertical" size="2" defaultValue="code">
                 <SegmentedControl.Item value="code" iconOnly aria-label="Code view">
                   <HugeiconsIcon icon={CodeIcon} strokeWidth={1.75} />
@@ -416,7 +416,7 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="2">Size 3</Text>
+              <Text size="2" weight="medium" mb="3">Size 3</Text>
               <SegmentedControl.Root orientation="vertical" size="3" value={verticalView} onValueChange={setVerticalView}>
                 <SegmentedControl.Item value="code" iconOnly aria-label="Code view">
                   <HugeiconsIcon icon={CodeIcon} strokeWidth={1.75} />
@@ -434,7 +434,7 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="2">Size 4</Text>
+              <Text size="2" weight="medium" mb="3">Size 4</Text>
               <SegmentedControl.Root orientation="vertical" size="4" defaultValue="code">
                 <SegmentedControl.Item value="code" iconOnly aria-label="Code view">
                   <HugeiconsIcon icon={CodeIcon} strokeWidth={1.75} />
@@ -449,7 +449,7 @@ export default function SegmentedControlTest() {
             </Box>
           </Flex>
 
-          <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               Selected: <Code variant="soft">{verticalView}</Code> - Perfect for sidebar tools and compact interfaces
             </Text>
@@ -459,17 +459,17 @@ export default function SegmentedControlTest() {
         <Separator size="4" />
 
         {/* Test 8: Vertical vs Horizontal Comparison */}
-        <Flex direction="column" gap="5">
+        <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="2">8. Orientation Comparison</Heading>
+            <Heading size="6" weight="medium" mb="3">8. Orientation Comparison</Heading>
             <Text size="2" emphasis="medium">
               Same control in both orientations
             </Text>
           </Box>
           
-          <Flex gap="6" wrap="wrap" align="start">
+          <Flex gap="7" wrap="wrap" align="start">
             <Box>
-              <Text size="2" weight="medium" mb="2">Horizontal (default)</Text>
+              <Text size="2" weight="medium" mb="3">Horizontal (default)</Text>
               <SegmentedControl.Root size="3" value={verticalTool} onValueChange={setVerticalTool}>
                 <SegmentedControl.Item value="search" iconOnly aria-label="Search">
                   <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
@@ -484,7 +484,7 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="2">Vertical</Text>
+              <Text size="2" weight="medium" mb="3">Vertical</Text>
               <SegmentedControl.Root orientation="vertical" size="3" value={verticalTool} onValueChange={setVerticalTool}>
                 <SegmentedControl.Item value="search" iconOnly aria-label="Search">
                   <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
@@ -499,7 +499,7 @@ export default function SegmentedControlTest() {
             </Box>
           </Flex>
 
-          <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               Both controls are synced: <Code variant="soft">{verticalTool}</Code>
             </Text>
@@ -509,17 +509,17 @@ export default function SegmentedControlTest() {
         <Separator size="4" />
 
         {/* Test 9: Vertical with Text (Less Ideal) */}
-        <Flex direction="column" gap="5">
+        <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="2">9. Vertical with Text (Less Ideal)</Heading>
+            <Heading size="6" weight="medium" mb="3">9. Vertical with Text (Less Ideal)</Heading>
             <Text size="2" emphasis="medium">
               Text labels work but are less recommended. Best with very short labels.
             </Text>
           </Box>
           
-          <Flex gap="6" wrap="wrap" align="start">
+          <Flex gap="7" wrap="wrap" align="start">
             <Box>
-              <Text size="2" weight="medium" mb="2">Short labels (OK)</Text>
+              <Text size="2" weight="medium" mb="3">Short labels (OK)</Text>
               <SegmentedControl.Root orientation="vertical" size="2" value={verticalText} onValueChange={setVerticalText}>
                 <SegmentedControl.Item value="day">Day</SegmentedControl.Item>
                 <SegmentedControl.Item value="week">Week</SegmentedControl.Item>
@@ -528,7 +528,7 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="2">With icons (Better)</Text>
+              <Text size="2" weight="medium" mb="3">With icons (Better)</Text>
               <SegmentedControl.Root orientation="vertical" size="3" defaultValue="list">
                 <SegmentedControl.Item value="list">
                   <HugeiconsIcon icon={Menu01Icon} strokeWidth={1.75} />
@@ -546,7 +546,7 @@ export default function SegmentedControlTest() {
             </Box>
           </Flex>
 
-          <Box p="4" style={{ background: 'var(--orange-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--orange-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" color="orange">
               ⚠️ For longer text labels, prefer horizontal orientation or consider using Radio Group or Tabs
             </Text>
@@ -556,17 +556,17 @@ export default function SegmentedControlTest() {
         <Separator size="4" />
 
         {/* Test 10: Real-World Vertical Use Cases */}
-        <Flex direction="column" gap="5">
+        <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="2">10. Real-World Vertical Use Cases</Heading>
+            <Heading size="6" weight="medium" mb="3">10. Real-World Vertical Use Cases</Heading>
             <Text size="2" emphasis="medium">
               Common patterns for vertical segmented controls
             </Text>
           </Box>
           
-          <Flex gap="6" wrap="wrap" align="start">
+          <Flex gap="7" wrap="wrap" align="start">
             <Box>
-              <Text size="2" weight="medium" mb="2">Sidebar Tool Palette</Text>
+              <Text size="2" weight="medium" mb="3">Sidebar Tool Palette</Text>
               <SegmentedControl.Root orientation="vertical" size="2" defaultValue="colors">
                 <SegmentedControl.Item value="colors" iconOnly aria-label="Colors">
                   <HugeiconsIcon icon={ColorsIcon} strokeWidth={1.75} />
@@ -584,7 +584,7 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="2">Compact Navigation</Text>
+              <Text size="2" weight="medium" mb="3">Compact Navigation</Text>
               <SegmentedControl.Root orientation="vertical" size="3" defaultValue="code">
                 <SegmentedControl.Item value="code" iconOnly aria-label="Code">
                   <HugeiconsIcon icon={CodeIcon} strokeWidth={1.75} />
@@ -599,7 +599,7 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="2">View Switcher</Text>
+              <Text size="2" weight="medium" mb="3">View Switcher</Text>
               <SegmentedControl.Root orientation="vertical" size="2" defaultValue="list">
                 <SegmentedControl.Item value="list" iconOnly aria-label="List view">
                   <HugeiconsIcon icon={Menu01Icon} strokeWidth={1.75} />
@@ -614,7 +614,7 @@ export default function SegmentedControlTest() {
             </Box>
           </Flex>
 
-          <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               Vertical icon-only controls are perfect for sidebars, tool palettes, and compact navigation rails
             </Text>
@@ -624,15 +624,15 @@ export default function SegmentedControlTest() {
         <Separator size="4" />
 
         {/* Test 11: Vertical Indicator Animation */}
-        <Flex direction="column" gap="5">
+        <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="2">11. Vertical Indicator Animation</Heading>
+            <Heading size="6" weight="medium" mb="3">11. Vertical Indicator Animation</Heading>
             <Text size="2" emphasis="medium">
               The sliding indicator animates smoothly in vertical orientation
             </Text>
           </Box>
           
-          <Flex gap="6" wrap="wrap" align="start">
+          <Flex gap="7" wrap="wrap" align="start">
             <SegmentedControl.Root orientation="vertical" size="3" defaultValue="1">
               <SegmentedControl.Item value="1" iconOnly aria-label="Option 1">
                 <Text size="3" weight="bold">1</Text>
@@ -664,7 +664,7 @@ export default function SegmentedControlTest() {
             </SegmentedControl.Root>
           </Flex>
 
-          <Box p="4" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               Click different segments to see the smooth vertical sliding animation with spring physics
             </Text>

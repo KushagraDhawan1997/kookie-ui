@@ -65,21 +65,21 @@ body {
 [data-highlighted-line] {
   background-color: var(--accent-a3);
   border-left: 2px solid var(--accent-9);
-  padding-left: calc(var(--space-4) - 2px);
-  margin-left: calc(-1 * var(--space-4));
-  margin-right: calc(-1 * var(--space-4));
-  padding-right: var(--space-4);
+  padding-left: calc(var(--space-5) - 2px);
+  margin-left: calc(-1 * var(--space-5));
+  margin-right: calc(-1 * var(--space-5));
+  padding-right: var(--space-5);
 }
 
 [data-highlighted-chars] {
   background-color: var(--accent-a4);
-  padding: 0 var(--space-1);
+  padding: 0 var(--space-2);
   border-radius: var(--radius-1);
 }
 
 [data-highlighted-word] {
   background-color: var(--accent-a4);
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-2);
   border: 1px solid var(--accent-a6);
 }
@@ -87,7 +87,7 @@ body {
 [data-rehype-pretty-code-title] {
   background-color: var(--gray-a4);
   color: var(--gray-12);
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-3) var(--space-5);
   font-size: var(--font-size-2);
   font-weight: 500;
   border-bottom: 1px solid var(--gray-a6);
@@ -96,8 +96,8 @@ body {
 
 pre + figcaption {
   background-color: var(--gray-a2);
-  padding: var(--space-2) var(--space-4);
-  margin: 0 0 var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  margin: 0 0 var(--space-5);
   border: 1px solid var(--gray-a6);
   border-top: none;
   border-radius: 0 0 var(--radius-3) var(--radius-3);
@@ -129,20 +129,20 @@ h6 {
   overflow: clip;
   background-color: var(--gray-1);
   background-image: radial-gradient(circle, var(--gray-a7) 1px, transparent 1.5px);
-  background-size: var(--space-5) var(--space-5);
+  background-size: var(--space-6) var(--space-6);
   background-position: center;
 }
 
 .kd-hero-stage {
   position: absolute;
   inset-inline: 0;
-  top: var(--space-7);
+  top: var(--space-8);
   display: grid;
   justify-items: center;
 }
 
 .kd-hero-window {
-  width: calc(30 * var(--space-6));
+  width: calc(30 * var(--space-7));
   background-color: var(--color-background);
   border: 1px solid var(--gray-a5);
   border-radius: var(--radius-6);
@@ -169,7 +169,7 @@ h6 {
 @media (max-width: 768px) {
   .kd-hero-stage {
     justify-items: start;
-    padding-inline-start: var(--space-5);
+    padding-inline-start: var(--space-6);
   }
 }
 

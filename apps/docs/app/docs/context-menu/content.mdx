@@ -91,7 +91,6 @@ The context menu is composed of several parts:
 | ------------------ | ---------------------------- | --------------- | ------------------------------------------------------------------ |
 | `size`             | `'1' \| '2' \| Responsive`   | `'2'`           | Size of the menu items                                             |
 | `color`            | `AccentColor`                | —               | Accent color for highlighted items. Inherits from theme if not set |
-| `material`         | `'solid' \| 'translucent'`   | —               | Background appearance. Inherits from the nearest Theme if not set  |
 | `virtualized`      | `boolean`                    | `false`         | Skips the ScrollArea so a `VirtualMenu` scrolls itself             |
 | `container`        | `HTMLElement`                | —               | Custom container for the portal                                    |
 | `forceMount`       | `true`                       | —               | Keeps the content mounted when closed                              |
@@ -148,7 +147,6 @@ The context menu is composed of several parts:
 | -------------- | --------------------------- | --------- | -------------------------------------------------------- |
 | `size`         | `'1' \| '2' \| Responsive`  | Inherited | Size of the submenu. Inherits from the parent content    |
 | `color`        | `AccentColor`               | Inherited | Accent color for highlighted items                       |
-| `material`     | `'solid' \| 'translucent'`  | Inherited | Background appearance                                    |
 | `virtualized`  | `boolean`                   | `false`   | Skips the ScrollArea so a `VirtualMenu` scrolls itself   |
 
 ContextMenu submenus always cascade. The `submenuBehavior` prop is accepted for backward compatibility and has no effect.
@@ -210,42 +208,6 @@ Use the `color` prop on items to communicate intent. Destructive actions should 
     <ContextMenu.Item>Rename</ContextMenu.Item>
     <ContextMenu.Separator />
     <ContextMenu.Item color="red">Delete</ContextMenu.Item>
-  </ContextMenu.Content>
-</ContextMenu.Root>
-```
-
-## Material
-
-### Solid Material
-
-Opaque background for standard interfaces.
-
-```tsx showLineNumbers
-<ContextMenu.Root>
-  <ContextMenu.Trigger>
-    <Card variant="raised" size="2">
-      <Text size="2">Right-click here</Text>
-    </Card>
-  </ContextMenu.Trigger>
-  <ContextMenu.Content material="solid">
-    <ContextMenu.Item>Edit</ContextMenu.Item>
-  </ContextMenu.Content>
-</ContextMenu.Root>
-```
-
-### Translucent Material
-
-Frosted glass for menus over images or canvases. Item text reads the strong ink by default.
-
-```tsx showLineNumbers
-<ContextMenu.Root>
-  <ContextMenu.Trigger>
-    <Card variant="raised" size="2">
-      <Text size="2">Right-click here</Text>
-    </Card>
-  </ContextMenu.Trigger>
-  <ContextMenu.Content material="translucent">
-    <ContextMenu.Item>Edit</ContextMenu.Item>
   </ContextMenu.Content>
 </ContextMenu.Root>
 ```
@@ -313,7 +275,7 @@ export function CanvasMenu() {
 
 ### Nested Actions
 
-Submenus open to the side and inherit the parent's size, color and material. Pass props to `SubContent` to override them.
+Submenus open to the side and inherit the parent's size and color. Pass props to `SubContent` to override them.
 
 ```tsx showLineNumbers
 <ContextMenu.Root>
@@ -337,7 +299,7 @@ Submenus open to the side and inherit the parent's size, color and material. Pas
 
 ### Long Lists
 
-Set `virtualized` and render a `VirtualMenu` for hundreds of items. Row heights follow the menu size and theme scaling.
+Set `virtualized` and render a `VirtualMenu` for hundreds of items. Row heights follow the menu size.
 
 ```tsx showLineNumbers
 import { ContextMenu, Card, Text, VirtualMenu } from '@kushagradhawan/kookie-ui';
@@ -414,22 +376,19 @@ Context menus are hidden by default. Make every action also reachable from a vis
 ### Added
 
 - `virtualized` prop on `Content` and `SubContent` for `VirtualMenu`
-- `SubContent` accepts its own `size`, `variant`, `color` and `material`
+- `SubContent` accepts its own `size`, `variant` and `color`
 - Shortcuts are exposed as `aria-keyshortcuts`
 
 ### Fixed
 
 - `submenuBehavior` no longer leaks to the DOM
 - A responsive `size` no longer places the menu at the viewport origin
-- The first item lines up with the pointer at every size and scaling
-- Menus follow a nested `Theme` `material`
+- The first item lines up with the pointer at every size
 - Radio items show a dot indicator, like DropdownMenu
 
 ### Removed
 
 - `highContrast` on `Content` and `SubContent`. A gray menu highlights with step 12 on its own, and item text reads the strong ink by default.
+- `material` and `panelBackground` props. Every surface is solid.
 
-### Deprecated
-
-- `panelBackground` prop in favor of `material` prop
 - `submenuBehavior` on `Content`, which has no effect

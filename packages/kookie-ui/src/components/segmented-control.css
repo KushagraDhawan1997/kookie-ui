@@ -21,34 +21,6 @@
 
   /* Create a new stacking context */
   isolation: isolate;
-
-  /* 
-   * Theme-level translucent override
-   * Applies backdrop filter for elevated visual effects
-   */
-  :where([data-material='translucent']) & {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
-
-  /* 
-   * Component-level material overrides
-   * These ensure proper rendering based on material setting
-   */
-  &:where([data-material='solid']) {
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-  
-  &:where([data-material='translucent']) {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
-
-  /* Disable backdrop-filter when inside elements that already have backdrop-filter */
-  :where(.rt-PopoverContent, .rt-BaseDialogContent, .rt-BaseMenuContent, .rt-DropdownMenuContent, .rt-ContextMenuContent, .rt-AlertDialogContent, .rt-HoverCardContent, .rt-TooltipContent, .rt-Card) & {
-    backdrop-filter: none !important;
-  }
 }
 
 .rt-SegmentedControlRoot:where([data-disabled]) {
@@ -160,8 +132,8 @@
   z-index: -1;
 
   /* Horizontal orientation (default) */
-  margin-top: calc(var(--space-1) * 0.75); /* 3px - slightly smaller than space-1 */
-  margin-bottom: calc(var(--space-1) * 0.75); /* 3px */
+  margin-top: calc(var(--space-2) * 0.75); /* 3px - slightly smaller than space-1 */
+  margin-bottom: calc(var(--space-2) * 0.75); /* 3px */
   margin-left: calc(-1 * var(--border-width-standard) * 0.5); /* -0.5px */
   margin-right: calc(-1 * var(--border-width-standard) * 0.5); /* -0.5px */
   width: var(--border-width-standard); /* 1px */
@@ -179,8 +151,8 @@
 
 /* Vertical orientation - separator */
 :where(.rt-r-orientation-vertical) .rt-SegmentedControlItemSeparator {
-  margin-left: calc(var(--space-1) * 0.75); /* 3px */
-  margin-right: calc(var(--space-1) * 0.75); /* 3px */
+  margin-left: calc(var(--space-2) * 0.75); /* 3px */
+  margin-right: calc(var(--space-2) * 0.75); /* 3px */
   margin-top: calc(-1 * var(--border-width-standard) * 0.5); /* -0.5px */
   margin-bottom: calc(-1 * var(--border-width-standard) * 0.5); /* -0.5px */
   width: auto;
@@ -410,8 +382,8 @@
       & :where(.rt-SegmentedControlItemLabel) {
         font-size: var(--font-size-1);
         letter-spacing: var(--letter-spacing-1);
-        padding-left: var(--space-3);
-        padding-right: var(--space-3);
+        padding-left: var(--space-4);
+        padding-right: var(--space-4);
         gap: var(--component-gap-1);
 
         /* Icon sizing for size 1 */
@@ -441,8 +413,8 @@
       & :where(.rt-SegmentedControlItemLabel) {
         font-size: var(--font-size-2);
         letter-spacing: var(--letter-spacing-2);
-        padding-left: var(--space-4);
-        padding-right: var(--space-4);
+        padding-left: var(--space-5);
+        padding-right: var(--space-5);
         gap: var(--component-gap-2);
 
         /* Icon sizing for size 2 */
@@ -472,8 +444,8 @@
       & :where(.rt-SegmentedControlItemLabel) {
         font-size: var(--font-size-3);
         letter-spacing: var(--letter-spacing-3);
-        padding-left: var(--space-4);
-        padding-right: var(--space-4);
+        padding-left: var(--space-5);
+        padding-right: var(--space-5);
         gap: var(--component-gap-3);
 
         /* Icon sizing for size 3 */
@@ -503,8 +475,8 @@
       & :where(.rt-SegmentedControlItemLabel) {
         font-size: var(--font-size-4);
         letter-spacing: var(--letter-spacing-4);
-        padding-left: var(--space-5);
-        padding-right: var(--space-5);
+        padding-left: var(--space-6);
+        padding-right: var(--space-6);
         gap: var(--component-gap-4);
 
         /* Icon sizing for size 4 */
@@ -525,22 +497,7 @@
 /* * * * * * * * * * * * * * * * * * * */
 
 .rt-SegmentedControlRoot {
-  /* Base state: solid color for solid panels */
   background-color: var(--gray-3);
-
-  /* Theme-level translucent override */
-  :where([data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--gray-a3), var(--gray-3) 60%);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-material='solid']) {
-    background-color: var(--gray-3);
-  }
-
-  &:where([data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--gray-a3), var(--gray-3) 60%);
-  }
 }
 
 /* * * * * * * * * * * * * * * * * * * */
@@ -549,7 +506,7 @@
 /*                                     */
 /* * * * * * * * * * * * * * * * * * * */
 
-/* 
+/*
  * Icon-only items get minimum square dimensions matching the height,
  * but can grow to fill available space while keeping icons centered.
  * This section is placed after size definitions for proper specificity.
@@ -579,33 +536,33 @@
 
 /* Vertical icon-only root width (explicit since nested :has() in @breakpoints may not work) */
 .rt-SegmentedControlRoot:where(.rt-r-orientation-vertical):where(.rt-r-size-1):has([data-icon-only]) {
-  width: var(--space-5);
-}
-.rt-SegmentedControlRoot:where(.rt-r-orientation-vertical):where(.rt-r-size-2):has([data-icon-only]) {
   width: var(--space-6);
 }
-.rt-SegmentedControlRoot:where(.rt-r-orientation-vertical):where(.rt-r-size-3):has([data-icon-only]) {
+.rt-SegmentedControlRoot:where(.rt-r-orientation-vertical):where(.rt-r-size-2):has([data-icon-only]) {
   width: var(--space-7);
 }
-.rt-SegmentedControlRoot:where(.rt-r-orientation-vertical):where(.rt-r-size-4):has([data-icon-only]) {
+.rt-SegmentedControlRoot:where(.rt-r-orientation-vertical):where(.rt-r-size-3):has([data-icon-only]) {
   width: var(--space-8);
+}
+.rt-SegmentedControlRoot:where(.rt-r-orientation-vertical):where(.rt-r-size-4):has([data-icon-only]) {
+  width: var(--space-9);
 }
 
 /* Vertical text items need vertical padding */
 :where(.rt-r-orientation-vertical):where(.rt-r-size-1) .rt-SegmentedControlItemLabel {
-  padding-top: var(--space-1);
-  padding-bottom: var(--space-1);
+  padding-top: var(--space-2);
+  padding-bottom: var(--space-2);
 }
 :where(.rt-r-orientation-vertical):where(.rt-r-size-2) .rt-SegmentedControlItemLabel {
-  padding-top: var(--space-2);
-  padding-bottom: var(--space-2);
-}
-:where(.rt-r-orientation-vertical):where(.rt-r-size-3) .rt-SegmentedControlItemLabel {
-  padding-top: var(--space-2);
-  padding-bottom: var(--space-2);
-}
-:where(.rt-r-orientation-vertical):where(.rt-r-size-4) .rt-SegmentedControlItemLabel {
   padding-top: var(--space-3);
   padding-bottom: var(--space-3);
+}
+:where(.rt-r-orientation-vertical):where(.rt-r-size-3) .rt-SegmentedControlItemLabel {
+  padding-top: var(--space-3);
+  padding-bottom: var(--space-3);
+}
+:where(.rt-r-orientation-vertical):where(.rt-r-size-4) .rt-SegmentedControlItemLabel {
+  padding-top: var(--space-4);
+  padding-bottom: var(--space-4);
 }
 

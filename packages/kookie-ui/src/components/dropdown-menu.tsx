@@ -33,7 +33,6 @@ import { MenuProvider } from './_internal/menu-context.js';
 import {
   MenuShortcut,
   getMenuAlignOffset,
-  resolveMenuMaterial,
   toAriaKeyShortcuts,
   useResolvedResponsiveValue,
 } from './_internal/base-menu.utils.js';
@@ -92,7 +91,6 @@ type DropdownMenuSurfaceProps = GetPropDefTypes<typeof dropdownMenuSubContentPro
 type DropdownMenuContentContextValue = {
   size?: DropdownMenuSurfaceProps['size'];
   color?: DropdownMenuSurfaceProps['color'];
-  material?: DropdownMenuSurfaceProps['material'];
 };
 const DropdownMenuContentContext = React.createContext<DropdownMenuContentContextValue>({});
 
@@ -132,9 +130,6 @@ interface DropdownMenuContentProps
 const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, DropdownMenuContentProps>(
   (props, forwardedRef) => {
     const themeContext = useThemeContext();
-
-
-    const material = resolveMenuMaterial(props.material, themeContext);
     const {
       size = dropdownMenuContentPropDefs.size.default,
     } = props;
@@ -144,7 +139,6 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
       color,
       container,
       forceMount,
-      material: _material,
       submenuBehavior,
       virtualized = false,
       onEscapeKeyDown,
@@ -177,8 +171,8 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
     };
 
     const contextValue = React.useMemo(
-      () => ({ size, color: resolvedColor, material }),
-      [size, resolvedColor, material],
+      () => ({ size, color: resolvedColor }),
+      [size, resolvedColor],
     );
 
     const contentBody = (
@@ -196,7 +190,6 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
         <Theme asChild>
           <DropdownMenuPrimitive.Content
             data-accent-color={resolvedColor}
-            data-material={material}
             align="start"
             sideOffset={4}
             collisionPadding={10}
@@ -658,14 +651,10 @@ DropdownMenuSubContent.displayName = 'DropdownMenu.SubContent';
 const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, DropdownMenuSubContentProps>(
   (props, forwardedRef) => {
     const parent = React.useContext(DropdownMenuContentContext);
-    const themeContext = useThemeContext();
-
 
     // A submenu inherits the parent surface, and its own props win.
     const size = props.size ?? parent.size;
     const color = props.color ?? parent.color;
-    const material =
-      props.material ?? parent.material ?? resolveMenuMaterial(undefined, themeContext);
 
     const {
       className,
@@ -673,7 +662,6 @@ const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, Dropdo
       container,
       forceMount,
       color: _color,
-      material: _material,
       virtualized = false,
       ...subContentProps
     } = extractProps({ ...props, size }, dropdownMenuSubContentPropDefs);
@@ -681,8 +669,8 @@ const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, Dropdo
     const scalarSize = useResolvedResponsiveValue(size, dropdownMenuSubContentPropDefs.size.default);
 
     const contextValue = React.useMemo(
-      () => ({ size, color, material }),
-      [size, color, material],
+      () => ({ size, color }),
+      [size, color],
     );
 
     const body = (
@@ -696,8 +684,7 @@ const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, Dropdo
         <Theme asChild>
           <DropdownMenuPrimitive.SubContent
             data-accent-color={color}
-            data-material={material}
-            alignOffset={getMenuAlignOffset(scalarSize, themeContext.scaling)}
+            alignOffset={getMenuAlignOffset(scalarSize)}
             // Side offset accounts for the outer solid box-shadow
             sideOffset={1}
             collisionPadding={10}
@@ -757,7 +744,6 @@ const DrillDownPanel = React.forwardRef<DropdownMenuSubContentElement, DrillDown
       virtualized: _virtualized,
       size: _size,
       color: _color,
-      material: _material,
       ...panelProps
     } = omitPopperProps(props);
 

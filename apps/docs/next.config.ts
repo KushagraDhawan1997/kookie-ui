@@ -48,7 +48,6 @@ const nextConfig = {
       ['/docs/colors', '/foundations/color'],
       ['/docs/typography', '/foundations/typography'],
       ['/docs/radius', '/foundations/radius'],
-      ['/docs/material', '/foundations/materials'],
       ['/docs/shadows', '/foundations/depth'],
       ['/docs/constants', '/foundations/constants'],
     ].map(([source, destination]) => ({ source, destination, permanent: true }));

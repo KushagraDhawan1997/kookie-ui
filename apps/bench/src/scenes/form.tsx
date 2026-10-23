@@ -10,10 +10,10 @@ export function FormScene() {
   useScene(api);
 
   return (
-    <Box ref={scroller} p="5" style={{ height: '100vh', overflow: 'auto' }}>
-      <Grid columns="2" gap="5">
+    <Box ref={scroller} p="6" style={{ height: '100vh', overflow: 'auto' }}>
+      <Grid columns="2" gap="6">
         {Array.from({ length: 40 }, (_, i) => (
-          <Flex key={i} direction="column" gap="2">
+          <Flex key={i} direction="column" gap="3">
             <Text as="label" weight="medium">
               Setting {i + version}
             </Text>
@@ -27,7 +27,7 @@ export function FormScene() {
                 <Select.Item value="c">Gamma</Select.Item>
               </Select.Content>
             </Select.Root>
-            <Flex gap="3" align="center">
+            <Flex gap="4" align="center">
               <Checkbox aria-label={`Enable ${i}`} defaultChecked={(i + version) % 2 === 0} />
               <Switch aria-label={`Sync ${i}`} defaultChecked />
             </Flex>

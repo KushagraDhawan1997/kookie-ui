@@ -30,18 +30,11 @@ afterEach(() => {
  * per-instance observers and forced style reads are worth keeping out.
  */
 describe('Button mounts cheaply', () => {
-  test('creates no MutationObserver, translucent or not', () => {
+  test('creates no MutationObserver', () => {
     renderWithProviders(
       <>
-        {Array.from({ length: 20 }, (_, i) => (
-          <Button key={i} material="translucent">
-            {i}
-          </Button>
-        ))}
-        {Array.from({ length: 20 }, (_, i) => (
-          <Button key={`solid-${i}`} material="solid">
-            {i}
-          </Button>
+        {Array.from({ length: 40 }, (_, i) => (
+          <Button key={i}>{i}</Button>
         ))}
       </>,
     );
@@ -50,21 +43,10 @@ describe('Button mounts cheaply', () => {
   });
 
   test('does not write will-change inline', () => {
-    // The blur already promotes the element; the inline write was per-instance
-    // DOM mutation buying nothing.
-    renderWithProviders(
-      <>
-        <Button data-testid="translucent" material="translucent">
-          a
-        </Button>
-        <Button data-testid="solid" material="solid">
-          b
-        </Button>
-      </>,
-    );
+    // An inline write is per-instance DOM mutation that buys nothing.
+    renderWithProviders(<Button data-testid="btn">a</Button>);
 
-    expect(screen.getByTestId('translucent').style.willChange).toBe('');
-    expect(screen.getByTestId('solid').style.willChange).toBe('');
+    expect(screen.getByTestId('btn').style.willChange).toBe('');
   });
 
   test('does not call getComputedStyle while mounting', () => {
@@ -73,9 +55,7 @@ describe('Button mounts cheaply', () => {
     renderWithProviders(
       <>
         {Array.from({ length: 10 }, (_, i) => (
-          <Button key={i} material="translucent">
-            {i}
-          </Button>
+          <Button key={i}>{i}</Button>
         ))}
       </>,
     );
@@ -120,16 +100,11 @@ describe('Button refs', () => {
   });
 });
 
-describe('Button still renders its material attributes', () => {
-  test('material is reflected for CSS to key off', () => {
-    renderWithProviders(
-      <Button data-testid="btn" material="translucent">
-        a
-      </Button>,
-    );
-    const button = screen.getByTestId('btn');
-
-    expect(button.dataset.material).toBe('translucent');
+describe('Button attributes', () => {
+  test('a button carries no material attribute', () => {
+    // v1 is solid only; nothing keys off a material.
+    renderWithProviders(<Button data-testid="btn">a</Button>);
+    expect(screen.getByTestId('btn')).not.toHaveAttribute('data-material');
   });
 
   test('a button defaults to type="button"', () => {

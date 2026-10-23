@@ -50,13 +50,13 @@ export function DocsPage({
     <Flex
       justify="center"
       align="start"
-      gap="9"
-      px={{ initial: '5', sm: '7', md: '9' }}
-      pt={{ initial: '6', sm: '7' }}
-      pb="9"
+      gap="10"
+      px={{ initial: '6', sm: '8', md: '10' }}
+      pt={{ initial: '7', sm: '8' }}
+      pb="10"
     >
       <Box flexGrow="1" minWidth="0" maxWidth={maxWidth}>
-        <Flex direction="column" gap={{ initial: '6', sm: '7' }} minWidth="0">
+        <Flex direction="column" gap={{ initial: '7', sm: '8' }} minWidth="0">
           {header ?? (meta && <DocsPageHeader meta={meta} actions={headerActions} tabs={headerTabs} showCopyButton={showCopyButton} />)}
 
           <Box minWidth="0" data-content-area>
@@ -64,9 +64,9 @@ export function DocsPage({
           </Box>
 
           {React.isValidElement(footer) ? (
-            <Box mt="9">{footer}</Box>
+            <Box mt="10">{footer}</Box>
           ) : footer && (
-            <Text as="p" size="2" emphasis="medium" mt="9">
+            <Text as="p" size="2" emphasis="medium" mt="10">
               © {new Date().getFullYear()}{' '}
               {footer.url ? (
                 <Link href={footer.url} target="_blank" rel="noreferrer" color="gray">
@@ -107,7 +107,7 @@ export function DocsPage({
           width="13rem"
           flexShrink="0"
           position="sticky"
-          top="6"
+          top="7"
         >
           {tableOfContents}
         </Box>

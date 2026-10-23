@@ -16,7 +16,6 @@ import {
   FilterIcon,
   SortingAZ01Icon,
   Settings01Icon,
-  PlayIcon,
   Bookmark01Icon,
 } from '@hugeicons/core-free-icons';
 
@@ -40,9 +39,9 @@ export function ButtonExamples() {
   };
 
   return (
-    <Flex direction="column" gap="9">
+    <Flex direction="column" gap="10">
       {/* Example 1: Form Submission */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Form Submission</SectionHeader.Title>
@@ -54,7 +53,7 @@ export function ButtonExamples() {
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
-          code={`<Flex gap="2" align="center">
+          code={`<Flex gap="3" align="center">
   <Button
     variant="soft"
     size="2"
@@ -74,7 +73,7 @@ export function ButtonExamples() {
   </Button>
 </Flex>`}
         >
-          <Flex gap="2" align="center">
+          <Flex gap="3" align="center">
             <Button variant="soft" size="2" color="gray" disabled={isSubmitting}>
               Cancel
             </Button>
@@ -89,7 +88,7 @@ export function ButtonExamples() {
       <Separator size="4" />
 
       {/* Example: Icon Loading with Spinner */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Icon Loading State</SectionHeader.Title>
@@ -108,7 +107,7 @@ export function ButtonExamples() {
   Bookmark
 </Button>`}
         >
-          <Flex gap="2" align="center">
+          <Flex gap="3" align="center">
             <Button variant="raised" size="2" disabled={isBookmarking} onClick={handleBookmark}>
               <Spinner loading={isBookmarking}>
                 <HugeiconsIcon icon={Bookmark01Icon} strokeWidth={1.75} />
@@ -128,7 +127,7 @@ export function ButtonExamples() {
       <Separator size="4" />
 
       {/* Example 2: Destructive Confirmation */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Destructive Confirmation</SectionHeader.Title>
@@ -139,7 +138,7 @@ export function ButtonExamples() {
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
-          code={`<Flex gap="2" align="center">
+          code={`<Flex gap="3" align="center">
   <Button variant="outline" size="2" color="gray">
     Cancel
   </Button>
@@ -149,7 +148,7 @@ export function ButtonExamples() {
   </Button>
 </Flex>`}
         >
-          <Flex gap="2" align="center">
+          <Flex gap="3" align="center">
             <Button variant="outline" size="2" color="gray">
               Cancel
             </Button>
@@ -164,7 +163,7 @@ export function ButtonExamples() {
       <Separator size="4" />
 
       {/* Example 3: Card CTA */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Card Call-to-Action</SectionHeader.Title>
@@ -180,8 +179,8 @@ export function ButtonExamples() {
   size="2"
   style={{ maxWidth: 320 }}
 >
-  <Flex direction="column" gap="6" p="2">
-    <Flex direction="column" gap="1">
+  <Flex direction="column" gap="7" p="3">
+    <Flex direction="column" gap="2">
       <Heading size="4" weight="medium">
         Pro Plan
       </Heading>
@@ -189,7 +188,7 @@ export function ButtonExamples() {
         Unlimited projects and collaborators
       </Text>
     </Flex>
-    <Flex direction="column" gap="1">
+    <Flex direction="column" gap="2">
       <Button variant="solid" size="2">
         Upgrade Now
         <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={1.75} />
@@ -202,8 +201,8 @@ export function ButtonExamples() {
 </Card>`}
         >
           <Card variant="raised" size="2" style={{ maxWidth: 320 }}>
-            <Flex direction="column" gap="6" p="2">
-              <Flex direction="column" gap="1">
+            <Flex direction="column" gap="7" p="3">
+              <Flex direction="column" gap="2">
                 <Heading size="4" weight="medium">
                   Pro Plan
                 </Heading>
@@ -211,7 +210,7 @@ export function ButtonExamples() {
                   Unlimited projects and collaborators
                 </Text>
               </Flex>
-              <Flex direction="column" gap="1">
+              <Flex direction="column" gap="2">
                 <Button variant="solid" size="2">
                   Upgrade Now
                   <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={1.75} />
@@ -228,7 +227,7 @@ export function ButtonExamples() {
       <Separator size="4" />
 
       {/* Example 4: Toolbar with Selection */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Toolbar Actions</SectionHeader.Title>
@@ -239,7 +238,7 @@ export function ButtonExamples() {
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
-          code={`<Flex gap="2" align="center">
+          code={`<Flex gap="3" align="center">
   <Button
     variant="soft"
     size="2"
@@ -269,7 +268,7 @@ export function ButtonExamples() {
   </Button>
 </Flex>`}
         >
-          <Flex gap="2" align="center">
+          <Flex gap="3" align="center">
             <Button variant="soft" size="2" color="gray" onClick={toggleSelection}>
               {selectedCount > 0 ? `${selectedCount} selected` : 'Select items'}
             </Button>
@@ -292,7 +291,7 @@ export function ButtonExamples() {
       <Separator size="4" />
 
       {/* Example 5: Empty State CTA */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Empty State</SectionHeader.Title>
@@ -307,11 +306,11 @@ export function ButtonExamples() {
   direction="column"
   align="center"
   justify="center"
-  gap="4"
-  py="5"
+  gap="5"
+  py="6"
   style={{ textAlign: 'center' }}
 >
-  <Flex direction="column" gap="1">
+  <Flex direction="column" gap="2">
     <Heading size="4" weight="medium">
       No projects yet
     </Heading>
@@ -325,8 +324,8 @@ export function ButtonExamples() {
   </Button>
 </Flex>`}
         >
-          <Flex direction="column" align="center" justify="center" gap="4" py="5" style={{ textAlign: 'center' }}>
-            <Flex direction="column" gap="1">
+          <Flex direction="column" align="center" justify="center" gap="5" py="6" style={{ textAlign: 'center' }}>
+            <Flex direction="column" gap="2">
               <Heading size="4" weight="medium">
                 No projects yet
               </Heading>
@@ -345,7 +344,7 @@ export function ButtonExamples() {
       <Separator size="4" />
 
       {/* Example 6: Compact Toolbar */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Compact Toolbar</SectionHeader.Title>
@@ -356,7 +355,7 @@ export function ButtonExamples() {
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
-          code={`<Flex gap="1" align="center">
+          code={`<Flex gap="2" align="center">
   <Button
     variant="soft"
     size="1"
@@ -379,7 +378,7 @@ export function ButtonExamples() {
   </Button>
 </Flex>`}
         >
-          <Flex gap="1" align="center">
+          <Flex gap="2" align="center">
             <Button variant="soft" size="1" color="gray">
               <HugeiconsIcon icon={FilterIcon} strokeWidth={1.75} />
               Filter
@@ -391,52 +390,6 @@ export function ButtonExamples() {
             <Button variant="ghost" size="1" color="gray">
               <HugeiconsIcon icon={Settings01Icon} strokeWidth={1.75} />
               Settings
-            </Button>
-          </Flex>
-        </PreviewBlock>
-      </Flex>
-
-      <Separator size="4" />
-
-      {/* Example 7: Translucent Material */}
-      <Flex direction="column" gap="4">
-        <SectionHeader.Root>
-          <SectionHeader.Content>
-            <SectionHeader.Title>Translucent Material</SectionHeader.Title>
-            <SectionHeader.Description>
-              The translucent material creates depth over images and dynamic backgrounds. Soft buttons keep their text on the strong ink, so they stay readable on complex surfaces.
-            </SectionHeader.Description>
-          </SectionHeader.Content>
-        </SectionHeader.Root>
-        <PreviewBlock
-          showThemeToggle={false}
-          appearance="dark"
-          background={{
-            backgroundColor: 'hsl(220, 20%, 10%)',
-            backgroundImage:
-              'url(https://images.unsplash.com/photo-1677246791329-ed88ad9d49d7?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-          code={`<Theme appearance="dark" material="translucent">
-  <Flex gap="2" align="center">
-    <Button variant="soft" size="2">
-      <HugeiconsIcon icon={PlayIcon} strokeWidth={1.75} />
-      Watch Demo
-    </Button>
-    <Button variant="soft" size="2" color="gray">
-      Learn More
-    </Button>
-  </Flex>
-</Theme>`}
-        >
-          <Flex gap="2" align="center">
-            <Button variant="soft" size="2" material="translucent">
-              <HugeiconsIcon icon={PlayIcon} strokeWidth={1.75} />
-              Watch Demo
-            </Button>
-            <Button variant="soft" size="2" color="gray" material="translucent">
-              Learn More
             </Button>
           </Flex>
         </PreviewBlock>

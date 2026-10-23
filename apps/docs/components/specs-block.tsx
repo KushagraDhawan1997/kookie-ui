@@ -74,7 +74,7 @@ interface SpecsBlockProps {
   /**
    * Tooltip content for table cells
    * Format: tooltips[property][column] = tooltip text
-   * @example { "Padding": { "size1": "var(--space-2)" } }
+   * @example { "Padding": { "size1": "var(--space-3)" } }
    */
   tooltips?: Record<string, Record<string, string>>;
 
@@ -150,7 +150,7 @@ const PreviewSection = ({
   if (background === 'none') {
     return (
       <Card size="2" variant="soft">
-        <Flex justify="center" align="center" py="4">
+        <Flex justify="center" align="center" py="5">
           <Theme fontFamily="sans">{preview}</Theme>
         </Flex>
       </Card>
@@ -171,7 +171,7 @@ const PreviewSection = ({
 
     return (
       <Card size="2" variant="soft">
-        <Flex justify="center" align="center" py="4" style={dotsStyle}>
+        <Flex justify="center" align="center" py="5" style={dotsStyle}>
           <Theme fontFamily="sans">{preview}</Theme>
         </Flex>
       </Card>
@@ -191,7 +191,7 @@ const PreviewSection = ({
 
   return (
     <Card size="2" variant="soft">
-      <Flex justify="center" align="center" py="4" style={imageStyle}>
+      <Flex justify="center" align="center" py="5" style={imageStyle}>
         <Theme fontFamily="sans">{preview}</Theme>
       </Flex>
     </Card>
@@ -260,10 +260,10 @@ const SpecsSection = memo(function SpecsSection({
       className="specs-content"
       style={{
         backgroundColor: 'var(--gray-a2)',
-        padding: 'var(--space-2) var(--space-4)',
+        padding: 'var(--space-3) var(--space-5)',
       }}
     >
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         {/* Specifications Table */}
         <Table.Root size="2" variant="ghost">
           <Table.Header>
@@ -278,7 +278,7 @@ const SpecsSection = memo(function SpecsSection({
               {/* Dynamic column headers based on detected or provided columns */}
               {detectedColumns.map((column) => (
                 <Table.ColumnHeaderCell key={column.key}>
-                  <Flex direction="column" gap="1">
+                  <Flex direction="column" gap="2">
                     <Text size="2" weight="medium">
                       {column.label.charAt(0).toUpperCase() + column.label.slice(1)}
                     </Text>
@@ -373,8 +373,8 @@ const SpecsSection = memo(function SpecsSection({
  *   ]}
  *   tooltips={{
  *     "Padding": {
- *       small: "var(--space-2)",
- *       medium: "var(--space-3)"
+ *       small: "var(--space-3)",
+ *       medium: "var(--space-4)"
  *     }
  *   }}
  * />
@@ -396,8 +396,8 @@ export const SpecsBlock = memo(function SpecsBlock({ preview, specs, columns, to
   // Fallback rendering without tabs (for backward compatibility)
   if (!showTabs) {
     return (
-      <Box my="6">
-        <Flex direction="column" gap="2">
+      <Box my="7">
+        <Flex direction="column" gap="3">
           <PreviewSection preview={preview} background={background} backgroundProps={backgroundProps} />
           <SpecsSection specs={specs} columns={columns} tooltips={tooltips} />
         </Flex>
@@ -407,14 +407,14 @@ export const SpecsBlock = memo(function SpecsBlock({ preview, specs, columns, to
 
   // Primary rendering with tabs for better organization
   return (
-    <Box my="6">
+    <Box my="7">
       <Tabs.Root defaultValue="preview">
         <Tabs.List>
           <Tabs.Trigger value="preview">Preview</Tabs.Trigger>
           <Tabs.Trigger value="specs">Specs</Tabs.Trigger>
         </Tabs.List>
 
-        <Box pt="6">
+        <Box pt="7">
           {/* Preview tab content */}
           <Tabs.Content value="preview" asChild>
             <PreviewSection preview={preview} background={background} backgroundProps={backgroundProps} />

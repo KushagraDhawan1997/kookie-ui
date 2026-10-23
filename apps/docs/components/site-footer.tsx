@@ -20,7 +20,7 @@ const REFERENCE = [
 
 export function SiteFooter() {
   return (
-    <Footer.Root gap="8">
+    <Footer.Root gap="9">
       <Footer.Main>
         <Footer.Brand>
           <NextLink href="/" aria-label="Womp's Design System" style={{ color: 'inherit' }}>

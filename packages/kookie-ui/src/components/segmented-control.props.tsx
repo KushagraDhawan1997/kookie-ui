@@ -15,13 +15,11 @@ const segmentedControlRootPropDefs = {
     default: 'horizontal',
     responsive: true,
   },
-  material: { type: 'enum', values: ['solid', 'translucent'] },
   ...radiusPropDef,
 } satisfies {
   disabled?: PropDef<boolean>;
   size: PropDef<(typeof sizes)[number]>;
   orientation: PropDef<(typeof orientations)[number]>;
-  material: PropDef<'solid' | 'translucent'>;
 };
 
 export { segmentedControlRootPropDefs };

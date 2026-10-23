@@ -9,9 +9,9 @@ import { CheckmarkCircle02Icon, Clock01Icon, Cancel01Icon, MoreHorizontalIcon } 
 
 export function BadgeExamples() {
   return (
-    <Flex direction="column" gap="9">
+    <Flex direction="column" gap="10">
       {/* Example 1: Deployment Status */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Deployment Status</SectionHeader.Title>
@@ -23,9 +23,9 @@ export function BadgeExamples() {
         <PreviewBlock
           background="none"
           code={`<Card variant="raised" size="2">
-  <Flex direction="column" gap="3">
+  <Flex direction="column" gap="4">
     <Flex justify="between" align="center">
-      <Flex gap="2" align="center">
+      <Flex gap="3" align="center">
         <HugeiconsIcon icon={CheckmarkCircle02Icon} strokeWidth={1.75} />
         <Text size="2">Production</Text>
       </Flex>
@@ -33,7 +33,7 @@ export function BadgeExamples() {
     </Flex>
     <Separator size="4" />
     <Flex justify="between" align="center">
-      <Flex gap="2" align="center">
+      <Flex gap="3" align="center">
         <HugeiconsIcon icon={Clock01Icon} strokeWidth={1.75} />
         <Text size="2">Staging</Text>
       </Flex>
@@ -43,9 +43,9 @@ export function BadgeExamples() {
 </Card>`}
         >
           <Card variant="raised" size="2" style={{ minWidth: 360 }}>
-            <Flex direction="column" gap="3">
+            <Flex direction="column" gap="4">
               <Flex justify="between" align="center">
-                <Flex gap="2" align="center">
+                <Flex gap="3" align="center">
                   <HugeiconsIcon icon={CheckmarkCircle02Icon} strokeWidth={1.75} style={{ width: 16, height: 16 }} />
                   <Text size="2">Production</Text>
                 </Flex>
@@ -53,7 +53,7 @@ export function BadgeExamples() {
               </Flex>
               <Separator size="4" />
               <Flex justify="between" align="center">
-                <Flex gap="2" align="center">
+                <Flex gap="3" align="center">
                   <HugeiconsIcon icon={Clock01Icon} strokeWidth={1.75} style={{ width: 16, height: 16 }} />
                   <Text size="2">Staging</Text>
                 </Flex>
@@ -61,7 +61,7 @@ export function BadgeExamples() {
               </Flex>
               <Separator size="4" />
               <Flex justify="between" align="center">
-                <Flex gap="2" align="center">
+                <Flex gap="3" align="center">
                   <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} style={{ width: 16, height: 16 }} />
                   <Text size="2">Preview</Text>
                 </Flex>
@@ -75,7 +75,7 @@ export function BadgeExamples() {
       <Separator size="4" />
 
       {/* Example 2: User Profile */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>User Profile</SectionHeader.Title>
@@ -87,21 +87,21 @@ export function BadgeExamples() {
         <PreviewBlock
           background="none"
           code={`<Card variant="raised" size="3">
-  <Flex direction="column" gap="5" align="center" p="1">
+  <Flex direction="column" gap="6" align="center" p="2">
     <Avatar
       size="6"
       fallback="AL"
       color="violet"
       variant="solid"
     />
-    <Flex direction="column" gap="1">
-      <Flex align="center" justify="center" gap="2">
+    <Flex direction="column" gap="2">
+      <Flex align="center" justify="center" gap="3">
         <Heading size="4">Alex Lee</Heading>
         <Badge size="1" color="violet">Pro</Badge>
       </Flex>
       <Text size="2" emphasis="medium">Senior Engineer</Text>
     </Flex>
-    <Flex gap="2" wrap="wrap" justify="center">
+    <Flex gap="3" wrap="wrap" justify="center">
       <Badge color="blue" variant="outline">React</Badge>
       <Badge color="green" variant="outline">Node.js</Badge>
       <Badge color="amber" variant="outline">TypeScript</Badge>
@@ -110,10 +110,10 @@ export function BadgeExamples() {
 </Card>`}
         >
           <Card variant="raised" size="3" style={{ maxWidth: 360 }}>
-            <Flex direction="column" gap="5" align="center" p="1" style={{ textAlign: 'center' }}>
+            <Flex direction="column" gap="6" align="center" p="2" style={{ textAlign: 'center' }}>
               <Avatar size="6" fallback="AL" color="violet" variant="solid" />
-              <Flex direction="column" gap="1">
-                <Flex align="center" justify="center" gap="2">
+              <Flex direction="column" gap="2">
+                <Flex align="center" justify="center" gap="3">
                   <Heading size="4">Alex Lee</Heading>
                   <Badge size="1" color="violet">
                     Pro
@@ -123,7 +123,7 @@ export function BadgeExamples() {
                   Senior Engineer
                 </Text>
               </Flex>
-              <Flex gap="2" wrap="wrap" justify="center">
+              <Flex gap="3" wrap="wrap" justify="center">
                 <Badge color="blue" variant="outline">
                   React
                 </Badge>
@@ -145,7 +145,7 @@ export function BadgeExamples() {
       <Separator size="4" />
 
       {/* Example 3: Feature Badges */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Feature Announcements</SectionHeader.Title>
@@ -155,7 +155,7 @@ export function BadgeExamples() {
         <PreviewBlock
           background="none"
           code={`<Flex justify="between" align="center">
-  <Flex direction="column" gap="1">
+  <Flex direction="column" gap="2">
     <Text size="2" weight="medium">AI Assistant</Text>
     <Text size="2" emphasis="medium">Intelligent code suggestions</Text>
   </Flex>
@@ -169,9 +169,9 @@ export function BadgeExamples() {
 </Flex>`}
         >
           <Card variant="raised" size="2" style={{ minWidth: 320, maxWidth: 400 }}>
-            <Flex direction="column" gap="3">
+            <Flex direction="column" gap="4">
               <Flex justify="between" align="center">
-                <Flex direction="column" gap="1">
+                <Flex direction="column" gap="2">
                   <Text size="2" weight="medium">
                     AI Assistant
                   </Text>
@@ -185,7 +185,7 @@ export function BadgeExamples() {
               </Flex>
               <Separator size="4" />
               <Flex justify="between" align="center">
-                <Flex direction="column" gap="1">
+                <Flex direction="column" gap="2">
                   <Text size="2" weight="medium">
                     Real-time Sync
                   </Text>
@@ -205,7 +205,7 @@ export function BadgeExamples() {
       <Separator size="4" />
 
       {/* Example 4: Notifications */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Notifications</SectionHeader.Title>
@@ -214,7 +214,7 @@ export function BadgeExamples() {
         </SectionHeader.Root>
         <PreviewBlock
           background="none"
-          code={`<Flex gap="3" align="start">
+          code={`<Flex gap="4" align="start">
   <Avatar
     size="3"
     fallback="JD"
@@ -223,7 +223,7 @@ export function BadgeExamples() {
   />
   <Flex direction="column" gap="0" style={{ flex: 1 }}>
     <Flex justify="between" align="center">
-      <Flex gap="2" align="center">
+      <Flex gap="3" align="center">
         <Text size="2" weight="medium">John Doe</Text>
         <Text size="1" emphasis="medium">2 min ago</Text>
       </Flex>
@@ -234,12 +234,12 @@ export function BadgeExamples() {
 </Flex>`}
         >
           <Card variant="raised" size="2" style={{ minWidth: 320, maxWidth: 400 }}>
-            <Flex direction="column" gap="4">
-              <Flex gap="3" align="start">
+            <Flex direction="column" gap="5">
+              <Flex gap="4" align="start">
                 <Avatar size="3" fallback="JD" color="blue" variant="soft" />
                 <Flex direction="column" gap="0" style={{ flex: 1 }}>
                   <Flex justify="between" align="center">
-                    <Flex gap="2" align="center">
+                    <Flex gap="3" align="center">
                       <Text size="2" weight="medium">
                         John Doe
                       </Text>
@@ -255,11 +255,11 @@ export function BadgeExamples() {
                 </Flex>
               </Flex>
               <Separator size="4" />
-              <Flex gap="3" align="start">
+              <Flex gap="4" align="start">
                 <Avatar size="3" fallback="SK" color="green" variant="soft" />
                 <Flex direction="column" gap="0" style={{ flex: 1 }}>
                   <Flex justify="between" align="center">
-                    <Flex gap="2" align="center">
+                    <Flex gap="3" align="center">
                       <Text size="2" weight="medium">
                         Sarah Kim
                       </Text>

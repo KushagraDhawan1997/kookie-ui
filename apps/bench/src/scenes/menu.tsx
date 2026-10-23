@@ -9,7 +9,7 @@ export function MenuScene() {
   useScene(api);
 
   return (
-    <Flex p="5">
+    <Flex p="6">
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
           <Button data-bench="open">Open menu {version}</Button>

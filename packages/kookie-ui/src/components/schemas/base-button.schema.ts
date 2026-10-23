@@ -119,15 +119,6 @@ export const BaseButtonSchema = z
       .describe('Loading state that shows a spinner and disables interaction'),
 
     /**
-     * Material type for visual rendering and depth effects
-     * Controls how the button renders its visual elements
-     */
-    material: z
-      .enum(['solid', 'translucent'])
-      .optional()
-      .describe('Material type for visual rendering and depth effects'),
-
-    /**
      * Flush mode that removes visual padding for seamless text integration
      * Only effective with ghost variant
      * @default false

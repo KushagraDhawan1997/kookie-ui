@@ -83,7 +83,6 @@ Chatbar is a compound component with the following parts:
 | `variant` | `'surface' \| 'outline' \| 'raised' \| 'ghost' \| 'soft'` | `'raised'` | Visual style variant |
 | `color` | `AccentColor` | - | Accent color for focus states and send button |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | - | Corner radius override |
-| `material` | `'solid' \| 'translucent'` | - | Background appearance for layered interfaces |
 | `width` | `CSSProperties['width']` | - | Fixed width |
 | `maxWidth` | `CSSProperties['maxWidth']` | - | Maximum width constraint |
 | `apiRef` | `Ref<Chatbar.ChatbarApi>` | - | Imperative API for programmatic control |
@@ -318,34 +317,6 @@ Use the `color` prop (any accent color) to set the accent color for focus states
 </Chatbar.Root>
 ```
 
-## Material
-
-Use the `material` prop for translucent surfaces over complex backgrounds.
-
-### Theme
-
-Chatbar automatically inherits the theme's material setting:
-
-```tsx
-<Theme material="translucent">
-  <Chatbar.Root variant="raised">
-    <Chatbar.Textarea aria-label="Message" />
-  </Chatbar.Root>
-</Theme>
-```
-
-### Custom
-
-Override the theme's material for specific effects:
-
-```tsx
-<Theme material="solid">
-  <Chatbar.Root material="translucent" variant="raised">
-    <Chatbar.Textarea aria-label="Message" />
-  </Chatbar.Root>
-</Theme>
-```
-
 ## States
 
 ### Disabled
@@ -483,7 +454,7 @@ Override the default attachment tile renderer:
   <Chatbar.AttachmentsRow
     renderAttachment={(attachment) => (
       <Card size="1" variant="surface">
-        <Flex align="center" gap="2" p="2">
+        <Flex align="center" gap="3" p="3">
           <Text size="1">{attachment.name}</Text>
           <Text size="1" emphasis="medium">{Math.ceil(attachment.size / 1024)} KB</Text>
         </Flex>
@@ -546,8 +517,8 @@ export function ChatWithShortcuts() {
   const chatbarApi = useRef<Chatbar.ChatbarApi>(null);
 
   return (
-    <Flex direction="column" gap="2">
-      <Flex gap="2">
+    <Flex direction="column" gap="3">
+      <Flex gap="3">
         <Button
           variant="soft"
           color="gray"
@@ -624,7 +595,6 @@ Chatbar provides accessibility through semantic markup, keyboard support and liv
 - Auto-resizing textarea with configurable line limits
 - Imperative API via `apiRef` for programmatic control
 - Multiple visual variants: surface, outline, raised, ghost, soft
-- Material support for translucent surfaces
 - Comprehensive accessibility with ARIA attributes and keyboard navigation
 - Exported types on the `Chatbar` namespace: `ChatbarApi`, `ChatbarAttachment`, `ChatbarAttachmentRejection`, `ChatbarRejectReason`, `ChatbarSubmitPayload`, `ChatbarSendMode`, `ChatbarExpandOn`, and part props types
 - Polite live region for attachment and drag-over announcements
@@ -641,6 +611,7 @@ Chatbar provides accessibility through semantic markup, keyboard support and liv
 ### Removed
 
 - `highContrast` on Send. Gray fills with step 12 on its own.
+- `material` prop. Every surface is solid.
 
 ### Fixed
 

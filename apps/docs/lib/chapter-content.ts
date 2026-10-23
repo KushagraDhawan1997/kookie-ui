@@ -16,7 +16,6 @@ export const CHAPTER_CONTENT: Record<string, ComponentType> = {
   'foundations/color': dynamic(() => import('@/content/foundations/color.mdx')),
   'foundations/typography': dynamic(() => import('@/content/foundations/typography.mdx')),
   'foundations/radius': dynamic(() => import('@/content/foundations/radius.mdx')),
-  'foundations/materials': dynamic(() => import('@/content/foundations/materials.mdx')),
   'foundations/depth': dynamic(() => import('@/content/foundations/depth.mdx')),
   'foundations/constants': dynamic(() => import('@/content/foundations/constants.mdx')),
 };

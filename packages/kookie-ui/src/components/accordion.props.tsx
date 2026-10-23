@@ -6,7 +6,6 @@ import type { PropDef } from '../props/prop-def.js';
 
 const sizes = ['1', '2', '3', '4'] as const;
 const variants = ['raised', 'soft', 'surface', 'outline', 'ghost'] as const;
-const materials = ['solid', 'translucent'] as const;
 
 const accordionRootPropDefs = {
   ...asChildPropDef,
@@ -14,12 +13,10 @@ const accordionRootPropDefs = {
   variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised' },
   ...colorPropDef,
   ...radiusPropDef,
-  material: { type: 'enum', values: materials, default: undefined },
   flush: { type: 'boolean', default: false },
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;
   variant: PropDef<(typeof variants)[number]>;
-  material: PropDef<(typeof materials)[number] | undefined>;
   flush: PropDef<boolean>;
 };
 
@@ -60,7 +57,6 @@ export type AccordionRootOwnProps = {
   variant?: (typeof variants)[number];
   color?: string;
   radius?: string;
-  material?: (typeof materials)[number];
   flush?: boolean;
 };
 

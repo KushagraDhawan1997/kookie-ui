@@ -35,13 +35,13 @@
 @breakpoints {
   .rt-Separator {
     &:where(.rt-r-size-1) {
-      --separator-size: var(--space-4);
+      --separator-size: var(--space-5);
     }
     &:where(.rt-r-size-2) {
-      --separator-size: var(--space-6);
+      --separator-size: var(--space-7);
     }
     &:where(.rt-r-size-3) {
-      --separator-size: var(--space-9);
+      --separator-size: var(--space-10);
     }
     &:where(.rt-r-size-4) {
       --separator-size: 100%;

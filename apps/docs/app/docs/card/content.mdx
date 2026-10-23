@@ -34,7 +34,7 @@ import { Card, Text, Heading, Flex, Button } from '@kushagradhawan/kookie-ui';
 export function MyCard() {
   return (
     <Card>
-      <Flex direction="column" gap="2">
+      <Flex direction="column" gap="3">
         <Heading size="3">Card Title</Heading>
         <Text size="2">Card content goes here.</Text>
         <Button size="2">Action</Button>
@@ -50,7 +50,6 @@ export function MyCard() {
 | ---- | ---- | ------- | ----------- |
 | `size` | `'1' \| '2' \| '3' \| '4' \| '5'` | `'1'` | Controls the padding and spacing inside the card. Supports responsive values. |
 | `variant` | `'surface' \| 'outline' \| 'raised' \| 'ghost' \| 'soft'` | `'raised'` | The visual style of the card. |
-| `material` | `'solid' \| 'translucent'` | - | Controls the material appearance. Translucent adds backdrop blur. |
 | `flush` | `boolean` | `false` | When true, removes padding for full-bleed content. |
 | `asChild` | `boolean` | `false` | Merge props onto the child element using Radix Slot. |
 
@@ -111,23 +110,13 @@ A muted background with no border.
 Cards support sizes from 1 to 5, controlling padding and internal spacing.
 
 ```tsx
-<Flex direction="column" gap="4">
+<Flex direction="column" gap="5">
   <Card size="1"><Text>Size 1 - Compact</Text></Card>
   <Card size="2"><Text>Size 2 - Default</Text></Card>
   <Card size="3"><Text>Size 3 - Comfortable</Text></Card>
   <Card size="4"><Text>Size 4 - Spacious</Text></Card>
   <Card size="5"><Text>Size 5 - Generous</Text></Card>
 </Flex>
-```
-
-## Material
-
-Use the `material` prop to control the card's material appearance.
-
-```tsx
-<Card material="translucent">
-  <Text>Translucent card with backdrop blur</Text>
-</Card>
 ```
 
 ## Flush Content
@@ -149,7 +138,7 @@ import { Link } from 'react-router-dom';
 
 <Card asChild>
   <Link to="/details">
-    <Flex direction="column" gap="2">
+    <Flex direction="column" gap="3">
       <Heading size="3">Clickable Card</Heading>
       <Text size="2">Click anywhere to navigate</Text>
     </Flex>

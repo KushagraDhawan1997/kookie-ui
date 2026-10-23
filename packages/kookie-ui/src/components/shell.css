@@ -27,7 +27,7 @@
 
 .rt-ShellRoot {
   /* Read by inset panes. Declared here, so the documented override on the Root works. */
-  --shell-inset-gap: var(--space-2);
+  --shell-inset-gap: var(--space-3);
   /* Written inline by the Root while a Rail shows; stated here so a nested Shell never inherits its parent's. */
   --shell-rail-offset: 0px;
 
@@ -99,6 +99,8 @@
   /* A pane nested in a Shell.Scroll measures its own floating rows, not the outer ones. */
   --rt-pane-inset-start: initial;
   --rt-pane-inset-end: initial;
+  --rt-pane-band-start: initial;
+  --rt-pane-band-end: initial;
   --rt-shell-position: initial;
   --rt-shell-z: initial;
   --rt-shell-row: initial;
@@ -201,7 +203,7 @@
 }
 
 .rt-ShellRailContent {
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 /* Shell.Scroll takes the room a pane's header and footer leave, and scrolls inside it. */
@@ -246,55 +248,67 @@
 
 /*
  * How tall the floating row is: one control row plus the row's padding on both sides, worked
- * out in CSS so the first paint is right. A Toolbar in the row states its own control height.
+ * out in CSS so the first paint is right. The padding is the pane's surface padding at the
+ * Shell's index, the same the row itself pads by. A Toolbar in the row publishes its own control
+ * height as the band (one step above the Shell's when it states no size).
  */
 :has(> .rt-ShellPaneHeader[data-float]:where(.rt-r-size-1)) {
   --rt-pane-row-start: var(--control-height-1);
-  --rt-pane-pad-start: var(--space-2);
+  --rt-pane-pad-start: var(--surface-p-1);
 }
 :has(> .rt-ShellPaneHeader[data-float]:where(.rt-r-size-2)) {
   --rt-pane-row-start: var(--control-height-2);
-  --rt-pane-pad-start: var(--space-3);
+  --rt-pane-pad-start: var(--surface-p-2);
 }
 :has(> .rt-ShellPaneHeader[data-float]:where(.rt-r-size-3)) {
   --rt-pane-row-start: var(--control-height-3);
-  --rt-pane-pad-start: var(--space-3);
+  --rt-pane-pad-start: var(--surface-p-3);
 }
 :has(> .rt-ShellPaneFooter[data-float]:where(.rt-r-size-1)) {
   --rt-pane-row-end: var(--control-height-1);
-  --rt-pane-pad-end: var(--space-2);
+  --rt-pane-pad-end: var(--surface-p-1);
 }
 :has(> .rt-ShellPaneFooter[data-float]:where(.rt-r-size-2)) {
   --rt-pane-row-end: var(--control-height-2);
-  --rt-pane-pad-end: var(--space-3);
+  --rt-pane-pad-end: var(--surface-p-2);
 }
 :has(> .rt-ShellPaneFooter[data-float]:where(.rt-r-size-3)) {
   --rt-pane-row-end: var(--control-height-3);
-  --rt-pane-pad-end: var(--space-3);
+  --rt-pane-pad-end: var(--surface-p-3);
 }
 :has(> .rt-ShellPaneHeader[data-float] > .rt-Toolbar:where(.rt-r-size-1)) {
-  --rt-pane-row-start: var(--control-height-1);
+  --rt-pane-band-start: var(--control-height-1);
 }
 :has(> .rt-ShellPaneHeader[data-float] > .rt-Toolbar:where(.rt-r-size-2)) {
-  --rt-pane-row-start: var(--control-height-2);
+  --rt-pane-band-start: var(--control-height-2);
 }
 :has(> .rt-ShellPaneHeader[data-float] > .rt-Toolbar:where(.rt-r-size-3)) {
-  --rt-pane-row-start: var(--control-height-3);
+  --rt-pane-band-start: var(--control-height-3);
 }
 :has(> .rt-ShellPaneHeader[data-float] > .rt-Toolbar:where(.rt-r-size-4)) {
-  --rt-pane-row-start: var(--control-height-4);
+  --rt-pane-band-start: var(--control-height-4);
 }
 :has(> .rt-ShellPaneFooter[data-float] > .rt-Toolbar:where(.rt-r-size-1)) {
-  --rt-pane-row-end: var(--control-height-1);
+  --rt-pane-band-end: var(--control-height-1);
 }
 :has(> .rt-ShellPaneFooter[data-float] > .rt-Toolbar:where(.rt-r-size-2)) {
-  --rt-pane-row-end: var(--control-height-2);
+  --rt-pane-band-end: var(--control-height-2);
 }
 :has(> .rt-ShellPaneFooter[data-float] > .rt-Toolbar:where(.rt-r-size-3)) {
-  --rt-pane-row-end: var(--control-height-3);
+  --rt-pane-band-end: var(--control-height-3);
 }
 :has(> .rt-ShellPaneFooter[data-float] > .rt-Toolbar:where(.rt-r-size-4)) {
-  --rt-pane-row-end: var(--control-height-4);
+  --rt-pane-band-end: var(--control-height-4);
+}
+
+/* A Rail's rows are tiles, and its chrome keeps their tight padding (sidebar.css). */
+.rt-ShellRailContent:has(> .rt-ShellPaneHeader[data-float]),
+.rt-ShellRailContent :has(> .rt-ShellPaneHeader[data-float]) {
+  --rt-pane-pad-start: var(--space-3);
+}
+.rt-ShellRailContent:has(> .rt-ShellPaneFooter[data-float]),
+.rt-ShellRailContent :has(> .rt-ShellPaneFooter[data-float]) {
+  --rt-pane-pad-end: var(--space-3);
 }
 
 /*
@@ -302,14 +316,15 @@
  * scrollbar stays between them, and the fade (with `fade`) runs across them.
  */
 :has(> .rt-ShellPaneHeader[data-float]) > .rt-ShellScroll {
-  --rt-pane-inset-start: calc(var(--rt-pane-row-start) + 2 * var(--rt-pane-pad-start));
+  /* The taller of the pane's control row and a Toolbar's own: the row never shrinks below the first. */
+  --rt-pane-inset-start: calc(max(var(--rt-pane-row-start), var(--rt-pane-band-start, 0px)) + 2 * var(--rt-pane-pad-start));
   --scroll-fade-start: var(--rt-pane-inset-start);
-  --scrollarea-scrollbar-vertical-margin-top: calc(var(--space-1) + var(--rt-pane-inset-start));
+  --scrollarea-scrollbar-vertical-margin-top: calc(var(--space-2) + var(--rt-pane-inset-start));
 }
 :has(> .rt-ShellPaneFooter[data-float]) > .rt-ShellScroll {
-  --rt-pane-inset-end: calc(var(--rt-pane-row-end) + 2 * var(--rt-pane-pad-end));
+  --rt-pane-inset-end: calc(max(var(--rt-pane-row-end), var(--rt-pane-band-end, 0px)) + 2 * var(--rt-pane-pad-end));
   --scroll-fade-end: var(--rt-pane-inset-end);
-  --scrollarea-scrollbar-vertical-margin-bottom: calc(var(--space-1) + var(--rt-pane-inset-end));
+  --scrollarea-scrollbar-vertical-margin-bottom: calc(var(--space-2) + var(--rt-pane-inset-end));
 }
 .rt-ShellScroll > .rt-ScrollAreaViewport > * {
   padding-top: var(--rt-pane-inset-start, 0px);
@@ -332,7 +347,7 @@
   --rt-shell-col: 1 / -1;
   --rt-shell-surface: var(--color-panel-solid);
   --rt-shell-shadow: var(--shadow-5);
-  --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
+  --rt-shell-cap: calc(100% - var(--space-9) - var(--rt-shell-start, 0px));
   --rt-shell-offset: var(--shell-rail-offset, 0px);
   --rt-shell-handle: none;
 }
@@ -376,7 +391,7 @@
   --rt-shell-col: 1 / -1;
   --rt-shell-surface: var(--color-panel-solid);
   --rt-shell-shadow: var(--shadow-5);
-  --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
+  --rt-shell-cap: calc(100% - var(--space-9) - var(--rt-shell-start, 0px));
   --rt-shell-offset: var(--shell-rail-offset, 0px);
   --rt-shell-handle: none;
 }
@@ -428,7 +443,7 @@
     --rt-shell-col: 1 / -1;
     --rt-shell-surface: var(--color-panel-solid);
     --rt-shell-shadow: var(--shadow-5);
-    --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
+    --rt-shell-cap: calc(100% - var(--space-9) - var(--rt-shell-start, 0px));
     --rt-shell-offset: var(--shell-rail-offset, 0px);
     --rt-shell-handle: none;
   }
@@ -481,7 +496,7 @@
     --rt-shell-col: 1 / -1;
     --rt-shell-surface: var(--color-panel-solid);
     --rt-shell-shadow: var(--shadow-5);
-    --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
+    --rt-shell-cap: calc(100% - var(--space-9) - var(--rt-shell-start, 0px));
     --rt-shell-offset: var(--shell-rail-offset, 0px);
     --rt-shell-handle: none;
   }
@@ -534,7 +549,7 @@
     --rt-shell-col: 1 / -1;
     --rt-shell-surface: var(--color-panel-solid);
     --rt-shell-shadow: var(--shadow-5);
-    --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
+    --rt-shell-cap: calc(100% - var(--space-9) - var(--rt-shell-start, 0px));
     --rt-shell-offset: var(--shell-rail-offset, 0px);
     --rt-shell-handle: none;
   }
@@ -587,7 +602,7 @@
     --rt-shell-col: 1 / -1;
     --rt-shell-surface: var(--color-panel-solid);
     --rt-shell-shadow: var(--shadow-5);
-    --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
+    --rt-shell-cap: calc(100% - var(--space-9) - var(--rt-shell-start, 0px));
     --rt-shell-offset: var(--shell-rail-offset, 0px);
     --rt-shell-handle: none;
   }
@@ -640,7 +655,7 @@
     --rt-shell-col: 1 / -1;
     --rt-shell-surface: var(--color-panel-solid);
     --rt-shell-shadow: var(--shadow-5);
-    --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
+    --rt-shell-cap: calc(100% - var(--space-9) - var(--rt-shell-start, 0px));
     --rt-shell-offset: var(--shell-rail-offset, 0px);
     --rt-shell-handle: none;
   }
@@ -791,7 +806,7 @@
   z-index: 1;
   background: transparent;
   /* hit target size, adjustable per media */
-  --resizer-hit: var(--space-3);
+  --resizer-hit: var(--space-4);
   display: var(--rt-shell-handle, flex);
   align-items: center;
   justify-content: center;
@@ -836,7 +851,7 @@
 
 @media (pointer: coarse) {
   .rt-ShellResizer {
-    --resizer-hit: var(--space-6);
+    --resizer-hit: var(--space-7);
   }
 }
 

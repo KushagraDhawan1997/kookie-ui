@@ -36,16 +36,14 @@ interface TabsListProps
     MarginProps,
     TabsListOwnProps {}
 const TabsList = React.forwardRef<TabsListElement, TabsListProps>((props, forwardedRef) => {
-  const { className, color, material: materialProp, ...listProps } = extractProps(
+  const { className, color, ...listProps } = extractProps(
     props,
     tabsListPropDefs,
     marginPropDefs,
   );
-  const material = materialProp;
   return (
     <TabsPrimitive.List
       data-accent-color={color}
-      data-material={material}
       {...listProps}
       asChild={false}
       ref={forwardedRef}

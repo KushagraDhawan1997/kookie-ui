@@ -4,7 +4,6 @@ import { colorPropDef } from '../../props/color.prop.js';
 import type { PropDef } from '../../props/prop-def.js';
 
 const contentSizes = ['1', '2'] as const;
-const materials = ['solid', 'translucent'] as const;
 const submenuBehaviors = ['cascade', 'drill-down'] as const;
 
 // Base props shared between Content and SubContent
@@ -16,15 +15,9 @@ const baseMenuSharedPropDefs = {
     default: '2',
     responsive: true,
   },
-  material: {
-    type: 'enum',
-    values: materials,
-    default: undefined,
-  },
   ...colorPropDef,
 } satisfies {
   size: PropDef<(typeof contentSizes)[number]>;
-  material: PropDef<(typeof materials)[number] | undefined>;
 };
 
 // Content-specific props (includes submenuBehavior)
@@ -44,7 +37,6 @@ const baseMenuContentPropDefs = {
   },
 } satisfies {
   size: PropDef<(typeof contentSizes)[number]>;
-  material: PropDef<(typeof materials)[number] | undefined>;
   submenuBehavior: PropDef<(typeof submenuBehaviors)[number]>;
 };
 

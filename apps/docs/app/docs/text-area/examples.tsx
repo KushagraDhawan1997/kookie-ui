@@ -41,9 +41,9 @@ export function TextAreaExamples() {
   };
 
   return (
-    <Flex direction="column" gap="9">
+    <Flex direction="column" gap="10">
       {/* Example 1: Comment Form */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Comment Form</SectionHeader.Title>
@@ -77,7 +77,7 @@ const handleSubmit = () => {
   rows={4}
 />`}
         >
-          <Flex direction="column" gap="3" style={{ width: 480 }}>
+          <Flex direction="column" gap="4" style={{ width: 480 }}>
             <TextArea
               size="2"
               variant="surface"
@@ -88,7 +88,7 @@ const handleSubmit = () => {
               errorMessage={commentError}
               rows={4}
             />
-            <Flex gap="2" justify="end">
+            <Flex gap="3" justify="end">
               <Button variant="soft" size="2" onClick={() => setComment('')}>
                 Cancel
               </Button>
@@ -103,7 +103,7 @@ const handleSubmit = () => {
       <Separator size="4" />
 
       {/* Example 2: Feedback Form */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Feedback Form</SectionHeader.Title>
@@ -134,8 +134,8 @@ const handleSubmit = async () => {
 />`}
         >
           <Card variant="raised" size="2" style={{ maxWidth: 560 }}>
-            <Flex direction="column" gap="6">
-              <Flex direction="column" gap="2">
+            <Flex direction="column" gap="7">
+              <Flex direction="column" gap="3">
                 <Heading size="5" weight="medium">
                   Send us your feedback
                 </Heading>
@@ -146,7 +146,7 @@ const handleSubmit = async () => {
 
               <TextArea size="2" variant="outline" placeholder="Tell us about your experience..." value={feedback} onChange={(e) => setFeedback(e.target.value)} disabled={isSubmitting} rows={6} />
 
-              <Flex gap="2" justify="end">
+              <Flex gap="3" justify="end">
                 <Button variant="soft" size="2" color="gray" disabled={isSubmitting} onClick={() => setFeedback('')}>
                   Clear
                 </Button>
@@ -162,7 +162,7 @@ const handleSubmit = async () => {
       <Separator size="4" />
 
       {/* Example 3: Character Counter */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Character Counter</SectionHeader.Title>
@@ -189,7 +189,7 @@ const maxLength = 280;
   {tweet.length} / {maxLength}
 </Text>`}
         >
-          <Flex direction="column" gap="2" style={{ width: 480 }}>
+          <Flex direction="column" gap="3" style={{ width: 480 }}>
             <TextArea size="2" variant="soft" placeholder="What's happening?" value={tweet} onChange={(e) => setTweet(e.target.value)} maxLength={maxLength} rows={3} />
             <Flex justify="between" align="center">
               <Text size="1" emphasis="medium">
@@ -206,7 +206,7 @@ const maxLength = 280;
       <Separator size="4" />
 
       {/* Example 4: Note Taking */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Note Taking</SectionHeader.Title>
@@ -230,8 +230,8 @@ const maxLength = 280;
   style={{ minHeight: 200 }}
 />`}
         >
-          <Flex direction="column" gap="3" style={{ width: 600 }}>
-            <Flex direction="column" gap="2">
+          <Flex direction="column" gap="4" style={{ width: 600 }}>
+            <Flex direction="column" gap="3">
               <Heading size="4" weight="medium">
                 Daily Notes
               </Heading>
@@ -247,7 +247,7 @@ const maxLength = 280;
       <Separator size="4" />
 
       {/* Example 5: Product Description */}
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Product Description Editor</SectionHeader.Title>
@@ -268,8 +268,8 @@ const maxLength = 280;
 />`}
         >
           <Card variant="raised" size="2" style={{ maxWidth: 640 }}>
-            <Flex direction="column" gap="6">
-              <Flex direction="column" gap="2">
+            <Flex direction="column" gap="7">
+              <Flex direction="column" gap="3">
                 <Heading size="5" weight="medium">
                   Product Information
                 </Heading>
@@ -278,14 +278,14 @@ const maxLength = 280;
                 </Text>
               </Flex>
 
-              <Flex direction="column" gap="2">
+              <Flex direction="column" gap="3">
                 <Text size="2" weight="medium">
                   Description
                 </Text>
                 <TextArea size="3" variant="raised" placeholder="Describe your product features, benefits, and specifications..." resize="none" rows={8} />
               </Flex>
 
-              <Flex gap="2" justify="end">
+              <Flex gap="3" justify="end">
                 <Button variant="soft" size="2" color="gray">
                   Cancel
                 </Button>

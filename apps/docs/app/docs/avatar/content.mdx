@@ -33,7 +33,7 @@ import { Avatar, Flex } from '@kushagradhawan/kookie-ui';
 
 export function MyAvatars() {
   return (
-    <Flex gap="3">
+    <Flex gap="4">
       <Avatar src="/profile.jpg" fallback="JD" />
       <Avatar fallback="AB" />
       <Avatar fallback="CD" color="violet" />
@@ -75,7 +75,7 @@ Display a user's profile image.
 When no image is provided or it fails to load, the fallback content is displayed.
 
 ```tsx
-<Flex gap="3">
+<Flex gap="4">
   <Avatar fallback="JD" />
   <Avatar fallback="AB" color="violet" />
   <Avatar fallback="CD" color="green" />
@@ -87,7 +87,7 @@ When no image is provided or it fails to load, the fallback content is displayed
 Avatars support 9 sizes from compact (1) to large (9).
 
 ```tsx
-<Flex gap="3" align="center">
+<Flex gap="4" align="center">
   <Avatar size="1" fallback="1" />
   <Avatar size="2" fallback="2" />
   <Avatar size="3" fallback="3" />
@@ -102,7 +102,7 @@ Avatars support 9 sizes from compact (1) to large (9).
 Control the fallback appearance with variants.
 
 ```tsx
-<Flex gap="3">
+<Flex gap="4">
   <Avatar fallback="CL" variant="raised" />
   <Avatar fallback="SO" variant="solid" />
   <Avatar fallback="SF" variant="soft" />
@@ -116,7 +116,7 @@ Control the fallback appearance with variants.
 Use colors to differentiate users or roles.
 
 ```tsx
-<Flex gap="3">
+<Flex gap="4">
   <Avatar
     fallback="JD"
     color="blue"
@@ -145,7 +145,7 @@ Use colors to differentiate users or roles.
 Customize the border radius.
 
 ```tsx
-<Flex gap="3">
+<Flex gap="4">
   <Avatar fallback="JD" radius="none" />
   <Avatar fallback="JD" radius="small" />
   <Avatar fallback="JD" radius="medium" />
@@ -159,7 +159,7 @@ Customize the border radius.
 Add a status indicator dot to show presence or state.
 
 ```tsx
-<Flex gap="3">
+<Flex gap="4">
   <Avatar fallback="JD" status="green" />
   <Avatar fallback="AB" status="amber" />
   <Avatar fallback="CD" status="gray" />
@@ -169,7 +169,7 @@ Add a status indicator dot to show presence or state.
 The status indicator scales automatically with the avatar size.
 
 ```tsx
-<Flex gap="3" align="center">
+<Flex gap="4" align="center">
   <Avatar
     fallback="JD"
     size="3"
@@ -193,7 +193,7 @@ The status indicator scales automatically with the avatar size.
 Use the `badge` prop for custom indicator content like icons or notification counts.
 
 ```tsx
-<Flex gap="3">
+<Flex gap="4">
   <Avatar
     fallback="JD"
     badge={<Badge size="1">3</Badge>}
@@ -212,7 +212,7 @@ Note: `status` and `badge` cannot be used together. If both are provided, `badge
 Control how images are scaled within the avatar container. This is useful for logos or images that shouldn't be cropped.
 
 ```tsx
-<Flex gap="3">
+<Flex gap="4">
   <Avatar
     src="/company-logo.png"
     fallback="CO"
@@ -276,7 +276,6 @@ When rendered as a `button`, `a`, or `[role="button"]` via `asChild`, avatars ga
 
 - Sizes 10, 11, 12 for larger avatar use cases
 - `classic`, `surface`, and `outline` variants
-- `material` prop for solid/translucent theme contexts
 - `status` prop for colored presence indicators
 - `badge` prop for custom indicator content
 - `fit` prop with responsive support for image scaling control
@@ -294,7 +293,5 @@ When rendered as a `button`, `a`, or `[role="button"]` via `asChild`, avatars ga
 ### Removed
 
 - `highContrast` prop. Gray fills with step 12 on its own, and fallback text reads the strong ink.
+- `material` and `panelBackground` props. Every surface is solid.
 
-### Deprecated
-
-- `panelBackground` prop in favor of `material` prop

@@ -14,7 +14,7 @@ export default function ShellRailPanelTest() {
         expandedSize={64}
         presentation={{ initial: 'overlay', sm: 'fixed' }}
       >
-        <Flex direction="column" gap="2" p="2" align="center">
+        <Flex direction="column" gap="3" p="3" align="center">
           <IconButton variant="ghost" size="2" asChild>
             <Shell.Trigger target="rail">
               <HugeiconsIcon icon={Menu01Icon} size={18} />
@@ -52,7 +52,7 @@ export default function ShellRailPanelTest() {
         minSize={200}
         maxSize={400}
       >
-        <Flex direction="column" p="4" gap="4" style={{ height: '100%' }}>
+        <Flex direction="column" p="5" gap="5" style={{ height: '100%' }}>
           <Heading size="4">Panel</Heading>
           <Text size="2" emphasis="medium">
             This panel is closed by default on mobile (initial), but open on sm breakpoint and above.
@@ -68,10 +68,10 @@ export default function ShellRailPanelTest() {
 
       {/* Content */}
       <Shell.Content>
-        <Box p="6">
-          <Heading size="6" mb="4">Shell Rail + Panel Test</Heading>
+        <Box p="7">
+          <Heading size="6" mb="5">Shell Rail + Panel Test</Heading>
           
-          <Flex gap="3" mb="6" wrap="wrap">
+          <Flex gap="4" mb="7" wrap="wrap">
             <IconButton variant="soft" size="3" asChild>
               <Shell.Trigger target="rail">
                 <HugeiconsIcon icon={Menu01Icon} size={20} />
@@ -84,15 +84,15 @@ export default function ShellRailPanelTest() {
             </IconButton>
           </Flex>
 
-          <Box mb="6" p="4" style={{ background: 'var(--gray-2)', borderRadius: 'var(--radius-3)' }}>
-            <Heading size="3" mb="2">Test Configuration</Heading>
-            <Text as="div" size="2" mb="2">
+          <Box mb="7" p="5" style={{ background: 'var(--gray-2)', borderRadius: 'var(--radius-3)' }}>
+            <Heading size="3" mb="3">Test Configuration</Heading>
+            <Text as="div" size="2" mb="3">
               <strong>Rail:</strong> defaultOpen=true (always starts open)
             </Text>
-            <Text as="div" size="2" mb="2">
+            <Text as="div" size="2" mb="3">
               <strong>Panel:</strong> defaultOpen={`{{ initial: false, sm: true }}`}
             </Text>
-            <Text as="div" size="2" mb="2">
+            <Text as="div" size="2" mb="3">
               <strong>Rail presentation:</strong> {`{{ initial: 'overlay', sm: 'fixed' }}`}
             </Text>
             <Text as="div" size="2">
@@ -100,15 +100,15 @@ export default function ShellRailPanelTest() {
             </Text>
           </Box>
 
-          <Box mb="6" p="4" style={{ background: 'var(--blue-2)', borderRadius: 'var(--radius-3)' }}>
-            <Heading size="3" mb="2">Expected Behavior</Heading>
-            <Text as="div" size="2" mb="2">
+          <Box mb="7" p="5" style={{ background: 'var(--blue-2)', borderRadius: 'var(--radius-3)' }}>
+            <Heading size="3" mb="3">Expected Behavior</Heading>
+            <Text as="div" size="2" mb="3">
               • On mobile (initial): Rail open as overlay, Panel closed
             </Text>
-            <Text as="div" size="2" mb="2">
+            <Text as="div" size="2" mb="3">
               • On sm+ (≥768px): Rail open fixed, Panel open fixed
             </Text>
-            <Text as="div" size="2" mb="2">
+            <Text as="div" size="2" mb="3">
               • Closing Rail leaves Panel as it is (the panes are independent since 0.8.0)
             </Text>
             <Text as="div" size="2">
@@ -116,12 +116,12 @@ export default function ShellRailPanelTest() {
             </Text>
           </Box>
 
-          <Box p="4" style={{ background: 'var(--gray-3)', borderRadius: 'var(--radius-3)' }}>
-            <Heading size="3" mb="2">Controls</Heading>
-            <Text as="div" size="2" mb="3">
+          <Box p="5" style={{ background: 'var(--gray-3)', borderRadius: 'var(--radius-3)' }}>
+            <Heading size="3" mb="3">Controls</Heading>
+            <Text as="div" size="2" mb="4">
               Use the buttons above or in the Rail to toggle:
             </Text>
-            <Flex gap="2" wrap="wrap">
+            <Flex gap="3" wrap="wrap">
               <IconButton variant="outline" asChild>
                 <Shell.Trigger target="rail" action="expand">
                   <Text size="1">Expand Rail</Text>

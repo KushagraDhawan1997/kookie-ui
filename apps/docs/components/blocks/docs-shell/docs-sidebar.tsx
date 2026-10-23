@@ -124,7 +124,7 @@ export function DocsSidebar({ navigation, logo, headerActions, footer, pathname 
             </>
           ) : (
             <>
-              <Flex align="center" gap="3">
+              <Flex align="center" gap="4">
                 {logo && (
                   <LinkComponent href={logo.href ?? '/'} aria-label={logo.alt ?? 'Home'}>
                     {logo.label ? (

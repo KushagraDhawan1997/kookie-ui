@@ -8,11 +8,8 @@
   --color-background: white;
   --color-overlay: var(--black-a6);
   --color-panel-solid: white;
-  --color-panel-translucent: rgba(255, 255, 255, var(--panel-opacity));
   --color-surface-solid: white;
-  --color-surface-translucent: rgba(255, 255, 255, var(--surface-opacity));
   --color-dialog-solid: white;
-  --color-dialog-translucent: rgba(255, 255, 255, var(--dialog-opacity));
 
   /*
    * v2's names for the page, its text and its neutral scale, so code written against either
@@ -32,21 +29,14 @@
   --neutral-10: var(--gray-10);
   --neutral-11: var(--gray-11);
   --neutral-12: var(--gray-12);
-
-  /* Material system defaults (solid) - controls color-mix blending for component backgrounds */
-  --material-blend: 100%;
-  --material-alpha: 0;
 }
 :is(.dark, .dark-theme),
 :is(.dark, .dark-theme) :where(.radix-themes:not(.light, .light-theme)) {
   --color-background: var(--gray-1);
   --color-overlay: var(--black-a8);
   --color-panel-solid: var(--gray-2);
-  --color-panel-translucent: color-mix(in srgb, var(--gray-2) var(--panel-opacity-percentage), transparent);
   --color-surface-solid: var(--gray-2);
-  --color-surface-translucent: color-mix(in srgb, var(--gray-2) var(--surface-opacity-percentage), transparent);
   --color-dialog-solid: var(--gray-2);
-  --color-dialog-translucent: color-mix(in srgb, var(--gray-2) var(--dialog-opacity-percentage), transparent);
 }
 
 /*                                     */
@@ -132,28 +122,10 @@
 /*                                     */
 
 .radix-themes {
-  &:where([data-material='solid']) {
-    --color-panel: var(--color-panel-solid);
-    --color-surface: var(--color-surface-solid);
-    --color-dialog: var(--color-dialog-solid);
-    --backdrop-filter-panel: none;
-    --backdrop-filter-components: none;
-    --backdrop-filter-dialog: none;
-    /* Material system for component backgrounds */
-    --material-blend: 100%;
-    --material-alpha: 0;
-  }
-  &:where([data-material='translucent']) {
-    --color-panel: var(--color-panel-translucent);
-    --color-surface: var(--color-surface-translucent);
-    --color-dialog: var(--color-dialog-translucent);
-    --backdrop-filter-panel: var(--backdrop-filter-panel-enabled);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-    --backdrop-filter-dialog: var(--backdrop-filter-dialog-enabled);
-    /* Material system for component backgrounds */
-    --material-blend: 60%;
-    --material-alpha: 1;
-  }
+  /* Solid is the only material, so these always resolve to the opaque surfaces. */
+  --color-panel: var(--color-panel-solid);
+  --color-surface: var(--color-surface-solid);
+  --color-dialog: var(--color-dialog-solid);
 }
 
 /*                                     */

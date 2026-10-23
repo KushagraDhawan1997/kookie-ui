@@ -41,25 +41,16 @@ function useResolvedResponsiveValue<T>(value: Responsive<T> | undefined, default
   return resolveResponsiveValue(value as T | Partial<Record<Breakpoint, T>> | undefined, breakpoint, defaultValue);
 }
 
-type MenuMaterial = 'solid' | 'translucent';
-
-/** The menu surface material: the component's prop, then the nearest Theme's `material`. */
-function resolveMenuMaterial(material: MenuMaterial | undefined, theme: { material: MenuMaterial }): MenuMaterial {
-  return material ?? theme.material;
-}
-
-/** Content padding per menu size, in px at 100% scaling (see base-menu.css). */
+/** Content padding per menu size, in px (see base-menu.css). */
 const CONTENT_PADDING: Record<string, number> = { '1': 8, '2': 12, '3': 12 };
 
 /**
  * Offset that lines the first item of a menu up with its anchor: the pointer
  * for a context menu, or the sub trigger for a submenu. It cancels the content
- * padding, which scales with the theme.
+ * padding.
  */
-function getMenuAlignOffset(size: string, scaling: string | undefined): number {
-  const scale = scaling ? parseFloat(scaling) / 100 : 1;
-  const padding = CONTENT_PADDING[size] ?? CONTENT_PADDING['2'];
-  return -Math.round(padding * (Number.isFinite(scale) ? scale : 1));
+function getMenuAlignOffset(size: string): number {
+  return -(CONTENT_PADDING[size] ?? CONTENT_PADDING['2']);
 }
 
 const KEY_SYMBOLS: Record<string, string> = {
@@ -126,9 +117,7 @@ function MenuShortcut({ shortcut, className }: { shortcut: string; className?: s
 export {
   resolveResponsiveValue,
   useResolvedResponsiveValue,
-  resolveMenuMaterial,
   getMenuAlignOffset,
   toAriaKeyShortcuts,
   MenuShortcut,
 };
-export type { MenuMaterial };

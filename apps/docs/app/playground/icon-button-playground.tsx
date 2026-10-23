@@ -38,7 +38,6 @@ const accentColors = [
 const variants = ['raised', 'solid', 'soft', 'surface', 'outline', 'ghost'] as const;
 const sizes = ['1', '2', '3', '4'] as const;
 const radiusOptions = ['none', 'small', 'medium', 'large', 'full'] as const;
-const materials = ['solid', 'translucent'] as const;
 const states = ['default', 'disabled', 'loading'] as const;
 
 type IconButtonPlaygroundProps = {
@@ -56,7 +55,6 @@ export default function IconButtonPlayground({
   const [color, setColor] = React.useState<string>('theme');
   const [radius, setRadius] = React.useState<string>('theme');
   const [size, setSize] = React.useState<string>('2');
-  const [material, setMaterial] = React.useState<string>('theme');
   const [state, setState] = React.useState<string>('default');
 
   const isDisabled = state === 'disabled';
@@ -101,15 +99,6 @@ export default function IconButtonPlayground({
       placeholder: 'Select size',
     },
     {
-      id: 'material',
-      label: 'Material',
-      type: 'select' as const,
-      value: material,
-      onChange: setMaterial,
-      options: [{ label: 'Theme', value: 'theme' }, ...materials.map((m) => ({ label: m, value: m }))],
-      placeholder: 'Theme',
-    },
-    {
       id: 'state',
       label: 'State',
       type: 'select' as const,
@@ -125,7 +114,6 @@ export default function IconButtonPlayground({
 
     if (color !== 'theme') props.push(`color="${color}"`);
     if (radius !== 'theme') props.push(`radius="${radius}"`);
-    if (material !== 'theme') props.push(`material="${material}"`);
     if (isDisabled) props.push('disabled');
     if (isLoading) props.push('loading');
 
@@ -144,7 +132,6 @@ export default function IconButtonPlayground({
           variant={variant as any}
           color={color === 'theme' ? undefined : (color as any)}
           radius={radius === 'theme' ? undefined : (radius as any)}
-          material={material === 'theme' ? undefined : (material as any)}
           disabled={isDisabled}
           loading={isLoading}
           aria-label="Settings"
@@ -154,8 +141,6 @@ export default function IconButtonPlayground({
       }
       code={generateCode()}
       items={items}
-      showBackground={material === 'translucent'}
-      hint={material === 'translucent' ? 'Translucent material is best observed with soft or surface variants.' : undefined}
       showControls={showControls}
       showToolbar={showToolbar}
       height={height}

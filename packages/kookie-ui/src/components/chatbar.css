@@ -8,26 +8,12 @@
 
 /* Defaults */
 .rt-ChatbarRoot {
-  --chatbar-item-lead: var(--space-5);
+  --chatbar-item-lead: var(--space-6);
   --chatbar-item-lead-radius: var(--radius-2);
-  --chatbar-item-padding: var(--space-1);
+  --chatbar-item-padding: var(--space-2);
   /* A column: notices, then the box (which fills any height the consumer gives the root), then context. */
   display: flex;
   flex-direction: column;
-
-  /*
-   * Component-level material override
-   * When component has explicit material prop, override the inherited theme values.
-   */
-  &:where([data-material='solid']) {
-    --material-blend: 100%;
-    --material-alpha: 0;
-  }
-
-  &:where([data-material='translucent']) {
-    --material-blend: 60%;
-    --material-alpha: 1;
-  }
 }
 
 /* Unstyled textarea (reset) */
@@ -58,7 +44,7 @@
 .rt-ChatbarBox :where(.rt-ChatbarGrid) {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-5);
   width: 100%;
 }
 
@@ -104,7 +90,7 @@
   width: 100%;
 }
 
-/* ScrollArea radius scaling */
+/* ScrollArea follows the attachments radius */
 .rt-ChatbarScrollArea {
   border-radius: var(--chatbar-attachments-radius);
 }
@@ -126,12 +112,12 @@
 .rt-ChatbarItem {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
   flex-shrink: 0;
   box-sizing: border-box;
   max-width: 240px;
   padding: var(--chatbar-item-padding);
-  padding-right: calc(var(--chatbar-item-padding) + var(--space-1));
+  padding-right: calc(var(--chatbar-item-padding) + var(--space-2));
   border: 1px solid var(--gray-a5);
   border-radius: calc(var(--chatbar-item-lead-radius) + var(--chatbar-item-padding));
   background-color: var(--color-panel-solid);
@@ -184,26 +170,28 @@
 }
 
 .rt-ChatbarItemRemove {
+  /* A hosted control: as tall as the lead tile, so a pill with × is as tall as one without. */
+  --base-button-height: var(--chatbar-item-lead);
   flex-shrink: 0;
-  margin-left: calc(var(--space-1) * -1);
+  margin-left: calc(var(--space-2) * -1);
 }
 
 @breakpoints {
   .rt-ChatbarRoot {
     &:where(.rt-r-size-1) {
-      --chatbar-item-lead: var(--space-4);
+      --chatbar-item-lead: var(--space-5);
       --chatbar-item-lead-radius: var(--radius-1);
-      --chatbar-item-padding: var(--space-1);
+      --chatbar-item-padding: var(--space-2);
     }
     &:where(.rt-r-size-2) {
-      --chatbar-item-lead: var(--space-5);
+      --chatbar-item-lead: var(--space-6);
       --chatbar-item-lead-radius: var(--radius-2);
-      --chatbar-item-padding: var(--space-1);
+      --chatbar-item-padding: var(--space-2);
     }
     &:where(.rt-r-size-3) {
-      --chatbar-item-lead: calc(var(--space-5) + var(--space-1));
+      --chatbar-item-lead: calc(var(--space-6) + var(--space-2));
       --chatbar-item-lead-radius: var(--radius-2);
-      --chatbar-item-padding: calc(var(--space-1) * 1.5);
+      --chatbar-item-padding: calc(var(--space-2) * 1.5);
     }
   }
 }
@@ -218,22 +206,12 @@
   isolation: isolate;
 }
 
-/* Theme-level translucent override for the visual shell (matches any ancestor) */
-:where([data-material='translucent']) .rt-ChatbarBox {
-  backdrop-filter: var(--backdrop-filter-components);
-  --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-}
-.rt-ChatbarRoot:where([data-material='solid']) .rt-ChatbarBox {
-  backdrop-filter: none;
-  --backdrop-filter-components: none;
-}
-
 /* Sizes (padding and radius via tokens) */
 @breakpoints {
   .rt-ChatbarRoot:where(.rt-r-size-1) .rt-ChatbarBox {
     /* Map Chatbar size 1 to Card size 2 */
-    border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-2) + var(--space-2)));
-    padding: var(--space-3);
+    border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-2) + var(--space-3)));
+    padding: var(--space-4);
   }
   .rt-ChatbarRoot:where(.rt-r-size-1) .rt-ChatbarInput {
     font-size: var(--font-size-1);
@@ -242,8 +220,8 @@
   }
   .rt-ChatbarRoot:where(.rt-r-size-2) .rt-ChatbarBox {
     /* Map Chatbar size 2 to Card size 3 */
-    border-radius: min(var(--radius-surface-7), calc(var(--radius-surface-3) + var(--space-3)));
-    padding: var(--space-4);
+    border-radius: min(var(--radius-surface-7), calc(var(--radius-surface-3) + var(--space-4)));
+    padding: var(--space-5);
   }
   .rt-ChatbarRoot:where(.rt-r-size-2) .rt-ChatbarInput {
     font-size: var(--font-size-2);
@@ -252,8 +230,8 @@
   }
   .rt-ChatbarRoot:where(.rt-r-size-3) .rt-ChatbarBox {
     /* Custom Chatbar size 3, different to Card size 4 */
-    border-radius: min(var(--radius-surface-7), calc(var(--radius-surface-3) + var(--space-3)));
-    padding: var(--space-4);
+    border-radius: min(var(--radius-surface-7), calc(var(--radius-surface-3) + var(--space-4)));
+    padding: var(--space-5);
   }
   .rt-ChatbarRoot:where(.rt-r-size-3) .rt-ChatbarInput {
     font-size: var(--font-size-3);
@@ -265,10 +243,10 @@
 /* Only enforce min-height when expanded */
 @breakpoints {
   .rt-ChatbarRoot:where([data-state='open'].rt-r-size-1) .rt-ChatbarBox {
-    min-height: var(--space-8);
+    min-height: var(--space-9);
   }
   .rt-ChatbarRoot:where([data-state='open'].rt-r-size-2) .rt-ChatbarBox {
-    min-height: var(--space-9);
+    min-height: var(--space-10);
   }
   .rt-ChatbarRoot:where([data-state='open'].rt-r-size-3) .rt-ChatbarBox {
     min-height: 80px;
@@ -278,13 +256,13 @@
 /* Reduced radius when collapsed (scale down by 1) */
 @breakpoints {
   .rt-ChatbarRoot:where([data-state='closed'].rt-r-size-1) .rt-ChatbarBox {
-    border-radius: min(var(--radius-surface-5), calc(var(--radius-surface-1) + var(--space-1)));
+    border-radius: min(var(--radius-surface-5), calc(var(--radius-surface-1) + var(--space-2)));
   }
   .rt-ChatbarRoot:where([data-state='closed'].rt-r-size-2) .rt-ChatbarBox {
-    border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-2) + var(--space-2)));
+    border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-2) + var(--space-3)));
   }
   .rt-ChatbarRoot:where([data-state='closed'].rt-r-size-3) .rt-ChatbarBox {
-    border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-2) + var(--space-2)));
+    border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-2) + var(--space-3)));
   }
 }
 
@@ -303,9 +281,7 @@
   --v-selection-color: var(--accent-a5);
   --v-focus-color: var(--accent-8);
   --v-bg: var(--accent-3);
-  --v-bg-a: var(--accent-a3);
   --v-bg-hover: var(--accent-4);
-  --v-bg-hover-a: var(--accent-a4);
 }
 
 /* Ghost variant palette */
@@ -314,11 +290,8 @@
   --v-selection-color: var(--accent-a5);
   --v-focus-color: var(--accent-8);
   --v-bg: transparent;
-  --v-bg-a: transparent;
   --v-bg-hover: var(--accent-3);
-  --v-bg-hover-a: var(--accent-a3);
   --v-bg-focus: var(--accent-2);
-  --v-bg-focus-a: var(--accent-a2);
 }
 
 /* Outline variant palette */
@@ -327,15 +300,10 @@
   --v-selection-color: var(--focus-a5);
   --v-focus-color: var(--focus-8);
   --v-bg: transparent;
-  --v-bg-a: transparent;
   --v-bg-hover: var(--accent-2);
-  --v-bg-hover-a: var(--accent-a2);
   --v-border: var(--accent-6);
-  --v-border-a: var(--accent-a6);
   --v-border-hover: var(--accent-7);
-  --v-border-hover-a: var(--accent-a7);
   --v-border-focus: var(--accent-8);
-  --v-border-focus-a: var(--accent-a8);
 }
 
 /* Surface variant palette */
@@ -344,17 +312,11 @@
   --v-selection-color: var(--accent-a5);
   --v-focus-color: var(--accent-8);
   --v-bg: var(--accent-2);
-  --v-bg-a: var(--accent-a2);
   --v-bg-hover: var(--accent-3);
-  --v-bg-hover-a: var(--accent-a3);
   --v-bg-focus: var(--accent-2);
-  --v-bg-focus-a: var(--accent-a2);
   --v-border: var(--accent-6);
-  --v-border-a: var(--accent-a6);
   --v-border-hover: var(--accent-7);
-  --v-border-hover-a: var(--accent-a7);
   --v-border-focus: var(--accent-8);
-  --v-border-focus-a: var(--accent-a8);
 }
 
 /***************************************************************************************************
@@ -368,20 +330,12 @@
 
 .rt-ChatbarBox:where(.rt-variant-soft, .rt-variant-ghost, .rt-variant-outline, .rt-variant-surface) {
   /* Rest state */
-  background-color: color-mix(
-    in srgb,
-    var(--v-bg-a) calc(var(--material-alpha) * 100%),
-    var(--v-bg) var(--material-blend)
-  );
+  background-color: var(--v-bg);
 
   /* Hover state */
   @media (hover: hover) {
     &:where(:hover:not(:focus-within)):where(:not(.rt-ChatbarRoot:is([data-disabled], [data-readonly]) *)) {
-      background-color: color-mix(
-        in srgb,
-        var(--v-bg-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-bg-hover) var(--material-blend)
-      );
+      background-color: var(--v-bg-hover);
     }
   }
 
@@ -395,52 +349,32 @@
 /* Border variants: outline and surface */
 .rt-ChatbarBox:where(.rt-variant-outline, .rt-variant-surface) {
   /* Rest state border */
-  box-shadow: inset 0 0 0 1px color-mix(
-    in srgb,
-    var(--v-border-a) calc(var(--material-alpha) * 100%),
-    var(--v-border) var(--material-blend)
-  );
+  box-shadow: inset 0 0 0 1px var(--v-border);
 
   /* Hover state border */
   @media (hover: hover) {
     &:where(:hover:not(:focus-within)):where(:not(.rt-ChatbarRoot:is([data-disabled], [data-readonly]) *)) {
-      box-shadow: inset 0 0 0 1px color-mix(
-        in srgb,
-        var(--v-border-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-border-hover) var(--material-blend)
-      );
+      box-shadow: inset 0 0 0 1px var(--v-border-hover);
     }
   }
 
   /* Focus state border */
   &:where(:focus-within) {
-    box-shadow: inset 0 0 0 var(--text-area-border-width) color-mix(
-      in srgb,
-      var(--v-border-focus-a) calc(var(--material-alpha) * 100%),
-      var(--v-border-focus) var(--material-blend)
-    );
+    box-shadow: inset 0 0 0 var(--text-area-border-width) var(--v-border-focus);
   }
 }
 
 /* Ghost focus state - needs background on focus */
 .rt-ChatbarBox:where(.rt-variant-ghost) {
   &:where(:focus-within) {
-    background-color: color-mix(
-      in srgb,
-      var(--v-bg-focus-a, var(--v-bg-a)) calc(var(--material-alpha) * 100%),
-      var(--v-bg-focus, var(--v-bg)) var(--material-blend)
-    );
+    background-color: var(--v-bg-focus, var(--v-bg));
   }
 }
 
 /* Surface focus state - background changes on focus */
 .rt-ChatbarBox:where(.rt-variant-surface) {
   &:where(:focus-within) {
-    background-color: color-mix(
-      in srgb,
-      var(--v-bg-focus-a, var(--v-bg-a)) calc(var(--material-alpha) * 100%),
-      var(--v-bg-focus, var(--v-bg)) var(--material-blend)
-    );
+    background-color: var(--v-bg-focus, var(--v-bg));
   }
 }
 
@@ -461,24 +395,10 @@
   background-color: var(--color-surface-solid);
   box-shadow: var(--shadow-2);
 
-  /* Translucent theme override (ancestor match, zero added specificity so hover still wins) */
-  :where([data-material='translucent']) & {
-    background-color: var(--color-surface-translucent);
-  }
-
-  /* Explicit solid material on the component beats an inherited translucent theme */
-  :where(.rt-ChatbarRoot[data-material='solid']) & {
-    background-color: var(--color-surface-solid);
-  }
-
   /* Hover effects */
   @media (hover: hover) {
     &:where(:hover:not(:focus-within)):where(:not(.rt-ChatbarRoot:is([data-disabled], [data-readonly]) *)) {
-      background-color: color-mix(
-        in srgb,
-        var(--accent-a2) calc(var(--material-alpha) * 100%),
-        var(--accent-2) var(--material-blend)
-      );
+      background-color: var(--accent-2);
       box-shadow: var(--shadow-3);
     }
   }
@@ -562,7 +482,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 /* Reduced motion */
@@ -573,21 +493,21 @@
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 /* Row slot positioning */
 .rt-ChatbarRowStart {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
   flex-shrink: 0;
 }
 
 .rt-ChatbarRowEnd {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
   flex-shrink: 0;
   margin-left: auto;
 }
@@ -598,19 +518,19 @@
     &:where(.rt-r-size-1) {
       font-size: var(--font-size-1);
       line-height: var(--line-height-1);
-      /* --chatbar-attachments-radius: min(var(--radius-5), calc(var(--radius-1) + var(--space-1))); */
+      /* --chatbar-attachments-radius: min(var(--radius-5), calc(var(--radius-1) + var(--space-2))); */
       --chatbar-attachments-radius: var(--radius-1);
     }
     &:where(.rt-r-size-2) {
       font-size: var(--font-size-2);
       line-height: var(--line-height-2);
-      /* --chatbar-attachments-radius: min(var(--radius-6), calc(var(--radius-2) + var(--space-2))); */
+      /* --chatbar-attachments-radius: min(var(--radius-6), calc(var(--radius-2) + var(--space-3))); */
       --chatbar-attachments-radius: var(--radius-2);
     }
     &:where(.rt-r-size-3) {
       font-size: var(--font-size-3);
       line-height: var(--line-height-3);
-      /* --chatbar-attachments-radius: min(var(--radius-7), calc(var(--radius-3) + var(--space-3))); */
+      /* --chatbar-attachments-radius: min(var(--radius-7), calc(var(--radius-3) + var(--space-4))); */
       --chatbar-attachments-radius: var(--radius-3);
     }
   }
@@ -626,13 +546,13 @@
 .rt-ChatbarNotices {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  margin-bottom: var(--space-2);
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
 }
 
 /* Context is quiet text below the box, inset to line up with the text inside it. */
 .rt-ChatbarContext {
-  padding: var(--space-2) var(--space-3) 0;
+  padding: var(--space-3) var(--space-4) 0;
   min-width: 0;
   overflow-wrap: anywhere;
 }

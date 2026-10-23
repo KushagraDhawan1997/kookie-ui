@@ -1,3 +1,19 @@
+## [0.17.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.16.0...v0.17.0) (2026-10-23)
+
+v1's scale becomes v2's. The first of five releases that make v1's core match v2. See MIGRATION.md.
+
+### Breaking changes
+
+* **space:** the palette has v2's twelve steps (2 to 128px). Every old step N is now N+1; 80px and 112px move to 64px and 96px. Layout props and `var(--space-N)` shift by one. `codemods/space-0.17.py` rewrites an app.
+* **scale:** `Theme scaling` is removed and `--scaling` is `--scale`, fixed at 1.
+* **material:** `material` and `panelBackground` are removed from every component and from `Theme`. Everything is solid. The `--opacity-N` and `--blur-N` tokens and the Materials page are gone.
+* **controls:** `--control-height-1` is 28px (was 24).
+* **shell:** Shell panes and their header, footer and scroll region pad by `--surface-p-N`, 24px at size 2 (was 12). A Toolbar in a pane row rests one size above the Shell unless it states its own.
+
+### Features
+
+* **tokens:** `--layout-space-N`, `--surface-p-N`, `--panel-p-N`, `--control-px-N`, `--control-px-pill-N`, `--control-gap-N`, `--icon-size-N`, `--row-inset-N`, `--slot-inset-N` and `--overlay-w-N`.
+
 ## [0.16.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.15.1...v0.16.0) (2026-10-22)
 
 A pane's header and footer can float over its list, as in v2.

@@ -10,7 +10,7 @@ import { Copy01Icon, Delete01Icon, Download01Icon, PencilEdit01Icon, Share01Icon
 const fileActionsCode = `<ContextMenu.Root>
   <ContextMenu.Trigger>
     <Card variant="raised" size="2">
-      <Flex gap="3" align="center">
+      <Flex gap="4" align="center">
         <Avatar fallback="Q" size="2" color="blue" />
         <Flex direction="column">
           <Text size="2" weight="medium">
@@ -49,7 +49,7 @@ function FileActions() {
     <ContextMenu.Root>
       <ContextMenu.Trigger>
         <Card variant="raised" size="2">
-          <Flex gap="3" align="center">
+          <Flex gap="4" align="center">
             <Avatar fallback="Q" size="2" color="blue" />
             <Flex direction="column">
               <Text size="2" weight="medium">
@@ -229,8 +229,8 @@ function LayerActions() {
 
 export function ContextMenuExamples() {
   return (
-    <Flex direction="column" gap="9">
-      <Flex direction="column" gap="4">
+    <Flex direction="column" gap="10">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>File Actions</SectionHeader.Title>
@@ -244,7 +244,7 @@ export function ContextMenuExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Canvas View Options</SectionHeader.Title>
@@ -258,7 +258,7 @@ export function ContextMenuExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <SectionHeader.Root>
           <SectionHeader.Content>
             <SectionHeader.Title>Layer Arrangement</SectionHeader.Title>

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithProviders, screen } from '../../test-utils';
-import { Shell, Sidebar } from '../../../src/components/index';
+import { Shell, Sidebar, Toolbar, ToolbarButton } from '../../../src/components/index';
 
 let warn: ReturnType<typeof vi.spyOn>;
 
@@ -100,5 +100,91 @@ describe('Sidebar parts inside Shell.Sidebar', () => {
     );
     expect(container.querySelector('.rt-ShellRail .rt-ShellPaneFooter .rt-SidebarMenuIconWrapper')).not.toBeNull();
     expect(container.querySelector('.rt-ShellSidebar .rt-SidebarMenuIconWrapper')).toBeNull();
+  });
+});
+
+describe('pane chrome in a pane with no Sidebar scope', () => {
+  it('takes the Shell index in an Inspector and a Bottom', () => {
+    const { container } = renderWithProviders(
+      <Shell.Root size="3">
+        <Shell.Inspector>
+          <Shell.PaneHeader>Inspector</Shell.PaneHeader>
+        </Shell.Inspector>
+        <Shell.Bottom>
+          <Shell.PaneFooter>Bottom</Shell.PaneFooter>
+        </Shell.Bottom>
+      </Shell.Root>,
+    );
+    expect(container.querySelector('.rt-ShellInspector .rt-ShellPaneHeader')).toHaveClass('rt-r-size-3');
+    expect(container.querySelector('.rt-ShellBottom .rt-ShellPaneFooter')).toHaveClass('rt-r-size-3');
+  });
+});
+
+// A Toolbar in a pane's header or footer rests one step above the Shell's index (v2 BAND_STEP).
+describe('a Toolbar in pane chrome', () => {
+  function Band({ size }: { size?: '1' | '2' | '3' | '4' }) {
+    return (
+      <Toolbar size={size} aria-label="Pane">
+        <ToolbarButton>Go</ToolbarButton>
+      </Toolbar>
+    );
+  }
+
+  for (const [shell, band] of [['1', '2'], ['2', '3'], ['3', '4']] as const) {
+    it(`rests at ${band} in a Shell of size ${shell}`, () => {
+      const { container } = renderWithProviders(
+        <Shell.Root size={shell}>
+          <Shell.Sidebar>
+            <Shell.PaneHeader>
+              <Band />
+            </Shell.PaneHeader>
+            <Shell.PaneFooter>
+              <Band />
+            </Shell.PaneFooter>
+          </Shell.Sidebar>
+        </Shell.Root>,
+      );
+      for (const selector of ['.rt-ShellPaneHeader .rt-Toolbar', '.rt-ShellPaneFooter .rt-Toolbar']) {
+        expect(container.querySelector(selector), selector).toHaveClass(`rt-r-size-${band}`);
+      }
+      expect(container.querySelector('.rt-ShellPaneHeader .rt-BaseButton')).toHaveClass(`rt-r-size-${band}`);
+    });
+  }
+
+  it('keeps a size it states', () => {
+    const { container } = renderWithProviders(
+      <Shell.Root size="2">
+        <Shell.Sidebar>
+          <Shell.PaneHeader>
+            <Band size="1" />
+          </Shell.PaneHeader>
+        </Shell.Sidebar>
+      </Shell.Root>,
+    );
+    expect(container.querySelector('.rt-Toolbar')).toHaveClass('rt-r-size-1');
+  });
+
+  it('takes the step in an Inspector too, and not in the scrolling list or outside a pane', () => {
+    const { container } = renderWithProviders(
+      <>
+        <Shell.Root size="2">
+          <Shell.Inspector>
+            <Shell.PaneHeader>
+              <Band />
+            </Shell.PaneHeader>
+          </Shell.Inspector>
+          <Shell.Sidebar>
+            <Shell.Scroll>
+              <Band />
+            </Shell.Scroll>
+          </Shell.Sidebar>
+        </Shell.Root>
+        <Band />
+      </>,
+    );
+    const toolbars = container.querySelectorAll('.rt-Toolbar');
+    expect(container.querySelector('.rt-ShellInspector .rt-Toolbar')).toHaveClass('rt-r-size-3');
+    expect(container.querySelector('.rt-ShellScroll .rt-Toolbar')).toHaveClass('rt-r-size-2');
+    expect(toolbars[toolbars.length - 1]).toHaveClass('rt-r-size-2');
   });
 });

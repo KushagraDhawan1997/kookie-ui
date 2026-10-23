@@ -123,7 +123,6 @@ The Trigger component renders as a button that opens the dropdown.
 | `variant` | `'raised' \| 'surface' \| 'soft' \| 'outline' \| 'ghost'` | Trigger button style: raised for elevated, surface for standard fields, outline for bordered, soft for subtle, ghost for minimal |
 | `color` | `AccentColor` | Semantic color. Overrides color from Root if provided |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Corner radius scale |
-| `material` | `'solid' \| 'translucent'` | Trigger background: solid for opaque, translucent for depth over images |
 | `loading` | `boolean` | Shows a spinner, sets `aria-busy`, and keeps the popup from opening. The trigger stays focusable |
 | `error` | `boolean` | Visual error state and `aria-invalid`, typically for validation failures |
 | `readOnly` | `boolean` | Shows the value and sets `aria-readonly`. The popup does not open |
@@ -142,7 +141,6 @@ The Content component renders the dropdown surface containing the search input a
 | ---- | ---- | ----------- |
 | `size` | `'1' \| '2' \| '3'` | Override size from Root. Affects padding and item height |
 | `color` | `AccentColor` | Semantic color for items. Falls back to Root color, then theme accent |
-| `material` | `'solid' \| 'translucent'` | Surface background. Falls back to the Theme material |
 | `width`, `minWidth`, `maxWidth` | `string` | Surface width. `minWidth` defaults to the trigger width, `maxWidth` to 480px |
 | `aria-label` | `string` | Accessible name for the popup, search field and list. Defaults to the trigger's name |
 | `container` | `HTMLElement` | Portal container. Defaults to `document.body` |
@@ -709,24 +707,6 @@ Use responsive objects with `size` on Root to adapt sizing across different brea
 </Combobox.Root>
 ```
 
-## Material
-
-Use `material` on Trigger for the trigger background and on Content for the dropdown surface. Choose `solid` for opaque backgrounds, or `translucent` for depth over images or dynamic backgrounds. Content falls back to the Theme material.
-
-```tsx
-<Combobox.Root size="2">
-  <Combobox.Trigger variant="soft" aria-label="Option" material="translucent">
-    <Combobox.Value placeholder="Translucent" />
-  </Combobox.Trigger>
-  <Combobox.Content material="translucent">
-    <Combobox.Input placeholder="Search..." />
-    <Combobox.List>
-      <Combobox.Item value="1">Option 1</Combobox.Item>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-```
-
 ## Accessibility
 
 The trigger follows the WAI-ARIA combobox pattern with a dialog popup. The popup holds a search field (itself a combobox) that controls the listbox of options.
@@ -736,7 +716,7 @@ The trigger follows the WAI-ARIA combobox pattern with a dialog popup. The popup
 The combobox role does not take its name from its content, so the trigger needs a label. Use `aria-label`, `aria-labelledby`, or a `<label htmlFor>` pointing at the trigger. The same name labels the popup, the search field and the listbox. In development, an unlabelled trigger logs a warning.
 
 ```tsx
-<Flex direction="column" gap="1">
+<Flex direction="column" gap="2">
   <Text as="label" size="2" weight="medium" htmlFor="country">
     Country
   </Text>
@@ -804,7 +784,6 @@ When the dropdown opens, the highlight starts on the selected option. Without a 
 - Input adornments (startAdornment, endAdornment)
 - Full controlled state support (value, searchValue, open)
 - `resetSearchOnSelect` and `resetSearchOnClose` options to control search clearing
-- `material` prop on Content
 - Result count announcements for screen readers
 - Color prop for semantic styling
 - Margin props with responsive support
@@ -814,6 +793,7 @@ When the dropdown opens, the highlight starts on the selected option. Without a 
 ### Removed
 
 - `highContrast` prop. Gray highlights with step 12 on its own, and text reads the strong ink by default.
+- `material` prop. Every surface is solid.
 
 ### Fixed
 

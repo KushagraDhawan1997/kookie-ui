@@ -55,19 +55,19 @@ Every part accepts the props of the component it wraps. Only the additions and c
 
 | Part | Wraps | Adds or changes |
 | ---- | ----- | --------------- |
-| `Root` | `Flex` | `align?: 'start' \| 'center'` (`'center'`). Always a column, `gap="4"` |
+| `Root` | `Flex` | `align?: 'start' \| 'center'` (`'center'`). Always a column, `gap="5"` |
 | `Icon` | `Box` | Sizes a child `svg` to `--empty-state-icon-size` and tints it `--gray-a9` |
-| `Content` | `Flex` | `direction="column"`, `gap="1"` |
+| `Content` | `Flex` | `direction="column"`, `gap="2"` |
 | `Title` | `Heading` | `as="h3"`, `size="5"`, `weight="medium"`, `align="center"` |
 | `Description` | `Text` | `size="2"`, `emphasis="medium"`, `align="center"` |
-| `Actions` | `Flex` | `gap="2"`, `align="center"`, `justify="center"` |
+| `Actions` | `Flex` | `gap="3"`, `align="center"`, `justify="center"` |
 
 ### Icon Size
 
-The icon is `var(--space-6)` square. Override the variable to change it.
+The icon is `var(--space-7)` square. Override the variable to change it.
 
 ```tsx
-<EmptyState.Icon style={{ '--empty-state-icon-size': 'var(--space-8)' } as React.CSSProperties}>
+<EmptyState.Icon style={{ '--empty-state-icon-size': 'var(--space-9)' } as React.CSSProperties}>
   <HugeiconsIcon icon={Folder01Icon} strokeWidth={1.75} />
 </EmptyState.Icon>
 ```

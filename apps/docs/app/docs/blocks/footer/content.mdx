@@ -74,18 +74,18 @@ Every part accepts the props of the component it wraps. Only the additions and c
 
 | Part | Wraps | Adds or changes |
 | ---- | ----- | --------------- |
-| `Root` | `Flex` as `footer` | `align?: 'left' \| 'center'` (`'left'`). `direction="column"`, `gap="6"` |
-| `Main` | `Flex` | `gap="8"`, `justify="between"`, `align="start"`, `wrap="wrap"` |
-| `Brand` | `Flex` | `direction="column"`, `gap="3"` |
+| `Root` | `Flex` as `footer` | `align?: 'left' \| 'center'` (`'left'`). `direction="column"`, `gap="7"` |
+| `Main` | `Flex` | `gap="9"`, `justify="between"`, `align="start"`, `wrap="wrap"` |
+| `Brand` | `Flex` | `direction="column"`, `gap="4"` |
 | `BrandName` | `Text` | `size="4"`, `weight="bold"` |
 | `Tagline` | `Text` | `size="2"`, `emphasis="medium"` |
-| `Links` | `Flex` | `gap="8"`, `wrap="wrap"` |
-| `LinkGroup` | `Flex` | `title: string`, rendered as an `h3`. `direction="column"`, `gap="3"` |
-| `Nav` | `Flex` as `nav` | `gap="6"`, `align="center"`, `wrap="wrap"` |
+| `Links` | `Flex` | `gap="9"`, `wrap="wrap"` |
+| `LinkGroup` | `Flex` | `title: string`, rendered as an `h3`. `direction="column"`, `gap="4"` |
+| `Nav` | `Flex` as `nav` | `gap="7"`, `align="center"`, `wrap="wrap"` |
 | `Link` | `Link` | `size="2"`, `color="gray"` |
-| `Bottom` | `Flex` | `gap="4"`, `justify="between"`, `align="center"`, `wrap="wrap"` |
-| `Legal` | `Flex` | `gap="4"`, `align="center"`, `wrap="wrap"` |
-| `Social` | `Flex` | `gap="4"`, `align="center"` |
+| `Bottom` | `Flex` | `gap="5"`, `justify="between"`, `align="center"`, `wrap="wrap"` |
+| `Legal` | `Flex` | `gap="5"`, `align="center"`, `wrap="wrap"` |
+| `Social` | `Flex` | `gap="5"`, `align="center"` |
 | `SocialLink` | `IconButton` | `icon: ComponentType`, `label: string`, `href: string`. `variant="ghost"`, `color="gray"`, `size="2"`. Opens in a new tab |
 
 ## Examples
@@ -93,8 +93,8 @@ Every part accepts the props of the component it wraps. Only the additions and c
 ### Product Footer
 
 <PreviewBlock background="none" height="auto" showThemeToggle={false}>
-  <Box width="100%" p="5">
-    <Footer.Root gap="6">
+  <Box width="100%" p="6">
+    <Footer.Root gap="7">
       <Footer.Main>
         <Footer.Brand>
           <Footer.BrandName>Acme</Footer.BrandName>

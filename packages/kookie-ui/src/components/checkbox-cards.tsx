@@ -12,7 +12,6 @@ import { Grid } from './grid.js';
 import { ThickCheckIcon } from './icons.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { marginPropDefs } from '../props/margin.props.js';
-import { useThemeContext } from './theme.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { MarginProps } from '../props/margin.props.js';
@@ -45,13 +44,10 @@ interface CheckboxCardsRootProps
     CheckboxCardsRootOwnProps {}
 const CheckboxCardsRoot = React.forwardRef<CheckboxCardsRootElement, CheckboxCardsRootProps>(
   (props: ScopedProps<CheckboxCardsRootProps>, forwardedRef) => {
-    const themeContext = useThemeContext();
-    const resolvedMaterial = props.material ?? themeContext.material;
     const {
       __scopeCheckboxCards,
       className,
       color,
-      material: _material,
       ...rootProps
     } = extractProps(props, checkboxCardsRootPropDefs, marginPropDefs);
     const checkboxGroupScope = useCheckboxGroupScope(__scopeCheckboxCards);
@@ -65,7 +61,6 @@ const CheckboxCardsRoot = React.forwardRef<CheckboxCardsRootElement, CheckboxCar
           <CheckboxGroupPrimitive.Root
             {...checkboxGroupScope}
             data-accent-color={color}
-            data-material={resolvedMaterial}
             {...rootProps}
             ref={forwardedRef}
             className={classNames('rt-CheckboxCardsRoot', className)}

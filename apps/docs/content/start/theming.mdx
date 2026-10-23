@@ -1,4 +1,4 @@
-Control your app's visual appearance with seven configuration options. Kookie UI Theme is a fork of [Radix Themes](https://www.radix-ui.com/themes), offering the same foundation with custom enhancements for theming and accessibility.
+Control your app's visual appearance with six configuration options. Kookie UI Theme is a fork of [Radix Themes](https://www.radix-ui.com/themes), offering the same foundation with custom enhancements for theming and accessibility.
 
 This is an enhanced version of the Theme component from [Radix Themes](https://www.radix-ui.com/themes). For the original API reference, see the [Radix Themes Theme documentation](https://www.radix-ui.com/themes/docs/theme/overview).
 
@@ -67,9 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 | `appearance` | `'light' \| 'dark' \| 'inherit'` | Color scheme; inherit follows system preference. Default: `'inherit'` |
 | `accentColor` | `AccentColor` | Primary accent used for interactive components. Default: `'gray'` |
 | `grayColor` | `GrayColor` | Neutral gray scale for backgrounds and text. Default: `'gray'` |
-| `material` | `'solid' \| 'translucent'` | Background rendering: opaque or translucent. Default: `'solid'` |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Global corner radius scale. Default: `'full'` |
-| `scaling` | `'90%' \| '95%' \| '100%' \| '105%' \| '110%'` | Global size scale for UI density. Default: `'100%'` |
 | `fontFamily` | `'sans' \| 'mono' \| 'serif'` | Font family for body text. Default: `'sans'` |
 | `headingFontFamily` | `'sans' \| 'mono' \| 'serif'` | Font family for `Heading`, set independently of body text. Follows `fontFamily` when unset |
 | `hasBackground` | `boolean` | Whether to apply background color to the Theme element. Default: `true` for root Theme |
@@ -133,26 +131,6 @@ When set to `auto`, the gray color automatically matches your accent color for a
 <Theme grayColor="auto" accentColor="blue"><YourApp /></Theme>
 ```
 
-## Material
-
-Set `material` to control panel transparency for depth and visual separation. Use `solid` for opaque backgrounds or `translucent` for depth over images or dynamic backgrounds.
-
-### Solid
-
-Opaque backgrounds for maximum contrast and clarity.
-
-```tsx
-<Theme material="solid"><YourApp /></Theme>
-```
-
-### Translucent
-
-Translucent backgrounds with blur effects for depth and separation (default).
-
-```tsx
-<Theme material="translucent"><YourApp /></Theme>
-```
-
 ## Radius
 
 Set `radius` to control the global corner radius scale for all components. This affects buttons, cards, inputs, and other rounded elements.
@@ -165,20 +143,6 @@ Available values: `none`, `small`, `medium`, `large`, `full` (default).
 
 ```tsx
 <Theme radius="large"><YourApp /></Theme>
-```
-
-## Scaling
-
-Set `scaling` to control the global size scale for UI density. Use smaller values for compact interfaces or larger values for improved readability and touch targets.
-
-Available values: `90%`, `95%`, `100%` (default), `105%`, `110%`.
-
-```tsx
-<Theme scaling="100%"><YourApp /></Theme>
-```
-
-```tsx
-<Theme scaling="110%"><YourApp /></Theme>
 ```
 
 ## Font Family
@@ -237,23 +201,13 @@ var(--radius-3)            /* Component border radius */
 var(--font-size-3)         /* Base font size */
 ```
 
-```css
-/* Material tokens */
-var(--blur-6)              /* Blur effect for translucent backgrounds */
-var(--opacity-6)            /* Opacity level */
-```
-
 ## Enhancements
 
 Kookie UI extends Radix Themes with practical improvements:
 
-### Material Prop
-
-`material` sets whether panels are solid or translucent. Every panel follows it.
-
 ### Effects
 
-Extended blur tokens provide 12-step blur scale for precise backdrop effects. Granular opacity offers 9-step opacity scale for fine-tuned transparency. Specialized 3D button effects create realistic depth and elevation.
+Specialized 3D button effects create realistic depth and elevation.
 
 ### Typography
 
@@ -263,12 +217,11 @@ Pre-configured Inter and JetBrains Mono fonts with proper fallbacks prevent brow
 
 ### Added
 
-- `material` prop as replacement for `panelBackground`
-- Extended blur token system (12 steps)
-- Granular opacity scale (9 steps)
 - Enhanced 3D button effects
 - Improved font fallback system
 
-### Deprecated
+### Removed
 
-- `panelBackground` prop in favor of `material` prop
+- `material` and `panelBackground` props. Every surface is solid.
+- `scaling` prop. The scale is fixed.
+- The `--blur-N` and `--opacity-N` token scales.

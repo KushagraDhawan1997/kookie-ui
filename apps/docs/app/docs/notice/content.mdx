@@ -12,7 +12,7 @@ import { Alert02Icon } from '@hugeicons/core-free-icons';
 Notice tells the person about a condition that is true now and that nobody just caused: a usage limit, a lost connection, a finished job. It takes space in the layout and never floats, so it cannot cover what it is about.
 
 <PreviewBlock height="10rem">
-  <Flex direction="column" gap="3" width="100%" maxWidth="28rem">
+  <Flex direction="column" gap="4" width="100%" maxWidth="28rem">
     <Notice icon={<HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />} action={<Button size="2" variant="soft" color="gray">Add credits</Button>}>You have used 90% of this month's credits.</Notice>
   </Flex>
 </PreviewBlock>
@@ -45,7 +45,6 @@ export function UsageNotice({ onDismiss }: { onDismiss: () => void }) {
 | `action` | `ReactNode` | One action that fixes the condition |
 | `onDismiss` | `() => void` | Shows a dismiss button. Dismissing hides the message; your app removes it and remembers the choice |
 | `dismissLabel` | `string` | Accessible name of the dismiss button. Default `'Dismiss'` |
-| `material` | `'solid' \| 'translucent'` | `translucent` when content scrolls behind it |
 
 A notice with no action and no dismiss button is a sentence. Use `Text` unless it must stand apart from the page.
 

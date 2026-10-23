@@ -1,6 +1,6 @@
 /* Override --empty-state-icon-size on EmptyState.Icon to resize the icon. */
 .empty-state-icon {
-  --empty-state-icon-size: var(--space-6);
+  --empty-state-icon-size: var(--space-7);
   color: var(--gray-a9);
 }
 

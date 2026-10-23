@@ -11,7 +11,7 @@ const COMPONENTS = docsNavigation.groups.find((group) => group.label === 'Compon
 export function ComponentsIndex({ description }: { description: string }) {
   return (
     <SiteDocsPage meta={{ title: 'Components', description }}>
-      <Flex direction="column" gap="3" align="start">
+      <Flex direction="column" gap="4" align="start">
         {COMPONENTS.map((item) => (
           <Link key={item.href} asChild size="3">
             <NextLink href={item.href}>{item.title}</NextLink>

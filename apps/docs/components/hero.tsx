@@ -61,7 +61,7 @@ const LAYERS: readonly Layer[] = [
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <Flex direction="column" gap="2">
+    <Flex direction="column" gap="3">
       <Text size="2" weight="medium">
         {label}
       </Text>
@@ -87,10 +87,10 @@ function Choice({ value, items }: { value: string; items: readonly string[] }) {
 
 function Builder() {
   return (
-    <Theme accentColor="gray" radius="full" material="solid" className="kd-hero-window">
+    <Theme accentColor="gray" radius="full" className="kd-hero-window">
       <Shell.Root height="704px">
         <Shell.Sidebar defaultState="expanded" defaultSize={232} presentation="fixed">
-          <Flex direction="column" gap="3" p="3">
+          <Flex direction="column" gap="4" p="4">
             <Flex align="center" justify="between">
               <SegmentedControl.Root defaultValue="layers" size="2">
                 <SegmentedControl.Item value="layers">Layers</SegmentedControl.Item>
@@ -100,14 +100,14 @@ function Builder() {
                 {icon(Search01Icon)}
               </IconButton>
             </Flex>
-            <Flex direction="column" gap="1">
+            <Flex direction="column" gap="2">
               {LAYERS.map((layer, i) => (
                 <Flex
                   key={i}
                   align="center"
-                  gap="1"
-                  py="1"
-                  pr="2"
+                  gap="2"
+                  py="2"
+                  pr="3"
                   style={{
                     paddingInlineStart: 4 + layer.depth * 14,
                     borderRadius: "var(--radius-full)",
@@ -125,7 +125,7 @@ function Builder() {
         </Shell.Sidebar>
         <Shell.Content>
           <Box position="relative" height="100%">
-            <Flex position="absolute" top="0" left="0" right="0" p="3" align="center" justify="between">
+            <Flex position="absolute" top="0" left="0" right="0" p="4" align="center" justify="between">
               <Toolbar.Root size="2">
                 <Toolbar.Button iconOnly aria-label="Layers">
                   {icon(SidebarLeftIcon)}
@@ -152,14 +152,14 @@ function Builder() {
             </Flex>
             <Flex justify="center" style={{ paddingTop: 128 }}>
               <Card size="3" style={{ width: 384 }}>
-                <Flex direction="column" gap="5">
-                  <Flex direction="column" gap="2">
+                <Flex direction="column" gap="6">
+                  <Flex direction="column" gap="3">
                     <Heading size="6">Sign in</Heading>
                     <Text size="3" color="gray">
                       Use the email for your workspace.
                     </Text>
                   </Flex>
-                  <Flex direction="column" gap="4">
+                  <Flex direction="column" gap="5">
                     <Field label="Email">
                       <TextField.Root size="2" defaultValue="ada@kookie.studio" />
                     </Field>
@@ -167,7 +167,7 @@ function Builder() {
                       <TextField.Root size="2" type="password" defaultValue="kookie-ui" />
                     </Field>
                   </Flex>
-                  <Flex gap="2" justify="end">
+                  <Flex gap="3" justify="end">
                     <Button variant="ghost" color="gray">
                       Cancel
                     </Button>
@@ -178,7 +178,7 @@ function Builder() {
                 </Flex>
               </Card>
             </Flex>
-            <Flex position="absolute" bottom="0" left="0" right="0" p="3" align="center" justify="between">
+            <Flex position="absolute" bottom="0" left="0" right="0" p="4" align="center" justify="between">
               <Toolbar.Root size="2">
                 <Toolbar.Group>
                   <Toolbar.Button iconOnly aria-label="Undo">
@@ -199,8 +199,8 @@ function Builder() {
           </Box>
         </Shell.Content>
         <Shell.Inspector defaultOpen defaultSize={272} presentation="fixed">
-          <Flex direction="column" gap="5" p="3">
-            <Flex align="center" justify="between" pl="2">
+          <Flex direction="column" gap="6" p="4">
+            <Flex align="center" justify="between" pl="3">
               <Text size="2" weight="medium">
                 Button
               </Text>
@@ -208,7 +208,7 @@ function Builder() {
                 {icon(SourceCodeIcon)}
               </IconButton>
             </Flex>
-            <Flex direction="column" gap="5" px="2">
+            <Flex direction="column" gap="6" px="3">
               <Field label="Label">
                 <TextField.Root size="2" defaultValue="Continue" />
               </Field>

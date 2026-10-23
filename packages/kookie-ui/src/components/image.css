@@ -208,7 +208,7 @@
   font-size: var(--font-size-1); /* Small, readable text */
   font-weight: var(--font-weight-regular); /* Regular weight for readability */
   color: var(--gray-11); /* Subtle but readable color */
-  margin-top: var(--space-2); /* Consistent spacing from image */
+  margin-top: var(--space-3); /* Consistent spacing from image */
   text-align: center; /* Centered alignment for visual balance */
 
   /* 

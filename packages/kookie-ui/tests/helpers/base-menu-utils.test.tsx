@@ -4,7 +4,6 @@ import { describe, expect, test } from 'vitest';
 
 import {
   getMenuAlignOffset,
-  resolveMenuMaterial,
   resolveResponsiveValue,
   toAriaKeyShortcuts,
 } from '../../src/components/_internal/base-menu.utils.js';
@@ -36,26 +35,12 @@ describe('resolveResponsiveValue', () => {
 
 describe('getMenuAlignOffset', () => {
   test('cancels the content padding for each size', () => {
-    expect(getMenuAlignOffset('1', '100%')).toBe(-8);
-    expect(getMenuAlignOffset('2', '100%')).toBe(-12);
+    expect(getMenuAlignOffset('1')).toBe(-8);
+    expect(getMenuAlignOffset('2')).toBe(-12);
   });
 
-  test('scales with the theme', () => {
-    expect(getMenuAlignOffset('2', '110%')).toBe(-13);
-    expect(getMenuAlignOffset('1', '90%')).toBe(-7);
-  });
-
-  test('never returns NaN', () => {
-    expect(Number.isNaN(getMenuAlignOffset('unknown', 'bogus'))).toBe(false);
-  });
-});
-
-describe('resolveMenuMaterial', () => {
-  const theme = { material: 'solid' } as const;
-
-  test('prefers the material prop, then the theme material', () => {
-    expect(resolveMenuMaterial('translucent', theme)).toBe('translucent');
-    expect(resolveMenuMaterial(undefined, theme)).toBe('solid');
+  test('falls back to size 2 for an unknown size', () => {
+    expect(getMenuAlignOffset('unknown')).toBe(-12);
   });
 });
 
@@ -82,10 +67,10 @@ describe('MenuProvider', () => {
     return null;
   }
 
-  test('resolves a responsive size and scales the item height', () => {
+  test('resolves a responsive size and its item height', () => {
     let value: ReturnType<typeof useMenuContext> | undefined;
     render(
-      <Theme scaling="110%">
+      <Theme>
         <MenuProvider size={{ initial: '1', xl: '2' }}>
           <Probe onValue={(v) => (value = v)} />
         </MenuProvider>
@@ -93,12 +78,12 @@ describe('MenuProvider', () => {
     );
     expect(value?.isInsideMenu).toBe(true);
     expect(value?.size).toBe('1');
-    expect(value?.itemHeight).toBeCloseTo(26.4);
+    expect(value?.itemHeight).toBe(28);
   });
 
   test('item heights follow the size tokens', () => {
-    expect(getMenuItemHeight('1', '100%')).toBe(24);
-    expect(getMenuItemHeight('2', '100%')).toBe(32);
-    expect(getMenuItemHeight('2', '90%')).toBeCloseTo(28.8);
+    // The scale is fixed, so a size maps to one height.
+    expect(getMenuItemHeight('1')).toBe(28);
+    expect(getMenuItemHeight('2')).toBe(32);
   });
 });

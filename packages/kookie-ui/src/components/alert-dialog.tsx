@@ -40,11 +40,9 @@ AlertDialogTrigger.displayName = 'AlertDialog.Trigger';
 // them on every render.
 const {
   align: alignPropDef,
-  material: materialPropDef,
   ...contentPropDefs
 } = alertDialogContentPropDefs;
 const alignPropDefs = { align: alignPropDef };
-const materialPropDefs = { material: materialPropDef };
 
 type AlertDialogContentElement = React.ElementRef<typeof AlertDialogPrimitive.Content>;
 interface AlertDialogContentProps
@@ -56,20 +54,10 @@ const AlertDialogContent = React.forwardRef<AlertDialogContentElement, AlertDial
   ({ align, ...props }, forwardedRef) => {
     const { className: alignClassName } = extractProps({ align }, alignPropDefs);
 
-
-    const { material: extractedMaterial } = extractProps(
-      { material: props.material },
-      materialPropDefs,
-    );
-
-
-    const materialValue = extractedMaterial;
-
     const {
       className,
       forceMount,
       container,
-      material: __,
       ...contentProps
     } = extractProps(props, contentPropDefs);
 
@@ -142,7 +130,6 @@ const AlertDialogContent = React.forwardRef<AlertDialogContentElement, AlertDial
                   {...contentProps}
                   ref={combinedRef}
                   className={classNames('rt-BaseDialogContent', 'rt-AlertDialogContent', className)}
-                  data-material={materialValue}
                   tabIndex={-1}
                   role="alertdialog"
                   aria-modal="true"
@@ -176,7 +163,7 @@ type AlertDialogTitleProps = ComponentPropsWithout<typeof Heading, 'asChild'>;
 const AlertDialogTitle = React.forwardRef<AlertDialogTitleElement, AlertDialogTitleProps>(
   (props, forwardedRef) => (
     <AlertDialogPrimitive.Title asChild>
-      <Heading size="5" mb="3" trim="start" {...props} asChild={false} ref={forwardedRef} />
+      <Heading size="5" mb="4" trim="start" {...props} asChild={false} ref={forwardedRef} />
     </AlertDialogPrimitive.Title>
   ),
 );

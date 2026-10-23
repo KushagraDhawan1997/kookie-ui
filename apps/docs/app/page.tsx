@@ -20,12 +20,12 @@ const DESCRIPTION =
 export default function Home() {
   return (
     <SiteDocsPage meta={{ title: "Womp's Design System", description: DESCRIPTION }} showCopyButton={false}>
-      <Flex direction="column" gap="9">
+      <Flex direction="column" gap="10">
         <Hero />
-        <Grid columns={{ initial: '1', sm: '2' }} gapX="7" gapY="9">
+        <Grid columns={{ initial: '1', sm: '2' }} gapX="8" gapY="10">
           {SECTIONS.map((section) => (
-            <Flex key={section.id} direction="column" gap="4">
-              <Flex direction="column" gap="3">
+            <Flex key={section.id} direction="column" gap="5">
+              <Flex direction="column" gap="4">
                 <Heading asChild size="5" weight="medium">
                   <h2>{section.title}</h2>
                 </Heading>
@@ -33,7 +33,7 @@ export default function Home() {
                   {section.blurb}
                 </Text>
               </Flex>
-              <Flex direction="column" gap="3" align="start">
+              <Flex direction="column" gap="4" align="start">
                 {chaptersIn(section.id).map((chapter) => (
                   <KUILink key={chapter.slug} asChild size="3">
                     <Link href={`/${chapter.slug}`}>{chapter.title}</Link>
@@ -43,8 +43,8 @@ export default function Home() {
             </Flex>
           ))}
 
-          <Flex direction="column" gap="4">
-            <Flex direction="column" gap="3">
+          <Flex direction="column" gap="5">
+            <Flex direction="column" gap="4">
               <Heading asChild size="5" weight="medium">
                 <h2>Components</h2>
               </Heading>

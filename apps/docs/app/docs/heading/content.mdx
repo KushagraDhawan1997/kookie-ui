@@ -27,7 +27,7 @@ import { Heading, Flex } from '@kushagradhawan/kookie-ui';
 
 export function MyHeadings() {
   return (
-    <Flex direction="column" gap="4">
+    <Flex direction="column" gap="5">
       <Heading size="8">Page Title</Heading>
       <Heading size="6">Section Title</Heading>
       <Heading size="4">Subsection</Heading>
@@ -57,7 +57,7 @@ export function MyHeadings() {
 Heading supports sizes from 0 (smallest) to 12 (largest display text).
 
 ```tsx
-<Flex direction="column" gap="3">
+<Flex direction="column" gap="4">
   <Heading size="12">Size 12 - Extra large display (104px)</Heading>
   <Heading size="11">Size 11 - Large display (86px)</Heading>
   <Heading size="10">Size 10 - Display (72px)</Heading>
@@ -93,7 +93,7 @@ Use the `as` prop to maintain proper heading hierarchy.
 Control heading weight with the `weight` prop.
 
 ```tsx
-<Flex direction="column" gap="3">
+<Flex direction="column" gap="4">
   <Heading size="6" weight="light">Light weight</Heading>
   <Heading size="6" weight="regular">Regular weight</Heading>
   <Heading size="6" weight="medium">Medium weight</Heading>
@@ -107,7 +107,7 @@ Control heading weight with the `weight` prop.
 Use colors sparingly for headings to maintain hierarchy.
 
 ```tsx
-<Flex direction="column" gap="3">
+<Flex direction="column" gap="4">
   <Heading size="6">Default color</Heading>
   <Heading size="6" color="blue">Blue heading</Heading>
   <Heading size="6" color="violet">Violet heading</Heading>
@@ -121,7 +121,7 @@ A colored heading reads the strong ink for its color: gray reads step 12, and ot
 Use `emphasis` to rank headings without picking a gray step. `loud` is the default when a color is set. `medium` and `quiet` fade the ink. Without a color, the levels use gray steps 12, 11 and 10.
 
 ```tsx
-<Flex direction="column" gap="3">
+<Flex direction="column" gap="4">
   <Heading size="6" emphasis="loud">Loud heading</Heading>
   <Heading size="6" emphasis="medium">Medium heading</Heading>
   <Heading size="6" emphasis="quiet">Quiet heading</Heading>
@@ -140,7 +140,7 @@ Use `emphasis` to rank headings without picking a gray step. `loud` is the defau
 Align headings horizontally.
 
 ```tsx
-<Flex direction="column" gap="3" width="100%">
+<Flex direction="column" gap="4" width="100%">
   <Heading size="5" align="left">Left aligned</Heading>
   <Heading size="5" align="center">Center aligned</Heading>
   <Heading size="5" align="right">Right aligned</Heading>

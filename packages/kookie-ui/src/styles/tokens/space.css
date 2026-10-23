@@ -1,27 +1,94 @@
+/*
+ * The scale, shared with Kookie UI v2. Three layers, each read by the one above:
+ *
+ * 1. The space palette: raw distances, 2px to 128px.
+ * 2. Layout space: what every distance between things reads (layout props, gaps). It equals
+ *    the palette today; it is the one place a density would re-pick steps.
+ * 3. Roles: one ladder per job, one step per size index 1 to 4. A component reads a role,
+ *    never a palette step: a surface pads --surface-p-N, a panel --panel-p-N, a control
+ *    --control-px-N.
+ */
 .radix-themes {
+  --scale: 1;
 
-  /*  */
-  --space-1: calc(4px * var(--scaling));
-  --space-2: calc(8px * var(--scaling));
-  --space-3: calc(12px * var(--scaling));
-  --space-4: calc(16px * var(--scaling));
+  /* 1. Palette */
+  --space-1: calc(2px * var(--scale));
+  --space-2: calc(4px * var(--scale));
+  --space-3: calc(8px * var(--scale));
+  --space-4: calc(12px * var(--scale));
+  --space-5: calc(16px * var(--scale));
+  --space-6: calc(24px * var(--scale));
+  --space-7: calc(32px * var(--scale));
+  --space-8: calc(40px * var(--scale));
+  --space-9: calc(48px * var(--scale));
+  --space-10: calc(64px * var(--scale));
+  --space-11: calc(96px * var(--scale));
+  --space-12: calc(128px * var(--scale));
 
-  /*  */
-  --space-5: calc(24px * var(--scaling));
-  --space-6: calc(32px * var(--scaling));
-  --space-7: calc(40px * var(--scaling));
-  --space-8: calc(48px * var(--scaling));
+  /* 2. Layout space */
+  --layout-space-1: var(--space-1);
+  --layout-space-2: var(--space-2);
+  --layout-space-3: var(--space-3);
+  --layout-space-4: var(--space-4);
+  --layout-space-5: var(--space-5);
+  --layout-space-6: var(--space-6);
+  --layout-space-7: var(--space-7);
+  --layout-space-8: var(--space-8);
+  --layout-space-9: var(--space-9);
+  --layout-space-10: var(--space-10);
+  --layout-space-11: var(--space-11);
+  --layout-space-12: var(--space-12);
 
-  /* Control heights. One ladder for every control: size N is the same height in
-     Button, Menu, Sidebar, Tabs, TextField, Select, SegmentedControl and Toolbar. */
-  --control-height-1: var(--space-5);
-  --control-height-2: var(--space-6);
-  --control-height-3: var(--space-7);
-  --control-height-4: var(--space-8);
+  /* 3. Roles */
 
-  /*  */
-  --space-9: calc(64px * var(--scaling));
-  --space-10: calc(80px * var(--scaling));
-  --space-11: calc(96px * var(--scaling));
-  --space-12: calc(112px * var(--scaling));
+  /* A surface (Card, Dialog, a Shell pane) pads by its index. */
+  --surface-p-1: var(--layout-space-5);
+  --surface-p-2: var(--layout-space-6);
+  --surface-p-3: var(--layout-space-7);
+  --surface-p-4: var(--layout-space-8);
+
+  /* A panel that hugs rows (menus, popover lists, notices) pads tighter. */
+  --panel-p-1: var(--layout-space-3);
+  --panel-p-2: var(--layout-space-4);
+  --panel-p-3: var(--layout-space-5);
+  --panel-p-4: var(--layout-space-6);
+
+  /* Controls: a designed ladder of its own, not palette steps. */
+  --control-height-1: calc(28px * var(--scale));
+  --control-height-2: calc(32px * var(--scale));
+  --control-height-3: calc(40px * var(--scale));
+  --control-height-4: calc(48px * var(--scale));
+  --control-px-1: calc(8px * var(--scale));
+  --control-px-2: calc(10px * var(--scale));
+  --control-px-3: calc(13px * var(--scale));
+  --control-px-4: calc(16px * var(--scale));
+  /* A bare edge under a full radius pads wider, because the curve cuts into the text. */
+  --control-px-pill-1: calc(12px * var(--scale));
+  --control-px-pill-2: calc(14px * var(--scale));
+  --control-px-pill-3: calc(17px * var(--scale));
+  --control-px-pill-4: calc(20px * var(--scale));
+  --control-gap-1: var(--space-2);
+  --control-gap-2: var(--space-3);
+  --control-gap-3: var(--space-3);
+  --control-gap-4: var(--space-4);
+  --icon-size-1: calc(16px * var(--scale));
+  --icon-size-2: calc(16px * var(--scale));
+  --icon-size-3: calc(20px * var(--scale));
+  --icon-size-4: calc(24px * var(--scale));
+  /* A row inside a panel hugs its line: line height plus this inset above and below. */
+  --row-inset-1: calc(4px * var(--scale));
+  --row-inset-2: calc(5px * var(--scale));
+  --row-inset-3: calc(5px * var(--scale));
+  --row-inset-4: calc(6px * var(--scale));
+  /* A control hosted inside another sits this far in from its host's edge. */
+  --slot-inset-1: calc(3px * var(--scale));
+  --slot-inset-2: calc(3px * var(--scale));
+  --slot-inset-3: calc(4px * var(--scale));
+  --slot-inset-4: calc(4px * var(--scale));
+
+  /* Overlay widths by index. */
+  --overlay-w-1: calc(360px * var(--scale));
+  --overlay-w-2: calc(440px * var(--scale));
+  --overlay-w-3: calc(560px * var(--scale));
+  --overlay-w-4: calc(720px * var(--scale));
 }

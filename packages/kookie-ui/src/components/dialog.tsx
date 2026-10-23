@@ -38,11 +38,9 @@ DialogTrigger.displayName = 'Dialog.Trigger';
 // them on every render.
 const {
   align: alignPropDef,
-  material: materialPropDef,
   ...contentPropDefs
 } = dialogContentPropDefs;
 const alignPropDefs = { align: alignPropDef };
-const materialPropDefs = { material: materialPropDef };
 
 type DialogContentElement = React.ElementRef<typeof DialogPrimitive.Content>;
 interface DialogContentProps
@@ -54,20 +52,10 @@ const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>
   ({ align, ...props }, forwardedRef) => {
     const { className: alignClassName } = extractProps({ align }, alignPropDefs);
 
-
-    const { material: extractedMaterial } = extractProps(
-      { material: props.material },
-      materialPropDefs,
-    );
-
-
-    const materialValue = extractedMaterial;
-
     const {
       className,
       forceMount,
       container,
-      material: __,
       ...contentProps
     } = extractProps(props, contentPropDefs);
 
@@ -143,7 +131,6 @@ const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>
                   {...contentProps}
                   ref={combinedRef}
                   className={classNames('rt-BaseDialogContent', 'rt-DialogContent', className)}
-                  data-material={materialValue}
                   tabIndex={-1}
                   role="dialog"
                   aria-modal="true"
@@ -176,7 +163,7 @@ type DialogTitleProps = ComponentPropsWithout<typeof Heading, 'asChild'>;
 const DialogTitle = React.forwardRef<DialogTitleElement, DialogTitleProps>(
   (props, forwardedRef) => (
     <DialogPrimitive.Title asChild>
-      <Heading size="5" mb="3" trim="start" {...props} asChild={false} ref={forwardedRef} />
+      <Heading size="5" mb="4" trim="start" {...props} asChild={false} ref={forwardedRef} />
     </DialogPrimitive.Title>
   ),
 );

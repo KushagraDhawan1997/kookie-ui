@@ -51,7 +51,6 @@ The Root component is the input element that accepts user text input.
 | `variant` | `'raised' \| 'surface' \| 'soft' \| 'ghost' \| 'outline'` | Input style variant: raised for elevated, surface for standard forms, soft for subtle integration, outline for defined boundaries, ghost for minimal inline editing |
 | `color` | `AccentColor` | Semantic color for focus state and validation feedback. Use for visual categorization or status communication |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Corner radius scale: none for sharp edges, small/medium/large for progressive rounding, full for pill-shaped |
-| `material` | `'solid' \| 'translucent'` | Background appearance: solid for opaque backgrounds, translucent for depth over images or dynamic backgrounds |
 | `error` | `boolean` | Marks field as invalid. Use with errorMessage for accessibility |
 | `errorMessage` | `string` | Error message displayed below input. Automatically connected via ARIA attributes for screen readers |
 | `required` | `boolean` | Marks field as required for forms |
@@ -167,30 +166,6 @@ Use the `color` prop with semantic colors to communicate input purpose or status
 <TextField.Root size="2" color="blue" placeholder="Username" />
 <TextField.Root size="2" color="green" placeholder="Success" />
 <TextField.Root size="2" color="red" placeholder="Error" />
-```
-
-## Material
-
-Use the `material` prop to set input appearance. Choose `solid` for opaque backgrounds, or `translucent` for depth and separation over images or dynamic backgrounds.
-
-### Theme
-
-Inputs automatically inherit the theme's material setting.
-
-```tsx
-<Theme material="translucent">
-  <TextField.Root placeholder="Enter text" />
-</Theme>
-```
-
-### Custom
-
-Override the theme's material for specific effects.
-
-```tsx
-<Theme material="solid">
-  <TextField.Root material="translucent" placeholder="Enter text" />
-</Theme>
 ```
 
 ## States
@@ -679,7 +654,6 @@ Built-in support for required fields, pattern validation, and min/max constraint
 - **Scrubbing behavior** for TextField.Slot with pointer lock and virtual cursor
 - **Error validation system** with `error` and `errorMessage` props
 - **Automatic ARIA attributes** for error messages and validation states
-- **Material prop** for solid/translucent theme contexts
 - **Slot composition system** for prefix/suffix content
 - **Scrubbable numeric inputs** with min/max constraints, sensitivity control, and modifier keys
 - **Multiple slot support** for complex input layouts
@@ -688,16 +662,16 @@ Built-in support for required fields, pattern validation, and min/max constraint
 - **Virtual cursor** with viewport wrap-around during scrubbing
 - **Delta-based onScrub callback** with isChanging state tracking
 
+### Removed
+
+- `material` and `panelBackground` props. Every surface is solid.
+
 ### Changed
 
 - Enhanced focus states with better contrast
 - Improved error state styling with clearer visual feedback
 - Better slot positioning and alignment for icons and labels
 - Scrubbing uses movementX for smooth sub-pixel precision
-
-### Deprecated
-
-- `panelBackground` prop in favor of `material` prop
 
 ### Fixed
 

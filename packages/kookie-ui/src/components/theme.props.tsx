@@ -5,8 +5,6 @@ import { radii } from '../props/radius.prop.js';
 import type { GetPropDefTypes, PropDef } from '../props/prop-def.js';
 
 const appearances = ['inherit', 'light', 'dark'] as const;
-const materials = ['solid', 'translucent'] as const;
-const scalings = ['90%', '95%', '100%', '105%', '110%'] as const;
 const fontFamilies = ['sans', 'mono', 'serif'] as const;
 
 const themePropDefs = {
@@ -40,23 +38,12 @@ const themePropDefs = {
    */
   grayColor: { type: 'enum', values: grayColors, default: 'gray' },
   /**
-   * What surfaces are made of: `solid`, or `translucent` with a backdrop blur.
-   */
-  material: { type: 'enum', values: materials, default: 'solid' },
-  /**
    * Sets the default radius of the components.
    *
    * @link
    * https://www.radix-ui.com/themes/docs/theme/visual-style
    */
   radius: { type: 'enum', values: radii, default: 'full' },
-  /**
-   * Sets a scaling multiplier for values like spacing, font sizes, line heights, etc. are scaled.
-   *
-   * @link
-   * https://www.radix-ui.com/themes/docs/theme/layout
-   */
-  scaling: { type: 'enum', values: scalings, default: '100%' },
   /**
    * Sets the font family used for body text in the theme.
    *
@@ -79,9 +66,7 @@ const themePropDefs = {
   appearance: PropDef<(typeof appearances)[number]>;
   accentColor: PropDef<(typeof accentColors)[number]>;
   grayColor: PropDef<(typeof grayColors)[number]>;
-  material: PropDef<(typeof materials)[number]>;
   radius: PropDef<(typeof radii)[number]>;
-  scaling: PropDef<(typeof scalings)[number]>;
   fontFamily: PropDef<(typeof fontFamilies)[number]>;
   headingFontFamily: PropDef<(typeof fontFamilies)[number]>;
 };

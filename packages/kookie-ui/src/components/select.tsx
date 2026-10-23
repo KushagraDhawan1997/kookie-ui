@@ -57,7 +57,6 @@ const SelectTrigger = React.forwardRef<SelectTriggerElement, SelectTriggerProps>
       loading,
       disabled,
       readOnly,
-      material,
       ...triggerProps
     } = extractProps(
       // Pass size value from the context to generate styles
@@ -84,7 +83,6 @@ const SelectTrigger = React.forwardRef<SelectTriggerElement, SelectTriggerProps>
         <button
           data-accent-color={color}
           data-radius={radius}
-          data-material={material}
           data-error={error}
           data-loading={loading}
           {...triggerProps}

@@ -7,7 +7,6 @@ import type { PropDef } from '../props/prop-def.js';
 
 const sizes = ['1', '2', '3', '4'] as const;
 const variants = ['raised', 'surface', 'soft', 'ghost', 'outline'] as const;
-const materials = ['solid', 'translucent'] as const;
 
 const textFieldRootPropDefs = {
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
@@ -21,7 +20,6 @@ const textFieldRootPropDefs = {
   'aria-labelledby': { type: 'string', default: undefined },
   ...colorPropDef,
   ...radiusPropDef,
-  material: { type: 'enum', values: materials, default: undefined },
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;
   variant: PropDef<(typeof variants)[number]>;
@@ -30,7 +28,6 @@ const textFieldRootPropDefs = {
   required: PropDef<boolean>;
   'aria-describedby': PropDef<string | undefined>;
   'aria-labelledby': PropDef<string | undefined>;
-  material: PropDef<(typeof materials)[number] | undefined>;
 };
 
 const sides = ['left', 'right'] as const;

@@ -6,7 +6,6 @@ import { extractProps } from '../helpers/extract-props.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
 import { popoverContentPropDefs } from './popover.props.js';
 import { Theme } from './theme.js';
-import { useThemeContext } from './theme.js';
 
 import type { PopoverContentOwnProps } from './popover.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
@@ -60,13 +59,10 @@ interface PopoverContentProps
 }
 const PopoverContent = React.forwardRef<PopoverContentElement, PopoverContentProps>(
   (props, forwardedRef) => {
-    const themeContext = useThemeContext();
-    const resolvedMaterial = props.material ?? themeContext.material;
     const {
       className,
       forceMount,
       container,
-      material: _material,
       ...contentProps
     } = extractProps(props, popoverContentPropDefs);
 
@@ -108,7 +104,6 @@ const PopoverContent = React.forwardRef<PopoverContentElement, PopoverContentPro
             {...contentProps}
             ref={combinedRef}
             aria-labelledby={labelId}
-            data-material={resolvedMaterial}
             className={classNames('rt-PopperContent', 'rt-PopoverContent', className)}
           >
             <PopoverContentContext.Provider value={React.useMemo(() => ({ contentRef, setToolbarOffset, setLabelId }), [setToolbarOffset])}>

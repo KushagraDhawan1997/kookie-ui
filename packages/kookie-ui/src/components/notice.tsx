@@ -40,8 +40,6 @@ interface StripProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'color'
    * fact the words don't already give, such as `red` for something that stops the next step.
    */
   color?: NoticeColor;
-  /** `translucent` when content scrolls behind the strip. */
-  material?: 'solid' | 'translucent';
   /** The message. */
   children: React.ReactNode;
 }
@@ -73,7 +71,7 @@ interface ConfirmationProps extends StripProps {
 }
 
 const Strip = React.forwardRef<HTMLDivElement, StripProps & { kind: 'notice' | 'confirmation'; trailing: React.ReactNode; leading?: React.ReactNode }>(
-  ({ kind, size = '2', color = 'gray', material, className, children, trailing, leading, ...props }, forwardedRef) => (
+  ({ kind, size = '2', color = 'gray', className, children, trailing, leading, ...props }, forwardedRef) => (
     <div
       role="status"
       aria-live="polite"
@@ -82,7 +80,6 @@ const Strip = React.forwardRef<HTMLDivElement, StripProps & { kind: 'notice' | '
       className={classNames('rt-NoticeRoot', `rt-r-size-${size}`, className)}
       data-kind={kind}
       data-accent-color={color}
-      data-material={material}
     >
       {leading ? (
         <span className="rt-NoticeIcon" aria-hidden>

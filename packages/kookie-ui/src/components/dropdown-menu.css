@@ -95,7 +95,7 @@
 }
 
 .rt-DropdownMenuDrillDownBackIcon {
-  margin-inline-start: calc(-2px * var(--scaling));
+  margin-inline-start: calc(-2px * var(--scale));
   margin-inline-end: 0;
 }
 

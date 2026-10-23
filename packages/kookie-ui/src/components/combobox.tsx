@@ -133,7 +133,6 @@ const ComboboxItemContext = React.createContext<ComboboxItemContextValue | null>
 interface ComboboxContentContextValue {
   sizeClassName?: string;
   color?: string;
-  material?: string;
   label?: string;
 }
 
@@ -333,14 +332,12 @@ const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTrigger
     loading,
     color,
     radius,
-    material,
     onClick,
     onKeyDown,
     type: buttonType,
     ...triggerProps
   } = extractProps({ size: ctx.size, ...props }, triggerSizingPropDefs, comboboxTriggerPropDefs, marginPropDefs);
 
-  const resolvedMaterial = material;
   const isDisabled = disabled ?? ctx.disabled;
   const resolvedColor = color ?? ctx.color;
   // Read-only and loading triggers stay focusable but do not open.
@@ -408,7 +405,6 @@ const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTrigger
       <button
         data-accent-color={resolvedColor}
         data-radius={radius}
-        data-material={resolvedMaterial}
         data-error={error}
         data-loading={loading}
         data-disabled={isDisabled || undefined}
@@ -488,8 +484,6 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
   const ctx = useComboboxContext('Content');
   const themeContext = useThemeContext();
 
-
-  const material = props.material ?? themeContext.material;
   // Menus stop at size 3; a size 4 field opens a size 3 list.
   const rootSize = ctx.size === '4' ? '3' : ctx.size;
   const size = props.size ?? rootSize ?? comboboxContentPropDefs.size.default;
@@ -500,7 +494,6 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
     color,
     forceMount,
     container,
-    material: _material,
     onOpenAutoFocus,
     'aria-label': _ariaLabel,
     'aria-labelledby': ariaLabelledByProp,
@@ -528,10 +521,9 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
       // Responsive-aware size class for the search field (never String() a responsive object).
       sizeClassName: extractProps({ size }, contentSizePropDefs).className || undefined,
       color: resolvedColor,
-      material,
       label,
     }),
-    [size, resolvedColor, material, label],
+    [size, resolvedColor, label],
   );
 
   const commandRef = React.useRef<HTMLDivElement>(null);
@@ -556,7 +548,6 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
       <Theme asChild>
         <PopoverPrimitive.Content
           data-accent-color={resolvedColor}
-          data-material={material}
           align="start"
           sideOffset={4}
           collisionPadding={10}
@@ -619,7 +610,6 @@ const ComboboxInput = React.forwardRef<ComboboxInputElement, ComboboxInputProps>
       <div
         className={classNames('rt-TextFieldRoot', 'rt-ComboboxInputRoot', contentContext?.sizeClassName, `rt-variant-${textFieldVariant}`)}
         data-accent-color={contentContext?.color}
-        data-material={contentContext?.material}
       >
         {startAdornment ? <div className="rt-TextFieldSlot">{startAdornment}</div> : null}
         <CommandPrimitive.Input

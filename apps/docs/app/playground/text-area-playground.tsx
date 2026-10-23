@@ -7,7 +7,6 @@ import Playground from '@/components/playground';
 const variants = ['raised', 'surface', 'soft', 'outline', 'ghost'] as const;
 const sizes = ['1', '2', '3'] as const;
 const radiusOptions = ['none', 'small', 'medium', 'large', 'full'] as const;
-const materials = ['solid', 'translucent'] as const;
 const resizeOptions = ['none', 'vertical', 'horizontal', 'both'] as const;
 
 type TextAreaPlaygroundProps = {
@@ -24,7 +23,6 @@ export default function TextAreaPlayground({
   const [variant, setVariant] = React.useState<string>('soft');
   const [size, setSize] = React.useState<string>('2');
   const [radius, setRadius] = React.useState<string>('theme');
-  const [material, setMaterial] = React.useState<string>('theme');
   const [resize, setResize] = React.useState<string>('vertical');
   const [disabled, setDisabled] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
@@ -59,15 +57,6 @@ export default function TextAreaPlayground({
       placeholder: 'Theme',
     },
     {
-      id: 'material',
-      label: 'Material',
-      type: 'select' as const,
-      value: material,
-      onChange: setMaterial,
-      options: [{ label: 'Theme', value: 'theme' }, ...materials.map((m) => ({ label: m, value: m }))],
-      placeholder: 'Theme',
-    },
-    {
       id: 'resize',
       label: 'Resize',
       type: 'select' as const,
@@ -98,7 +87,6 @@ export default function TextAreaPlayground({
     props.push('placeholder="Enter your text here..."');
 
     if (radius !== 'theme') props.push(`radius="${radius}"`);
-    if (material !== 'theme') props.push(`material="${material}"`);
     if (resize !== 'vertical') props.push(`resize="${resize}"`);
     if (disabled) props.push('disabled');
     if (error) props.push('error');
@@ -115,7 +103,6 @@ export default function TextAreaPlayground({
           variant={variant as any}
           size={size as any}
           radius={radius === 'theme' ? undefined : (radius as any)}
-          material={material === 'theme' ? undefined : (material as any)}
           resize={resize as any}
           disabled={disabled}
           error={error}
@@ -127,13 +114,10 @@ export default function TextAreaPlayground({
       }
       code={generateCode()}
       items={items}
-      showBackground={material === 'translucent'}
       hint={
-        material === 'translucent'
-          ? 'Translucent material adds backdrop blur for depth over complex backgrounds.'
-          : resize !== 'none'
-            ? 'Drag the bottom-right corner to resize the textarea.'
-            : undefined
+        resize !== 'none'
+          ? 'Drag the bottom-right corner to resize the textarea.'
+          : undefined
       }
       showControls={showControls}
       showToolbar={showToolbar}

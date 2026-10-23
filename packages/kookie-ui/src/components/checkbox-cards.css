@@ -15,7 +15,7 @@
 
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
   cursor: var(--cursor-button);
   -webkit-tap-highlight-color: transparent;
 
@@ -61,7 +61,7 @@
       --line-height: var(--line-height-2);
       --letter-spacing: var(--letter-spacing-2);
       /* keep in sync with checkbox */
-      --checkbox-cards-item-checkbox-size: calc(var(--space-4) * var(--spacing-multiplier-medium));
+      --checkbox-cards-item-checkbox-size: calc(var(--space-5) * var(--spacing-multiplier-medium));
     }
     
 
@@ -71,7 +71,7 @@
       --line-height: var(--line-height-2);
       --letter-spacing: var(--letter-spacing-2);
       /* keep in sync with checkbox */
-      --checkbox-cards-item-checkbox-size: var(--space-4);
+      --checkbox-cards-item-checkbox-size: var(--space-5);
     }
     /* Size 3 */
     &:where(.rt-r-size-3) {
@@ -79,7 +79,7 @@
       --line-height: var(--line-height-3);
       --letter-spacing: var(--letter-spacing-3);
       /* keep in sync with checkbox */
-      --checkbox-cards-item-checkbox-size: calc(var(--space-4) * var(--spacing-multiplier-large));
+      --checkbox-cards-item-checkbox-size: calc(var(--space-5) * var(--spacing-multiplier-large));
     }
     /* Size 4 */
     &:where(.rt-r-size-4) {
@@ -87,7 +87,7 @@
       --line-height: var(--line-height-3);
       --letter-spacing: var(--letter-spacing-3);
       /* keep in sync with checkbox */
-      --checkbox-cards-item-checkbox-size: calc(var(--space-4) * var(--spacing-multiplier-large));
+      --checkbox-cards-item-checkbox-size: calc(var(--space-5) * var(--spacing-multiplier-large));
     }
     /* Size 5 */
     &:where(.rt-r-size-5) {
@@ -95,7 +95,7 @@
       --line-height: var(--line-height-4);
       --letter-spacing: var(--letter-spacing-4);
       /* keep in sync with checkbox */
-      --checkbox-cards-item-checkbox-size: calc(var(--space-5) * var(--spacing-multiplier-medium));
+      --checkbox-cards-item-checkbox-size: calc(var(--space-6) * var(--spacing-multiplier-medium));
     }
   }
 }
@@ -150,19 +150,19 @@
 @breakpoints {
   .rt-CheckboxCardsItem {
     &:where(.rt-r-size-1) {
-      --base-card-border-radius: min(var(--radius-5), calc(var(--radius-1) + var(--space-1)));
+      --base-card-border-radius: min(var(--radius-5), calc(var(--radius-1) + var(--space-2)));
     }
     &:where(.rt-r-size-2) {
-      --base-card-border-radius: min(var(--radius-6), calc(var(--radius-2) + var(--space-2)));
+      --base-card-border-radius: min(var(--radius-6), calc(var(--radius-2) + var(--space-3)));
     }
     &:where(.rt-r-size-3) {
-      --base-card-border-radius: min(var(--radius-7), calc(var(--radius-3) + var(--space-3)));
+      --base-card-border-radius: min(var(--radius-7), calc(var(--radius-3) + var(--space-4)));
     }
     &:where(.rt-r-size-4) {
-      --base-card-border-radius: min(var(--radius-8), calc(var(--radius-4) + var(--space-4)));
+      --base-card-border-radius: min(var(--radius-8), calc(var(--radius-4) + var(--space-5)));
     }
     &:where(.rt-r-size-5) {
-      --base-card-border-radius: min(var(--radius-9), calc(var(--radius-5) + var(--space-5)));
+      --base-card-border-radius: min(var(--radius-9), calc(var(--radius-5) + var(--space-6)));
     }
   }
 }

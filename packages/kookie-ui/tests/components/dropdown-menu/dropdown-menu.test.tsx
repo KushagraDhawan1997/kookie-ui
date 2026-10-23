@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event';
 import { renderWithProviders, render, screen } from '../../test-utils';
 import * as DropdownMenu from '../../../src/components/dropdown-menu';
 import { Button } from '../../../src/components/button';
-import { Theme } from '../../../src/components/theme';
 import { VirtualMenu } from '../../../src/components/virtual-menu';
 
 /** Opens the first cascade submenu from the keyboard. */
@@ -56,37 +55,19 @@ describe('DropdownMenu', () => {
     expect(screen.queryByRole('menu')).toBeNull();
   });
 
-  it('applies size, material and color to the content, with the soft highlight', async () => {
+  it('applies size and color to the content, with the soft highlight', async () => {
     renderMenu(<DropdownMenu.Item>One</DropdownMenu.Item>, {
       size: '1',
-      material: 'solid',
       color: 'red',
     });
     const menu = await screen.findByRole('menu');
     expect(menu).toHaveClass('rt-r-size-1', 'rt-variant-soft');
-    expect(menu).toHaveAttribute('data-material', 'solid');
     expect(menu).toHaveAttribute('data-accent-color', 'red');
+    expect(menu).not.toHaveAttribute('data-material');
     expect(menu).not.toHaveAttribute('color');
     expect(menu).not.toHaveAttribute('submenubehavior');
   });
 
-  it('follows the nearest Theme material', async () => {
-    render(
-      <Theme material="translucent">
-        <Theme material="solid">
-          <DropdownMenu.Root defaultOpen>
-            <DropdownMenu.Trigger>
-              <Button>Open</Button>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Content>
-              <DropdownMenu.Item>One</DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
-        </Theme>
-      </Theme>,
-    );
-    expect(await screen.findByRole('menu')).toHaveAttribute('data-material', 'solid');
-  });
 
   it('renders shortcuts as hidden hints with aria-keyshortcuts', async () => {
     renderMenu(
@@ -180,18 +161,17 @@ describe('DropdownMenu', () => {
       const user = renderMenu(
         <DropdownMenu.Sub>
           <DropdownMenu.SubTrigger>Share</DropdownMenu.SubTrigger>
-          <DropdownMenu.SubContent size="1" color="red" material="solid" data-testid="sub">
+          <DropdownMenu.SubContent size="1" color="red" data-testid="sub">
             <DropdownMenu.Item>Email</DropdownMenu.Item>
           </DropdownMenu.SubContent>
         </DropdownMenu.Sub>,
-        { size: '2', color: 'blue', material: 'translucent' },
+        { size: '2', color: 'blue' },
       );
 
       await openFirstSub(user, 'Share');
       const sub = await screen.findByTestId('sub');
       expect(sub).toHaveClass('rt-r-size-1');
       expect(sub).toHaveAttribute('data-accent-color', 'red');
-      expect(sub).toHaveAttribute('data-material', 'solid');
       expect(sub).not.toHaveAttribute('color');
     });
 
@@ -203,14 +183,13 @@ describe('DropdownMenu', () => {
             <DropdownMenu.Item>Email</DropdownMenu.Item>
           </DropdownMenu.SubContent>
         </DropdownMenu.Sub>,
-        { size: '1', variant: 'soft', color: 'blue', material: 'solid' },
+        { size: '1', variant: 'soft', color: 'blue' },
       );
 
       await openFirstSub(user, 'Share');
       const sub = await screen.findByTestId('sub');
       expect(sub).toHaveClass('rt-r-size-1', 'rt-variant-soft');
       expect(sub).toHaveAttribute('data-accent-color', 'blue');
-      expect(sub).toHaveAttribute('data-material', 'solid');
     });
 
     it('never produces a NaN offset for a responsive size', async () => {
@@ -265,7 +244,7 @@ describe('DropdownMenu', () => {
           </DropdownMenu.SubContent>
         </DropdownMenu.Sub>
       </>,
-      { submenuBehavior: 'cascade', material: 'solid' },
+      { submenuBehavior: 'cascade' },
     );
     await openFirstSub(user, 'More');
     await screen.findByRole('menuitem', { name: 'Nested' });

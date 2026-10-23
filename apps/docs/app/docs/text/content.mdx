@@ -27,7 +27,7 @@ import { Text, Flex } from '@kushagradhawan/kookie-ui';
 
 export function MyText() {
   return (
-    <Flex direction="column" gap="2">
+    <Flex direction="column" gap="3">
       <Text size="3">Regular body text</Text>
       <Text size="2" emphasis="medium">Secondary text</Text>
       <Text size="1" weight="medium">Small label</Text>
@@ -57,7 +57,7 @@ export function MyText() {
 Text supports sizes from 0 (smallest) to 12 (largest).
 
 ```tsx
-<Flex direction="column" gap="2">
+<Flex direction="column" gap="3">
   <Text size="1">Size 1 - Fine print (12px)</Text>
   <Text size="2">Size 2 - UI text (14px)</Text>
   <Text size="3">Size 3 - Body text (16px)</Text>
@@ -74,7 +74,7 @@ Text supports sizes from 0 (smallest) to 12 (largest).
 Control text weight with the `weight` prop.
 
 ```tsx
-<Flex direction="column" gap="2">
+<Flex direction="column" gap="3">
   <Text weight="light">Light weight</Text>
   <Text weight="regular">Regular weight</Text>
   <Text weight="medium">Medium weight</Text>
@@ -88,7 +88,7 @@ Control text weight with the `weight` prop.
 Use semantic colors for different text purposes. Colored text reads a strong ink by default, so an error stays red and easy to read.
 
 ```tsx
-<Flex direction="column" gap="2">
+<Flex direction="column" gap="3">
   <Text>Default text color</Text>
   <Text color="blue">Link or info text</Text>
   <Text color="green">Success text</Text>
@@ -101,7 +101,7 @@ Use semantic colors for different text purposes. Colored text reads a strong ink
 Use `emphasis` to rank text. `loud` is the strongest, `medium` is for secondary copy and `quiet` is for hints and metadata. Without `color`, the levels step down the gray scale. With `color`, they fade the same color.
 
 ```tsx
-<Flex direction="column" gap="2">
+<Flex direction="column" gap="3">
   <Text emphasis="loud">Primary text</Text>
   <Text emphasis="medium">Secondary text</Text>
   <Text emphasis="quiet">Hint text</Text>
@@ -147,7 +147,7 @@ Truncate long text with ellipsis.
 Align text horizontally.
 
 ```tsx
-<Flex direction="column" gap="2" width="100%">
+<Flex direction="column" gap="3" width="100%">
   <Text align="left">Left aligned text</Text>
   <Text align="center">Center aligned text</Text>
   <Text align="right">Right aligned text</Text>

@@ -23,7 +23,6 @@ const triggerVariants = ['raised', 'surface', 'soft', 'outline', 'ghost'] as con
  */
 const comboboxTriggerPropDefs = {
   variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'raised' },
-  material: { type: 'enum', values: ['solid', 'translucent'] },
   error: { type: 'boolean' },
   loading: { type: 'boolean' },
   disabled: { type: 'boolean' },
@@ -34,7 +33,6 @@ const comboboxTriggerPropDefs = {
   placeholder: { type: 'string' },
 } satisfies {
   variant: PropDef<(typeof triggerVariants)[number]>;
-  material: PropDef<'solid' | 'translucent'>;
   error: PropDef<boolean>;
   loading: PropDef<boolean>;
   disabled: PropDef<boolean>;
@@ -45,7 +43,6 @@ const comboboxTriggerPropDefs = {
 
 // The list is a menu, and menus stop at size 3.
 const contentSizes = ['1', '2', '3'] as const;
-const materials = ['solid', 'translucent'] as const;
 
 /**
  * Styling props for the dropdown surface rendered by Combobox.Content.
@@ -53,14 +50,12 @@ const materials = ['solid', 'translucent'] as const;
 const comboboxContentPropDefs = {
   size: { type: 'enum', className: 'rt-r-size', values: contentSizes, default: '2', responsive: true },
   ...colorPropDef,
-  material: { type: 'enum', values: materials, default: undefined },
   width: widthPropDefs.width,
   minWidth: widthPropDefs.minWidth,
   maxWidth: { ...widthPropDefs.maxWidth, default: '480px' },
   ...heightPropDefs,
 } satisfies {
   size: PropDef<(typeof contentSizes)[number]>;
-  material: PropDef<(typeof materials)[number] | undefined>;
   width: PropDef<string>;
   minWidth: PropDef<string>;
   maxWidth: PropDef<string>;
