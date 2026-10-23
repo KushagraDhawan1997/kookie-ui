@@ -145,7 +145,7 @@ h6 {
   width: calc(30 * var(--space-7));
   background-color: var(--color-page);
   border: 1px solid var(--neutral-a5);
-  border-radius: var(--radius-6);
+  border-radius: var(--radius-surface-4);
   overflow: clip;
 }
 

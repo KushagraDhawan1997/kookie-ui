@@ -340,3 +340,12 @@ The `color="gray"` prop value does not change.
 - `m="bleed"` now works inside Dialog, AlertDialog, Sheet, Popover and Notice, not only Card.
 - With `class="dark"` on `<html>`, `--color-page` and `--color-surface` resolve outside a Theme again.
 
+## 0.22.1: rounder controls, flatter surfaces
+
+Nothing to change in an app. At the default full radius, surfaces are less rounded while controls stay pills:
+
+| Role | Sizes 1–4 before | After |
+| --- | --- | --- |
+| `--radius-surface-N` (cards, popovers, menus, tables, panes, notices) | 10 / 16 / 22 / 28px | 8 / 12 / 16 / 20px |
+| `--radius-overlay-N` (dialogs, sheets) | 14 / 20 / 24 / 28px | 12 / 16 / 20 / 24px |
+

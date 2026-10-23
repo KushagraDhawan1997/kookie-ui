@@ -5,7 +5,7 @@ import { Box, Card, Theme } from '../../../src/components/index';
 
 // Theme defaults: radius `full` (surface factor 1), scale 1, size 2.
 const PADDING = { '1': 16, '2': 24, '3': 32, '4': 40 } as const;
-const CORNER = { '1': 10, '2': 16, '3': 22, '4': 28 } as const;
+const CORNER = { '1': 8, '2': 12, '3': 16, '4': 20 } as const;
 const SIZES = ['1', '2', '3', '4'] as const;
 
 const px = (value: string) => parseFloat(value);
@@ -28,7 +28,7 @@ describe('Card geometry', () => {
     );
     const { pads, corner } = box(container.querySelector('.kui-Card')!);
     expect(pads).toEqual([24, 24, 24, 24]);
-    expect(corner).toBe(16);
+    expect(corner).toBe(12);
   });
 
   for (const size of SIZES) {
@@ -52,7 +52,7 @@ describe('Card geometry', () => {
     );
     const { pads, corner } = box(container.querySelector('.kui-Card')!);
     expect(pads[0]).toBe(40);
-    expect(corner).toBe(28);
+    expect(corner).toBe(20);
   });
 
   it('a Card in a Card is concentric: outer corner minus outer padding, never below 0', () => {
