@@ -5,7 +5,7 @@ import { Popover, Theme } from '../../../src/components/index';
 
 // A popover is a card that floats (v2): surface padding and surface corner, sizes 1-4, rest 2.
 const pad = { '1': 16, '2': 24, '3': 32, '4': 40 } as const;
-const corner = { '1': 10, '2': 16, '3': 22, '4': 28 } as const;
+const corner = { '1': 8, '2': 12, '3': 16, '4': 20 } as const;
 type Size = keyof typeof pad;
 
 function measure(selector: string) {

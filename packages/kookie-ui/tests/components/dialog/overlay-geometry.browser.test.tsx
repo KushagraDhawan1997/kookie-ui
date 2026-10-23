@@ -6,7 +6,7 @@ import { AlertDialog, Dialog, Sheet, Theme } from '../../../src/components/index
 // An overlay (v2): size N pads --surface-p-(N+1) capped at 4, wears --radius-overlay-N and caps
 // at --overlay-w-N. Sizes 1-4, rest 2. Measured at radius="full" (the factor caps at 1).
 const pad = { '1': 24, '2': 32, '3': 40, '4': 40 } as const;
-const corner = { '1': 14, '2': 20, '3': 24, '4': 28 } as const;
+const corner = { '1': 12, '2': 16, '3': 20, '4': 24 } as const;
 const width = { '1': 360, '2': 440, '3': 560, '4': 720 } as const;
 type Size = keyof typeof pad;
 
@@ -49,7 +49,7 @@ describe('Dialog geometry', () => {
         </Dialog.Root>
       </Theme>,
     );
-    expect(measure('.kui-DialogContent')).toEqual({ pad: 40, corner: 28, width: 720 });
+    expect(measure('.kui-DialogContent')).toEqual({ pad: 40, corner: 24, width: 720 });
   });
 
   it('an explicit maxWidth wins over the overlay width', () => {

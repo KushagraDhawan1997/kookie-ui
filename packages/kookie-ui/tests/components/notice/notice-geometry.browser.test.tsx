@@ -5,7 +5,7 @@ import { Button, Notice, Theme } from '../../../src/components/index';
 
 // A notice is a surface: Card's padding and corner at the same size, and one 12px gap.
 const surface = { '1': 16, '2': 24, '3': 32, '4': 40 } as const;
-const corner = { '1': 10, '2': 16, '3': 22, '4': 28 } as const;
+const corner = { '1': 8, '2': 12, '3': 16, '4': 20 } as const;
 
 function measure(size: '1' | '2' | '3' | '4', radius?: 'none' | 'medium' | 'full') {
   const { container, unmount } = render(

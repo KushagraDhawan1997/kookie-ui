@@ -1,3 +1,9 @@
+## [0.22.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.22.0...v0.22.1) (2026-10-23)
+
+### Look
+
+* **radius:** surfaces are less rounded and controls stay pills, which is v1's look. At the default full radius, `--radius-surface-1..4` is 8/12/16/20px (was 10/16/22/28) and `--radius-overlay-1..4` is 12/16/20/24px (was 14/20/24/28).
+
 ## [0.22.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.21.0...v0.22.0) (2026-10-23)
 
 v2's names. Release 5b, the last of the core plan. See MIGRATION.md.
