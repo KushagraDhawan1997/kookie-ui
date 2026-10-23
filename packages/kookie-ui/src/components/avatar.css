@@ -34,7 +34,7 @@
 /* stylelint-disable selector-max-type */
 .rt-AvatarRoot:where(button),
 .rt-AvatarRoot:where(a),
-.rt-AvatarRoot:where([role="button"]) {
+.rt-AvatarRoot:where([role='button']) {
   cursor: pointer;
 
   &:where(:focus-visible) {
@@ -42,9 +42,14 @@
     outline-offset: var(--focus-outline-offset);
   }
 
+  /* Disabled is a colour remap: the element still hit-tests, so the cursor stops promising a press. */
   &:where(:disabled),
   &:where([data-disabled]) {
-    cursor: not-allowed;
+    cursor: default;
+  }
+
+  /* A link has no native disabled: keep a disabled one from navigating. */
+  &:where(a[data-disabled]) {
     pointer-events: none;
   }
 
@@ -122,66 +127,67 @@
   }
 }
 
+/* Box ladder is v2's: sizes 1-4 are the control heights, 5-9 are 56/64/80/96/128. */
 @breakpoints {
   .rt-AvatarRoot {
     &:where(.rt-r-size-1) {
-      --avatar-size: var(--space-6);
+      --avatar-size: var(--control-height-1);
       --avatar-fallback-one-letter-font-size: var(--font-size-2);
       --avatar-fallback-two-letters-font-size: var(--font-size-1);
       border-radius: var(--radius-pill-1);
       letter-spacing: var(--letter-spacing-1);
     }
     &:where(.rt-r-size-2) {
-      --avatar-size: var(--space-7);
+      --avatar-size: var(--control-height-2);
       --avatar-fallback-one-letter-font-size: var(--font-size-3);
       --avatar-fallback-two-letters-font-size: var(--font-size-2);
       border-radius: var(--radius-pill-2);
       letter-spacing: var(--letter-spacing-2);
     }
     &:where(.rt-r-size-3) {
-      --avatar-size: var(--space-8);
+      --avatar-size: var(--control-height-3);
       --avatar-fallback-one-letter-font-size: var(--font-size-4);
       --avatar-fallback-two-letters-font-size: var(--font-size-3);
       border-radius: var(--radius-pill-3);
       letter-spacing: var(--letter-spacing-3);
     }
     &:where(.rt-r-size-4) {
-      --avatar-size: var(--space-9);
+      --avatar-size: var(--control-height-4);
       --avatar-fallback-one-letter-font-size: var(--font-size-5);
       --avatar-fallback-two-letters-font-size: var(--font-size-4);
       border-radius: var(--radius-pill-4);
       letter-spacing: var(--letter-spacing-4);
     }
     &:where(.rt-r-size-5) {
-      --avatar-size: var(--space-10);
+      --avatar-size: calc(56px * var(--scale));
       --avatar-fallback-one-letter-font-size: var(--font-size-6);
       --avatar-fallback-two-letters-font-size: var(--font-size-5);
       border-radius: var(--radius-pill-5);
       letter-spacing: var(--letter-spacing-5);
     }
     &:where(.rt-r-size-6) {
-      --avatar-size: 80px;
+      --avatar-size: var(--space-10);
       --avatar-fallback-one-letter-font-size: var(--font-size-7);
       --avatar-fallback-two-letters-font-size: var(--font-size-6);
       border-radius: var(--radius-pill-6);
       letter-spacing: var(--letter-spacing-6);
     }
     &:where(.rt-r-size-7) {
-      --avatar-size: 96px;
+      --avatar-size: calc(80px * var(--scale));
       --avatar-fallback-one-letter-font-size: var(--font-size-7);
       --avatar-fallback-two-letters-font-size: var(--font-size-6);
       border-radius: var(--radius-pill-7);
       letter-spacing: var(--letter-spacing-7);
     }
     &:where(.rt-r-size-8) {
-      --avatar-size: 128px;
+      --avatar-size: calc(96px * var(--scale));
       --avatar-fallback-one-letter-font-size: var(--font-size-8);
       --avatar-fallback-two-letters-font-size: var(--font-size-7);
       border-radius: var(--radius-pill-8);
       letter-spacing: var(--letter-spacing-8);
     }
     &:where(.rt-r-size-9) {
-      --avatar-size: 160px;
+      --avatar-size: var(--space-12);
       --avatar-fallback-one-letter-font-size: var(--font-size-9);
       --avatar-fallback-two-letters-font-size: var(--font-size-8);
       border-radius: var(--radius-pill-9);
@@ -284,7 +290,7 @@
 
 /* Shared interactive states for soft, outline, surface */
 /* stylelint-disable selector-max-type */
-.rt-AvatarRoot:where(button, a, [role="button"]):where(.rt-variant-soft, .rt-variant-outline, .rt-variant-surface) {
+.rt-AvatarRoot:where(button, a, [role='button']):where(.rt-variant-soft, .rt-variant-outline, .rt-variant-surface) {
   /* Hover state */
   @media (hover: hover) {
     &:where(:hover:not(:disabled, [data-disabled])) {
@@ -307,7 +313,7 @@
 }
 
 /* Border interactive states for outline and surface */
-.rt-AvatarRoot:where(button, a, [role="button"]):where(.rt-variant-outline, .rt-variant-surface) {
+.rt-AvatarRoot:where(button, a, [role='button']):where(.rt-variant-outline, .rt-variant-surface) {
   /* Hover border */
   @media (hover: hover) {
     &:where(:hover:not(:disabled, [data-disabled])) {
@@ -351,7 +357,7 @@
 }
 
 /* Solid interactive states */
-.rt-AvatarRoot:where(button, a, [role="button"]):where(.rt-variant-solid) {
+.rt-AvatarRoot:where(button, a, [role='button']):where(.rt-variant-solid) {
   @media (hover: hover) {
     &:where(:hover:not(:disabled, [data-disabled])) {
       background-color: var(--accent-solid-hover);
@@ -395,7 +401,7 @@
 }
 
 /* Raised interactive states */
-.rt-AvatarRoot:where(button, a, [role="button"]):where(.rt-variant-raised) {
+.rt-AvatarRoot:where(button, a, [role='button']):where(.rt-variant-raised) {
   @media (hover: hover) {
     &:where(:hover:not(:disabled, [data-disabled])) {
       background-color: var(--gray-2);

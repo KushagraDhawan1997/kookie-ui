@@ -1,5 +1,3 @@
-/* Disabled state uses simple opacity instead of complex blend modes */
-
 .rt-SwitchRoot {
   position: relative;
   display: inline-flex;
@@ -9,8 +7,8 @@
   height: var(--switch-height);
   border-radius: 9999px;
 
-  --switch-width: calc(var(--switch-height) * 1.75);
-  --switch-thumb-inset: 1px;
+  /* The thumb is the track minus one designed inset on every side (v2's --switch-inset). */
+  --switch-thumb-inset: var(--switch-inset, calc(2px * var(--scale)));
   --switch-thumb-size: calc(var(--switch-height) - var(--switch-thumb-inset) * 2);
   --switch-thumb-translate-x: calc(var(--switch-width) - var(--switch-height));
 
@@ -26,12 +24,8 @@
   }
 
   &:where(:focus-visible)::before {
-    outline: 2px solid var(--focus-8);
-    outline-offset: 2px;
-  }
-
-  &:where([data-disabled])::before {
-    cursor: var(--cursor-disabled);
+    outline: var(--focus-ring-width, 2px) solid var(--focus-8);
+    outline-offset: var(--focus-ring-offset, 2px);
   }
 }
 
@@ -56,19 +50,27 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
+/*
+ * The track is v2's mark one index up (size N is --mark-(N+1): 20/24/26/28), so a switch stands
+ * one step taller than the checkbox beside it. Its width is v2's own ladder (34/40/44/48).
+ */
 @breakpoints {
   .rt-SwitchRoot {
     &:where(.rt-r-size-1) {
-      --switch-height: var(--space-5);
+      --switch-height: var(--mark-2, calc(20px * var(--scale)));
+      --switch-width: var(--switch-w-1, calc(34px * var(--scale)));
     }
     &:where(.rt-r-size-2) {
-      --switch-height: calc(var(--space-6));
+      --switch-height: var(--mark-3, calc(24px * var(--scale)));
+      --switch-width: var(--switch-w-2, calc(40px * var(--scale)));
     }
     &:where(.rt-r-size-3) {
-      --switch-height: var(--space-7);
+      --switch-height: var(--mark-4, calc(26px * var(--scale)));
+      --switch-width: var(--switch-w-3, calc(44px * var(--scale)));
     }
     &:where(.rt-r-size-4) {
-      --switch-height: var(--space-8);
+      --switch-height: var(--mark-5, calc(28px * var(--scale)));
+      --switch-width: var(--switch-w-4, calc(48px * var(--scale)));
     }
   }
 }
@@ -119,19 +121,51 @@
   }
 }
 
-/* all disabled Switches */
+/* Hover is one step up the variant's own ramp, press two. Disabled switches take neither. */
+
+.rt-SwitchRoot {
+  --switch-off-hover: var(--gray-a2);
+  --switch-off-active: var(--gray-a3);
+
+  &:where(.rt-variant-surface) {
+    --switch-off-hover: var(--gray-3);
+    --switch-off-active: var(--gray-4);
+  }
+  &:where(.rt-variant-soft) {
+    --switch-off-hover: var(--gray-4);
+    --switch-off-active: var(--gray-5);
+  }
+
+  @media (hover: hover) {
+    &:where(:hover:not([data-disabled]))::before {
+      background-color: var(--switch-off-hover);
+    }
+    &:where(:hover:not([data-disabled]):is([data-state='checked']))::before {
+      background-color: var(--accent-solid-hover);
+    }
+  }
+  &:where(:active:not([data-disabled]))::before {
+    background-color: var(--switch-off-active);
+  }
+  &:where(:active:not([data-disabled]):is([data-state='checked']))::before {
+    background-color: var(--accent-solid-active);
+  }
+}
+
+/* all disabled Switches: a colour remap, never opacity, and a default cursor */
 
 [data-disabled] {
   .rt-SwitchRoot:where(&) {
-    cursor: var(--cursor-disabled);
+    cursor: default;
   }
   .rt-SwitchRoot:where(&)::before {
+    cursor: default;
     background-color: var(--gray-a3) !important;
     box-shadow: none !important;
     outline: none !important;
   }
   .rt-SwitchThumb:where(&) {
-    cursor: var(--cursor-disabled);
+    cursor: default;
     box-shadow: none !important;
     outline: none !important;
   }

@@ -33,58 +33,52 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
+/* Paddings and gaps sit on v2's space palette (2, 4, 8, 12): no fractional steps. */
 @breakpoints {
   .rt-Badge {
     &:where(.rt-r-size-1) {
       font-size: var(--font-size-0);
       line-height: var(--line-height-0);
       letter-spacing: var(--letter-spacing-0);
-      padding: calc(var(--space-2) * 0.5) calc(var(--space-2) * 1.5);
-      gap: calc(var(--space-2) * 1.5);
+      padding: var(--space-1) var(--space-2);
+      gap: var(--space-2);
       border-radius: max(calc(var(--radius-1) * var(--spacing-multiplier-medium)), var(--radius-full));
-
-      &:where(.rt-variant-ghost) {
-        padding: calc(var(--space-2) * 0.25) var(--space-2);
-        gap: var(--space-2);
-      }
     }
     &:where(.rt-r-size-2) {
       font-size: var(--font-size-1);
       line-height: var(--line-height-1);
       letter-spacing: var(--letter-spacing-1);
       padding: var(--space-2) var(--space-3);
-      gap: calc(var(--space-2) * 1.5);
+      gap: var(--space-2);
       border-radius: var(--radius-pill-1);
 
       &:where(.rt-variant-ghost) {
-        padding: calc(var(--space-2) * 0.5) calc(var(--space-2) * 1.25);
-        gap: var(--space-2);
+        padding: var(--space-1) var(--space-2);
       }
     }
     &:where(.rt-r-size-3) {
       font-size: var(--font-size-2);
       line-height: var(--line-height-2);
       letter-spacing: var(--letter-spacing-2);
-      padding: var(--space-2) calc(var(--space-3) * 1.25);
+      padding: var(--space-2) var(--space-4);
       gap: var(--space-3);
       border-radius: var(--radius-pill-2);
 
       &:where(.rt-variant-ghost) {
-        padding: calc(var(--space-2) * 0.75) var(--space-3);
-        gap: calc(var(--space-2) * 1.5);
+        padding: var(--space-1) var(--space-3);
+        gap: var(--space-2);
       }
     }
     &:where(.rt-r-size-4) {
       font-size: var(--font-size-3);
       line-height: var(--line-height-3);
       letter-spacing: var(--letter-spacing-3);
-      padding: calc(var(--space-2) * 1.25) calc(var(--space-3) * 1.5);
-      gap: calc(var(--space-3) * 1.25);
+      padding: var(--space-2) var(--space-4);
+      gap: var(--space-3);
       border-radius: var(--radius-pill-3);
 
       &:where(.rt-variant-ghost) {
-        padding: var(--space-2) calc(var(--space-3) * 1.25);
-        gap: var(--space-3);
+        padding: var(--space-2) var(--space-3);
       }
     }
   }
@@ -107,8 +101,7 @@
     background-color: var(--gray-a3);
     outline: none;
     filter: none;
-    cursor: not-allowed;
-    pointer-events: none;
+    cursor: default;
   }
 }
 
@@ -128,8 +121,7 @@
   &:where([data-disabled]) {
     color: var(--gray-a8);
     background-color: var(--gray-a3);
-    cursor: not-allowed;
-    pointer-events: none;
+    cursor: default;
   }
 }
 
@@ -139,8 +131,7 @@
   &:where([data-disabled]) {
     color: var(--gray-a8);
     background-color: var(--gray-a3);
-    cursor: not-allowed;
-    pointer-events: none;
+    cursor: default;
   }
 }
 

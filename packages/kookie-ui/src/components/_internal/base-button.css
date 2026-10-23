@@ -36,8 +36,27 @@
   position: relative;
   cursor: pointer;
   contain: paint;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+
+  /* The control ladder. min-height, not height: a hard height clips a resized or wrapped label. */
+  min-height: var(--base-button-height);
   gap: var(--base-button-gap);
-  height: var(--base-button-height);
+
+  /* Side padding is per side. Under a full radius a bare side pads wider (the corner curve swings
+     in at the text); a side that starts or ends with an icon keeps the plain padding. Outside the
+     full radius --radius-full is 0px, so the bare padding IS the plain padding. */
+  --base-button-px-bare: calc(
+    var(--base-button-px) + min(var(--radius-full), var(--base-button-px-pill) - var(--base-button-px))
+  );
+  padding-inline-start: var(--base-button-px-bare);
+  padding-inline-end: var(--base-button-px-bare);
+
+  /* Each level keeps v1's roundness; a full radius is half the control's height. */
+  border-radius: max(
+    var(--base-button-radius),
+    min(var(--radius-full), calc(var(--base-button-height) / 2))
+  );
 
   /* Typography */
   font-family: var(--default-font-family);
@@ -59,11 +78,16 @@
     background-color: Canvas;
   }
 
-  /* Disabled state styling */
-  &:where([data-disabled]) {
+  /* One focus ring for every variant */
+  &:where(:focus-visible) {
+    outline: var(--focus-ring-width) solid var(--focus-8);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  /* Disabled is a colour remap (per variant, below). It still hit-tests and keeps the arrow. */
+  &:where([data-disabled], [aria-disabled='true']) {
     --spinner-opacity: 1;
-    cursor: not-allowed;
-    pointer-events: none;
+    cursor: default;
     @media (forced-colors: active) {
       border-color: GrayText;
       color: GrayText;
@@ -71,10 +95,18 @@
     }
   }
 
-  /* Loading state styling */
+  /* Loading: busy, not frozen */
   &:where(.rt-loading) {
     position: relative;
-    cursor: wait;
+    cursor: progress;
+  }
+
+  /* Icons ride the icon ladder */
+  /* stylelint-disable-next-line selector-max-type */
+  & :where(svg) {
+    width: var(--base-button-icon-size);
+    height: var(--base-button-icon-size);
+    flex: none;
   }
 
   /* Stabilize SVGs during scale transforms (prevent wobble, especially Firefox) */
@@ -87,6 +119,22 @@
   }
 }
 
+/* An edge holding an icon keeps the plain padding under a pill */
+.rt-BaseButton:where([data-icon-start]) {
+  padding-inline-start: var(--base-button-px);
+}
+
+.rt-BaseButton:where([data-icon-end]) {
+  padding-inline-end: var(--base-button-px);
+}
+
+/* An icon-only button is square: no inline padding, and aspect-ratio rather than a width ladder,
+   so a hosted icon button whose height comes from its container (Toolbar, Chatbar) stays square. */
+.rt-BaseButton:where(.rt-IconButton) {
+  padding-inline: 0;
+  aspect-ratio: 1;
+}
+
 /* Full width mode */
 .rt-BaseButton:where(.rt-full-width) {
   display: flex;
@@ -97,28 +145,47 @@
  *                                                                                                 *
  * SIZES                                                                                           *
  *                                                                                                 *
+ * The control ladder: height 28/32/40/48, side padding, pill padding, gap and icon size all come  *
+ * from the role tokens. Only the corner keeps v1's own level.                                     *
+ *                                                                                                 *
  ***************************************************************************************************/
 
 @breakpoints {
   .rt-BaseButton {
     &:where(.rt-r-size-1) {
       --base-button-height: var(--control-height-1);
-      border-radius: var(--radius-pill-1);
+      --base-button-px: var(--control-px-1);
+      --base-button-px-pill: var(--control-px-pill-1);
+      --base-button-gap: var(--control-gap-1);
+      --base-button-icon-size: var(--icon-size-1);
+      --base-button-radius: var(--radius-1);
     }
 
     &:where(.rt-r-size-2) {
       --base-button-height: var(--control-height-2);
-      border-radius: var(--radius-pill-2);
+      --base-button-px: var(--control-px-2);
+      --base-button-px-pill: var(--control-px-pill-2);
+      --base-button-gap: var(--control-gap-2);
+      --base-button-icon-size: var(--icon-size-2);
+      --base-button-radius: var(--radius-2);
     }
 
     &:where(.rt-r-size-3) {
       --base-button-height: var(--control-height-3);
-      border-radius: var(--radius-pill-3);
+      --base-button-px: var(--control-px-3);
+      --base-button-px-pill: var(--control-px-pill-3);
+      --base-button-gap: var(--control-gap-3);
+      --base-button-icon-size: var(--icon-size-3);
+      --base-button-radius: var(--radius-3);
     }
 
     &:where(.rt-r-size-4) {
       --base-button-height: var(--control-height-4);
-      border-radius: var(--radius-pill-4);
+      --base-button-px: var(--control-px-4);
+      --base-button-px-pill: var(--control-px-pill-4);
+      --base-button-gap: var(--control-gap-4);
+      --base-button-icon-size: var(--icon-size-4);
+      --base-button-radius: var(--radius-4);
     }
   }
 }
@@ -128,7 +195,7 @@
  * VARIANT PALETTES                                                                                *
  *                                                                                                 *
  * Each variant defines its color scale. Shared state logic uses these variables.                  *
- * Variables: --v-color, --v-bg-*, --v-border-*, --v-shadow-*, --v-focus-*                        *
+ * Variables: --v-color, --v-bg-*, --v-border-*, --v-shadow-*                                     *
  *                                                                                                 *
  ***************************************************************************************************/
 
@@ -144,8 +211,6 @@
   --v-bg-pressed: var(--accent-5);
   --v-bg-pressed-a: var(--accent-a5);
   --v-shadow-hover: var(--shadow-2);
-  --v-focus-color: var(--accent-8);
-  --v-focus-offset: -1px;
 }
 
 /* Ghost variant palette */
@@ -160,8 +225,6 @@
   --v-bg-pressed: var(--accent-4);
   --v-bg-pressed-a: var(--accent-a4);
   --v-bg-disabled: transparent;
-  --v-focus-color: var(--focus-8);
-  --v-focus-offset: -1px;
 }
 
 /* Outline variant palette */
@@ -185,8 +248,6 @@
   --v-border-active: var(--accent-8);
   --v-border-active-a: var(--accent-a8);
   --v-border-disabled: var(--gray-a7);
-  --v-focus-color: var(--focus-8);
-  --v-focus-offset: -1px;
 }
 
 /* Surface variant palette */
@@ -210,15 +271,14 @@
   --v-border-active: var(--accent-8);
   --v-border-active-a: var(--accent-a8);
   --v-border-disabled: var(--gray-a6);
-  --v-focus-color: var(--focus-8);
-  --v-focus-offset: -1px;
 }
 
 /***************************************************************************************************
  *                                                                                                 *
  * SHARED STATE LOGIC                                                                              *
  *                                                                                                 *
- * Single set of state selectors that use variant palette variables.                               *
+ * One rule for every variant: hover = +1 step and press = +2 steps on the variant's own ramp.     *
+ * Hover only where hovering exists. Disabled is a colour remap: no opacity, no pointer-events.    *
  * Applies to: soft, ghost, outline, surface                                                       *
  *                                                                                                 *
  ***************************************************************************************************/
@@ -228,15 +288,9 @@
   color: var(--v-color);
   background-color: var(--v-bg);
 
-  /* Focus visible */
-  &:where(:focus-visible) {
-    outline: 2px solid var(--v-focus-color);
-    outline-offset: var(--v-focus-offset);
-  }
-
   /* Hover state */
   @media (hover: hover) {
-    &:where(:hover:not([data-disabled])) {
+    &:where(:hover:not([data-disabled], [aria-disabled='true'])) {
       background-color: var(--v-bg-hover);
       box-shadow: var(--v-shadow-hover, none);
     }
@@ -248,7 +302,7 @@
   }
 
   /* Active state */
-  &:where(:active:not([data-state='open'], [data-disabled])) {
+  &:where(:active:not([data-state='open'], [data-disabled], [aria-disabled='true'])) {
     background-color: var(--v-bg-active);
     box-shadow: var(--shadow-1);
   }
@@ -259,11 +313,10 @@
   }
 
   /* Disabled state */
-  &:where([data-disabled]) {
+  &:where([data-disabled], [aria-disabled='true']) {
     color: var(--gray-a8);
     background-color: var(--v-bg-disabled, var(--gray-a3));
-    cursor: not-allowed;
-    pointer-events: none;
+    box-shadow: none;
   }
 }
 
@@ -274,7 +327,7 @@
 
   /* Hover state border */
   @media (hover: hover) {
-    &:where(:hover:not([data-disabled])) {
+    &:where(:hover:not([data-disabled], [aria-disabled='true'])) {
       box-shadow: inset 0 0 0 1px var(--v-border-hover);
     }
   }
@@ -285,26 +338,26 @@
   }
 
   /* Active and pressed state border */
-  &:where(:active:not([data-state='open'], [data-disabled])),
+  &:where(:active:not([data-state='open'], [data-disabled], [aria-disabled='true'])),
   &:where([data-state='on']) {
     box-shadow: inset 0 0 0 1px var(--v-border-active);
   }
 
   /* Disabled state border */
-  &:where([data-disabled]) {
+  &:where([data-disabled], [aria-disabled='true']) {
     box-shadow: inset 0 0 0 1px var(--v-border-disabled);
   }
 }
 
-/* Ghost flush mode */
+/* Ghost flush mode: pull the button out by its own padding so its content sits on the text line */
 .rt-BaseButton:where(.rt-variant-ghost[data-flush='true']) {
   --margin-top: 0px;
   --margin-right: 0px;
   --margin-bottom: 0px;
   --margin-left: 0px;
 
-  --button-padding-x: calc(var(--base-button-height) * var(--padding-ratio-horizontal) / 4);
-  --button-padding-y: calc(var(--base-button-height) / 8);
+  --button-padding-x: var(--base-button-px);
+  --button-padding-y: calc((var(--base-button-height) - 1lh) / 2);
 
   --margin-top-override: calc(var(--margin-top) - var(--button-padding-y));
   --margin-right-override: calc(var(--margin-right) - var(--button-padding-x));
@@ -324,6 +377,12 @@
   }
 }
 
+/* A flush ghost icon button pulls out by the space around its glyph */
+.rt-BaseButton:where(.rt-IconButton.rt-variant-ghost[data-flush='true']) {
+  --button-padding-x: calc((var(--base-button-height) - var(--base-button-icon-size)) / 2);
+  --button-padding-y: var(--button-padding-x);
+}
+
 /***************************************************************************************************
  *                                                                                                 *
  * SPECIAL VARIANTS                                                                                *
@@ -332,62 +391,50 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* Raised variant - uses --color-surface and gray interactive states */
+/* Raised variant - surface at rest, then gray 2 on hover and gray 3 on press */
 .rt-BaseButton:where(.rt-variant-raised) {
   position: relative;
   color: var(--accent-ink);
   background-color: var(--color-surface-solid);
   box-shadow: var(--shadow-2);
 
-  &:where(:focus-visible) {
-    outline: 2px solid var(--focus-8);
-    outline-offset: 2px;
-  }
-
   @media (hover: hover) {
-    &:where(:hover) {
+    &:where(:hover:not([data-disabled], [aria-disabled='true'])) {
       background-color: var(--gray-2);
       box-shadow: var(--shadow-2);
     }
   }
 
   &:where([data-state='open']),
-  &:where(:active:not([data-state='open'], [data-disabled])),
-  &:where([data-state='on']:not([data-disabled])) {
+  &:where(:active:not([data-state='open'], [data-disabled], [aria-disabled='true'])),
+  &:where([data-state='on']:not([data-disabled], [aria-disabled='true'])) {
     background-color: var(--gray-3);
     box-shadow: var(--shadow-1);
   }
 
   @media (pointer: coarse) {
-    &:where(:active:not([data-state='open'])) {
+    &:where(:active:not([data-state='open'], [data-disabled], [aria-disabled='true'])) {
       outline: var(--raised-shadow-blur-large) solid var(--gray-a4);
       outline-offset: 0;
     }
   }
 
-  &:where([data-disabled]) {
+  &:where([data-disabled], [aria-disabled='true']) {
     color: var(--gray-a8);
     background-color: var(--gray-a3);
     box-shadow: none;
-    outline: none;
-    cursor: not-allowed;
-    pointer-events: none;
     top: 0;
   }
 }
 
-/* Solid variant - fills with the accent solid tokens (gray resolves to step 12 automatically) */
+/* Solid variant - accent solid at rest, solid-hover on hover, solid-active on press
+   (gray resolves the three to step 12 and the filters carry the change) */
 .rt-BaseButton:where(.rt-variant-solid) {
   background-color: var(--accent-solid);
   color: var(--accent-solid-contrast);
 
-  &:where(:focus-visible) {
-    outline: 2px solid var(--focus-8);
-    outline-offset: 2px;
-  }
-
   @media (hover: hover) {
-    &:where(:hover) {
+    &:where(:hover:not([data-disabled], [aria-disabled='true'])) {
       background-color: var(--accent-solid-hover);
       filter: var(--accent-solid-hover-filter);
       box-shadow: var(--shadow-2);
@@ -399,7 +446,8 @@
     filter: var(--accent-solid-open-filter);
   }
 
-  &:where(:active:not([data-state='open'])) {
+  &:where(:active:not([data-state='open'], [data-disabled], [aria-disabled='true'])) {
+    background-color: var(--accent-solid-active);
     filter: var(--accent-solid-active-filter);
   }
 
@@ -409,19 +457,18 @@
   }
 
   @media (pointer: coarse) {
-    &:where(:active:not([data-state='open'])) {
+    &:where(:active:not([data-state='open'], [data-disabled], [aria-disabled='true'])) {
       outline: var(--raised-shadow-blur-large) solid var(--accent-a4);
       outline-offset: 0;
     }
   }
 
-  &:where([data-disabled]) {
+  &:where([data-disabled], [aria-disabled='true']) {
     color: var(--gray-a8);
     background-color: var(--gray-a3);
-    outline: none;
+    box-shadow: none;
     filter: none;
-    cursor: not-allowed;
-    pointer-events: none;
+    opacity: 1;
   }
 }
 
@@ -431,24 +478,13 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-BaseButton:where([disabled][aria-pressed]) {
+.rt-BaseButton:where([data-disabled][aria-pressed], [aria-disabled='true'][aria-pressed]) {
   transform: none;
   color: var(--gray-a8);
   background-color: var(--gray-a3);
-  background: var(--gray-a3);
   box-shadow: none;
   filter: none;
-  opacity: 0.6;
-  cursor: not-allowed;
-  pointer-events: none;
-
-  &:where([data-state='on']) {
-    transform: none;
-    background: var(--gray-a3);
-    background-color: var(--gray-a3);
-    box-shadow: none;
-    filter: none;
-  }
+  opacity: 1;
 
   /* Raised needs special handling for top position */
   &:where(.rt-variant-raised) {

@@ -140,7 +140,7 @@ export default function ShellControlledTest() {
               <HugeiconsIcon icon={SidebarLeft01Icon} strokeWidth={1.75} />
             </Shell.Trigger>
           </IconButton>
-          <Separator size="4" my="2" />
+          <Separator my="2" />
           <IconButton variant="ghost" size="2" color="gray" aria-label="Home">
             <HugeiconsIcon icon={Home01Icon} strokeWidth={1.75} />
           </IconButton>
@@ -179,7 +179,7 @@ export default function ShellControlledTest() {
               </Shell.Trigger>
             </IconButton>
           </Flex>
-          <Separator size="4" />
+          <Separator />
           <Flex direction="column" gap="2">
             {['Dashboard', 'Projects', 'Tasks', 'Calendar', 'Reports'].map((item) => (
               <Button key={item} variant="ghost" size="2" color="gray" style={{ justifyContent: 'flex-start' }}>
@@ -469,13 +469,13 @@ export default function ShellControlledTest() {
               </Shell.Trigger>
             </IconButton>
           </Flex>
-          <Separator size="4" />
+          <Separator />
           <Flex direction="column" gap="4">
             <Box>
               <Text size="2" weight="medium" mb="2">Properties</Text>
               <Text size="1" emphasis="medium">Selected item properties would appear here.</Text>
             </Box>
-            <Separator size="4" />
+            <Separator />
             <Box>
               <Text size="2" weight="medium" mb="2">State Debug</Text>
               <Flex direction="column" gap="2">

@@ -17,47 +17,12 @@ export default function SpinnerTest() {
           </Text>
         </Flex>
 
-        <Separator size="4" />
+        <Separator />
 
-        {/* Test 1: All Sizes */}
+        {/* Test 1: With Colors */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">1. All Sizes</Heading>
-            <Text size="2" emphasis="medium">
-              Spinner scales correctly across all sizes
-            </Text>
-          </Box>
-
-          <Flex gap="7" align="center">
-            <Flex direction="column" align="center" gap="3">
-              <Spinner size="1" />
-              <Code size="1" variant="soft">size="1"</Code>
-            </Flex>
-
-            <Flex direction="column" align="center" gap="3">
-              <Spinner size="2" />
-              <Code size="1" variant="soft">size="2"</Code>
-            </Flex>
-
-            <Flex direction="column" align="center" gap="3">
-              <Spinner size="3" />
-              <Code size="1" variant="soft">size="3"</Code>
-            </Flex>
-          </Flex>
-
-          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-            <Text size="2" emphasis="medium">
-              All sizes use the same <Code variant="soft">steps(8, end)</Code> rotation animation
-            </Text>
-          </Box>
-        </Flex>
-
-        <Separator size="4" />
-
-        {/* Test 2: With Colors */}
-        <Flex direction="column" gap="6">
-          <Box>
-            <Heading size="6" weight="medium" mb="3">2. Color Inheritance</Heading>
+            <Heading size="6" weight="medium" mb="3">1. Color Inheritance</Heading>
             <Text size="2" emphasis="medium">
               Spinner inherits color from parent context
             </Text>
@@ -66,28 +31,28 @@ export default function SpinnerTest() {
           <Flex gap="7" align="center">
             <Flex direction="column" align="center" gap="3">
               <Box style={{ color: 'var(--crimson-9)' }}>
-                <Spinner size="3" />
+                <Spinner />
               </Box>
               <Code size="1" variant="soft" color="crimson">crimson</Code>
             </Flex>
 
             <Flex direction="column" align="center" gap="3">
               <Box style={{ color: 'var(--blue-9)' }}>
-                <Spinner size="3" />
+                <Spinner />
               </Box>
               <Code size="1" variant="soft" color="blue">blue</Code>
             </Flex>
 
             <Flex direction="column" align="center" gap="3">
               <Box style={{ color: 'var(--green-9)' }}>
-                <Spinner size="3" />
+                <Spinner />
               </Box>
               <Code size="1" variant="soft" color="green">green</Code>
             </Flex>
 
             <Flex direction="column" align="center" gap="3">
               <Box style={{ color: 'var(--orange-9)' }}>
-                <Spinner size="3" />
+                <Spinner />
               </Box>
               <Code size="1" variant="soft" color="orange">orange</Code>
             </Flex>
@@ -100,12 +65,12 @@ export default function SpinnerTest() {
           </Box>
         </Flex>
 
-        <Separator size="4" />
+        <Separator />
 
-        {/* Test 3: With Loading State */}
+        {/* Test 2: With Loading State */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">3. Loading State</Heading>
+            <Heading size="6" weight="medium" mb="3">2. Loading State</Heading>
             <Text size="2" emphasis="medium">
               Spinner wrapping content shows/hides based on loading prop
             </Text>
@@ -128,52 +93,52 @@ export default function SpinnerTest() {
           </Box>
         </Flex>
 
-        <Separator size="4" />
+        <Separator />
 
-        {/* Test 4: In Buttons */}
+        {/* Test 3: In Buttons */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">4. Inside Buttons</Heading>
+            <Heading size="6" weight="medium" mb="3">3. Inside Buttons</Heading>
             <Text size="2" emphasis="medium">
-              Spinner maintains proper sizing inside buttons
+              Spinner is 16px at every button size
             </Text>
           </Box>
 
           <Flex gap="4" wrap="wrap">
             <Button size="1" disabled>
-              <Spinner size="1" />
+              <Spinner />
               Loading
             </Button>
 
             <Button size="2" disabled>
-              <Spinner size="1" />
+              <Spinner />
               Loading
             </Button>
 
             <Button size="3" disabled>
-              <Spinner size="2" />
+              <Spinner />
               Loading
             </Button>
 
             <Button size="2" variant="soft" color="gray" disabled>
-              <Spinner size="1" />
+              <Spinner />
               Processing
             </Button>
           </Flex>
 
           <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
-              Use smaller spinner sizes inside buttons for proper proportions
+              Spinner has one size, 16px
             </Text>
           </Box>
         </Flex>
 
-        <Separator size="4" />
+        <Separator />
 
-        {/* Test 5: Performance Stress Test */}
+        {/* Test 4: Performance Stress Test */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">5. Performance Stress Test</Heading>
+            <Heading size="6" weight="medium" mb="3">4. Performance Stress Test</Heading>
             <Text size="2" emphasis="medium">
               Multiple spinners to test GPU-composited animation performance
             </Text>
@@ -191,7 +156,7 @@ export default function SpinnerTest() {
             {showMany && (
               <Flex gap="4" wrap="wrap" p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
                 {Array.from({ length: 50 }).map((_, i) => (
-                  <Spinner key={i} size="2" />
+                  <Spinner key={i} />
                 ))}
               </Flex>
             )}
@@ -204,12 +169,12 @@ export default function SpinnerTest() {
           </Box>
         </Flex>
 
-        <Separator size="4" />
+        <Separator />
 
-        {/* Test 6: Animation Details */}
+        {/* Test 5: Animation Details */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">6. Animation Implementation</Heading>
+            <Heading size="6" weight="medium" mb="3">5. Animation Implementation</Heading>
             <Text size="2" emphasis="medium">
               Technical details of the optimized spinner
             </Text>
@@ -244,19 +209,19 @@ export default function SpinnerTest() {
           </Box>
         </Flex>
 
-        <Separator size="4" />
+        <Separator />
 
-        {/* Test 7: Side by Side */}
+        {/* Test 6: Side by Side */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">7. Visual Consistency</Heading>
+            <Heading size="6" weight="medium" mb="3">6. Visual Consistency</Heading>
             <Text size="2" emphasis="medium">
               Spinner appearance matches the classic iOS-style spinner
             </Text>
           </Box>
 
           <Flex justify="center" p="9" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
-            <Spinner size="3" />
+            <Spinner />
           </Flex>
 
           <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>

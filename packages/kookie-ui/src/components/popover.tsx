@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { Popover as PopoverPrimitive } from 'radix-ui';
 
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
 import { popoverContentPropDefs } from './popover.props.js';
 import { Theme } from './theme.js';
@@ -58,7 +59,8 @@ interface PopoverContentProps
   container?: React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Portal>['container'];
 }
 const PopoverContent = React.forwardRef<PopoverContentElement, PopoverContentProps>(
-  (props, forwardedRef) => {
+  (ownProps, forwardedRef) => {
+    const props = useThemeSizeProps(ownProps, popoverContentPropDefs.size);
     const {
       className,
       forceMount,

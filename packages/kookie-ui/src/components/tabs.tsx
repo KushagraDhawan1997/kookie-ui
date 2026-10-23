@@ -4,6 +4,7 @@ import { Tabs as TabsPrimitive } from 'radix-ui';
 
 import { tabsListPropDefs } from './tabs.props.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { marginPropDefs } from '../props/margin.props.js';
 
 import type { tabsContentPropDefs, tabsRootPropDefs } from './tabs.props.js';
@@ -35,7 +36,8 @@ interface TabsListProps
   extends ComponentPropsWithout<typeof TabsPrimitive.List, RemovedProps>,
     MarginProps,
     TabsListOwnProps {}
-const TabsList = React.forwardRef<TabsListElement, TabsListProps>((props, forwardedRef) => {
+const TabsList = React.forwardRef<TabsListElement, TabsListProps>((ownProps, forwardedRef) => {
+  const props = useThemeSizeProps(ownProps, tabsListPropDefs.size);
   const { className, color, ...listProps } = extractProps(
     props,
     tabsListPropDefs,

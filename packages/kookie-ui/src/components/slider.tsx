@@ -4,6 +4,7 @@ import { Slider as SliderPrimitive } from 'radix-ui';
 
 import { sliderPropDefs } from './slider.props.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { marginPropDefs } from '../props/margin.props.js';
 
 import type { MarginProps } from '../props/margin.props.js';
@@ -22,7 +23,8 @@ interface SliderProps
   ticks?: Array<{ value: number; label?: string }>;
   unit?: string;
 }
-const Slider = React.forwardRef<SliderElement, SliderProps>((props, forwardedRef) => {
+const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwardedRef) => {
+  const props = useThemeSizeProps(ownProps, sliderPropDefs.size);
   const { className, color, radius, tabIndex, ...sliderProps } = extractProps(
     props,
     sliderPropDefs,

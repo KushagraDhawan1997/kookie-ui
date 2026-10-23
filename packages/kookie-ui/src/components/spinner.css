@@ -6,6 +6,8 @@
 .rt-Spinner {
   display: block;
   position: relative;
+  width: var(--space-5);
+  height: var(--space-5);
   opacity: var(--spinner-opacity);
   /* Single GPU-composited rotation instead of 8 opacity animations */
   animation: rt-spinner-rotate var(--spinner-animation-duration) steps(8, end) infinite;
@@ -73,28 +75,5 @@
 @media (prefers-reduced-motion: reduce) {
   .rt-Spinner {
     animation-duration: calc(var(--spinner-animation-duration) * 3);
-  }
-}
-
-/***************************************************************************************************
- *                                                                                                 *
- * SIZES                                                                                           *
- *                                                                                                 *
- ***************************************************************************************************/
-
-@breakpoints {
-  .rt-Spinner {
-    &:where(.rt-r-size-1) {
-      width: var(--space-4);
-      height: var(--space-4);
-    }
-    &:where(.rt-r-size-2) {
-      width: var(--space-5);
-      height: var(--space-5);
-    }
-    &:where(.rt-r-size-3) {
-      width: calc(1.25 * var(--space-5));
-      height: calc(1.25 * var(--space-5));
-    }
   }
 }

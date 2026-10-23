@@ -5,7 +5,6 @@
   flex-shrink: 0;
   user-select: none;
   vertical-align: top;
-  line-height: var(--height);
 
   font-family: var(--default-font-family);
   font-weight: var(--font-weight-regular);
@@ -137,36 +136,34 @@
 
 .rt-SelectTrigger {
   color: var(--gray-12);
+  box-sizing: border-box;
+  /* min-height, not height: a hard height clips text resized to 200%. */
+  min-height: var(--select-trigger-height);
+  gap: var(--select-trigger-gap);
 
-  &:where(:not(.rt-variant-ghost)) {
-    box-sizing: border-box;
-    height: var(--select-trigger-height);
-  }
-  &:where(.rt-variant-ghost) {
-    box-sizing: border-box;
-    height: var(--select-trigger-height);
-    padding: 0 var(--select-trigger-ghost-padding-x);
-  }
+  /*
+   * The label's edge is bare, so under a full radius it pads wider (the curve cuts into the
+   * text). `--radius-full` is 0px below `full` and 9999px at `full`. The chevron's edge keeps
+   * the plain padding.
+   */
+  padding-left: calc(
+    var(--select-trigger-px) + min(var(--radius-full, 0px), var(--select-trigger-px-pill) - var(--select-trigger-px))
+  );
+  padding-right: var(--select-trigger-px);
 }
 
 @breakpoints {
   .rt-SelectTrigger {
     &:where(.rt-r-size-1) {
       --select-trigger-height: var(--control-height-1);
-      gap: var(--component-gap-1);
+      --select-trigger-px: var(--control-px-1);
+      --select-trigger-px-pill: var(--control-px-pill-1);
+      --select-trigger-gap: var(--control-gap-1);
       font-size: var(--font-size-1);
       line-height: var(--line-height-1);
       letter-spacing: var(--letter-spacing-1);
       border-radius: var(--radius-pill-1);
 
-      &:where(:not(.rt-variant-ghost)) {
-        padding-left: var(--space-3);
-        padding-right: var(--space-3);
-      }
-      &:where(.rt-variant-ghost) {
-        gap: var(--component-gap-ghost-1);
-        --select-trigger-ghost-padding-x: var(--space-3);
-      }
       & :where(.rt-SelectIcon) {
         width: var(--trigger-icon-size-1);
         height: var(--trigger-icon-size-1);
@@ -174,20 +171,14 @@
     }
     &:where(.rt-r-size-2) {
       --select-trigger-height: var(--control-height-2);
-      gap: var(--component-gap-2);
+      --select-trigger-px: var(--control-px-2);
+      --select-trigger-px-pill: var(--control-px-pill-2);
+      --select-trigger-gap: var(--control-gap-2);
       font-size: var(--font-size-2);
       line-height: var(--line-height-2);
       letter-spacing: var(--letter-spacing-2);
       border-radius: var(--radius-pill-2);
 
-      &:where(:not(.rt-variant-ghost)) {
-        padding-left: var(--space-4);
-        padding-right: var(--space-4);
-      }
-      &:where(.rt-variant-ghost) {
-        gap: var(--component-gap-ghost-2);
-        --select-trigger-ghost-padding-x: var(--space-3);
-      }
       & :where(.rt-SelectIcon) {
         width: var(--trigger-icon-size-2);
         height: var(--trigger-icon-size-2);
@@ -195,20 +186,14 @@
     }
     &:where(.rt-r-size-3) {
       --select-trigger-height: var(--control-height-3);
-      gap: var(--component-gap-3);
+      --select-trigger-px: var(--control-px-3);
+      --select-trigger-px-pill: var(--control-px-pill-3);
+      --select-trigger-gap: var(--control-gap-3);
       font-size: var(--font-size-3);
       line-height: var(--line-height-3);
       letter-spacing: var(--letter-spacing-3);
       border-radius: var(--radius-pill-3);
 
-      &:where(:not(.rt-variant-ghost)) {
-        padding-left: var(--space-5);
-        padding-right: var(--space-5);
-      }
-      &:where(.rt-variant-ghost) {
-        gap: var(--component-gap-ghost-3);
-        --select-trigger-ghost-padding-x: var(--space-4);
-      }
       & :where(.rt-SelectIcon) {
         width: var(--trigger-icon-size-3);
         height: var(--trigger-icon-size-3);
@@ -216,20 +201,14 @@
     }
     &:where(.rt-r-size-4) {
       --select-trigger-height: var(--control-height-4);
-      gap: var(--component-gap-4);
+      --select-trigger-px: var(--control-px-4);
+      --select-trigger-px-pill: var(--control-px-pill-4);
+      --select-trigger-gap: var(--control-gap-4);
       font-size: var(--font-size-4);
       line-height: var(--line-height-4);
       letter-spacing: var(--letter-spacing-4);
       border-radius: var(--radius-pill-4);
 
-      &:where(:not(.rt-variant-ghost)) {
-        padding-left: var(--space-5);
-        padding-right: var(--space-5);
-      }
-      &:where(.rt-variant-ghost) {
-        gap: var(--component-gap-ghost-4);
-        --select-trigger-ghost-padding-x: var(--space-4);
-      }
       & :where(.rt-SelectIcon) {
         width: var(--trigger-icon-size-4);
         height: var(--trigger-icon-size-4);
@@ -345,7 +324,7 @@
   }
 
   @media (hover: hover) {
-    &:where(:hover) {
+    &:where(:hover:not(:disabled)) {
       background-color: var(--accent-2);
       box-shadow: var(--shadow-2);
     }
@@ -364,8 +343,7 @@
     background-color: var(--gray-a3);
     box-shadow: none;
     outline: none;
-    cursor: not-allowed;
-    pointer-events: none;
+    cursor: default;
     top: 0;
   }
 
@@ -388,7 +366,7 @@
   }
 
   @media (hover: hover) {
-    &:where(:hover) {
+    &:where(:hover:not(:disabled)) {
       background-color: var(--accent-4);
     }
   }
@@ -397,15 +375,14 @@
     background-color: var(--accent-4);
   }
 
-  &:where(:active:not([data-state='open'])) {
+  &:where(:active:not([data-state='open'], :disabled)) {
     background-color: var(--accent-5);
   }
 
   &:where(:disabled) {
     color: var(--gray-a8);
     background-color: var(--gray-a3);
-    cursor: not-allowed;
-    pointer-events: none;
+    cursor: default;
   }
 
   &:where([data-placeholder]) {
@@ -431,7 +408,7 @@
   }
 
   @media (hover: hover) {
-    &:where(:hover) {
+    &:where(:hover:not(:disabled)) {
       background-color: var(--accent-3);
     }
   }
@@ -445,15 +422,14 @@
     background-color: var(--accent-3);
   }
 
-  &:where(:active:not([data-state='open'])) {
+  &:where(:active:not([data-state='open'], :disabled)) {
     background-color: var(--accent-4);
   }
 
   &:where(:disabled) {
     color: var(--gray-a8);
     background-color: transparent;
-    cursor: not-allowed;
-    pointer-events: none;
+    cursor: default;
   }
 }
 
@@ -464,7 +440,7 @@
   color: var(--accent-ink);
 
   @media (hover: hover) {
-    &:where(:hover) {
+    &:where(:hover:not(:disabled)) {
       background-color: var(--accent-2);
       box-shadow: inset 0 0 0 1px var(--accent-7);
     }
@@ -475,7 +451,7 @@
     box-shadow: inset 0 0 0 1px var(--accent-7);
   }
 
-  &:where(:active:not([data-state='open'])) {
+  &:where(:active:not([data-state='open'], :disabled)) {
     background-color: var(--accent-3);
     box-shadow: inset 0 0 0 1px var(--accent-8);
   }
@@ -489,8 +465,7 @@
     color: var(--gray-a8);
     box-shadow: inset 0 0 0 1px var(--gray-a7);
     background-color: transparent;
-    cursor: not-allowed;
-    pointer-events: none;
+    cursor: default;
   }
 
   &:where([data-placeholder]) {
@@ -509,7 +484,7 @@
   color: var(--accent-ink);
 
   @media (hover: hover) {
-    &:where(:hover) {
+    &:where(:hover:not(:disabled)) {
       background-color: var(--accent-3);
       box-shadow: inset 0 0 0 1px var(--accent-7);
     }
@@ -520,7 +495,7 @@
     box-shadow: inset 0 0 0 1px var(--accent-8);
   }
 
-  &:where(:active:not([data-state='open'])) {
+  &:where(:active:not([data-state='open'], :disabled)) {
     background-color: var(--accent-4);
     box-shadow: inset 0 0 0 1px var(--accent-8);
   }
@@ -534,8 +509,7 @@
     color: var(--gray-a8);
     box-shadow: inset 0 0 0 1px var(--gray-a6);
     background-color: var(--gray-a2);
-    cursor: not-allowed;
-    pointer-events: none;
+    cursor: default;
   }
 
   &:where([data-placeholder]) {
@@ -546,22 +520,50 @@
   }
 }
 
-/* all disabled */
+/* all disabled: a colour remap, never opacity, and the arrow cursor */
 .rt-SelectTrigger {
   &:where(:disabled) {
     & :where(.rt-SelectIcon) {
       color: var(--gray-a9);
     }
+    &:where([data-placeholder]) :where(.rt-SelectTriggerInner) {
+      color: var(--gray-a8);
+      opacity: 1;
+    }
   }
 }
 
-/* Error state styling */
-.rt-SelectTrigger:where([data-error="true"]) {
-  box-shadow: inset 0 0 0 1px var(--red-9);
-}
+/*
+ * Invalid. Keyed on `aria-invalid`, which the `error` prop sets, so both paths style the same.
+ * Only the border and the focus ring move; the fill stays the variant's.
+ */
+.rt-SelectTrigger:where([aria-invalid='true']) {
+  &:where(:not(.rt-variant-raised)) {
+    box-shadow: inset 0 0 0 1px var(--red-6);
 
-.rt-SelectTrigger:where([data-error="true"]:focus-visible) {
-  outline: 2px solid var(--red-8);
+    @media (hover: hover) {
+      &:where(:hover:not(:disabled)) {
+        box-shadow: inset 0 0 0 1px var(--red-7);
+      }
+    }
+    &:where([data-state='open'], :active) {
+      box-shadow: inset 0 0 0 1px var(--red-7);
+    }
+  }
+
+  &:where(.rt-variant-raised) {
+    box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-6);
+
+    @media (hover: hover) {
+      &:where(:hover:not(:disabled)) {
+        box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-7);
+      }
+    }
+  }
+
+  &:where(:focus-visible) {
+    outline-color: var(--red-8);
+  }
 }
 
 /* Loading state styling */
@@ -595,7 +597,7 @@
 
 /* Forced colors support */
 @media (forced-colors: active) {
-  .rt-SelectTrigger:where([data-error="true"]) {
+  .rt-SelectTrigger:where([aria-invalid='true']) {
     border: 1px solid CanvasText;
   }
 }

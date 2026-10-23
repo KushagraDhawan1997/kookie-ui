@@ -8,7 +8,6 @@ import { useScrollEdges } from '../hooks/use-scroll-edges.js';
 import { useThumbSync } from '../hooks/use-thumb-sync.js';
 import { extractMarginProps } from '../helpers/extract-margin-props.js';
 import { getMarginStyles } from '../helpers/get-margin-styles.js';
-import { getResponsiveClassNames } from '../helpers/get-responsive-styles.js';
 import { getSubtree } from '../helpers/get-subtree.js';
 import { mergeStyles } from '../helpers/merge-styles.js';
 
@@ -35,7 +34,6 @@ const ScrollArea = React.forwardRef<ScrollAreaElement, ScrollAreaProps>((props, 
     type,
     scrollHideDelay = type !== 'scroll' ? 0 : undefined,
     dir,
-    size = scrollAreaPropDefs.size.default,
     radius = scrollAreaPropDefs.radius.default,
     scrollbars = scrollAreaPropDefs.scrollbars.default,
     fade = scrollAreaPropDefs.fade.default,
@@ -70,14 +68,7 @@ const ScrollArea = React.forwardRef<ScrollAreaElement, ScrollAreaProps>((props, 
             <ScrollAreaPrimitive.Scrollbar
               data-radius={radius}
               orientation="horizontal"
-              className={classNames(
-                'rt-ScrollAreaScrollbar',
-                getResponsiveClassNames({
-                  className: 'rt-r-size',
-                  value: size,
-                  propValues: scrollAreaPropDefs.size.values,
-                }),
-              )}
+              className="rt-ScrollAreaScrollbar"
             >
               <ScrollAreaPrimitive.Thumb className="rt-ScrollAreaThumb" />
             </ScrollAreaPrimitive.Scrollbar>
@@ -87,14 +78,7 @@ const ScrollArea = React.forwardRef<ScrollAreaElement, ScrollAreaProps>((props, 
             <ScrollAreaPrimitive.Scrollbar
               data-radius={radius}
               orientation="vertical"
-              className={classNames(
-                'rt-ScrollAreaScrollbar',
-                getResponsiveClassNames({
-                  className: 'rt-r-size',
-                  value: size,
-                  propValues: scrollAreaPropDefs.size.values,
-                }),
-              )}
+              className="rt-ScrollAreaScrollbar"
             >
               <ScrollAreaPrimitive.Thumb className="rt-ScrollAreaThumb" />
             </ScrollAreaPrimitive.Scrollbar>

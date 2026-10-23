@@ -139,7 +139,7 @@ export function ChatbarExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 2: AI Assistant Interface */}
       <Flex direction="column" gap="5">

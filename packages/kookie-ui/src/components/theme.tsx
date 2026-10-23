@@ -6,6 +6,7 @@ import { Direction, Slot, Tooltip as TooltipPrimitive } from 'radix-ui';
 import { useComposedRefs, useLayoutEffect } from 'radix-ui/internal';
 
 import { getMatchingGrayColor } from '../helpers/get-matching-gray-color.js';
+import { ThemeSizeContext } from '../helpers/theme-size.js';
 import { usePropSyncedState } from '../hooks/use-prop-synced-state.js';
 import { themePropDefs } from './theme.props.js';
 
@@ -19,6 +20,7 @@ type ThemeAccentColor = (typeof themePropDefs.accentColor.values)[number];
 type ThemeGrayColor = (typeof themePropDefs.grayColor.values)[number];
 type ThemeRadius = (typeof themePropDefs.radius.values)[number];
 type ThemeFontFamily = (typeof themePropDefs.fontFamily.values)[number];
+type ThemeSize = (typeof themePropDefs.size.values)[number];
 // Headings follow the body font until something sets this, so `undefined` is a
 // meaningful value here rather than a missing one.
 type ThemeHeadingFontFamily = ThemeFontFamily | undefined;
@@ -30,6 +32,7 @@ interface ThemeChangeHandlers {
   onRadiusChange: (radius: ThemeRadius) => void;
   onFontFamilyChange: (fontFamily: ThemeFontFamily) => void;
   onHeadingFontFamilyChange: (headingFontFamily: ThemeHeadingFontFamily) => void;
+  onSizeChange: (size: ThemeSize) => void;
 }
 
 interface ThemeContextValue extends ThemeChangeHandlers {
@@ -40,6 +43,7 @@ interface ThemeContextValue extends ThemeChangeHandlers {
   radius: ThemeRadius;
   fontFamily: ThemeFontFamily;
   headingFontFamily: ThemeHeadingFontFamily;
+  size: ThemeSize;
 }
 // Default theme values used when components render outside a Theme provider
 const defaultThemeContext: ThemeContextValue = {
@@ -50,12 +54,14 @@ const defaultThemeContext: ThemeContextValue = {
   radius: themePropDefs.radius.default,
   fontFamily: themePropDefs.fontFamily.default,
   headingFontFamily: undefined,
+  size: themePropDefs.size.default,
   onAppearanceChange: noop,
   onAccentColorChange: noop,
   onGrayColorChange: noop,
   onRadiusChange: noop,
   onFontFamilyChange: noop,
   onHeadingFontFamilyChange: noop,
+  onSizeChange: noop,
 };
 
 const ThemeContext = React.createContext<ThemeContextValue | undefined>(undefined);
@@ -86,61 +92,61 @@ const Theme = React.forwardRef<ThemeImplElement, ThemeProps>((props, forwardedRe
 });
 Theme.displayName = 'Theme';
 
-const ThemeRoot = React.forwardRef<ThemeImplElement, ThemeImplPublicProps>(
-  (props, forwardedRef) => {
-    const {
-      appearance: appearanceProp = themePropDefs.appearance.default,
-      accentColor: accentColorProp = themePropDefs.accentColor.default,
-      grayColor: grayColorProp = themePropDefs.grayColor.default,
-      radius: radiusProp = themePropDefs.radius.default,
-      fontFamily: fontFamilyProp = themePropDefs.fontFamily.default,
-      headingFontFamily: headingFontFamilyProp,
-      hasBackground = themePropDefs.hasBackground.default,
-      ...rootProps
-    } = props;
+const ThemeRoot = React.forwardRef<ThemeImplElement, ThemeImplPublicProps>((props, forwardedRef) => {
+  const {
+    appearance: appearanceProp = themePropDefs.appearance.default,
+    accentColor: accentColorProp = themePropDefs.accentColor.default,
+    grayColor: grayColorProp = themePropDefs.grayColor.default,
+    radius: radiusProp = themePropDefs.radius.default,
+    fontFamily: fontFamilyProp = themePropDefs.fontFamily.default,
+    headingFontFamily: headingFontFamilyProp,
+    size: sizeProp = themePropDefs.size.default,
+    hasBackground = themePropDefs.hasBackground.default,
+    ...rootProps
+  } = props;
 
-    // Each of these follows its prop but stays independently settable, so
-    // `ThemePanel` can change the theme at runtime. Syncing during render
-    // rather than in an effect matters here: an effect would commit the old
-    // theme first and re-render every consumer of the context a second time.
-    const [appearance, setAppearance] = usePropSyncedState(appearanceProp);
-    const [accentColor, setAccentColor] = usePropSyncedState(accentColorProp);
-    const [grayColor, setGrayColor] = usePropSyncedState(grayColorProp);
-    const [radius, setRadius] = usePropSyncedState(radiusProp);
-    const [fontFamily, setFontFamily] = usePropSyncedState(fontFamilyProp);
-    const [headingFontFamily, setHeadingFontFamily] = usePropSyncedState(headingFontFamilyProp);
+  // Each of these follows its prop but stays independently settable, so
+  // `ThemePanel` can change the theme at runtime. Syncing during render
+  // rather than in an effect matters here: an effect would commit the old
+  // theme first and re-render every consumer of the context a second time.
+  const [appearance, setAppearance] = usePropSyncedState(appearanceProp);
+  const [accentColor, setAccentColor] = usePropSyncedState(accentColorProp);
+  const [grayColor, setGrayColor] = usePropSyncedState(grayColorProp);
+  const [radius, setRadius] = usePropSyncedState(radiusProp);
+  const [fontFamily, setFontFamily] = usePropSyncedState(fontFamilyProp);
+  const [headingFontFamily, setHeadingFontFamily] = usePropSyncedState(headingFontFamilyProp);
+  const [size, setSize] = usePropSyncedState(sizeProp);
 
-    return (
-      <ThemeImpl
-        {...rootProps}
-        ref={forwardedRef}
-        isRoot
-        hasBackground={hasBackground}
-        //
-        appearance={appearance}
-        accentColor={accentColor}
-        grayColor={grayColor}
-        radius={radius}
-        fontFamily={fontFamily}
-        headingFontFamily={headingFontFamily}
-        //
-        onAppearanceChange={setAppearance}
-        onAccentColorChange={setAccentColor}
-        onGrayColorChange={setGrayColor}
-        onRadiusChange={setRadius}
-        onFontFamilyChange={setFontFamily}
-        onHeadingFontFamilyChange={setHeadingFontFamily}
-      />
-    );
-  },
-);
+  return (
+    <ThemeImpl
+      {...rootProps}
+      ref={forwardedRef}
+      isRoot
+      hasBackground={hasBackground}
+      //
+      appearance={appearance}
+      accentColor={accentColor}
+      grayColor={grayColor}
+      radius={radius}
+      fontFamily={fontFamily}
+      headingFontFamily={headingFontFamily}
+      size={size}
+      //
+      onAppearanceChange={setAppearance}
+      onAccentColorChange={setAccentColor}
+      onGrayColorChange={setGrayColor}
+      onRadiusChange={setRadius}
+      onFontFamilyChange={setFontFamily}
+      onHeadingFontFamilyChange={setHeadingFontFamily}
+      onSizeChange={setSize}
+    />
+  );
+});
 ThemeRoot.displayName = 'ThemeRoot';
 
 type ThemeImplElement = React.ElementRef<'div'>;
 interface ThemeImplProps extends ThemeImplPublicProps, ThemeImplPrivateProps {}
-interface ThemeImplPublicProps
-  extends ComponentPropsWithout<'div', RemovedProps | 'dir'>,
-    ThemeOwnProps {}
+interface ThemeImplPublicProps extends ComponentPropsWithout<'div', RemovedProps | 'dir'>, ThemeOwnProps {}
 interface ThemeImplPrivateProps extends Partial<ThemeChangeHandlers> {
   isRoot?: boolean;
 }
@@ -166,6 +172,7 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
     radius = props.radius ?? context?.radius ?? themePropDefs.radius.default,
     fontFamily = props.fontFamily ?? context?.fontFamily ?? themePropDefs.fontFamily.default,
     headingFontFamily = props.headingFontFamily ?? context?.headingFontFamily,
+    size = props.size ?? context?.size ?? themePropDefs.size.default,
     //
     onAppearanceChange = noop,
     onAccentColorChange = noop,
@@ -173,14 +180,14 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
     onRadiusChange = noop,
     onFontFamilyChange = noop,
     onHeadingFontFamilyChange = noop,
+    onSizeChange = noop,
     //
     ...themeProps
   } = props;
   const Comp = asChild ? Slot.Root : 'div';
   const resolvedGrayColor = grayColor === 'auto' ? getMatchingGrayColor(accentColor) : grayColor;
   const isExplicitAppearance = props.appearance === 'light' || props.appearance === 'dark';
-  const hasBackground =
-    hasBackgroundProp === undefined ? isRoot || isExplicitAppearance : hasBackgroundProp;
+  const hasBackground = hasBackgroundProp === undefined ? isRoot || isExplicitAppearance : hasBackgroundProp;
 
   // `data-os` can only be resolved on the client. Writing it straight to the
   // DOM keeps it out of the server markup — so hydration still matches — without
@@ -212,6 +219,7 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
           radius,
           fontFamily,
           headingFontFamily,
+          size,
           //
           onAppearanceChange,
           onAccentColorChange,
@@ -219,6 +227,7 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
           onRadiusChange,
           onFontFamilyChange,
           onHeadingFontFamilyChange,
+          onSizeChange,
         }),
         [
           appearance,
@@ -228,6 +237,7 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
           radius,
           fontFamily,
           headingFontFamily,
+          size,
           //
           onAppearanceChange,
           onAccentColorChange,
@@ -235,29 +245,34 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
           onRadiusChange,
           onFontFamilyChange,
           onHeadingFontFamilyChange,
+          onSizeChange,
         ],
       )}
     >
-      <Comp
-        data-is-root-theme={isRoot ? 'true' : 'false'}
-        data-accent-color={accentColor}
-        data-gray-color={resolvedGrayColor}
-        // for nested `Theme` background
-        data-has-background={hasBackground ? 'true' : 'false'}
-        data-radius={radius}
-        data-font-family={fontFamily}
-        data-heading-font-family={headingFontFamily}
-        ref={composedRef}
-        {...themeProps}
-        className={classNames(
-          'radix-themes',
-          {
-            light: appearance === 'light',
-            dark: appearance === 'dark',
-          },
-          themeProps.className,
-        )}
-      />
+      {/* Size travels on its own context as a bare string, so the components
+          that read it do not re-render when another theme value changes. */}
+      <ThemeSizeContext.Provider value={size}>
+        <Comp
+          data-is-root-theme={isRoot ? 'true' : 'false'}
+          data-accent-color={accentColor}
+          data-gray-color={resolvedGrayColor}
+          // for nested `Theme` background
+          data-has-background={hasBackground ? 'true' : 'false'}
+          data-radius={radius}
+          data-font-family={fontFamily}
+          data-heading-font-family={headingFontFamily}
+          ref={composedRef}
+          {...themeProps}
+          className={classNames(
+            'radix-themes',
+            {
+              light: appearance === 'light',
+              dark: appearance === 'dark',
+            },
+            themeProps.className,
+          )}
+        />
+      </ThemeSizeContext.Provider>
     </ThemeContext.Provider>
   );
 });

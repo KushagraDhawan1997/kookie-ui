@@ -78,7 +78,7 @@
   &::after {
     content: '';
     position: absolute;
-    inset: calc(var(--slider-thumb-inset-factor) * var(--slider-track-size) * -1);
+    inset: calc(var(--slider-thumb-inset-factor) * var(--slider-thumb-overshoot-base, var(--slider-track-size)) * -1);
     background-color: var(--accent-solid-thumb);
     border-radius: var(--slider-thumb-radius);
     box-shadow: var(--shadow-2);
@@ -86,7 +86,8 @@
   }
 
   &:where(:focus-visible)::after {
-    box-shadow: var(--shadow-3), 0 0 0 var(--slider-focus-ring-inner) var(--accent-3), 0 0 0 var(--slider-focus-ring-outer) var(--focus-8);
+    outline: var(--focus-ring-width, 2px) solid var(--focus-8);
+    outline-offset: var(--focus-ring-offset, 2px);
   }
 
   &:where(:active) {
@@ -100,31 +101,37 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
+/* Track thickness is v2's slider ladder (4/5/6/7). The thumb keeps v1's shape: its overshoot
+ * still reads v1's track thickness, so a thinner track does not shrink it. */
 @breakpoints {
   .rt-SliderRoot {
     &:where(.rt-r-size-1) {
-      --slider-track-size: var(--progress-slider-height-1);
+      --slider-track-size: var(--slider-track-1, calc(4px * var(--scale)));
+      --slider-thumb-overshoot-base: var(--progress-slider-height-1);
       --slider-radius: var(--progress-slider-radius-1);
       --slider-thumb-width: var(--space-4);
       --slider-thumb-height: var(--space-3);
       --slider-thumb-radius: calc(var(--radius-1) * 0.75);
     }
     &:where(.rt-r-size-2) {
-      --slider-track-size: var(--progress-slider-height-2);
+      --slider-track-size: var(--slider-track-2, calc(5px * var(--scale)));
+      --slider-thumb-overshoot-base: var(--progress-slider-height-2);
       --slider-radius: var(--progress-slider-radius-2);
       --slider-thumb-width: var(--space-5);
       --slider-thumb-height: calc(var(--space-3) + var(--space-2));
       --slider-thumb-radius: calc(var(--radius-2) * 0.75);
     }
     &:where(.rt-r-size-3) {
-      --slider-track-size: var(--progress-slider-height-3);
+      --slider-track-size: var(--slider-track-3, calc(6px * var(--scale)));
+      --slider-thumb-overshoot-base: var(--progress-slider-height-3);
       --slider-radius: var(--progress-slider-radius-3);
       --slider-thumb-width: var(--space-5);
       --slider-thumb-height: var(--space-4);
       --slider-thumb-radius: calc(var(--radius-3) * 0.75);
     }
     &:where(.rt-r-size-4) {
-      --slider-track-size: var(--progress-slider-height-4);
+      --slider-track-size: var(--slider-track-4, calc(7px * var(--scale)));
+      --slider-thumb-overshoot-base: var(--progress-slider-height-4);
       --slider-radius: var(--progress-slider-radius-4);
       --slider-thumb-width: calc(var(--space-5) + var(--space-2));
       --slider-thumb-height: calc(var(--space-4) + var(--space-2));
@@ -189,11 +196,11 @@
   }
 }
 
-/* all disabled Sliders */
+/* all disabled Sliders: a colour remap, never opacity, and a default cursor */
 
 [data-disabled] {
   .rt-SliderRoot:where(&) {
-    cursor: var(--cursor-disabled);
+    cursor: default;
   }
   .rt-SliderTrack:where(&) {
     background-color: var(--gray-a3) !important;
@@ -203,9 +210,10 @@
     background-color: var(--accent-a3) !important;
   }
   .rt-SliderThumb:where(&) {
-    cursor: var(--cursor-disabled);
+    cursor: default;
   }
   .rt-SliderThumb:where(&)::after {
+    cursor: default;
     background-color: var(--gray-3) !important;
     box-shadow: none !important;
   }
@@ -274,8 +282,8 @@
 }
 
 .rt-SliderTick:where(:focus-visible) {
-  outline: 2px solid var(--focus-8);
-  outline-offset: 2px;
+  outline: var(--focus-ring-width, 2px) solid var(--focus-8);
+  outline-offset: var(--focus-ring-offset, 2px);
 }
 
 .rt-SliderTickMark {

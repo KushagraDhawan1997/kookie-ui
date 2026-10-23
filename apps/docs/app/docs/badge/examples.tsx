@@ -31,7 +31,7 @@ export function BadgeExamples() {
       </Flex>
       <Badge color="green">Live</Badge>
     </Flex>
-    <Separator size="4" />
+    <Separator />
     <Flex justify="between" align="center">
       <Flex gap="3" align="center">
         <HugeiconsIcon icon={Clock01Icon} strokeWidth={1.75} />
@@ -51,7 +51,7 @@ export function BadgeExamples() {
                 </Flex>
                 <Badge color="green">Live</Badge>
               </Flex>
-              <Separator size="4" />
+              <Separator />
               <Flex justify="between" align="center">
                 <Flex gap="3" align="center">
                   <HugeiconsIcon icon={Clock01Icon} strokeWidth={1.75} style={{ width: 16, height: 16 }} />
@@ -59,7 +59,7 @@ export function BadgeExamples() {
                 </Flex>
                 <Badge color="amber">Deploying</Badge>
               </Flex>
-              <Separator size="4" />
+              <Separator />
               <Flex justify="between" align="center">
                 <Flex gap="3" align="center">
                   <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} style={{ width: 16, height: 16 }} />
@@ -72,7 +72,7 @@ export function BadgeExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 2: User Profile */}
       <Flex direction="column" gap="5">
@@ -142,7 +142,7 @@ export function BadgeExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 3: Feature Badges */}
       <Flex direction="column" gap="5">
@@ -183,7 +183,7 @@ export function BadgeExamples() {
                   New
                 </Badge>
               </Flex>
-              <Separator size="4" />
+              <Separator />
               <Flex justify="between" align="center">
                 <Flex direction="column" gap="2">
                   <Text size="2" weight="medium">
@@ -202,7 +202,7 @@ export function BadgeExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 4: Notifications */}
       <Flex direction="column" gap="5">
@@ -254,7 +254,7 @@ export function BadgeExamples() {
                   <Text size="2">Commented on your pull request</Text>
                 </Flex>
               </Flex>
-              <Separator size="4" />
+              <Separator />
               <Flex gap="4" align="start">
                 <Avatar size="3" fallback="SK" color="green" variant="soft" />
                 <Flex direction="column" gap="0" style={{ flex: 1 }}>

@@ -17,8 +17,9 @@
 
   isolation: isolate;
 
+  /* Disabled is a colour remap (per variant below), never opacity; the cursor stays default. */
   &:where(:disabled, [data-disabled]) {
-    cursor: var(--cursor-disabled);
+    cursor: default;
   }
 
   &::before {
@@ -46,8 +47,8 @@
   }
 
   &:where(:focus-visible)::before {
-    outline: 2px solid var(--focus-8);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width, 2px) solid var(--focus-8);
+    outline-offset: var(--focus-ring-offset, 2px);
   }
 }
 
@@ -57,16 +58,20 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
+/* The box is v2's mark ladder (16/20/24/26), the same box Checkbox has at each size. */
 @breakpoints {
   .rt-BaseRadioRoot {
     &:where(.rt-r-size-1) {
-      --radio-size: calc(var(--space-5) * 0.875);
+      --radio-size: var(--mark-1, calc(16px * var(--scale)));
     }
     &:where(.rt-r-size-2) {
-      --radio-size: var(--space-5);
+      --radio-size: var(--mark-2, calc(20px * var(--scale)));
     }
     &:where(.rt-r-size-3) {
-      --radio-size: calc(var(--space-5) * 1.25);
+      --radio-size: var(--mark-3, calc(24px * var(--scale)));
+    }
+    &:where(.rt-r-size-4) {
+      --radio-size: var(--mark-4, calc(26px * var(--scale)));
     }
   }
 }
@@ -211,5 +216,62 @@
   }
   &:where(:disabled, [data-disabled])::after {
     background-color: var(--gray-a8);
+  }
+}
+
+/***************************************************************************************************
+ *                                                                                                 *
+ * INTERACTION                                                                                     *
+ *                                                                                                 *
+ * Hover is one step up the variant's own ramp, press two. Disabled marks take neither.           *
+ *                                                                                                 *
+ ***************************************************************************************************/
+
+.rt-BaseRadioRoot {
+  --radio-unchecked-hover: var(--accent-a2);
+  --radio-unchecked-active: var(--accent-a3);
+  --radio-checked-hover: var(--accent-4);
+  --radio-checked-active: var(--accent-5);
+
+  &:where(.rt-variant-solid) {
+    --radio-checked-hover: var(--accent-solid-hover);
+    --radio-checked-active: var(--accent-solid-active);
+  }
+  &:where(.rt-variant-raised) {
+    --radio-unchecked-hover: var(--color-surface-solid);
+    --radio-unchecked-active: var(--accent-3);
+  }
+  &:where(.rt-variant-soft) {
+    --radio-unchecked-hover: var(--accent-4);
+    --radio-unchecked-active: var(--accent-5);
+  }
+  &:where(.rt-variant-outline) {
+    --radio-checked-hover: var(--accent-3);
+    --radio-checked-active: var(--accent-4);
+  }
+  &:where(.rt-variant-surface) {
+    --radio-unchecked-hover: var(--accent-3);
+    --radio-unchecked-active: var(--accent-4);
+  }
+
+  @media (hover: hover) {
+    &:where(:hover:not(:disabled, [data-disabled]))::before {
+      background-color: var(--radio-unchecked-hover);
+    }
+    &:where(:hover:not(:disabled, [data-disabled])):where(:checked, [data-state='checked'])::before {
+      background-color: var(--radio-checked-hover);
+    }
+    &:where(.rt-variant-solid:hover:not(:disabled, [data-disabled])):where(:checked, [data-state='checked'])::before {
+      box-shadow: inset 0 0 0 1px var(--radio-checked-hover);
+    }
+  }
+  &:where(:active:not(:disabled, [data-disabled]))::before {
+    background-color: var(--radio-unchecked-active);
+  }
+  &:where(:active:not(:disabled, [data-disabled])):where(:checked, [data-state='checked'])::before {
+    background-color: var(--radio-checked-active);
+  }
+  &:where(.rt-variant-solid:active:not(:disabled, [data-disabled])):where(:checked, [data-state='checked'])::before {
+    box-shadow: inset 0 0 0 1px var(--radio-checked-active);
   }
 }

@@ -10,6 +10,7 @@ import {
   accordionContentPropDefs,
 } from './accordion.props.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 
 import type {
   AccordionRootOwnProps,
@@ -27,7 +28,8 @@ interface AccordionRootProps
     AccordionRootOwnProps {}
 
 const AccordionRoot = React.forwardRef<AccordionRootElement, AccordionRootProps>(
-  (props, forwardedRef) => {
+  (ownProps, forwardedRef) => {
+    const props = useThemeSizeProps(ownProps, accordionRootPropDefs.size);
     const { className, flush, radius, color, ...extractedRadixProps } =
       extractProps(props, accordionRootPropDefs);
 

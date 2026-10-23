@@ -63,7 +63,7 @@ export function TextFieldExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 2: Login Form */}
       <Flex direction="column" gap="5">
@@ -201,7 +201,7 @@ export function TextFieldExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 3: Property Panel */}
       <Flex direction="column" gap="5">
@@ -282,7 +282,7 @@ const [height, setHeight] = React.useState(1080);
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 4: Profile Settings */}
       <Flex direction="column" gap="5">

@@ -122,13 +122,32 @@
   flex-shrink: 0;
   display: flex;
   align-items: center;
+  gap: var(--text-field-gap);
   cursor: text;
 
-  /* A slot that is not a right-side slot goes on the left */
+  /* stylelint-disable-next-line selector-max-type */
+  & :where(svg) {
+    width: var(--text-field-icon-size);
+    height: var(--text-field-icon-size);
+    flex-shrink: 0;
+  }
+
+  /*
+   * A slot that is not a right-side slot goes on the left.
+   * The outer edge keeps the plain padding (the slot stands between the text and a pill's curve);
+   * the inner edge is the gap to the text.
+   */
   &:where(:not([data-side='right'])) {
     order: -1;
     margin-left: calc(var(--text-field-border-width) * -1);
     margin-right: 0;
+    padding-left: var(--text-field-px);
+    padding-right: var(--text-field-gap);
+
+    /* A hosted control sits the slot inset from the edge, the same distance as above and below. */
+    &:where(:has(> .rt-BaseButton)) {
+      padding-left: var(--text-field-slot-inset);
+    }
   }
 
   &:where([data-side='right']),
@@ -140,7 +159,24 @@
     order: 0;
     margin-left: 0;
     margin-right: calc(var(--text-field-border-width) * -1);
+    padding-left: var(--text-field-gap);
+    padding-right: var(--text-field-px);
+
+    &:where(:has(> .rt-BaseButton)) {
+      padding-right: var(--text-field-slot-inset);
+    }
   }
+}
+
+/*
+ * A control hosted in a slot (IconButton, Button) is as tall as the field minus the slot inset on
+ * each side, and its corner is concentric with the field's. Overriding the height variable rather
+ * than `height` keeps an icon button square. Wins over the button's own size rule on source order:
+ * base-button.css is imported (through button.css) before this file.
+ */
+.rt-TextFieldSlot > :where(.rt-BaseButton) {
+  --base-button-height: var(--text-field-hosted-height);
+  border-radius: max(0px, calc(var(--text-field-border-radius) - var(--text-field-slot-inset)));
 }
 
 /***************************************************************************************************
@@ -151,22 +187,33 @@
 
 .rt-TextFieldRoot {
   box-sizing: border-box;
-  height: var(--text-field-height);
+  /* min-height, not height: a hard height clips text resized to 200%. */
+  min-height: var(--text-field-height);
   padding: var(--text-field-border-width);
   border-radius: var(--text-field-border-radius);
+
+  /*
+   * A bare edge under a full radius pads wider, because the curve cuts into the text.
+   * `--radius-full` is 0px below `full` and 9999px at `full`, so the min() adds the pill
+   * difference only at `full`.
+   */
+  --text-field-px-bare: calc(
+    var(--text-field-px) + min(var(--radius-full, 0px), var(--text-field-px-pill) - var(--text-field-px))
+  );
+  --text-field-hosted-height: calc(var(--text-field-height) - 2 * var(--text-field-slot-inset));
 }
 .rt-TextFieldInput {
   /* Clip text to the border radius of the Root */
   border-radius: calc(var(--text-field-border-radius) - var(--text-field-border-width));
 
   /* Equivalent to padding-left, but doesn't cut off long values when cursor is at the end. */
-  text-indent: var(--text-field-padding);
+  text-indent: calc(var(--text-field-px-bare) - var(--text-field-border-width));
+  padding-right: calc(var(--text-field-px-bare) - var(--text-field-border-width));
 
   &:where([type='date'], [type='datetime-local'], [type='time'], [type='week'], [type='month']) {
     /* Safari is buggy with text-indent for these input types */
     text-indent: 0;
-    padding-left: var(--text-field-padding);
-    padding-right: var(--text-field-padding);
+    padding-left: calc(var(--text-field-px-bare) - var(--text-field-border-width));
   }
 
   /* Remove border-radius and text-indent/padding on the left if there's a left-side slot */
@@ -193,24 +240,15 @@
   .rt-TextFieldRoot {
     &:where(.rt-r-size-1) {
       --text-field-height: var(--control-height-1);
-      --text-field-padding: calc(var(--space-2) * 1.5 - var(--text-field-border-width));
+      --text-field-px: var(--control-px-1);
+      --text-field-px-pill: var(--control-px-pill-1);
+      --text-field-gap: var(--control-gap-1);
+      --text-field-icon-size: var(--icon-size-1);
+      --text-field-slot-inset: var(--slot-inset-1);
       --text-field-border-radius: var(--radius-pill-1);
-      --text-field-native-icon-size: var(--space-4);
+      --text-field-native-icon-size: var(--icon-size-1);
       font-size: var(--font-size-1);
       letter-spacing: var(--letter-spacing-1);
-
-      & :where(.rt-TextFieldSlot) {
-        gap: var(--space-3);
-        padding-left: var(--space-2);
-        padding-right: var(--space-2);
-
-        /* stylelint-disable-next-line selector-max-type */
-        & :where(svg) {
-          width: calc(var(--space-4) * 1.175);
-          height: calc(var(--space-4) * 1.175);
-          flex-shrink: 0;
-        }
-      }
 
       & :where(.rt-TextFieldInput) {
         /* Reset size 2 padding bottom */
@@ -226,9 +264,13 @@
 
     &:where(.rt-r-size-2) {
       --text-field-height: var(--control-height-2);
-      --text-field-padding: calc(var(--space-3) - var(--text-field-border-width));
+      --text-field-px: var(--control-px-2);
+      --text-field-px-pill: var(--control-px-pill-2);
+      --text-field-gap: var(--control-gap-2);
+      --text-field-icon-size: var(--icon-size-2);
+      --text-field-slot-inset: var(--slot-inset-2);
       --text-field-border-radius: var(--radius-pill-2);
-      --text-field-native-icon-size: var(--space-5);
+      --text-field-native-icon-size: var(--icon-size-2);
       font-size: var(--font-size-2);
       letter-spacing: var(--letter-spacing-2);
 
@@ -243,26 +285,17 @@
           margin-right: 0px;
         }
       }
-
-      & :where(.rt-TextFieldSlot) {
-        gap: var(--space-3);
-        padding-left: var(--space-3);
-        padding-right: var(--space-3);
-
-        /* stylelint-disable-next-line selector-max-type */
-        & :where(svg) {
-          width: var(--space-5);
-          height: var(--space-5);
-          flex-shrink: 0;
-        }
-      }
     }
 
     &:where(.rt-r-size-3) {
       --text-field-height: var(--control-height-3);
-      --text-field-padding: calc(var(--space-4) - var(--text-field-border-width));
+      --text-field-px: var(--control-px-3);
+      --text-field-px-pill: var(--control-px-pill-3);
+      --text-field-gap: var(--control-gap-3);
+      --text-field-icon-size: var(--icon-size-3);
+      --text-field-slot-inset: var(--slot-inset-3);
       --text-field-border-radius: var(--radius-pill-3);
-      --text-field-native-icon-size: var(--space-5);
+      --text-field-native-icon-size: var(--icon-size-3);
       font-size: var(--font-size-3);
       letter-spacing: var(--letter-spacing-3);
 
@@ -276,27 +309,17 @@
           margin-right: 0px;
         }
       }
-
-      & :where(.rt-TextFieldSlot) {
-        gap: var(--space-4);
-        padding-left: var(--space-4);
-        padding-right: var(--space-4);
-
-        /* stylelint-disable-next-line selector-max-type */
-        & :where(svg) {
-          width: calc(var(--space-5) * 1.175);
-          height: calc(var(--space-5) * 1.175);
-          flex-shrink: 0;
-        }
-      }
     }
 
-    /* Size 4 sits on the same ladder step as Button size 4. */
     &:where(.rt-r-size-4) {
       --text-field-height: var(--control-height-4);
-      --text-field-padding: calc(var(--space-5) - var(--text-field-border-width));
+      --text-field-px: var(--control-px-4);
+      --text-field-px-pill: var(--control-px-pill-4);
+      --text-field-gap: var(--control-gap-4);
+      --text-field-icon-size: var(--icon-size-4);
+      --text-field-slot-inset: var(--slot-inset-4);
       --text-field-border-radius: var(--radius-pill-4);
-      --text-field-native-icon-size: var(--space-6);
+      --text-field-native-icon-size: var(--icon-size-4);
       font-size: var(--font-size-4);
       letter-spacing: var(--letter-spacing-4);
 
@@ -309,26 +332,13 @@
           margin-right: 0px;
         }
       }
-
-      & :where(.rt-TextFieldSlot) {
-        gap: var(--space-4);
-        padding-left: var(--space-5);
-        padding-right: var(--space-5);
-
-        /* stylelint-disable-next-line selector-max-type */
-        & :where(svg) {
-          width: var(--content-icon-size-4);
-          height: var(--content-icon-size-4);
-          flex-shrink: 0;
-        }
-      }
     }
   }
 }
 
 /***************************************************************************************************
-	*                                                                                                 *
-	* VARIANTS                                                                                        *
+ *                                                                                                 *
+ * VARIANTS                                                                                        *
  *                                                                                                 *
  ***************************************************************************************************/
 
@@ -343,7 +353,7 @@
 
   /* Hover effects */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextFieldInput:focus))) {
+    &:where(:hover:not(:has(.rt-TextFieldInput:where(:focus, :disabled)))) {
       background-color: var(--accent-2);
       box-shadow: inset 0 0 0 1px var(--accent-7);
     }
@@ -389,7 +399,7 @@
 
   /* Hover effects */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextFieldInput:focus))) {
+    &:where(:hover:not(:has(.rt-TextFieldInput:where(:focus, :disabled)))) {
       background-color: var(--accent-2);
       box-shadow: var(--shadow-2);
     }
@@ -438,7 +448,7 @@
 
   /* Hover effects */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextFieldInput:focus))) {
+    &:where(:hover:not(:has(.rt-TextFieldInput:where(:focus, :disabled)))) {
       background-color: var(--accent-4);
     }
   }
@@ -495,7 +505,7 @@
 
   /* Hover effects */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextFieldInput:focus))) {
+    &:where(:hover:not(:has(.rt-TextFieldInput:where(:focus, :disabled)))) {
       background-color: var(--accent-3);
     }
   }
@@ -543,7 +553,7 @@
 
   /* Hover effects */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextFieldInput:focus))) {
+    &:where(:hover:not(:has(.rt-TextFieldInput:where(:focus, :disabled)))) {
       background-color: var(--accent-3);
       box-shadow: inset 0 0 0 1px var(--accent-7);
     }
@@ -568,25 +578,12 @@
   }
 }
 
-/* all disabled and read-only text fields */
-
+/* Read-only text fields: the value stays selectable, so the caret cursor stays. */
 .rt-TextFieldInput {
-  &:where(:disabled, :read-only) {
-    cursor: text;
+  &:where(:read-only:not(:disabled)) {
     color: var(--gray-a11);
     /* Safari */
     -webkit-text-fill-color: var(--gray-a11);
-
-    &::placeholder {
-      opacity: 0.5;
-    }
-    &:where(:placeholder-shown) {
-      cursor: var(--cursor-disabled);
-
-      & ~ :where(.rt-TextFieldSlot) {
-        cursor: var(--cursor-disabled);
-      }
-    }
 
     .rt-TextFieldRoot:where(:has(&)) {
       --text-field-selection-color: var(--gray-a5);
@@ -595,61 +592,66 @@
   }
 }
 
-/* Error state styling */
-.rt-TextFieldRoot:where(.rt-error) {
-  --text-field-selection-color: var(--red-a5);
+/*
+ * Disabled is a colour remap, never opacity: value, placeholder and slots take the disabled ink,
+ * and the cursor goes back to the arrow.
+ */
+.rt-TextFieldInput {
+  &:where(:disabled) {
+    cursor: default;
+    color: var(--gray-a8);
+    /* Safari */
+    -webkit-text-fill-color: var(--gray-a8);
+
+    &::placeholder {
+      color: var(--gray-a8);
+      -webkit-text-fill-color: var(--gray-a8);
+      opacity: 1;
+    }
+
+    .rt-TextFieldRoot:where(:has(&)) {
+      --text-field-selection-color: var(--gray-a5);
+      --text-field-focus-color: var(--gray-8);
+      cursor: default;
+    }
+
+    & ~ :where(.rt-TextFieldSlot) {
+      color: var(--gray-a8);
+      cursor: default;
+    }
+  }
+}
+
+/*
+ * Invalid. Keyed on the input's `aria-invalid`, which the `error` prop also sets, so both paths
+ * style the same. Only the border and the focus ring move; the fill stays the variant's.
+ */
+.rt-TextFieldRoot:where(:has(> .rt-TextFieldInput[aria-invalid='true'])) {
   --text-field-focus-color: var(--red-8);
-}
 
-.rt-TextFieldRoot:where(.rt-error.rt-variant-outline) {
-  box-shadow: inset 0 0 0 1px var(--red-6);
+  &:where(.rt-variant-outline, .rt-variant-surface, .rt-variant-soft, .rt-variant-ghost) {
+    box-shadow: inset 0 0 0 1px var(--red-6);
 
-  @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextFieldInput:focus))) {
-      box-shadow: inset 0 0 0 1px var(--red-7);
-    }
-  }
-}
-
-.rt-TextFieldRoot:where(.rt-error.rt-variant-surface) {
-  box-shadow: inset 0 0 0 1px var(--red-6);
-
-  @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextFieldInput:focus))) {
-      box-shadow: inset 0 0 0 1px var(--red-7);
-    }
-  }
-}
-
-.rt-TextFieldRoot:where(.rt-error.rt-variant-raised) {
-  box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-6);
-
-  @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextFieldInput:focus))) {
-      box-shadow: var(--shadow-3), inset 0 0 0 1px var(--red-7);
-    }
-  }
-}
-
-.rt-TextFieldRoot:where(.rt-error.rt-variant-soft) {
-  background-color: var(--red-2);
-
-  @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextFieldInput:focus))) {
-      background-color: var(--red-4);
-    }
-  }
-}
-
-.rt-TextFieldRoot:where(.rt-error.rt-variant-ghost) {
-  @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextFieldInput:focus))) {
-      background-color: var(--red-3);
+    @media (hover: hover) {
+      &:where(:hover:not(:has(.rt-TextFieldInput:where(:focus, :disabled)))) {
+        box-shadow: inset 0 0 0 1px var(--red-7);
+      }
     }
   }
 
-  &:where(:focus-within) {
-    background-color: var(--red-2);
+  &:where(.rt-variant-raised) {
+    box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-6);
+
+    @media (hover: hover) {
+      &:where(:hover:not(:has(.rt-TextFieldInput:where(:focus, :disabled)))) {
+        box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-7);
+      }
+    }
+
+    /* The raised focus ring is a box-shadow, not the outline */
+    &:where(:has(.rt-TextFieldInput:focus)) {
+      box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-6), 0 0 0 2px var(--red-8);
+    }
   }
 }
 

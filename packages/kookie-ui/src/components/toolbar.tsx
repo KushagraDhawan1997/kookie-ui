@@ -9,6 +9,7 @@ import { Button } from './button.js';
 import { IconButton } from './icon-button.js';
 import { Text } from './text.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSize } from '../helpers/theme-size.js';
 import { marginPropDefs } from '../props/margin.props.js';
 import { usePaneBandSize } from './_internal/pane-chrome.js';
 
@@ -91,7 +92,8 @@ interface ToolbarProps
 const ToolbarRoot = React.forwardRef<HTMLDivElement, ToolbarProps>((props, forwardedRef) => {
   // In a Shell pane's header or footer, a toolbar with no size rests one step above the Shell's.
   const band = usePaneBandSize();
-  const size: ToolbarSize = props.size ?? band ?? toolbarRootPropDefs.size.default;
+  // Elsewhere it takes the nearest Theme's size.
+  const size: ToolbarSize = useThemeSize(props.size ?? band ?? undefined, toolbarRootPropDefs.size);
   const orientation: ToolbarOrientation = props.orientation ?? toolbarRootPropDefs.orientation.default;
   const { className, orientation: _orientation, backdrop = false, children, ...rootProps } = extractProps(
     { ...props, size },

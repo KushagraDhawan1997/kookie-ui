@@ -10,6 +10,7 @@ import { checkboxGroupRootPropDefs } from './checkbox-group.props.js';
 import { ThickCheckIcon } from './icons.js';
 import { Text } from './text.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSize } from '../helpers/theme-size.js';
 import { marginPropDefs } from '../props/margin.props.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
@@ -42,12 +43,13 @@ const CheckboxGroupRoot = React.forwardRef<CheckboxGroupRootElement, CheckboxGro
   (
     {
       color = checkboxGroupRootPropDefs.color.default,
-      size = checkboxGroupRootPropDefs.size.default,
+      size: sizeProp,
       variant = checkboxGroupRootPropDefs.variant.default,
       ...props
     }: ScopedProps<CheckboxGroupRootProps>,
     forwardedRef,
   ) => {
+    const size = useThemeSize(sizeProp, checkboxGroupRootPropDefs.size);
     const { __scopeCheckboxGroup, className, ...rootProps } = extractProps(props, marginPropDefs);
     const checkboxGroupScope = useCheckboxGroupScope(__scopeCheckboxGroup);
     return (
