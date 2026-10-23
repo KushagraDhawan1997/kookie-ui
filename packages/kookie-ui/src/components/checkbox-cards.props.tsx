@@ -5,12 +5,13 @@ import { gridPropDefs } from './grid.props.js';
 
 import type { PropDef } from '../props/prop-def.js';
 
-const sizes = ['1', '2', '3', '4', '5'] as const;
+const sizes = ['1', '2', '3', '4'] as const;
 // The same list as Card: a selectable card looks like any other card.
 const variants = cardPropDefs.variant.values;
 
 const checkboxCardsRootPropDefs = {
   ...asChildPropDef,
+  /** The Card surface ladder: padding --surface-p-N, corner --radius-surface-N. Unset, it follows the Theme size. */
   size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
   variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised' },
   ...colorPropDef,

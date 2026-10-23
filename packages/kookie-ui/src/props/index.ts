@@ -43,7 +43,6 @@ export * from '../components/heading.props.js';
 export * from '../components/hover-card.props.js';
 export * from '../components/icon-button.props.js';
 export * from '../components/image.props.js';
-export * from '../components/inset.props.js';
 export * from '../components/kbd.props.js';
 export * from '../components/link.props.js';
 export * from '../components/popover.props.js';

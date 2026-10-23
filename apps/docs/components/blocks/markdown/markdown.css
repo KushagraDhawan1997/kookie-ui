@@ -129,7 +129,7 @@
   display: block;
   max-width: 100%;
   height: auto;
-  border-radius: var(--radius-surface-3);
+  border-radius: var(--radius-surface-1);
 }
 
 /* ---------------------------------------------------------------------------------------------

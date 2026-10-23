@@ -11,6 +11,7 @@ import { baseCheckboxPropDefs } from './_internal/base-checkbox.props.js';
 import { Grid } from './grid.js';
 import { ThickCheckIcon } from './icons.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { marginPropDefs } from '../props/margin.props.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
@@ -43,7 +44,8 @@ interface CheckboxCardsRootProps
     MarginProps,
     CheckboxCardsRootOwnProps {}
 const CheckboxCardsRoot = React.forwardRef<CheckboxCardsRootElement, CheckboxCardsRootProps>(
-  (props: ScopedProps<CheckboxCardsRootProps>, forwardedRef) => {
+  (ownProps: ScopedProps<CheckboxCardsRootProps>, forwardedRef) => {
+    const props = useThemeSizeProps(ownProps, checkboxCardsRootPropDefs.size);
     const {
       __scopeCheckboxCards,
       className,
@@ -54,7 +56,7 @@ const CheckboxCardsRoot = React.forwardRef<CheckboxCardsRootElement, CheckboxCar
     return (
       <CheckboxCardsProvider
         scope={__scopeCheckboxCards}
-        size={props.size}
+        size={props.size ?? checkboxCardsRootPropDefs.size.default}
         variant={props.variant}
       >
         <Grid asChild>
@@ -93,7 +95,11 @@ const CheckboxCardsItem = React.forwardRef<
     baseCheckboxPropDefs,
   );
   const variantClass = context?.variant ? `rt-variant-${context.variant}` : undefined;
-  const sizeClass = context?.size ? `rt-r-size-${context.size}` : undefined;
+  // extractProps writes the responsive size classes (`md:rt-r-size-3`) a template string cannot.
+  const { className: sizeClass } = extractProps(
+    { size: context?.size },
+    { size: checkboxCardsRootPropDefs.size },
+  );
 
   return (
     <label

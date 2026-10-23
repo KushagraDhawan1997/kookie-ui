@@ -139,7 +139,7 @@
       --base-menu-item-padding-right: var(--space-3);
       --base-menu-item-padding-y: var(--space-2);
       --base-menu-item-height: var(--control-height-1);
-      border-radius: var(--radius-surface-3);
+      border-radius: var(--radius-surface-1);
 
       & :where(.rt-BaseMenuItem) {
         gap: var(--component-gap-2);
@@ -177,7 +177,7 @@
       --base-menu-item-padding-right: var(--space-4);
       --base-menu-item-padding-y: var(--space-2);
       --base-menu-item-height: var(--control-height-2);
-      border-radius: var(--radius-surface-5);
+      border-radius: var(--radius-surface-2);
 
       & :where(.rt-BaseMenuItem) {
         gap: var(--component-gap-3);
@@ -215,7 +215,7 @@
       --base-menu-item-padding-right: var(--space-4);
       --base-menu-item-padding-y: var(--space-3);
       --base-menu-item-height: var(--control-height-3);
-      border-radius: var(--radius-surface-6);
+      border-radius: var(--radius-surface-3);
 
       & :where(.rt-BaseMenuItem) {
         gap: var(--component-gap-4);

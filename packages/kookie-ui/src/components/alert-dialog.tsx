@@ -7,6 +7,7 @@ import { Heading } from './heading.js';
 import { Text } from './text.js';
 import { Theme } from './theme.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
 
 import type { AlertDialogContentOwnProps } from './alert-dialog.props.js';
@@ -51,7 +52,8 @@ interface AlertDialogContentProps
   container?: React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Portal>['container'];
 }
 const AlertDialogContent = React.forwardRef<AlertDialogContentElement, AlertDialogContentProps>(
-  ({ align, ...props }, forwardedRef) => {
+  ({ align, ...ownProps }, forwardedRef) => {
+    const props = useThemeSizeProps(ownProps, contentPropDefs.size);
     const { className: alignClassName } = extractProps({ align }, alignPropDefs);
 
     const {

@@ -21,7 +21,7 @@ export default function SheetPlayground({
   height: playgroundHeight,
 }: SheetPlaygroundProps = {}) {
   const [side, setSide] = React.useState<string>('end');
-  const [size, setSize] = React.useState<string>('3');
+  const [size, setSize] = React.useState<string>('2');
   const [width, setWidth] = React.useState<string>('320px');
   const [height, setHeight] = React.useState<string>('300px');
   const [open, setOpen] = React.useState(false);
@@ -74,7 +74,7 @@ export default function SheetPlayground({
 
   const generateCode = () => {
     const contentProps = [`side="${side}"`];
-    if (size !== '3') contentProps.push(`size="${size}"`);
+    if (size !== '2') contentProps.push(`size="${size}"`);
     if (isHorizontal && width !== '320px') contentProps.push(`width="${width}"`);
     if (!isHorizontal && height !== '300px') contentProps.push(`height="${height}"`);
 

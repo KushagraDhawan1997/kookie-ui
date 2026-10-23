@@ -20,12 +20,13 @@ const dialogContentPropDefs = {
     type: 'enum',
     className: 'rt-r-size',
     values: contentSizes,
-    default: '3',
+    default: '2',
     responsive: true,
   },
   width: widthPropDefs.width,
   minWidth: widthPropDefs.minWidth,
-  maxWidth: { ...widthPropDefs.maxWidth, default: '600px' },
+  // No default: the size's --overlay-w is the max width until a maxWidth is given.
+  maxWidth: widthPropDefs.maxWidth,
   ...heightPropDefs,
 } satisfies {
   align: PropDef<(typeof alignValues)[number]>;

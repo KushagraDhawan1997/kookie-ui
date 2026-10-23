@@ -755,7 +755,7 @@
 .rt-ShellPane[data-inset],
 .rt-ShellContent[data-inset] {
   margin: var(--shell-inset-gap);
-  border-radius: var(--radius-surface-3);
+  border-radius: var(--radius-surface-1);
   background: var(--color-background);
   box-shadow: var(--shadow-2);
 }

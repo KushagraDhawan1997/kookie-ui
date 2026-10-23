@@ -245,7 +245,7 @@
       --text-field-gap: var(--control-gap-1);
       --text-field-icon-size: var(--icon-size-1);
       --text-field-slot-inset: var(--slot-inset-1);
-      --text-field-border-radius: var(--radius-pill-1);
+      --text-field-border-radius: var(--radius-control-1);
       --text-field-native-icon-size: var(--icon-size-1);
       font-size: var(--font-size-1);
       letter-spacing: var(--letter-spacing-1);
@@ -269,7 +269,7 @@
       --text-field-gap: var(--control-gap-2);
       --text-field-icon-size: var(--icon-size-2);
       --text-field-slot-inset: var(--slot-inset-2);
-      --text-field-border-radius: var(--radius-pill-2);
+      --text-field-border-radius: var(--radius-control-2);
       --text-field-native-icon-size: var(--icon-size-2);
       font-size: var(--font-size-2);
       letter-spacing: var(--letter-spacing-2);
@@ -294,7 +294,7 @@
       --text-field-gap: var(--control-gap-3);
       --text-field-icon-size: var(--icon-size-3);
       --text-field-slot-inset: var(--slot-inset-3);
-      --text-field-border-radius: var(--radius-pill-3);
+      --text-field-border-radius: var(--radius-control-3);
       --text-field-native-icon-size: var(--icon-size-3);
       font-size: var(--font-size-3);
       letter-spacing: var(--letter-spacing-3);
@@ -318,7 +318,7 @@
       --text-field-gap: var(--control-gap-4);
       --text-field-icon-size: var(--icon-size-4);
       --text-field-slot-inset: var(--slot-inset-4);
-      --text-field-border-radius: var(--radius-pill-4);
+      --text-field-border-radius: var(--radius-control-4);
       --text-field-native-icon-size: var(--icon-size-4);
       font-size: var(--font-size-4);
       letter-spacing: var(--letter-spacing-4);

@@ -44,10 +44,6 @@
   box-sizing: border-box;
   overflow: auto;
 
-  --inset-padding-top: var(--dialog-content-padding);
-  --inset-padding-right: var(--dialog-content-padding);
-  --inset-padding-bottom: var(--dialog-content-padding);
-  --inset-padding-left: var(--dialog-content-padding);
   padding: var(--dialog-content-padding);
   box-sizing: border-box;
 
@@ -62,23 +58,33 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
+/*
+ * v2's overlay ladder. Size N wears the overlay corner N, pads one surface step above its
+ * index (capped at 4), and publishes --overlay-w as its designed maximum width. Dialog and
+ * AlertDialog read it as max-width; Sheet reads it on its start/end sides only. An explicit
+ * maxWidth prop wins, because the max-width utility comes later in the cascade.
+ */
 @breakpoints {
   .rt-BaseDialogContent {
     &:where(.rt-r-size-1) {
-      --dialog-content-padding: var(--space-6);
-      border-radius: min(var(--radius-surface-5), calc(var(--radius-surface-1) + var(--space-3)));
+      --dialog-content-padding: var(--surface-p-2);
+      --overlay-w: var(--overlay-w-1);
+      border-radius: var(--radius-overlay-1);
     }
     &:where(.rt-r-size-2) {
-      --dialog-content-padding: var(--space-7);
-      border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-2) + var(--space-4)));
+      --dialog-content-padding: var(--surface-p-3);
+      --overlay-w: var(--overlay-w-2);
+      border-radius: var(--radius-overlay-2);
     }
     &:where(.rt-r-size-3) {
-      --dialog-content-padding: var(--space-8);
-      border-radius: min(var(--radius-surface-7), calc(var(--radius-surface-3) + var(--space-5)));
+      --dialog-content-padding: var(--surface-p-4);
+      --overlay-w: var(--overlay-w-3);
+      border-radius: var(--radius-overlay-3);
     }
     &:where(.rt-r-size-4) {
-      --dialog-content-padding: var(--space-9);
-      border-radius: min(var(--radius-surface-8), calc(var(--radius-surface-4) + var(--space-6)));
+      --dialog-content-padding: var(--surface-p-4);
+      --overlay-w: var(--overlay-w-4);
+      border-radius: var(--radius-overlay-4);
     }
   }
 }

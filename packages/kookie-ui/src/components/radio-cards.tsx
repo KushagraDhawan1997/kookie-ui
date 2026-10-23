@@ -5,6 +5,7 @@ import { RadioGroup as RadioGroupPrimitive } from 'radix-ui';
 import { radioCardsRootPropDefs } from './radio-cards.props.js';
 import { Grid } from './grid.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { marginPropDefs } from '../props/margin.props.js';
 
 import type { MarginProps } from '../props/margin.props.js';
@@ -33,14 +34,19 @@ interface RadioCardsRootProps
     MarginProps,
     RadioCardsRootOwnProps {}
 const RadioCardsRoot = React.forwardRef<RadioCardsRootElement, RadioCardsRootProps>(
-  (props, forwardedRef) => {
+  (ownProps, forwardedRef) => {
+    const props = useThemeSizeProps(ownProps, radioCardsRootPropDefs.size);
     const {
       className,
       color,
       ...rootProps
     } = extractProps(props, radioCardsRootPropDefs, marginPropDefs);
+    // Items read the resolved size, so an unset size still pads them at the default.
+    const size = props.size ?? radioCardsRootPropDefs.size.default;
+    const variant = props.variant;
+    const context = React.useMemo(() => ({ size, variant }), [size, variant]);
     return (
-      <RadioCardsContext.Provider value={{ size: props.size, variant: props.variant }}>
+      <RadioCardsContext.Provider value={context}>
         <Grid asChild>
           <RadioGroupPrimitive.Root
             data-accent-color={color}
@@ -63,7 +69,11 @@ const RadioCardsItem = React.forwardRef<RadioCardsItemElement, RadioCardsItemPro
   ({ className, ...props }, forwardedRef) => {
     const context = useRadioCardsContext();
     const variantClass = context?.variant ? `rt-variant-${context.variant}` : undefined;
-    const sizeClass = context?.size ? `rt-r-size-${context.size}` : undefined;
+    // extractProps writes the responsive size classes (`md:rt-r-size-3`) a template string cannot.
+    const { className: sizeClass } = extractProps(
+      { size: context?.size },
+      { size: radioCardsRootPropDefs.size },
+    );
 
     return (
       <RadioGroupPrimitive.Item

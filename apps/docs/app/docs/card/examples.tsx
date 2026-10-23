@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
 import { SectionHeader } from '@/components/blocks/section-header/section-header';
-import { Flex, Card, Text, Heading, Button, Inset, Image } from '@kushagradhawan/kookie-ui';
+import { Flex, Card, Text, Heading, Button, Box, Image } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ArrowRight01Icon } from '@hugeicons/core-free-icons';
 
@@ -18,7 +18,7 @@ export function CardExamples() {
           <SectionHeader.Content>
             <SectionHeader.Title>Content Card</SectionHeader.Title>
             <SectionHeader.Description>
-              Use Inset for edge-to-edge media placement within cards. The raised variant provides subtle elevation, with solid buttons for clear hierarchy.
+              Use bleed margins for edge-to-edge media inside cards. The raised variant provides subtle elevation, with solid buttons for clear hierarchy.
             </SectionHeader.Description>
           </SectionHeader.Content>
         </SectionHeader.Root>
@@ -26,15 +26,15 @@ export function CardExamples() {
           background="dots"
           code={`<Card variant="raised" size="2" style={{ maxWidth: 320 }}>
   <Flex direction="column">
-    <Inset clip="padding-box" side="top" pb="current">
+    <Box mx="bleed" mt="bleed" mb="5">
       <Image
         src="/path/to/image.jpg"
         alt="Card media"
         radius="none"
         style={{ height: 320, objectFit: 'cover' }}
       />
-    </Inset>
-    <Flex direction="column" gap="5" p="3">
+    </Box>
+    <Flex direction="column" gap="5">
       <Flex direction="column" gap="3">
         <Heading size="6" weight="medium">Getting Started</Heading>
         <Text size="3" emphasis="medium">
@@ -52,7 +52,7 @@ export function CardExamples() {
         >
           <Card variant="raised" size="2" style={{ maxWidth: 320 }}>
             <Flex direction="column">
-              <Inset clip="padding-box" side="top" pb="current">
+              <Box mx="bleed" mt="bleed" mb="5">
                 <Image
                   src={IMAGE_URL}
                   alt="Abstract gradient"
@@ -62,8 +62,8 @@ export function CardExamples() {
                     objectFit: 'cover',
                   }}
                 />
-              </Inset>
-              <Flex direction="column" gap="5" p="3">
+              </Box>
+              <Flex direction="column" gap="5">
                 <Flex direction="column" gap="3">
                   <Heading size="6" weight="medium">
                     Getting Started

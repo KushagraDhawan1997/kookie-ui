@@ -6,7 +6,7 @@ import { Button, Notice, Theme } from '../../../src/components/index';
 // A notice has Callout's spacing: an even inset, the icon on the first line, and an action
 // that does not make the strip taller than its words.
 describe('Notice spacing', () => {
-  for (const size of ['1', '2', '3'] as const) {
+  for (const size of ['1', '2', '3', '4'] as const) {
     it(`size ${size}`, () => {
       const { container } = render(
         <Theme>

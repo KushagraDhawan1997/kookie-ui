@@ -5,10 +5,6 @@
   position: relative;
   z-index: 200; /* Above dialogs (100) so hover cards inside dialogs/sheets work */
 
-  --inset-padding-top: var(--hover-card-content-padding);
-  --inset-padding-right: var(--hover-card-content-padding);
-  --inset-padding-bottom: var(--hover-card-content-padding);
-  --inset-padding-left: var(--hover-card-content-padding);
   padding: var(--hover-card-content-padding);
   box-sizing: border-box;
 
@@ -24,16 +20,20 @@
 @breakpoints {
   .rt-HoverCardContent {
     &:where(.rt-r-size-1) {
-      --hover-card-content-padding: var(--space-4);
-      border-radius: var(--radius-surface-4);
+      --hover-card-content-padding: var(--surface-p-1);
+      border-radius: var(--radius-surface-1);
     }
     &:where(.rt-r-size-2) {
-      --hover-card-content-padding: var(--space-5);
-      border-radius: var(--radius-surface-4);
+      --hover-card-content-padding: var(--surface-p-2);
+      border-radius: var(--radius-surface-2);
     }
     &:where(.rt-r-size-3) {
-      --hover-card-content-padding: var(--space-6);
-      border-radius: var(--radius-surface-5);
+      --hover-card-content-padding: var(--surface-p-3);
+      border-radius: var(--radius-surface-3);
+    }
+    &:where(.rt-r-size-4) {
+      --hover-card-content-padding: var(--surface-p-4);
+      border-radius: var(--radius-surface-4);
     }
   }
 }

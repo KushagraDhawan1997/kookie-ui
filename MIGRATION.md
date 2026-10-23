@@ -81,3 +81,64 @@ Avatar sizes follow v2's ladder: 1–4 are 28/32/40/48px (size 1 was 24) and 5�
 - **Loading** buttons are no longer natively `disabled`. They stay focusable, set `aria-disabled`, and block their own clicks. Tests that check `toBeDisabled()` on a loading button need `aria-disabled` instead.
 - **Invalid** fields key on `aria-invalid="true"`. `error` sets it, and your own `aria-invalid` now styles the field too. Only the border and ring turn red; soft and surface fields no longer fill red. A valid field no longer renders `aria-invalid="false"`. CSS keyed on `[data-error]` or `.rt-error` no longer matches anything the library styles.
 - **Focus** is one ring on every button variant: 2px of `--focus-8`, 2px outside the edge. New tokens: `--focus-ring-width`, `--focus-ring-offset`.
+
+## 0.19.0: surfaces and corners
+
+### Radius tokens
+
+Corners follow v2's structure: a palette and three roles, four steps each. Read a role, not a palette step.
+
+- Palette: `--radius-0` (new, 0px) to `--radius-10`, plus `--radius-full`. `--radius-11` and `--radius-12` are gone; use `--radius-10`.
+- `--radius-control-1..4`: palette steps 1 to 4, half the control height at `full`.
+- `--radius-surface-1..4`: 10, 16, 22, 28px at `full`. These are new values, not the old `surface-1..4` (6/8/10/12).
+- `--radius-overlay-1..4`: 14, 20, 24, 28px at `full`.
+
+| Old | New |
+| --- | --- |
+| `--radius-surface-1..4` | `--radius-surface-1` |
+| `--radius-surface-5` | `--radius-surface-2` |
+| `--radius-surface-6`, `-7` | `--radius-overlay-2`, `--radius-overlay-3` |
+| `--radius-surface-8` to `-12` | `--radius-surface-4` |
+| `--radius-pill-*` | `--radius-control-N` at the matching size |
+
+At `full`, Avatar sizes 5 to 9 and the Kbd sizes that used pills now draw a 24px corner, not a circle.
+
+### Card
+
+- Sizes are 1 to 4. Map old sizes 1, 2, 3 → 1, old 4 → 2, old 5 → 3.
+- Padding is 16, 24, 32, 40px. Default size is 2 (was 1): 24px padding and a 16px corner. Unset, a Card follows Theme size.
+- A Card inside a Card draws the outer corner minus the outer padding, never below 0. At the default sizes that is square.
+- `flush` and `inset` are removed. `Inset` is removed. Put the content in a Box with `m="bleed"`, or `mx`, `mt`, `mb` set to `"bleed"`, to reach the Card's edge.
+
+```tsx
+// before
+<Inset clip="padding-box" side="top" pb="current"><img /></Inset>
+// after
+<Box mx="bleed" mt="bleed" mb="5"><img /></Box>
+```
+
+CheckboxCards and RadioCards take sizes 1 to 4 on the same ladder: item padding 16, 24, 32, 40px, corners 10, 16, 22, 28px. Size 5 is gone. Items no longer use the control corner.
+
+### Dialog, AlertDialog and Sheet
+
+- Default size is 2 (was 3), and follows Theme size: 32px padding, 20px corner.
+- Max width comes from the size: 360, 440, 560, 720px. The 600px default `maxWidth` is gone. Pass `maxWidth` to keep a wider dialog.
+- Size 4 padding is 40px (was 48).
+- Start and end sheets cap at the size's width, 440px by default (was 90vw). A `width` above the cap needs `maxWidth` too. Sheet padding at the default is 32px (was 40).
+
+### Popover and HoverCard
+
+Padding and corners follow the surface ladder. Default size 2: padding 24px (was 16), corner 16px (was 10).
+
+| Size | Padding | Corner |
+| --- | --- | --- |
+| 1 | 16 | 10 |
+| 2 | 24 | 16 |
+| 3 | 32 | 22 |
+| 4 | 40 | 28 |
+
+HoverCard gains size 4.
+
+### Notice
+
+Notice takes sizes 1 to 4. Padding is 8, 12, 16, 24px (was 12, 16, 24). The corner is the control corner plus the padding, so it wraps its buttons: 22, 28, 36, 48px at `full`. The gap is 12px at every size. A Theme size of 4 now reaches Notice and Chatbar notices as 4.

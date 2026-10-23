@@ -7,6 +7,7 @@ import { Heading } from './heading.js';
 import { Text } from './text.js';
 import { Theme } from './theme.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
 import { useBodyPointerEventsCleanup } from '../hooks/use-body-pointer-events-cleanup.js';
 
@@ -49,7 +50,8 @@ interface DialogContentProps
   container?: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Portal>['container'];
 }
 const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>(
-  ({ align, ...props }, forwardedRef) => {
+  ({ align, ...ownProps }, forwardedRef) => {
+    const props = useThemeSizeProps(ownProps, contentPropDefs.size);
     const { className: alignClassName } = extractProps({ align }, alignPropDefs);
 
     const {

@@ -1,1 +1,5 @@
 @import './_internal/base-dialog.css';
+
+.rt-AlertDialogContent {
+  max-width: var(--overlay-w);
+}

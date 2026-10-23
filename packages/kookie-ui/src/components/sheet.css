@@ -2,7 +2,8 @@
   position: fixed !important;
   /* Use physical properties to integrate with width/height responsive utilities */
   width: var(--width, 90vw);
-  max-width: var(--max-width, 100vw);
+  /* The size's overlay width caps the start/end sides; top and bottom span the window. */
+  max-width: min(var(--overlay-w), 100vw);
   height: 100vh;
   max-height: 100vh;
   margin: 0 !important;

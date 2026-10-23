@@ -89,10 +89,10 @@ The panel that slides in from the specified side.
 | Prop | Type | Description |
 | ---- | ---- | ----------- |
 | `side` | `'start' \| 'end' \| 'top' \| 'bottom' \| 'left' \| 'right'` | Side where sheet appears. `left`/`right` alias to `start`/`end` for RTL support. Default: `'start'` |
-| `size` | `'1' \| '2' \| '3' \| '4'` | Content size scale from Dialog |
+| `size` | `'1' \| '2' \| '3' \| '4'` | Padding, corner and width cap, as on Dialog. Default `'2'`; unset, it follows the Theme size |
 | `width` | `string \| number \| Responsive<string \| number>` | Width of the sheet. Supports responsive objects |
 | `minWidth` | `string \| number \| Responsive<string \| number>` | Minimum width |
-| `maxWidth` | `string \| number \| Responsive<string \| number>` | Maximum width (Dialog's default 600px clamping is removed for sheets) |
+| `maxWidth` | `string \| number \| Responsive<string \| number>` | Maximum width. Start and end sheets cap at the size's width (360, 440, 560, 720px); set `maxWidth` to go wider |
 | `height` | `string \| number \| Responsive<string \| number>` | Height of the sheet. Supports responsive objects |
 | `minHeight` | `string \| number \| Responsive<string \| number>` | Minimum height |
 | `maxHeight` | `string \| number \| Responsive<string \| number>` | Maximum height |
@@ -180,7 +180,7 @@ Slides up from the bottom. Common for mobile action sheets.
 
 ## Sizing
 
-Sheet reuses Dialog's sizing system but removes the default maxWidth clamping, allowing sheets to take custom widths.
+Sheet uses Dialog's sizes. A start or end sheet caps at its size's width: 440px at the default size 2. A `width` above the cap needs `maxWidth` too. Top and bottom sheets span the full width.
 
 ### Fixed Width
 

@@ -12,13 +12,13 @@
       border-radius: var(--radius-surface-1);
     }
     &:where(.rt-r-size-2) {
-      border-radius: var(--radius-surface-2);
+      border-radius: var(--radius-surface-1);
     }
     &:where(.rt-r-size-3) {
-      border-radius: var(--radius-surface-3);
+      border-radius: var(--radius-surface-1);
     }
     &:where(.rt-r-size-4) {
-      border-radius: var(--radius-surface-4);
+      border-radius: var(--radius-surface-1);
     }
   }
 }
