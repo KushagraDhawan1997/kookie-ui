@@ -1,5 +1,11 @@
 # What's new in Womp's Design System
 
+## 0.23.0 (October 23)
+
+1. **Lighter in Chrome.** Spinners, accordions and scrollers build far fewer layers, components write less inline CSS, and a closed select uses less memory.
+2. **Image is back.** A slim `Image` with `fit`, `radius` and lazy loading.
+3. **Unused focus aliases removed (breaking).** 21 `--focus-*` variables nothing read are gone.
+
 ## 0.22.1 (October 23)
 
 1. **Flatter surfaces.** Cards, popovers, menus and panes are less rounded; buttons and fields stay pills.

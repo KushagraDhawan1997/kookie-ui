@@ -152,14 +152,7 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
         ref={announceRef}
         aria-live="polite"
         aria-atomic="true"
-        className="sr-only"
-        style={{
-          position: 'absolute',
-          left: '-10000px',
-          width: '1px',
-          height: '1px',
-          overflow: 'hidden',
-        }}
+        className="kui-sr-only"
       />
 
       <SliderPrimitive.Root
@@ -205,10 +198,8 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
               <button
                 key={tick.index}
                 className="kui-SliderTick"
-                style={{
-                  left: `${tick.percentage}%`,
-                  transform: 'translateX(-50%)',
-                }}
+                // Only `left` varies per tick; the centring transform lives in `.kui-SliderTick`.
+                style={{ left: `${tick.percentage}%` }}
                 onClick={() => {
                   const currentValues = sliderProps.value ?? sliderProps.defaultValue ?? [min];
                   const newValue = Array.isArray(currentValues)

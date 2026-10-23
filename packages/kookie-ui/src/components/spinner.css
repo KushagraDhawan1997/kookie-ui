@@ -8,6 +8,18 @@
   position: relative;
   width: var(--space-5);
   height: var(--space-5);
+  /* The rotation runs on the inner wheel, clipped here. Unclipped, a running transform animation
+     makes Chrome give its own layer to everything painted after it that it might overlap. The
+     leaves stay inside this box at every step; the margin keeps their anti-aliased edges on the
+     diagonal steps, which a clip at the box itself shaves. */
+  contain: paint;
+  overflow-clip-margin: 4px;
+}
+
+.kui-SpinnerWheel {
+  position: absolute;
+  inset: 0;
+  /* On the wheel, not the root: opacity on the clipping root costs Chrome a second layer per spinner. */
   opacity: var(--spinner-opacity);
   /* Single GPU-composited rotation instead of 8 opacity animations */
   animation: kui-spinner-rotate var(--spinner-animation-duration) steps(8, end) infinite;
@@ -73,7 +85,13 @@
 
 /* A busy indicator keeps moving when motion is reduced, more slowly. */
 @media (prefers-reduced-motion: reduce) {
-  .kui-Spinner {
+  .kui-SpinnerWheel {
     animation-duration: calc(var(--spinner-animation-duration) * 3);
   }
+}
+
+/* Children of a Spinner keep their space but are not shown while it spins. A class, not an inline style. */
+.kui-SpinnerHiddenChildren {
+  display: contents;
+  visibility: hidden;
 }

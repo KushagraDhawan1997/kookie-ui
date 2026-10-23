@@ -6,6 +6,7 @@ import { FormScene } from './scenes/form';
 import { MenuScene } from './scenes/menu';
 import { DialogsScene } from './scenes/dialogs';
 import { ShellScene } from './scenes/shell';
+import { ComponentsScene } from './components';
 
 const SCENES: Record<string, () => React.ReactElement> = {
   table: TableScene,
@@ -13,6 +14,7 @@ const SCENES: Record<string, () => React.ReactElement> = {
   menu: MenuScene,
   dialogs: DialogsScene,
   shell: ShellScene,
+  components: ComponentsScene,
 };
 
 const name = new URLSearchParams(location.search).get('scene') ?? 'table';

@@ -24,6 +24,7 @@ export {
   ThickChevronRightIcon,
   ThickDividerHorizontalIcon,
 } from './icons.js';
+export { Image, type ImageProps } from './image.js';
 export { Kbd, type KbdProps } from './kbd.js';
 export { Link, type LinkProps } from './link.js';
 export * as Navbar from './navbar.js';

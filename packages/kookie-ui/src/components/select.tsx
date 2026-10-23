@@ -21,16 +21,45 @@ import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-p
 
 type SelectRootOwnProps = GetPropDefTypes<typeof selectRootPropDefs>;
 
-type SelectContextValue = SelectRootOwnProps;
+// Trigger and Content pass the size prop def as its own record. It is hoisted because
+// extractProps caches its compiled prop defs on the identity of each record it is given:
+// a literal written at the call site would be a new object, and a recompile, every render.
+const selectSizePropDefs = { size: selectRootPropDefs.size };
+
+interface SelectContextValue extends SelectRootOwnProps {
+  /** Whether the list is open. Undefined when Content is rendered outside a Kookie Select.Root. */
+  open?: boolean;
+}
 const SelectContext = React.createContext<SelectContextValue>({});
 
-interface SelectRootProps extends SelectPrimitive.SelectProps, SelectContextValue {}
+interface SelectRootProps extends SelectPrimitive.SelectProps, SelectRootOwnProps {}
 const SelectRoot: React.FC<SelectRootProps> = (props) => {
-  const { children, size: sizeProp, ...rootProps } = props;
+  const {
+    children,
+    size: sizeProp,
+    open: openProp,
+    defaultOpen,
+    onOpenChange,
+    ...rootProps
+  } = props;
   const size = useThemeSize(sizeProp, selectRootPropDefs.size);
+
+  // Root owns the open state and hands Radix a controlled `open`, so Content learns of a
+  // change in the same render Radix does. Radix's uncontrolled state reports changes from an
+  // effect, a render late, which would mount the open list once without its wrappers.
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen ?? false);
+  const open = openProp ?? uncontrolledOpen;
+  const handleOpenChange = React.useCallback(
+    (next: boolean) => {
+      setUncontrolledOpen(next);
+      onOpenChange?.(next);
+    },
+    [onOpenChange],
+  );
+
   return (
-    <SelectPrimitive.Root {...rootProps}>
-      <SelectContext.Provider value={React.useMemo(() => ({ size }), [size])}>
+    <SelectPrimitive.Root {...rootProps} open={open} onOpenChange={handleOpenChange}>
+      <SelectContext.Provider value={React.useMemo(() => ({ size, open }), [size, open])}>
         {children}
       </SelectContext.Provider>
     </SelectPrimitive.Root>
@@ -61,7 +90,7 @@ const SelectTrigger = React.forwardRef<SelectTriggerElement, SelectTriggerProps>
       // Pass size value from the context to generate styles
       { size: context?.size, ...props },
       // Pass size prop def to allow it to be extracted
-      { size: selectRootPropDefs.size },
+      selectSizePropDefs,
       selectTriggerPropDefs,
     );
 
@@ -143,12 +172,26 @@ const SelectContent = React.forwardRef<SelectContentElement, SelectContentProps>
       // Pass size value from the context to generate styles
       { size: context?.size, ...props },
       // Pass size prop def to allow it to be extracted
-      { size: selectRootPropDefs.size },
+      selectSizePropDefs,
       selectContentPropDefs,
     );
     const themeContext = useThemeContext();
+
+    // While closed, Radix still renders Content's children, into a detached fragment: the
+    // items must exist for the trigger's value label, typeahead and the native form select.
+    // Nothing in that fragment is ever shown, so the theme wrapper and the scroll area, with
+    // its two resize observers, are left out until the list opens.
+    if (context.open === false && !contentProps.forceMount) {
+      return (
+        <SelectPrimitive.Portal container={container}>
+          <SelectPrimitive.Content {...contentProps} asChild={false} ref={forwardedRef}>
+            {children}
+          </SelectPrimitive.Content>
+        </SelectPrimitive.Portal>
+      );
+    }
+
     const resolvedColor = color || themeContext.accentColor;
-    const setThumbViewport = useThumbSync<HTMLDivElement>();
     return (
       <SelectPrimitive.Portal container={container}>
         <Theme asChild>
@@ -161,31 +204,12 @@ const SelectContent = React.forwardRef<SelectContentElement, SelectContentProps>
             className={classNames(
               'kui-PopperContent',
               'kui-BaseMenuContent',
-          'kui-variant-soft',
+              'kui-variant-soft',
               'kui-SelectContent',
               className,
             )}
           >
-            <ScrollAreaPrimitive.Root type="auto" className="kui-ScrollAreaRoot">
-              <SelectPrimitive.Viewport
-                asChild
-                className={classNames('kui-BaseMenuViewport', 'kui-SelectViewport')}
-              >
-                <ScrollAreaPrimitive.Viewport
-                  ref={setThumbViewport}
-                  className="kui-ScrollAreaViewport"
-                  style={{ overflowY: undefined }}
-                >
-                  {children}
-                </ScrollAreaPrimitive.Viewport>
-              </SelectPrimitive.Viewport>
-              <ScrollAreaPrimitive.Scrollbar
-                className="kui-ScrollAreaScrollbar"
-                orientation="vertical"
-              >
-                <ScrollAreaPrimitive.Thumb className="kui-ScrollAreaThumb" />
-              </ScrollAreaPrimitive.Scrollbar>
-            </ScrollAreaPrimitive.Root>
+            <SelectScrollArea>{children}</SelectScrollArea>
           </SelectPrimitive.Content>
         </Theme>
       </SelectPrimitive.Portal>
@@ -193,6 +217,30 @@ const SelectContent = React.forwardRef<SelectContentElement, SelectContentProps>
   },
 );
 SelectContent.displayName = 'Select.Content';
+
+/** The open list's scroll area. Its own component so the thumb sync hook runs only while open. */
+function SelectScrollArea({ children }: { children: React.ReactNode }) {
+  const setThumbViewport = useThumbSync<HTMLDivElement>();
+  return (
+    <ScrollAreaPrimitive.Root type="auto" className="kui-ScrollAreaRoot">
+      <SelectPrimitive.Viewport
+        asChild
+        className={classNames('kui-BaseMenuViewport', 'kui-SelectViewport')}
+      >
+        <ScrollAreaPrimitive.Viewport
+          ref={setThumbViewport}
+          className="kui-ScrollAreaViewport"
+          style={{ overflowY: undefined }}
+        >
+          {children}
+        </ScrollAreaPrimitive.Viewport>
+      </SelectPrimitive.Viewport>
+      <ScrollAreaPrimitive.Scrollbar className="kui-ScrollAreaScrollbar" orientation="vertical">
+        <ScrollAreaPrimitive.Thumb className="kui-ScrollAreaThumb" />
+      </ScrollAreaPrimitive.Scrollbar>
+    </ScrollAreaPrimitive.Root>
+  );
+}
 
 type SelectItemElement = React.ElementRef<typeof SelectPrimitive.Item>;
 interface SelectItemProps

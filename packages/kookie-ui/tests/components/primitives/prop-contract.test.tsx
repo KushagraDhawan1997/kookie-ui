@@ -14,6 +14,7 @@ import {
   Flex,
   Grid,
   Heading,
+  Image,
   Kbd,
   Link,
   Separator,
@@ -127,6 +128,10 @@ const CASES: Case[] = [
   { name: 'Card', render: () => <Card data-testid={TID} size="2" variant="classic" /> },
   { name: 'Separator', render: () => <Separator data-testid={TID} /> },
   { name: 'Spinner', render: () => <Spinner data-testid={TID} /> },
+  {
+    name: 'Image',
+    render: () => <Image data-testid={TID} src="/a.jpg" alt="" width="64px" height="64px" fit="contain" />,
+  },
   {
     name: 'Avatar',
     render: () => <Avatar size="3" variant="soft" fallback="A" />,

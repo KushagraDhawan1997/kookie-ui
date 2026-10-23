@@ -12,6 +12,10 @@
 .kui-ComboboxContent {
   --combobox-list-max-height: calc(300px * var(--scale));
 
+  /* Stops the list's scroll chaining to the page. Not user-scrollable (overflow: hidden), so
+     Chromium does not composite it the way it does a scroller with this property. */
+  overscroll-behavior: contain;
+
   min-width: var(--radix-popover-trigger-width);
   max-height: var(--radix-popover-content-available-height);
   transform-origin: var(--radix-popover-content-transform-origin);
@@ -53,6 +57,15 @@
   max-height: var(--combobox-list-max-height);
   scrollbar-width: thin;
   scrollbar-color: var(--neutral-a8) transparent;
+}
+
+/* Chromium (the only engine with -webkit-app-region) composites a scroller whose
+   overscroll-behavior is not auto, even when the list fits: 2 layers. There the content above
+   stops the chain. WebKit ignores an ancestor that is not user-scrollable, so it keeps `contain`. */
+@supports (-webkit-app-region: drag) {
+  .kui-ComboboxScrollArea {
+    overscroll-behavior: auto;
+  }
 }
 
 .kui-ComboboxList {

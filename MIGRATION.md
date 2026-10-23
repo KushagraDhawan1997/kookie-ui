@@ -277,7 +277,7 @@ These have no v2 counterpart and are gone. Replace each by hand.
 | `TabNav` | `Tabs`, or a row of links |
 | `DataList` | `Table`, or a `Grid` of `Text` |
 | `AspectRatio` | A `div` with `aspect-ratio` in its style |
-| `Image` | Native `<img>` |
+| `Image` | Back in 0.23.0 as a slim `Image`; see 0.23.0 below |
 | `CheckboxCards`, `RadioCards` | A `Card` holding a `Checkbox` or `Radio` |
 | `ThemePanel` | None |
 
@@ -349,3 +349,30 @@ Nothing to change in an app. At the default full radius, surfaces are less round
 | `--radius-surface-N` (cards, popovers, menus, tables, panes, notices) | 10 / 16 / 22 / 28px | 8 / 12 / 16 / 20px |
 | `--radius-overlay-N` (dialogs, sheets) | 14 / 20 / 24 / 28px | 12 / 16 / 20 / 24px |
 
+## 0.23.0: performance, Image is back
+
+### Removed focus aliases
+
+Coloured components no longer declare 21 focus aliases nothing in the library read. These are gone: `--focus-1` to `--focus-7`, `--focus-9` to `--focus-12`, `--focus-a1`, `--focus-a3`, `--focus-a4`, and `--focus-a6` to `--focus-a12`. `--focus-8`, `--focus-a2` and `--focus-a5` stay. Where your own CSS reads a removed one, read the accent step instead: `--focus-3` becomes `--accent-3`, `--focus-a4` becomes `--accent-a4`.
+
+### Image
+
+`Image` returns as one `<img>` with no wrapper. It keeps `src`, `alt`, `fit` (default `cover`), `radius`, `width` and `height`, loads lazily with async decoding unless you say otherwise, and rests on a quiet neutral fill until it has loaded. Every other `<img>` attribute passes through.
+
+Gone from the 0.15 Image, so a 0.15 call site needs a hand edit where it used them:
+
+| Before | After |
+| --- | --- |
+| `showSkeleton` | Nothing: the neutral fill is always there while it loads |
+| `placeholder` (blurred low-res image) | Layer your own low-res `<img>` behind it |
+| `caption` | A `Text` under the image in a `Flex direction="column"` |
+| `as={NextImage}`, `fill` | Use the framework's image component directly |
+| `loadingAriaLabel`, `errorAriaLabel` | Nothing: `alt` is what a screen reader hears |
+| responsive `fit`, margin and position props | A plain `fit` value; wrap the image in a `Box` for margin or position |
+| the fade-in on load | None: v1 has had no motion since 0.15 |
+
+`className`, `style`, `width` and `height` now land on the `<img>` itself, not a wrapping `div`.
+
+### Nothing else to change
+
+The rest of 0.23.0 is internal. Spinner rotates an inner wheel, so code that targeted the spinner root's animation should target `.kui-SpinnerWheel`. Accordion content no longer sets `will-change`.

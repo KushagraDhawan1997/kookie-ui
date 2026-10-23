@@ -101,6 +101,12 @@
     cursor: progress;
   }
 
+  /* The label, hidden in place while the spinner shows. `contents` keeps the button's flex gap. */
+  & :where(.kui-BaseButtonContent) {
+    display: contents;
+    visibility: hidden;
+  }
+
   /* Icons ride the icon ladder */
   /* stylelint-disable-next-line selector-max-type */
   & :where(svg) {

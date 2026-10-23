@@ -88,6 +88,18 @@
   isolation: isolate;
 }
 
+/*
+ * Chromium (the only engine with -webkit-app-region) gives a scroller whose overscroll-behavior is
+ * not auto two composited layers even when its content fits: about 3 MB for a 1280x800 pane. There
+ * the Root's own overscroll-behavior already stops the chain, so the content does not need one.
+ * WebKit ignores an ancestor that is not user-scrollable, so it keeps `contain` above.
+ */
+@supports (-webkit-app-region: drag) {
+  .kui-ShellContent {
+    overscroll-behavior: auto;
+  }
+}
+
 /* ── Panes ─────────────────────────────────────────────────────────────────── */
 
 /*
