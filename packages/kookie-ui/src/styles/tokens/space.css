@@ -86,6 +86,22 @@
   --slot-inset-3: calc(4px * var(--scale));
   --slot-inset-4: calc(4px * var(--scale));
 
+  /* Marks: the box of a checkbox or radio by index, and the switch and slider tracks. */
+  --mark-1: calc(16px * var(--scale));
+  --mark-2: calc(20px * var(--scale));
+  --mark-3: calc(24px * var(--scale));
+  --mark-4: calc(26px * var(--scale));
+  --mark-5: calc(28px * var(--scale));
+  --switch-w-1: calc(34px * var(--scale));
+  --switch-w-2: calc(40px * var(--scale));
+  --switch-w-3: calc(44px * var(--scale));
+  --switch-w-4: calc(48px * var(--scale));
+  --switch-inset: calc(2px * var(--scale));
+  --slider-track-1: calc(4px * var(--scale));
+  --slider-track-2: calc(5px * var(--scale));
+  --slider-track-3: calc(6px * var(--scale));
+  --slider-track-4: calc(7px * var(--scale));
+
   /* Overlay widths by index. */
   --overlay-w-1: calc(360px * var(--scale));
   --overlay-w-2: calc(440px * var(--scale));

@@ -41,7 +41,7 @@ const PageHeaderRoot = React.forwardRef<HTMLDivElement, PageHeaderRootProps>(
       <PageHeaderContext.Provider value={context}>
         <Flex ref={ref} direction={direction} gap={gap} {...props}>
           {children}
-          {separator && <Separator size="4" />}
+          {separator && <Separator />}
         </Flex>
       </PageHeaderContext.Provider>
     );

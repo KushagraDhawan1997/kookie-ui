@@ -7,7 +7,7 @@
  * - Variant palettes: Each variant defines its color scale as CSS variables
  * - Shared state logic: Single set of hover/focus/disabled selectors
  * - Special variants: raised (unique behavior, kept separate)
- * - Error states: Override colors for error styling
+ * - Invalid state: border and focus ring only, keyed on aria-invalid
  */
 
 /***************************************************************************************************
@@ -103,59 +103,52 @@
   box-sizing: border-box;
   padding: var(--text-area-border-width);
 }
+/* One inset on all four sides, the control padding of the size; the control height is the floor. */
 .rt-TextAreaInput {
-  padding: var(--text-area-padding-y) var(--text-area-padding-x);
+  padding: calc(var(--text-area-padding) - var(--text-area-border-width));
 }
 
 @breakpoints {
   .rt-TextAreaRoot {
     &:where(.rt-r-size-1) {
-      min-height: var(--space-9);
+      --text-area-padding: var(--control-px-1);
+      min-height: var(--control-height-1);
       border-radius: var(--radius-1);
 
       & :where(.rt-TextAreaInput) {
-        /* Clip text to border */
-        --text-area-padding-y: calc(var(--space-3) - var(--text-area-border-width));
-        --text-area-padding-x: calc(var(--space-3) - var(--text-area-border-width));
         font-size: var(--font-size-1);
         line-height: var(--line-height-1);
         letter-spacing: var(--letter-spacing-1);
       }
     }
     &:where(.rt-r-size-2) {
-      min-height: var(--space-10);
+      --text-area-padding: var(--control-px-2);
+      min-height: var(--control-height-2);
       border-radius: var(--radius-2);
 
       & :where(.rt-TextAreaInput) {
-        /* Clip text to border */
-        --text-area-padding-y: calc(var(--space-3) - var(--text-area-border-width));
-        --text-area-padding-x: calc(var(--space-3) - var(--text-area-border-width));
         font-size: var(--font-size-2);
         line-height: var(--line-height-2);
         letter-spacing: var(--letter-spacing-2);
       }
     }
     &:where(.rt-r-size-3) {
-      min-height: 80px;
+      --text-area-padding: var(--control-px-3);
+      min-height: var(--control-height-3);
       border-radius: var(--radius-3);
 
       & :where(.rt-TextAreaInput) {
-        /* Clip text to border */
-        --text-area-padding-y: calc(var(--space-4) - var(--text-area-border-width));
-        --text-area-padding-x: calc(var(--space-4) - var(--text-area-border-width));
         font-size: var(--font-size-3);
         line-height: var(--line-height-3);
         letter-spacing: var(--letter-spacing-3);
       }
     }
     &:where(.rt-r-size-4) {
-      min-height: var(--space-10);
+      --text-area-padding: var(--control-px-4);
+      min-height: var(--control-height-4);
       border-radius: var(--radius-4);
 
       & :where(.rt-TextAreaInput) {
-        /* Clip text to border */
-        --text-area-padding-y: calc(var(--space-4) - var(--text-area-border-width));
-        --text-area-padding-x: calc(var(--space-5) - var(--text-area-border-width));
         font-size: var(--font-size-4);
         line-height: var(--line-height-4);
         letter-spacing: var(--letter-spacing-4);
@@ -260,7 +253,7 @@
 
   /* Hover state */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
+    &:where(:hover:not(:has(.rt-TextAreaInput:where(:focus, :disabled)))) {
       background-color: var(--v-bg-hover);
     }
   }
@@ -286,7 +279,7 @@
 
   /* Hover state border */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
+    &:where(:hover:not(:has(.rt-TextAreaInput:where(:focus, :disabled)))) {
       box-shadow: inset 0 0 0 1px var(--v-border-hover);
     }
   }
@@ -377,7 +370,7 @@
 
   /* Hover effects */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
+    &:where(:hover:not(:has(.rt-TextAreaInput:where(:focus, :disabled)))) {
       background-color: var(--accent-2);
       box-shadow: var(--shadow-2);
     }
@@ -405,20 +398,12 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* All disabled and read-only text areas */
+/* Read-only text areas: the value stays selectable, so the caret cursor stays. */
 .rt-TextAreaInput {
-  &:where(:disabled, :read-only) {
-    cursor: text;
+  &:where(:read-only:not(:disabled)) {
     color: var(--gray-a11);
     /* Safari */
     -webkit-text-fill-color: var(--gray-a11);
-
-    &::placeholder {
-      opacity: 0.5;
-    }
-    &:where(:placeholder-shown) {
-      cursor: var(--cursor-disabled);
-    }
 
     .rt-TextAreaRoot:where(:has(&)) {
       --v-selection-color: var(--gray-a5);
@@ -427,100 +412,63 @@
   }
 }
 
+/* Disabled is a colour remap, never opacity, and the cursor goes back to the arrow. */
+.rt-TextAreaInput {
+  &:where(:disabled) {
+    cursor: default;
+    color: var(--gray-a8);
+    /* Safari */
+    -webkit-text-fill-color: var(--gray-a8);
+
+    &::placeholder {
+      color: var(--gray-a8);
+      -webkit-text-fill-color: var(--gray-a8);
+      opacity: 1;
+    }
+
+    .rt-TextAreaRoot:where(:has(&)) {
+      --v-selection-color: var(--gray-a5);
+      --v-focus-color: var(--gray-8);
+      cursor: default;
+    }
+  }
+}
+
 /***************************************************************************************************
  *                                                                                                 *
- * ERROR STATES                                                                                    *
+ * INVALID                                                                                         *
+ *                                                                                                 *
+ * Keyed on the textarea's `aria-invalid`, which the `error` prop also sets. Only the border and   *
+ * the focus ring move; the fill stays the variant's.                                              *
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-TextAreaRoot:where(.rt-error) {
-  --v-selection-color: var(--red-a5);
+.rt-TextAreaRoot:where(:has(> .rt-TextAreaInput[aria-invalid='true'])) {
   --v-focus-color: var(--red-8);
-}
 
-/* Error outline variant */
-.rt-TextAreaRoot:where(.rt-error.rt-variant-outline) {
-  --v-bg-hover: var(--red-2);
-  --v-bg-hover-a: var(--red-a2);
-  --v-border: var(--red-6);
-  --v-border-a: var(--red-a6);
-  --v-border-hover: var(--red-7);
-  --v-border-hover-a: var(--red-a7);
+  &:where(.rt-variant-outline, .rt-variant-surface, .rt-variant-soft, .rt-variant-ghost) {
+    box-shadow: inset 0 0 0 1px var(--red-6);
 
-  box-shadow: inset 0 0 0 1px var(--v-border);
-
-  @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      background-color: var(--v-bg-hover);
-      box-shadow: inset 0 0 0 1px var(--v-border-hover);
-    }
-  }
-}
-
-/* Error surface variant */
-.rt-TextAreaRoot:where(.rt-error.rt-variant-surface) {
-  --v-bg: var(--red-2);
-  --v-bg-a: var(--red-a2);
-  --v-bg-hover: var(--red-3);
-  --v-bg-hover-a: var(--red-a3);
-  --v-border: var(--red-6);
-  --v-border-a: var(--red-a6);
-  --v-border-hover: var(--red-7);
-  --v-border-hover-a: var(--red-a7);
-
-  background-color: var(--v-bg);
-  box-shadow: inset 0 0 0 1px var(--v-border);
-
-  @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      background-color: var(--v-bg-hover);
-      box-shadow: inset 0 0 0 1px var(--v-border-hover);
-    }
-  }
-}
-
-/* Error raised variant */
-.rt-TextAreaRoot:where(.rt-error.rt-variant-raised) {
-  box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-6);
-
-  @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      box-shadow: var(--shadow-3), inset 0 0 0 1px var(--red-7);
-    }
-  }
-}
-
-/* Error soft variant */
-.rt-TextAreaRoot:where(.rt-error.rt-variant-soft) {
-  --v-bg: var(--red-2);
-  --v-bg-a: var(--red-a2);
-  --v-bg-hover: var(--red-4);
-  --v-bg-hover-a: var(--red-a4);
-
-  background-color: var(--v-bg);
-
-  @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      background-color: var(--v-bg-hover);
-    }
-  }
-}
-
-/* Error ghost variant */
-.rt-TextAreaRoot:where(.rt-error.rt-variant-ghost) {
-  --v-bg-hover: var(--red-3);
-  --v-bg-hover-a: var(--red-a3);
-  --v-bg-focus: var(--red-2);
-  --v-bg-focus-a: var(--red-a2);
-
-  @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      background-color: var(--v-bg-hover);
+    @media (hover: hover) {
+      &:where(:hover:not(:has(.rt-TextAreaInput:where(:focus, :disabled)))) {
+        box-shadow: inset 0 0 0 1px var(--red-7);
+      }
     }
   }
 
-  &:where(:focus-within) {
-    background-color: var(--v-bg-focus);
+  &:where(.rt-variant-raised) {
+    box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-6);
+
+    @media (hover: hover) {
+      &:where(:hover:not(:has(.rt-TextAreaInput:where(:focus, :disabled)))) {
+        box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-7);
+      }
+    }
+
+    /* The raised focus ring is a box-shadow, not the outline */
+    &:where(:has(.rt-TextAreaInput:focus)) {
+      box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-6), 0 0 0 2px var(--red-8);
+    }
   }
 }
 

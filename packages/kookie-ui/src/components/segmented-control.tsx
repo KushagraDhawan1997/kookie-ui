@@ -8,6 +8,7 @@ import { useControllableState } from 'radix-ui/internal';
 
 import { segmentedControlRootPropDefs } from './segmented-control.props.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { marginPropDefs } from '../props/margin.props.js';
 
 import type { MarginProps } from '../props/margin.props.js';
@@ -26,7 +27,8 @@ interface SegmentedControlRootProps
 }
 
 const SegmentedControlRoot = React.forwardRef<HTMLDivElement, SegmentedControlRootProps>(
-  (props, forwardedRef) => {
+  (ownProps, forwardedRef) => {
+    const props = useThemeSizeProps(ownProps, segmentedControlRootPropDefs.size);
     const {
       className,
       children,

@@ -42,7 +42,7 @@ export default function SegmentedControlTest() {
           </Text>
         </Flex>
 
-        <Separator size="4" />
+        <Separator />
 
         {/* Test 1: Basic Text vs Icon-Only Comparison */}
         <Flex direction="column" gap="6">
@@ -86,7 +86,7 @@ export default function SegmentedControlTest() {
           </Box>
         </Flex>
 
-        <Separator size="4" />
+        <Separator />
 
         {/* Test 2: All Sizes Icon-Only */}
         <Flex direction="column" gap="6">
@@ -170,7 +170,7 @@ export default function SegmentedControlTest() {
           </Box>
         </Flex>
 
-        <Separator size="4" />
+        <Separator />
 
         {/* Test 3: Real-World Use Cases */}
         <Flex direction="column" gap="6">
@@ -241,7 +241,7 @@ export default function SegmentedControlTest() {
           </Box>
         </Flex>
 
-        <Separator size="4" />
+        <Separator />
 
         {/* Test 4: Visual Preview */}
         <Flex direction="column" gap="6">
@@ -269,7 +269,7 @@ export default function SegmentedControlTest() {
           </Box>
         </Flex>
 
-        <Separator size="4" />
+        <Separator />
 
         {/* Test 5: Indicator Animation */}
         <Flex direction="column" gap="6">
@@ -307,7 +307,7 @@ export default function SegmentedControlTest() {
           </Box>
         </Flex>
 
-        <Separator size="4" />
+        <Separator />
 
         {/* Test 6: Full Width Icon-Only */}
         <Flex direction="column" gap="6">
@@ -373,7 +373,7 @@ export default function SegmentedControlTest() {
           </Box>
         </Flex>
 
-        <Separator size="4" />
+        <Separator />
 
         {/* Test 7: Vertical Orientation - Icon-Only (Recommended) */}
         <Flex direction="column" gap="6">
@@ -456,7 +456,7 @@ export default function SegmentedControlTest() {
           </Box>
         </Flex>
 
-        <Separator size="4" />
+        <Separator />
 
         {/* Test 8: Vertical vs Horizontal Comparison */}
         <Flex direction="column" gap="6">
@@ -506,7 +506,7 @@ export default function SegmentedControlTest() {
           </Box>
         </Flex>
 
-        <Separator size="4" />
+        <Separator />
 
         {/* Test 9: Vertical with Text (Less Ideal) */}
         <Flex direction="column" gap="6">
@@ -553,7 +553,7 @@ export default function SegmentedControlTest() {
           </Box>
         </Flex>
 
-        <Separator size="4" />
+        <Separator />
 
         {/* Test 10: Real-World Vertical Use Cases */}
         <Flex direction="column" gap="6">
@@ -621,7 +621,7 @@ export default function SegmentedControlTest() {
           </Box>
         </Flex>
 
-        <Separator size="4" />
+        <Separator />
 
         {/* Test 11: Vertical Indicator Animation */}
         <Flex direction="column" gap="6">

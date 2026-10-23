@@ -85,7 +85,7 @@ export function ButtonExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example: Icon Loading with Spinner */}
       <Flex direction="column" gap="5">
@@ -124,7 +124,7 @@ export function ButtonExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 2: Destructive Confirmation */}
       <Flex direction="column" gap="5">
@@ -160,7 +160,7 @@ export function ButtonExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 3: Card CTA */}
       <Flex direction="column" gap="5">
@@ -224,7 +224,7 @@ export function ButtonExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 4: Toolbar with Selection */}
       <Flex direction="column" gap="5">
@@ -288,7 +288,7 @@ export function ButtonExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 5: Empty State CTA */}
       <Flex direction="column" gap="5">
@@ -341,7 +341,7 @@ export function ButtonExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 6: Compact Toolbar */}
       <Flex direction="column" gap="5">

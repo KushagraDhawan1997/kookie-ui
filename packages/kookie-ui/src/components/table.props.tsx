@@ -3,7 +3,7 @@ import { widthPropDefs } from '../props/width.props.js';
 
 import type { PropDef } from '../props/prop-def.js';
 
-const sizes = ['1', '2', '3'] as const;
+const sizes = ['1', '2', '3', '4'] as const;
 const variants = ['surface', 'ghost'] as const;
 const layoutValues = ['auto', 'fixed'] as const;
 

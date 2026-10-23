@@ -4,6 +4,7 @@ import { HoverCard as HoverCardPrimitive } from 'radix-ui';
 
 import { hoverCardContentPropDefs } from './hover-card.props.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
 import { Theme } from './theme.js';
 
@@ -41,7 +42,8 @@ interface HoverCardContentProps
   container?: React.ComponentPropsWithoutRef<typeof HoverCardPrimitive.Portal>['container'];
 }
 const HoverCardContent = React.forwardRef<HoverCardContentElement, HoverCardContentProps>(
-  (props, forwardedRef) => {
+  (ownProps, forwardedRef) => {
+    const props = useThemeSizeProps(ownProps, hoverCardContentPropDefs.size);
     const { className, forceMount, container, ...contentProps } = extractProps(
       props,
       hoverCardContentPropDefs

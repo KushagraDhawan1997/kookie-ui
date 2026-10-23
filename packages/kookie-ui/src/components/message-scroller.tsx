@@ -144,7 +144,7 @@ type ButtonProps = Omit<IconButtonProps, 'aria-label' | 'aria-labelledby' | 'var
  * Place it inside `Root`, after the viewport. It sits over the viewport's bottom edge.
  */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ direction = 'end', behavior, className, children, size = '2', variant = 'surface', emphasis, color = 'gray', radius = 'full', 'aria-label': label, ...props }, forwardedRef) => (
+  ({ direction = 'end', behavior, className, children, size, variant = 'surface', emphasis, color = 'gray', radius = 'full', 'aria-label': label, ...props }, forwardedRef) => (
     <Primitive.Button
       direction={direction}
       {...(behavior ? { behavior } : {})}

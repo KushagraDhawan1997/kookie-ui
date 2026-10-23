@@ -88,7 +88,7 @@ export function DocsPageHeader({ meta, actions, showCopyButton = true, tabs, sep
       {tabs ? (
         <PageHeader.Tabs mt="7">{tabs}</PageHeader.Tabs>
       ) : (
-        separator && <Separator size="4" mt="7" />
+        separator && <Separator mt="7" />
       )}
     </PageHeader.Root>
   );

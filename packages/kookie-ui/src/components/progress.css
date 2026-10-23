@@ -2,6 +2,9 @@
   --progress-value: 0;
   --progress-max: 100;
   --progress-duration: var(--progress-default-duration);
+  --progress-height: var(--progress-slider-height-2);
+  --progress-radius: var(--progress-slider-radius-2);
+  --progress-indicator-radius: var(--progress-slider-radius-2);
   pointer-events: none;
   position: relative;
   overflow: hidden;
@@ -25,11 +28,7 @@
    * `.rt-ProgressRoot` clips the overhang. `max()` keeps a sliver of the bar
    * visible at very low values, as the width form did.
    */
-  transform: translateX(
-    calc(
-      -100% + max(calc(var(--progress-value) / var(--progress-max) * 100%), var(--progress-height))
-    )
-  );
+  transform: translateX(calc(-100% + max(calc(var(--progress-value) / var(--progress-max) * 100%), var(--progress-height))));
 
   &:where([data-state='indeterminate']) {
     animation-name: rt-progress-indicator-indeterminate-grow;
@@ -56,37 +55,6 @@
   }
   100% {
     transform: translateX(calc(-100% + var(--progress-scale-final) * 100%));
-  }
-}
-
-/***************************************************************************************************
- *                                                                                                 *
- * SIZES                                                                                           *
- *                                                                                                 *
- ***************************************************************************************************/
-
-@breakpoints {
-  .rt-ProgressRoot {
-    &:where(.rt-r-size-1) {
-      --progress-height: var(--progress-slider-height-1);
-      --progress-radius: var(--progress-slider-radius-1);
-      --progress-indicator-radius: var(--progress-slider-radius-1);
-    }
-    &:where(.rt-r-size-2) {
-      --progress-height: var(--progress-slider-height-2);
-      --progress-radius: var(--progress-slider-radius-2);
-      --progress-indicator-radius: var(--progress-slider-radius-2);
-    }
-    &:where(.rt-r-size-3) {
-      --progress-height: var(--progress-slider-height-3);
-      --progress-radius: var(--progress-slider-radius-3);
-      --progress-indicator-radius: var(--progress-slider-radius-3);
-    }
-    &:where(.rt-r-size-4) {
-      --progress-height: var(--progress-slider-height-4);
-      --progress-radius: var(--progress-slider-radius-4);
-      --progress-indicator-radius: var(--progress-slider-radius-4);
-    }
   }
 }
 
@@ -127,4 +95,3 @@
     background-color: var(--accent-solid);
   }
 }
-

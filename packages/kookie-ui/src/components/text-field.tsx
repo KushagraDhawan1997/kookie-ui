@@ -7,6 +7,7 @@ import { composeRefs } from 'radix-ui/internal';
 
 import { textFieldRootPropDefs, textFieldSlotPropDefs, type TextFieldSlotScrubProps } from './text-field.props.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { marginPropDefs } from '../props/margin.props.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
@@ -22,17 +23,18 @@ type TextFieldRootOwnProps = GetPropDefTypes<typeof textFieldRootPropDefs> & {
 };
 type TextFieldInputProps = ComponentPropsWithout<'input', NotInputTextualAttributes | 'color' | 'defaultValue' | 'size' | 'type' | 'value'>;
 interface TextFieldRootProps extends TextFieldInputProps, MarginProps, TextFieldRootOwnProps {}
-const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>((props, forwardedRef) => {
+const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>((ownProps, forwardedRef) => {
+  const props = useThemeSizeProps(ownProps, textFieldRootPropDefs.size);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const { children, className, color, radius, style, ...inputProps } = extractProps(props, textFieldRootPropDefs, marginPropDefs);
 
   // Generate unique IDs for accessibility
   const errorId = React.useId();
 
-  // Determine invalid state
-  const isInvalid = inputProps.error;
+  const { 'aria-describedby': ariaDescribedby, 'aria-labelledby': ariaLabelledby, 'aria-invalid': ariaInvalid } = inputProps;
 
-  const { 'aria-describedby': ariaDescribedby, 'aria-labelledby': ariaLabelledby } = inputProps;
+  // Invalid when `error` is set or the caller passes aria-invalid; the CSS keys on aria-invalid only.
+  const isInvalid = Boolean(inputProps.error) || ariaInvalid === true || ariaInvalid === 'true';
 
   // Build aria-describedby string
   const describedBy = React.useMemo(() => {
@@ -45,11 +47,11 @@ const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>
   // Build aria attributes
   const ariaProps = React.useMemo(
     () => ({
-      'aria-invalid': isInvalid,
+      'aria-invalid': isInvalid ? true : ariaInvalid,
       'aria-describedby': describedBy,
       'aria-labelledby': ariaLabelledby,
     }),
-    [isInvalid, describedBy, ariaLabelledby],
+    [isInvalid, ariaInvalid, describedBy, ariaLabelledby],
   );
 
   // Filter out our custom props to avoid DOM warnings

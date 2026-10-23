@@ -4,6 +4,10 @@
   /* Standard border width constants */
   --border-width-standard: 1px;
 
+  /* One focus ring: outline var(--focus-ring-width) solid var(--focus-8), offset var(--focus-ring-offset) */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
   /* Raised variant 3D effect constants - simplified for button-like components */
   --raised-elevation-offset: -0.02em;
   --raised-active-padding-offset-1: 0.5px;
