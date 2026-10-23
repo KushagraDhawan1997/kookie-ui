@@ -28,7 +28,7 @@ import { Heading, Flex } from '@kushagradhawan/kookie-ui';
 export function MyHeadings() {
   return (
     <Flex direction="column" gap="5">
-      <Heading size="8">Page Title</Heading>
+      <Heading size="7">Page Title</Heading>
       <Heading size="6">Section Title</Heading>
       <Heading size="4">Subsection</Heading>
     </Flex>
@@ -41,9 +41,9 @@ export function MyHeadings() {
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
 | `as` | `'h1' \| 'h2' \| 'h3' \| 'h4' \| 'h5' \| 'h6'` | `'h1'` | The HTML heading element to render. |
-| `size` | `'0' \| '1' \| '2' \| '3' \| ... \| '12'` | `'6'` | The font size. Supports responsive values. |
+| `size` | `'1' \| '2' \| '3' \| ... \| '9'` | `'6'` | The font size. Supports responsive values. |
 | `font` | `'sans' \| 'mono' \| 'serif'` | - | The font family. Overrides the theme font. |
-| `weight` | `'thin' \| 'extralight' \| 'light' \| 'regular' \| 'medium' \| 'semibold' \| 'bold' \| 'extrabold'` | - | The font weight. Supports responsive values. |
+| `weight` | `'regular' \| 'medium' \| 'semibold'` | `'medium'` | The font weight. Supports responsive values. |
 | `color` | `AccentColor` | - | The text color. Inherits from the parent if not set. |
 | `emphasis` | `'loud' \| 'medium' \| 'quiet'` | `'loud'` with a color | How strongly the heading reads. Without a color it ranks gray text. |
 | `align` | `'left' \| 'center' \| 'right'` | - | Text alignment. Supports responsive values. |
@@ -54,20 +54,17 @@ export function MyHeadings() {
 
 ## Sizes
 
-Heading supports sizes from 0 (smallest) to 12 (largest display text).
+Heading supports sizes from 1 (smallest) to 9 (largest display text).
 
 ```tsx
 <Flex direction="column" gap="4">
-  <Heading size="12">Size 12 - Extra large display (104px)</Heading>
-  <Heading size="11">Size 11 - Large display (86px)</Heading>
-  <Heading size="10">Size 10 - Display (72px)</Heading>
-  <Heading size="9">Size 9 - Hero (60px)</Heading>
-  <Heading size="8">Size 8 - Page title (48px)</Heading>
-  <Heading size="7">Size 7 - Section (36px)</Heading>
-  <Heading size="6">Size 6 - Subsection (28px)</Heading>
-  <Heading size="5">Size 5 - Card title (24px)</Heading>
-  <Heading size="4">Size 4 - Subtitle (20px)</Heading>
-  <Heading size="3">Size 3 - Label (18px)</Heading>
+  <Heading size="9">Size 9 - Hero (64px)</Heading>
+  <Heading size="8">Size 8 - Display (44px)</Heading>
+  <Heading size="7">Size 7 - Page title (32px)</Heading>
+  <Heading size="6">Size 6 - Section (24px)</Heading>
+  <Heading size="5">Size 5 - Subsection (20px)</Heading>
+  <Heading size="4">Size 4 - Card title (18px)</Heading>
+  <Heading size="3">Size 3 - Label (16px)</Heading>
 </Flex>
 ```
 
@@ -77,7 +74,7 @@ Use the `as` prop to maintain proper heading hierarchy.
 
 ```tsx
 <article>
-  <Heading as="h1" size="8">Article Title</Heading>
+  <Heading as="h1" size="7">Article Title</Heading>
   <section>
     <Heading as="h2" size="6">Section One</Heading>
     <Heading as="h3" size="4">Subsection</Heading>
@@ -90,15 +87,13 @@ Use the `as` prop to maintain proper heading hierarchy.
 
 ## Weights
 
-Control heading weight with the `weight` prop.
+Control heading weight with the `weight` prop. Headings default to `medium`.
 
 ```tsx
 <Flex direction="column" gap="4">
-  <Heading size="6" weight="light">Light weight</Heading>
   <Heading size="6" weight="regular">Regular weight</Heading>
   <Heading size="6" weight="medium">Medium weight</Heading>
   <Heading size="6" weight="semibold">Semibold weight</Heading>
-  <Heading size="6" weight="bold">Bold weight</Heading>
 </Flex>
 ```
 

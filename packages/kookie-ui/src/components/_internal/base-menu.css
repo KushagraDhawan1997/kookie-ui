@@ -35,7 +35,7 @@
 .rt-BaseMenuItem {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--base-menu-item-gap);
   min-height: var(--base-menu-item-height);
   padding-top: var(--base-menu-item-padding-y);
   padding-bottom: var(--base-menu-item-padding-y);
@@ -45,6 +45,10 @@
   position: relative;
   outline: none;
   scroll-margin: var(--base-menu-content-padding) 0;
+  font-size: var(--base-menu-font-size);
+  line-height: var(--base-menu-line-height);
+  letter-spacing: var(--base-menu-letter-spacing);
+  border-radius: var(--base-menu-item-radius);
 
   /* Fix sticky text highlighting after selection in Firefox */
   user-select: none;
@@ -55,35 +59,64 @@
     cursor: default;
   }
 
-  /* Enhanced reduced motion support */
+  /* stylelint-disable-next-line selector-max-type */
+  & :where(svg) {
+    width: var(--base-menu-icon-size);
+    height: var(--base-menu-icon-size);
+    flex-shrink: 0;
+  }
 }
 
+/*
+ * The trailing slot (a shortcut, a submenu chevron) sits the row's inset from the far edge,
+ * the same distance as from the top and bottom. The label keeps the row's text padding.
+ */
 .rt-BaseMenuShortcut {
   display: flex;
   align-items: center;
   margin-inline-start: auto;
   padding-inline-start: var(--space-5);
-  margin-inline-end: calc(-2px * var(--scale)); /* Pulls closer to edge */
+  margin-inline-end: calc(var(--base-menu-item-padding-y) - var(--base-menu-item-padding-right));
+}
+
+/*
+ * A shortcut's Kbd is a line-box-tall chip, so it never grows the row past its line plus the
+ * insets. Kbd loads later and sets its own block padding, so this needs the extra class.
+ */
+/* stylelint-disable-next-line selector-max-specificity */
+.rt-BaseMenuShortcut .rt-Kbd {
+  height: var(--base-menu-line-height);
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .rt-BaseMenuSubTriggerIcon {
   color: var(--gray-12);
-  margin-inline-end: calc(-2px * var(--scale));
 }
 
+/* The check or radio mark sits in the leading icon box, at the plain padding. */
 .rt-BaseMenuItemIndicator {
   position: absolute;
-  inset-inline-start: 0;
-  width: var(--base-menu-item-padding-left);
+  inset-inline-start: var(--base-menu-item-px);
+  top: 0;
+  bottom: 0;
+  width: var(--base-menu-icon-size);
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
+/* The mark and the chevron are small glyphs, not icons. */
+.rt-BaseMenuItem :where(.rt-BaseMenuItemIndicatorIcon, .rt-BaseMenuSubTriggerIcon, .rt-SelectItemIndicatorIcon) {
+  width: var(--base-menu-indicator-icon-size);
+  height: var(--base-menu-indicator-icon-size);
+}
+
+/* A separator keeps the panel's own rhythm above and below, and spans the rows' text. */
 .rt-BaseMenuSeparator {
   height: 1px;
-  margin-top: var(--space-3);
-  margin-bottom: var(--space-3);
+  margin-top: var(--base-menu-content-padding);
+  margin-bottom: var(--base-menu-content-padding);
   margin-inline-start: var(--base-menu-item-padding-left);
   margin-inline-end: var(--base-menu-item-padding-right);
 }
@@ -97,6 +130,9 @@
   padding-inline-start: var(--base-menu-item-padding-left);
   padding-inline-end: var(--base-menu-item-padding-right);
   box-sizing: border-box;
+  font-size: var(--base-menu-font-size);
+  line-height: var(--base-menu-line-height);
+  letter-spacing: var(--base-menu-letter-spacing);
   color: var(--gray-a11);
   user-select: none;
   cursor: default;
@@ -111,15 +147,39 @@
   transform: scaleX(-1);
 }
 
+/***************************************************************************************************
+ *                                                                                                 *
+ * ROWS                                                                                            *
+ *                                                                                                 *
+ ***************************************************************************************************/
+
 /*
- * Items leave room for the check/radio indicator only when the menu has one.
- * The size blocks below set both paddings; this picks one. Browsers without
- * :has() keep the indicator padding, which never overlaps.
+ * A panel that hugs rows (v2 §21). The panel pads --panel-p-N. A row hugs its line: its
+ * height is the line height plus --row-inset-N above and below (24 / 30 / 34 / 38 at sizes
+ * 1-4), never under the 24px target floor, and a wrapped label grows it. Its inline padding
+ * is --control-px-N, or --control-px-pill-N at radius full (--radius-full is 0px below full
+ * and 9999px at full). Its corner is --radius-row-N: half the row's own height at full.
+ *
+ * Items leave room for the check or radio mark only when the menu has one: the plain
+ * padding, the mark's icon box and the gap. Select and Combobox rows always carry a mark.
+ * Browsers without :has() keep the room.
  */
-.rt-BaseMenuContent {
+.rt-BaseMenuContent,
+.rt-SidebarHeader,
+.rt-SidebarFooter,
+.rt-SidebarSearchPopover {
+  --base-menu-item-height: max(24px, calc(var(--base-menu-line-height) + 2 * var(--base-menu-item-padding-y)));
+  --base-menu-item-padding-x: calc(
+    var(--base-menu-item-px) + min(var(--radius-full, 0px), var(--base-menu-item-px-pill) - var(--base-menu-item-px))
+  );
+  --base-menu-item-padding-left-plain: var(--base-menu-item-padding-x);
+  --base-menu-item-padding-left-indicator: calc(
+    var(--base-menu-item-px) + var(--base-menu-icon-size) + var(--base-menu-item-gap)
+  );
+  --base-menu-item-padding-right: var(--base-menu-item-padding-x);
   --base-menu-item-padding-left: var(--base-menu-item-padding-left-indicator);
 
-  &:where(:not(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem))) {
+  &:where(:not(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem, .rt-SelectItem, .rt-ComboboxItem))) {
     --base-menu-item-padding-left: var(--base-menu-item-padding-left-plain);
   }
 }
@@ -133,117 +193,63 @@
 @breakpoints {
   .rt-BaseMenuContent {
     &:where(.rt-r-size-1) {
-      --base-menu-content-padding: var(--space-3);
-      --base-menu-item-padding-left-plain: var(--space-3);
-      --base-menu-item-padding-left-indicator: calc(var(--space-6) / 1.2);
-      --base-menu-item-padding-right: var(--space-3);
-      --base-menu-item-padding-y: var(--space-2);
-      --base-menu-item-height: var(--control-height-1);
+      --base-menu-content-padding: var(--panel-p-1);
+      --base-menu-item-padding-y: var(--row-inset-1);
+      --base-menu-item-px: var(--control-px-1);
+      --base-menu-item-px-pill: var(--control-px-pill-1);
+      --base-menu-item-gap: var(--control-gap-1);
+      --base-menu-item-radius: var(--radius-row-1);
+      --base-menu-icon-size: var(--icon-size-1);
+      --base-menu-indicator-icon-size: var(--indicator-icon-size-1);
+      --base-menu-font-size: var(--font-size-1);
+      --base-menu-line-height: var(--line-height-1);
+      --base-menu-letter-spacing: var(--letter-spacing-1);
       border-radius: var(--radius-surface-1);
-
-      & :where(.rt-BaseMenuItem) {
-        gap: var(--component-gap-2);
-        font-size: var(--font-size-1);
-        line-height: var(--line-height-1);
-        letter-spacing: var(--letter-spacing-1);
-        border-radius: var(--radius-1);
-
-        /* stylelint-disable-next-line selector-max-type */
-        & :where(svg) {
-          width: var(--content-icon-size-1);
-          height: var(--content-icon-size-1);
-          flex-shrink: 0;
-        }
-      }
-
-      & :where(.rt-BaseMenuLabel) {
-        font-size: var(--font-size-1);
-        line-height: var(--line-height-1);
-        letter-spacing: var(--letter-spacing-1);
-        padding-inline-start: var(--base-menu-item-padding-left);
-      }
-
-      & :where(.rt-BaseMenuItemIndicatorIcon, .rt-BaseMenuSubTriggerIcon) {
-        width: var(--indicator-icon-size-1);
-        height: var(--indicator-icon-size-1);
-      }
-
     }
 
     &:where(.rt-r-size-2) {
-      --base-menu-content-padding: var(--space-4);
-      --base-menu-item-padding-left-plain: var(--space-4);
-      --base-menu-item-padding-left-indicator: var(--space-6);
-      --base-menu-item-padding-right: var(--space-4);
-      --base-menu-item-padding-y: var(--space-2);
-      --base-menu-item-height: var(--control-height-2);
+      --base-menu-content-padding: var(--panel-p-2);
+      --base-menu-item-padding-y: var(--row-inset-2);
+      --base-menu-item-px: var(--control-px-2);
+      --base-menu-item-px-pill: var(--control-px-pill-2);
+      --base-menu-item-gap: var(--control-gap-2);
+      --base-menu-item-radius: var(--radius-row-2);
+      --base-menu-icon-size: var(--icon-size-2);
+      --base-menu-indicator-icon-size: var(--indicator-icon-size-2);
+      --base-menu-font-size: var(--font-size-2);
+      --base-menu-line-height: var(--line-height-2);
+      --base-menu-letter-spacing: var(--letter-spacing-2);
       border-radius: var(--radius-surface-2);
-
-      & :where(.rt-BaseMenuItem) {
-        gap: var(--component-gap-3);
-        font-size: var(--font-size-2);
-        line-height: var(--line-height-2);
-        letter-spacing: var(--letter-spacing-2);
-        border-radius: var(--radius-2);
-
-        /* stylelint-disable-next-line selector-max-type */
-        & :where(svg) {
-          width: var(--content-icon-size-2);
-          height: var(--content-icon-size-2);
-          flex-shrink: 0;
-        }
-      }
-
-      & :where(.rt-BaseMenuLabel) {
-        font-size: var(--font-size-2);
-        line-height: var(--line-height-2);
-        letter-spacing: var(--letter-spacing-2);
-        padding-inline-start: var(--base-menu-item-padding-left);
-      }
-
-      & :where(.rt-BaseMenuItemIndicatorIcon, .rt-BaseMenuSubTriggerIcon) {
-        width: var(--indicator-icon-size-2);
-        height: var(--indicator-icon-size-2);
-      }
-
     }
 
     &:where(.rt-r-size-3) {
-      --base-menu-content-padding: var(--space-4);
-      --base-menu-item-padding-left-plain: var(--space-4);
-      --base-menu-item-padding-left-indicator: var(--space-6);
-      --base-menu-item-padding-right: var(--space-4);
-      --base-menu-item-padding-y: var(--space-3);
-      --base-menu-item-height: var(--control-height-3);
+      --base-menu-content-padding: var(--panel-p-3);
+      --base-menu-item-padding-y: var(--row-inset-3);
+      --base-menu-item-px: var(--control-px-3);
+      --base-menu-item-px-pill: var(--control-px-pill-3);
+      --base-menu-item-gap: var(--control-gap-3);
+      --base-menu-item-radius: var(--radius-row-3);
+      --base-menu-icon-size: var(--icon-size-3);
+      --base-menu-indicator-icon-size: var(--indicator-icon-size-3);
+      --base-menu-font-size: var(--font-size-3);
+      --base-menu-line-height: var(--line-height-3);
+      --base-menu-letter-spacing: var(--letter-spacing-3);
       border-radius: var(--radius-surface-3);
+    }
 
-      & :where(.rt-BaseMenuItem) {
-        gap: var(--component-gap-4);
-        font-size: var(--font-size-3);
-        line-height: var(--line-height-3);
-        letter-spacing: var(--letter-spacing-3);
-        border-radius: var(--radius-2);
-
-        /* stylelint-disable-next-line selector-max-type */
-        & :where(svg) {
-          width: var(--content-icon-size-3);
-          height: var(--content-icon-size-3);
-          flex-shrink: 0;
-        }
-      }
-
-      & :where(.rt-BaseMenuLabel) {
-        font-size: var(--font-size-3);
-        line-height: var(--line-height-3);
-        letter-spacing: var(--letter-spacing-3);
-        padding-inline-start: var(--base-menu-item-padding-left);
-      }
-
-      & :where(.rt-BaseMenuItemIndicatorIcon, .rt-BaseMenuSubTriggerIcon) {
-        width: var(--indicator-icon-size-3);
-        height: var(--indicator-icon-size-3);
-      }
-
+    &:where(.rt-r-size-4) {
+      --base-menu-content-padding: var(--panel-p-4);
+      --base-menu-item-padding-y: var(--row-inset-4);
+      --base-menu-item-px: var(--control-px-4);
+      --base-menu-item-px-pill: var(--control-px-pill-4);
+      --base-menu-item-gap: var(--control-gap-4);
+      --base-menu-item-radius: var(--radius-row-4);
+      --base-menu-icon-size: var(--icon-size-4);
+      --base-menu-indicator-icon-size: var(--indicator-icon-size-3);
+      --base-menu-font-size: var(--font-size-4);
+      --base-menu-line-height: var(--line-height-4);
+      --base-menu-letter-spacing: var(--letter-spacing-4);
+      border-radius: var(--radius-surface-4);
     }
   }
 }

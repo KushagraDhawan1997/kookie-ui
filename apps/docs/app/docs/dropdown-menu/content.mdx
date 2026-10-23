@@ -89,7 +89,7 @@ The dropdown menu is composed of several parts:
 
 | Prop              | Type                        | Default   | Description                                                           |
 | ----------------- | --------------------------- | --------- | --------------------------------------------------------------------- |
-| `size`            | `'1' \| '2' \| Responsive`  | `'2'`     | Size of the menu items                                                |
+| `size`            | `'1' \| '2' \| '3' \| '4' \| Responsive` | `'2'`     | Size of the menu items                                                |
 | `color`           | `AccentColor`               | —         | Accent color for highlighted items. Inherits from theme if not set    |
 | `submenuBehavior` | `'cascade' \| 'drill-down' \| Responsive` | `'cascade'` | How submenus behave. See [Submenu Behavior](#submenu-behavior) |
 | `virtualized`     | `boolean`                   | `false`   | Enables virtualization mode. See [Virtualization](#virtualization)    |
@@ -159,7 +159,7 @@ In drill-down mode, `open` and `defaultOpen` push the submenu onto the navigatio
 
 | Prop           | Type                       | Default          | Description                                                        |
 | -------------- | -------------------------- | ---------------- | ------------------------------------------------------------------ |
-| `size`         | `'1' \| '2' \| Responsive` | Inherited        | Size of the submenu. Inherits from the parent content              |
+| `size`         | `'1' \| '2' \| '3' \| '4' \| Responsive` | Inherited        | Size of the submenu. Inherits from the parent content              |
 | `color`        | `AccentColor`              | Inherited        | Accent color for highlighted items                                 |
 | `virtualized`  | `boolean`                  | `false`          | Skips the ScrollArea so a `VirtualMenu` scrolls itself. Cascade mode only |
 | `container`    | `HTMLElement`              | —                | Custom container for the portal                                    |
@@ -204,6 +204,24 @@ Standard size for most interfaces.
     </Button>
   </DropdownMenu.Trigger>
   <DropdownMenu.Content size="2">
+    <DropdownMenu.Item>Edit</DropdownMenu.Item>
+    <DropdownMenu.Item>Duplicate</DropdownMenu.Item>
+  </DropdownMenu.Content>
+</DropdownMenu.Root>
+```
+
+### Larger Sizes
+
+Sizes 3 and 4 give taller rows for prominent surfaces. Rows are 24, 30, 34 and 38px tall at sizes 1-4. Under `<Theme size>`, menus follow the theme size.
+
+```tsx showLineNumbers
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger>
+    <Button variant="soft" color="gray">
+      Options
+    </Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content size="3">
     <DropdownMenu.Item>Edit</DropdownMenu.Item>
     <DropdownMenu.Item>Duplicate</DropdownMenu.Item>
   </DropdownMenu.Content>

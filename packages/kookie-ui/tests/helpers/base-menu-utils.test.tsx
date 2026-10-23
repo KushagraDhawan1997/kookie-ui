@@ -78,12 +78,14 @@ describe('MenuProvider', () => {
     );
     expect(value?.isInsideMenu).toBe(true);
     expect(value?.size).toBe('1');
-    expect(value?.itemHeight).toBe(28);
+    expect(value?.itemHeight).toBe(24);
   });
 
-  test('item heights follow the size tokens', () => {
+  test('item heights are the row heights: line height plus the row inset above and below', () => {
     // The scale is fixed, so a size maps to one height.
-    expect(getMenuItemHeight('1')).toBe(28);
-    expect(getMenuItemHeight('2')).toBe(32);
+    expect(getMenuItemHeight('1')).toBe(24);
+    expect(getMenuItemHeight('2')).toBe(30);
+    expect(getMenuItemHeight('3')).toBe(34);
+    expect(getMenuItemHeight('4')).toBe(38);
   });
 });

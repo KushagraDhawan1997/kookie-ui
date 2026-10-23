@@ -1,54 +1,38 @@
 .radix-themes {
-  --font-size-0: calc(10px * var(--scale));
+  /* Type: v2's nine steps and three weights. Fonts are v1's own (font-family.css). */
   --font-size-1: calc(12px * var(--scale));
   --font-size-2: calc(14px * var(--scale));
   --font-size-3: calc(16px * var(--scale));
   --font-size-4: calc(18px * var(--scale));
   --font-size-5: calc(20px * var(--scale));
   --font-size-6: calc(24px * var(--scale));
-  --font-size-7: calc(28px * var(--scale));
-  --font-size-8: calc(35px * var(--scale));
-  --font-size-9: calc(60px * var(--scale));
-  --font-size-10: calc(72px * var(--scale));
-  --font-size-11: calc(86px * var(--scale));
-  --font-size-12: calc(104px * var(--scale));
+  --font-size-7: calc(32px * var(--scale));
+  --font-size-8: calc(44px * var(--scale));
+  --font-size-9: calc(64px * var(--scale));
 
-  --font-weight-thin: 100;
-  --font-weight-extralight: 200;
-  --font-weight-light: 300;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-  --font-weight-extrabold: 800;
 
-  --line-height-0: calc(12px * var(--scale));
   --line-height-1: calc(16px * var(--scale));
   --line-height-2: calc(20px * var(--scale));
   --line-height-3: calc(24px * var(--scale));
   --line-height-4: calc(26px * var(--scale));
   --line-height-5: calc(28px * var(--scale));
-  --line-height-6: calc(30px * var(--scale));
-  --line-height-7: calc(36px * var(--scale));
-  --line-height-8: calc(40px * var(--scale));
-  --line-height-9: calc(60px * var(--scale));
-  --line-height-10: calc(76px * var(--scale));
-  --line-height-11: calc(90px * var(--scale));
-  --line-height-12: calc(108px * var(--scale));
+  --line-height-6: calc(32px * var(--scale));
+  --line-height-7: calc(40px * var(--scale));
+  --line-height-8: calc(52px * var(--scale));
+  --line-height-9: calc(70px * var(--scale));
 
-  --letter-spacing-0: 0.005em;
-  --letter-spacing-1: 0.0025em;
+  --letter-spacing-1: 0em;
   --letter-spacing-2: 0em;
   --letter-spacing-3: 0em;
-  --letter-spacing-4: -0.0025em;
-  --letter-spacing-5: -0.005em;
-  --letter-spacing-6: -0.00625em;
-  --letter-spacing-7: -0.0075em;
-  --letter-spacing-8: -0.01em;
+  --letter-spacing-4: -0.005em;
+  --letter-spacing-5: -0.0075em;
+  --letter-spacing-6: -0.01em;
+  --letter-spacing-7: -0.015em;
+  --letter-spacing-8: -0.02em;
   --letter-spacing-9: -0.025em;
-  --letter-spacing-10: -0.03em;
-  --letter-spacing-11: -0.035em;
-  --letter-spacing-12: -0.04em;
 
   /* default values (typefaces live in font-family.css) */
 
@@ -67,24 +51,14 @@
   --heading-leading-trim-start: var(--default-leading-trim-start);
   --heading-leading-trim-end: var(--default-leading-trim-end);
   --heading-letter-spacing: 0em;
-
-  --heading-line-height-0: calc(12px * var(--scale));
-  --heading-line-height-1: calc(16px * var(--scale));
-  --heading-line-height-2: calc(18px * var(--scale));
-  --heading-line-height-3: calc(22px * var(--scale));
-  --heading-line-height-4: calc(24px * var(--scale));
-  --heading-line-height-5: calc(26px * var(--scale));
-  --heading-line-height-6: calc(30px * var(--scale));
-  --heading-line-height-7: calc(36px * var(--scale));
-  --heading-line-height-8: calc(40px * var(--scale));
-  --heading-line-height-9: calc(60px * var(--scale));
-  --heading-line-height-10: calc(76px * var(--scale));
-  --heading-line-height-11: calc(90px * var(--scale));
-  --heading-line-height-12: calc(108px * var(--scale));
+  /* The weight every Heading uses unless it sets `weight` (v2 §15: medium). Change it here, once. */
+  --heading-font-weight: var(--font-weight-medium);
+  /* No heading line heights: Heading reads --line-height-N, the same ramp as Text (v2 §15). */
 
   /* Code */
 
-  --code-font-size-adjust: 0.95;
+  /* Mono glyphs read a step large at the same size, so Code shrinks them by this factor (v2). */
+  --mono-scale: 0.925;
   --code-font-style: normal;
   --code-font-weight: inherit;
   --code-letter-spacing: -0.007em;
@@ -97,8 +71,6 @@
 
   --strong-font-size-adjust: 1;
   --strong-font-style: inherit;
-  /* The weight every Heading uses unless it sets `weight`. Change it here, once. */
-  --heading-font-weight: var(--font-weight-bold);
   --strong-font-weight: var(--font-weight-medium);
   --strong-letter-spacing: 0em;
 

@@ -142,3 +142,79 @@ HoverCard gains size 4.
 ### Notice
 
 Notice takes sizes 1 to 4. Padding is 8, 12, 16, 24px (was 12, 16, 24). The corner is the control corner plus the padding, so it wraps its buttons: 22, 28, 36, 48px at `full`. The gap is 12px at every size. A Theme size of 4 now reaches Notice and Chatbar notices as 4.
+
+## 0.20.0: type and rows
+
+### Type scale
+
+Type takes v2's nine steps. Sizes 0, 10, 11 and 12 are gone from Text, Heading, Link, Code, Kbd and Blockquote, and from the tokens.
+
+| Size | Font size | Line height | Letter spacing |
+| --- | --- | --- | --- |
+| 1 | 12 | 16 | 0 |
+| 2 | 14 | 20 | 0 |
+| 3 | 16 | 24 | 0 |
+| 4 | 18 | 26 | -0.005em |
+| 5 | 20 | 28 | -0.0075em |
+| 6 | 24 | 32 | -0.01em |
+| 7 | 32 | 40 | -0.015em |
+| 8 | 44 | 52 | -0.02em |
+| 9 | 64 | 70 | -0.025em |
+
+Old sizes move to the nearest step: `"0"` → `"1"`, `"8"` → `"7"`, `"10"`, `"11"`, `"12"` → `"9"`. Size 8 is a new 44px step, not the old one. Sizes 7 and 9 also change px, so check display text.
+
+Heading uses Text's line heights. At the default size 6 a heading's line is 32px (was 30). The `--heading-line-height-N` tokens are gone.
+
+### Three weights
+
+`weight` takes `regular`, `medium` and `semibold`. `thin`, `extralight` and `light` become `regular`; `bold` and `extrabold` become `semibold`. Their `--font-weight-*` tokens are gone. Headings rest at `medium` (500).
+
+### Code
+
+Code shrinks by one factor, `--mono-scale: 0.925`, in every variant. `--code-font-size-adjust` is gone. At size 3, Code is 14.8px in every variant.
+
+### Codemod
+
+A codemod rewrites `size` and `weight` on Text, Heading, Link, Code, Kbd, Blockquote, Em, Strong and Quote, including responsive objects, and `var(--font-size-N)`, `var(--line-height-N)`, `var(--letter-spacing-N)` and `var(--font-weight-NAME)` in your CSS. Run it once from the app's root, pointing at your source folders:
+
+```sh
+python3 node_modules/@kushagradhawan/kookie-ui/codemods/type-0.20.py src
+```
+
+It maps `"8"` to `"7"`, so do not run it on code that already uses the new size 8.
+
+### Menu rows
+
+DropdownMenu, ContextMenu and VirtualMenu take sizes 1 to 4 (was 1 and 2). Select and Combobox lists draw the same rows. Under `<Theme size>`, menus now follow sizes 3 and 4 instead of stopping at 2.
+
+| Size | Row | Panel padding | Side padding | Pill padding | Icon |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 24 | 8 | 8 | 12 | 16 |
+| 2 | 30 | 12 | 10 | 14 | 16 |
+| 3 | 34 | 16 | 13 | 17 | 20 |
+| 4 | 38 | 24 | 16 | 20 | 24 |
+
+At the default size 2 a row is 30px (was 32) and the panel pads 12px (was 8). A checkable row's label starts after the padding, the mark and the gap: 34px at radius `full` (was 24). Separators take the panel padding above and below. A shortcut or submenu chevron sits one row inset from the far edge. `getMenuItemHeight` returns 24, 30, 34 and 38. If you pass `estimatedItemSize` to a VirtualMenu, check it against these.
+
+`--radius-row-1..4` are new: the control corner, half the row height at `full`.
+
+### Sidebar rows
+
+Sidebar rows stay at control height. They take the pill padding, gap and icon of their size: at size 2 the side padding is 14px (was 12) and icons are 16px. Sub-rows are the normal row height (32px at size 2, was 40). Search results use size 2 menu rows.
+
+### Table
+
+Table takes size 4. Cell padding follows the layout scale and size N sets font size N, so size 1 is 12px text (was 14). The minimum cell height is gone.
+
+| Size | Padding (top and bottom, sides) |
+| --- | --- |
+| 1 | 4, 8 |
+| 2 | 8, 12 |
+| 3 | 12, 16 |
+| 4 | 16, 24 |
+
+At the default size 2 a cell pads 8×12px (was 12 all round) and a one-line row is 36px (was 44).
+
+### Notice pads like a card
+
+A Notice pads and rounds like a Card of the same size: 24px and a 16px corner at size 2 (was 12px and a corner matched to its buttons). The gap stays 12px.

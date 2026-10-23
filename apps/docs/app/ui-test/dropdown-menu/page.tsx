@@ -452,7 +452,7 @@ export default function DropdownMenuTest() {
       <Flex gap="5" wrap="wrap" mb="7">
         {/* Left-positioned menu */}
         <Box p="5" style={{ background: 'var(--gray-2)', borderRadius: 'var(--radius-3)', flex: 1, minWidth: 200 }}>
-          <Text size="2" weight="bold" mb="4" as="div">Left Edge (cascade)</Text>
+          <Text size="2" weight="semibold" mb="4" as="div">Left Edge (cascade)</Text>
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>
               <Button variant="soft">Open Menu</Button>
@@ -490,7 +490,7 @@ export default function DropdownMenuTest() {
 
         {/* Right-positioned menu */}
         <Box p="5" style={{ background: 'var(--gray-2)', borderRadius: 'var(--radius-3)', flex: 1, minWidth: 200 }}>
-          <Text size="2" weight="bold" mb="4" as="div">Right Edge (cascade)</Text>
+          <Text size="2" weight="semibold" mb="4" as="div">Right Edge (cascade)</Text>
           <Flex justify="end">
             <DropdownMenu.Root>
               <DropdownMenu.Trigger>

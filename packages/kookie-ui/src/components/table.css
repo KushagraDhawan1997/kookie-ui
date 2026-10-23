@@ -32,9 +32,8 @@
   box-shadow: var(--table-row-box-shadow);
   box-sizing: border-box;
   vertical-align: inherit;
-  padding: var(--table-cell-padding);
-  /* Works as min-height */
-  height: var(--table-cell-min-height);
+  /* A cell hugs its line: the inset above and below, the wider inset at the sides. */
+  padding: var(--table-cell-py) var(--table-cell-px);
 }
 .rt-TableColumnHeaderCell {
   font-weight: 600;
@@ -53,32 +52,46 @@
   .rt-TableRoot {
     &:where(.rt-r-size-1) {
       --table-border-radius: var(--radius-surface-1);
-      --table-cell-padding: var(--space-3);
-      --table-cell-min-height: calc(36px * var(--scale));
+      --table-cell-py: var(--layout-space-2);
+      --table-cell-px: var(--layout-space-3);
 
       & :where(.rt-TableRootTable) {
-        font-size: var(--font-size-2);
-        line-height: var(--line-height-2);
+        font-size: var(--font-size-1);
+        line-height: var(--line-height-1);
+        letter-spacing: var(--letter-spacing-1);
       }
     }
     &:where(.rt-r-size-2) {
       --table-border-radius: var(--radius-surface-2);
-      --table-cell-padding: var(--space-4);
-      --table-cell-min-height: calc(44px * var(--scale));
+      --table-cell-py: var(--layout-space-3);
+      --table-cell-px: var(--layout-space-4);
 
       & :where(.rt-TableRootTable) {
         font-size: var(--font-size-2);
         line-height: var(--line-height-2);
+        letter-spacing: var(--letter-spacing-2);
       }
     }
     &:where(.rt-r-size-3) {
       --table-border-radius: var(--radius-surface-3);
-      --table-cell-padding: var(--space-5);
-      --table-cell-min-height: var(--space-9);
+      --table-cell-py: var(--layout-space-4);
+      --table-cell-px: var(--layout-space-5);
 
       & :where(.rt-TableRootTable) {
         font-size: var(--font-size-3);
         line-height: var(--line-height-3);
+        letter-spacing: var(--letter-spacing-3);
+      }
+    }
+    &:where(.rt-r-size-4) {
+      --table-border-radius: var(--radius-surface-4);
+      --table-cell-py: var(--layout-space-5);
+      --table-cell-px: var(--layout-space-6);
+
+      & :where(.rt-TableRootTable) {
+        font-size: var(--font-size-4);
+        line-height: var(--line-height-4);
+        letter-spacing: var(--letter-spacing-4);
       }
     }
   }

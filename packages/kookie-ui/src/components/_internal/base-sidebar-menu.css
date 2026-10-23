@@ -31,7 +31,7 @@
 .rt-SidebarMenuButton {
   display: flex;
   align-items: center;
-  gap: var(--space-3); /* Will be overridden by size-specific gap */
+  gap: var(--base-menu-item-gap);
   min-height: var(--base-menu-item-height);
   padding-top: var(--base-menu-item-padding-y);
   padding-bottom: var(--base-menu-item-padding-y);
@@ -129,31 +129,6 @@
   margin-inline-start: var(--space-4);
 }
 
-/* Sub-menu items have consistent heights based on size - match dropdown menu exactly */
-:where(.rt-SidebarContent.rt-r-size-1) :where(.rt-SidebarMenuSubList) .rt-SidebarMenuButton {
-  padding-inline-start: var(--space-4);
-  padding-top: calc(var(--space-2) * 0.75);
-  padding-bottom: calc(var(--space-2) * 0.75);
-  min-height: var(--space-7); /* bumped from space-5 */
-  font-size: var(--font-size-1);
-}
-
-:where(.rt-SidebarContent.rt-r-size-2) :where(.rt-SidebarMenuSubList) .rt-SidebarMenuButton {
-  padding-inline-start: var(--space-4);
-  padding-top: var(--space-2);
-  padding-bottom: var(--space-2);
-  min-height: var(--space-8); /* bumped from space-6 */
-  font-size: var(--font-size-2);
-}
-
-:where(.rt-SidebarContent.rt-r-size-3) :where(.rt-SidebarMenuSubList) .rt-SidebarMenuButton {
-  padding-inline-start: var(--space-4);
-  padding-top: var(--space-3);
-  padding-bottom: var(--space-3);
-  min-height: var(--space-9);
-  font-size: var(--font-size-3);
-}
-
 .rt-SidebarGroupLabel {
   /* Inherit all BaseMenuLabel styles */
   display: flex;
@@ -175,18 +150,6 @@
   }
 }
 
-/* Reduce right padding on menu buttons with trailing elements */
-.rt-SidebarMenuButton:where(:has(.rt-SidebarMenuShortcut, .rt-SidebarMenuBadge)) {
-  /* Use base menu padding tokens */
-  :where(.rt-SidebarContent.rt-r-size-1) & {
-    padding-inline-end: var(--base-menu-item-padding-y); /* Matches top/bottom padding */
-  }
-
-  :where(.rt-SidebarContent.rt-r-size-2) & {
-    padding-inline-end: var(--base-menu-item-padding-y); /* Matches top/bottom padding */
-  }
-}
-
 .rt-SidebarMenuShortcut {
   display: flex;
   align-items: center;
@@ -195,10 +158,17 @@
   color: var(--gray-a11);
 }
 
+/*
+ * A trailing badge sits the row's inset from the far edge, like a shortcut. A badge is taller
+ * than the line, so it may spend the row's block insets rather than grow the row past its height.
+ */
 .rt-SidebarMenuBadge {
   display: flex;
   align-items: center;
   margin-inline-start: auto;
+  margin-inline-end: calc(var(--base-menu-item-padding-y) - var(--base-menu-item-padding-right));
+  margin-top: calc(-1 * var(--base-menu-item-padding-y));
+  margin-bottom: calc(-1 * var(--base-menu-item-padding-y));
   padding-inline-start: var(--space-3);
 }
 

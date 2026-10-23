@@ -283,19 +283,19 @@ export default function SegmentedControlTest() {
           <Flex gap="5" wrap="wrap">
             <SegmentedControl.Root defaultValue="1" size="3">
               <SegmentedControl.Item value="1" iconOnly aria-label="Option 1">
-                <Text size="3" weight="bold">1</Text>
+                <Text size="3" weight="semibold">1</Text>
               </SegmentedControl.Item>
               <SegmentedControl.Item value="2" iconOnly aria-label="Option 2">
-                <Text size="3" weight="bold">2</Text>
+                <Text size="3" weight="semibold">2</Text>
               </SegmentedControl.Item>
               <SegmentedControl.Item value="3" iconOnly aria-label="Option 3">
-                <Text size="3" weight="bold">3</Text>
+                <Text size="3" weight="semibold">3</Text>
               </SegmentedControl.Item>
               <SegmentedControl.Item value="4" iconOnly aria-label="Option 4">
-                <Text size="3" weight="bold">4</Text>
+                <Text size="3" weight="semibold">4</Text>
               </SegmentedControl.Item>
               <SegmentedControl.Item value="5" iconOnly aria-label="Option 5">
-                <Text size="3" weight="bold">5</Text>
+                <Text size="3" weight="semibold">5</Text>
               </SegmentedControl.Item>
             </SegmentedControl.Root>
           </Flex>
@@ -635,31 +635,31 @@ export default function SegmentedControlTest() {
           <Flex gap="7" wrap="wrap" align="start">
             <SegmentedControl.Root orientation="vertical" size="3" defaultValue="1">
               <SegmentedControl.Item value="1" iconOnly aria-label="Option 1">
-                <Text size="3" weight="bold">1</Text>
+                <Text size="3" weight="semibold">1</Text>
               </SegmentedControl.Item>
               <SegmentedControl.Item value="2" iconOnly aria-label="Option 2">
-                <Text size="3" weight="bold">2</Text>
+                <Text size="3" weight="semibold">2</Text>
               </SegmentedControl.Item>
               <SegmentedControl.Item value="3" iconOnly aria-label="Option 3">
-                <Text size="3" weight="bold">3</Text>
+                <Text size="3" weight="semibold">3</Text>
               </SegmentedControl.Item>
               <SegmentedControl.Item value="4" iconOnly aria-label="Option 4">
-                <Text size="3" weight="bold">4</Text>
+                <Text size="3" weight="semibold">4</Text>
               </SegmentedControl.Item>
               <SegmentedControl.Item value="5" iconOnly aria-label="Option 5">
-                <Text size="3" weight="bold">5</Text>
+                <Text size="3" weight="semibold">5</Text>
               </SegmentedControl.Item>
             </SegmentedControl.Root>
 
             <SegmentedControl.Root orientation="vertical" size="2" defaultValue="a">
               <SegmentedControl.Item value="a" iconOnly aria-label="Option A">
-                <Text size="2" weight="bold">A</Text>
+                <Text size="2" weight="semibold">A</Text>
               </SegmentedControl.Item>
               <SegmentedControl.Item value="b" iconOnly aria-label="Option B">
-                <Text size="2" weight="bold">B</Text>
+                <Text size="2" weight="semibold">B</Text>
               </SegmentedControl.Item>
               <SegmentedControl.Item value="c" iconOnly aria-label="Option C">
-                <Text size="2" weight="bold">C</Text>
+                <Text size="2" weight="semibold">C</Text>
               </SegmentedControl.Item>
             </SegmentedControl.Root>
           </Flex>

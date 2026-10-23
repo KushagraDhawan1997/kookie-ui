@@ -9,6 +9,8 @@
  *    role, never a palette step.
  *    --radius-control-N  a control's corner. Half the control height at `full` (a capsule),
  *                        the palette step N below it.
+ *    --radius-row-N      a row's corner inside a panel that hugs rows. Half the row's own
+ *                        height at `full`, --radius-control-N below it.
  *    --radius-surface-N  a surface's corner: cards, tables, panes, popovers, menus.
  *    --radius-overlay-N  a detached surface's corner: dialogs and sheets.
  *    Surfaces and overlays damp as the theme grows (--radius-surface-factor, capped at 1)
@@ -36,6 +38,10 @@
   --radius-control-2: var(--radius-2);
   --radius-control-3: var(--radius-3);
   --radius-control-4: var(--radius-4);
+  --radius-row-1: var(--radius-control-1);
+  --radius-row-2: var(--radius-control-2);
+  --radius-row-3: var(--radius-control-3);
+  --radius-row-4: var(--radius-control-4);
 
   --radius-surface-1: calc(10px * var(--scale) * var(--radius-surface-factor));
   --radius-surface-2: calc(16px * var(--scale) * var(--radius-surface-factor));
@@ -82,6 +88,12 @@
   --radius-control-2: calc(var(--control-height-2) / 2);
   --radius-control-3: calc(var(--control-height-3) / 2);
   --radius-control-4: calc(var(--control-height-4) / 2);
+
+  /* A row in a panel hugs its line, so its capsule is half the line plus both insets. */
+  --radius-row-1: calc((var(--line-height-1) + 2 * var(--row-inset-1)) / 2);
+  --radius-row-2: calc((var(--line-height-2) + 2 * var(--row-inset-2)) / 2);
+  --radius-row-3: calc((var(--line-height-3) + 2 * var(--row-inset-3)) / 2);
+  --radius-row-4: calc((var(--line-height-4) + 2 * var(--row-inset-4)) / 2);
 }
 
 /*

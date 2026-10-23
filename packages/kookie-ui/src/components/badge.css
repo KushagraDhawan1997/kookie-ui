@@ -37,9 +37,9 @@
 @breakpoints {
   .rt-Badge {
     &:where(.rt-r-size-1) {
-      font-size: var(--font-size-0);
-      line-height: var(--line-height-0);
-      letter-spacing: var(--letter-spacing-0);
+      font-size: var(--font-size-1);
+      line-height: var(--line-height-1);
+      letter-spacing: var(--letter-spacing-1);
       padding: var(--space-1) var(--space-2);
       gap: var(--space-2);
       border-radius: max(calc(var(--radius-1) * var(--spacing-multiplier-medium)), var(--radius-full));

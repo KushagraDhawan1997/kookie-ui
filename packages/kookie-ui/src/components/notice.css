@@ -64,38 +64,35 @@
 }
 
 .rt-NoticeRoot {
-  /* v2 notice: a panel's padding, one gap at every size, and a corner concentric with the
-     buttons it holds (control corner + padding). At `none` the padding term drops out, so a
-     square theme stays square. */
+  /* A notice is a surface: it pads and rounds like a Card of the same size, with one gap. */
   gap: var(--layout-space-4);
-  --notice-corner-on: min(1, calc(var(--radius-factor, 1) * 1000));
-  border-radius: calc(var(--notice-control-radius) + var(--notice-padding) * var(--notice-corner-on));
+  border-radius: var(--notice-radius);
   padding: var(--notice-padding);
 
   &:where(.rt-r-size-1) {
-    --notice-padding: var(--panel-p-1);
-    --notice-control-radius: var(--radius-control-1);
+    --notice-padding: var(--surface-p-1);
+    --notice-radius: var(--radius-surface-1);
     --notice-line: var(--line-height-1);
     --notice-control: var(--control-height-1);
     --notice-icon-size: var(--content-icon-size-1);
   }
   &:where(.rt-r-size-2) {
-    --notice-padding: var(--panel-p-2);
-    --notice-control-radius: var(--radius-control-2);
+    --notice-padding: var(--surface-p-2);
+    --notice-radius: var(--radius-surface-2);
     --notice-line: var(--line-height-2);
     --notice-control: var(--control-height-2);
     --notice-icon-size: var(--content-icon-size-2);
   }
   &:where(.rt-r-size-3) {
-    --notice-padding: var(--panel-p-3);
-    --notice-control-radius: var(--radius-control-3);
+    --notice-padding: var(--surface-p-3);
+    --notice-radius: var(--radius-surface-3);
     --notice-line: var(--line-height-3);
     --notice-control: var(--control-height-3);
     --notice-icon-size: var(--content-icon-size-3);
   }
   &:where(.rt-r-size-4) {
-    --notice-padding: var(--panel-p-4);
-    --notice-control-radius: var(--radius-control-4);
+    --notice-padding: var(--surface-p-4);
+    --notice-radius: var(--radius-surface-4);
     --notice-line: var(--line-height-4);
     --notice-control: var(--control-height-4);
     --notice-icon-size: var(--content-icon-size-4);

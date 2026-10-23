@@ -181,15 +181,15 @@
     }
     &:where(.rt-r-size-8) {
       --avatar-size: calc(96px * var(--scale));
-      --avatar-fallback-one-letter-font-size: var(--font-size-8);
+      --avatar-fallback-one-letter-font-size: var(--font-size-7);
       --avatar-fallback-two-letters-font-size: var(--font-size-7);
       border-radius: max(var(--radius-control-4), var(--radius-full));
-      letter-spacing: var(--letter-spacing-8);
+      letter-spacing: var(--letter-spacing-7);
     }
     &:where(.rt-r-size-9) {
       --avatar-size: var(--space-12);
       --avatar-fallback-one-letter-font-size: var(--font-size-9);
-      --avatar-fallback-two-letters-font-size: var(--font-size-8);
+      --avatar-fallback-two-letters-font-size: var(--font-size-7);
       border-radius: max(var(--radius-control-4), var(--radius-full));
       letter-spacing: var(--letter-spacing-9);
     }

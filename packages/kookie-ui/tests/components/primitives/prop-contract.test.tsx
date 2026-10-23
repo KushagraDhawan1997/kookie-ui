@@ -111,7 +111,7 @@ const CASES: Case[] = [
   { name: 'Grid', render: () => <Grid data-testid={TID} columns="3" gap="2" {...LAYOUT_PROPS} /> },
   { name: 'Container', render: () => <Container data-testid={TID} size="2" {...LAYOUT_PROPS} /> },
   { name: 'Text', render: () => <Text data-testid={TID} size="2" weight="medium" color="gray" emphasis="medium" m="2" /> },
-  { name: 'Heading', render: () => <Heading data-testid={TID} size="5" weight="bold" mb="3" /> },
+  { name: 'Heading', render: () => <Heading data-testid={TID} size="5" weight="semibold" mb="3" /> },
   { name: 'Blockquote', render: () => <Blockquote data-testid={TID} size="2" m="1" /> },
   { name: 'Code', render: () => <Code data-testid={TID} size="2" variant="soft" m="1" /> },
   { name: 'Em', render: () => <Em data-testid={TID} /> },
