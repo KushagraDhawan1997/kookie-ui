@@ -19,7 +19,7 @@ Kookie UI extends Radix Themes with:
 - **Material** — a Theme-level `material` prop for translucent or solid surfaces with backdrop blur, replacing `panelBackground`
 - **Shell architecture** — Complete layout engine with 7 slots (Header, Rail, Panel, Sidebar, Content, Inspector, Bottom), responsive presentation modes, and resize handles
 - **Navbar component** — Semantic slots for logo, navigation, and actions with fixed/sticky/static positioning
-- **Built-in tooltip support** — Native `tooltip` prop on Button and IconButton eliminates wrapper components
+- **Built-in tooltip support** — Native `tooltip` prop on Button, including `iconOnly` eliminates wrapper components
 - **Enhanced accessibility** — RTL layout support, Windows High Contrast mode, and no motion beyond busy indicators
 - **Extended token systems** — 12-step blur scale, 9-step opacity scale, enhanced 3D button effects
 

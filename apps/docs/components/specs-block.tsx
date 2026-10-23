@@ -1,7 +1,7 @@
 'use client';
 
 import React, { memo } from 'react';
-import { Box, Card, Flex, Table, Text, IconButton, Code, Tooltip, Tabs, Theme } from '@kushagradhawan/kookie-ui';
+import { Box, Card, Flex, Table, Text, Button, Code, Tooltip, Tabs, Theme } from '@kushagradhawan/kookie-ui';
 
 /**
  * Types for the specs data structure
@@ -381,7 +381,7 @@ const SpecsSection = memo(function SpecsSection({
  *
  * // With dots background
  * <SpecsBlock
- *   preview={<Image src="/logo.png" alt="Logo" />}
+ *   preview={<img src="/logo.png" alt="Logo" />}
  *   specs={specsData}
  *   background="dots"
  *   backgroundProps={{ dotSize: 16, color: 'var(--blue-10)' }}

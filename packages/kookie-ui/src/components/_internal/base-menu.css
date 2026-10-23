@@ -114,11 +114,13 @@
 
 /* A separator keeps the panel's own rhythm above and below, and spans the rows' text. */
 .rt-BaseMenuSeparator {
+  box-sizing: content-box;
   height: 1px;
-  margin-top: var(--base-menu-content-padding);
-  margin-bottom: var(--base-menu-content-padding);
-  margin-inline-start: var(--base-menu-item-padding-left);
-  margin-inline-end: var(--base-menu-item-padding-right);
+  padding-top: var(--base-menu-content-padding);
+  padding-bottom: var(--base-menu-content-padding);
+  padding-inline-start: var(--base-menu-item-padding-left);
+  padding-inline-end: var(--base-menu-item-padding-right);
+  background-clip: content-box;
 }
 
 .rt-BaseMenuLabel {
@@ -137,8 +139,10 @@
   user-select: none;
   cursor: default;
 
+  /* After items, the extra air is inside the label's own box, never a margin on it. */
   :where(.rt-BaseMenuItem) + & {
-    margin-top: var(--space-3);
+    min-height: calc(var(--base-menu-item-height) + var(--space-3));
+    padding-top: calc(var(--base-menu-item-padding-y) + var(--space-3));
   }
 }
 
@@ -327,7 +331,7 @@
       }
 
       /* Also target any element with data-accent-color="gray" */
-      & :where([data-accent-color='gray']:not(.rt-Badge)) {
+      & :where([data-accent-color='gray']:not(.rt-Chip)) {
         color: inherit !important;
       }
     }

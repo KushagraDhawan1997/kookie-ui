@@ -34,13 +34,13 @@
 .rt-BaseTabListTriggerInner {
   position: absolute;
 
-  :where(.rt-BaseTabListTrigger[data-state='inactive'], .rt-TabNavLink:not([data-active])) & {
+  :where(.rt-BaseTabListTrigger[data-state='inactive']) & {
     letter-spacing: var(--tab-inactive-letter-spacing);
     word-spacing: var(--tab-inactive-word-spacing);
  /* 100ms - allows staggered effect vs active state's 0ms */
   }
 
-  :where(.rt-BaseTabListTrigger[data-state='active'], .rt-TabNavLink[data-active]) & {
+  :where(.rt-BaseTabListTrigger[data-state='active']) & {
     font-weight: var(--font-weight-medium);
     letter-spacing: var(--tab-active-letter-spacing);
     word-spacing: var(--tab-active-word-spacing);
@@ -219,8 +219,7 @@
 
 /* Forced colors support */
 @media (forced-colors: active) {
-  .rt-BaseTabListTrigger:where([data-state='active'])::before,
-  .rt-TabNavLink:where([data-active])::before {
+  .rt-BaseTabListTrigger:where([data-state='active'])::before {
     background-color: Highlight;
   }
 

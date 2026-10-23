@@ -27,17 +27,9 @@ export type { BaseButtonProps } from './base-button.schema.js';
 export { ButtonSchema, parseButtonProps } from './button.schema.js';
 export type { ButtonProps } from './button.schema.js';
 
-// IconButton schemas
-export { IconButtonSchema, parseIconButtonProps } from './icon-button.schema.js';
-export type { IconButtonProps } from './icon-button.schema.js';
-
-// ToggleButton schemas
-export { ToggleButtonSchema, parseToggleButtonProps } from './toggle-button.schema.js';
-export type { ToggleButtonProps } from './toggle-button.schema.js';
-
-// ToggleIconButton schemas
-export { ToggleIconButtonSchema, parseToggleIconButtonProps } from './toggle-icon-button.schema.js';
-export type { ToggleIconButtonProps } from './toggle-icon-button.schema.js';
+// Toggle schemas
+export { ToggleSchema, parseToggleProps } from './toggle.schema.js';
+export type { ToggleProps } from './toggle.schema.js';
 
 // Shell schemas
 export {

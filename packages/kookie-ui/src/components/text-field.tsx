@@ -8,11 +8,9 @@ import { composeRefs } from 'radix-ui/internal';
 import { textFieldRootPropDefs, textFieldSlotPropDefs, type TextFieldSlotScrubProps } from './text-field.props.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../helpers/theme-size.js';
-import { marginPropDefs } from '../props/margin.props.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { NotInputTextualAttributes } from '../helpers/input-attributes.js';
-import type { MarginProps } from '../props/margin.props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
 type TextFieldRootElement = React.ElementRef<'input'>;
@@ -22,11 +20,11 @@ type TextFieldRootOwnProps = GetPropDefTypes<typeof textFieldRootPropDefs> & {
   type?: 'date' | 'datetime-local' | 'email' | 'hidden' | 'month' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'time' | 'url' | 'week';
 };
 type TextFieldInputProps = ComponentPropsWithout<'input', NotInputTextualAttributes | 'color' | 'defaultValue' | 'size' | 'type' | 'value'>;
-interface TextFieldRootProps extends TextFieldInputProps, MarginProps, TextFieldRootOwnProps {}
+interface TextFieldRootProps extends TextFieldInputProps, TextFieldRootOwnProps {}
 const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>((ownProps, forwardedRef) => {
   const props = useThemeSizeProps(ownProps, textFieldRootPropDefs.size);
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const { children, className, color, radius, style, ...inputProps } = extractProps(props, textFieldRootPropDefs, marginPropDefs);
+  const { children, className, color, radius, style, ...inputProps } = extractProps(props, textFieldRootPropDefs);
 
   // Generate unique IDs for accessibility
   const errorId = React.useId();

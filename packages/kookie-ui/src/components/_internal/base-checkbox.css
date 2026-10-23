@@ -7,13 +7,8 @@
   flex-shrink: 0;
   cursor: var(--cursor-checkbox);
 
-  /* Unless in a skeleton, align with text line height when possible and fall back to own height */
-  height: var(--skeleton-height, var(--line-height, var(--checkbox-size)));
-  --skeleton-height-override: var(--checkbox-size);
-
-  /* Set root radius when in a skeleton */
-  border-radius: var(--skeleton-radius);
-  --skeleton-radius-override: var(--checkbox-border-radius);
+  /* Align with text line height when possible and fall back to own height */
+  height: var(--line-height, var(--checkbox-size));
 
   /*
    * Ceiling on the mark's corner, as a ratio of its own box.
@@ -322,7 +317,7 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* The focus ring lives on Checkbox and CheckboxGroup: CheckboxCards rings its card instead. */
+/* The focus ring lives on Checkbox and CheckboxGroup. */
 .rt-BaseCheckboxRoot {
   /* Disabled is a colour remap (per variant above), never opacity; the cursor stays default. */
   &:where(:disabled, [data-disabled]) {

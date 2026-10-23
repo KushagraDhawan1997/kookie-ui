@@ -9,7 +9,7 @@ export const previewSources = {
 </PreviewBlock>`,
   dark: `<PreviewBlock appearance="dark" showThemeToggle={false} code={source}>
   <Flex gap="2" align="center">
-    <Badge color="green" variant="soft">Live</Badge>
+    <Chip color="green" variant="soft">Live</Chip>
     <Text size="2">Deployed 2 minutes ago</Text>
   </Flex>
 </PreviewBlock>`,

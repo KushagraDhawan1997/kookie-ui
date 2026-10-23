@@ -66,35 +66,37 @@ export function DocsPage({
           {React.isValidElement(footer) ? (
             <Box mt="10">{footer}</Box>
           ) : footer && (
-            <Text as="p" size="2" emphasis="medium" mt="10">
-              © {new Date().getFullYear()}{' '}
-              {footer.url ? (
-                <Link href={footer.url} target="_blank" rel="noreferrer" color="gray">
-                  {footer.name}
-                </Link>
-              ) : (
-                footer.name
-              )}
-              . Licensed under MIT.
-              {footer.githubUrl && (
-                <>
-                  {' '}
-                  <Link href={footer.githubUrl} target="_blank" rel="noreferrer" color="gray">
-                    GitHub
+            <Box mt="10">
+              <Text as="p" size="2" emphasis="medium">
+                © {new Date().getFullYear()}{' '}
+                {footer.url ? (
+                  <Link href={footer.url} target="_blank" rel="noreferrer" color="gray">
+                    {footer.name}
                   </Link>
-                  .
-                </>
-              )}
-              {footer.links?.map((link) => (
-                <React.Fragment key={link.href}>
-                  {' '}
-                  <Link href={link.href} color="gray">
-                    {link.label}
-                  </Link>
-                  .
-                </React.Fragment>
-              ))}
-            </Text>
+                ) : (
+                  footer.name
+                )}
+                . Licensed under MIT.
+                {footer.githubUrl && (
+                  <>
+                    {' '}
+                    <Link href={footer.githubUrl} target="_blank" rel="noreferrer" color="gray">
+                      GitHub
+                    </Link>
+                    .
+                  </>
+                )}
+                {footer.links?.map((link) => (
+                  <React.Fragment key={link.href}>
+                    {' '}
+                    <Link href={link.href} color="gray">
+                      {link.label}
+                    </Link>
+                    .
+                  </React.Fragment>
+                ))}
+              </Text>
+            </Box>
           )}
         </Flex>
       </Box>

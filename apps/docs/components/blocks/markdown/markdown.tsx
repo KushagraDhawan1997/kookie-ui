@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Components } from 'react-markdown';
-import { Blockquote, Code, Em, Heading, Link, Separator, Table, Text } from '@kushagradhawan/kookie-ui';
+import { Blockquote, Code, Heading, Link, Separator, Table, Text } from '@kushagradhawan/kookie-ui';
 import { CodeBlock, useCodeBlockContext } from '../code-block/code-block';
 import './markdown.css';
 
@@ -141,7 +141,7 @@ export function createMarkdownComponents(options: MarkdownComponentOptions = {})
     a: MarkdownLink,
     // Medium, not bold: bold reads too heavy next to body text.
     strong: ({ children }: ChildrenProps) => <Text weight="medium">{children}</Text>,
-    em: ({ children }: ChildrenProps) => <Em>{children}</Em>,
+    em: ({ children }: ChildrenProps) => <em>{children}</em>,
 
     code: MarkdownCode,
     pre: MarkdownPre,

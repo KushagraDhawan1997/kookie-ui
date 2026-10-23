@@ -16,8 +16,8 @@ function files(dir: string, ext: string[], out: string[] = []) {
 const css = files(SRC, ['.css']).map((f) => [path.relative(SRC, f), fs.readFileSync(f, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '')] as const);
 const ts = files(SRC, ['.ts', '.tsx']).map((f) => [path.relative(SRC, f), fs.readFileSync(f, 'utf8')] as const);
 
-/** The busy indicators are the only things that move: spinners, skeletons and the indeterminate bar. */
-const MOVING = new Set(['components/spinner.css', 'components/skeleton.css', 'components/progress.css', 'components/select.css']);
+/** The busy indicators are the only things that move: spinners and the indeterminate bar. */
+const MOVING = new Set(['components/spinner.css', 'components/progress.css', 'components/select.css']);
 
 describe('0.15.0 removed motion', () => {
   it('no stylesheet declares a transition', () => {

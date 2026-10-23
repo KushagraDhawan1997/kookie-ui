@@ -4,7 +4,7 @@ import { hydrateRoot } from 'react-dom/client';
 import { act } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { Badge, Box, Button, Card, Flex, Heading, Text, Theme } from '../../src/components/index';
+import { Box, Button, Card, Chip, Flex, Heading, Text, Theme } from '../../src/components/index';
 import { Shell } from '../../src/components/index';
 
 function Screen() {
@@ -18,9 +18,9 @@ function Screen() {
               Body
             </Text>
           </Card>
-          <Badge variant="soft" color="gray">
+          <Chip variant="soft" color="gray">
             Active
-          </Badge>
+          </Chip>
           <Button size="2" variant="classic">
             Save
           </Button>

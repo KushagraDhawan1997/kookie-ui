@@ -3,8 +3,8 @@ import { z } from 'zod';
 /**
  * BaseButton Zod schema - Single source of truth for all button component props
  *
- * This schema defines the core button functionality used by Button, IconButton,
- * ToggleButton, and ToggleIconButton components. It ensures consistency across
+ * This schema defines the core button functionality used by the Button and Toggle
+ * components. It ensures consistency across
  * the design system and provides machine-readable validation.
  *
  * @example
@@ -117,17 +117,6 @@ export const BaseButtonSchema = z
       .optional()
       .default(false)
       .describe('Loading state that shows a spinner and disables interaction'),
-
-    /**
-     * Flush mode that removes visual padding for seamless text integration
-     * Only effective with ghost variant
-     * @default false
-     */
-    flush: z
-      .boolean()
-      .optional()
-      .default(false)
-      .describe('Flush mode that removes visual padding for seamless text integration'),
 
     /**
      * Disabled state

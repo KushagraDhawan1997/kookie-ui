@@ -48,9 +48,8 @@ export function MyComponent() {
 | `size`         | `'1' \| '2' \| '3' \| '4'`                                            | Button density: 1 (28px) for toolbars, 2 (32px) standard, 3 (40px) for important actions, 4 (48px) for hero sections. Supports responsive objects |
 | `color`        | `AccentColor`                                                         | Semantic color to communicate action intent. Gray fills with step 12 on its own |
 | `emphasis`     | `'loud' \| 'medium' \| 'quiet'`                                     | The button's rank: loud is `solid`, medium is `raised` (the default), quiet is `ghost`. Pass `emphasis` or `variant`, not both |
-| `iconOnly`     | `boolean`                                                             | Square button for a single icon. Needs `aria-label`. Same as IconButton                         |
+| `iconOnly`     | `boolean`                                                             | Square button holding only an icon. Requires `aria-label` or `aria-labelledby`; rules out `fullWidth` |
 | `fullWidth`    | `boolean`                                                             | Makes button fill its container width. Useful for mobile layouts and form submissions          |
-| `flush`        | `boolean`                                                             | Removes padding for seamless text integration. Use with ghost variant to blend with text while staying interactive |
 | `radius`       | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'`                  | Corner radius scale: none for sharp edges, small/medium/large for progressive rounding, full for pill-shaped |
 | `loading`      | `boolean`                                                             | Replaces all content with a centered spinner and disables button automatically. For visible text during loading, use Spinner component around icons instead |
 | `disabled`     | `boolean`                                                             | Prevents interaction when action is unavailable, such as during form validation or when authentication is required |
@@ -241,30 +240,17 @@ Set the `fullWidth` prop to `true` to make the button fill its container. This i
 </Flex>
 ```
 
-### Flush
+### Spacing
 
-Use the `flush` prop with the `ghost` variant to remove padding, making the button blend with text while staying interactive.
+Button takes no margin props. Space buttons with the parent's `gap`, or wrap one in a `Box` with margin.
 
 ```tsx
-<Flex gap="3" align="center">
-  <Button size="3" variant="ghost" flush>
-    Learn
-  </Button>{' '}
-  about us.
+<Flex gap="3">
+  <Button size="3" variant="soft" color="gray">
+    Cancel
+  </Button>
+  <Button size="3">Save</Button>
 </Flex>
-```
-
-## Margin
-
-Use margin props for spacing around buttons. All margin props are responsive and accept design tokens or CSS values.
-
-```tsx
-<Button size="3" variant="soft" mx="3">
-  Button
-</Button>
-<Button size="3" variant="soft" mx="3">
-  Button
-</Button>
 ```
 
 ## Tooltips
@@ -294,19 +280,25 @@ import { Check } from 'lucide-react';
 </Button>
 ```
 
-For icon-only buttons, use the `IconButton` component for proper accessibility and touch targets.
+### Icon Only
+
+Set `iconOnly` for a square button holding only an icon. It has no visible text, so the type requires `aria-label` or `aria-labelledby`. It never takes the full width. Add a `tooltip` so sighted users get the name too.
 
 ```tsx
 import { ChevronDown } from 'lucide-react';
 
-<IconButton
+<Button
+  iconOnly
   size="3"
   variant="soft"
   aria-label="More options"
+  tooltip="More options"
 >
   <ChevronDown />
-</IconButton>
+</Button>
 ```
+
+A button that stays pressed is a [Toggle](/docs/toggle), which takes `iconOnly` too.
 
 ## Polymorphism
 
@@ -348,7 +340,7 @@ Use standard HTML form attributes to integrate buttons with forms. The component
 </Button>
 ```
 
-Button also supports customizable tooltip props for content, position, timing, and behavior. Additionally, all margin props (`m`, `mx`, `my`, `mt`, `mr`, `mb`, `ml`) are supported with responsive values.
+Button also supports customizable tooltip props for content, position, timing, and behavior.
 
 ## Accessibility
 
@@ -390,18 +382,13 @@ Native `tooltip` prop eliminates need for wrapper components. Tooltips automatic
 
 Loading state replaces all button content with a centered spinner and disables interaction. Screen readers announce loading context with proper `aria-busy` and `aria-disabled` attributes. For patterns where text should remain visible during loading, wrap icons in the `Spinner` component instead.
 
-### Flush Mode
-
-`flush` prop removes padding for seamless text integration, especially with ghost variant. Creates inline button behavior while maintaining interactive touch targets.
-
 ## Changelog
 
 ### Added
 
 - Enhanced loading state accessibility with `aria-busy`, `aria-disabled`, and `aria-describedby` attributes
 - Built-in tooltip support through `tooltip`, `tooltipSide`, `tooltipAlign` props
-- `flush` prop for seamless text integration with ghost variants
-- Full margin prop system with responsive support
+- `iconOnly` prop for square, icon-only buttons
 - Enhanced form integration with complete HTML form attribute support
 - **RTL (Right-to-Left) layout support** for international applications
 - **Windows High Contrast mode support** via `forced-colors` media query
@@ -421,6 +408,8 @@ Loading state replaces all button content with a centered spinner and disables i
 
 - `highContrast` prop. Gray fills with step 12 on its own, and text reads the strong ink by default.
 - `material` and `panelBackground` props. Every surface is solid.
+- `IconButton`. Use `Button iconOnly`.
+- `flush` prop and margin props. Use the parent's `gap`, or a `Box` with margin.
 
 ### Fixed
 

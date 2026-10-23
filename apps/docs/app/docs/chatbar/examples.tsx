@@ -3,7 +3,7 @@
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
 import { SectionHeader } from '@/components/blocks/section-header/section-header';
 import { Hero } from '@/components/blocks/hero/hero';
-import { Flex, Chatbar, IconButton, Separator, Text } from '@kushagradhawan/kookie-ui';
+import { Flex, Chatbar, Button, Separator, Text } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Attachment01Icon, SmileIcon, Mic01Icon, SparklesIcon, AiBrain01Icon } from '@hugeicons/core-free-icons';
 
@@ -57,7 +57,7 @@ export function ChatbarExamples() {
   <Chatbar.Row>
     <Chatbar.RowStart>
       <Chatbar.AttachTrigger asChild>
-        <IconButton
+        <Button iconOnly
           variant="ghost"
           size="2"
           color="gray"
@@ -65,9 +65,9 @@ export function ChatbarExamples() {
           tooltip="Attach file"
         >
           <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
-        </IconButton>
+        </Button>
       </Chatbar.AttachTrigger>
-      <IconButton
+      <Button iconOnly
         variant="ghost"
         size="2"
         color="gray"
@@ -75,8 +75,8 @@ export function ChatbarExamples() {
         tooltip="Add emoji"
       >
         <HugeiconsIcon icon={SmileIcon} strokeWidth={1.75} />
-      </IconButton>
-      <IconButton
+      </Button>
+      <Button iconOnly
         variant="ghost"
         size="2"
         color="gray"
@@ -84,7 +84,7 @@ export function ChatbarExamples() {
         tooltip="Voice message"
       >
         <HugeiconsIcon icon={Mic01Icon} strokeWidth={1.75} />
-      </IconButton>
+      </Button>
     </Chatbar.RowStart>
     <Chatbar.RowEnd>
       <Text size="1" emphasis="medium">Shift+Enter for new line</Text>
@@ -117,16 +117,16 @@ export function ChatbarExamples() {
             <Chatbar.Row>
               <Chatbar.RowStart>
                 <Chatbar.AttachTrigger asChild>
-                  <IconButton variant="ghost" size="2" color="gray" aria-label="Attach file" tooltip="Attach file">
+                  <Button iconOnly variant="ghost" size="2" color="gray" aria-label="Attach file" tooltip="Attach file">
                     <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
-                  </IconButton>
+                  </Button>
                 </Chatbar.AttachTrigger>
-                <IconButton variant="ghost" size="2" color="gray" aria-label="Add emoji" tooltip="Add emoji">
+                <Button iconOnly variant="ghost" size="2" color="gray" aria-label="Add emoji" tooltip="Add emoji">
                   <HugeiconsIcon icon={SmileIcon} strokeWidth={1.75} />
-                </IconButton>
-                <IconButton variant="ghost" size="2" color="gray" aria-label="Voice message" tooltip="Voice message">
+                </Button>
+                <Button iconOnly variant="ghost" size="2" color="gray" aria-label="Voice message" tooltip="Voice message">
                   <HugeiconsIcon icon={Mic01Icon} strokeWidth={1.75} />
-                </IconButton>
+                </Button>
               </Chatbar.RowStart>
               <Chatbar.RowEnd>
                 <Text size="1" emphasis="medium">
@@ -183,7 +183,7 @@ export function ChatbarExamples() {
     <Chatbar.Row>
       <Chatbar.RowStart>
         <Chatbar.AttachTrigger asChild>
-          <IconButton
+          <Button iconOnly
             variant="ghost"
             size="2"
             color="gray"
@@ -191,9 +191,9 @@ export function ChatbarExamples() {
             tooltip="Attach file"
           >
             <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
-          </IconButton>
+          </Button>
         </Chatbar.AttachTrigger>
-        <IconButton
+        <Button iconOnly
           variant="ghost"
           size="2"
           color="gray"
@@ -201,7 +201,7 @@ export function ChatbarExamples() {
           tooltip="Select model"
         >
           <HugeiconsIcon icon={AiBrain01Icon} strokeWidth={1.75} />
-        </IconButton>
+        </Button>
       </Chatbar.RowStart>
       <Chatbar.RowEnd>
         <Chatbar.Send />
@@ -235,13 +235,13 @@ export function ChatbarExamples() {
               <Chatbar.Row>
                 <Chatbar.RowStart>
                   <Chatbar.AttachTrigger asChild>
-                    <IconButton variant="ghost" size="2" color="gray" aria-label="Attach file" tooltip="Attach file">
+                    <Button iconOnly variant="ghost" size="2" color="gray" aria-label="Attach file" tooltip="Attach file">
                       <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
-                    </IconButton>
+                    </Button>
                   </Chatbar.AttachTrigger>
-                  <IconButton variant="ghost" size="2" color="gray" aria-label="Select model" tooltip="Select model">
+                  <Button iconOnly variant="ghost" size="2" color="gray" aria-label="Select model" tooltip="Select model">
                     <HugeiconsIcon icon={AiBrain01Icon} strokeWidth={1.75} />
-                  </IconButton>
+                  </Button>
                 </Chatbar.RowStart>
                 <Chatbar.RowEnd>
                   <Chatbar.Send />

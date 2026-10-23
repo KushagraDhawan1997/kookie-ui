@@ -123,8 +123,8 @@
     color: var(--accent-solid-contrast);
   }
 
-  /* Muted text follows the highlight colour. Badges keep their own colours. */
-  :where(.rt-BaseMenuContent.rt-variant-soft) .rt-ComboboxItem:where([data-selected='true']) :where(.rt-Text, [data-accent-color='gray']:not(.rt-Badge)) {
+  /* Muted text follows the highlight colour. Chips keep their own colours. */
+  :where(.rt-BaseMenuContent.rt-variant-soft) .rt-ComboboxItem:where([data-selected='true']) :where(.rt-Text, [data-accent-color='gray']:not(.rt-Chip)) {
     color: inherit;
   }
 }

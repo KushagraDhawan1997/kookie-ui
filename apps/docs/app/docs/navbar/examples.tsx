@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
 import { SectionHeader } from '@/components/blocks/section-header/section-header';
-import { Flex, Button, Avatar, Text, Separator, IconButton, DropdownMenu, Navbar } from '@kushagradhawan/kookie-ui';
+import { Flex, Button, Avatar, Text, Separator, DropdownMenu, Navbar } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon, Menu01Icon } from '@hugeicons/core-free-icons';
 
@@ -233,12 +233,12 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
     </Button>
   </Navbar.Navigation>
   <Navbar.Actions gap="2">
-    <IconButton variant="ghost" size="2" aria-label="Notifications">
+    <Button iconOnly variant="ghost" size="2" aria-label="Notifications">
       <HugeiconsIcon icon={Notification01Icon} strokeWidth={1.75} />
-    </IconButton>
-    <IconButton variant="ghost" size="2" aria-label="Profile">
+    </Button>
+    <Button iconOnly variant="ghost" size="2" aria-label="Profile">
       <HugeiconsIcon icon={UserIcon} strokeWidth={1.75} />
-    </IconButton>
+    </Button>
   </Navbar.Actions>
 </Navbar.Root>`}
         >
@@ -257,12 +257,12 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
               </Button>
             </Navbar.Navigation>
             <Navbar.Actions gap="2">
-              <IconButton variant="ghost" size="2" aria-label="Notifications">
+              <Button iconOnly variant="ghost" size="2" aria-label="Notifications">
                 <HugeiconsIcon icon={Notification01Icon} strokeWidth={1.75} />
-              </IconButton>
-              <IconButton variant="ghost" size="2" aria-label="Profile">
+              </Button>
+              <Button iconOnly variant="ghost" size="2" aria-label="Profile">
                 <HugeiconsIcon icon={UserIcon} strokeWidth={1.75} />
-              </IconButton>
+              </Button>
             </Navbar.Actions>
           </Navbar.Root>
         </PreviewBlock>
@@ -293,9 +293,9 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
   <Navbar.Actions>
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
-        <IconButton variant="ghost" size="2">
+        <Button iconOnly variant="ghost" size="2" aria-label="Account menu">
           <Avatar size="2" fallback="JD" />
-        </IconButton>
+        </Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
         <DropdownMenu.Item>Profile</DropdownMenu.Item>
@@ -325,9 +325,9 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
             <Navbar.Actions>
               <DropdownMenu.Root>
                 <DropdownMenu.Trigger>
-                  <IconButton variant="ghost" size="2">
+                  <Button iconOnly variant="ghost" size="2" aria-label="Account menu">
                     <Avatar size="2" fallback="JD" />
-                  </IconButton>
+                  </Button>
                 </DropdownMenu.Trigger>
                 <DropdownMenu.Content>
                   <DropdownMenu.Item>Profile</DropdownMenu.Item>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Badge, Card, Flex, Grid, Heading, Shell, Sidebar, Text, Toolbar, ToolbarButton } from '@kushagradhawan/kookie-ui';
+import { Card, Chip, Flex, Grid, Heading, Shell, Sidebar, Text, Toolbar, ToolbarButton } from '@kushagradhawan/kookie-ui';
 import { useScene, useVersion } from '../harness';
 
 /** An app frame: a sidebar of 200 rows with floating toolbars, beside a grid of 60 cards. */
@@ -51,7 +51,7 @@ export function ShellScene() {
                 <Flex direction="column" gap="2">
                   <Text weight="medium">Metric {i}</Text>
                   <Heading size="6">{(i * 37 + version) % 1000}</Heading>
-                  <Badge color={i % 2 ? 'green' : 'red'}>{i % 2 ? '+' : '-'}{i % 9}%</Badge>
+                  <Chip color={i % 2 ? 'green' : 'red'}>{i % 2 ? '+' : '-'}{i % 9}%</Chip>
                 </Flex>
               </Card>
             ))}

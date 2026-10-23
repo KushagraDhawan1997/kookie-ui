@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Chatbar, IconButton } from '@kushagradhawan/kookie-ui';
+import { Chatbar, Button } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Attachment01Icon } from '@hugeicons/core-free-icons';
 import Playground from '@/components/playground';
@@ -120,7 +120,7 @@ export default function ChatbarPlayground({
 
     const imports = [
       `import { useState } from 'react';`,
-      `import { Chatbar${showAttach ? ', IconButton' : ''} } from '@kushagradhawan/kookie-ui';`,
+      `import { Chatbar${showAttach ? ', Button' : ''} } from '@kushagradhawan/kookie-ui';`,
       ...(showAttach
         ? [`import { HugeiconsIcon } from '@hugeicons/react';`, `import { Attachment01Icon } from '@hugeicons/core-free-icons';`]
         : []),
@@ -136,14 +136,14 @@ export default function ChatbarPlayground({
       ? `
         <Chatbar.RowStart>
           <Chatbar.AttachTrigger asChild>
-            <IconButton
+            <Button iconOnly
               variant="ghost"
               size="${size}"
               color="gray"
               aria-label="Attach file"
             >
               <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
-            </IconButton>
+            </Button>
           </Chatbar.AttachTrigger>
         </Chatbar.RowStart>`
       : `
@@ -198,14 +198,14 @@ export function ChatbarDemo() {
             <Chatbar.RowStart>
               {showAttach && (
                 <Chatbar.AttachTrigger asChild>
-                  <IconButton
+                  <Button iconOnly
                     variant="ghost"
                     size={size as any}
                     color="gray"
                     aria-label="Attach file"
                   >
                     <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
-                  </IconButton>
+                  </Button>
                 </Chatbar.AttachTrigger>
               )}
             </Chatbar.RowStart>

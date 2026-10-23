@@ -4,9 +4,7 @@ import classNames from 'classnames';
 import { textAreaPropDefs } from './text-area.props.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../helpers/theme-size.js';
-import { marginPropDefs } from '../props/margin.props.js';
 
-import type { MarginProps } from '../props/margin.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
@@ -17,13 +15,12 @@ type TextAreaOwnProps = GetPropDefTypes<typeof textAreaPropDefs> & {
 };
 interface TextAreaProps
   extends ComponentPropsWithout<'textarea', RemovedProps | 'size' | 'value'>,
-    MarginProps,
     TextAreaOwnProps {}
 
 const TextArea = React.forwardRef<TextAreaElement, TextAreaProps>((ownProps, forwardedRef) => {
   const props = useThemeSizeProps(ownProps, textAreaPropDefs.size);
   const { className, color, radius, style, ...textAreaProps } =
-    extractProps(props, textAreaPropDefs, marginPropDefs);
+    extractProps(props, textAreaPropDefs);
 
   // Generate unique IDs for accessibility
   const errorId = React.useId();

@@ -8,9 +8,7 @@ import { Spinner } from '../spinner.js';
 import { VisuallyHidden } from '../visually-hidden.js';
 import { extractProps } from '../../helpers/extract-props.js';
 import { useThemeSizeProps } from '../../helpers/theme-size.js';
-import { marginPropDefs } from '../../props/margin.props.js';
 
-import type { MarginProps } from '../../props/margin.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../../helpers/component-props.js';
 import type { GetPropDefTypes } from '../../props/prop-def.js';
 
@@ -26,8 +24,7 @@ type PolymorphicBaseButtonProps<C extends React.ElementType = 'button'> = {
   /** Element type to render as (e.g., 'a', 'span', etc.) */
   as?: C;
 } & BaseButtonOwnProps &
-  MarginProps &
-  ComponentPropsWithout<C, RemovedProps | keyof BaseButtonOwnProps | keyof MarginProps | 'as'>;
+  ComponentPropsWithout<C, RemovedProps | keyof BaseButtonOwnProps | 'as'>;
 
 /**
  * BaseButton props interface that combines all available props
@@ -39,8 +36,7 @@ interface BaseButtonProps extends PolymorphicBaseButtonProps {}
  *
  * This is the foundational button component that handles all the complex logic
  * including loading states, accessibility, performance optimizations, and
- * polymorphic rendering. It's used by Button, IconButton, and other button
- * variants to ensure consistent behavior across the design system.
+ * polymorphic rendering. It's used by Button and Toggle to ensure consistent behavior across the design system.
  *
  * Key features:
  * - Loading state with spinner and accessibility announcements
@@ -70,10 +66,9 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
     as,
     color,
     radius,
-    flush,
     disabled: nativeDisabled,
     ...baseButtonProps
-  } = extractProps(props, baseButtonPropDefs, marginPropDefs);
+  } = extractProps(props, baseButtonPropDefs);
 
   // Loading blocks activation but keeps the native `disabled` off, so the button keeps focus
   // and its place in the tab order (aria-disabled carries the state). An explicit `disabled`
@@ -158,7 +153,6 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
     <Comp
       data-accent-color={color}
       data-radius={radius}
-      data-flush={flush ? 'true' : undefined}
       data-icon-start={iconStart || undefined}
       data-icon-end={iconEnd || undefined}
       {...baseButtonProps}

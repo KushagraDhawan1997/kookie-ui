@@ -6,6 +6,10 @@ import { Flex } from './flex.js';
 import { Slot } from './slot.js';
 
 import type { FlexProps } from './flex.js';
+import type { MarginProps } from '../props/margin.props.js';
+
+// Navbar slots are parts, not layout primitives: the bar owns their spacing.
+type NavbarSlotFlexProps = Omit<FlexProps, keyof MarginProps>;
 
 import { navbarRootPropDefs } from './navbar.props.js';
 import { extractProps } from '../helpers/extract-props.js';
@@ -62,7 +66,7 @@ const NavbarRoot = React.forwardRef<NavbarRootElement, NavbarRootProps>(
 NavbarRoot.displayName = 'Navbar.Root';
 
 // Logo Slot - extends FlexProps
-type NavbarLogoProps = FlexProps & {
+type NavbarLogoProps = NavbarSlotFlexProps & {
   asChild?: boolean;
 };
 
@@ -93,7 +97,7 @@ const NavbarLogo = React.forwardRef<HTMLDivElement, NavbarLogoProps>(
 NavbarLogo.displayName = 'Navbar.Logo';
 
 // Navigation Slot - extends FlexProps
-type NavbarNavigationProps = FlexProps & {
+type NavbarNavigationProps = NavbarSlotFlexProps & {
   asChild?: boolean;
 };
 
@@ -126,7 +130,7 @@ const NavbarNavigation = React.forwardRef<HTMLDivElement, NavbarNavigationProps>
 NavbarNavigation.displayName = 'Navbar.Navigation';
 
 // Actions Slot - extends FlexProps
-type NavbarActionsProps = FlexProps & {
+type NavbarActionsProps = NavbarSlotFlexProps & {
   asChild?: boolean;
 };
 

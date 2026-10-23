@@ -21,25 +21,25 @@
 
 @breakpoints {
   /* Size 1 Button */
-  .rt-Button:where(.rt-r-size-1) :where(.rt-DropdownMenuTriggerIcon) {
+  .rt-Button:where(:not([data-icon-only]).rt-r-size-1) :where(.rt-DropdownMenuTriggerIcon) {
     width: var(--trigger-icon-size-1);
     height: var(--trigger-icon-size-1);
   }
 
   /* Size 2 Button */
-  .rt-Button:where(.rt-r-size-2) :where(.rt-DropdownMenuTriggerIcon) {
+  .rt-Button:where(:not([data-icon-only]).rt-r-size-2) :where(.rt-DropdownMenuTriggerIcon) {
     width: var(--trigger-icon-size-2);
     height: var(--trigger-icon-size-2);
   }
 
   /* Size 3 Button */
-  .rt-Button:where(.rt-r-size-3) :where(.rt-DropdownMenuTriggerIcon) {
+  .rt-Button:where(:not([data-icon-only]).rt-r-size-3) :where(.rt-DropdownMenuTriggerIcon) {
     width: var(--trigger-icon-size-3);
     height: var(--trigger-icon-size-3);
   }
 
   /* Size 4 Button */
-  .rt-Button:where(.rt-r-size-4) :where(.rt-DropdownMenuTriggerIcon) {
+  .rt-Button:where(:not([data-icon-only]).rt-r-size-4) :where(.rt-DropdownMenuTriggerIcon) {
     width: var(--trigger-icon-size-4);
     height: var(--trigger-icon-size-4);
   }

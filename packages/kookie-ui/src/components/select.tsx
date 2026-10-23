@@ -7,7 +7,6 @@ import { Select as SelectPrimitive, ScrollArea as ScrollAreaPrimitive } from 'ra
 
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSize } from '../helpers/theme-size.js';
-import { marginPropDefs } from '../props/margin.props.js';
 import { ChevronDownIcon, ThickCheckIcon } from './icons.js';
 import {
   selectRootPropDefs,
@@ -17,7 +16,6 @@ import {
 import { useThemeContext, Theme } from './theme.js';
 import { useThumbSync } from '../hooks/use-thumb-sync.js';
 
-import type { MarginProps } from '../props/margin.props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 
@@ -44,7 +42,6 @@ type SelectTriggerElement = React.ElementRef<typeof SelectPrimitive.Trigger>;
 type SelectTriggerOwnProps = GetPropDefTypes<typeof selectTriggerPropDefs>;
 interface SelectTriggerProps
   extends ComponentPropsWithout<typeof SelectPrimitive.Trigger, RemovedProps>,
-    MarginProps,
     SelectTriggerOwnProps {}
 const SelectTrigger = React.forwardRef<SelectTriggerElement, SelectTriggerProps>(
   (props, forwardedRef) => {
@@ -66,7 +63,6 @@ const SelectTrigger = React.forwardRef<SelectTriggerElement, SelectTriggerProps>
       // Pass size prop def to allow it to be extracted
       { size: selectRootPropDefs.size },
       selectTriggerPropDefs,
-      marginPropDefs,
     );
 
 

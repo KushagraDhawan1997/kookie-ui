@@ -27,7 +27,7 @@ const accentColorPropDef = {
   color: PropDef<(typeof accentColors)[number]>;
 };
 
-// For components whose colour comes from their content (Badge, Avatar, Code): they rest gray, and `color` picks a category when it means something.
+// For components whose colour comes from their content (Chip, Avatar, Code): they rest gray, and `color` picks a category when it means something.
 const grayAccentColorPropDef = {
   color: {
     type: 'enum',

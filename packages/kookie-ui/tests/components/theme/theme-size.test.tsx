@@ -6,7 +6,7 @@ import { Theme, useThemeContext } from '../../../src/components/theme';
 import { Button } from '../../../src/components/button';
 import * as TextField from '../../../src/components/text-field';
 import * as DropdownMenu from '../../../src/components/dropdown-menu';
-import { Badge } from '../../../src/components/badge';
+import { Chip } from '../../../src/components/chip';
 
 function button(container: HTMLElement, name = 'Go') {
   return Array.from(container.querySelectorAll('button')).find((el) => el.textContent?.includes(name)) as HTMLElement;
@@ -107,13 +107,13 @@ describe('Theme size', () => {
     expect(content.classList.contains('rt-r-size-4')).toBe(true);
   });
 
-  test('badge rests at 2 and does not follow the theme', () => {
+  test('chip rests at 2 and does not follow the theme', () => {
     const { container } = render(
       <Theme size="4">
-        <Badge>New</Badge>
+        <Chip>New</Chip>
       </Theme>,
     );
-    const badge = container.querySelector('.rt-Badge') as HTMLElement;
-    expect(badge.classList.contains('rt-r-size-2')).toBe(true);
+    const chip = container.querySelector('.rt-Chip') as HTMLElement;
+    expect(chip.classList.contains('rt-r-size-2')).toBe(true);
   });
 });

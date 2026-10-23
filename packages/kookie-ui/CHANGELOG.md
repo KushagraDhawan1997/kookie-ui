@@ -1,3 +1,16 @@
+## [0.21.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.20.0...v0.21.0) (2026-10-23)
+
+The component list and composition rules become v2's. Release 5a. See MIGRATION.md.
+
+### Breaking changes
+
+* **button:** IconButton is removed; use `Button iconOnly` (it needs an `aria-label`).
+* **toggle:** ToggleButton and ToggleIconButton become one `Toggle`, with `iconOnly` for an icon.
+* **chip:** Badge is renamed Chip (`rt-Badge` → `rt-Chip`).
+* **removed:** CheckboxCards, RadioCards, HoverCard, DataList, Section, Container, TabNav, Skeleton, AspectRatio, Image, ThemePanel, Quote, Em and Strong.
+* **composition:** only Box, Flex and Grid take margin props. A component's parts space themselves with gap, and Accordion loses `flush`.
+* **codemod:** `codemods/components-0.21.py` renames IconButton, ToggleButton, ToggleIconButton and Badge in an app.
+
 ## [0.20.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.19.0...v0.20.0) (2026-10-23)
 
 Type and rows take v2's scale. Release 4 of 5. See MIGRATION.md.

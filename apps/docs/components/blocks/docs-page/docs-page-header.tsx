@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Button, Separator } from '@kushagradhawan/kookie-ui';
+import { Box, Button, Separator } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ArrowUpRight01Icon, Copy01Icon, Tick01Icon } from '@hugeicons/core-free-icons';
 import { PageHeader } from '../page-header/page-header';
@@ -88,7 +88,11 @@ export function DocsPageHeader({ meta, actions, showCopyButton = true, tabs, sep
       {tabs ? (
         <PageHeader.Tabs mt="7">{tabs}</PageHeader.Tabs>
       ) : (
-        separator && <Separator mt="7" />
+        separator && (
+          <Box mt="7">
+            <Separator />
+          </Box>
+        )
       )}
     </PageHeader.Root>
   );

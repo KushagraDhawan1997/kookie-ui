@@ -7,7 +7,7 @@ source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/comp
 import { BlockInstallation } from '@/components/block-doc-page';
 import { Hero } from '@/components/blocks/hero/hero';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
-import { Badge, Box, Button, Card, Flex, Text } from '@kushagradhawan/kookie-ui';
+import { Chip, Box, Button, Card, Flex, Text } from '@kushagradhawan/kookie-ui';
 
 Hero is the opening section of a landing page: an announcement, a headline, a line of supporting text and calls to action, optionally beside an image. Centered and stacked by default; split side by side on wider screens. The [home page](/) opens with one.
 
@@ -66,7 +66,7 @@ Every part accepts the props of the component it wraps. Only the additions and c
   <Box py="9" px="5">
     <Hero.Root>
       <Hero.Meta>
-        <Badge variant="soft" color="gray">New in 2.0</Badge>
+        <Chip variant="soft" color="gray">New in 2.0</Chip>
       </Hero.Meta>
       <Hero.Title as="h3" size={{ initial: '7', sm: '8' }}>Ship interfaces faster</Hero.Title>
       <Hero.Description size="3" emphasis="medium">Accessible components with a design system built in.</Hero.Description>
@@ -81,7 +81,7 @@ Every part accepts the props of the component it wraps. Only the additions and c
 ```tsx showLineNumbers
 <Hero.Root>
   <Hero.Meta>
-    <Badge variant="soft" color="gray">New in 2.0</Badge>
+    <Chip variant="soft" color="gray">New in 2.0</Chip>
   </Hero.Meta>
   <Hero.Title size={{ initial: '7', sm: '8' }}>Ship interfaces faster</Hero.Title>
   <Hero.Description size="3" emphasis="medium">
@@ -135,7 +135,7 @@ Copy on the left, product shot on the right from `md` up. Align the text to the 
     </Hero.Actions>
   </Flex>
   <Hero.Media flexGrow="1" flexBasis="0" width="100%">
-    <Image src="/product.png" alt="The sprint board" width={640} height={400} />
+    <img src="/product.png" alt="The sprint board" width={640} height={400} />
   </Hero.Media>
 </Hero.Root>
 ```

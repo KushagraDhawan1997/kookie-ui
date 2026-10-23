@@ -1,13 +1,13 @@
 'use client';
 
 import React from 'react';
-import { Spinner, Text, Flex, Box, Heading, Code, Separator, Container, Button } from '@kushagradhawan/kookie-ui';
+import { Spinner, Text, Flex, Box, Heading, Code, Separator, Button } from '@kushagradhawan/kookie-ui';
 
 export default function SpinnerTest() {
   const [showMany, setShowMany] = React.useState(false);
 
   return (
-    <Container size="2" px="9" py="9">
+    <Box maxWidth="688px" mx="auto" px="9" py="9">
       <Flex direction="column" gap="9">
         {/* Header */}
         <Flex direction="column" gap="4">
@@ -22,7 +22,9 @@ export default function SpinnerTest() {
         {/* Test 1: With Colors */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">1. Color Inheritance</Heading>
+            <Box mb="3">
+              <Heading size="6" weight="medium">1. Color Inheritance</Heading>
+            </Box>
             <Text size="2" emphasis="medium">
               Spinner inherits color from parent context
             </Text>
@@ -70,7 +72,9 @@ export default function SpinnerTest() {
         {/* Test 2: With Loading State */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">2. Loading State</Heading>
+            <Box mb="3">
+              <Heading size="6" weight="medium">2. Loading State</Heading>
+            </Box>
             <Text size="2" emphasis="medium">
               Spinner wrapping content shows/hides based on loading prop
             </Text>
@@ -98,7 +102,9 @@ export default function SpinnerTest() {
         {/* Test 3: In Buttons */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">3. Inside Buttons</Heading>
+            <Box mb="3">
+              <Heading size="6" weight="medium">3. Inside Buttons</Heading>
+            </Box>
             <Text size="2" emphasis="medium">
               Spinner is 16px at every button size
             </Text>
@@ -138,7 +144,9 @@ export default function SpinnerTest() {
         {/* Test 4: Performance Stress Test */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">4. Performance Stress Test</Heading>
+            <Box mb="3">
+              <Heading size="6" weight="medium">4. Performance Stress Test</Heading>
+            </Box>
             <Text size="2" emphasis="medium">
               Multiple spinners to test GPU-composited animation performance
             </Text>
@@ -174,7 +182,9 @@ export default function SpinnerTest() {
         {/* Test 5: Animation Details */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">5. Animation Implementation</Heading>
+            <Box mb="3">
+              <Heading size="6" weight="medium">5. Animation Implementation</Heading>
+            </Box>
             <Text size="2" emphasis="medium">
               Technical details of the optimized spinner
             </Text>
@@ -182,7 +192,9 @@ export default function SpinnerTest() {
 
           <Flex gap="7" align="start">
             <Box>
-              <Heading size="3" weight="medium" mb="4">Before (Slow)</Heading>
+              <Box mb="4">
+                <Heading size="3" weight="medium">Before (Slow)</Heading>
+              </Box>
               <Flex direction="column" gap="3">
                 <Text size="2">• 8 separate opacity animations</Text>
                 <Text size="2">• Opacity changes → CPU repaints</Text>
@@ -192,7 +204,9 @@ export default function SpinnerTest() {
             </Box>
 
             <Box>
-              <Heading size="3" weight="medium" mb="4">After (Fast)</Heading>
+              <Box mb="4">
+                <Heading size="3" weight="medium">After (Fast)</Heading>
+              </Box>
               <Flex direction="column" gap="3">
                 <Text size="2">• 1 transform rotation animation</Text>
                 <Text size="2">• Transform → GPU composited</Text>
@@ -214,7 +228,9 @@ export default function SpinnerTest() {
         {/* Test 6: Side by Side */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">6. Visual Consistency</Heading>
+            <Box mb="3">
+              <Heading size="6" weight="medium">6. Visual Consistency</Heading>
+            </Box>
             <Text size="2" emphasis="medium">
               Spinner appearance matches the classic iOS-style spinner
             </Text>
@@ -231,6 +247,6 @@ export default function SpinnerTest() {
           </Box>
         </Flex>
       </Flex>
-    </Container>
+    </Box>
   );
 }

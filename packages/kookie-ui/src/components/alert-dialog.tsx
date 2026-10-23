@@ -165,7 +165,7 @@ type AlertDialogTitleProps = ComponentPropsWithout<typeof Heading, 'asChild'>;
 const AlertDialogTitle = React.forwardRef<AlertDialogTitleElement, AlertDialogTitleProps>(
   (props, forwardedRef) => (
     <AlertDialogPrimitive.Title asChild>
-      <Heading size="5" mb="4" trim="start" {...props} asChild={false} ref={forwardedRef} />
+      <Heading size="5" trim="start" {...props} asChild={false} ref={forwardedRef} />
     </AlertDialogPrimitive.Title>
   ),
 );

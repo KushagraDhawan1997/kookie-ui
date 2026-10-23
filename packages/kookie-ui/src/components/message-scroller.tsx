@@ -42,9 +42,9 @@ import {
 
 import { useComposedRefs } from 'radix-ui/internal';
 
-import { IconButton, type IconButtonProps } from './icon-button.js';
+import { Button as KuiButton } from './button.js';
 import { useScrollEdges } from '../hooks/use-scroll-edges.js';
-import type { ButtonRankProps } from './button.js';
+import type { ButtonProps as KuiButtonProps, ButtonRankProps } from './button.js';
 
 interface RootProps extends React.ComponentPropsWithoutRef<'div'> {
   /**
@@ -129,7 +129,7 @@ const Item = React.forwardRef<HTMLDivElement, ItemProps>(({ className, ...props 
 ));
 Item.displayName = 'MessageScroller.Item';
 
-type ButtonProps = Omit<IconButtonProps, 'aria-label' | 'aria-labelledby' | 'variant' | 'emphasis'> &
+type ButtonProps = Omit<KuiButtonProps, 'aria-label' | 'aria-labelledby' | 'variant' | 'emphasis' | 'iconOnly' | 'fullWidth'> &
   ButtonRankProps & {
   /** Accessible name, in your words. Default "Jump to the latest". */
   'aria-label'?: string;
@@ -149,7 +149,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       direction={direction}
       {...(behavior ? { behavior } : {})}
       render={
-        <IconButton
+        <KuiButton
+          iconOnly
           {...props}
           ref={forwardedRef}
           size={size}
@@ -165,7 +166,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
               <path d="M7.5 2.5v10M3.5 8.5l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           )}
-        </IconButton>
+        </KuiButton>
       }
     />
   ),

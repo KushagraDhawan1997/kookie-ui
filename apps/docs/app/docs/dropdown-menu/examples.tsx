@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
 import { SectionHeader } from '@/components/blocks/section-header/section-header';
-import { Flex, Button, Text, Separator, Card, DropdownMenu, Avatar, IconButton, VirtualMenu, type VirtualMenuRenderItemProps } from '@kushagradhawan/kookie-ui';
+import { Flex, Button, Text, Separator, Card, DropdownMenu, Avatar, VirtualMenu, type VirtualMenuRenderItemProps } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
   MoreHorizontalIcon,
@@ -80,14 +80,14 @@ export function DropdownMenuExamples() {
           background="none"
           code={`<DropdownMenu.Root>
   <DropdownMenu.Trigger>
-    <IconButton
+    <Button iconOnly
       variant="ghost"
       size="2"
       color="gray"
       aria-label="More options"
     >
       <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
-    </IconButton>
+    </Button>
   </DropdownMenu.Trigger>
   <DropdownMenu.Content>
     <DropdownMenu.Item>
@@ -125,9 +125,9 @@ export function DropdownMenuExamples() {
               </Flex>
               <DropdownMenu.Root>
                 <DropdownMenu.Trigger>
-                  <IconButton variant="ghost" size="2" color="gray" aria-label="More options">
+                  <Button iconOnly variant="ghost" size="2" color="gray" aria-label="More options">
                     <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
-                  </IconButton>
+                  </Button>
                 </DropdownMenu.Trigger>
                 <DropdownMenu.Content>
                   <DropdownMenu.Item>

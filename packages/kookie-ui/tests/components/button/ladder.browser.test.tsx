@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { Button, IconButton, ToggleButton, ToggleIconButton, Theme } from '../../../src/components/index';
+import { Button, Theme, Toggle } from '../../../src/components/index';
 
 const HEIGHTS = { '1': 28, '2': 32, '3': 40, '4': 48 } as const;
 const PX = { '1': 8, '2': 10, '3': 13, '4': 16 } as const;
@@ -30,15 +30,15 @@ describe('buttons sit on the control ladder', () => {
               <Button size={size} variant={variant}>
                 Label
               </Button>
-              <IconButton size={size} variant={variant} aria-label={`icon ${variant}`}>
+              <Button iconOnly size={size} variant={variant} aria-label={`icon ${variant}`}>
                 <Icon />
-              </IconButton>
+              </Button>
             </React.Fragment>
           ))}
-          <ToggleButton size={size}>Toggle</ToggleButton>
-          <ToggleIconButton size={size} aria-label="toggle icon">
+          <Toggle size={size}>Toggle</Toggle>
+          <Toggle iconOnly size={size} aria-label="toggle icon">
             <Icon />
-          </ToggleIconButton>
+          </Toggle>
         </Theme>,
       );
       for (const button of screen.getAllByRole('button')) {
@@ -66,12 +66,12 @@ describe('buttons sit on the control ladder', () => {
     it(`size ${size} icon-only is a ${HEIGHTS[size]}px square with no inline padding`, () => {
       render(
         <Theme>
-          <IconButton size={size} aria-label="a">
+          <Button iconOnly size={size} aria-label="a">
             <Icon />
-          </IconButton>
-          <ToggleIconButton size={size} variant="ghost" aria-label="b">
+          </Button>
+          <Toggle iconOnly size={size} variant="ghost" aria-label="b">
             <Icon />
-          </ToggleIconButton>
+          </Toggle>
           <Button size={size} iconOnly aria-label="c">
             <Icon />
           </Button>
@@ -161,9 +161,9 @@ describe('button states', () => {
             {variant}
           </Button>
         ))}
-        <ToggleButton disabled defaultPressed>
+        <Toggle disabled defaultPressed>
           toggle
-        </ToggleButton>
+        </Toggle>
       </Theme>,
     );
     for (const button of screen.getAllByRole('button')) {

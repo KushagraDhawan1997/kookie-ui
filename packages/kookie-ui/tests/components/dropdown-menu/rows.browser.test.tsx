@@ -148,7 +148,7 @@ describe('menu rows hug their line inside a panel', () => {
     expect(px2n(getComputedStyle(item).paddingRight)).toBe(pill['2']);
   });
 
-  it('a separator takes the panel padding above and below', () => {
+  it('a separator keeps the panel padding above and below inside its own box', () => {
     render(
       <Theme>
         <DropdownMenu.Root open modal={false}>
@@ -164,8 +164,15 @@ describe('menu rows hug their line inside a panel', () => {
       </Theme>,
     );
     const separator = document.querySelector<HTMLElement>('.rt-DropdownMenuContent .rt-BaseMenuSeparator')!;
-    expect(px2n(getComputedStyle(separator).marginTop)).toBe(panelPadding['2']);
-    expect(px2n(getComputedStyle(separator).marginBottom)).toBe(panelPadding['2']);
+    const style = getComputedStyle(separator);
+    // The rhythm is the separator's own padding: a part never sets the space around itself.
+    expect(px2n(style.marginTop)).toBe(0);
+    expect(px2n(style.marginBottom)).toBe(0);
+    expect(px2n(style.paddingTop)).toBe(panelPadding['2']);
+    expect(px2n(style.paddingBottom)).toBe(panelPadding['2']);
+    // Only the content box paints, so the line stays one hairline tall.
+    expect(style.backgroundClip).toBe('content-box');
+    expect(separator.getBoundingClientRect().height).toBe(panelPadding['2'] * 2 + 1);
   });
 });
 

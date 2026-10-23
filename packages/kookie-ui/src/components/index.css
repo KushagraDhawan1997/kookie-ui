@@ -1,40 +1,30 @@
 @import './reset.css';
 @import './layout.css';
 
-/* Import Skeleton before other components so that its default border-radius doesn’t have a higher specificity */
-@import './skeleton.css';
-
 /* Import Text before other components as it’s commonly extended */
 @import './text.css';
 
 @import './accordion.css';
 @import './alert-dialog.css';
 @import './avatar.css';
-@import './badge.css';
+/* Chip keeps Badge's place in the cascade. */
+@import './chip.css';
 @import './blockquote.css';
 @import './button.css';
 @import './card.css';
-@import './checkbox-cards.css';
 @import './checkbox-group.css';
 @import './checkbox.css';
 @import './code.css';
 @import './context-menu.css';
-@import './data-list.css';
 @import './dialog.css';
 @import './dropdown-menu.css';
 @import './combobox.css';
-@import './em.css';
 @import './heading.css';
-@import './hover-card.css';
-@import './icon-button.css';
-@import './image.css';
 @import './kbd.css';
 @import './link.css';
 @import './navbar.css';
 @import './popover.css';
 @import './progress.css';
-@import './quote.css';
-@import './radio-cards.css';
 @import './radio-group.css';
 @import './radio.css';
 @import './sheet.css';
@@ -46,14 +36,11 @@
 @import './shell.css';
 @import './slider.css';
 @import './spinner.css';
-@import './strong.css';
 @import './switch.css';
-@import './tab-nav.css';
 @import './table.css';
 @import './tabs.css';
 @import './text-area.css';
 @import './text-field.css';
-@import './theme-panel.css';
 @import './toolbar.css';
 @import './tooltip.css';
 @import './virtual-menu.css';

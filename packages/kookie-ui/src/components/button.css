@@ -3,17 +3,18 @@
  *
  * Button sits on the shared control ladder in _internal/base-button.css: height, side padding
  * (with the pill correction), gap and icon size all come from there, for every variant. This
- * file adds the label's type step per size.
+ * file adds the label's type step per size. An icon-only button (`data-icon-only`) has no label,
+ * so it takes neither.
  */
 
 @import './_internal/base-button.css';
 
-.rt-Button {
+.rt-Button:where(:not([data-icon-only])) {
   font-weight: var(--font-weight-medium);
 }
 
 @breakpoints {
-  .rt-Button {
+  .rt-Button:where(:not([data-icon-only])) {
     &:where(.rt-r-size-1) {
       font-size: var(--font-size-1);
       line-height: var(--line-height-1);

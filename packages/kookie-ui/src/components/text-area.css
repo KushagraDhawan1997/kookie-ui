@@ -19,6 +19,8 @@
 .rt-TextAreaRoot {
   display: flex;
   flex-direction: column;
+  /* The root spaces its parts: the gap sits between the text and an error message under it. */
+  gap: var(--space-2);
   box-sizing: border-box;
 
   font-family: var(--default-font-family);
@@ -482,7 +484,6 @@
   color: var(--red-11);
   font-size: var(--font-size-1);
   line-height: var(--line-height-1);
-  margin-top: var(--space-2);
   display: flex;
   align-items: center;
   gap: var(--space-2);

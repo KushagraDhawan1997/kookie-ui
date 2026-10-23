@@ -167,7 +167,7 @@ The bottom panel also takes the [resize props](#resize).
 
 ### Trigger
 
-`Shell.Trigger` is a `<button>`. Wrap it with `IconButton` or `Button` through `asChild` to style it.
+`Shell.Trigger` is a `<button>`. Wrap it with `Button` through `asChild` to style it. Set `iconOnly` and `aria-label` for an icon.
 
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
@@ -259,11 +259,11 @@ They are not called on mount, and not called when the window crosses a breakpoin
 <Shell.Root>
   <Shell.Header>
     <Flex align="center" gap="3" px="4" height="100%">
-      <IconButton variant="ghost" color="gray" aria-label="Toggle navigation" asChild>
+      <Button iconOnly variant="ghost" color="gray" aria-label="Toggle navigation" asChild>
         <Shell.Trigger target="sidebar">
           <HugeiconsIcon icon={SidebarLeft01Icon} strokeWidth={1.75} />
         </Shell.Trigger>
-      </IconButton>
+      </Button>
       <Text weight="medium">Projects</Text>
     </Flex>
   </Shell.Header>
@@ -279,11 +279,11 @@ They are not called on mount, and not called when the window crosses a breakpoin
 ```tsx showLineNumbers
 <Shell.Root>
   <Shell.Rail>
-    <IconButton variant="ghost" color="gray" aria-label="Toggle panel" asChild>
+    <Button iconOnly variant="ghost" color="gray" aria-label="Toggle panel" asChild>
       <Shell.Trigger target="panel">
         <HugeiconsIcon icon={SidebarLeft01Icon} strokeWidth={1.75} />
       </Shell.Trigger>
-    </IconButton>
+    </Button>
   </Shell.Rail>
   <Shell.Panel defaultOpen={{ initial: false, md: true }}>
     <nav>Navigation</nav>

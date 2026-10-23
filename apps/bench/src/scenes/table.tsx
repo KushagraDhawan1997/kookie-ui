@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Avatar, Badge, Button, Checkbox, DropdownMenu, Flex, IconButton, ScrollArea, Table, Text } from '@kushagradhawan/kookie-ui';
+import { Avatar, Button, Checkbox, Chip, DropdownMenu, Flex, ScrollArea, Table, Text } from '@kushagradhawan/kookie-ui';
 import { useScene, useVersion } from '../harness';
 
 const STATUSES = ['Active', 'Invited', 'Paused', 'Archived'] as const;
@@ -41,15 +41,15 @@ export function TableScene() {
                 </Table.RowHeaderCell>
                 <Table.Cell>person{i}@example.com</Table.Cell>
                 <Table.Cell>
-                  <Badge color={COLORS[n]}>{STATUSES[n]}</Badge>
+                  <Chip color={COLORS[n]}>{STATUSES[n]}</Chip>
                 </Table.Cell>
                 <Table.Cell>{(i * 7 + version) % 50}</Table.Cell>
                 <Table.Cell>
                   <DropdownMenu.Root>
                     <DropdownMenu.Trigger>
-                      <IconButton variant="ghost" aria-label={`Actions for row ${i}`}>
+                      <Button iconOnly variant="ghost" aria-label={`Actions for row ${i}`}>
                         …
-                      </IconButton>
+                      </Button>
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content>
                       <DropdownMenu.Item>Edit</DropdownMenu.Item>

@@ -14,16 +14,12 @@ export interface BaseButtonJsonSchema {
 }
 
 export interface ButtonJsonSchema extends BaseButtonJsonSchema {}
-export interface IconButtonJsonSchema extends BaseButtonJsonSchema {}
-export interface ToggleButtonJsonSchema extends BaseButtonJsonSchema {}
-export interface ToggleIconButtonJsonSchema extends BaseButtonJsonSchema {}
+export interface ToggleJsonSchema extends BaseButtonJsonSchema {}
 
 export interface KookieUIButtonSchemas {
   'base-button': BaseButtonJsonSchema;
   'button': ButtonJsonSchema;
-  'icon-button': IconButtonJsonSchema;
-  'toggle-button': ToggleButtonJsonSchema;
-  'toggle-icon-button': ToggleIconButtonJsonSchema;
+  'toggle': ToggleJsonSchema;
 }
 
 export type ButtonComponentName = keyof KookieUIButtonSchemas;

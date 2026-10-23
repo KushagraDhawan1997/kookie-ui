@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { SegmentedControl, Text, Flex, Box, Heading, Code, Separator, Container } from '@kushagradhawan/kookie-ui';
+import { SegmentedControl, Text, Flex, Box, Heading, Code, Separator } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
   Grid02Icon,
@@ -32,7 +32,7 @@ export default function SegmentedControlTest() {
   const [verticalText, setVerticalText] = React.useState('day');
 
   return (
-    <Container size="2" px="9" py="9">
+    <Box maxWidth="688px" mx="auto" px="9" py="9">
       <Flex direction="column" gap="9">
         {/* Header */}
         <Flex direction="column" gap="4">
@@ -47,7 +47,9 @@ export default function SegmentedControlTest() {
         {/* Test 1: Basic Text vs Icon-Only Comparison */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">1. Text vs Icon-Only Comparison</Heading>
+            <Box mb="3">
+              <Heading size="6" weight="medium">1. Text vs Icon-Only Comparison</Heading>
+            </Box>
             <Text size="2" emphasis="medium">
               Compare standard text segments with icon-only fixed-width segments
             </Text>
@@ -55,7 +57,9 @@ export default function SegmentedControlTest() {
           
           <Flex direction="column" gap="5">
             <Box>
-              <Text size="2" weight="medium" mb="3">Text Labels (default)</Text>
+              <Box mb="3">
+                <Text size="2" weight="medium">Text Labels (default)</Text>
+              </Box>
               <SegmentedControl.Root defaultValue="grid">
                 <SegmentedControl.Item value="list">List</SegmentedControl.Item>
                 <SegmentedControl.Item value="grid">Grid</SegmentedControl.Item>
@@ -64,7 +68,9 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="3">Icon-Only (fixed width)</Text>
+              <Box mb="3">
+                <Text size="2" weight="medium">Icon-Only (fixed width)</Text>
+              </Box>
               <SegmentedControl.Root value={view} onValueChange={setView}>
                 <SegmentedControl.Item value="list" iconOnly aria-label="List view">
                   <HugeiconsIcon icon={Menu01Icon} strokeWidth={1.75} />
@@ -91,7 +97,9 @@ export default function SegmentedControlTest() {
         {/* Test 2: All Sizes Icon-Only */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">2. Icon-Only Across All Sizes</Heading>
+            <Box mb="3">
+              <Heading size="6" weight="medium">2. Icon-Only Across All Sizes</Heading>
+            </Box>
             <Text size="2" emphasis="medium">
               Each size maintains square aspect ratio
             </Text>
@@ -175,7 +183,9 @@ export default function SegmentedControlTest() {
         {/* Test 3: Real-World Use Cases */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">3. Real-World Use Cases</Heading>
+            <Box mb="3">
+              <Heading size="6" weight="medium">3. Real-World Use Cases</Heading>
+            </Box>
             <Text size="2" emphasis="medium">
               Common icon-only segmented control patterns
             </Text>
@@ -183,7 +193,9 @@ export default function SegmentedControlTest() {
           
           <Flex direction="column" gap="5">
             <Box>
-              <Text size="2" weight="medium" mb="3">View Mode</Text>
+              <Box mb="3">
+                <Text size="2" weight="medium">View Mode</Text>
+              </Box>
               <SegmentedControl.Root value={alignment} onValueChange={setAlignment}>
                 <SegmentedControl.Item value="left" iconOnly aria-label="Code view">
                   <HugeiconsIcon icon={CodeIcon} strokeWidth={1.75} />
@@ -201,7 +213,9 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="3">Tool Picker</Text>
+              <Box mb="3">
+                <Text size="2" weight="medium">Tool Picker</Text>
+              </Box>
               <SegmentedControl.Root value={theme} onValueChange={setTheme}>
                 <SegmentedControl.Item value="light" iconOnly aria-label="Search">
                   <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
@@ -216,7 +230,9 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="3">Style Picker</Text>
+              <Box mb="3">
+                <Text size="2" weight="medium">Style Picker</Text>
+              </Box>
               <SegmentedControl.Root value={direction} onValueChange={setDirection}>
                 <SegmentedControl.Item value="left" iconOnly aria-label="Colors">
                   <HugeiconsIcon icon={ColorsIcon} strokeWidth={1.75} />
@@ -246,7 +262,9 @@ export default function SegmentedControlTest() {
         {/* Test 4: Visual Preview */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">4. Interactive Preview</Heading>
+            <Box mb="3">
+              <Heading size="6" weight="medium">4. Interactive Preview</Heading>
+            </Box>
             <Text size="2" emphasis="medium">
               See the selected values reflected in real-time
             </Text>
@@ -274,7 +292,9 @@ export default function SegmentedControlTest() {
         {/* Test 5: Indicator Animation */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">5. Indicator Animation</Heading>
+            <Box mb="3">
+              <Heading size="6" weight="medium">5. Indicator Animation</Heading>
+            </Box>
             <Text size="2" emphasis="medium">
               The sliding indicator works correctly with equal-width icon-only items
             </Text>
@@ -312,7 +332,9 @@ export default function SegmentedControlTest() {
         {/* Test 6: Full Width Icon-Only */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">6. Full Width Icon-Only</Heading>
+            <Box mb="3">
+              <Heading size="6" weight="medium">6. Full Width Icon-Only</Heading>
+            </Box>
             <Text size="2" emphasis="medium">
               Icon-only items grow to fill available space while keeping icons centered
             </Text>
@@ -320,7 +342,9 @@ export default function SegmentedControlTest() {
           
           <Flex direction="column" gap="5">
             <Box>
-              <Text size="2" weight="medium" mb="3">Narrow container (default)</Text>
+              <Box mb="3">
+                <Text size="2" weight="medium">Narrow container (default)</Text>
+              </Box>
               <SegmentedControl.Root defaultValue="list" size="2">
                 <SegmentedControl.Item value="list" iconOnly aria-label="List view">
                   <HugeiconsIcon icon={Menu01Icon} strokeWidth={1.75} />
@@ -335,7 +359,9 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="3">Full width container</Text>
+              <Box mb="3">
+                <Text size="2" weight="medium">Full width container</Text>
+              </Box>
               <Box style={{ width: '100%' }}>
                 <SegmentedControl.Root defaultValue="list" size="2" style={{ width: '100%' }}>
                   <SegmentedControl.Item value="list" iconOnly aria-label="List view">
@@ -352,7 +378,9 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="3">Wide container with 2 items</Text>
+              <Box mb="3">
+                <Text size="2" weight="medium">Wide container with 2 items</Text>
+              </Box>
               <Box style={{ width: '400px', maxWidth: '100%' }}>
                 <SegmentedControl.Root defaultValue="light" size="3" style={{ width: '100%' }}>
                   <SegmentedControl.Item value="light" iconOnly aria-label="Light mode">
@@ -378,7 +406,9 @@ export default function SegmentedControlTest() {
         {/* Test 7: Vertical Orientation - Icon-Only (Recommended) */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">7. Vertical Orientation - Icon-Only (Recommended)</Heading>
+            <Box mb="3">
+              <Heading size="6" weight="medium">7. Vertical Orientation - Icon-Only (Recommended)</Heading>
+            </Box>
             <Text size="2" emphasis="medium">
               Vertical orientation works best with icon-only segments for compact toolbars and sidebars
             </Text>
@@ -386,7 +416,9 @@ export default function SegmentedControlTest() {
           
           <Flex gap="7" wrap="wrap" align="start">
             <Box>
-              <Text size="2" weight="medium" mb="3">Size 1</Text>
+              <Box mb="3">
+                <Text size="2" weight="medium">Size 1</Text>
+              </Box>
               <SegmentedControl.Root orientation="vertical" size="1" defaultValue="code">
                 <SegmentedControl.Item value="code" iconOnly aria-label="Code view">
                   <HugeiconsIcon icon={CodeIcon} strokeWidth={1.75} />
@@ -401,7 +433,9 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="3">Size 2</Text>
+              <Box mb="3">
+                <Text size="2" weight="medium">Size 2</Text>
+              </Box>
               <SegmentedControl.Root orientation="vertical" size="2" defaultValue="code">
                 <SegmentedControl.Item value="code" iconOnly aria-label="Code view">
                   <HugeiconsIcon icon={CodeIcon} strokeWidth={1.75} />
@@ -416,7 +450,9 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="3">Size 3</Text>
+              <Box mb="3">
+                <Text size="2" weight="medium">Size 3</Text>
+              </Box>
               <SegmentedControl.Root orientation="vertical" size="3" value={verticalView} onValueChange={setVerticalView}>
                 <SegmentedControl.Item value="code" iconOnly aria-label="Code view">
                   <HugeiconsIcon icon={CodeIcon} strokeWidth={1.75} />
@@ -434,7 +470,9 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="3">Size 4</Text>
+              <Box mb="3">
+                <Text size="2" weight="medium">Size 4</Text>
+              </Box>
               <SegmentedControl.Root orientation="vertical" size="4" defaultValue="code">
                 <SegmentedControl.Item value="code" iconOnly aria-label="Code view">
                   <HugeiconsIcon icon={CodeIcon} strokeWidth={1.75} />
@@ -461,7 +499,9 @@ export default function SegmentedControlTest() {
         {/* Test 8: Vertical vs Horizontal Comparison */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">8. Orientation Comparison</Heading>
+            <Box mb="3">
+              <Heading size="6" weight="medium">8. Orientation Comparison</Heading>
+            </Box>
             <Text size="2" emphasis="medium">
               Same control in both orientations
             </Text>
@@ -469,7 +509,9 @@ export default function SegmentedControlTest() {
           
           <Flex gap="7" wrap="wrap" align="start">
             <Box>
-              <Text size="2" weight="medium" mb="3">Horizontal (default)</Text>
+              <Box mb="3">
+                <Text size="2" weight="medium">Horizontal (default)</Text>
+              </Box>
               <SegmentedControl.Root size="3" value={verticalTool} onValueChange={setVerticalTool}>
                 <SegmentedControl.Item value="search" iconOnly aria-label="Search">
                   <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
@@ -484,7 +526,9 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="3">Vertical</Text>
+              <Box mb="3">
+                <Text size="2" weight="medium">Vertical</Text>
+              </Box>
               <SegmentedControl.Root orientation="vertical" size="3" value={verticalTool} onValueChange={setVerticalTool}>
                 <SegmentedControl.Item value="search" iconOnly aria-label="Search">
                   <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
@@ -511,7 +555,9 @@ export default function SegmentedControlTest() {
         {/* Test 9: Vertical with Text (Less Ideal) */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">9. Vertical with Text (Less Ideal)</Heading>
+            <Box mb="3">
+              <Heading size="6" weight="medium">9. Vertical with Text (Less Ideal)</Heading>
+            </Box>
             <Text size="2" emphasis="medium">
               Text labels work but are less recommended. Best with very short labels.
             </Text>
@@ -519,7 +565,9 @@ export default function SegmentedControlTest() {
           
           <Flex gap="7" wrap="wrap" align="start">
             <Box>
-              <Text size="2" weight="medium" mb="3">Short labels (OK)</Text>
+              <Box mb="3">
+                <Text size="2" weight="medium">Short labels (OK)</Text>
+              </Box>
               <SegmentedControl.Root orientation="vertical" size="2" value={verticalText} onValueChange={setVerticalText}>
                 <SegmentedControl.Item value="day">Day</SegmentedControl.Item>
                 <SegmentedControl.Item value="week">Week</SegmentedControl.Item>
@@ -528,7 +576,9 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="3">With icons (Better)</Text>
+              <Box mb="3">
+                <Text size="2" weight="medium">With icons (Better)</Text>
+              </Box>
               <SegmentedControl.Root orientation="vertical" size="3" defaultValue="list">
                 <SegmentedControl.Item value="list">
                   <HugeiconsIcon icon={Menu01Icon} strokeWidth={1.75} />
@@ -558,7 +608,9 @@ export default function SegmentedControlTest() {
         {/* Test 10: Real-World Vertical Use Cases */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">10. Real-World Vertical Use Cases</Heading>
+            <Box mb="3">
+              <Heading size="6" weight="medium">10. Real-World Vertical Use Cases</Heading>
+            </Box>
             <Text size="2" emphasis="medium">
               Common patterns for vertical segmented controls
             </Text>
@@ -566,7 +618,9 @@ export default function SegmentedControlTest() {
           
           <Flex gap="7" wrap="wrap" align="start">
             <Box>
-              <Text size="2" weight="medium" mb="3">Sidebar Tool Palette</Text>
+              <Box mb="3">
+                <Text size="2" weight="medium">Sidebar Tool Palette</Text>
+              </Box>
               <SegmentedControl.Root orientation="vertical" size="2" defaultValue="colors">
                 <SegmentedControl.Item value="colors" iconOnly aria-label="Colors">
                   <HugeiconsIcon icon={ColorsIcon} strokeWidth={1.75} />
@@ -584,7 +638,9 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="3">Compact Navigation</Text>
+              <Box mb="3">
+                <Text size="2" weight="medium">Compact Navigation</Text>
+              </Box>
               <SegmentedControl.Root orientation="vertical" size="3" defaultValue="code">
                 <SegmentedControl.Item value="code" iconOnly aria-label="Code">
                   <HugeiconsIcon icon={CodeIcon} strokeWidth={1.75} />
@@ -599,7 +655,9 @@ export default function SegmentedControlTest() {
             </Box>
 
             <Box>
-              <Text size="2" weight="medium" mb="3">View Switcher</Text>
+              <Box mb="3">
+                <Text size="2" weight="medium">View Switcher</Text>
+              </Box>
               <SegmentedControl.Root orientation="vertical" size="2" defaultValue="list">
                 <SegmentedControl.Item value="list" iconOnly aria-label="List view">
                   <HugeiconsIcon icon={Menu01Icon} strokeWidth={1.75} />
@@ -626,7 +684,9 @@ export default function SegmentedControlTest() {
         {/* Test 11: Vertical Indicator Animation */}
         <Flex direction="column" gap="6">
           <Box>
-            <Heading size="6" weight="medium" mb="3">11. Vertical Indicator Animation</Heading>
+            <Box mb="3">
+              <Heading size="6" weight="medium">11. Vertical Indicator Animation</Heading>
+            </Box>
             <Text size="2" emphasis="medium">
               The sliding indicator animates smoothly in vertical orientation
             </Text>
@@ -671,7 +731,7 @@ export default function SegmentedControlTest() {
           </Box>
         </Flex>
       </Flex>
-    </Container>
+    </Box>
   );
 }
 
