@@ -23,14 +23,16 @@ const Spinner = React.forwardRef<SpinnerElement, SpinnerProps>((props, forwarded
 
   const spinner = (
     <span {...spinnerProps} ref={forwardedRef} className={classNames('kui-Spinner', className)}>
-      <span className="kui-SpinnerLeaf" />
-      <span className="kui-SpinnerLeaf" />
-      <span className="kui-SpinnerLeaf" />
-      <span className="kui-SpinnerLeaf" />
-      <span className="kui-SpinnerLeaf" />
-      <span className="kui-SpinnerLeaf" />
-      <span className="kui-SpinnerLeaf" />
-      <span className="kui-SpinnerLeaf" />
+      <span className="kui-SpinnerWheel">
+        <span className="kui-SpinnerLeaf" />
+        <span className="kui-SpinnerLeaf" />
+        <span className="kui-SpinnerLeaf" />
+        <span className="kui-SpinnerLeaf" />
+        <span className="kui-SpinnerLeaf" />
+        <span className="kui-SpinnerLeaf" />
+        <span className="kui-SpinnerLeaf" />
+        <span className="kui-SpinnerLeaf" />
+      </span>
     </span>
   );
 
@@ -43,7 +45,7 @@ const Spinner = React.forwardRef<SpinnerElement, SpinnerProps>((props, forwarded
          * `display: contents` removes the content from the accessibility tree in some browsers,
          * so we force remove it with `aria-hidden`
          */}
-        <span aria-hidden style={{ display: 'contents', visibility: 'hidden' }} inert={undefined}>
+        <span aria-hidden className="kui-SpinnerHiddenChildren" inert={undefined}>
           {children}
         </span>
 

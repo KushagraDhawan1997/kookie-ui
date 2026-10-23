@@ -1,3 +1,23 @@
+## [0.23.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.22.1...v0.23.0) (2026-10-23)
+
+Fewer Chrome layers, less inline CSS, less memory. See MIGRATION.md.
+
+### Breaking changes
+
+* **color:** 21 unused `--focus-*` aliases are gone from every coloured element (`--focus-1..7`, `--focus-9..12`, `--focus-a1`, `--focus-a3`, `--focus-a4`, `--focus-a6..a12`). A coloured Chip declares 52 custom properties instead of 73.
+
+### Features
+
+* **image:** `Image` is back as one img element: `fit`, `radius`, lazy loading, a neutral fill while loading, and `data-status`.
+
+### Performance
+
+* **spinner:** an inner wheel rotates inside a paint-contained root, so a page of loading rows no longer promotes every row after it. 50 loading rows: 106 layers before, 5 after.
+* **accordion:** content no longer keeps `will-change`. 20 open items: 24 layers and 12.5 MB before, 4 layers and 8.7 MB after.
+* **shell, combobox:** scrollers whose content fits are no longer composited in Chrome.
+* **slider, button:** live regions, ticks and the loading state use classes, not inline styles. A 5-tick slider writes 212 B of inline style (was 435 B); a loading button writes none (was 217 B).
+* **select:** a closed Select builds a bare item list and starts no observers. Heap per closed Select 93 KB (was 111 KB).
+
 ## [0.22.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.22.0...v0.22.1) (2026-10-23)
 
 ### Look

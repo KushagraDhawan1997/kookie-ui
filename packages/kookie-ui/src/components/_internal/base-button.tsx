@@ -6,7 +6,6 @@ import { useComposedRefs, useLayoutEffect } from 'radix-ui/internal';
 import { baseButtonPropDefs } from './base-button.props.js';
 import { Flex } from '../flex.js';
 import { Spinner } from '../spinner.js';
-import { VisuallyHidden } from '../visually-hidden.js';
 import { extractProps } from '../../helpers/extract-props.js';
 import { useThemeSizeProps } from '../../helpers/theme-size.js';
 
@@ -186,19 +185,20 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
            * The button is a flex container with a `gap`, so we use `display: contents` to ensure the correct flex layout.
            *
            * However, `display: contents` removes the content from the accessibility tree in some browsers,
-           * so we force remove it with `aria-hidden` and re-add it in the tree with `VisuallyHidden`
+           * so we force remove it with `aria-hidden` and re-add it in the tree with a `kui-sr-only` copy.
+           * Both are classes, not style attributes, so a loading button carries no inline style.
            */}
-          <span style={{ display: 'contents', visibility: 'hidden' }} aria-hidden>
+          <span className="kui-BaseButtonContent" aria-hidden>
             {children}
           </span>
 
           {/* The label stays the name; the hidden "Loading" only describes (aria-describedby reads hidden text). */}
-          <VisuallyHidden>
+          <span className="kui-sr-only">
             <span id={describedById} aria-hidden>
               Loading
             </span>
             {children}
-          </VisuallyHidden>
+          </span>
 
           {/* Centered spinner overlay during loading state */}
           <Flex asChild align="center" justify="center" position="absolute" inset="0">

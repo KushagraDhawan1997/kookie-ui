@@ -1,0 +1,33 @@
+/*
+ * Image: one <img>. It fills its box by `fit`, takes the theme's corner, rests on a quiet
+ * neutral fill until it has loaded, so the box holds its place and a failed image keeps it.
+ * No fade-in: v1 has had no motion since 0.15. The fill clears once loaded so a transparent
+ * picture shows what is behind it.
+ */
+.kui-Image {
+  display: block;
+  max-width: 100%;
+  object-fit: var(--image-object-fit, cover);
+  border-radius: var(--radius-2);
+  background-color: var(--neutral-a3);
+}
+
+.kui-Image:where([data-status='loaded']) {
+  background-color: transparent;
+}
+
+.kui-Image:where(.kui-r-fit-cover) {
+  --image-object-fit: cover;
+}
+.kui-Image:where(.kui-r-fit-contain) {
+  --image-object-fit: contain;
+}
+.kui-Image:where(.kui-r-fit-fill) {
+  --image-object-fit: fill;
+}
+.kui-Image:where(.kui-r-fit-scale-down) {
+  --image-object-fit: scale-down;
+}
+.kui-Image:where(.kui-r-fit-none) {
+  --image-object-fit: none;
+}

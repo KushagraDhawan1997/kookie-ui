@@ -1,8 +1,8 @@
 {
   "comment": "Performance budget for the bench screens (apps/bench). Counts (bytes, DOM nodes, what 100 open-close cycles leave behind) fail CI on any increase. Times, long frames and heap sizes are machine-dependent: they are copied in from a CI run and fail only past 1.5x, plus 16ms (one frame) for times in ms. From a baseline of 0 long frames, one long frame fails. Re-record on purpose, in the same commit as the change, with `pnpm --filter bench bench:update`.",
   "size": {
-    "cssGzipBytes": 107417,
-    "jsGzipBytes": 174026
+    "cssGzipBytes": 107561,
+    "jsGzipBytes": 178346
   },
   "table": {
     "domNodes": 12312,
@@ -10,22 +10,31 @@
     "rerenderMs": 171.8,
     "interactionMs": 288,
     "longFrames": 0,
-    "heapKB": 34678
+    "heapKB": 34678,
+    "layers": 10,
+    "inlineStyleElements": 135,
+    "inlineStyleBytes": 3248
   },
   "form": {
-    "domNodes": 3583,
+    "domNodes": 3303,
     "mountMs": 403.9,
     "rerenderMs": 69.3,
     "interactionMs": 24,
     "longFrames": 0,
-    "heapKB": 15839
+    "heapKB": 15839,
+    "layers": 30,
+    "inlineStyleElements": 301,
+    "inlineStyleBytes": 8870
   },
   "menu": {
     "domNodes": 28,
     "mountMs": 119.7,
     "rerenderMs": 3.2,
     "interactionMs": 144,
-    "heapKB": 4783
+    "heapKB": 4783,
+    "layers": 5,
+    "inlineStyleElements": 1,
+    "inlineStyleBytes": 0
   },
   "dialogs": {
     "domNodes": 37,
@@ -35,7 +44,10 @@
     "rerenderMs": 12.3,
     "interactionMs": 24,
     "heapKB": 4381,
-    "heapGrowthKB": 1206
+    "heapGrowthKB": 1206,
+    "layers": 5,
+    "inlineStyleElements": 1,
+    "inlineStyleBytes": 0
   },
   "shell": {
     "domNodes": 1884,
@@ -43,6 +55,9 @@
     "rerenderMs": 16.9,
     "interactionMs": 16,
     "longFrames": 0,
-    "heapKB": 5624
+    "heapKB": 5624,
+    "layers": 14,
+    "inlineStyleElements": 8,
+    "inlineStyleBytes": 634
   }
 }

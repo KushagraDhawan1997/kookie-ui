@@ -123,6 +123,37 @@ async function memory(cdp) {
   return { nodes: get('Nodes'), listeners: get('JSEventListeners'), heapKB: Math.round(get('JSHeapUsedSize') / 1024) };
 }
 
+/** Compositing layers Chrome builds for the page, after one more frame has painted. */
+async function layers(page, cdp, withReasons = false) {
+  const changed = new Promise((resolve) => cdp.once('LayerTree.layerTreeDidChange', resolve));
+  await cdp.send('LayerTree.enable');
+  await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+  const { layers: list = [] } = await Promise.race([changed, new Promise((r) => setTimeout(() => r({}), 2000))]);
+  let reasons;
+  if (withReasons) {
+    reasons = {};
+    for (const layer of list) {
+      try {
+        const { compositingReasonIds = [] } = await cdp.send('LayerTree.compositingReasons', { layerId: layer.layerId });
+        const key = compositingReasonIds.join(',') || '(none)';
+        reasons[key] = (reasons[key] ?? 0) + 1;
+      } catch {}
+    }
+  }
+  await cdp.send('LayerTree.disable');
+  return { count: list.length, reasons };
+}
+
+/** How many elements carry a style attribute, and how much CSS text those attributes hold. */
+async function inlineStyles(page) {
+  return page.evaluate(() => {
+    const styled = document.querySelectorAll('[style]');
+    let bytes = 0;
+    for (const el of styled) bytes += (el.getAttribute('style') ?? '').length;
+    return { elements: styled.length, bytes };
+  });
+}
+
 // ── Scenes ──────────────────────────────────────────────────────────────────
 
 const INTERACTIONS = {
@@ -183,8 +214,11 @@ async function measureScene(browser, base, scene) {
     const inp = await interactionDelay(page);
     const jank = await scrollJank(page);
     const mem = await memory(cdp);
+    const layer = run === 0 ? await layers(page, cdp, args.has('--diagnose')) : undefined;
+    const inline = run === 0 ? await inlineStyles(page) : undefined;
+    if (layer?.reasons) console.log(`\n${scene} layers by reason:`, layer.reasons);
     const leak = scene === 'dialogs' && run === 0 ? await leakCheck(page, cdp) : undefined;
-    samples.push({ mount, rerender, inp, jank, mem, leak });
+    samples.push({ mount, rerender, inp, jank, mem, leak, layer, inline });
     await context.close();
   }
   const pick = (f) => round(median(samples.map(f)));
@@ -194,6 +228,9 @@ async function measureScene(browser, base, scene) {
     interactionMs: pick((s) => s.inp),
     ...(samples[0].jank ? { longFrames: pick((s) => s.jank.long) } : {}),
     domNodes: pick((s) => s.mem.nodes),
+    layers: samples[0].layer.count,
+    inlineStyleElements: samples[0].inline.elements,
+    inlineStyleBytes: samples[0].inline.bytes,
     heapKB: pick((s) => s.mem.heapKB),
     ...(samples[0].leak ?? {}),
   };

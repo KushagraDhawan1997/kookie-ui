@@ -186,7 +186,6 @@
   color: var(--accent-ink);
   line-height: var(--line-height-4);
   transform-origin: top;
-  will-change: height, opacity, transform;
 }
 
 .kui-AccordionContentInner {
