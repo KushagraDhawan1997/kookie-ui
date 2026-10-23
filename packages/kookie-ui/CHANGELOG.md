@@ -8,6 +8,10 @@ v2's names. Release 5b, the last of the core plan. See MIGRATION.md.
 * **colour tokens:** the neutral scale is `--neutral-N` (was `--gray-N`). The page is `--color-page` and every surface is `--color-surface`, replacing `--color-background`, `--color-panel(-solid)`, `--color-surface-solid` and `--color-dialog(-solid)`.
 * **codemod:** `codemods/names-0.22.py` rewrites an app.
 
+### Features
+
+* **card:** a Card holding a checked Checkbox or Radio reads as chosen (an accent tint and ring), so a Card with a choice inside replaces CheckboxCards and RadioCards fully.
+
 ## [0.21.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.20.0...v0.21.0) (2026-10-23)
 
 The component list and composition rules become v2's. Release 5a. See MIGRATION.md.
