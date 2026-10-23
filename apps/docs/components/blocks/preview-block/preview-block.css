@@ -3,7 +3,7 @@
  * object. Override these on `.preview-block` to restyle.
  */
 .preview-block {
-  --preview-block-radius: var(--radius-surface-4);
+  --preview-block-radius: var(--radius-surface-1);
   --preview-block-border: var(--gray-a4);
   --preview-block-padding: var(--space-7);
   --preview-block-min-height: 10rem;

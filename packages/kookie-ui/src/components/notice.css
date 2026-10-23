@@ -10,7 +10,6 @@
   align-items: flex-start;
   min-width: 0;
   color: var(--accent-ink);
-  border-radius: var(--notice-radius);
 
   /* An alpha fill, so the strip is a tint of whatever it sits on, as Callout was. */
   background-color: var(--accent-a3);
@@ -65,29 +64,40 @@
 }
 
 .rt-NoticeRoot {
-  /* Callout's spacing: an even inset on every side, wider steps between icon, words and actions. */
+  /* v2 notice: a panel's padding, one gap at every size, and a corner concentric with the
+     buttons it holds (control corner + padding). At `none` the padding term drops out, so a
+     square theme stays square. */
+  gap: var(--layout-space-4);
+  --notice-corner-on: min(1, calc(var(--radius-factor, 1) * 1000));
+  border-radius: calc(var(--notice-control-radius) + var(--notice-padding) * var(--notice-corner-on));
+  padding: var(--notice-padding);
+
   &:where(.rt-r-size-1) {
-    gap: var(--space-3);
-    padding: var(--space-4);
+    --notice-padding: var(--panel-p-1);
+    --notice-control-radius: var(--radius-control-1);
     --notice-line: var(--line-height-1);
     --notice-control: var(--control-height-1);
-    --notice-radius: var(--radius-surface-1);
     --notice-icon-size: var(--content-icon-size-1);
   }
   &:where(.rt-r-size-2) {
-    gap: var(--space-4);
-    padding: var(--space-5);
+    --notice-padding: var(--panel-p-2);
+    --notice-control-radius: var(--radius-control-2);
     --notice-line: var(--line-height-2);
     --notice-control: var(--control-height-2);
-    --notice-radius: var(--radius-surface-2);
     --notice-icon-size: var(--content-icon-size-2);
   }
   &:where(.rt-r-size-3) {
-    gap: var(--space-5);
-    padding: var(--space-6);
+    --notice-padding: var(--panel-p-3);
+    --notice-control-radius: var(--radius-control-3);
     --notice-line: var(--line-height-3);
     --notice-control: var(--control-height-3);
-    --notice-radius: var(--radius-surface-3);
     --notice-icon-size: var(--content-icon-size-3);
+  }
+  &:where(.rt-r-size-4) {
+    --notice-padding: var(--panel-p-4);
+    --notice-control-radius: var(--radius-control-4);
+    --notice-line: var(--line-height-4);
+    --notice-control: var(--control-height-4);
+    --notice-icon-size: var(--content-icon-size-4);
   }
 }

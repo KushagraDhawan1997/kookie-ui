@@ -5,7 +5,7 @@ import { Card, Flex } from '@kushagradhawan/kookie-ui';
 import Playground from '@/components/playground';
 
 const variants = ['surface', 'outline', 'raised', 'ghost', 'soft'] as const;
-const sizes = ['1', '2', '3', '4', '5'] as const;
+const sizes = ['1', '2', '3', '4'] as const;
 
 type CardPlaygroundProps = {
   showControls?: boolean;

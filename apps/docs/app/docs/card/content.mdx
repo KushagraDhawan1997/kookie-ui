@@ -48,9 +48,8 @@ export function MyCard() {
 
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
-| `size` | `'1' \| '2' \| '3' \| '4' \| '5'` | `'1'` | Controls the padding and spacing inside the card. Supports responsive values. |
+| `size` | `'1' \| '2' \| '3' \| '4'` | `'2'` | Padding and corner. Unset, it follows the Theme size. Supports responsive values. |
 | `variant` | `'surface' \| 'outline' \| 'raised' \| 'ghost' \| 'soft'` | `'raised'` | The visual style of the card. |
-| `flush` | `boolean` | `false` | When true, removes padding for full-bleed content. |
 | `asChild` | `boolean` | `false` | Merge props onto the child element using Radix Slot. |
 
 ## Variants
@@ -107,27 +106,33 @@ A muted background with no border.
 
 ## Sizes
 
-Cards support sizes from 1 to 5, controlling padding and internal spacing.
+Sizes 1 to 4 set the padding (16, 24, 32, 40px) and the corner. Unset, a Card follows the Theme size.
 
 ```tsx
 <Flex direction="column" gap="5">
-  <Card size="1"><Text>Size 1 - Compact</Text></Card>
+  <Card size="1"><Text>Size 1</Text></Card>
   <Card size="2"><Text>Size 2 - Default</Text></Card>
-  <Card size="3"><Text>Size 3 - Comfortable</Text></Card>
-  <Card size="4"><Text>Size 4 - Spacious</Text></Card>
-  <Card size="5"><Text>Size 5 - Generous</Text></Card>
+  <Card size="3"><Text>Size 3</Text></Card>
+  <Card size="4"><Text>Size 4</Text></Card>
 </Flex>
 ```
 
-## Flush Content
+## Bleed
 
-Use the `flush` prop for full-bleed content like images.
+`bleed` on any margin prop pulls a child out by the Card's padding, so it reaches the Card's edge. The Card clips it to its corner.
 
 ```tsx
-<Card flush>
-  <img src="/image.jpg" alt="Full bleed image" />
+<Card>
+  <Box mx="bleed" mt="bleed" mb="4">
+    <img src="/image.jpg" alt="Full bleed image" style={{ display: 'block', width: '100%' }} />
+  </Box>
+  <Text>Caption</Text>
 </Card>
 ```
+
+## Nesting
+
+A Card inside a Card draws its corner as the outer corner minus the outer padding, never below 0.
 
 ## Interactive Cards
 

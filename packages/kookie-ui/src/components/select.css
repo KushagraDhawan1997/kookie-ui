@@ -162,7 +162,7 @@
       font-size: var(--font-size-1);
       line-height: var(--line-height-1);
       letter-spacing: var(--letter-spacing-1);
-      border-radius: var(--radius-pill-1);
+      border-radius: var(--radius-control-1);
 
       & :where(.rt-SelectIcon) {
         width: var(--trigger-icon-size-1);
@@ -177,7 +177,7 @@
       font-size: var(--font-size-2);
       line-height: var(--line-height-2);
       letter-spacing: var(--letter-spacing-2);
-      border-radius: var(--radius-pill-2);
+      border-radius: var(--radius-control-2);
 
       & :where(.rt-SelectIcon) {
         width: var(--trigger-icon-size-2);
@@ -192,7 +192,7 @@
       font-size: var(--font-size-3);
       line-height: var(--line-height-3);
       letter-spacing: var(--letter-spacing-3);
-      border-radius: var(--radius-pill-3);
+      border-radius: var(--radius-control-3);
 
       & :where(.rt-SelectIcon) {
         width: var(--trigger-icon-size-3);
@@ -207,7 +207,7 @@
       font-size: var(--font-size-4);
       line-height: var(--line-height-4);
       letter-spacing: var(--letter-spacing-4);
-      border-radius: var(--radius-pill-4);
+      border-radius: var(--radius-control-4);
 
       & :where(.rt-SelectIcon) {
         width: var(--trigger-icon-size-4);
@@ -230,7 +230,7 @@
       --select-item-height: var(--control-height-1);
       --select-item-indicator-width: calc(var(--space-6) / var(--select-item-indicator-width-factor));
       --select-separator-margin-right: var(--space-3);
-      border-radius: var(--radius-surface-3);
+      border-radius: var(--radius-surface-1);
 
       & :where(.rt-SelectLabel) {
         font-size: var(--font-size-1);
@@ -252,7 +252,7 @@
       --select-content-padding: var(--space-3);
       --select-item-indicator-width: var(--space-6);
       --select-separator-margin-right: var(--space-4);
-      border-radius: var(--radius-surface-4);
+      border-radius: var(--radius-surface-1);
 
       & :where(.rt-SelectLabel) {
         font-size: var(--font-size-2);

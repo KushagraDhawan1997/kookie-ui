@@ -6,7 +6,7 @@
  *
  * ARCHITECTURE (matching base-button.css):
  * 1. Base styles: Layout, pseudo-element setup
- * 2. Sizes: Responsive padding and border-radius
+ * 2. Sizes 1-4: padding --surface-p-N, corner --radius-surface-N
  * 3. Variant palettes: Each variant defines its color variables
  * 4. Shared state logic: Single set of hover/active/open selectors (outline, soft, surface)
  * 5. Border variants: Outline & surface border handling
@@ -43,14 +43,6 @@
   font-style: normal;
   text-align: start;
 
-  /* Inset calculations */
-  --inset-border-width: var(--base-card-border-width);
-  --inset-border-radius: var(--base-card-border-radius);
-  --inset-padding-top: calc(var(--base-card-padding-top) - var(--base-card-border-width));
-  --inset-padding-right: calc(var(--base-card-padding-right) - var(--base-card-border-width));
-  --inset-padding-bottom: calc(var(--base-card-padding-bottom) - var(--base-card-border-width));
-  --inset-padding-left: calc(var(--base-card-padding-left) - var(--base-card-border-width));
-
   /*
    * Pseudo-element setup
    * ::before = background color (z-index: -1)
@@ -83,54 +75,34 @@
 @breakpoints {
   .rt-BaseCard {
     &:where(.rt-r-size-1) {
-      --base-card-padding-top: var(--space-3);
-      --base-card-padding-right: var(--space-3);
-      --base-card-padding-bottom: var(--space-3);
-      --base-card-padding-left: var(--space-3);
-      --base-card-border-radius: min(var(--radius-surface-5), calc(var(--radius-surface-1) + var(--space-2)));
+      --base-card-padding-top: var(--surface-p-1);
+      --base-card-padding-right: var(--surface-p-1);
+      --base-card-padding-bottom: var(--surface-p-1);
+      --base-card-padding-left: var(--surface-p-1);
+      --base-card-border-radius: var(--radius-surface-1);
     }
     &:where(.rt-r-size-2) {
-      --base-card-padding-top: var(--space-4);
-      --base-card-padding-right: var(--space-4);
-      --base-card-padding-bottom: var(--space-4);
-      --base-card-padding-left: var(--space-4);
-      --base-card-border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-2) + var(--space-3)));
+      --base-card-padding-top: var(--surface-p-2);
+      --base-card-padding-right: var(--surface-p-2);
+      --base-card-padding-bottom: var(--surface-p-2);
+      --base-card-padding-left: var(--surface-p-2);
+      --base-card-border-radius: var(--radius-surface-2);
     }
     &:where(.rt-r-size-3) {
-      --base-card-padding-top: var(--space-5);
-      --base-card-padding-right: var(--space-5);
-      --base-card-padding-bottom: var(--space-5);
-      --base-card-padding-left: var(--space-5);
-      --base-card-border-radius: min(var(--radius-surface-7), calc(var(--radius-surface-3) + var(--space-4)));
+      --base-card-padding-top: var(--surface-p-3);
+      --base-card-padding-right: var(--surface-p-3);
+      --base-card-padding-bottom: var(--surface-p-3);
+      --base-card-padding-left: var(--surface-p-3);
+      --base-card-border-radius: var(--radius-surface-3);
     }
     &:where(.rt-r-size-4) {
-      --base-card-padding-top: var(--space-6);
-      --base-card-padding-right: var(--space-6);
-      --base-card-padding-bottom: var(--space-6);
-      --base-card-padding-left: var(--space-6);
-      --base-card-border-radius: min(var(--radius-surface-8), calc(var(--radius-surface-4) + var(--space-5)));
-    }
-    &:where(.rt-r-size-5) {
-      --base-card-padding-top: var(--space-7);
-      --base-card-padding-right: var(--space-7);
-      --base-card-padding-bottom: var(--space-7);
-      --base-card-padding-left: var(--space-7);
-      --base-card-border-radius: min(var(--radius-surface-9), calc(var(--radius-surface-5) + var(--space-6)));
+      --base-card-padding-top: var(--surface-p-4);
+      --base-card-padding-right: var(--surface-p-4);
+      --base-card-padding-bottom: var(--surface-p-4);
+      --base-card-padding-left: var(--surface-p-4);
+      --base-card-border-radius: var(--radius-surface-4);
     }
   }
-}
-
-/***************************************************************************************************
- *                                                                                                 *
- * INSET MODE                                                                                      *
- *                                                                                                 *
- ***************************************************************************************************/
-
-.rt-BaseCard:where([data-inset='true']) {
-  --base-card-padding-top: 0px;
-  --base-card-padding-right: 0px;
-  --base-card-padding-bottom: 0px;
-  --base-card-padding-left: 0px;
 }
 
 /***************************************************************************************************
@@ -298,30 +270,6 @@
   --v-bg-active: var(--gray-4);
   --v-focus-color: var(--focus-8);
   --v-focus-offset: -1px;
-
-  /* Flush mode */
-  &:where([data-flush='true']) {
-    --margin-top: 0px;
-    --margin-right: 0px;
-    --margin-bottom: 0px;
-    --margin-left: 0px;
-    --margin-top-override: calc(var(--margin-top) - var(--card-padding));
-    --margin-right-override: calc(var(--margin-right) - var(--card-padding));
-    --margin-bottom-override: calc(var(--margin-bottom) - var(--card-padding));
-    --margin-left-override: calc(var(--margin-left) - var(--card-padding));
-
-    margin-top: var(--margin-top-override);
-    margin-right: var(--margin-right-override);
-    margin-bottom: var(--margin-bottom-override);
-    margin-left: var(--margin-left-override);
-
-    :where(&) > * {
-      --margin-top-override: initial;
-      --margin-right-override: initial;
-      --margin-bottom-override: initial;
-      --margin-left-override: initial;
-    }
-  }
 
   /* Focus */
   &:where(:focus-visible) {

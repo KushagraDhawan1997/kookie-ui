@@ -1,3 +1,15 @@
+## [0.19.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.18.0...v0.19.0) (2026-10-23)
+
+Surfaces and corners take v2's structure. Release 3 of 5. See MIGRATION.md.
+
+### Breaking changes
+
+* **radius:** the palette is steps 0 to 10 plus full; `--radius-11`, `--radius-12` and `--radius-pill-N` are gone. Corners come in three roles of four steps: `--radius-control-N`, `--radius-surface-N` and `--radius-overlay-N`. v1 keeps its own roundness per step. A surface inside a surface takes the outer corner less the outer padding.
+* **card:** sizes 1 to 4, resting at 2 and following Theme size; padding is `--surface-p-N` (24px at size 2). `flush`, `inset` and size 5 are gone. CheckboxCards and RadioCards follow the same ladder.
+* **inset:** the Inset component is removed. Margin props take `"bleed"`, which pulls a child out to the edge of the surface around it.
+* **overlays:** Dialog, AlertDialog and Sheet rest at size 2, pad one step above their size (32px at 2), take `--radius-overlay-N` corners and `--overlay-w-N` widths. The 600px default `maxWidth` is gone.
+* **popover and notice:** Popover and HoverCard pad like a card (24px at 2); Notice pads like a panel (12px at 2). All take sizes 1 to 4.
+
 ## [0.18.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.17.0...v0.18.0) (2026-10-23)
 
 Controls take v2's ladder. Release 2 of 5. See MIGRATION.md.

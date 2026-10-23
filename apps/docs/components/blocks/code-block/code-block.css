@@ -2,7 +2,7 @@
  * Code block frame. Override these on `.code-block` (or any ancestor) to restyle every instance.
  */
 .code-block {
-  --code-block-radius: var(--radius-surface-4);
+  --code-block-radius: var(--radius-surface-1);
   --code-block-border: var(--gray-a4);
   --code-block-background: var(--gray-a2);
   --code-block-font-size: var(--font-size-2);

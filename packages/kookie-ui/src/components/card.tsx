@@ -1,9 +1,12 @@
+'use client';
+
 import * as React from 'react';
 import classNames from 'classnames';
 import { Slot } from 'radix-ui';
 
 import { cardPropDefs } from './card.props.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { marginPropDefs } from '../props/margin.props.js';
 
 import type { MarginProps } from '../props/margin.props.js';
@@ -13,20 +16,15 @@ import type { GetPropDefTypes } from '../props/prop-def.js';
 type CardElement = React.ElementRef<'div'>;
 type CardOwnProps = GetPropDefTypes<typeof cardPropDefs>;
 interface CardProps extends ComponentPropsWithout<'div', RemovedProps>, MarginProps, CardOwnProps {}
-const Card = React.forwardRef<CardElement, CardProps>((props, forwardedRef) => {
-  const { asChild, className, flush, inset, ...cardProps } = extractProps(
-    props,
-    cardPropDefs,
-    marginPropDefs,
-  );
+const Card = React.forwardRef<CardElement, CardProps>((ownProps, forwardedRef) => {
+  const props = useThemeSizeProps(ownProps, cardPropDefs.size);
+  const { asChild, className, ...cardProps } = extractProps(props, cardPropDefs, marginPropDefs);
   const Comp = asChild ? Slot.Root : 'div';
   return (
     <Comp
       ref={forwardedRef}
       {...cardProps}
-      data-flush={flush ? 'true' : undefined}
-      data-inset={inset ? 'true' : undefined}
-      className={classNames('rt-reset', 'rt-BaseCard', 'rt-Card', className)}
+      className={classNames('rt-reset', 'rt-BaseCard', 'rt-Card', 'rt-SurfaceNest', className)}
     />
   );
 });

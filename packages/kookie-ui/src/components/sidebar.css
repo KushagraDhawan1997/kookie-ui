@@ -232,19 +232,19 @@
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-1 .rt-SidebarMenuIconWrapper {
   padding: var(--space-3) var(--space-3);
-  border-radius: var(--radius-pill-1);
+  border-radius: var(--radius-control-1);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-2 .rt-SidebarMenuIconWrapper {
   padding: var(--space-3);
-  border-radius: var(--radius-pill-2);
+  border-radius: var(--radius-control-2);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-ShellRailContent :is(.rt-SidebarContent, .rt-ShellPaneHeader, .rt-ShellPaneFooter).rt-r-size-3 .rt-SidebarMenuIconWrapper {
   padding: var(--space-4);
-  border-radius: var(--radius-pill-3);
+  border-radius: var(--radius-control-3);
 }
 
 /* Label styling in thin mode - outside the background area */
@@ -921,19 +921,19 @@
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-ShellRailContent.rt-r-size-1 .rt-SidebarSearchTrigger .rt-SidebarMenuIconWrapper {
   padding: var(--space-3) var(--space-3);
-  border-radius: var(--radius-pill-1);
+  border-radius: var(--radius-control-1);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-ShellRailContent.rt-r-size-2 .rt-SidebarSearchTrigger .rt-SidebarMenuIconWrapper {
   padding: var(--space-3);
-  border-radius: var(--radius-pill-2);
+  border-radius: var(--radius-control-2);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-ShellRailContent.rt-r-size-3 .rt-SidebarSearchTrigger .rt-SidebarMenuIconWrapper {
   padding: var(--space-4);
-  border-radius: var(--radius-pill-3);
+  border-radius: var(--radius-control-3);
 }
 
 /* Search trigger icon wrapper hover (soft variant) */

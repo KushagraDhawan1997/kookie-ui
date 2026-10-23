@@ -27,17 +27,17 @@ import { Text } from './text.js';
 import { useThemeSize } from '../helpers/theme-size.js';
 import { accentColorPropDef } from '../props/color.prop.js';
 
-type NoticeSize = '1' | '2' | '3';
+type NoticeSize = '1' | '2' | '3' | '4';
 
 /** The size a notice takes when it doesn't set one. `Chatbar.Root` provides its own size here. */
 const NoticeSizeContext = React.createContext<NoticeSize | undefined>(undefined);
 
-/** Notice's own range; a Theme size of 4 maps to 3. */
-const noticeSizePropDef = { values: ['1', '2', '3'] as const };
+/** Notice's own range, the Theme's four sizes. */
+const noticeSizePropDef = { values: ['1', '2', '3', '4'] as const };
 type NoticeColor = (typeof accentColorPropDef)['color']['values'][number];
 
 interface StripProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'color' | 'children'> {
-  /** Padding, text and button size. Defaults to the nearest Theme's size (3 when the Theme is 4). */
+  /** Padding, text and button size. Defaults to the nearest Theme's size. */
   size?: NoticeSize;
   /**
    * The category of the message, not its volume. Default `gray`. Use a colour only when it adds a

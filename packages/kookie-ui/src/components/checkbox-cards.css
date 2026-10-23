@@ -51,8 +51,6 @@
 /*                                     */
 /* * * * * * * * * * * * * * * * * * * */
 
-
-
 @breakpoints {
   .rt-CheckboxCardsRoot {
     /* Size 1 */
@@ -61,17 +59,15 @@
       --line-height: var(--line-height-2);
       --letter-spacing: var(--letter-spacing-2);
       /* keep in sync with checkbox */
-      --checkbox-cards-item-checkbox-size: calc(var(--space-5) * var(--spacing-multiplier-medium));
+      --checkbox-cards-item-checkbox-size: var(--mark-1, calc(16px * var(--scale)));
     }
-    
-
     /* Size 2 */
     &:where(.rt-r-size-2) {
       font-size: var(--font-size-2);
       --line-height: var(--line-height-2);
       --letter-spacing: var(--letter-spacing-2);
       /* keep in sync with checkbox */
-      --checkbox-cards-item-checkbox-size: var(--space-5);
+      --checkbox-cards-item-checkbox-size: var(--mark-2, calc(20px * var(--scale)));
     }
     /* Size 3 */
     &:where(.rt-r-size-3) {
@@ -79,7 +75,7 @@
       --line-height: var(--line-height-3);
       --letter-spacing: var(--letter-spacing-3);
       /* keep in sync with checkbox */
-      --checkbox-cards-item-checkbox-size: calc(var(--space-5) * var(--spacing-multiplier-large));
+      --checkbox-cards-item-checkbox-size: var(--mark-3, calc(24px * var(--scale)));
     }
     /* Size 4 */
     &:where(.rt-r-size-4) {
@@ -87,20 +83,10 @@
       --line-height: var(--line-height-3);
       --letter-spacing: var(--letter-spacing-3);
       /* keep in sync with checkbox */
-      --checkbox-cards-item-checkbox-size: calc(var(--space-5) * var(--spacing-multiplier-large));
-    }
-    /* Size 5 */
-    &:where(.rt-r-size-5) {
-      font-size: var(--font-size-4);
-      --line-height: var(--line-height-4);
-      --letter-spacing: var(--letter-spacing-4);
-      /* keep in sync with checkbox */
-      --checkbox-cards-item-checkbox-size: calc(var(--space-6) * var(--spacing-multiplier-medium));
+      --checkbox-cards-item-checkbox-size: var(--mark-4, calc(26px * var(--scale)));
     }
   }
 }
-
-
 
 /* * * * * * * * * * * * * * * * * * * */
 /*                                     */
@@ -134,35 +120,5 @@
   }
   &::selection {
     background-color: var(--gray-a5);
-  }
-}
-
-/*
- * Pin the item shell to the control channel.
- *
- * These are selection controls that happen to be card-shaped, not surfaces:
- * they sit in a row of choices and read as one large target each. Inheriting
- * BaseCard's damped surface radius made them square off while every other
- * control in the same form stayed round, so they take the control channel
- * instead — the same formulas BaseCard used before the surface split. The
- * mark inside keeps its own radius.
- */
-@breakpoints {
-  .rt-CheckboxCardsItem {
-    &:where(.rt-r-size-1) {
-      --base-card-border-radius: min(var(--radius-5), calc(var(--radius-1) + var(--space-2)));
-    }
-    &:where(.rt-r-size-2) {
-      --base-card-border-radius: min(var(--radius-6), calc(var(--radius-2) + var(--space-3)));
-    }
-    &:where(.rt-r-size-3) {
-      --base-card-border-radius: min(var(--radius-7), calc(var(--radius-3) + var(--space-4)));
-    }
-    &:where(.rt-r-size-4) {
-      --base-card-border-radius: min(var(--radius-8), calc(var(--radius-4) + var(--space-5)));
-    }
-    &:where(.rt-r-size-5) {
-      --base-card-border-radius: min(var(--radius-9), calc(var(--radius-5) + var(--space-6)));
-    }
   }
 }

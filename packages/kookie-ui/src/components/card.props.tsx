@@ -2,20 +2,17 @@ import { asChildPropDef } from '../props/as-child.prop.js';
 
 import type { PropDef } from '../props/prop-def.js';
 
-const sizes = ['1', '2', '3', '4', '5'] as const;
+const sizes = ['1', '2', '3', '4'] as const;
 const variants = ['raised', 'surface', 'outline', 'ghost', 'soft'] as const;
 
 const cardPropDefs = {
   ...asChildPropDef,
-  size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '1', responsive: true },
+  /** Padding --surface-p-N and corner --radius-surface-N. Unset, it follows the Theme size. */
+  size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
   variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised' },
-  flush: { type: 'boolean', default: false },
-  inset: { type: 'boolean', default: false },
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;
   variant: PropDef<(typeof variants)[number]>;
-  flush: PropDef<boolean>;
-  inset: PropDef<boolean>;
 };
 
 export { cardPropDefs };

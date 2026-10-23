@@ -4,7 +4,7 @@ import { widthPropDefs } from '../props/width.props.js';
 
 import type { PropDef, GetPropDefTypes } from '../props/prop-def.js';
 
-const contentSizes = ['1', '2', '3'] as const;
+const contentSizes = ['1', '2', '3', '4'] as const;
 
 const hoverCardContentPropDefs = {
   ...asChildPropDef,

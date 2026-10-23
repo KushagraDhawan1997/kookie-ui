@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
 import { SectionHeader } from '@/components/blocks/section-header/section-header';
-import { Flex, TextField, Text, Separator, Card, Heading, Button, Inset, Image } from '@kushagradhawan/kookie-ui';
+import { Flex, TextField, Text, Separator, Card, Heading, Button, Box, Image } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Search01Icon, Mail01Icon, LockPasswordIcon, ViewIcon, ViewOffIcon, UserIcon, Link01Icon } from '@hugeicons/core-free-icons';
 
@@ -80,15 +80,15 @@ export function TextFieldExamples() {
           background="dots"
           code={`<Card variant="raised" size="2" style={{ maxWidth: 400 }}>
   <Flex direction="column">
-    <Inset clip="padding-box" side="top" pb="current">
+    <Box mx="bleed" mt="bleed" mb="5">
       <Image
         src="/path/to/image.jpg"
         alt="Card media"
         radius="none"
         style={{ height: 240, objectFit: 'cover' }}
       />
-    </Inset>
-    <Flex direction="column" gap="7" p="3">
+    </Box>
+    <Flex direction="column" gap="7">
       <Flex direction="column" gap="2">
         <Heading size="6" weight="medium">Welcome back</Heading>
         <Text size="3" emphasis="medium">
@@ -136,15 +136,15 @@ export function TextFieldExamples() {
         >
           <Card variant="raised" size="2" style={{ maxWidth: 400 }}>
             <Flex direction="column">
-              <Inset clip="padding-box" side="top" pb="current">
+              <Box mx="bleed" mt="bleed" mb="5">
                 <Image
                   src="https://images.unsplash.com/photo-1637664025413-630c2aa76b5a?q=80&w=1288&auto=format&fit=crop"
                   alt="Abstract gradient"
                   radius="none"
                   style={{ height: 240, objectFit: 'cover' }}
                 />
-              </Inset>
-              <Flex direction="column" gap="7" p="3">
+              </Box>
+              <Flex direction="column" gap="7">
                 <Flex direction="column" gap="2">
                   <Heading size="6" weight="medium">
                     Welcome back

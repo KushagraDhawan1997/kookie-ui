@@ -12,8 +12,8 @@
  *
  * Notes
  * - Side: set with `side` on `Sheet.Content`. Aliases: `left` → `start`, `right` → `end`.
- * - Sizing: reuses Dialog content prop defs (width/min/max/height/size). Default Dialog
- *   maxWidth clamping is removed for Sheets.
+ * - Sizing: reuses Dialog content prop defs (width/min/max/height/size). Size follows the
+ *   Theme size; start/end sheets cap at the size's overlay width unless maxWidth is set.
  * - A11y: provide an accessible name via `Sheet.Title` or `aria-label` on `Sheet.Content`.
  *
  * Example
@@ -41,6 +41,7 @@ import { Theme } from './theme.js';
 import { Heading } from './heading.js';
 import { Text } from './text.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
 import { useBodyPointerEventsCleanup } from '../hooks/use-body-pointer-events-cleanup.js';
 
@@ -91,13 +92,7 @@ const {
   align: _alignPropDef,
   ...dialogPropDefsForSheet
 } = dialogContentPropDefs;
-
-// Override dialog's default maxWidth (600px) to avoid clamping Sheet by default
-const { default: _mwDefault, ...maxWidthWithoutDefault } = dialogPropDefsForSheet.maxWidth;
-const sheetPropDefs = {
-  ...dialogPropDefsForSheet,
-  maxWidth: maxWidthWithoutDefault,
-} as typeof dialogPropDefsForSheet;
+const sheetPropDefs = dialogPropDefsForSheet;
 
 type SheetContentElement = React.ElementRef<typeof DialogPrimitive.Content>;
 interface SheetContentProps
@@ -121,8 +116,9 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>(
       forceMount,
       container,
       className,
-      ...restProps
+      ...ownProps
     } = allProps;
+    const restProps = useThemeSizeProps(ownProps, sheetPropDefs.size);
     const normalizedSideMap: Record<SheetSide, 'start' | 'end' | 'top' | 'bottom'> = {
       left: 'start',
       right: 'end',

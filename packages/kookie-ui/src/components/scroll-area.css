@@ -8,7 +8,7 @@
   --scrollarea-scrollbar-vertical-margin-left: var(--space-2);
   --scrollarea-scrollbar-vertical-margin-right: var(--space-2);
   --scrollarea-scrollbar-size: var(--space-2);
-  --scrollarea-scrollbar-border-radius: var(--radius-pill-1);
+  --scrollarea-scrollbar-border-radius: var(--radius-control-1);
 }
 
 .rt-ScrollAreaRoot {

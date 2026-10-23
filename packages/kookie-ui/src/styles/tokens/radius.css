@@ -1,77 +1,52 @@
 /*
  * RADIUS
  *
- * Two channels, one theme.
+ * v2's structure, v1's roundness.
  *
- * `--radius-*`         CONTROLS & MARKS — buttons, inputs, checkboxes, badges,
- *                      switches, tabs. These scale aggressively with the theme
- *                      and opt into `--radius-full` to become pills, through
- *                      `--radius-pill-*`.
- *
- * `--radius-surface-*` SURFACES — cards, dialogs, popovers, menus, tables,
- *                      callouts. These damp as the theme grows and never go
- *                      pill. A surface at `full` is exactly as round as a
- *                      surface at `medium`; `--radius-surface-factor` is
- *                      capped at 1.
- *
- * The gap between the two channels is the point: round controls read as
- * touchable, restrained surfaces read as architectural. Widening the theme
- * widens that contrast instead of inflating everything at once.
+ * 1. The palette: --radius-0 to --radius-10, plus --radius-full. Raw corners, scaled by the
+ *    Theme radius through --radius-factor. --radius-full is 9999px at `full` and 0px below it.
+ * 2. Roles: one ladder per job, four steps each, one step per size index. A component reads a
+ *    role, never a palette step.
+ *    --radius-control-N  a control's corner. Half the control height at `full` (a capsule),
+ *                        the palette step N below it.
+ *    --radius-surface-N  a surface's corner: cards, tables, panes, popovers, menus.
+ *    --radius-overlay-N  a detached surface's corner: dialogs and sheets.
+ *    Surfaces and overlays damp as the theme grows (--radius-surface-factor, capped at 1)
+ *    and never go pill.
+ * 3. Nesting: a pane inside a pane is concentric. Inner corner = outer corner minus outer
+ *    padding, never below 0. See the end of this file.
  */
 
 [data-radius] {
-  /* Controls & marks */
+  /* 1. Palette */
+  --radius-0: 0px;
   --radius-1: calc(6px * var(--scale) * var(--radius-factor));
   --radius-2: calc(8px * var(--scale) * var(--radius-factor));
   --radius-3: calc(10px * var(--scale) * var(--radius-factor));
   --radius-4: calc(12px * var(--scale) * var(--radius-factor));
-
-  /*  */
   --radius-5: calc(16px * var(--scale) * var(--radius-factor));
   --radius-6: calc(20px * var(--scale) * var(--radius-factor));
   --radius-7: calc(24px * var(--scale) * var(--radius-factor));
   --radius-8: calc(28px * var(--scale) * var(--radius-factor));
-
-  /*  */
   --radius-9: calc(32px * var(--scale) * var(--radius-factor));
   --radius-10: calc(40px * var(--scale) * var(--radius-factor));
-  --radius-11: calc(48px * var(--scale) * var(--radius-factor));
-  --radius-12: calc(56px * var(--scale) * var(--radius-factor));
 
-  /* Controls that turn into a pill when the theme radius is `full`. Use these instead of
-     repeating `max(var(--radius-N), var(--radius-full))` in each component. */
-  --radius-pill-1: max(var(--radius-1), var(--radius-full));
-  --radius-pill-2: max(var(--radius-2), var(--radius-full));
-  --radius-pill-3: max(var(--radius-3), var(--radius-full));
-  --radius-pill-4: max(var(--radius-4), var(--radius-full));
-  --radius-pill-5: max(var(--radius-5), var(--radius-full));
-  --radius-pill-6: max(var(--radius-6), var(--radius-full));
-  --radius-pill-7: max(var(--radius-7), var(--radius-full));
-  --radius-pill-8: max(var(--radius-8), var(--radius-full));
-  --radius-pill-9: max(var(--radius-9), var(--radius-full));
-  --radius-pill-10: max(var(--radius-10), var(--radius-full));
-  --radius-pill-11: max(var(--radius-11), var(--radius-full));
-  --radius-pill-12: max(var(--radius-12), var(--radius-full));
+  /* 2. Roles */
+  --radius-control-1: var(--radius-1);
+  --radius-control-2: var(--radius-2);
+  --radius-control-3: var(--radius-3);
+  --radius-control-4: var(--radius-4);
 
-  /* Surfaces — same ramp, damped factor, no pill */
-  --radius-surface-1: calc(6px * var(--scale) * var(--radius-surface-factor));
-  --radius-surface-2: calc(8px * var(--scale) * var(--radius-surface-factor));
-  --radius-surface-3: calc(10px * var(--scale) * var(--radius-surface-factor));
-  --radius-surface-4: calc(12px * var(--scale) * var(--radius-surface-factor));
+  --radius-surface-1: calc(10px * var(--scale) * var(--radius-surface-factor));
+  --radius-surface-2: calc(16px * var(--scale) * var(--radius-surface-factor));
+  --radius-surface-3: calc(22px * var(--scale) * var(--radius-surface-factor));
+  --radius-surface-4: calc(28px * var(--scale) * var(--radius-surface-factor));
 
-  /*  */
-  --radius-surface-5: calc(16px * var(--scale) * var(--radius-surface-factor));
-  --radius-surface-6: calc(20px * var(--scale) * var(--radius-surface-factor));
-  --radius-surface-7: calc(24px * var(--scale) * var(--radius-surface-factor));
-  --radius-surface-8: calc(28px * var(--scale) * var(--radius-surface-factor));
-
-  /*  */
-  --radius-surface-9: calc(32px * var(--scale) * var(--radius-surface-factor));
-  --radius-surface-10: calc(40px * var(--scale) * var(--radius-surface-factor));
-  --radius-surface-11: calc(48px * var(--scale) * var(--radius-surface-factor));
-  --radius-surface-12: calc(56px * var(--scale) * var(--radius-surface-factor));
+  --radius-overlay-1: calc(14px * var(--scale) * var(--radius-surface-factor));
+  --radius-overlay-2: calc(20px * var(--scale) * var(--radius-surface-factor));
+  --radius-overlay-3: calc(24px * var(--scale) * var(--radius-surface-factor));
+  --radius-overlay-4: calc(28px * var(--scale) * var(--radius-surface-factor));
 }
-
 
 [data-radius='none'] {
   --radius-factor: 0;
@@ -101,4 +76,73 @@
   --radius-factor: 2;
   --radius-surface-factor: 1;
   --radius-full: 9999px;
+
+  /* A control at `full` is a capsule: half its own height. */
+  --radius-control-1: calc(var(--control-height-1) / 2);
+  --radius-control-2: calc(var(--control-height-2) / 2);
+  --radius-control-3: calc(var(--control-height-3) / 2);
+  --radius-control-4: calc(var(--control-height-4) / 2);
+}
+
+/*
+ * 3. Nesting (v2 §6, §10)
+ *
+ * A surface opts in with `rt-SurfaceNest` next to its `rt-r-size-N` class. At its size it
+ * publishes on ITSELF:
+ *   --kui-sf-radius  its corner (--radius-surface-N)
+ *   --kui-sf-p       its padding (--surface-p-N)
+ *   --kui-sf-r       the corner to draw: its own, or the nested corner when inside another
+ * and on its CHILDREN:
+ *   --kui-nest       outer corner minus outer padding
+ *
+ * --kui-nest is written from the size tokens, not from --kui-sf-radius and --kui-sf-p: a
+ * direct child that is itself a surface would resolve those against its own declarations.
+ * It inherits, so it crosses any Flex, Grid or Box in between. Two levels: the inner surface
+ * publishes from its own size, not from the corner it was handed.
+ *
+ * The component draws `border-radius: var(--kui-sf-r)` and pads by `var(--kui-sf-p)`.
+ * An element that states `--kui-nest: initial` hands the inner surface its own corner back.
+ */
+@breakpoints {
+  .rt-SurfaceNest {
+    &:where(.rt-r-size-1) {
+      --kui-sf-radius: var(--radius-surface-1);
+      --kui-sf-p: var(--surface-p-1);
+    }
+    &:where(.rt-r-size-1) > * {
+      --kui-nest: max(0px, calc(var(--radius-surface-1) - var(--surface-p-1)));
+    }
+    &:where(.rt-r-size-2) {
+      --kui-sf-radius: var(--radius-surface-2);
+      --kui-sf-p: var(--surface-p-2);
+    }
+    &:where(.rt-r-size-2) > * {
+      --kui-nest: max(0px, calc(var(--radius-surface-2) - var(--surface-p-2)));
+    }
+    &:where(.rt-r-size-3) {
+      --kui-sf-radius: var(--radius-surface-3);
+      --kui-sf-p: var(--surface-p-3);
+    }
+    &:where(.rt-r-size-3) > * {
+      --kui-nest: max(0px, calc(var(--radius-surface-3) - var(--surface-p-3)));
+    }
+    &:where(.rt-r-size-4) {
+      --kui-sf-radius: var(--radius-surface-4);
+      --kui-sf-p: var(--surface-p-4);
+    }
+    &:where(.rt-r-size-4) > * {
+      --kui-nest: max(0px, calc(var(--radius-surface-4) - var(--surface-p-4)));
+    }
+  }
+}
+
+.rt-SurfaceNest {
+  --kui-sf-r: var(--kui-sf-radius, var(--radius-surface-2));
+}
+
+:where(.rt-SurfaceNest) .rt-SurfaceNest {
+  --kui-sf-r: min(
+    var(--kui-nest, var(--kui-sf-radius, var(--radius-surface-2))),
+    var(--kui-sf-radius, var(--radius-surface-2))
+  );
 }

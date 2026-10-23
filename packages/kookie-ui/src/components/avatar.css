@@ -134,63 +134,63 @@
       --avatar-size: var(--control-height-1);
       --avatar-fallback-one-letter-font-size: var(--font-size-2);
       --avatar-fallback-two-letters-font-size: var(--font-size-1);
-      border-radius: var(--radius-pill-1);
+      border-radius: var(--radius-control-1);
       letter-spacing: var(--letter-spacing-1);
     }
     &:where(.rt-r-size-2) {
       --avatar-size: var(--control-height-2);
       --avatar-fallback-one-letter-font-size: var(--font-size-3);
       --avatar-fallback-two-letters-font-size: var(--font-size-2);
-      border-radius: var(--radius-pill-2);
+      border-radius: var(--radius-control-2);
       letter-spacing: var(--letter-spacing-2);
     }
     &:where(.rt-r-size-3) {
       --avatar-size: var(--control-height-3);
       --avatar-fallback-one-letter-font-size: var(--font-size-4);
       --avatar-fallback-two-letters-font-size: var(--font-size-3);
-      border-radius: var(--radius-pill-3);
+      border-radius: var(--radius-control-3);
       letter-spacing: var(--letter-spacing-3);
     }
     &:where(.rt-r-size-4) {
       --avatar-size: var(--control-height-4);
       --avatar-fallback-one-letter-font-size: var(--font-size-5);
       --avatar-fallback-two-letters-font-size: var(--font-size-4);
-      border-radius: var(--radius-pill-4);
+      border-radius: max(var(--radius-control-4), var(--radius-full));
       letter-spacing: var(--letter-spacing-4);
     }
     &:where(.rt-r-size-5) {
       --avatar-size: calc(56px * var(--scale));
       --avatar-fallback-one-letter-font-size: var(--font-size-6);
       --avatar-fallback-two-letters-font-size: var(--font-size-5);
-      border-radius: var(--radius-pill-5);
+      border-radius: max(var(--radius-control-4), var(--radius-full));
       letter-spacing: var(--letter-spacing-5);
     }
     &:where(.rt-r-size-6) {
       --avatar-size: var(--space-10);
       --avatar-fallback-one-letter-font-size: var(--font-size-7);
       --avatar-fallback-two-letters-font-size: var(--font-size-6);
-      border-radius: var(--radius-pill-6);
+      border-radius: max(var(--radius-control-4), var(--radius-full));
       letter-spacing: var(--letter-spacing-6);
     }
     &:where(.rt-r-size-7) {
       --avatar-size: calc(80px * var(--scale));
       --avatar-fallback-one-letter-font-size: var(--font-size-7);
       --avatar-fallback-two-letters-font-size: var(--font-size-6);
-      border-radius: var(--radius-pill-7);
+      border-radius: max(var(--radius-control-4), var(--radius-full));
       letter-spacing: var(--letter-spacing-7);
     }
     &:where(.rt-r-size-8) {
       --avatar-size: calc(96px * var(--scale));
       --avatar-fallback-one-letter-font-size: var(--font-size-8);
       --avatar-fallback-two-letters-font-size: var(--font-size-7);
-      border-radius: var(--radius-pill-8);
+      border-radius: max(var(--radius-control-4), var(--radius-full));
       letter-spacing: var(--letter-spacing-8);
     }
     &:where(.rt-r-size-9) {
       --avatar-size: var(--space-12);
       --avatar-fallback-one-letter-font-size: var(--font-size-9);
       --avatar-fallback-two-letters-font-size: var(--font-size-8);
-      border-radius: var(--radius-pill-9);
+      border-radius: max(var(--radius-control-4), var(--radius-full));
       letter-spacing: var(--letter-spacing-9);
     }
   }

@@ -7,6 +7,17 @@
 .rt-Card {
   --base-card-border-width: var(--card-border-width);
 
+  /*
+   * A Card is a nesting surface (rt-SurfaceNest, tokens/radius.css): it pads by its own
+   * --kui-sf-p and draws --kui-sf-r, which inside another surface is the outer corner minus
+   * the outer padding, so a Card in a Card stays concentric.
+   */
+  --base-card-padding-top: var(--kui-sf-p);
+  --base-card-padding-right: var(--kui-sf-p);
+  --base-card-padding-bottom: var(--kui-sf-p);
+  --base-card-padding-left: var(--kui-sf-p);
+  --base-card-border-radius: var(--kui-sf-r);
+
   &:where(:focus-visible) {
     outline: 2px solid var(--focus-8);
     outline-offset: -1px;
@@ -21,5 +32,3 @@
     }
   }
 }
-
-
