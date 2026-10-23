@@ -90,7 +90,7 @@ describe('Theme size', () => {
     expect(seen).toEqual(['4', '4']);
   });
 
-  test('a theme size beyond a component range maps to its nearest end', () => {
+  test('a menu follows the theme size across its full 1-4 range', () => {
     const { baseElement } = render(
       <Theme size="4">
         <DropdownMenu.Root open>
@@ -104,7 +104,7 @@ describe('Theme size', () => {
       </Theme>,
     );
     const content = baseElement.querySelector('.rt-DropdownMenuContent') as HTMLElement;
-    expect(content.classList.contains('rt-r-size-2')).toBe(true);
+    expect(content.classList.contains('rt-r-size-4')).toBe(true);
   });
 
   test('badge rests at 2 and does not follow the theme', () => {

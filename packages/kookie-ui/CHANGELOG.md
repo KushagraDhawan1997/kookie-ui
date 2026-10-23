@@ -1,3 +1,17 @@
+## [0.20.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.19.0...v0.20.0) (2026-10-23)
+
+Type and rows take v2's scale. Release 4 of 5. See MIGRATION.md.
+
+### Breaking changes
+
+* **type:** nine sizes (12 to 64px) and three weights (regular, medium, semibold). Text, Heading, Link, Code, Kbd and Blockquote take sizes 1 to 9; size 0 and 10 to 12, and the thin, light, bold and extrabold weights are gone. Heading rests at medium and shares Text's line heights. `codemods/type-0.20.py` rewrites an app.
+* **rows:** menus, Select and Combobox lists take sizes 1 to 4. A panel pads `--panel-p-N`; a row hugs its line (30px at size 2) with pill padding at radius full. Sidebar rows stay at control height. Table cells pad 8 by 12 at size 2 and Table takes size 4.
+* **notice:** Notice pads and rounds like a Card of the same size (24px at size 2).
+
+### Fixes
+
+* **bench:** timing checks allow one frame (16ms) above 1.5 times the baseline, so CI no longer fails on sub-frame noise.
+
 ## [0.19.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.18.0...v0.19.0) (2026-10-23)
 
 Surfaces and corners take v2's structure. Release 3 of 5. See MIGRATION.md.

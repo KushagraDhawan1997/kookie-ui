@@ -42,7 +42,8 @@ function useResolvedResponsiveValue<T>(value: Responsive<T> | undefined, default
 }
 
 /** Content padding per menu size, in px (see base-menu.css). */
-const CONTENT_PADDING: Record<string, number> = { '1': 8, '2': 12, '3': 12 };
+// The panel padding ladder (--panel-p-N).
+const CONTENT_PADDING: Record<string, number> = { '1': 8, '2': 12, '3': 16, '4': 24 };
 
 /**
  * Offset that lines the first item of a menu up with its anchor: the pointer

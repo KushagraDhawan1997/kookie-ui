@@ -39,8 +39,8 @@
   flex-direction: column !important;
   gap: var(--space-2) !important;
   text-align: center !important;
-  font-size: var(--font-size-0) !important;
-  line-height: var(--line-height-0) !important;
+  font-size: var(--font-size-1) !important;
+  line-height: var(--line-height-1) !important;
   padding-inline-start: var(--space-2) !important;
   padding-inline-end: var(--space-2) !important;
   /* Add margin for balanced spacing like normal variant */
@@ -87,8 +87,8 @@
     flex-direction: column;
     gap: var(--space-2);
     text-align: center;
-    font-size: var(--font-size-0);
-    line-height: var(--line-height-0);
+    font-size: var(--font-size-1);
+    line-height: var(--line-height-1);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -122,8 +122,8 @@
     flex-direction: column;
     gap: var(--space-2);
     text-align: center;
-    font-size: var(--font-size-0);
-    line-height: var(--line-height-0);
+    font-size: var(--font-size-1);
+    line-height: var(--line-height-1);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -156,8 +156,8 @@
     flex-direction: column;
     gap: var(--space-2);
     text-align: center;
-    font-size: var(--font-size-0);
-    line-height: var(--line-height-0);
+    font-size: var(--font-size-1);
+    line-height: var(--line-height-1);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -257,8 +257,8 @@
   white-space: nowrap;
   text-align: center;
   color: var(--gray-11);
-  font-size: var(--font-size-0);
-  line-height: var(--line-height-0);
+  font-size: var(--font-size-1);
+  line-height: var(--line-height-1);
 }
 
 /* Active label gets accent color and medium weight */
@@ -493,12 +493,12 @@
   /* Inherit all base MenuButton styles */
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--base-menu-item-gap);
   min-height: var(--base-menu-item-height);
   padding-top: var(--base-menu-item-padding-y);
   padding-bottom: var(--base-menu-item-padding-y);
-  padding-left: var(--base-menu-item-padding-left);
-  padding-right: var(--base-menu-item-padding-right);
+  padding-inline-start: var(--base-menu-item-padding-left);
+  padding-inline-end: var(--base-menu-item-padding-right);
   box-sizing: border-box;
   position: relative;
   outline: none;
@@ -523,14 +523,6 @@
   /* Reduced motion support */
 }
 
-.rt-SidebarHeader :where(.rt-SidebarMenuButton) {
-  border-radius: var(--sidebar-base-border-radius) var(--sidebar-base-border-radius) 0 0;
-}
-
-.rt-SidebarFooter :where(.rt-SidebarMenuButton) {
-  border-radius: 0 0 var(--sidebar-base-border-radius) var(--sidebar-base-border-radius);
-}
-
 /***************************************************************************************************
  *                                                                                                 *
  * SIZES                                                                                           *
@@ -544,10 +536,10 @@
 }
 
 @breakpoints {
-  /* Sidebar rows sit on the control height ladder: size N is as tall as a Button,
-     menu item or TextField of size N. Content is a BaseMenuContent, so it takes
-     every size value from base-menu.css. Header and Footer are not, so they
-     restate base-menu's values here; keep the two in step. */
+  /* Sidebar rows sit on the control height ladder: size N is as tall as a Button or
+     TextField of size N, with the row family's pill padding, gap and icon box. Content is a
+     BaseMenuContent, so it takes every other size value from base-menu.css. Header and
+     Footer are not, so they restate base-menu's values here; keep the two in step. */
   /* A Shell pane is a surface: its header, footer, search and scrolling list all pad by the
      surface padding at the Shell's index, so every row and every control in the pane starts on
      one line. The Rail is left out: its tiles keep their own tight padding (above). */
@@ -580,98 +572,71 @@
 
   .rt-SidebarHeader:where(.rt-r-size-1),
   .rt-SidebarFooter:where(.rt-r-size-1) {
-    --base-menu-content-padding: var(--space-3);
-    --base-menu-item-padding-left: var(--space-3);
-    --base-menu-item-padding-right: var(--space-3);
-    --base-menu-item-padding-y: var(--space-2);
+    --base-menu-content-padding: var(--panel-p-1);
+    --base-menu-item-padding-y: var(--row-inset-1);
+    --base-menu-item-px: var(--control-px-1);
+    --base-menu-item-px-pill: var(--control-px-pill-1);
+    --base-menu-item-gap: var(--control-gap-1);
+    --base-menu-icon-size: var(--icon-size-1);
+    --base-menu-indicator-icon-size: var(--indicator-icon-size-1);
+    --base-menu-font-size: var(--font-size-1);
+    --base-menu-line-height: var(--line-height-1);
+    --base-menu-letter-spacing: var(--letter-spacing-1);
+  }
+
+  /* A sidebar row stands level with a button: control height, and the control's corner. */
+  .rt-SidebarContent:where(.rt-r-size-1),
+  .rt-SidebarHeader:where(.rt-r-size-1),
+  .rt-SidebarFooter:where(.rt-r-size-1) {
     --base-menu-item-height: var(--control-height-1);
-    --sidebar-item-height: var(--base-menu-item-height);
-
-    & :where(.rt-SidebarMenuButton) {
-      gap: var(--component-gap-2);
-      font-size: var(--font-size-1);
-      line-height: var(--line-height-1);
-      letter-spacing: var(--letter-spacing-1);
-      border-radius: var(--radius-1);
-
-      /* stylelint-disable-next-line selector-max-type */
-      & :where(svg) {
-        width: var(--content-icon-size-1);
-        height: var(--content-icon-size-1);
-        flex-shrink: 0;
-      }
-    }
-
-    & :where(.rt-BaseMenuSubTriggerIcon) {
-      width: var(--indicator-icon-size-1);
-      height: var(--indicator-icon-size-1);
-      flex-shrink: 0;
-      margin-left: auto;
-    }
+    --base-menu-item-radius: var(--radius-control-1);
+    --sidebar-item-height: var(--control-height-1);
   }
 
   .rt-SidebarHeader:where(.rt-r-size-2),
   .rt-SidebarFooter:where(.rt-r-size-2) {
-    --base-menu-content-padding: var(--space-4);
-    --base-menu-item-padding-left: var(--space-4);
-    --base-menu-item-padding-right: var(--space-4);
-    --base-menu-item-padding-y: var(--space-2);
+    --base-menu-content-padding: var(--panel-p-2);
+    --base-menu-item-padding-y: var(--row-inset-2);
+    --base-menu-item-px: var(--control-px-2);
+    --base-menu-item-px-pill: var(--control-px-pill-2);
+    --base-menu-item-gap: var(--control-gap-2);
+    --base-menu-icon-size: var(--icon-size-2);
+    --base-menu-indicator-icon-size: var(--indicator-icon-size-2);
+    --base-menu-font-size: var(--font-size-2);
+    --base-menu-line-height: var(--line-height-2);
+    --base-menu-letter-spacing: var(--letter-spacing-2);
+  }
+
+  /* A sidebar row stands level with a button: control height, and the control's corner. */
+  .rt-SidebarContent:where(.rt-r-size-2),
+  .rt-SidebarHeader:where(.rt-r-size-2),
+  .rt-SidebarFooter:where(.rt-r-size-2) {
     --base-menu-item-height: var(--control-height-2);
-    --sidebar-item-height: var(--base-menu-item-height);
-
-    & :where(.rt-SidebarMenuButton) {
-      gap: var(--component-gap-3);
-      font-size: var(--font-size-2);
-      line-height: var(--line-height-2);
-      letter-spacing: var(--letter-spacing-2);
-      border-radius: var(--radius-2);
-
-      /* stylelint-disable-next-line selector-max-type */
-      & :where(svg) {
-        width: var(--content-icon-size-2);
-        height: var(--content-icon-size-2);
-        flex-shrink: 0;
-      }
-    }
-
-    & :where(.rt-BaseMenuSubTriggerIcon) {
-      width: var(--indicator-icon-size-2);
-      height: var(--indicator-icon-size-2);
-      flex-shrink: 0;
-      margin-left: auto;
-    }
+    --base-menu-item-radius: var(--radius-control-2);
+    --sidebar-item-height: var(--control-height-2);
   }
 
   .rt-SidebarHeader:where(.rt-r-size-3),
   .rt-SidebarFooter:where(.rt-r-size-3) {
-    --base-menu-content-padding: var(--space-4);
-    --base-menu-item-padding-left: var(--space-4);
-    --base-menu-item-padding-right: var(--space-4);
-    --base-menu-item-padding-y: var(--space-3);
+    --base-menu-content-padding: var(--panel-p-3);
+    --base-menu-item-padding-y: var(--row-inset-3);
+    --base-menu-item-px: var(--control-px-3);
+    --base-menu-item-px-pill: var(--control-px-pill-3);
+    --base-menu-item-gap: var(--control-gap-3);
+    --base-menu-icon-size: var(--icon-size-3);
+    --base-menu-indicator-icon-size: var(--indicator-icon-size-3);
+    --base-menu-font-size: var(--font-size-3);
+    --base-menu-line-height: var(--line-height-3);
+    --base-menu-letter-spacing: var(--letter-spacing-3);
+  }
+
+  /* A sidebar row stands level with a button: control height, and the control's corner. */
+  .rt-SidebarContent:where(.rt-r-size-3),
+  .rt-SidebarHeader:where(.rt-r-size-3),
+  .rt-SidebarFooter:where(.rt-r-size-3) {
     --base-menu-item-height: var(--control-height-3);
-    --sidebar-item-height: var(--base-menu-item-height);
-
-    & :where(.rt-SidebarMenuButton) {
-      gap: var(--component-gap-4);
-      font-size: var(--font-size-3);
-      line-height: var(--line-height-3);
-      letter-spacing: var(--letter-spacing-3);
-      border-radius: var(--radius-2);
-
-      /* stylelint-disable-next-line selector-max-type */
-      & :where(svg) {
-        width: var(--content-icon-size-3);
-        height: var(--content-icon-size-3);
-        flex-shrink: 0;
-      }
-    }
-
-    & :where(.rt-BaseMenuSubTriggerIcon) {
-      width: var(--indicator-icon-size-3);
-      height: var(--indicator-icon-size-3);
-      flex-shrink: 0;
-      margin-left: auto;
-    }
+    --base-menu-item-radius: var(--radius-control-3);
+    --sidebar-item-height: var(--control-height-3);
   }
 }
 
@@ -862,8 +827,8 @@
   flex-direction: column !important;
   gap: var(--space-2) !important;
   text-align: center !important;
-  font-size: var(--font-size-0) !important;
-  line-height: var(--line-height-0) !important;
+  font-size: var(--font-size-1) !important;
+  line-height: var(--line-height-1) !important;
   padding-inline-start: var(--space-2) !important;
   padding-inline-end: var(--space-2) !important;
   margin-top: 1px;
@@ -950,11 +915,18 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  --base-menu-item-height: var(--space-8);
-  --base-menu-item-padding-y: var(--space-2);
-  --base-menu-item-padding-left: var(--space-4);
-  --base-menu-item-padding-right: var(--space-4);
+  /* A floating panel of rows at size 2: the rows hug their line (base-menu.css). */
   --base-menu-content-padding: 0;
+  --base-menu-item-padding-y: var(--row-inset-2);
+  --base-menu-item-px: var(--control-px-2);
+  --base-menu-item-px-pill: var(--control-px-pill-2);
+  --base-menu-item-gap: var(--control-gap-2);
+  --base-menu-item-radius: var(--radius-row-2);
+  --base-menu-icon-size: var(--icon-size-2);
+  --base-menu-indicator-icon-size: var(--indicator-icon-size-2);
+  --base-menu-font-size: var(--font-size-2);
+  --base-menu-line-height: var(--line-height-2);
+  --base-menu-letter-spacing: var(--letter-spacing-2);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
@@ -986,24 +958,11 @@
   list-style: none;
 }
 
-/* Popover menu button sizing (mirrors size-2 Content rules) */
 /* stylelint-disable-next-line selector-max-specificity */
 .rt-SidebarSearchPopover .rt-SidebarMenuButton {
-  gap: var(--component-gap-3);
-  font-size: var(--font-size-2);
-  line-height: var(--line-height-2);
-  letter-spacing: var(--letter-spacing-2);
-  border-radius: var(--radius-2);
   font-weight: var(--font-weight-regular);
   margin-top: 1px;
   margin-bottom: 1px;
-}
-
-/* stylelint-disable-next-line selector-max-type, selector-max-specificity */
-.rt-SidebarSearchPopover .rt-SidebarMenuButton :where(svg) {
-  width: var(--content-icon-size-3);
-  height: var(--content-icon-size-3);
-  flex-shrink: 0;
 }
 
 /* Popover menu button hover (soft variant) */

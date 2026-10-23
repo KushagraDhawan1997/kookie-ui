@@ -14,7 +14,7 @@ import type { Responsive } from '../../props/prop-def.js';
  * - Use the correct item height based on menu size
  */
 
-export type MenuSize = '1' | '2';
+export type MenuSize = '1' | '2' | '3' | '4';
 
 interface MenuContextValue {
   /** Whether we're inside a menu that owns the menu role */
@@ -33,10 +33,15 @@ interface MenuProviderProps {
   size?: Responsive<MenuSize>;
 }
 
-/** Menu item height in pixels per size: the control height ladder (--control-height-N). */
+/**
+ * Menu row height in pixels per size: the line height plus --row-inset-N above and below
+ * (base-menu.css), never under the 24px target floor.
+ */
 export const menuSizeToItemHeight: Record<MenuSize, number> = {
-  '1': 28,
-  '2': 32,
+  '1': 24,
+  '2': 30,
+  '3': 34,
+  '4': 38,
 };
 
 export function getMenuItemHeight(size: MenuSize): number {

@@ -66,15 +66,6 @@
   cursor: var(--cursor-menu-item);
 }
 
-/* Room for the check indicator on every size */
-.rt-BaseMenuContent:where(.rt-r-size-1) :where(.rt-ComboboxItem, .rt-ComboboxLabel) {
-  --base-menu-item-padding-left: calc(var(--space-6) / 1.2);
-}
-
-.rt-BaseMenuContent:where(.rt-r-size-2, .rt-r-size-3) :where(.rt-ComboboxItem, .rt-ComboboxLabel) {
-  --base-menu-item-padding-left: var(--space-6);
-}
-
 /* Search row: shares the surface background, no second panel */
 .rt-ComboboxSearch {
   padding: var(--base-menu-content-padding);

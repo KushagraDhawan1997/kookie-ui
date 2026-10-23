@@ -89,7 +89,7 @@ The context menu is composed of several parts:
 
 | Prop               | Type                         | Default         | Description                                                        |
 | ------------------ | ---------------------------- | --------------- | ------------------------------------------------------------------ |
-| `size`             | `'1' \| '2' \| Responsive`   | `'2'`           | Size of the menu items                                             |
+| `size`             | `'1' \| '2' \| '3' \| '4' \| Responsive` | `'2'`           | Size of the menu items                                             |
 | `color`            | `AccentColor`                | —               | Accent color for highlighted items. Inherits from theme if not set |
 | `virtualized`      | `boolean`                    | `false`         | Skips the ScrollArea so a `VirtualMenu` scrolls itself             |
 | `container`        | `HTMLElement`                | —               | Custom container for the portal                                    |
@@ -145,7 +145,7 @@ The context menu is composed of several parts:
 
 | Prop           | Type                        | Default   | Description                                              |
 | -------------- | --------------------------- | --------- | -------------------------------------------------------- |
-| `size`         | `'1' \| '2' \| Responsive`  | Inherited | Size of the submenu. Inherits from the parent content    |
+| `size`         | `'1' \| '2' \| '3' \| '4' \| Responsive` | Inherited | Size of the submenu. Inherits from the parent content    |
 | `color`        | `AccentColor`               | Inherited | Accent color for highlighted items                       |
 | `virtualized`  | `boolean`                   | `false`   | Skips the ScrollArea so a `VirtualMenu` scrolls itself   |
 
@@ -187,6 +187,24 @@ Standard size for most interfaces.
     </Card>
   </ContextMenu.Trigger>
   <ContextMenu.Content size="2">
+    <ContextMenu.Item shortcut="⌘ C">Copy</ContextMenu.Item>
+    <ContextMenu.Item shortcut="⌘ V">Paste</ContextMenu.Item>
+  </ContextMenu.Content>
+</ContextMenu.Root>
+```
+
+### Larger Sizes
+
+Sizes 3 and 4 give taller rows for prominent surfaces. Rows are 24, 30, 34 and 38px tall at sizes 1-4. Under `<Theme size>`, menus follow the theme size.
+
+```tsx showLineNumbers
+<ContextMenu.Root>
+  <ContextMenu.Trigger>
+    <Card variant="raised" size="2">
+      <Text size="2">Right-click here</Text>
+    </Card>
+  </ContextMenu.Trigger>
+  <ContextMenu.Content size="3">
     <ContextMenu.Item shortcut="⌘ C">Copy</ContextMenu.Item>
     <ContextMenu.Item shortcut="⌘ V">Paste</ContextMenu.Item>
   </ContextMenu.Content>

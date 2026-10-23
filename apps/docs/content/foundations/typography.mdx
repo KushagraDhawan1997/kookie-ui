@@ -1,6 +1,4 @@
-Typography system with 10-step scale (0-9), font weights, and formatting components. The typography infrastructure (scale system, token structure) is from [Radix Themes](https://www.radix-ui.com/themes), but **Kookie UI uses custom typography values** that differ from Radix Themes.
-
-For complete typography documentation and advanced customization, visit the [Radix Themes Typography documentation](https://www.radix-ui.com/themes/docs/theme/typography). Note that Kookie UI's typography values are customized and may not match Radix Themes exactly.
+Typography system with a nine-step scale (1-9), three font weights, and formatting components. The token structure is from [Radix Themes](https://www.radix-ui.com/themes); the values are Kookie UI's own.
 
 ## Installation
 
@@ -21,116 +19,37 @@ import { Text, Heading } from '@kushagradhawan/kookie-ui';
 
 ## Type Scale
 
-10-step size scale (0-9) with corresponding font size, line height, and letter spacing values:
+Each step sets a font size, line height and letter spacing. `Text`, `Heading`, `Link`, `Code`, `Kbd` and `Blockquote` take sizes 1-9.
+
+| Size | Font size | Line height | Letter spacing |
+| ---- | --------- | ----------- | -------------- |
+| 1 | 12px | 16px | 0 |
+| 2 | 14px | 20px | 0 |
+| 3 | 16px | 24px | 0 |
+| 4 | 18px | 26px | -0.005em |
+| 5 | 20px | 28px | -0.0075em |
+| 6 | 24px | 32px | -0.01em |
+| 7 | 32px | 40px | -0.015em |
+| 8 | 44px | 52px | -0.02em |
+| 9 | 64px | 70px | -0.025em |
 
 ```css
-/* Type scale tokens */
-var(--font-size-0)  /* 10px - Extra small text */
-var(--font-size-1)  /* 12px - Small text */
-var(--font-size-2)  /* 14px - Body text */
-var(--font-size-3)  /* 16px - Standard text */
-var(--font-size-4)  /* 18px - Large text */
-var(--font-size-5)  /* 20px - Heading text */
-var(--font-size-6)  /* 24px - Large heading */
-var(--font-size-7)  /* 28px - Display text */
-var(--font-size-8)  /* 35px - Hero text */
-var(--font-size-9)  /* 60px - Massive text */
+var(--font-size-3)       /* 16px */
+var(--line-height-3)     /* 24px */
+var(--letter-spacing-3)  /* 0 */
 ```
 
-## Size Scale
-
-### Size 0
-
-Extra small text for fine print and micro labels.
-
-```tsx
-<Text size="0">Extra small text for fine print</Text>
-```
-
-### Size 1
-
-Small text for captions and labels.
-
-```tsx
-<Text size="1">Small text for captions</Text>
-```
-
-### Size 2
-
-Body text for secondary content.
-
-```tsx
-<Text size="2">Body text for secondary content</Text>
-```
-
-### Size 3
-
-Standard text for main content.
-
-```tsx
-<Text size="3">Standard text for main content</Text>
-```
-
-### Size 4
-
-Large text for important content.
-
-```tsx
-<Text size="4">Large text for important content</Text>
-```
-
-### Size 5
-
-Heading text for section titles.
-
-```tsx
-<Heading size="5">Heading text for section titles</Heading>
-```
-
-### Size 6
-
-Large heading for page titles.
-
-```tsx
-<Heading size="6">Large heading for page titles</Heading>
-```
-
-### Size 7
-
-Display text for hero sections.
-
-```tsx
-<Heading size="7">Display text for hero sections</Heading>
-```
-
-### Size 8
-
-Hero text for main headlines.
-
-```tsx
-<Heading size="8">Hero text for main headlines</Heading>
-```
-
-### Size 9
-
-Massive text for impact headlines.
-
-```tsx
-<Heading size="9">Massive text for impact headlines</Heading>
-```
+Heading uses the same line heights as Text.
 
 ## Font Weight
 
-Use `weight` prop to control text emphasis and hierarchy:
+Three weights: `regular` (400), `medium` (500) and `semibold` (600). Heading defaults to `medium`.
 
 ```tsx
-<Text weight="light">Light text</Text>
 <Text weight="regular">Regular text</Text>
 <Text weight="medium">Medium text</Text>
-<Text weight="bold">Bold text</Text>
+<Text weight="semibold">Semibold text</Text>
 ```
-
-Available weights: `thin`, `extralight`, `light`, `regular`, `medium`, `semibold`, `bold`, `extrabold`.
 
 ## Emphasis
 
@@ -291,4 +210,4 @@ With `@kushagradhawan/kookie-ui/fonts.css` imported, the three stacks become Int
 
 ## Credits
 
-The typography infrastructure (10-step scale system and token structure) is from [Radix Themes](https://www.radix-ui.com/themes) by [WorkOS](https://workos.com/). However, Kookie UI uses custom typography values that have been modified from the original Radix Themes values. The typography system structure and approach credit goes to Radix Themes, while the specific typography values are custom to Kookie UI.
+The typography token structure is from [Radix Themes](https://www.radix-ui.com/themes) by [WorkOS](https://workos.com/). However, Kookie UI uses custom typography values that have been modified from the original Radix Themes values. The typography system structure and approach credit goes to Radix Themes, while the specific typography values are custom to Kookie UI.

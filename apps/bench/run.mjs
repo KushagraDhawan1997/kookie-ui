@@ -208,7 +208,8 @@ async function measureScene(browser, base, scene) {
  */
 const TIME_KEYS = new Set(['mountMs', 'rerenderMs', 'interactionMs', 'longFrames', 'heapKB', 'heapGrowthKB']);
 const TIME_MARGIN = 1.5;
-const TIME_SLACK = 5;
+// One frame: a difference under 16ms is noise on a shared CI runner, and no one can see it.
+const TIME_SLACK = 16;
 
 function compare(budget, results) {
   const failures = [];

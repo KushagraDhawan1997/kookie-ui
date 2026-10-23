@@ -23,7 +23,7 @@ export function MyNavbar() {
   return (
     <Navbar.Root>
       <Navbar.Logo>
-        <Text weight="bold">Brand</Text>
+        <Text weight="semibold">Brand</Text>
       </Navbar.Logo>
       <Navbar.Navigation>
         <Button variant="ghost">Home</Button>
@@ -182,7 +182,7 @@ export function IconNavbar() {
   return (
     <Navbar.Root>
       <Navbar.Logo>
-        <Text weight="bold">Brand</Text>
+        <Text weight="semibold">Brand</Text>
       </Navbar.Logo>
       <Navbar.Navigation>
         <Button variant="ghost">
@@ -220,7 +220,7 @@ export function NextNavbar() {
     <Navbar.Root>
       <Navbar.Logo asChild>
         <Link href="/">
-          <Text weight="bold">Brand</Text>
+          <Text weight="semibold">Brand</Text>
         </Link>
       </Navbar.Logo>
       <Navbar.Navigation>
@@ -247,7 +247,7 @@ export function DashboardNavbar() {
   return (
     <Navbar.Root>
       <Navbar.Logo>
-        <Text weight="bold">Dashboard</Text>
+        <Text weight="semibold">Dashboard</Text>
       </Navbar.Logo>
       <Navbar.Navigation>
         <Button variant="ghost">Overview</Button>
@@ -309,7 +309,7 @@ export function AppLayout() {
     <Shell.Root>
       <Navbar.Root position="fixed">
         <Navbar.Logo>
-          <Text weight="bold">App</Text>
+          <Text weight="semibold">App</Text>
         </Navbar.Logo>
         <Navbar.Navigation>
           <Button variant="ghost">Dashboard</Button>
@@ -338,7 +338,7 @@ Fixed navbars stay at the top of the viewport. Content scrolls beneath them. Add
 ```tsx
 <Navbar.Root position="fixed">
   <Navbar.Logo>
-    <Text weight="bold">Brand</Text>
+    <Text weight="semibold">Brand</Text>
   </Navbar.Logo>
 </Navbar.Root>
 ```
@@ -350,7 +350,7 @@ Sticky navbars scroll with content until they reach the top, then stick in place
 ```tsx
 <Navbar.Root position="sticky">
   <Navbar.Logo>
-    <Text weight="bold">Brand</Text>
+    <Text weight="semibold">Brand</Text>
   </Navbar.Logo>
 </Navbar.Root>
 ```
@@ -362,7 +362,7 @@ Static navbars flow with the document and scroll out of view.
 ```tsx
 <Navbar.Root position="static">
   <Navbar.Logo>
-    <Text weight="bold">Brand</Text>
+    <Text weight="semibold">Brand</Text>
   </Navbar.Logo>
 </Navbar.Root>
 ```
@@ -378,7 +378,7 @@ Compact padding for dense interfaces or mobile layouts.
 ```tsx
 <Navbar.Root size="1">
   <Navbar.Logo>
-    <Text weight="bold">Brand</Text>
+    <Text weight="semibold">Brand</Text>
   </Navbar.Logo>
 </Navbar.Root>
 ```
@@ -390,7 +390,7 @@ Standard padding for most applications. The default size.
 ```tsx
 <Navbar.Root size="2">
   <Navbar.Logo>
-    <Text weight="bold">Brand</Text>
+    <Text weight="semibold">Brand</Text>
   </Navbar.Logo>
 </Navbar.Root>
 ```
@@ -402,7 +402,7 @@ Spacious padding for prominent headers or when you want more breathing room.
 ```tsx
 <Navbar.Root size="3">
   <Navbar.Logo>
-    <Text weight="bold">Brand</Text>
+    <Text weight="semibold">Brand</Text>
   </Navbar.Logo>
 </Navbar.Root>
 ```
@@ -461,7 +461,7 @@ Use the `asChild` prop on any slot to merge its props with a child element. This
 <Navbar.Root>
   <Navbar.Logo asChild>
     <a href="/">
-      <Text weight="bold">Brand</Text>
+      <Text weight="semibold">Brand</Text>
     </a>
   </Navbar.Logo>
   <Navbar.Navigation asChild>

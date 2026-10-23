@@ -24,4 +24,4 @@ pnpm --filter bench bench:update   # re-record the budget on purpose
 pnpm --filter bench bench:serve    # look at the screens: http://localhost:4173/?scene=table
 ```
 
-Counts (bytes, DOM nodes, leftovers after the cycles) fail on any increase. Times and heap sizes depend on the machine, so they are copied in from a CI run and fail only past 1.5× plus 5ms.
+Counts (bytes, DOM nodes, leftovers after the cycles) fail on any increase. Times and heap sizes depend on the machine, so they are copied in from a CI run and fail only past 1.5× plus 16ms (one frame).

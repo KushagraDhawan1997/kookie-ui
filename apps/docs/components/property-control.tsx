@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import * as Label from '@radix-ui/react-label';
-import { Card, Flex, Text, DropdownMenu, Switch, Box, Button } from '@kushagradhawan/kookie-ui';
+import { Flex, Text, DropdownMenu, Switch, Box, Button } from '@kushagradhawan/kookie-ui';
 
 interface RootProps {
   width?: string | number;
@@ -12,11 +12,9 @@ interface RootProps {
 
 function Root({ width, style, children }: RootProps) {
   return (
-    <Card size="2" variant="ghost" style={{ width: width || 'fit-content', height: 'fit-content', ...style }}>
-      <Flex direction="column" gap="5">
-        {children}
-      </Flex>
-    </Card>
+    <Flex direction="column" gap="5" style={{ width: width || 'fit-content', height: 'fit-content', ...style }}>
+      {children}
+    </Flex>
   );
 }
 

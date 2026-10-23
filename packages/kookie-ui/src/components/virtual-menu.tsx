@@ -5,6 +5,8 @@ import classNames from 'classnames';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useMenuContext, getMenuItemHeight } from './_internal/menu-context.js';
 
+import type { MenuSize } from './_internal/menu-context.js';
+
 /**
  * VirtualMenu - A virtualized menu component for rendering large lists efficiently.
  *
@@ -90,7 +92,7 @@ interface VirtualMenuProps<T> {
    * Only set manually when using VirtualMenu outside of a menu context.
    * @default '2' (or inherited from context)
    */
-  size?: '1' | '2';
+  size?: MenuSize;
   /**
    * Estimated height of each item in pixels.
    * Can be a number (same for all) or a function (per-item).

@@ -37,7 +37,7 @@ const FooterBrand = React.forwardRef<HTMLDivElement, FlexProps>(({ direction = '
 ));
 FooterBrand.displayName = 'Footer.Brand';
 
-const FooterBrandName = React.forwardRef<HTMLSpanElement, TextProps>(({ size = '4', weight = 'bold', ...props }, ref) => (
+const FooterBrandName = React.forwardRef<HTMLSpanElement, TextProps>(({ size = '4', weight = 'semibold', ...props }, ref) => (
   <Text ref={ref} size={size} weight={weight} {...props} />
 ));
 FooterBrandName.displayName = 'Footer.BrandName';

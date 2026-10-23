@@ -3,7 +3,7 @@ import { colorPropDef } from '../../props/color.prop.js';
 
 import type { PropDef } from '../../props/prop-def.js';
 
-const contentSizes = ['1', '2'] as const;
+const contentSizes = ['1', '2', '3', '4'] as const;
 const submenuBehaviors = ['cascade', 'drill-down'] as const;
 
 // Base props shared between Content and SubContent

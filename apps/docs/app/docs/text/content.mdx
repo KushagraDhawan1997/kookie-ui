@@ -41,9 +41,9 @@ export function MyText() {
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
 | `as` | `'span' \| 'div' \| 'label' \| 'p'` | `'span'` | The HTML element to render. |
-| `size` | `'0' \| '1' \| '2' \| '3' \| ... \| '12'` | - | The font size. Supports responsive values. |
+| `size` | `'1' \| '2' \| '3' \| ... \| '9'` | - | The font size. Supports responsive values. |
 | `font` | `'sans' \| 'mono' \| 'serif'` | - | The font family. Overrides the theme font. |
-| `weight` | `'thin' \| 'extralight' \| 'light' \| 'regular' \| 'medium' \| 'semibold' \| 'bold' \| 'extrabold'` | - | The font weight. Supports responsive values. |
+| `weight` | `'regular' \| 'medium' \| 'semibold'` | - | The font weight. Supports responsive values. |
 | `color` | `AccentColor` | - | The text color. Inherits the parent color if not set. |
 | `emphasis` | `'loud' \| 'medium' \| 'quiet'` | - | How strongly the text reads. With no `color`, it uses the gray ladder. |
 | `align` | `'left' \| 'center' \| 'right'` | - | Text alignment. Supports responsive values. |
@@ -54,7 +54,7 @@ export function MyText() {
 
 ## Sizes
 
-Text supports sizes from 0 (smallest) to 12 (largest).
+Text supports sizes from 1 (smallest) to 9 (largest).
 
 ```tsx
 <Flex direction="column" gap="3">
@@ -63,23 +63,22 @@ Text supports sizes from 0 (smallest) to 12 (largest).
   <Text size="3">Size 3 - Body text (16px)</Text>
   <Text size="4">Size 4 - Large body (18px)</Text>
   <Text size="5">Size 5 - Lead text (20px)</Text>
-  <Text size="10">Size 10 - Display (72px)</Text>
-  <Text size="11">Size 11 - Large display (86px)</Text>
-  <Text size="12">Size 12 - Extra large display (104px)</Text>
+  <Text size="6">Size 6 - Title (24px)</Text>
+  <Text size="7">Size 7 - Section (32px)</Text>
+  <Text size="8">Size 8 - Display (44px)</Text>
+  <Text size="9">Size 9 - Hero (64px)</Text>
 </Flex>
 ```
 
 ## Weights
 
-Control text weight with the `weight` prop.
+Control text weight with the `weight` prop. Three weights are available.
 
 ```tsx
 <Flex direction="column" gap="3">
-  <Text weight="light">Light weight</Text>
   <Text weight="regular">Regular weight</Text>
   <Text weight="medium">Medium weight</Text>
   <Text weight="semibold">Semibold weight</Text>
-  <Text weight="bold">Bold weight</Text>
 </Flex>
 ```
 

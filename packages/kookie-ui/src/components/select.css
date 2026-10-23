@@ -39,11 +39,16 @@
   height: var(--trigger-icon-size-default);
 }
 
+/*
+ * The panel and its rows are the menu's (base-menu.css): the content is a BaseMenuContent and
+ * every item a BaseMenuItem, so the panel pads --panel-p-N and a row hugs its line. What is
+ * left here is the select's own: the check mark's box and rich rows.
+ */
 .rt-SelectContent {
-  --scrollarea-scrollbar-vertical-margin-top: var(--select-content-padding);
-  --scrollarea-scrollbar-vertical-margin-bottom: var(--select-content-padding);
-  --scrollarea-scrollbar-horizontal-margin-left: var(--select-content-padding);
-  --scrollarea-scrollbar-horizontal-margin-right: var(--select-content-padding);
+  --scrollarea-scrollbar-vertical-margin-top: var(--base-menu-content-padding);
+  --scrollarea-scrollbar-vertical-margin-bottom: var(--base-menu-content-padding);
+  --scrollarea-scrollbar-horizontal-margin-left: var(--base-menu-content-padding);
+  --scrollarea-scrollbar-horizontal-margin-right: var(--base-menu-content-padding);
 
   overflow: hidden;
   z-index: 200; /* Above dialogs (100) so select inside dialogs/sheets work */
@@ -59,47 +64,28 @@
 
 .rt-SelectViewport {
   box-sizing: border-box;
-  padding: var(--select-content-padding);
 
   :where(.rt-SelectContent:has(.rt-ScrollAreaScrollbar[data-orientation='vertical'])) & {
     padding-right: var(--space-4);
   }
 }
 
-.rt-SelectItem {
-  display: flex;
-  align-items: center;
-  height: var(--select-item-height);
-  padding-left: var(--select-item-indicator-width);
-  padding-right: var(--select-item-indicator-width);
-  position: relative;
-  box-sizing: border-box;
-  outline: none;
-  scroll-margin: var(--select-content-padding) 0;
+/* Rich content grows the row; the mark stays on the first line. */
+.rt-SelectItem:where(.rt-SelectItemRich) {
+  align-items: flex-start;
 
-  /* Fix sticky text highlighting after selection in Firefox */
-  user-select: none;
-
-  /* Cursors */
-  cursor: var(--cursor-menu-item);
-  &:where([data-disabled]) {
-    cursor: default;
-  }
-
-  /* Allow rich content to expand height */
-  &:where(.rt-SelectItemRich) {
-    height: auto;
-    min-height: var(--select-item-height);
-    align-items: flex-start;
-    padding-top: var(--space-3);
-    padding-bottom: var(--space-3);
+  & :where(.rt-SelectItemIndicator) {
+    bottom: auto;
+    height: var(--base-menu-item-height);
   }
 }
 
 .rt-SelectItemIndicator {
   position: absolute;
-  left: 0;
-  width: var(--select-item-indicator-width);
+  inset-inline-start: var(--base-menu-item-px);
+  top: 0;
+  bottom: 0;
+  width: var(--base-menu-icon-size);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -107,25 +93,10 @@
 
 .rt-SelectSeparator {
   height: var(--separator-height-thin);
-  margin-top: var(--space-3);
-  margin-bottom: var(--space-3);
-  margin-left: var(--select-item-indicator-width);
-  margin-right: var(--select-separator-margin-right);
 }
 
 .rt-SelectLabel {
-  display: flex;
-  align-items: center;
-  height: var(--select-item-height);
-  padding-left: var(--select-item-indicator-width);
-  padding-right: var(--select-item-indicator-width);
   color: var(--gray-a10);
-  user-select: none;
-  cursor: default;
-
-  :where(.rt-SelectItem) + & {
-    margin-top: var(--space-3);
-  }
 }
 
 /***************************************************************************************************
@@ -212,92 +183,6 @@
       & :where(.rt-SelectIcon) {
         width: var(--trigger-icon-size-4);
         height: var(--trigger-icon-size-4);
-      }
-    }
-  }
-}
-
-/***************************************************************************************************
- *                                                                                                 *
- * CONTENT SIZES                                                                                   *
- *                                                                                                 *
- ***************************************************************************************************/
-
-@breakpoints {
-  .rt-SelectContent {
-    &:where(.rt-r-size-1) {
-      --select-content-padding: var(--space-2);
-      --select-item-height: var(--control-height-1);
-      --select-item-indicator-width: calc(var(--space-6) / var(--select-item-indicator-width-factor));
-      --select-separator-margin-right: var(--space-3);
-      border-radius: var(--radius-surface-1);
-
-      & :where(.rt-SelectLabel) {
-        font-size: var(--font-size-1);
-        letter-spacing: var(--letter-spacing-1);
-        line-height: var(--line-height-1);
-      }
-      & :where(.rt-SelectItem) {
-        font-size: var(--font-size-1);
-        line-height: var(--line-height-1);
-        letter-spacing: var(--letter-spacing-1);
-        border-radius: var(--radius-1);
-      }
-      & :where(.rt-SelectItemIndicatorIcon) {
-        width: var(--select-indicator-icon-size-1);
-        height: var(--select-indicator-icon-size-1);
-      }
-    }
-    &:where(.rt-r-size-2, .rt-r-size-3, .rt-r-size-4) {
-      --select-content-padding: var(--space-3);
-      --select-item-indicator-width: var(--space-6);
-      --select-separator-margin-right: var(--space-4);
-      border-radius: var(--radius-surface-1);
-
-      & :where(.rt-SelectLabel) {
-        font-size: var(--font-size-2);
-        letter-spacing: var(--letter-spacing-2);
-        line-height: var(--line-height-2);
-      }
-      & :where(.rt-SelectItem) {
-        line-height: var(--line-height-2);
-        border-radius: var(--radius-2);
-      }
-    }
-    &:where(.rt-r-size-2) {
-      --select-item-height: var(--control-height-2);
-
-      & :where(.rt-SelectItem) {
-        font-size: var(--font-size-2);
-        letter-spacing: var(--letter-spacing-2);
-      }
-      & :where(.rt-SelectItemIndicatorIcon) {
-        width: var(--select-indicator-icon-size-2);
-        height: var(--select-indicator-icon-size-2);
-      }
-    }
-    &:where(.rt-r-size-3) {
-      --select-item-height: var(--control-height-3);
-
-      & :where(.rt-SelectItem) {
-        font-size: var(--font-size-3);
-        letter-spacing: var(--letter-spacing-3);
-      }
-      & :where(.rt-SelectItemIndicatorIcon) {
-        width: var(--select-indicator-icon-size-3);
-        height: var(--select-indicator-icon-size-3);
-      }
-    }
-    &:where(.rt-r-size-4) {
-      --select-item-height: var(--control-height-4);
-
-      & :where(.rt-SelectItem) {
-        font-size: var(--font-size-4);
-        letter-spacing: var(--letter-spacing-4);
-      }
-      & :where(.rt-SelectItemIndicatorIcon) {
-        width: var(--select-indicator-icon-size-4);
-        height: var(--select-indicator-icon-size-4);
       }
     }
   }

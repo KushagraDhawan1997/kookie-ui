@@ -42,7 +42,7 @@ const comboboxTriggerPropDefs = {
 };
 
 // The list is a menu, and menus stop at size 3.
-const contentSizes = ['1', '2', '3'] as const;
+const contentSizes = ['1', '2', '3', '4'] as const;
 
 /**
  * Styling props for the dropdown surface rendered by Combobox.Content.

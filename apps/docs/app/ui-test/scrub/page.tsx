@@ -44,7 +44,7 @@ export default function ScrubTestPage() {
           <Badge size="2" variant="soft" color="blue" style={{ alignSelf: 'flex-start' }}>
             New Feature
           </Badge>
-          <Heading size="7" weight="bold">
+          <Heading size="7" weight="semibold">
             TextField Scrubbing
           </Heading>
           <Text size="3" emphasis="medium">
@@ -269,7 +269,7 @@ export default function ScrubTestPage() {
                       scrubMax={useBounds ? maxBound : undefined}
                       onScrub={(delta) => setDemoValue((prev) => Math.round((prev + delta) * 100) / 100)}
                     >
-                      <Text size="2" weight="bold">
+                      <Text size="2" weight="semibold">
                         Value
                       </Text>
                     </TextField.Slot>
