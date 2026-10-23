@@ -6,7 +6,7 @@ const weights = ['regular', 'medium', 'semibold'] as const;
 const weightPropDef = {
   weight: {
     type: 'enum',
-    className: 'rt-r-weight',
+    className: 'kui-r-weight',
     values: weights,
     responsive: true,
   },

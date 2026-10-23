@@ -14,13 +14,13 @@ const MARGIN_PROPS: ReadonlyArray<{
   className: string;
   customProperties: `--${string}`[];
 }> = [
-  { key: 'm', className: 'rt-r-m', customProperties: ['--margin'] },
-  { key: 'mx', className: 'rt-r-mx', customProperties: ['--margin-left', '--margin-right'] },
-  { key: 'my', className: 'rt-r-my', customProperties: ['--margin-top', '--margin-bottom'] },
-  { key: 'mt', className: 'rt-r-mt', customProperties: ['--margin-top'] },
-  { key: 'mr', className: 'rt-r-mr', customProperties: ['--margin-right'] },
-  { key: 'mb', className: 'rt-r-mb', customProperties: ['--margin-bottom'] },
-  { key: 'ml', className: 'rt-r-ml', customProperties: ['--margin-left'] },
+  { key: 'm', className: 'kui-r-m', customProperties: ['--margin'] },
+  { key: 'mx', className: 'kui-r-mx', customProperties: ['--margin-left', '--margin-right'] },
+  { key: 'my', className: 'kui-r-my', customProperties: ['--margin-top', '--margin-bottom'] },
+  { key: 'mt', className: 'kui-r-mt', customProperties: ['--margin-top'] },
+  { key: 'mr', className: 'kui-r-mr', customProperties: ['--margin-right'] },
+  { key: 'mb', className: 'kui-r-mb', customProperties: ['--margin-bottom'] },
+  { key: 'ml', className: 'kui-r-ml', customProperties: ['--margin-left'] },
 ];
 
 export function getMarginStyles(props: MarginProps) {

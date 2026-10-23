@@ -123,7 +123,7 @@ describe('peek (deprecated)', () => {
         <Shell.Sidebar presentation="overlay">sidebar</Shell.Sidebar>
       </Shell.Root>,
     );
-    const inspector = q('.rt-ShellInspector');
+    const inspector = q('.kui-ShellInspector');
     const trigger = screen.getByRole('button', { name: 'inspector' });
 
     fireEvent.mouseEnter(trigger);
@@ -132,7 +132,7 @@ describe('peek (deprecated)', () => {
     expect(inspector.hasAttribute('data-peek')).toBe(false);
 
     fireEvent.mouseEnter(screen.getByRole('button', { name: 'sidebar' }));
-    expect(q('.rt-ShellSidebar').hasAttribute('data-peek')).toBe(false);
+    expect(q('.kui-ShellSidebar').hasAttribute('data-peek')).toBe(false);
 
     // Once open, there is nothing to preview.
     fireEvent.click(trigger);

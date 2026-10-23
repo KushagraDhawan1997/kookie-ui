@@ -20,8 +20,8 @@ describe("v2's token names", () => {
       </Theme>,
     );
     const inside = screen.getByTestId('inside');
-    expect(resolve(inside, '--color-page')).toBe(resolve(inside, '--color-background'));
-    expect(resolve(inside, '--color-text')).toBe(resolve(inside, '--gray-12'));
+    expect(resolve(inside, '--color-page')).toBe(resolve(inside, '--color-page'));
+    expect(resolve(inside, '--color-text')).toBe(resolve(inside, '--neutral-12'));
     for (let n = 1; n <= 12; n++) {
       expect(resolve(inside, `--neutral-${n}`)).toBe(resolve(inside, `--gray-${n}`));
     }

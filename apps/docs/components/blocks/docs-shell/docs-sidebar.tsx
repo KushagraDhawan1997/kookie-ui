@@ -55,7 +55,7 @@ export function DocsSidebar({ navigation, logo, headerActions, footer, pathname 
       <Sidebar.MenuButton asChild isActive={pathname === item.href} badge={withBadge ? item.badge : undefined}>
         <LinkComponent href={item.href}>
           {renderIcon(item.icon)}
-          <span className="rt-SidebarMenuLabel">{item.title}</span>
+          <span className="kui-SidebarMenuLabel">{item.title}</span>
         </LinkComponent>
       </Sidebar.MenuButton>
     </Sidebar.MenuItem>
@@ -77,7 +77,7 @@ export function DocsSidebar({ navigation, logo, headerActions, footer, pathname 
               <Sidebar.MenuButton asChild key={subItem.href} isActive={pathname === subItem.href}>
                 <LinkComponent href={subItem.href}>
                   {renderIcon(subItem.icon)}
-                  <span className="rt-SidebarMenuLabel">{subItem.title}</span>
+                  <span className="kui-SidebarMenuLabel">{subItem.title}</span>
                 </LinkComponent>
               </Sidebar.MenuButton>
             ))}

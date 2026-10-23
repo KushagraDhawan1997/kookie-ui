@@ -2,21 +2,21 @@
  * MessageScroller — the transcript's layout. The behaviour is shadcn/ui's primitive.
  */
 
-.rt-MessageScrollerRoot {
+.kui-MessageScrollerRoot {
   position: relative;
   display: flex;
   flex-direction: column;
   min-height: 0;
 }
 
-.rt-MessageScrollerViewport {
+.kui-MessageScrollerViewport {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
   scrollbar-width: thin;
-  scrollbar-color: var(--gray-a6) transparent;
+  scrollbar-color: var(--neutral-a6) transparent;
   outline: none;
 
   &:where(:focus-visible) {
@@ -25,20 +25,20 @@
   }
 }
 
-.rt-MessageScrollerContent {
+.kui-MessageScrollerContent {
   display: flex;
   flex-direction: column;
   min-height: 100%;
 }
 
-.rt-MessageScrollerItem {
+.kui-MessageScrollerItem {
   min-width: 0;
 }
 
 /* The jump button floats over the bottom edge of the viewport, centred by its margins, never by a
    transform: a button's own press and hover motion may use `translate`, and a centring transform
    would be replaced by it. */
-.rt-MessageScrollerButton {
+.kui-MessageScrollerButton {
   position: absolute;
   bottom: var(--space-4);
   left: 0;
@@ -48,7 +48,7 @@
 }
 
 /* Asleep while the reader is at the end: the primitive makes it inert; this makes it unseen. */
-.rt-MessageScrollerButton:where([data-active='false']) {
+.kui-MessageScrollerButton:where([data-active='false']) {
   opacity: 0;
   pointer-events: none;
 }

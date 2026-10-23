@@ -55,7 +55,7 @@ describe('ContextMenu', () => {
     });
 
     const menu = await openAt();
-    expect(menu).toHaveClass('rt-r-size-1', 'rt-variant-soft');
+    expect(menu).toHaveClass('kui-r-size-1', 'kui-variant-soft');
     expect(menu).toHaveAttribute('data-accent-color', 'red');
     expect(menu).not.toHaveAttribute('data-material');
     expect(menu).not.toHaveAttribute('submenubehavior');
@@ -82,7 +82,7 @@ describe('ContextMenu', () => {
     await openAt();
     const item = screen.getByRole('menuitem', { name: 'Command palette' });
     expect(item).toHaveAttribute('aria-keyshortcuts', 'Meta+Shift+P');
-    expect(item.querySelector('.rt-BaseMenuShortcut')).toHaveAttribute('aria-hidden', 'true');
+    expect(item.querySelector('.kui-BaseMenuShortcut')).toHaveAttribute('aria-hidden', 'true');
     expect(screen.getByRole('menuitemcheckbox', { name: 'Grid' })).toHaveAttribute('aria-keyshortcuts', 'Alt+G');
   });
 
@@ -104,10 +104,10 @@ describe('ContextMenu', () => {
 
     const checkbox = screen.getByRole('menuitemcheckbox', { name: 'Show rulers' });
     expect(checkbox).toHaveAttribute('aria-checked', 'true');
-    expect(checkbox.querySelector('.rt-BaseMenuItemIndicatorIcon')).not.toBeNull();
+    expect(checkbox.querySelector('.kui-BaseMenuItemIndicatorIcon')).not.toBeNull();
     const fit = screen.getByRole('menuitemradio', { name: 'Fit' });
     expect(fit).toHaveAttribute('aria-checked', 'true');
-    expect(fit.querySelector('.rt-BaseMenuItemIndicatorIcon')).not.toBeNull();
+    expect(fit.querySelector('.kui-BaseMenuItemIndicatorIcon')).not.toBeNull();
 
     await user.click(screen.getByRole('menuitemradio', { name: 'Fill' }));
     expect(onValueChange).toHaveBeenCalledWith('fill');
@@ -128,7 +128,7 @@ describe('ContextMenu', () => {
     screen.getByRole('menuitem', { name: 'Arrange' }).focus();
     await user.keyboard('{ArrowRight}');
     const sub = await screen.findByTestId('sub');
-    expect(sub).toHaveClass('rt-r-size-1', 'rt-variant-soft');
+    expect(sub).toHaveClass('kui-r-size-1', 'kui-variant-soft');
     expect(sub).toHaveAttribute('data-accent-color', 'red');
     expect(sub).not.toHaveAttribute('color');
     expect(screen.getByRole('menuitem', { name: 'Bring to front' })).toBeInTheDocument();
@@ -141,8 +141,8 @@ describe('ContextMenu', () => {
     });
 
     const menu = await openAt();
-    expect(menu.querySelector('.rt-ScrollAreaRoot')).toBeNull();
-    expect(menu.querySelector('.rt-virtualized')).not.toBeNull();
+    expect(menu.querySelector('.kui-ScrollAreaRoot')).toBeNull();
+    expect(menu.querySelector('.kui-virtualized')).not.toBeNull();
     expect(screen.getAllByRole('menu')).toHaveLength(1);
     expect(propWarnings(error)).toEqual([]);
   });

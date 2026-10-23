@@ -20,7 +20,7 @@ const marginPropDefs = {
     type: 'enum | string',
     values: marginValues,
     responsive: true,
-    className: 'rt-r-m',
+    className: 'kui-r-m',
     customProperties: ['--m'],
   },
   /**
@@ -40,7 +40,7 @@ const marginPropDefs = {
     type: 'enum | string',
     values: marginValues,
     responsive: true,
-    className: 'rt-r-mx',
+    className: 'kui-r-mx',
     customProperties: ['--ml', '--mr'],
   },
   /**
@@ -60,7 +60,7 @@ const marginPropDefs = {
     type: 'enum | string',
     values: marginValues,
     responsive: true,
-    className: 'rt-r-my',
+    className: 'kui-r-my',
     customProperties: ['--mt', '--mb'],
   },
   /**
@@ -79,7 +79,7 @@ const marginPropDefs = {
     type: 'enum | string',
     values: marginValues,
     responsive: true,
-    className: 'rt-r-mt',
+    className: 'kui-r-mt',
     customProperties: ['--mt'],
   },
   /**
@@ -98,7 +98,7 @@ const marginPropDefs = {
     type: 'enum | string',
     values: marginValues,
     responsive: true,
-    className: 'rt-r-mr',
+    className: 'kui-r-mr',
     customProperties: ['--mr'],
   },
   /**
@@ -117,7 +117,7 @@ const marginPropDefs = {
     type: 'enum | string',
     values: marginValues,
     responsive: true,
-    className: 'rt-r-mb',
+    className: 'kui-r-mb',
     customProperties: ['--mb'],
   },
   /**
@@ -136,7 +136,7 @@ const marginPropDefs = {
     type: 'enum | string',
     values: marginValues,
     responsive: true,
-    className: 'rt-r-ml',
+    className: 'kui-r-ml',
     customProperties: ['--ml'],
   },
 } satisfies {

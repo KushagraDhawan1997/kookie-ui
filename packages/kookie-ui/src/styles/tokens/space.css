@@ -8,7 +8,7 @@
  *    never a palette step: a surface pads --surface-p-N, a panel --panel-p-N, a control
  *    --control-px-N.
  */
-.radix-themes {
+.kui-theme {
   --scale: 1;
 
   /* 1. Palette */

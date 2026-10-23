@@ -153,7 +153,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
       {...withoutRemovedPaneProps(domProps)}
       id={pane.id}
       ref={composedRef}
-      className={classNames('rt-ShellPane', 'rt-ShellSidebar', className)}
+      className={classNames('kui-ShellPane', 'kui-ShellSidebar', className)}
       {...paneAttributes(pane, attributes)}
       data-inset={inset || undefined}
       tabIndex={pane.overlaying ? -1 : domProps.tabIndex}
@@ -167,7 +167,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
         } as CSSPropertiesWithVars
       }
     >
-      <div className="rt-ShellSidebarContent">
+      <div className="kui-ShellSidebarContent">
         <PaneChromeScope>{content}</PaneChromeScope>
       </div>
       {handle}

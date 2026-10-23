@@ -33,8 +33,8 @@ function Transcript({ count }: { count: number }) {
   );
 }
 
-const viewport = () => document.querySelector<HTMLElement>('.rt-MessageScrollerViewport')!;
-const button = () => document.querySelector<HTMLElement>('.rt-MessageScrollerButton')!;
+const viewport = () => document.querySelector<HTMLElement>('.kui-MessageScrollerViewport')!;
+const button = () => document.querySelector<HTMLElement>('.kui-MessageScrollerButton')!;
 const distanceFromEnd = (el: HTMLElement) => el.scrollHeight - el.clientHeight - el.scrollTop;
 
 describe('MessageScroller in a browser', () => {
@@ -91,7 +91,7 @@ describe('MessageScroller in a browser', () => {
   it('centres the jump button by its margins, not a transform', async () => {
     render(<Transcript count={30} />);
     await settle();
-    const root = document.querySelector<HTMLElement>('.rt-MessageScrollerRoot')!.getBoundingClientRect();
+    const root = document.querySelector<HTMLElement>('.kui-MessageScrollerRoot')!.getBoundingClientRect();
     const b = button().getBoundingClientRect();
     expect(Math.abs(b.left + b.width / 2 - (root.left + root.width / 2))).toBeLessThan(1);
     expect(b.width).toBeCloseTo(b.height, 0);

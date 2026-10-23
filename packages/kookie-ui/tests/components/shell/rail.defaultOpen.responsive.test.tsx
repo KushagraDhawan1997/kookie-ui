@@ -16,31 +16,31 @@ function App({ defaultOpen }: { defaultOpen?: boolean | { initial?: boolean; xs?
 describe('Rail defaultOpen (responsive)', () => {
   it('defaults to true (open) when no defaultOpen is provided', () => {
     renderWithProviders(<App />);
-    const left = document.querySelector('.rt-ShellRail') as HTMLElement;
+    const left = document.querySelector('.kui-ShellRail') as HTMLElement;
     expect(left).toHaveAttribute('data-mode', 'expanded');
   });
 
   it('respects defaultOpen={false} to start collapsed', () => {
     renderWithProviders(<App defaultOpen={false} />);
-    const left = document.querySelector('.rt-ShellRail') as HTMLElement;
+    const left = document.querySelector('.kui-ShellRail') as HTMLElement;
     expect(left).toHaveAttribute('data-mode', 'collapsed');
   });
 
   it('respects defaultOpen={true} to start expanded', () => {
     renderWithProviders(<App defaultOpen={true} />);
-    const left = document.querySelector('.rt-ShellRail') as HTMLElement;
+    const left = document.querySelector('.kui-ShellRail') as HTMLElement;
     expect(left).toHaveAttribute('data-mode', 'expanded');
   });
 
   it('resolves responsive map at initial breakpoint (initial: true → expanded)', () => {
     renderWithProviders(<App defaultOpen={{ initial: true, lg: false }} />);
-    const left = document.querySelector('.rt-ShellRail') as HTMLElement;
+    const left = document.querySelector('.kui-ShellRail') as HTMLElement;
     expect(left).toHaveAttribute('data-mode', 'expanded');
   });
 
   it('resolves responsive map at initial breakpoint (initial: false → collapsed)', () => {
     renderWithProviders(<App defaultOpen={{ initial: false, lg: true }} />);
-    const left = document.querySelector('.rt-ShellRail') as HTMLElement;
+    const left = document.querySelector('.kui-ShellRail') as HTMLElement;
     expect(left).toHaveAttribute('data-mode', 'collapsed');
   });
 });

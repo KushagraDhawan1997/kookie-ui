@@ -1,5 +1,5 @@
 @import './_internal/base-dialog.css';
 
-.rt-DialogContent {
+.kui-DialogContent {
   max-width: var(--overlay-w);
 }

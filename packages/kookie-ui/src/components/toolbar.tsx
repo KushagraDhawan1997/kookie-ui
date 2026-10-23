@@ -104,7 +104,7 @@ const ToolbarRoot = React.forwardRef<HTMLDivElement, ToolbarProps>((props, forwa
       ref={forwardedRef}
       orientation={orientation}
       data-backdrop={backdrop || undefined}
-      className={classNames('rt-Toolbar', className)}
+      className={classNames('kui-Toolbar', className)}
     >
       <ToolbarContext.Provider value={context}>{children}</ToolbarContext.Provider>
     </ToolbarPrimitive.Root>
@@ -137,7 +137,7 @@ const ToolbarGroup = React.forwardRef<HTMLDivElement, ToolbarGroupProps>(
         data-disabled={disabled || undefined}
         {...props}
         ref={forwardedRef}
-        className={classNames('rt-ToolbarGroup', className)}
+        className={classNames('kui-ToolbarGroup', className)}
       >
         <ToolbarGroupContext.Provider value={group}>{children}</ToolbarGroupContext.Provider>
       </div>
@@ -229,7 +229,7 @@ const ToolbarSeparator = React.forwardRef<HTMLDivElement, ToolbarSeparatorProps>
       <ToolbarPrimitive.Separator
         {...props}
         ref={forwardedRef}
-        className={classNames('rt-ToolbarSeparator', className)}
+        className={classNames('kui-ToolbarSeparator', className)}
       />
     );
   },
@@ -270,7 +270,7 @@ const ToolbarTitle = React.forwardRef<HTMLSpanElement, ToolbarTitleProps>(
         truncate
         id={id}
         style={style}
-        className={classNames('rt-ToolbarTitle', className)}
+        className={classNames('kui-ToolbarTitle', className)}
       >
         {children}
       </Text>

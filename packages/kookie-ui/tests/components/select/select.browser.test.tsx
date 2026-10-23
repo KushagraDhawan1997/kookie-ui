@@ -35,7 +35,7 @@ describe('Select and Combobox triggers on the control ladder', () => {
           </Combobox.Root>
         </Theme>,
       );
-      const [plain, ghost, full, combobox] = container.querySelectorAll<HTMLElement>('.rt-SelectTrigger');
+      const [plain, ghost, full, combobox] = container.querySelectorAll<HTMLElement>('.kui-SelectTrigger');
       for (const el of [plain, ghost, full, combobox]) {
         expect(el.getBoundingClientRect().height).toBe(heights[size]);
       }
@@ -55,7 +55,7 @@ describe('Select and Combobox triggers on the control ladder', () => {
         <Trigger size="2" variant="surface" error />
       </Theme>,
     );
-    const [plain, invalid] = container.querySelectorAll<HTMLElement>('.rt-SelectTrigger');
+    const [plain, invalid] = container.querySelectorAll<HTMLElement>('.kui-SelectTrigger');
     expect(invalid).toHaveAttribute('aria-invalid', 'true');
     expect(getComputedStyle(invalid).boxShadow).not.toBe(getComputedStyle(plain).boxShadow);
     expect(getComputedStyle(invalid).backgroundColor).toBe(getComputedStyle(plain).backgroundColor);
@@ -74,12 +74,12 @@ describe('Select and Combobox triggers on the control ladder', () => {
         ))}
       </Theme>,
     );
-    for (const el of container.querySelectorAll<HTMLElement>('.rt-SelectTrigger')) {
+    for (const el of container.querySelectorAll<HTMLElement>('.kui-SelectTrigger')) {
       const style = getComputedStyle(el);
       expect(style.opacity).toBe('1');
       expect(style.pointerEvents).not.toBe('none');
       expect(style.cursor).toBe('default');
-      const inner = el.querySelector<HTMLElement>('.rt-SelectTriggerInner')!;
+      const inner = el.querySelector<HTMLElement>('.kui-SelectTriggerInner')!;
       expect(getComputedStyle(inner).opacity).toBe('1');
     }
   });

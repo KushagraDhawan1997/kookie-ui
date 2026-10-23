@@ -47,11 +47,11 @@ const Checkbox = React.forwardRef<CheckboxElement, CheckboxProps>((ownProps, for
       onCheckedChange={setChecked}
       asChild={false}
       ref={forwardedRef}
-      className={classNames('rt-reset', 'rt-BaseCheckboxRoot', 'rt-CheckboxRoot', className)}
+      className={classNames('kui-reset', 'kui-BaseCheckboxRoot', 'kui-CheckboxRoot', className)}
     >
       <CheckboxPrimitive.Indicator
         asChild
-        className="rt-BaseCheckboxIndicator rt-CheckboxIndicator"
+        className="kui-BaseCheckboxIndicator kui-CheckboxIndicator"
       >
         {checked === 'indeterminate' ? <ThickDividerHorizontalIcon /> : <ThickCheckIcon />}
       </CheckboxPrimitive.Indicator>

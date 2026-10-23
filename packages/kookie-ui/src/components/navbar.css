@@ -7,30 +7,30 @@
  */
 
 /* Root container */
-.rt-NavbarRoot {
+.kui-NavbarRoot {
   width: 100%;
   z-index: 50;
-  background-color: var(--color-background);
+  background-color: var(--color-page);
 }
 
-.rt-NavbarRoot[data-position='fixed'] {
+.kui-NavbarRoot[data-position='fixed'] {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
 }
 
-.rt-NavbarRoot[data-position='sticky'] {
+.kui-NavbarRoot[data-position='sticky'] {
   position: sticky;
   top: 0;
 }
 
-.rt-NavbarRoot[data-position='static'] {
+.kui-NavbarRoot[data-position='static'] {
   position: static;
 }
 
 /* Container - grid layout for true centering */
-.rt-NavbarContainer {
+.kui-NavbarContainer {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
@@ -39,36 +39,36 @@
 }
 
 /* Size variants - padding based */
-.rt-NavbarRoot[data-size='1'] .rt-NavbarContainer {
+.kui-NavbarRoot[data-size='1'] .kui-NavbarContainer {
   padding: var(--space-3) var(--space-4);
 }
 
-.rt-NavbarRoot[data-size='2'] .rt-NavbarContainer {
+.kui-NavbarRoot[data-size='2'] .kui-NavbarContainer {
   padding: var(--space-4) var(--space-5);
 }
 
-.rt-NavbarRoot[data-size='3'] .rt-NavbarContainer {
+.kui-NavbarRoot[data-size='3'] .kui-NavbarContainer {
   padding: var(--space-5) var(--space-6);
 }
 
-.rt-NavbarRoot[data-size='4'] .rt-NavbarContainer {
+.kui-NavbarRoot[data-size='4'] .kui-NavbarContainer {
   padding: var(--space-6) var(--space-7);
 }
 
 /* Slot overflow handling */
-.rt-NavbarLogo,
-.rt-NavbarActions {
+.kui-NavbarLogo,
+.kui-NavbarActions {
   min-width: 0;
 }
 
 /* Ensure Actions always stays in the right column */
-.rt-NavbarActions {
+.kui-NavbarActions {
   grid-column: 3;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .rt-NavbarContainer {
+  .kui-NavbarContainer {
     gap: var(--space-4);
   }
 }

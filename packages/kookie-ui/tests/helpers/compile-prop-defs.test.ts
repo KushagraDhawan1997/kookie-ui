@@ -112,13 +112,13 @@ describe('caching does not leak between components', () => {
   test('two prop def sets sharing a record keep their own results', () => {
     const shared: Defs = { size: { type: 'enum', values: ['1', '2'], default: '1' } as PropDef };
     const withVariant: Defs = {
-      variant: { type: 'enum', values: ['solid'], className: 'rt-variant' } as PropDef,
+      variant: { type: 'enum', values: ['solid'], className: 'kui-variant' } as PropDef,
     };
 
     const a = extractProps({ variant: 'solid' } as never, shared, withVariant) as Record<string, unknown>;
     const b = extractProps({ variant: 'solid' } as never, shared) as Record<string, unknown>;
 
-    expect(a.className).toBe('rt-variant-solid');
+    expect(a.className).toBe('kui-variant-solid');
     // `variant` is not a prop def here, so it passes straight through.
     expect(b.className).toBe('');
     expect(b.variant).toBe('solid');

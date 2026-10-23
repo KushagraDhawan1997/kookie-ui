@@ -15,7 +15,7 @@ function measure(size: '1' | '2' | '3' | '4', radius?: 'none' | 'medium' | 'full
       </Notice>
     </Theme>,
   );
-  const root = container.querySelector<HTMLElement>('.rt-NoticeRoot')!;
+  const root = container.querySelector<HTMLElement>('.kui-NoticeRoot')!;
   const out = {
     pad: parseFloat(getComputedStyle(root).paddingTop),
     gap: parseFloat(getComputedStyle(root).columnGap),

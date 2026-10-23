@@ -23,7 +23,7 @@ function Glyph() {
 
 // Distance from the root's outer left edge to where the input's text starts.
 function textStart(root: HTMLElement) {
-  const input = root.querySelector<HTMLElement>('.rt-TextFieldInput')!;
+  const input = root.querySelector<HTMLElement>('.kui-TextFieldInput')!;
   const style = getComputedStyle(input);
   return rect(input).left - rect(root).left + parseFloat(style.textIndent) + parseFloat(style.paddingLeft);
 }
@@ -39,7 +39,7 @@ describe('TextField on the control ladder', () => {
             ))}
           </Theme>,
         );
-        for (const root of container.querySelectorAll('.rt-TextFieldRoot')) {
+        for (const root of container.querySelectorAll('.kui-TextFieldRoot')) {
           expect(rect(root).height).toBe(heights[size]);
         }
       });
@@ -51,7 +51,7 @@ describe('TextField on the control ladder', () => {
             <TextField.Root size={size} variant="outline" radius="full" aria-label="pill" />
           </Theme>,
         );
-        const [plain, full] = container.querySelectorAll<HTMLElement>('.rt-TextFieldRoot');
+        const [plain, full] = container.querySelectorAll<HTMLElement>('.kui-TextFieldRoot');
         expect(textStart(plain)).toBeCloseTo(px[size], 1);
         expect(textStart(full)).toBeCloseTo(pill[size], 1);
       });
@@ -66,7 +66,7 @@ describe('TextField on the control ladder', () => {
             </TextField.Root>
           </Theme>,
         );
-        const root = container.querySelector<HTMLElement>('.rt-TextFieldRoot')!;
+        const root = container.querySelector<HTMLElement>('.kui-TextFieldRoot')!;
         const svg = root.querySelector('svg')!;
         expect(rect(svg).width).toBe(icon[size]);
         expect(rect(svg).height).toBe(icon[size]);
@@ -87,7 +87,7 @@ describe('TextField on the control ladder', () => {
             </TextField.Root>
           </Theme>,
         );
-        const root = container.querySelector<HTMLElement>('.rt-TextFieldRoot')!;
+        const root = container.querySelector<HTMLElement>('.kui-TextFieldRoot')!;
         const button = root.querySelector<HTMLElement>('[data-icon-only]')!;
         const r = rect(root);
         const b = rect(button);
@@ -112,7 +112,7 @@ describe('TextField on the control ladder', () => {
             </TextField.Root>
           </Theme>,
         );
-        const root = container.querySelector<HTMLElement>('.rt-TextFieldRoot')!;
+        const root = container.querySelector<HTMLElement>('.kui-TextFieldRoot')!;
         const button = root.querySelector<HTMLElement>('[data-icon-only]')!;
         const r = rect(root);
         const b = rect(button);
@@ -130,7 +130,7 @@ describe('TextField on the control ladder', () => {
         <TextField.Root aria-label="default-radius" variant="outline" />
       </Theme>,
     );
-    const [root, outline] = container.querySelectorAll<HTMLElement>('.rt-TextFieldRoot');
+    const [root, outline] = container.querySelectorAll<HTMLElement>('.kui-TextFieldRoot');
     expect(rect(root).height).toBe(40);
     // The Theme radius defaults to full, so a bare edge takes the pill padding.
     expect(textStart(outline)).toBeCloseTo(17, 1);
@@ -146,7 +146,7 @@ describe('TextField states', () => {
         <TextField.Root variant="outline" aria-invalid aria-label="c" />
       </Theme>,
     );
-    const [plain, viaError, viaAria] = container.querySelectorAll<HTMLElement>('.rt-TextFieldRoot');
+    const [plain, viaError, viaAria] = container.querySelectorAll<HTMLElement>('.kui-TextFieldRoot');
     const shadow = (el: HTMLElement) => getComputedStyle(el).boxShadow;
     expect(shadow(viaError)).toBe(shadow(viaAria));
     expect(shadow(viaError)).not.toBe(shadow(plain));
@@ -161,7 +161,7 @@ describe('TextField states', () => {
         <TextField.Root variant="soft" error aria-label="b" />
       </Theme>,
     );
-    const [plain, invalid] = container.querySelectorAll<HTMLElement>('.rt-TextFieldRoot');
+    const [plain, invalid] = container.querySelectorAll<HTMLElement>('.kui-TextFieldRoot');
     expect(getComputedStyle(invalid).backgroundColor).toBe(getComputedStyle(plain).backgroundColor);
     expect(getComputedStyle(invalid).boxShadow).not.toBe(getComputedStyle(plain).boxShadow);
   });
@@ -172,7 +172,7 @@ describe('TextField states', () => {
         <TextField.Root variant="outline" disabled placeholder="Name" aria-label="name" />
       </Theme>,
     );
-    const root = container.querySelector<HTMLElement>('.rt-TextFieldRoot')!;
+    const root = container.querySelector<HTMLElement>('.kui-TextFieldRoot')!;
     const input = root.querySelector<HTMLInputElement>('input')!;
     expect(getComputedStyle(root).opacity).toBe('1');
     expect(getComputedStyle(input).opacity).toBe('1');

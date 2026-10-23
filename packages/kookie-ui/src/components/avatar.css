@@ -16,7 +16,7 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-AvatarRoot {
+.kui-AvatarRoot {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -32,9 +32,9 @@
 
 /* Interactive states for avatars used as buttons/links */
 /* stylelint-disable selector-max-type */
-.rt-AvatarRoot:where(button),
-.rt-AvatarRoot:where(a),
-.rt-AvatarRoot:where([role='button']) {
+.kui-AvatarRoot:where(button),
+.kui-AvatarRoot:where(a),
+.kui-AvatarRoot:where([role='button']) {
   cursor: pointer;
 
   &:where(:focus-visible) {
@@ -55,23 +55,23 @@
 
   /* Apply subtle filters to avatars that display images on interaction */
   @media (hover: hover) {
-    &:where(:hover:not(:disabled, [data-disabled])) :where(.rt-AvatarImage) {
+    &:where(:hover:not(:disabled, [data-disabled])) :where(.kui-AvatarImage) {
       filter: var(--avatar-image-hover-filter);
     }
   }
 
-  &:where(:active:not(:disabled, [data-disabled])) :where(.rt-AvatarImage) {
+  &:where(:active:not(:disabled, [data-disabled])) :where(.kui-AvatarImage) {
     filter: var(--avatar-image-active-filter);
   }
 
   /* Disabled state for avatar images */
-  &:where(:disabled, [data-disabled]) :where(.rt-AvatarImage) {
+  &:where(:disabled, [data-disabled]) :where(.kui-AvatarImage) {
     filter: grayscale(1) opacity(0.6);
   }
 }
 /* stylelint-enable selector-max-type */
 
-.rt-AvatarImage {
+.kui-AvatarImage {
   width: 100%;
   height: 100%;
   object-fit: var(--avatar-object-fit, cover);
@@ -79,23 +79,23 @@
 }
 
 /* Object-fit variants */
-.rt-AvatarRoot:where(.rt-r-fit-cover) {
+.kui-AvatarRoot:where(.kui-r-fit-cover) {
   --avatar-object-fit: cover;
 }
-.rt-AvatarRoot:where(.rt-r-fit-contain) {
+.kui-AvatarRoot:where(.kui-r-fit-contain) {
   --avatar-object-fit: contain;
 }
-.rt-AvatarRoot:where(.rt-r-fit-fill) {
+.kui-AvatarRoot:where(.kui-r-fit-fill) {
   --avatar-object-fit: fill;
 }
-.rt-AvatarRoot:where(.rt-r-fit-scale-down) {
+.kui-AvatarRoot:where(.kui-r-fit-scale-down) {
   --avatar-object-fit: scale-down;
 }
-.rt-AvatarRoot:where(.rt-r-fit-none) {
+.kui-AvatarRoot:where(.kui-r-fit-none) {
   --avatar-object-fit: none;
 }
 
-.rt-AvatarFallback {
+.kui-AvatarFallback {
   font-family: var(--default-font-family);
   font-weight: var(--font-weight-medium);
   font-style: normal;
@@ -115,13 +115,13 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-AvatarFallback {
+.kui-AvatarFallback {
   text-transform: uppercase;
 
-  &:where(.rt-one-letter) {
+  &:where(.kui-one-letter) {
     font-size: var(--avatar-fallback-one-letter-font-size);
   }
-  &:where(.rt-two-letters) {
+  &:where(.kui-two-letters) {
     /* prettier-ignore */
     font-size: var(--avatar-fallback-two-letters-font-size, var(--avatar-fallback-one-letter-font-size));
   }
@@ -129,64 +129,64 @@
 
 /* Box ladder is v2's: sizes 1-4 are the control heights, 5-9 are 56/64/80/96/128. */
 @breakpoints {
-  .rt-AvatarRoot {
-    &:where(.rt-r-size-1) {
+  .kui-AvatarRoot {
+    &:where(.kui-r-size-1) {
       --avatar-size: var(--control-height-1);
       --avatar-fallback-one-letter-font-size: var(--font-size-2);
       --avatar-fallback-two-letters-font-size: var(--font-size-1);
       border-radius: var(--radius-control-1);
       letter-spacing: var(--letter-spacing-1);
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       --avatar-size: var(--control-height-2);
       --avatar-fallback-one-letter-font-size: var(--font-size-3);
       --avatar-fallback-two-letters-font-size: var(--font-size-2);
       border-radius: var(--radius-control-2);
       letter-spacing: var(--letter-spacing-2);
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       --avatar-size: var(--control-height-3);
       --avatar-fallback-one-letter-font-size: var(--font-size-4);
       --avatar-fallback-two-letters-font-size: var(--font-size-3);
       border-radius: var(--radius-control-3);
       letter-spacing: var(--letter-spacing-3);
     }
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       --avatar-size: var(--control-height-4);
       --avatar-fallback-one-letter-font-size: var(--font-size-5);
       --avatar-fallback-two-letters-font-size: var(--font-size-4);
       border-radius: max(var(--radius-control-4), var(--radius-full));
       letter-spacing: var(--letter-spacing-4);
     }
-    &:where(.rt-r-size-5) {
+    &:where(.kui-r-size-5) {
       --avatar-size: calc(56px * var(--scale));
       --avatar-fallback-one-letter-font-size: var(--font-size-6);
       --avatar-fallback-two-letters-font-size: var(--font-size-5);
       border-radius: max(var(--radius-control-4), var(--radius-full));
       letter-spacing: var(--letter-spacing-5);
     }
-    &:where(.rt-r-size-6) {
+    &:where(.kui-r-size-6) {
       --avatar-size: var(--space-10);
       --avatar-fallback-one-letter-font-size: var(--font-size-7);
       --avatar-fallback-two-letters-font-size: var(--font-size-6);
       border-radius: max(var(--radius-control-4), var(--radius-full));
       letter-spacing: var(--letter-spacing-6);
     }
-    &:where(.rt-r-size-7) {
+    &:where(.kui-r-size-7) {
       --avatar-size: calc(80px * var(--scale));
       --avatar-fallback-one-letter-font-size: var(--font-size-7);
       --avatar-fallback-two-letters-font-size: var(--font-size-6);
       border-radius: max(var(--radius-control-4), var(--radius-full));
       letter-spacing: var(--letter-spacing-7);
     }
-    &:where(.rt-r-size-8) {
+    &:where(.kui-r-size-8) {
       --avatar-size: calc(96px * var(--scale));
       --avatar-fallback-one-letter-font-size: var(--font-size-7);
       --avatar-fallback-two-letters-font-size: var(--font-size-7);
       border-radius: max(var(--radius-control-4), var(--radius-full));
       letter-spacing: var(--letter-spacing-7);
     }
-    &:where(.rt-r-size-9) {
+    &:where(.kui-r-size-9) {
       --avatar-size: var(--space-12);
       --avatar-fallback-one-letter-font-size: var(--font-size-9);
       --avatar-fallback-two-letters-font-size: var(--font-size-7);
@@ -206,7 +206,7 @@
  ***************************************************************************************************/
 
 /* Soft variant palette */
-.rt-AvatarRoot:where(.rt-variant-soft) {
+.kui-AvatarRoot:where(.kui-variant-soft) {
   --v-color: var(--accent-ink);
   --v-bg: var(--accent-3);
   --v-bg-a: var(--accent-a3);
@@ -214,11 +214,11 @@
   --v-bg-hover-a: var(--accent-a4);
   --v-bg-active: var(--accent-5);
   --v-bg-active-a: var(--accent-a5);
-  --v-bg-disabled: var(--gray-a3);
+  --v-bg-disabled: var(--neutral-a3);
 }
 
 /* Outline variant palette */
-.rt-AvatarRoot:where(.rt-variant-outline) {
+.kui-AvatarRoot:where(.kui-variant-outline) {
   --v-color: var(--accent-ink);
   --v-bg: transparent;
   --v-bg-a: transparent;
@@ -233,11 +233,11 @@
   --v-border-hover-a: var(--accent-a7);
   --v-border-active: var(--accent-8);
   --v-border-active-a: var(--accent-a8);
-  --v-border-disabled: var(--gray-a7);
+  --v-border-disabled: var(--neutral-a7);
 }
 
 /* Surface variant palette */
-.rt-AvatarRoot:where(.rt-variant-surface) {
+.kui-AvatarRoot:where(.kui-variant-surface) {
   --v-color: var(--accent-ink);
   --v-bg: var(--accent-2);
   --v-bg-a: var(--accent-a2);
@@ -245,14 +245,14 @@
   --v-bg-hover-a: var(--accent-a3);
   --v-bg-active: var(--accent-4);
   --v-bg-active-a: var(--accent-a4);
-  --v-bg-disabled: var(--gray-a2);
+  --v-bg-disabled: var(--neutral-a2);
   --v-border: var(--accent-6);
   --v-border-a: var(--accent-a6);
   --v-border-hover: var(--accent-7);
   --v-border-hover-a: var(--accent-a7);
   --v-border-active: var(--accent-8);
   --v-border-active-a: var(--accent-a8);
-  --v-border-disabled: var(--gray-a6);
+  --v-border-disabled: var(--neutral-a6);
 }
 
 /***************************************************************************************************
@@ -265,38 +265,38 @@
  ***************************************************************************************************/
 
 /* Rest state for fallback */
-.rt-AvatarRoot:where(.rt-variant-soft, .rt-variant-outline, .rt-variant-surface) {
-  & :where(.rt-AvatarFallback) {
+.kui-AvatarRoot:where(.kui-variant-soft, .kui-variant-outline, .kui-variant-surface) {
+  & :where(.kui-AvatarFallback) {
     color: var(--v-color);
     background-color: var(--v-bg);
   }
 
-  &:where([data-disabled]) :where(.rt-AvatarFallback) {
-    color: var(--gray-a8);
-    background-color: var(--v-bg-disabled, var(--gray-a3));
+  &:where([data-disabled]) :where(.kui-AvatarFallback) {
+    color: var(--neutral-a8);
+    background-color: var(--v-bg-disabled, var(--neutral-a3));
   }
 }
 
 /* Border variants: outline and surface */
-.rt-AvatarRoot:where(.rt-variant-outline, .rt-variant-surface) {
-  & :where(.rt-AvatarFallback) {
+.kui-AvatarRoot:where(.kui-variant-outline, .kui-variant-surface) {
+  & :where(.kui-AvatarFallback) {
     box-shadow: inset 0 0 0 1px var(--v-border);
   }
 
-  &:where([data-disabled]) :where(.rt-AvatarFallback) {
+  &:where([data-disabled]) :where(.kui-AvatarFallback) {
     box-shadow: inset 0 0 0 1px var(--v-border-disabled);
   }
 }
 
 /* Shared interactive states for soft, outline, surface */
 /* stylelint-disable selector-max-type */
-.rt-AvatarRoot:where(button, a, [role='button']):where(.rt-variant-soft, .rt-variant-outline, .rt-variant-surface) {
+.kui-AvatarRoot:where(button, a, [role='button']):where(.kui-variant-soft, .kui-variant-outline, .kui-variant-surface) {
   /* Hover state */
   @media (hover: hover) {
     &:where(:hover:not(:disabled, [data-disabled])) {
       background-color: var(--v-bg-hover);
 
-      & :where(.rt-AvatarFallback) {
+      & :where(.kui-AvatarFallback) {
         background-color: inherit;
       }
     }
@@ -306,20 +306,20 @@
   &:where(:active:not(:disabled, [data-disabled])) {
     background-color: var(--v-bg-active);
 
-    & :where(.rt-AvatarFallback) {
+    & :where(.kui-AvatarFallback) {
       background-color: inherit;
     }
   }
 }
 
 /* Border interactive states for outline and surface */
-.rt-AvatarRoot:where(button, a, [role='button']):where(.rt-variant-outline, .rt-variant-surface) {
+.kui-AvatarRoot:where(button, a, [role='button']):where(.kui-variant-outline, .kui-variant-surface) {
   /* Hover border */
   @media (hover: hover) {
     &:where(:hover:not(:disabled, [data-disabled])) {
       box-shadow: inset 0 0 0 1px var(--v-border-hover);
 
-      & :where(.rt-AvatarFallback) {
+      & :where(.kui-AvatarFallback) {
         box-shadow: inherit;
       }
     }
@@ -329,7 +329,7 @@
   &:where(:active:not(:disabled, [data-disabled])) {
     box-shadow: inset 0 0 0 1px var(--v-border-active);
 
-    & :where(.rt-AvatarFallback) {
+    & :where(.kui-AvatarFallback) {
       box-shadow: inherit;
     }
   }
@@ -343,27 +343,27 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-AvatarRoot:where(.rt-variant-solid) {
-  & :where(.rt-AvatarFallback) {
+.kui-AvatarRoot:where(.kui-variant-solid) {
+  & :where(.kui-AvatarFallback) {
     background-color: var(--accent-solid);
     color: var(--accent-solid-contrast);
   }
 
-  &:where([data-disabled]) :where(.rt-AvatarFallback) {
-    color: var(--gray-a8);
-    background-color: var(--gray-a3);
+  &:where([data-disabled]) :where(.kui-AvatarFallback) {
+    color: var(--neutral-a8);
+    background-color: var(--neutral-a3);
     filter: none;
   }
 }
 
 /* Solid interactive states */
-.rt-AvatarRoot:where(button, a, [role='button']):where(.rt-variant-solid) {
+.kui-AvatarRoot:where(button, a, [role='button']):where(.kui-variant-solid) {
   @media (hover: hover) {
     &:where(:hover:not(:disabled, [data-disabled])) {
       background-color: var(--accent-solid-hover);
 
       /* Filter the fallback, not the root, so the status dot and badge stay untouched */
-      & :where(.rt-AvatarFallback) {
+      & :where(.kui-AvatarFallback) {
         background-color: inherit;
         filter: var(--accent-solid-hover-filter);
       }
@@ -373,41 +373,41 @@
   &:where(:active:not(:disabled, [data-disabled])) {
     background-color: var(--accent-solid-active);
 
-    & :where(.rt-AvatarFallback) {
+    & :where(.kui-AvatarFallback) {
       background-color: inherit;
     }
   }
 }
 
 /* Raised variant - uses --color-surface and gray interactive states */
-.rt-AvatarRoot:where(.rt-variant-raised) {
+.kui-AvatarRoot:where(.kui-variant-raised) {
   position: relative;
   top: var(--raised-elevation-offset);
 
-  & :where(.rt-AvatarFallback) {
+  & :where(.kui-AvatarFallback) {
     position: relative;
     top: 0;
     color: var(--accent-ink);
-    background-color: var(--color-surface-solid);
+    background-color: var(--color-surface);
     box-shadow: var(--shadow-2);
   }
 
-  &:where([data-disabled]) :where(.rt-AvatarFallback) {
-    color: var(--gray-a8);
-    background-color: var(--gray-a3);
+  &:where([data-disabled]) :where(.kui-AvatarFallback) {
+    color: var(--neutral-a8);
+    background-color: var(--neutral-a3);
     box-shadow: none;
     top: 0;
   }
 }
 
 /* Raised interactive states */
-.rt-AvatarRoot:where(button, a, [role='button']):where(.rt-variant-raised) {
+.kui-AvatarRoot:where(button, a, [role='button']):where(.kui-variant-raised) {
   @media (hover: hover) {
     &:where(:hover:not(:disabled, [data-disabled])) {
-      background-color: var(--gray-2);
+      background-color: var(--neutral-2);
       box-shadow: var(--shadow-2);
 
-      & :where(.rt-AvatarFallback) {
+      & :where(.kui-AvatarFallback) {
         background-color: inherit;
         box-shadow: inherit;
       }
@@ -417,9 +417,9 @@
   &:where(:active:not(:disabled, [data-disabled])) {
     padding-top: var(--raised-active-padding-offset-2);
     padding-bottom: 0;
-    background-color: var(--gray-3);
+    background-color: var(--neutral-3);
 
-    & :where(.rt-AvatarFallback) {
+    & :where(.kui-AvatarFallback) {
       padding-top: inherit;
       padding-bottom: 0;
       background-color: inherit;
@@ -433,14 +433,14 @@
 /* Avatar image filter tokens                                                                     */
 /* ---------------------------------------------------------------------------------------------- */
 
-:where(.radix-themes) {
+:where(.kui-theme) {
   /* Hover and active filters for avatars that display images */
   --avatar-image-hover-filter: brightness(0.95) saturate(1.05);
   --avatar-image-active-filter: brightness(0.9) saturate(1.1);
 }
 
 :is(.dark, .dark-theme),
-:is(.dark, .dark-theme) :where(.radix-themes:not(.light, .light-theme)) {
+:is(.dark, .dark-theme) :where(.kui-theme:not(.light, .light-theme)) {
   --avatar-image-hover-filter: brightness(1.05) saturate(1.05);
   --avatar-image-active-filter: brightness(1.1) saturate(1.1);
 }
@@ -451,8 +451,8 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-AvatarStatus,
-.rt-AvatarBadge {
+.kui-AvatarStatus,
+.kui-AvatarBadge {
   position: absolute;
   bottom: 0;
   right: 0;
@@ -462,17 +462,17 @@
 }
 
 /* Status indicator - colored dot */
-.rt-AvatarStatus {
+.kui-AvatarStatus {
   width: var(--avatar-status-size);
   height: var(--avatar-status-size);
   border-radius: 50%;
   background-color: var(--accent-9);
-  border: var(--avatar-status-border-width) solid var(--color-background);
+  border: var(--avatar-status-border-width) solid var(--color-page);
   box-sizing: content-box;
 }
 
 /* Badge container - for custom content */
-.rt-AvatarBadge {
+.kui-AvatarBadge {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -482,48 +482,48 @@
 
 /* Status/Badge size scaling based on avatar size */
 @breakpoints {
-  .rt-AvatarRoot {
-    &:where(.rt-r-size-1) {
+  .kui-AvatarRoot {
+    &:where(.kui-r-size-1) {
       --avatar-status-size: 6px;
       --avatar-status-border-width: 1.5px;
       --avatar-badge-min-size: 10px;
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       --avatar-status-size: 8px;
       --avatar-status-border-width: 2px;
       --avatar-badge-min-size: 12px;
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       --avatar-status-size: 10px;
       --avatar-status-border-width: 2px;
       --avatar-badge-min-size: 14px;
     }
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       --avatar-status-size: 12px;
       --avatar-status-border-width: 2px;
       --avatar-badge-min-size: 16px;
     }
-    &:where(.rt-r-size-5) {
+    &:where(.kui-r-size-5) {
       --avatar-status-size: 14px;
       --avatar-status-border-width: 2px;
       --avatar-badge-min-size: 18px;
     }
-    &:where(.rt-r-size-6) {
+    &:where(.kui-r-size-6) {
       --avatar-status-size: 16px;
       --avatar-status-border-width: 3px;
       --avatar-badge-min-size: 20px;
     }
-    &:where(.rt-r-size-7) {
+    &:where(.kui-r-size-7) {
       --avatar-status-size: 18px;
       --avatar-status-border-width: 3px;
       --avatar-badge-min-size: 22px;
     }
-    &:where(.rt-r-size-8) {
+    &:where(.kui-r-size-8) {
       --avatar-status-size: 20px;
       --avatar-status-border-width: 3px;
       --avatar-badge-min-size: 24px;
     }
-    &:where(.rt-r-size-9) {
+    &:where(.kui-r-size-9) {
       --avatar-status-size: 24px;
       --avatar-status-border-width: 4px;
       --avatar-badge-min-size: 28px;

@@ -1,12 +1,12 @@
 /* stylelint-disable selector-max-specificity */
 
-.rt-SegmentedControlRoot {
+.kui-SegmentedControlRoot {
   display: inline-grid;
   vertical-align: top;
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
   align-items: stretch;
-  color: var(--gray-12);
+  color: var(--neutral-12);
   position: relative;
   min-width: max-content;
 
@@ -24,14 +24,14 @@
 }
 
 /* Disabled is a colour remap, never opacity, with a default cursor. */
-.rt-SegmentedControlRoot:where([data-disabled]) {
-  color: var(--gray-a8);
-  background-color: var(--gray-3);
+.kui-SegmentedControlRoot:where([data-disabled]) {
+  color: var(--neutral-a8);
+  background-color: var(--neutral-3);
   cursor: default;
 }
 
-.rt-SegmentedControlItem:where([disabled]) {
-  color: var(--gray-a8);
+.kui-SegmentedControlItem:where([disabled]) {
+  color: var(--neutral-a8);
   cursor: default;
 }
 
@@ -42,7 +42,7 @@
 /* * * * * * * * * * * * * * * * * * * */
 /* Note: Base vertical grid properties are inside @breakpoints for correct CSS ordering */
 
-.rt-SegmentedControlItem {
+.kui-SegmentedControlItem {
   display: flex;
   align-items: stretch;
   user-select: none;
@@ -66,24 +66,24 @@
 }
 
 /* Vertical orientation - item layout */
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlItem {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem {
   flex-direction: column;
 }
 
 /* Vertical orientation - item border radius */
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlItem:first-child {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem:first-child {
   border-top-left-radius: inherit;
   border-top-right-radius: inherit;
   border-bottom-left-radius: 0;
 }
 
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlItem:nth-last-child(2) {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem:nth-last-child(2) {
   border-bottom-left-radius: inherit;
   border-bottom-right-radius: inherit;
   border-top-right-radius: 0;
 }
 
-.rt-SegmentedControlItemLabel {
+.kui-SegmentedControlItemLabel {
   display: flex;
   flex-grow: 1;
   align-items: center;
@@ -98,16 +98,16 @@
 
   /* Hover is one step up, press two. A disabled segment takes neither. */
   @media (hover: hover) {
-    :where(.rt-SegmentedControlItem[data-state='off']:not([disabled]):hover) & {
-      background-color: var(--gray-a2);
+    :where(.kui-SegmentedControlItem[data-state='off']:not([disabled]):hover) & {
+      background-color: var(--neutral-a2);
     }
   }
-  :where(.rt-SegmentedControlItem[data-state='off']:not([disabled]):active) & {
-    background-color: var(--gray-a3);
+  :where(.kui-SegmentedControlItem[data-state='off']:not([disabled]):active) & {
+    background-color: var(--neutral-a3);
   }
 }
 
-.rt-SegmentedControlItemLabelInactive {
+.kui-SegmentedControlItemLabelInactive {
   position: absolute;
 
   font-weight: var(--font-weight-regular);
@@ -116,29 +116,29 @@
 
   opacity: 1;
  /* Staggered effect like tabs */
-  :where(.rt-SegmentedControlItem[data-state='on']) & {
+  :where(.kui-SegmentedControlItem[data-state='on']) & {
     opacity: 0;
  /* Immediate transition for state change */
   }
 }
 
-.rt-SegmentedControlItemLabelActive {
+.kui-SegmentedControlItemLabelActive {
   font-weight: var(--font-weight-medium);
   letter-spacing: var(--tab-active-letter-spacing);
   word-spacing: var(--tab-active-word-spacing);
 
   opacity: 0;
  /* Immediate transition for active state like tabs */
-  :where(.rt-SegmentedControlItem[data-state='on']) & {
+  :where(.kui-SegmentedControlItem[data-state='on']) & {
     opacity: 1;
  /* Immediate transition for active state */
   }
 }
 
-.rt-SegmentedControlItemSeparator {
+.kui-SegmentedControlItemSeparator {
   /*
    * Place the separator below the indicator.
-   * Be careful not to introduce a stacking context on ".rt-SegmentedControlItem":
+   * Be careful not to introduce a stacking context on ".kui-SegmentedControlItem":
    * https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_positioned_layout/Understanding_z-index/Stacking_context
    */
   z-index: -1;
@@ -149,21 +149,21 @@
   margin-left: calc(-1 * var(--border-width-standard) * 0.5); /* -0.5px */
   margin-right: calc(-1 * var(--border-width-standard) * 0.5); /* -0.5px */
   width: var(--border-width-standard); /* 1px */
-  background-color: var(--gray-a4);
+  background-color: var(--neutral-a4);
   background-clip: content-box;
 
   /* Make separators slow to disappear and fast to appear, syncing it well with the indicator motion */
 
-  :where(.rt-SegmentedControlItem:first-child) &,
-  :where(.rt-SegmentedControlItem:where([data-state='on'], :focus-visible)) &,
-  :where(.rt-SegmentedControlItem:where([data-state='on'], :focus-visible)) + * & {
+  :where(.kui-SegmentedControlItem:first-child) &,
+  :where(.kui-SegmentedControlItem:where([data-state='on'], :focus-visible)) &,
+  :where(.kui-SegmentedControlItem:where([data-state='on'], :focus-visible)) + * & {
     opacity: 0;
   }
   /* Don't transition when the separator is hidden because of the focus outline */
 }
 
 /* Vertical orientation - separator */
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlItemSeparator {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlItemSeparator {
   padding-block: 0;
   padding-inline: calc(var(--space-2) * 0.75); /* 3px */
   margin-left: 0;
@@ -174,11 +174,11 @@
   height: var(--border-width-standard); /* 1px */
 }
 
-:where(.radix-themes) {
-  --segmented-control-indicator-background-color: var(--color-background);
+:where(.kui-theme) {
+  --segmented-control-indicator-background-color: var(--color-page);
 }
 
-.rt-SegmentedControlIndicator {
+.kui-SegmentedControlIndicator {
   display: none;
   position: absolute;
   z-index: -1;
@@ -196,12 +196,12 @@
     content: '';
   }
 
-  :where(.rt-SegmentedControlItem[data-state='on']) ~ & {
+  :where(.kui-SegmentedControlItem[data-state='on']) ~ & {
     display: block;
   }
 
-  :where(.rt-SegmentedControlItem[disabled]) ~ & {
-    --segmented-control-indicator-background-color: var(--gray-a3);
+  :where(.kui-SegmentedControlItem[disabled]) ~ & {
+    --segmented-control-indicator-background-color: var(--neutral-a3);
 
     &::before {
       inset: 0;
@@ -242,104 +242,104 @@
   }
 
   /* Horizontal transforms (default) */
-  :where(.rt-SegmentedControlItem[data-state='on']:nth-child(1)) ~ & {
+  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(1)) ~ & {
     transform: translateX(0%);
   }
-  :where(.rt-SegmentedControlItem[data-state='on']:nth-child(2)) ~ & {
+  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(2)) ~ & {
     transform: translateX(100%);
   }
-  :where(.rt-SegmentedControlItem[data-state='on']:nth-child(3)) ~ & {
+  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(3)) ~ & {
     transform: translateX(200%);
   }
-  :where(.rt-SegmentedControlItem[data-state='on']:nth-child(4)) ~ & {
+  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(4)) ~ & {
     transform: translateX(300%);
   }
-  :where(.rt-SegmentedControlItem[data-state='on']:nth-child(5)) ~ & {
+  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(5)) ~ & {
     transform: translateX(400%);
   }
-  :where(.rt-SegmentedControlItem[data-state='on']:nth-child(6)) ~ & {
+  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(6)) ~ & {
     transform: translateX(500%);
   }
-  :where(.rt-SegmentedControlItem[data-state='on']:nth-child(7)) ~ & {
+  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(7)) ~ & {
     transform: translateX(600%);
   }
-  :where(.rt-SegmentedControlItem[data-state='on']:nth-child(8)) ~ & {
+  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(8)) ~ & {
     transform: translateX(700%);
   }
-  :where(.rt-SegmentedControlItem[data-state='on']:nth-child(9)) ~ & {
+  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(9)) ~ & {
     transform: translateX(800%);
   }
-  :where(.rt-SegmentedControlItem[data-state='on']:nth-child(10)) ~ & {
+  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(10)) ~ & {
     transform: translateX(900%);
   }
 }
 
 /* Vertical orientation - indicator height based on number of items */
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlIndicator {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator {
   width: 100%;
   height: unset;
 }
 
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlIndicator:nth-child(2) {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(2) {
   height: calc(100% / 1);
 }
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlIndicator:nth-child(3) {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(3) {
   height: calc(100% / 2);
 }
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlIndicator:nth-child(4) {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(4) {
   height: calc(100% / 3);
 }
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlIndicator:nth-child(5) {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(5) {
   height: calc(100% / 4);
 }
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlIndicator:nth-child(6) {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(6) {
   height: calc(100% / 5);
 }
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlIndicator:nth-child(7) {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(7) {
   height: calc(100% / 6);
 }
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlIndicator:nth-child(8) {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(8) {
   height: calc(100% / 7);
 }
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlIndicator:nth-child(9) {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(9) {
   height: calc(100% / 8);
 }
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlIndicator:nth-child(10) {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(10) {
   height: calc(100% / 9);
 }
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlIndicator:nth-child(11) {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(11) {
   height: calc(100% / 10);
 }
 
 /* Vertical transforms */
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlItem[data-state='on']:nth-child(1) ~ .rt-SegmentedControlIndicator {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(1) ~ .kui-SegmentedControlIndicator {
   transform: translateY(0%);
 }
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlItem[data-state='on']:nth-child(2) ~ .rt-SegmentedControlIndicator {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(2) ~ .kui-SegmentedControlIndicator {
   transform: translateY(100%);
 }
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlItem[data-state='on']:nth-child(3) ~ .rt-SegmentedControlIndicator {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(3) ~ .kui-SegmentedControlIndicator {
   transform: translateY(200%);
 }
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlItem[data-state='on']:nth-child(4) ~ .rt-SegmentedControlIndicator {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(4) ~ .kui-SegmentedControlIndicator {
   transform: translateY(300%);
 }
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlItem[data-state='on']:nth-child(5) ~ .rt-SegmentedControlIndicator {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(5) ~ .kui-SegmentedControlIndicator {
   transform: translateY(400%);
 }
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlItem[data-state='on']:nth-child(6) ~ .rt-SegmentedControlIndicator {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(6) ~ .kui-SegmentedControlIndicator {
   transform: translateY(500%);
 }
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlItem[data-state='on']:nth-child(7) ~ .rt-SegmentedControlIndicator {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(7) ~ .kui-SegmentedControlIndicator {
   transform: translateY(600%);
 }
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlItem[data-state='on']:nth-child(8) ~ .rt-SegmentedControlIndicator {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(8) ~ .kui-SegmentedControlIndicator {
   transform: translateY(700%);
 }
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlItem[data-state='on']:nth-child(9) ~ .rt-SegmentedControlIndicator {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(9) ~ .kui-SegmentedControlIndicator {
   transform: translateY(800%);
 }
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlItem[data-state='on']:nth-child(10) ~ .rt-SegmentedControlIndicator {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(10) ~ .kui-SegmentedControlIndicator {
   transform: translateY(900%);
 }
 
@@ -349,23 +349,23 @@
 /*                                     */
 /* * * * * * * * * * * * * * * * * * * */
 
-.rt-SegmentedControlItemLabel,
-.rt-SegmentedControlItemLabelInactive,
-.rt-SegmentedControlItemLabelActive {
+.kui-SegmentedControlItemLabel,
+.kui-SegmentedControlItemLabelInactive,
+.kui-SegmentedControlItemLabelActive {
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: inherit;
 }
-.rt-SegmentedControlRoot {
+.kui-SegmentedControlRoot {
   border-radius: var(--segmented-control-border-radius);
 }
 
 @breakpoints {
-  .rt-SegmentedControlRoot {
+  .kui-SegmentedControlRoot {
     /* Vertical orientation - grid layout (must be inside @breakpoints for correct CSS ordering) */
-    &:where(.rt-r-orientation-vertical) {
+    &:where(.kui-r-orientation-vertical) {
       grid-auto-flow: row;
       grid-auto-columns: unset;
       grid-auto-rows: 1fr;
@@ -373,18 +373,18 @@
       min-height: max-content;
     }
 
-    &:where(.rt-r-orientation-vertical):has([data-icon-only]) {
+    &:where(.kui-r-orientation-vertical):has([data-icon-only]) {
       grid-auto-columns: unset;
       grid-auto-rows: minmax(var(--segmented-control-height), 1fr);
     }
 
-    &:where(.rt-r-size-1) {
+    &:where(.kui-r-size-1) {
       --segmented-control-border-radius: var(--radius-control-1);
       --segmented-control-height: var(--control-height-1);
       height: var(--segmented-control-height);
 
       /* Vertical: height auto, width determined by content or icon-only */
-      &:where(.rt-r-orientation-vertical) {
+      &:where(.kui-r-orientation-vertical) {
         height: auto;
         width: auto;
 
@@ -394,7 +394,7 @@
         }
       }
 
-      & :where(.rt-SegmentedControlItemLabel) {
+      & :where(.kui-SegmentedControlItemLabel) {
         font-size: var(--font-size-1);
         letter-spacing: var(--letter-spacing-1);
         padding-inline: var(--control-px-1);
@@ -408,13 +408,13 @@
         }
       }
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       --segmented-control-border-radius: var(--radius-control-2);
       --segmented-control-height: var(--control-height-2);
       height: var(--segmented-control-height);
 
       /* Vertical: height auto, width determined by content or icon-only */
-      &:where(.rt-r-orientation-vertical) {
+      &:where(.kui-r-orientation-vertical) {
         height: auto;
         width: auto;
 
@@ -424,7 +424,7 @@
         }
       }
 
-      & :where(.rt-SegmentedControlItemLabel) {
+      & :where(.kui-SegmentedControlItemLabel) {
         font-size: var(--font-size-2);
         letter-spacing: var(--letter-spacing-2);
         padding-inline: var(--control-px-2);
@@ -438,13 +438,13 @@
         }
       }
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       --segmented-control-border-radius: var(--radius-control-3);
       --segmented-control-height: var(--control-height-3);
       height: var(--segmented-control-height);
 
       /* Vertical: height auto, width determined by content or icon-only */
-      &:where(.rt-r-orientation-vertical) {
+      &:where(.kui-r-orientation-vertical) {
         height: auto;
         width: auto;
 
@@ -454,7 +454,7 @@
         }
       }
 
-      & :where(.rt-SegmentedControlItemLabel) {
+      & :where(.kui-SegmentedControlItemLabel) {
         font-size: var(--font-size-3);
         letter-spacing: var(--letter-spacing-3);
         padding-inline: var(--control-px-3);
@@ -468,13 +468,13 @@
         }
       }
     }
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       --segmented-control-border-radius: var(--radius-control-4);
       --segmented-control-height: var(--control-height-4);
       height: var(--segmented-control-height);
 
       /* Vertical: height auto, width determined by content or icon-only */
-      &:where(.rt-r-orientation-vertical) {
+      &:where(.kui-r-orientation-vertical) {
         height: auto;
         width: auto;
 
@@ -484,7 +484,7 @@
         }
       }
 
-      & :where(.rt-SegmentedControlItemLabel) {
+      & :where(.kui-SegmentedControlItemLabel) {
         font-size: var(--font-size-4);
         letter-spacing: var(--letter-spacing-4);
         padding-inline: var(--control-px-4);
@@ -507,8 +507,8 @@
 /*                                     */
 /* * * * * * * * * * * * * * * * * * * */
 
-.rt-SegmentedControlRoot {
-  background-color: var(--gray-3);
+.kui-SegmentedControlRoot {
+  background-color: var(--neutral-3);
 }
 
 /* * * * * * * * * * * * * * * * * * * */
@@ -522,56 +522,56 @@
  * but can grow to fill available space while keeping icons centered.
  * This section is placed after size definitions for proper specificity.
  */
-.rt-SegmentedControlItem:where([data-icon-only]) {
+.kui-SegmentedControlItem:where([data-icon-only]) {
   /* Horizontal: Minimum square width, but can grow to fill container */
   min-width: var(--segmented-control-height);
 
   /* Remove padding and center icon */
-  & :where(.rt-SegmentedControlItemLabel) {
+  & :where(.kui-SegmentedControlItemLabel) {
     padding-inline: 0;
   }
 }
 
 /* Vertical icon-only - minimum square height */
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlItem[data-icon-only] {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-icon-only] {
   min-width: unset;
   min-height: var(--segmented-control-height);
 }
 
 /* Vertical icon-only - remove top/bottom padding */
-:where(.rt-r-orientation-vertical) .rt-SegmentedControlItem[data-icon-only] .rt-SegmentedControlItemLabel {
+:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-icon-only] .kui-SegmentedControlItemLabel {
   padding-top: 0;
   padding-bottom: 0;
 }
 
 /* Vertical icon-only root width (explicit since nested :has() in @breakpoints may not work) */
-.rt-SegmentedControlRoot:where(.rt-r-orientation-vertical):where(.rt-r-size-1):has([data-icon-only]) {
+.kui-SegmentedControlRoot:where(.kui-r-orientation-vertical):where(.kui-r-size-1):has([data-icon-only]) {
   width: var(--control-height-1);
 }
-.rt-SegmentedControlRoot:where(.rt-r-orientation-vertical):where(.rt-r-size-2):has([data-icon-only]) {
+.kui-SegmentedControlRoot:where(.kui-r-orientation-vertical):where(.kui-r-size-2):has([data-icon-only]) {
   width: var(--control-height-2);
 }
-.rt-SegmentedControlRoot:where(.rt-r-orientation-vertical):where(.rt-r-size-3):has([data-icon-only]) {
+.kui-SegmentedControlRoot:where(.kui-r-orientation-vertical):where(.kui-r-size-3):has([data-icon-only]) {
   width: var(--control-height-3);
 }
-.rt-SegmentedControlRoot:where(.rt-r-orientation-vertical):where(.rt-r-size-4):has([data-icon-only]) {
+.kui-SegmentedControlRoot:where(.kui-r-orientation-vertical):where(.kui-r-size-4):has([data-icon-only]) {
   width: var(--control-height-4);
 }
 
 /* Vertical text items need vertical padding */
-:where(.rt-r-orientation-vertical):where(.rt-r-size-1) .rt-SegmentedControlItemLabel {
+:where(.kui-r-orientation-vertical):where(.kui-r-size-1) .kui-SegmentedControlItemLabel {
   padding-top: var(--space-2);
   padding-bottom: var(--space-2);
 }
-:where(.rt-r-orientation-vertical):where(.rt-r-size-2) .rt-SegmentedControlItemLabel {
+:where(.kui-r-orientation-vertical):where(.kui-r-size-2) .kui-SegmentedControlItemLabel {
   padding-top: var(--space-3);
   padding-bottom: var(--space-3);
 }
-:where(.rt-r-orientation-vertical):where(.rt-r-size-3) .rt-SegmentedControlItemLabel {
+:where(.kui-r-orientation-vertical):where(.kui-r-size-3) .kui-SegmentedControlItemLabel {
   padding-top: var(--space-3);
   padding-bottom: var(--space-3);
 }
-:where(.rt-r-orientation-vertical):where(.rt-r-size-4) .rt-SegmentedControlItemLabel {
+:where(.kui-r-orientation-vertical):where(.kui-r-size-4) .kui-SegmentedControlItemLabel {
   padding-top: var(--space-4);
   padding-bottom: var(--space-4);
 }

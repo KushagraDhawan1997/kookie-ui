@@ -63,19 +63,19 @@ const TextArea = React.forwardRef<TextAreaElement, TextAreaProps>((ownProps, for
     <div
       data-accent-color={color}
       data-radius={radius}
-      className={classNames('rt-TextAreaRoot', className, {
-        'rt-error': isInvalid,
+      className={classNames('kui-TextAreaRoot', className, {
+        'kui-error': isInvalid,
       })}
       style={style}
     >
       <textarea
-        className="rt-reset rt-TextAreaInput"
+        className="kui-reset kui-TextAreaInput"
         ref={forwardedRef}
         {...nativeTextAreaProps}
         {...ariaProps}
       />
       {textAreaProps.errorMessage && (
-        <div id={errorId} className="rt-TextAreaErrorMessage" role="alert">
+        <div id={errorId} className="kui-TextAreaErrorMessage" role="alert">
           {textAreaProps.errorMessage}
         </div>
       )}

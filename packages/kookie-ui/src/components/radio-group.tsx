@@ -58,7 +58,7 @@ const RadioGroupRoot = React.forwardRef<RadioGroupRootElement, RadioGroupRootPro
           {...radioGroupScope}
           {...rootProps}
           ref={forwardedRef}
-          className={classNames('rt-RadioGroupRoot', className)}
+          className={classNames('kui-RadioGroupRoot', className)}
         />
       </RadioGroupProvider>
     );
@@ -81,7 +81,7 @@ const RadioGroupItem = React.forwardRef<RadioGroupItemElement, RadioGroupItemPro
         <Text
           as="label"
           size={size}
-          className={classNames('rt-RadioGroupItem', className)}
+          className={classNames('kui-RadioGroupItem', className)}
           style={style}
         >
           <RadioGroupItemRadio
@@ -89,7 +89,7 @@ const RadioGroupItem = React.forwardRef<RadioGroupItemElement, RadioGroupItemPro
             {...props}
             ref={forwardedRef}
           />
-          {children && <span className="rt-RadioGroupItemInner">{children}</span>}
+          {children && <span className="kui-RadioGroupItemInner">{children}</span>}
         </Text>
       );
     }
@@ -127,7 +127,7 @@ const RadioGroupItemRadio = React.forwardRef<
       {...props}
       asChild={false}
       ref={forwardedRef}
-      className={classNames('rt-reset', 'rt-BaseRadioRoot', className)}
+      className={classNames('kui-reset', 'kui-BaseRadioRoot', className)}
     />
   );
 });

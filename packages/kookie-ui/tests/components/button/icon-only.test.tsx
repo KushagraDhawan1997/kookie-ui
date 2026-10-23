@@ -8,7 +8,7 @@ describe('icon-only buttons', () => {
   it('Button iconOnly is a Button marked icon-only', () => {
     renderWithProviders(<Button iconOnly aria-label="Add">+</Button>);
     const button = screen.getByRole('button', { name: 'Add' });
-    expect(button).toHaveClass('rt-Button');
+    expect(button).toHaveClass('kui-Button');
     expect(button).toHaveAttribute('data-icon-only', 'true');
   });
 
@@ -33,7 +33,7 @@ describe('icon-only buttons', () => {
   it('an icon-only button never takes the full width', () => {
     // @ts-expect-error iconOnly excludes fullWidth
     renderWithProviders(<Button iconOnly aria-label="Wide" fullWidth>+</Button>);
-    expect(screen.getByRole('button', { name: 'Wide' })).not.toHaveClass('rt-full-width');
+    expect(screen.getByRole('button', { name: 'Wide' })).not.toHaveClass('kui-full-width');
   });
 
   it('a button has no flush mode: it never pulls itself out with a negative margin', () => {

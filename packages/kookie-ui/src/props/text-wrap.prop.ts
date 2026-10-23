@@ -5,7 +5,7 @@ const textWrapValues = ['wrap', 'nowrap', 'pretty', 'balance'] as const;
 const textWrapPropDef = {
   wrap: {
     type: 'enum',
-    className: 'rt-r-tw',
+    className: 'kui-r-tw',
     values: textWrapValues,
     responsive: true,
   },

@@ -20,13 +20,13 @@ describe('Notice spacing', () => {
           </Notice>
         </Theme>,
       );
-      const [wrapped, withAction] = container.querySelectorAll<HTMLElement>('.rt-NoticeRoot');
+      const [wrapped, withAction] = container.querySelectorAll<HTMLElement>('.kui-NoticeRoot');
       const style = getComputedStyle(wrapped);
       expect(new Set([style.paddingTop, style.paddingRight, style.paddingBottom, style.paddingLeft]).size).toBe(1);
 
-      const icon = wrapped.querySelector<HTMLElement>('.rt-NoticeIcon')!.getBoundingClientRect();
-      const text = wrapped.querySelector<HTMLElement>('.rt-NoticeText')!.getBoundingClientRect();
-      const line = parseFloat(getComputedStyle(wrapped.querySelector('.rt-NoticeText')!).lineHeight);
+      const icon = wrapped.querySelector<HTMLElement>('.kui-NoticeIcon')!.getBoundingClientRect();
+      const text = wrapped.querySelector<HTMLElement>('.kui-NoticeText')!.getBoundingClientRect();
+      const line = parseFloat(getComputedStyle(wrapped.querySelector('.kui-NoticeText')!).lineHeight);
       expect(text.height).toBeGreaterThan(line);
       expect(Math.abs(icon.top + icon.height / 2 - (text.top + line / 2))).toBeLessThan(1);
 

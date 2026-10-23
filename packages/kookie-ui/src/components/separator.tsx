@@ -12,7 +12,7 @@ type SeparatorOwnProps = GetPropDefTypes<typeof separatorPropDefs>;
 interface SeparatorProps extends ComponentPropsWithout<'span', RemovedProps>, SeparatorOwnProps {}
 const Separator = React.forwardRef<SeparatorElement, SeparatorProps>((props, forwardedRef) => {
   const { className, color, decorative, ...separatorProps } = extractProps(props, separatorPropDefs);
-  return <span data-accent-color={color} role={decorative ? undefined : 'separator'} {...separatorProps} ref={forwardedRef} className={classNames('rt-Separator', className)} />;
+  return <span data-accent-color={color} role={decorative ? undefined : 'separator'} {...separatorProps} ref={forwardedRef} className={classNames('kui-Separator', className)} />;
 });
 Separator.displayName = 'Separator';
 

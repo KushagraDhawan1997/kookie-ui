@@ -9,13 +9,13 @@ const kbdPropDefs = {
   ...asChildPropDef,
   size: {
     type: 'enum',
-    className: 'rt-r-size',
+    className: 'kui-r-size',
     values: sizes,
     responsive: true,
   },
   variant: {
     type: 'enum',
-    className: 'rt-variant',
+    className: 'kui-variant',
     values: variants,
     default: 'raised',
   },

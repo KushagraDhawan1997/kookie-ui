@@ -1,4 +1,4 @@
-.rt-Heading {
+.kui-Heading {
   --leading-trim-start: var(--heading-leading-trim-start);
   --leading-trim-end: var(--heading-leading-trim-end);
   font-family: var(--heading-font-family);
@@ -7,13 +7,13 @@
   line-height: var(--line-height);
 
   /* `font` prop — all three resolve through the same tier-1 stacks. */
-  &:where(.rt-r-ff-sans) {
+  &:where(.kui-r-ff-sans) {
     font-family: var(--font-sans);
   }
-  &:where(.rt-r-ff-mono) {
+  &:where(.kui-r-ff-mono) {
     font-family: var(--font-mono);
   }
-  &:where(.rt-r-ff-serif) {
+  &:where(.kui-r-ff-serif) {
     font-family: var(--font-serif);
   }
 
@@ -22,22 +22,22 @@
   }
 
   /* Emphasis ladder. No colour and no emphasis sets nothing, so the colour is inherited. */
-  &:where(.rt-emphasis-loud) {
-    color: var(--gray-ink);
+  &:where(.kui-emphasis-loud) {
+    color: var(--neutral-ink);
   }
-  &:where(.rt-emphasis-medium) {
-    color: var(--gray-ink-muted);
+  &:where(.kui-emphasis-medium) {
+    color: var(--neutral-ink-muted);
   }
-  &:where(.rt-emphasis-quiet) {
-    color: var(--gray-ink-faint);
+  &:where(.kui-emphasis-quiet) {
+    color: var(--neutral-ink-faint);
   }
   &:where([data-accent-color]) {
     color: var(--accent-ink);
   }
-  &:where([data-accent-color].rt-emphasis-medium) {
+  &:where([data-accent-color].kui-emphasis-medium) {
     color: var(--accent-ink-muted);
   }
-  &:where([data-accent-color].rt-emphasis-quiet) {
+  &:where([data-accent-color].kui-emphasis-quiet) {
     color: var(--accent-ink-faint);
   }
 }
@@ -49,48 +49,48 @@
  ***************************************************************************************************/
 
 @breakpoints {
-  .rt-Heading {
-    &:where(.rt-r-size-1) {
+  .kui-Heading {
+    &:where(.kui-r-size-1) {
       font-size: calc(var(--font-size-1) * var(--heading-font-size-adjust));
       --line-height: var(--line-height-1);
       letter-spacing: calc(var(--letter-spacing-1) + var(--heading-letter-spacing));
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       font-size: calc(var(--font-size-2) * var(--heading-font-size-adjust));
       --line-height: var(--line-height-2);
       letter-spacing: calc(var(--letter-spacing-2) + var(--heading-letter-spacing));
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       font-size: calc(var(--font-size-3) * var(--heading-font-size-adjust));
       --line-height: var(--line-height-3);
       letter-spacing: calc(var(--letter-spacing-3) + var(--heading-letter-spacing));
     }
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       font-size: calc(var(--font-size-4) * var(--heading-font-size-adjust));
       --line-height: var(--line-height-4);
       letter-spacing: calc(var(--letter-spacing-4) + var(--heading-letter-spacing));
     }
-    &:where(.rt-r-size-5) {
+    &:where(.kui-r-size-5) {
       font-size: calc(var(--font-size-5) * var(--heading-font-size-adjust));
       --line-height: var(--line-height-5);
       letter-spacing: calc(var(--letter-spacing-5) + var(--heading-letter-spacing));
     }
-    &:where(.rt-r-size-6) {
+    &:where(.kui-r-size-6) {
       font-size: calc(var(--font-size-6) * var(--heading-font-size-adjust));
       --line-height: var(--line-height-6);
       letter-spacing: calc(var(--letter-spacing-6) + var(--heading-letter-spacing));
     }
-    &:where(.rt-r-size-7) {
+    &:where(.kui-r-size-7) {
       font-size: calc(var(--font-size-7) * var(--heading-font-size-adjust));
       --line-height: var(--line-height-7);
       letter-spacing: calc(var(--letter-spacing-7) + var(--heading-letter-spacing));
     }
-    &:where(.rt-r-size-8) {
+    &:where(.kui-r-size-8) {
       font-size: calc(var(--font-size-8) * var(--heading-font-size-adjust));
       --line-height: var(--line-height-8);
       letter-spacing: calc(var(--letter-spacing-8) + var(--heading-letter-spacing));
     }
-    &:where(.rt-r-size-9) {
+    &:where(.kui-r-size-9) {
       font-size: calc(var(--font-size-9) * var(--heading-font-size-adjust));
       --line-height: var(--line-height-9);
       letter-spacing: calc(var(--letter-spacing-9) + var(--heading-letter-spacing));

@@ -1,6 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * */
 
-:where(.radix-themes) {
+:where(.kui-theme) {
   /* Standard border width constants */
   --border-width-standard: 1px;
 

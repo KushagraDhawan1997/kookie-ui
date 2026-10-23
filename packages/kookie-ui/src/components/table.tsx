@@ -28,9 +28,9 @@ const TableRoot = React.forwardRef<TableRootElement, TableRootProps>((ownProps, 
     propValues: tableRootPropDefs.layout.values,
   });
   return (
-    <div ref={forwardedRef} className={classNames('rt-TableRoot', className)} {...rootProps}>
+    <div ref={forwardedRef} className={classNames('kui-TableRoot', className)} {...rootProps}>
       <ScrollArea>
-        <table className={classNames('rt-TableRootTable', tableLayoutClassNames)}>{children}</table>
+        <table className={classNames('kui-TableRootTable', tableLayoutClassNames)}>{children}</table>
       </ScrollArea>
     </div>
   );
@@ -41,7 +41,7 @@ type TableHeaderElement = React.ElementRef<'thead'>;
 interface TableHeaderProps extends ComponentPropsWithout<'thead', RemovedProps> {}
 const TableHeader = React.forwardRef<TableHeaderElement, TableHeaderProps>(
   ({ className, ...props }, forwardedRef) => (
-    <thead {...props} ref={forwardedRef} className={classNames('rt-TableHeader', className)} />
+    <thead {...props} ref={forwardedRef} className={classNames('kui-TableHeader', className)} />
   )
 );
 TableHeader.displayName = 'Table.Header';
@@ -50,7 +50,7 @@ type TableBodyElement = React.ElementRef<'tbody'>;
 interface TableBodyProps extends ComponentPropsWithout<'tbody', RemovedProps> {}
 const TableBody = React.forwardRef<TableBodyElement, TableBodyProps>(
   ({ className, ...props }, forwardedRef) => (
-    <tbody {...props} ref={forwardedRef} className={classNames('rt-TableBody', className)} />
+    <tbody {...props} ref={forwardedRef} className={classNames('kui-TableBody', className)} />
   )
 );
 TableBody.displayName = 'Table.Body';
@@ -60,7 +60,7 @@ type TableRowOwnProps = GetPropDefTypes<typeof tableRowPropDefs>;
 interface TableRowProps extends ComponentPropsWithout<'tr', RemovedProps>, TableRowOwnProps {}
 const TableRow = React.forwardRef<TableRowElement, TableRowProps>((props, forwardedRef) => {
   const { className, ...rowProps } = extractProps(props, tableRowPropDefs);
-  return <tr {...rowProps} ref={forwardedRef} className={classNames('rt-TableRow', className)} />;
+  return <tr {...rowProps} ref={forwardedRef} className={classNames('kui-TableRow', className)} />;
 });
 TableRow.displayName = 'Table.Row';
 
@@ -71,7 +71,7 @@ interface TableCellProps
     TableCellOwnProps {}
 const TableCell = React.forwardRef<TableCellElement, TableCellProps>((props, forwardedRef) => {
   const { className, ...cellProps } = extractProps(props, tableCellPropDefs);
-  return <td className={classNames('rt-TableCell', className)} ref={forwardedRef} {...cellProps} />;
+  return <td className={classNames('kui-TableCell', className)} ref={forwardedRef} {...cellProps} />;
 });
 TableCell.displayName = 'Table.Cell';
 
@@ -86,7 +86,7 @@ const TableColumnHeaderCell = React.forwardRef<
   const { className, ...cellProps } = extractProps(props, tableCellPropDefs);
   return (
     <th
-      className={classNames('rt-TableCell', 'rt-TableColumnHeaderCell', className)}
+      className={classNames('kui-TableCell', 'kui-TableColumnHeaderCell', className)}
       scope="col"
       ref={forwardedRef}
       {...cellProps}
@@ -104,7 +104,7 @@ const TableRowHeaderCell = React.forwardRef<TableRowHeaderCellElement, TableRowH
     const { className, ...cellProps } = extractProps(props, tableCellPropDefs);
     return (
       <th
-        className={classNames('rt-TableCell', 'rt-TableRowHeaderCell', className)}
+        className={classNames('kui-TableCell', 'kui-TableRowHeaderCell', className)}
         scope="row"
         ref={forwardedRef}
         {...cellProps}

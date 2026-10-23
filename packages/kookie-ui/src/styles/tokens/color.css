@@ -4,19 +4,16 @@
 /*                                     */
 /*                                     */
 
-:where(.radix-themes) {
-  --color-background: white;
+:where(.kui-theme) {
+  --color-page: white;
   --color-overlay: var(--black-a6);
-  --color-panel-solid: white;
-  --color-surface-solid: white;
-  --color-dialog-solid: white;
+  --color-surface: white;
 
   /*
-   * v2's names for the page, its text and its neutral scale, so code written against either
-   * system reads the same tokens. Aliases only: the values stay v1's and follow the appearance.
+   * The neutral scale, named as in v2. It defaults to the plain gray palette; a Theme grayColor
+   * (mauve, olive, sage, sand, slate) points it at another palette below.
    */
-  --color-page: var(--color-background);
-  --color-text: var(--gray-12);
+  --color-text: var(--neutral-12);
   --neutral-1: var(--gray-1);
   --neutral-2: var(--gray-2);
   --neutral-3: var(--gray-3);
@@ -29,25 +26,39 @@
   --neutral-10: var(--gray-10);
   --neutral-11: var(--gray-11);
   --neutral-12: var(--gray-12);
+  --neutral-a1: var(--gray-a1);
+  --neutral-a2: var(--gray-a2);
+  --neutral-a3: var(--gray-a3);
+  --neutral-a4: var(--gray-a4);
+  --neutral-a5: var(--gray-a5);
+  --neutral-a6: var(--gray-a6);
+  --neutral-a7: var(--gray-a7);
+  --neutral-a8: var(--gray-a8);
+  --neutral-a9: var(--gray-a9);
+  --neutral-a10: var(--gray-a10);
+  --neutral-a11: var(--gray-a11);
+  --neutral-a12: var(--gray-a12);
+  --neutral-contrast: var(--gray-contrast);
+  --neutral-surface: var(--gray-surface);
+  --neutral-indicator: var(--gray-indicator);
+  --neutral-track: var(--gray-track);
 }
 :is(.dark, .dark-theme),
-:is(.dark, .dark-theme) :where(.radix-themes:not(.light, .light-theme)) {
-  --color-background: var(--gray-1);
+:is(.dark, .dark-theme) :where(.kui-theme:not(.light, .light-theme)) {
+  --color-page: var(--neutral-1);
   --color-overlay: var(--black-a8);
-  --color-panel-solid: var(--gray-2);
-  --color-surface-solid: var(--gray-2);
-  --color-dialog-solid: var(--gray-2);
+  --color-surface: var(--neutral-2);
 }
 
 /*                                     */
 /*                                     */
 
 /* Note: using `:where` here to guarantee that the P3 color will take over regardless of the output rule order. */
-:where(.radix-themes) {
+:where(.kui-theme) {
 }
 @supports (color: color(display-p3 1 1 1)) {
   @media (color-gamut: p3) {
-    .radix-themes {
+    .kui-theme {
     }
   }
 }
@@ -59,13 +70,13 @@
  * Make sure that forced light/dark appearance also sets corresponding browser colors,
  * like input autofill color and body scrollbar
  */
-.radix-themes:where(.light, .light-theme) {
+.kui-theme:where(.light, .light-theme) {
   &,
   :root:where(:has(&[data-is-root-theme='true'])) {
     color-scheme: light;
   }
 }
-.radix-themes:where(.dark, .dark-theme) {
+.kui-theme:where(.dark, .dark-theme) {
   &,
   :root:where(:has(&[data-is-root-theme='true'])) {
     color-scheme: dark;
@@ -75,7 +86,7 @@
 /*                                     */
 /*                                     */
 
-.radix-themes,
+.kui-theme,
 [data-accent-color]:where(:not([data-accent-color=''], [data-accent-color='gray'])) {
   --focus-1: var(--accent-1);
   --focus-2: var(--accent-2);
@@ -104,29 +115,23 @@
   --focus-a12: var(--accent-a12);
 }
 
-.radix-themes ::selection {
+.kui-theme ::selection {
   background-color: var(--focus-a5);
 }
 
 /*                                     */
 /*                                     */
 
-.radix-themes {
-  color: var(--gray-12);
+.kui-theme {
+  color: var(--neutral-12);
   &:where([data-has-background='true']) {
-    background-color: var(--color-background);
+    background-color: var(--color-page);
   }
 }
 
 /*                                     */
 /*                                     */
 
-.radix-themes {
-  /* Solid is the only material, so these always resolve to the opaque surfaces. */
-  --color-panel: var(--color-panel-solid);
-  --color-surface: var(--color-surface-solid);
-  --color-dialog: var(--color-dialog-solid);
-}
 
 /*                                     */
 /*                                     */
@@ -396,36 +401,36 @@
 }
 
 [data-accent-color='gray'] {
-  --accent-1: var(--gray-1);
-  --accent-2: var(--gray-2);
-  --accent-3: var(--gray-3);
-  --accent-4: var(--gray-4);
-  --accent-5: var(--gray-5);
-  --accent-6: var(--gray-6);
-  --accent-7: var(--gray-7);
-  --accent-8: var(--gray-8);
-  --accent-9: var(--gray-9);
-  --accent-10: var(--gray-10);
-  --accent-11: var(--gray-11);
-  --accent-12: var(--gray-12);
+  --accent-1: var(--neutral-1);
+  --accent-2: var(--neutral-2);
+  --accent-3: var(--neutral-3);
+  --accent-4: var(--neutral-4);
+  --accent-5: var(--neutral-5);
+  --accent-6: var(--neutral-6);
+  --accent-7: var(--neutral-7);
+  --accent-8: var(--neutral-8);
+  --accent-9: var(--neutral-9);
+  --accent-10: var(--neutral-10);
+  --accent-11: var(--neutral-11);
+  --accent-12: var(--neutral-12);
 
-  --accent-a1: var(--gray-a1);
-  --accent-a2: var(--gray-a2);
-  --accent-a3: var(--gray-a3);
-  --accent-a4: var(--gray-a4);
-  --accent-a5: var(--gray-a5);
-  --accent-a6: var(--gray-a6);
-  --accent-a7: var(--gray-a7);
-  --accent-a8: var(--gray-a8);
-  --accent-a9: var(--gray-a9);
-  --accent-a10: var(--gray-a10);
-  --accent-a11: var(--gray-a11);
-  --accent-a12: var(--gray-a12);
+  --accent-a1: var(--neutral-a1);
+  --accent-a2: var(--neutral-a2);
+  --accent-a3: var(--neutral-a3);
+  --accent-a4: var(--neutral-a4);
+  --accent-a5: var(--neutral-a5);
+  --accent-a6: var(--neutral-a6);
+  --accent-a7: var(--neutral-a7);
+  --accent-a8: var(--neutral-a8);
+  --accent-a9: var(--neutral-a9);
+  --accent-a10: var(--neutral-a10);
+  --accent-a11: var(--neutral-a11);
+  --accent-a12: var(--neutral-a12);
 
-  --accent-contrast: var(--gray-contrast);
-  --accent-surface: var(--gray-surface);
-  --accent-indicator: var(--gray-indicator);
-  --accent-track: var(--gray-track);
+  --accent-contrast: var(--neutral-contrast);
+  --accent-surface: var(--neutral-surface);
+  --accent-indicator: var(--neutral-indicator);
+  --accent-track: var(--neutral-track);
 }
 
 [data-accent-color='green'] {
@@ -1007,12 +1012,12 @@
  * the resolved colour. So each element that changes the accent must re-declare the roles.
  * Elements with data-accent-color="" mean "inherit the parent's accent" and are skipped,
  * so they inherit the parent's resolved roles (chroma stays chroma, gray stays gray).
- * The gray rule comes last so it wins over `.radix-themes` at equal specificity.
+ * The gray rule comes last so it wins over `.kui-theme` at equal specificity.
  */
 
 /* Mode-dependent filters for solid fills. Chromatic fills change colour on hover (step 10);
  * gray is already at step 12, so it gets a filter instead. */
-:where(.radix-themes) {
+:where(.kui-theme) {
   --solid-chroma-hover-filter: none;
   --solid-chroma-active-filter: brightness(0.9) contrast(1.03);
   --solid-chroma-open-filter: brightness(0.96) contrast(1.02);
@@ -1021,7 +1026,7 @@
   --solid-gray-open-filter: brightness(0.96);
 }
 :is(.dark, .dark-theme),
-:is(.dark, .dark-theme) :where(.radix-themes:not(.light, .light-theme)) {
+:is(.dark, .dark-theme) :where(.kui-theme:not(.light, .light-theme)) {
   --solid-chroma-hover-filter: none;
   --solid-chroma-active-filter: brightness(0.88) contrast(1.03);
   --solid-chroma-open-filter: brightness(0.95) contrast(1.02);
@@ -1031,14 +1036,14 @@
 }
 
 /* Gray ink ladder, independent of the accent. Used by `emphasis` when no colour is set. */
-.radix-themes {
-  --gray-ink: var(--gray-12);
-  --gray-ink-muted: var(--gray-a11);
-  --gray-ink-faint: var(--gray-a10);
+.kui-theme {
+  --neutral-ink: var(--neutral-12);
+  --neutral-ink-muted: var(--neutral-a11);
+  --neutral-ink-faint: var(--neutral-a10);
 }
 
 /* Chromatic accent */
-.radix-themes,
+.kui-theme,
 [data-accent-color]:where(:not([data-accent-color=''], [data-accent-color='gray'])) {
   /* How far chromatic ink moves from step 11 toward step 12. */
   --accent-ink-mix: 45%;
@@ -1071,24 +1076,24 @@
 
 /* Gray accent: ink is step 12, fills are step 12 with inverted text */
 [data-accent-color='gray'] {
-  --accent-ink: var(--gray-12);
-  --accent-ink-muted: var(--gray-a11);
-  --accent-ink-faint: var(--gray-a10);
+  --accent-ink: var(--neutral-12);
+  --accent-ink-muted: var(--neutral-a11);
+  --accent-ink-faint: var(--neutral-a10);
 
-  --accent-solid: var(--gray-12);
-  --accent-solid-a: var(--gray-a12);
-  --accent-solid-hover: var(--gray-12);
-  --accent-solid-hover-a: var(--gray-a12);
-  --accent-solid-active: var(--gray-12);
-  --accent-solid-active-a: var(--gray-a12);
-  --accent-solid-contrast: var(--gray-1);
-  --accent-solid-selection: var(--gray-a11);
-  --accent-solid-selection-contrast: var(--gray-1);
-  --accent-solid-indicator: var(--gray-12);
+  --accent-solid: var(--neutral-12);
+  --accent-solid-a: var(--neutral-a12);
+  --accent-solid-hover: var(--neutral-12);
+  --accent-solid-hover-a: var(--neutral-a12);
+  --accent-solid-active: var(--neutral-12);
+  --accent-solid-active-a: var(--neutral-a12);
+  --accent-solid-contrast: var(--neutral-1);
+  --accent-solid-selection: var(--neutral-a11);
+  --accent-solid-selection-contrast: var(--neutral-1);
+  --accent-solid-indicator: var(--neutral-12);
   /* gray-12 is near-white in dark mode, so the thumb flips with it */
-  --accent-solid-thumb: var(--gray-1);
-  --accent-solid-badge: var(--gray-1);
-  --accent-solid-badge-contrast: var(--gray-12);
+  --accent-solid-thumb: var(--neutral-1);
+  --accent-solid-badge: var(--neutral-1);
+  --accent-solid-badge-contrast: var(--neutral-12);
 
   --accent-solid-hover-filter: var(--solid-gray-hover-filter);
   --accent-solid-active-filter: var(--solid-gray-active-filter);
@@ -1098,169 +1103,169 @@
 /*                                     */
 /*                                     */
 
-.radix-themes {
+.kui-theme {
   &:where([data-gray-color='mauve']) {
-    --gray-1: var(--mauve-1);
-    --gray-2: var(--mauve-2);
-    --gray-3: var(--mauve-3);
-    --gray-4: var(--mauve-4);
-    --gray-5: var(--mauve-5);
-    --gray-6: var(--mauve-6);
-    --gray-7: var(--mauve-7);
-    --gray-8: var(--mauve-8);
-    --gray-9: var(--mauve-9);
-    --gray-10: var(--mauve-10);
-    --gray-11: var(--mauve-11);
-    --gray-12: var(--mauve-12);
+    --neutral-1: var(--mauve-1);
+    --neutral-2: var(--mauve-2);
+    --neutral-3: var(--mauve-3);
+    --neutral-4: var(--mauve-4);
+    --neutral-5: var(--mauve-5);
+    --neutral-6: var(--mauve-6);
+    --neutral-7: var(--mauve-7);
+    --neutral-8: var(--mauve-8);
+    --neutral-9: var(--mauve-9);
+    --neutral-10: var(--mauve-10);
+    --neutral-11: var(--mauve-11);
+    --neutral-12: var(--mauve-12);
 
-    --gray-a1: var(--mauve-a1);
-    --gray-a2: var(--mauve-a2);
-    --gray-a3: var(--mauve-a3);
-    --gray-a4: var(--mauve-a4);
-    --gray-a5: var(--mauve-a5);
-    --gray-a6: var(--mauve-a6);
-    --gray-a7: var(--mauve-a7);
-    --gray-a8: var(--mauve-a8);
-    --gray-a9: var(--mauve-a9);
-    --gray-a10: var(--mauve-a10);
-    --gray-a11: var(--mauve-a11);
-    --gray-a12: var(--mauve-a12);
+    --neutral-a1: var(--mauve-a1);
+    --neutral-a2: var(--mauve-a2);
+    --neutral-a3: var(--mauve-a3);
+    --neutral-a4: var(--mauve-a4);
+    --neutral-a5: var(--mauve-a5);
+    --neutral-a6: var(--mauve-a6);
+    --neutral-a7: var(--mauve-a7);
+    --neutral-a8: var(--mauve-a8);
+    --neutral-a9: var(--mauve-a9);
+    --neutral-a10: var(--mauve-a10);
+    --neutral-a11: var(--mauve-a11);
+    --neutral-a12: var(--mauve-a12);
 
-    --gray-contrast: var(--mauve-contrast);
-    --gray-surface: var(--mauve-surface);
-    --gray-indicator: var(--mauve-indicator);
-    --gray-track: var(--mauve-track);
+    --neutral-contrast: var(--mauve-contrast);
+    --neutral-surface: var(--mauve-surface);
+    --neutral-indicator: var(--mauve-indicator);
+    --neutral-track: var(--mauve-track);
   }
 
   &:where([data-gray-color='olive']) {
-    --gray-1: var(--olive-1);
-    --gray-2: var(--olive-2);
-    --gray-3: var(--olive-3);
-    --gray-4: var(--olive-4);
-    --gray-5: var(--olive-5);
-    --gray-6: var(--olive-6);
-    --gray-7: var(--olive-7);
-    --gray-8: var(--olive-8);
-    --gray-9: var(--olive-9);
-    --gray-10: var(--olive-10);
-    --gray-11: var(--olive-11);
-    --gray-12: var(--olive-12);
+    --neutral-1: var(--olive-1);
+    --neutral-2: var(--olive-2);
+    --neutral-3: var(--olive-3);
+    --neutral-4: var(--olive-4);
+    --neutral-5: var(--olive-5);
+    --neutral-6: var(--olive-6);
+    --neutral-7: var(--olive-7);
+    --neutral-8: var(--olive-8);
+    --neutral-9: var(--olive-9);
+    --neutral-10: var(--olive-10);
+    --neutral-11: var(--olive-11);
+    --neutral-12: var(--olive-12);
 
-    --gray-a1: var(--olive-a1);
-    --gray-a2: var(--olive-a2);
-    --gray-a3: var(--olive-a3);
-    --gray-a4: var(--olive-a4);
-    --gray-a5: var(--olive-a5);
-    --gray-a6: var(--olive-a6);
-    --gray-a7: var(--olive-a7);
-    --gray-a8: var(--olive-a8);
-    --gray-a9: var(--olive-a9);
-    --gray-a10: var(--olive-a10);
-    --gray-a11: var(--olive-a11);
-    --gray-a12: var(--olive-a12);
+    --neutral-a1: var(--olive-a1);
+    --neutral-a2: var(--olive-a2);
+    --neutral-a3: var(--olive-a3);
+    --neutral-a4: var(--olive-a4);
+    --neutral-a5: var(--olive-a5);
+    --neutral-a6: var(--olive-a6);
+    --neutral-a7: var(--olive-a7);
+    --neutral-a8: var(--olive-a8);
+    --neutral-a9: var(--olive-a9);
+    --neutral-a10: var(--olive-a10);
+    --neutral-a11: var(--olive-a11);
+    --neutral-a12: var(--olive-a12);
 
-    --gray-contrast: var(--olive-contrast);
-    --gray-surface: var(--olive-surface);
-    --gray-indicator: var(--olive-indicator);
-    --gray-track: var(--olive-track);
+    --neutral-contrast: var(--olive-contrast);
+    --neutral-surface: var(--olive-surface);
+    --neutral-indicator: var(--olive-indicator);
+    --neutral-track: var(--olive-track);
   }
 
   &:where([data-gray-color='sage']) {
-    --gray-1: var(--sage-1);
-    --gray-2: var(--sage-2);
-    --gray-3: var(--sage-3);
-    --gray-4: var(--sage-4);
-    --gray-5: var(--sage-5);
-    --gray-6: var(--sage-6);
-    --gray-7: var(--sage-7);
-    --gray-8: var(--sage-8);
-    --gray-9: var(--sage-9);
-    --gray-10: var(--sage-10);
-    --gray-11: var(--sage-11);
-    --gray-12: var(--sage-12);
+    --neutral-1: var(--sage-1);
+    --neutral-2: var(--sage-2);
+    --neutral-3: var(--sage-3);
+    --neutral-4: var(--sage-4);
+    --neutral-5: var(--sage-5);
+    --neutral-6: var(--sage-6);
+    --neutral-7: var(--sage-7);
+    --neutral-8: var(--sage-8);
+    --neutral-9: var(--sage-9);
+    --neutral-10: var(--sage-10);
+    --neutral-11: var(--sage-11);
+    --neutral-12: var(--sage-12);
 
-    --gray-a1: var(--sage-a1);
-    --gray-a2: var(--sage-a2);
-    --gray-a3: var(--sage-a3);
-    --gray-a4: var(--sage-a4);
-    --gray-a5: var(--sage-a5);
-    --gray-a6: var(--sage-a6);
-    --gray-a7: var(--sage-a7);
-    --gray-a8: var(--sage-a8);
-    --gray-a9: var(--sage-a9);
-    --gray-a10: var(--sage-a10);
-    --gray-a11: var(--sage-a11);
-    --gray-a12: var(--sage-a12);
+    --neutral-a1: var(--sage-a1);
+    --neutral-a2: var(--sage-a2);
+    --neutral-a3: var(--sage-a3);
+    --neutral-a4: var(--sage-a4);
+    --neutral-a5: var(--sage-a5);
+    --neutral-a6: var(--sage-a6);
+    --neutral-a7: var(--sage-a7);
+    --neutral-a8: var(--sage-a8);
+    --neutral-a9: var(--sage-a9);
+    --neutral-a10: var(--sage-a10);
+    --neutral-a11: var(--sage-a11);
+    --neutral-a12: var(--sage-a12);
 
-    --gray-contrast: var(--sage-contrast);
-    --gray-surface: var(--sage-surface);
-    --gray-indicator: var(--sage-indicator);
-    --gray-track: var(--sage-track);
+    --neutral-contrast: var(--sage-contrast);
+    --neutral-surface: var(--sage-surface);
+    --neutral-indicator: var(--sage-indicator);
+    --neutral-track: var(--sage-track);
   }
 
   &:where([data-gray-color='sand']) {
-    --gray-1: var(--sand-1);
-    --gray-2: var(--sand-2);
-    --gray-3: var(--sand-3);
-    --gray-4: var(--sand-4);
-    --gray-5: var(--sand-5);
-    --gray-6: var(--sand-6);
-    --gray-7: var(--sand-7);
-    --gray-8: var(--sand-8);
-    --gray-9: var(--sand-9);
-    --gray-10: var(--sand-10);
-    --gray-11: var(--sand-11);
-    --gray-12: var(--sand-12);
+    --neutral-1: var(--sand-1);
+    --neutral-2: var(--sand-2);
+    --neutral-3: var(--sand-3);
+    --neutral-4: var(--sand-4);
+    --neutral-5: var(--sand-5);
+    --neutral-6: var(--sand-6);
+    --neutral-7: var(--sand-7);
+    --neutral-8: var(--sand-8);
+    --neutral-9: var(--sand-9);
+    --neutral-10: var(--sand-10);
+    --neutral-11: var(--sand-11);
+    --neutral-12: var(--sand-12);
 
-    --gray-a1: var(--sand-a1);
-    --gray-a2: var(--sand-a2);
-    --gray-a3: var(--sand-a3);
-    --gray-a4: var(--sand-a4);
-    --gray-a5: var(--sand-a5);
-    --gray-a6: var(--sand-a6);
-    --gray-a7: var(--sand-a7);
-    --gray-a8: var(--sand-a8);
-    --gray-a9: var(--sand-a9);
-    --gray-a10: var(--sand-a10);
-    --gray-a11: var(--sand-a11);
-    --gray-a12: var(--sand-a12);
+    --neutral-a1: var(--sand-a1);
+    --neutral-a2: var(--sand-a2);
+    --neutral-a3: var(--sand-a3);
+    --neutral-a4: var(--sand-a4);
+    --neutral-a5: var(--sand-a5);
+    --neutral-a6: var(--sand-a6);
+    --neutral-a7: var(--sand-a7);
+    --neutral-a8: var(--sand-a8);
+    --neutral-a9: var(--sand-a9);
+    --neutral-a10: var(--sand-a10);
+    --neutral-a11: var(--sand-a11);
+    --neutral-a12: var(--sand-a12);
 
-    --gray-contrast: var(--sand-contrast);
-    --gray-surface: var(--sand-surface);
-    --gray-indicator: var(--sand-indicator);
-    --gray-track: var(--sand-track);
+    --neutral-contrast: var(--sand-contrast);
+    --neutral-surface: var(--sand-surface);
+    --neutral-indicator: var(--sand-indicator);
+    --neutral-track: var(--sand-track);
   }
 
   &:where([data-gray-color='slate']) {
-    --gray-1: var(--slate-1);
-    --gray-2: var(--slate-2);
-    --gray-3: var(--slate-3);
-    --gray-4: var(--slate-4);
-    --gray-5: var(--slate-5);
-    --gray-6: var(--slate-6);
-    --gray-7: var(--slate-7);
-    --gray-8: var(--slate-8);
-    --gray-9: var(--slate-9);
-    --gray-10: var(--slate-10);
-    --gray-11: var(--slate-11);
-    --gray-12: var(--slate-12);
+    --neutral-1: var(--slate-1);
+    --neutral-2: var(--slate-2);
+    --neutral-3: var(--slate-3);
+    --neutral-4: var(--slate-4);
+    --neutral-5: var(--slate-5);
+    --neutral-6: var(--slate-6);
+    --neutral-7: var(--slate-7);
+    --neutral-8: var(--slate-8);
+    --neutral-9: var(--slate-9);
+    --neutral-10: var(--slate-10);
+    --neutral-11: var(--slate-11);
+    --neutral-12: var(--slate-12);
 
-    --gray-a1: var(--slate-a1);
-    --gray-a2: var(--slate-a2);
-    --gray-a3: var(--slate-a3);
-    --gray-a4: var(--slate-a4);
-    --gray-a5: var(--slate-a5);
-    --gray-a6: var(--slate-a6);
-    --gray-a7: var(--slate-a7);
-    --gray-a8: var(--slate-a8);
-    --gray-a9: var(--slate-a9);
-    --gray-a10: var(--slate-a10);
-    --gray-a11: var(--slate-a11);
-    --gray-a12: var(--slate-a12);
+    --neutral-a1: var(--slate-a1);
+    --neutral-a2: var(--slate-a2);
+    --neutral-a3: var(--slate-a3);
+    --neutral-a4: var(--slate-a4);
+    --neutral-a5: var(--slate-a5);
+    --neutral-a6: var(--slate-a6);
+    --neutral-a7: var(--slate-a7);
+    --neutral-a8: var(--slate-a8);
+    --neutral-a9: var(--slate-a9);
+    --neutral-a10: var(--slate-a10);
+    --neutral-a11: var(--slate-a11);
+    --neutral-a12: var(--slate-a12);
 
-    --gray-contrast: var(--slate-contrast);
-    --gray-surface: var(--slate-surface);
-    --gray-indicator: var(--slate-indicator);
-    --gray-track: var(--slate-track);
+    --neutral-contrast: var(--slate-contrast);
+    --neutral-surface: var(--slate-surface);
+    --neutral-indicator: var(--slate-indicator);
+    --neutral-track: var(--slate-track);
   }
 }

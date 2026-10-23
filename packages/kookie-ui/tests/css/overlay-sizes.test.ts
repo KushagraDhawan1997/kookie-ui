@@ -21,7 +21,7 @@ describe('overlays follow the v2 overlay ladder', () => {
     const css = read('_internal/base-dialog.css');
     const pad = ['2', '3', '4', '4'];
     for (let n = 1; n <= 4; n++) {
-      const block = css.match(new RegExp(`rt-r-size-${n}\\) \\{([^}]*)\\}`))?.[1] ?? '';
+      const block = css.match(new RegExp(`kui-r-size-${n}\\) \\{([^}]*)\\}`))?.[1] ?? '';
       expect(block).toContain(`--dialog-content-padding: var(--surface-p-${pad[n - 1]})`);
       expect(block).toContain(`--overlay-w: var(--overlay-w-${n})`);
       expect(block).toContain(`border-radius: var(--radius-overlay-${n})`);

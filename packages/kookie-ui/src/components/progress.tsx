@@ -27,7 +27,7 @@ const Progress = React.forwardRef<ProgressElement, ProgressProps>((props, forwar
       data-accent-color={color}
       data-radius={radius}
       ref={forwardedRef}
-      className={classNames('rt-ProgressRoot', className)}
+      className={classNames('kui-ProgressRoot', className)}
       style={mergeStyles(
         {
           '--progress-duration': 'value' in progressProps ? undefined : duration,
@@ -39,7 +39,7 @@ const Progress = React.forwardRef<ProgressElement, ProgressProps>((props, forwar
       {...progressProps}
       asChild={false}
     >
-      <ProgressPrimitive.Indicator className="rt-ProgressIndicator" />
+      <ProgressPrimitive.Indicator className="kui-ProgressIndicator" />
     </ProgressPrimitive.Root>
   );
 });

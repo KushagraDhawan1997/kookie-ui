@@ -1,5 +1,5 @@
-.rt-PopoverContent {
-  background-color: var(--color-panel-solid);
+.kui-PopoverContent {
+  background-color: var(--color-surface);
   box-shadow: var(--shadow-5);
   min-width: var(--radix-popover-trigger-width);
   outline: 0;
@@ -21,7 +21,7 @@
   }
 }
 
-.rt-PopoverToolbar {
+.kui-PopoverToolbar {
   position: absolute;
   top: 0;
   left: 0;
@@ -32,22 +32,22 @@
   align-items: center;
   column-gap: var(--space-2);
   padding: var(--popover-toolbar-padding);
-  background-color: var(--color-panel-solid);
+  background-color: var(--color-surface);
 }
 
-.rt-PopoverToolbarSection {
+.kui-PopoverToolbarSection {
   display: flex;
   align-items: center;
   gap: var(--space-3);
 }
 
-.rt-PopoverToolbarLeft { justify-self: start; }
+.kui-PopoverToolbarLeft { justify-self: start; }
 
-.rt-PopoverToolbarCenter { grid-column: 2; justify-self: center; min-width: 0; text-align: center; }
+.kui-PopoverToolbarCenter { grid-column: 2; justify-self: center; min-width: 0; text-align: center; }
 
-.rt-PopoverToolbarRight { justify-self: end; }
+.kui-PopoverToolbarRight { justify-self: end; }
 
-.rt-PopoverToolbarTitle {
+.kui-PopoverToolbarTitle {
   display: inline-block;
   white-space: nowrap;
   overflow: hidden;
@@ -61,23 +61,23 @@
  ***************************************************************************************************/
 
 @breakpoints {
-  .rt-PopoverContent {
-    &:where(.rt-r-size-1) {
+  .kui-PopoverContent {
+    &:where(.kui-r-size-1) {
       --popover-content-padding: var(--surface-p-1);
       --popover-toolbar-padding: var(--space-3);
       border-radius: var(--radius-surface-1);
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       --popover-content-padding: var(--surface-p-2);
       --popover-toolbar-padding: var(--space-3);
       border-radius: var(--radius-surface-2);
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       --popover-content-padding: var(--surface-p-3);
       --popover-toolbar-padding: var(--space-4);
       border-radius: var(--radius-surface-3);
     }
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       --popover-content-padding: var(--surface-p-4);
       --popover-toolbar-padding: var(--space-5);
       border-radius: var(--radius-surface-4);

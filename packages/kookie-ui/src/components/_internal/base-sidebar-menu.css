@@ -5,8 +5,8 @@
   - Relies on Base Menu tokens: --base-menu-*
 */
 
-/* Sidebar Menu - based on rt-BaseMenuViewport */
-.rt-SidebarMenu {
+/* Sidebar Menu - based on kui-BaseMenuViewport */
+.kui-SidebarMenu {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -17,18 +17,18 @@
   padding: 0;
   min-height: 0;
 
-  :where(.rt-SidebarContent:has(.rt-ScrollAreaScrollbar[data-orientation='vertical'])) & {
+  :where(.kui-SidebarContent:has(.kui-ScrollAreaScrollbar[data-orientation='vertical'])) & {
     padding-inline-end: var(--space-4);
   }
 }
 
 /* Sidebar Menu Item */
-.rt-SidebarMenuItem {
+.kui-SidebarMenuItem {
   list-style: none;
 }
 
 /* Sidebar Menu Button - inherit from BaseMenuItem */
-.rt-SidebarMenuButton {
+.kui-SidebarMenuButton {
   display: flex;
   align-items: center;
   gap: var(--base-menu-item-gap);
@@ -56,11 +56,11 @@
   cursor: var(--cursor-menu-item);
   &:where([data-disabled]) {
     cursor: default;
-    color: var(--gray-a8);
+    color: var(--neutral-a8);
   }
 
   /* Active navigation state - always accent-based */
-  &:where([data-active], .rt-active) {
+  &:where([data-active], .kui-active) {
     background-color: var(--accent-a3);
     color: var(--accent-a12);
   }
@@ -77,20 +77,20 @@
   }
 
   /* Muted text sits a step lower inside items */
-  & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
-    color: var(--gray-a10);
+  & :where(.kui-Text.kui-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
+    color: var(--neutral-a10);
   }
 
   /* Ensure shortcuts inherit color in disabled/highlighted/hover/active states */
   &:where([data-disabled], [data-highlighted], [data-active]) {
-    & :where(.rt-SidebarMenuShortcut) {
+    & :where(.kui-SidebarMenuShortcut) {
       color: inherit;
     }
   }
 
   @media (hover: hover) {
     &:where(:hover) {
-      & :where(.rt-SidebarMenuShortcut) {
+      & :where(.kui-SidebarMenuShortcut) {
         color: inherit;
       }
     }
@@ -100,19 +100,19 @@
 }
 
 /* Sidebar Menu Sub Components - Radix Accordion */
-.rt-SidebarMenuSubTrigger {
+.kui-SidebarMenuSubTrigger {
   justify-content: space-between;
 }
 
 /* Accordion trigger icon rotation */
-.rt-SidebarMenuSubTrigger {
+.kui-SidebarMenuSubTrigger {
 
-  &:where([data-state='open']) :where(.rt-SidebarMenuSubTriggerIcon) {
+  &:where([data-state='open']) :where(.kui-SidebarMenuSubTriggerIcon) {
     transform: rotate(90deg);
   }
 }
 
-.rt-SidebarMenuSubContent {
+.kui-SidebarMenuSubContent {
   overflow: hidden;
 
   /* Allow focus outlines to show */
@@ -123,13 +123,13 @@
   /* Radix Accordion animation support */
 }
 
-.rt-SidebarMenuSubList {
+.kui-SidebarMenuSubList {
   padding-inline-start: var(--space-5);
-  border-inline-start: 1px solid var(--gray-a5);
+  border-inline-start: 1px solid var(--neutral-a5);
   margin-inline-start: var(--space-4);
 }
 
-.rt-SidebarGroupLabel {
+.kui-SidebarGroupLabel {
   /* Inherit all BaseMenuLabel styles */
   display: flex;
   align-items: center;
@@ -140,30 +140,30 @@
   padding-inline-end: var(--base-menu-item-padding-right);
   box-sizing: border-box;
   /* a11 keeps the label above 4.5:1 on every sidebar background. */
-  color: var(--gray-a11);
+  color: var(--neutral-a11);
   user-select: none;
   cursor: default;
 
   /* After items, the extra air is inside the label's own box - identical to BaseMenuLabel */
-  :where(.rt-SidebarMenuItem) + & {
+  :where(.kui-SidebarMenuItem) + & {
     min-height: calc(var(--base-menu-item-height) + var(--space-3));
     padding-top: calc(var(--base-menu-item-padding-y) + var(--space-3));
   }
 }
 
-.rt-SidebarMenuShortcut {
+.kui-SidebarMenuShortcut {
   display: flex;
   align-items: center;
   margin-inline-start: auto;
   padding-inline-start: var(--space-5);
-  color: var(--gray-a11);
+  color: var(--neutral-a11);
 }
 
 /*
  * A trailing badge sits the row's inset from the far edge, like a shortcut. A badge is taller
  * than the line, so it may spend the row's block insets rather than grow the row past its height.
  */
-.rt-SidebarMenuBadge {
+.kui-SidebarMenuBadge {
   display: flex;
   align-items: center;
   margin-inline-start: auto;
@@ -174,14 +174,14 @@
 }
 
 /* Add balanced spacing for sidebar menu items while preserving base menu border radius */
-.rt-SidebarContent :where(.rt-BaseMenuItem) {
+.kui-SidebarContent :where(.kui-BaseMenuItem) {
   margin-top: 1px;
   margin-bottom: 1px;
 }
 
 /* Add same balanced spacing for submenu items */
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-SidebarContent :where(.rt-SidebarMenuSubList) .rt-SidebarMenuButton {
+.kui-SidebarContent :where(.kui-SidebarMenuSubList) .kui-SidebarMenuButton {
   margin-top: 1px;
   margin-bottom: 1px;
 }

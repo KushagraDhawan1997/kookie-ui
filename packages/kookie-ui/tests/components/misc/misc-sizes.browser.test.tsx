@@ -22,15 +22,15 @@ describe('sizeless primitives keep the old default look', () => {
         </ScrollArea>
       </Theme>,
     );
-    const spinner = container.querySelector('.rt-Spinner')!.getBoundingClientRect();
+    const spinner = container.querySelector('.kui-Spinner')!.getBoundingClientRect();
     expect([spinner.width, spinner.height]).toEqual([16, 16]);
-    const [h, v] = container.querySelectorAll('.rt-Separator');
+    const [h, v] = container.querySelectorAll('.kui-Separator');
     expect(h.getBoundingClientRect().width).toBe(120);
     expect(v.getBoundingClientRect().height).toBe(60);
-    const progress = container.querySelector('.rt-ProgressRoot')!;
+    const progress = container.querySelector('.kui-ProgressRoot')!;
     expect(progress.getBoundingClientRect().height).toBeGreaterThan(0);
     expect(progress.getBoundingClientRect().height).toBe(6);
-    const bar = container.querySelector('.rt-ScrollAreaScrollbar[data-orientation="vertical"]')!;
+    const bar = container.querySelector('.kui-ScrollAreaScrollbar[data-orientation="vertical"]')!;
     expect(bar.getBoundingClientRect().width).toBe(4);
   });
 });
@@ -49,13 +49,13 @@ describe('chip ladder', () => {
         <Chip>Rest</Chip>
       </Theme>,
     );
-    const chips = [...container.querySelectorAll('.rt-Chip')];
+    const chips = [...container.querySelectorAll('.kui-Chip')];
     const palette = [2, 4, 8, 12];
     for (const b of chips) {
       for (const p of ['padding-top', 'padding-left', 'column-gap']) expect(palette).toContain(px(b, p));
     }
     const rest = chips.at(-1)!;
-    expect(rest.className).toContain('rt-r-size-2');
+    expect(rest.className).toContain('kui-r-size-2');
     expect([px(rest, 'padding-top'), px(rest, 'padding-left'), px(rest, 'column-gap')]).toEqual([4, 8, 4]);
   });
 
@@ -67,7 +67,7 @@ describe('chip ladder', () => {
         </Chip>
       </Theme>,
     );
-    const b = container.querySelector('.rt-Chip')!;
+    const b = container.querySelector('.kui-Chip')!;
     expect(getComputedStyle(b).cursor).toBe('default');
     expect(getComputedStyle(b).pointerEvents).not.toBe('none');
     expect(getComputedStyle(b).opacity).toBe('1');
@@ -85,7 +85,7 @@ describe('avatar ladder', () => {
         <Avatar fallback="B" />
       </Theme>,
     );
-    const boxes = [...container.querySelectorAll('.rt-AvatarRoot')].map((el) => el.getBoundingClientRect());
+    const boxes = [...container.querySelectorAll('.kui-AvatarRoot')].map((el) => el.getBoundingClientRect());
     expect(boxes.map((b) => b.height)).toEqual([28, 32, 40, 48, 56, 64, 80, 96, 128, 40]);
     expect(boxes.map((b) => b.width)).toEqual([28, 32, 40, 48, 56, 64, 80, 96, 128, 40]);
   });

@@ -86,14 +86,14 @@ const SelectTrigger = React.forwardRef<SelectTriggerElement, SelectTriggerProps>
           {...triggerProps}
           {...ariaProps}
           ref={forwardedRef}
-          className={classNames('rt-reset', 'rt-SelectTrigger', className)}
+          className={classNames('kui-reset', 'kui-SelectTrigger', className)}
         >
-          <span className="rt-SelectTriggerInner">
+          <span className="kui-SelectTriggerInner">
             <SelectPrimitive.Value placeholder={placeholder}>{children}</SelectPrimitive.Value>
           </span>
           <SelectPrimitive.Icon asChild>
             {loading ? (
-              <div className="rt-SelectIcon rt-SelectLoadingIcon" aria-hidden="true">
+              <div className="kui-SelectIcon kui-SelectLoadingIcon" aria-hidden="true">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <circle
                     cx="8"
@@ -104,12 +104,12 @@ const SelectTrigger = React.forwardRef<SelectTriggerElement, SelectTriggerProps>
                     strokeLinecap="round"
                     strokeDasharray="32"
                     strokeDashoffset="32"
-                    className="rt-SelectLoadingIconCircle"
+                    className="kui-SelectLoadingIconCircle"
                   />
                 </svg>
               </div>
             ) : (
-              <ChevronDownIcon className="rt-SelectIcon" />
+              <ChevronDownIcon className="kui-SelectIcon" />
             )}
           </SelectPrimitive.Icon>
         </button>
@@ -149,31 +149,31 @@ const SelectContent = React.forwardRef<SelectContentElement, SelectContentProps>
             asChild={false}
             ref={forwardedRef}
             className={classNames(
-              'rt-PopperContent',
-              'rt-BaseMenuContent',
-          'rt-variant-soft',
-              'rt-SelectContent',
+              'kui-PopperContent',
+              'kui-BaseMenuContent',
+          'kui-variant-soft',
+              'kui-SelectContent',
               className,
             )}
           >
-            <ScrollAreaPrimitive.Root type="auto" className="rt-ScrollAreaRoot">
+            <ScrollAreaPrimitive.Root type="auto" className="kui-ScrollAreaRoot">
               <SelectPrimitive.Viewport
                 asChild
-                className={classNames('rt-BaseMenuViewport', 'rt-SelectViewport')}
+                className={classNames('kui-BaseMenuViewport', 'kui-SelectViewport')}
               >
                 <ScrollAreaPrimitive.Viewport
                   ref={setThumbViewport}
-                  className="rt-ScrollAreaViewport"
+                  className="kui-ScrollAreaViewport"
                   style={{ overflowY: undefined }}
                 >
                   {children}
                 </ScrollAreaPrimitive.Viewport>
               </SelectPrimitive.Viewport>
               <ScrollAreaPrimitive.Scrollbar
-                className="rt-ScrollAreaScrollbar"
+                className="kui-ScrollAreaScrollbar"
                 orientation="vertical"
               >
-                <ScrollAreaPrimitive.Thumb className="rt-ScrollAreaThumb" />
+                <ScrollAreaPrimitive.Thumb className="kui-ScrollAreaThumb" />
               </ScrollAreaPrimitive.Scrollbar>
             </ScrollAreaPrimitive.Root>
           </SelectPrimitive.Content>
@@ -199,15 +199,15 @@ const SelectItem = React.forwardRef<SelectItemElement, SelectItemProps>((props, 
       asChild={false}
       ref={forwardedRef}
       className={classNames(
-        'rt-reset',
-        'rt-BaseMenuItem',
-        'rt-SelectItem',
-        { 'rt-SelectItemRich': isRichContent },
+        'kui-reset',
+        'kui-BaseMenuItem',
+        'kui-SelectItem',
+        { 'kui-SelectItemRich': isRichContent },
         className,
       )}
     >
-      <SelectPrimitive.ItemIndicator className="rt-SelectItemIndicator">
-        <ThickCheckIcon className="rt-SelectItemIndicatorIcon" />
+      <SelectPrimitive.ItemIndicator className="kui-SelectItemIndicator">
+        <ThickCheckIcon className="kui-SelectItemIndicatorIcon" />
       </SelectPrimitive.ItemIndicator>
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
     </SelectPrimitive.Item>
@@ -224,7 +224,7 @@ const SelectGroup = React.forwardRef<SelectGroupElement, SelectGroupProps>(
       {...props}
       asChild={false}
       ref={forwardedRef}
-      className={classNames('rt-SelectGroup', className)}
+      className={classNames('kui-SelectGroup', className)}
     />
   ),
 );
@@ -239,7 +239,7 @@ const SelectLabel = React.forwardRef<SelectLabelElement, SelectLabelProps>(
       {...props}
       asChild={false}
       ref={forwardedRef}
-      className={classNames('rt-BaseMenuLabel', 'rt-SelectLabel', className)}
+      className={classNames('kui-BaseMenuLabel', 'kui-SelectLabel', className)}
     />
   ),
 );
@@ -254,7 +254,7 @@ const SelectSeparator = React.forwardRef<SelectSeparatorElement, SelectSeparator
       {...props}
       asChild={false}
       ref={forwardedRef}
-      className={classNames('rt-BaseMenuSeparator', 'rt-SelectSeparator', className)}
+      className={classNames('kui-BaseMenuSeparator', 'kui-SelectSeparator', className)}
     />
   ),
 );

@@ -25,7 +25,7 @@ function ControlledFixture() {
 describe('Bottom controlled open', () => {
   it('parent drives state; callback emitted', async () => {
     renderWithProviders(<ControlledFixture />);
-    const el = () => screen.getByText('bottom').closest('.rt-ShellBottom') as HTMLElement;
+    const el = () => screen.getByText('bottom').closest('.kui-ShellBottom') as HTMLElement;
     expect(el()).toHaveAttribute('data-mode', 'collapsed');
     await userEvent.click(screen.getByRole('button', { name: /toggle bottom/i }));
     expect(el()).toHaveAttribute('data-mode', 'expanded');

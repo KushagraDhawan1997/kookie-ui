@@ -121,7 +121,7 @@ interface SpecsBlockProps {
  * <PreviewSection
  *   preview={<Button>Click me</Button>}
  *   background="dots"
- *   backgroundProps={{ dotSize: 16, color: 'var(--gray-10)' }}
+ *   backgroundProps={{ dotSize: 16, color: 'var(--neutral-10)' }}
  * />
  * ```
  */
@@ -144,7 +144,7 @@ const PreviewSection = ({
   };
 }) => {
   // Extract background properties with sensible defaults
-  const { dotSize = 24, color = 'var(--gray-10)', backgroundColor = 'var(--gray-2)', height = '300px', width = '100%', radius = '3' } = backgroundProps;
+  const { dotSize = 24, color = 'var(--neutral-10)', backgroundColor = 'var(--neutral-2)', height = '300px', width = '100%', radius = '3' } = backgroundProps;
 
   // Render with no background (default card styling)
   if (background === 'none') {
@@ -259,7 +259,7 @@ const SpecsSection = memo(function SpecsSection({
     <Box
       className="specs-content"
       style={{
-        backgroundColor: 'var(--gray-a2)',
+        backgroundColor: 'var(--neutral-a2)',
         padding: 'var(--space-3) var(--space-5)',
       }}
     >

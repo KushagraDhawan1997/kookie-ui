@@ -32,24 +32,24 @@ function App({ defaultOpen }: { defaultOpen?: boolean }) {
 describe('Panel defaultOpen (uncontrolled)', () => {
   it('is closed by default when defaultOpen is not provided', () => {
     renderWithProviders(<App />);
-    const panelRoot = screen.getByText('panel').closest('.rt-ShellPanel') as HTMLElement;
+    const panelRoot = screen.getByText('panel').closest('.kui-ShellPanel') as HTMLElement;
     expect(panelRoot).toHaveAttribute('data-mode', 'collapsed');
   });
 
   it('is open on mount when defaultOpen is true', async () => {
     renderWithProviders(<App defaultOpen />);
     await waitFor(() => {
-      const panelRoot = screen.getByText('panel').closest('.rt-ShellPanel') as HTMLElement;
+      const panelRoot = screen.getByText('panel').closest('.kui-ShellPanel') as HTMLElement;
       expect(panelRoot).toHaveAttribute('data-mode', 'expanded');
     });
   });
 
   it('toggles internally via shell.togglePane without props', async () => {
     renderWithProviders(<App />);
-    let panelRoot = screen.getByText('panel').closest('.rt-ShellPanel') as HTMLElement;
+    let panelRoot = screen.getByText('panel').closest('.kui-ShellPanel') as HTMLElement;
     expect(panelRoot).toHaveAttribute('data-mode', 'collapsed');
     await userEvent.click(screen.getByRole('button', { name: /toggle panel/i }));
-    panelRoot = screen.getByText('panel').closest('.rt-ShellPanel') as HTMLElement;
+    panelRoot = screen.getByText('panel').closest('.kui-ShellPanel') as HTMLElement;
     expect(panelRoot).toHaveAttribute('data-mode', 'expanded');
   });
 });

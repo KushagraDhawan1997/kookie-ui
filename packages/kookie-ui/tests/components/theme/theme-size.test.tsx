@@ -13,7 +13,7 @@ function button(container: HTMLElement, name = 'Go') {
 }
 
 function textField(container: HTMLElement) {
-  return container.querySelector('.rt-TextFieldRoot') as HTMLElement;
+  return container.querySelector('.kui-TextFieldRoot') as HTMLElement;
 }
 
 describe('Theme size', () => {
@@ -24,8 +24,8 @@ describe('Theme size', () => {
         <TextField.Root aria-label="Name" />
       </Theme>,
     );
-    expect(button(container).classList.contains('rt-r-size-2')).toBe(true);
-    expect(textField(container).classList.contains('rt-r-size-2')).toBe(true);
+    expect(button(container).classList.contains('kui-r-size-2')).toBe(true);
+    expect(textField(container).classList.contains('kui-r-size-2')).toBe(true);
   });
 
   test('controls with no size take the theme size', () => {
@@ -35,9 +35,9 @@ describe('Theme size', () => {
         <TextField.Root aria-label="Name" />
       </Theme>,
     );
-    expect(button(container).classList.contains('rt-r-size-3')).toBe(true);
-    expect(button(container).classList.contains('rt-r-size-2')).toBe(false);
-    expect(textField(container).classList.contains('rt-r-size-3')).toBe(true);
+    expect(button(container).classList.contains('kui-r-size-3')).toBe(true);
+    expect(button(container).classList.contains('kui-r-size-2')).toBe(false);
+    expect(textField(container).classList.contains('kui-r-size-3')).toBe(true);
   });
 
   test('an explicit size wins, a responsive one included', () => {
@@ -48,12 +48,12 @@ describe('Theme size', () => {
         <TextField.Root size="4" aria-label="Name" />
       </Theme>,
     );
-    expect(button(container).classList.contains('rt-r-size-1')).toBe(true);
-    expect(button(container).classList.contains('rt-r-size-3')).toBe(false);
+    expect(button(container).classList.contains('kui-r-size-1')).toBe(true);
+    expect(button(container).classList.contains('kui-r-size-3')).toBe(false);
     const responsive = button(container, 'Wide');
-    expect(responsive.classList.contains('rt-r-size-4')).toBe(true);
-    expect(responsive.classList.contains('md:rt-r-size-1')).toBe(true);
-    expect(textField(container).classList.contains('rt-r-size-4')).toBe(true);
+    expect(responsive.classList.contains('kui-r-size-4')).toBe(true);
+    expect(responsive.classList.contains('md:kui-r-size-1')).toBe(true);
+    expect(textField(container).classList.contains('kui-r-size-4')).toBe(true);
   });
 
   test('a nested theme overrides for its subtree', () => {
@@ -68,9 +68,9 @@ describe('Theme size', () => {
         </Theme>
       </Theme>,
     );
-    expect(button(container, 'Outer').classList.contains('rt-r-size-3')).toBe(true);
-    expect(button(container, 'Inner').classList.contains('rt-r-size-1')).toBe(true);
-    expect(button(container, 'Inherited').classList.contains('rt-r-size-3')).toBe(true);
+    expect(button(container, 'Outer').classList.contains('kui-r-size-3')).toBe(true);
+    expect(button(container, 'Inner').classList.contains('kui-r-size-1')).toBe(true);
+    expect(button(container, 'Inherited').classList.contains('kui-r-size-3')).toBe(true);
   });
 
   test('the size is carried on the theme context', () => {
@@ -103,8 +103,8 @@ describe('Theme size', () => {
         </DropdownMenu.Root>
       </Theme>,
     );
-    const content = baseElement.querySelector('.rt-DropdownMenuContent') as HTMLElement;
-    expect(content.classList.contains('rt-r-size-4')).toBe(true);
+    const content = baseElement.querySelector('.kui-DropdownMenuContent') as HTMLElement;
+    expect(content.classList.contains('kui-r-size-4')).toBe(true);
   });
 
   test('chip rests at 2 and does not follow the theme', () => {
@@ -113,7 +113,7 @@ describe('Theme size', () => {
         <Chip>New</Chip>
       </Theme>,
     );
-    const chip = container.querySelector('.rt-Chip') as HTMLElement;
-    expect(chip.classList.contains('rt-r-size-2')).toBe(true);
+    const chip = container.querySelector('.kui-Chip') as HTMLElement;
+    expect(chip.classList.contains('kui-r-size-2')).toBe(true);
   });
 });

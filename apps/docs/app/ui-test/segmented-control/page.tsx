@@ -85,7 +85,7 @@ export default function SegmentedControlTest() {
             </Box>
           </Flex>
 
-          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               <Code variant="soft">iconOnly</Code> applies fixed square width = height, with no horizontal padding
             </Text>
@@ -171,7 +171,7 @@ export default function SegmentedControlTest() {
             </Flex>
           </Flex>
 
-          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               Uses <Code variant="soft">--segmented-control-height</Code> for both width and height
             </Text>
@@ -250,7 +250,7 @@ export default function SegmentedControlTest() {
             </Box>
           </Flex>
 
-          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               Always include <Code variant="soft">aria-label</Code> for accessibility when using icon-only segments
             </Text>
@@ -273,7 +273,7 @@ export default function SegmentedControlTest() {
           <Box 
             p="7" 
             style={{ 
-              background: 'var(--gray-a2)', 
+              background: 'var(--neutral-a2)', 
               borderRadius: 'var(--radius-3)',
               minHeight: 120,
             }}
@@ -320,7 +320,7 @@ export default function SegmentedControlTest() {
             </SegmentedControl.Root>
           </Flex>
 
-          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               Click different segments to see the smooth sliding animation
             </Text>
@@ -394,7 +394,7 @@ export default function SegmentedControlTest() {
             </Box>
           </Flex>
 
-          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               Items maintain minimum square dimensions but grow equally to fill container. Icons stay perfectly centered using <Code variant="soft">minmax(height, 1fr)</Code> grid columns.
             </Text>
@@ -487,7 +487,7 @@ export default function SegmentedControlTest() {
             </Box>
           </Flex>
 
-          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               Selected: <Code variant="soft">{verticalView}</Code> - Perfect for sidebar tools and compact interfaces
             </Text>
@@ -543,7 +543,7 @@ export default function SegmentedControlTest() {
             </Box>
           </Flex>
 
-          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               Both controls are synced: <Code variant="soft">{verticalTool}</Code>
             </Text>
@@ -672,7 +672,7 @@ export default function SegmentedControlTest() {
             </Box>
           </Flex>
 
-          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               Vertical icon-only controls are perfect for sidebars, tool palettes, and compact navigation rails
             </Text>
@@ -724,7 +724,7 @@ export default function SegmentedControlTest() {
             </SegmentedControl.Root>
           </Flex>
 
-          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               Click different segments to see the smooth vertical sliding animation with spring physics
             </Text>

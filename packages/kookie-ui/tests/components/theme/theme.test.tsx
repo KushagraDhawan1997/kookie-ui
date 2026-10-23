@@ -17,7 +17,7 @@ function readContext() {
 describe('Theme attributes', () => {
   test('the root theme carries the resolved values', () => {
     const { container } = render(<Theme appearance="dark" accentColor="crimson" radius="large" />);
-    const root = container.querySelector('.radix-themes') as HTMLElement;
+    const root = container.querySelector('.kui-theme') as HTMLElement;
 
     expect(root.dataset.isRootTheme).toBe('true');
     expect(root.dataset.accentColor).toBe('crimson');
@@ -33,7 +33,7 @@ describe('Theme attributes', () => {
         <Theme appearance="dark" data-testid="nested" />
       </Theme>,
     );
-    const themes = container.querySelectorAll('.radix-themes');
+    const themes = container.querySelectorAll('.kui-theme');
 
     expect(themes).toHaveLength(2);
     expect((themes[0] as HTMLElement).dataset.isRootTheme).toBe('true');
@@ -42,7 +42,7 @@ describe('Theme attributes', () => {
 
   test('grayColor="auto" resolves against the accent colour', () => {
     const { container } = render(<Theme accentColor="crimson" grayColor="auto" />);
-    const root = container.querySelector('.radix-themes') as HTMLElement;
+    const root = container.querySelector('.kui-theme') as HTMLElement;
 
     expect(root.dataset.grayColor).toBeTruthy();
     expect(root.dataset.grayColor).not.toBe('auto');
@@ -77,7 +77,7 @@ describe('Theme data-os', () => {
     const restore = withUserAgent(userAgent);
     try {
       const { container } = render(<Theme />);
-      const root = container.querySelector('.radix-themes') as HTMLElement;
+      const root = container.querySelector('.kui-theme') as HTMLElement;
       expect(root.dataset.os).toBe(expected);
     } finally {
       restore();
@@ -88,7 +88,7 @@ describe('Theme data-os', () => {
     const restore = withUserAgent('Mozilla/5.0 (something else)');
     try {
       const { container } = render(<Theme />);
-      const root = container.querySelector('.radix-themes') as HTMLElement;
+      const root = container.querySelector('.kui-theme') as HTMLElement;
       expect(root.hasAttribute('data-os')).toBe(false);
     } finally {
       restore();
@@ -103,7 +103,7 @@ describe('Theme data-os', () => {
           <Theme appearance="dark" />
         </Theme>,
       );
-      const themes = container.querySelectorAll('.radix-themes');
+      const themes = container.querySelectorAll('.kui-theme');
 
       expect((themes[0] as HTMLElement).dataset.os).toBe('macos');
       expect((themes[1] as HTMLElement).hasAttribute('data-os')).toBe(false);
@@ -117,7 +117,7 @@ describe('Theme data-os', () => {
     const restore = withUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)');
     try {
       const { container, rerender } = render(<Theme accentColor="blue" />);
-      const root = container.querySelector('.radix-themes') as HTMLElement;
+      const root = container.querySelector('.kui-theme') as HTMLElement;
 
       rerender(<Theme accentColor="crimson" />);
 
@@ -132,7 +132,7 @@ describe('Theme data-os', () => {
     const restore = withUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)');
     try {
       const { container } = render(<Theme data-os="windows" />);
-      const root = container.querySelector('.radix-themes') as HTMLElement;
+      const root = container.querySelector('.kui-theme') as HTMLElement;
       expect(root.dataset.os).toBe('windows');
     } finally {
       restore();
@@ -143,7 +143,7 @@ describe('Theme data-os', () => {
     const restore = withUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)');
     try {
       const { container, unmount } = render(<Theme />);
-      const root = container.querySelector('.radix-themes') as HTMLElement;
+      const root = container.querySelector('.kui-theme') as HTMLElement;
       expect(root.dataset.os).toBe('macos');
 
       unmount();
@@ -230,7 +230,7 @@ describe('Theme values follow their props', () => {
 
   test('solid is the only material, so no material attribute is written', () => {
     const { container } = render(<Theme />);
-    const root = container.querySelector('.radix-themes') as HTMLElement;
+    const root = container.querySelector('.kui-theme') as HTMLElement;
 
     expect(root.dataset.material).toBeUndefined();
   });

@@ -10,20 +10,20 @@ const layoutValues = ['auto', 'fixed'] as const;
 const tableRootPropDefs = {
   size: {
     type: 'enum',
-    className: 'rt-r-size',
+    className: 'kui-r-size',
     values: sizes,
     default: '2',
     responsive: true,
   },
   variant: {
     type: 'enum',
-    className: 'rt-variant',
+    className: 'kui-variant',
     values: variants,
     default: 'ghost',
   },
   layout: {
     type: 'enum',
-    className: 'rt-r-tl',
+    className: 'kui-r-tl',
     values: layoutValues,
     responsive: true,
   },
@@ -38,7 +38,7 @@ const rowAlign = ['start', 'center', 'end', 'baseline'] as const;
 const tableRowPropDefs = {
   align: {
     type: 'enum',
-    className: 'rt-r-va',
+    className: 'kui-r-va',
     values: rowAlign,
     parseValue: parseAlignValue,
     responsive: true,
@@ -61,7 +61,7 @@ const justifyValues = ['start', 'center', 'end'] as const;
 const tableCellPropDefs = {
   justify: {
     type: 'enum',
-    className: 'rt-r-ta',
+    className: 'kui-r-ta',
     values: justifyValues,
     parseValue: parseJustifyValue,
     responsive: true,

@@ -3,11 +3,11 @@ import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Accordion, Tabs, Theme } from '../../../src/components/index';
 
-// A disabled trigger reads like a disabled menu item: --gray-a8 text and a default cursor.
+// A disabled trigger reads like a disabled menu item: --neutral-a8 text and a default cursor.
 const resolve = (value: string) => {
   const probe = document.createElement('span');
   probe.style.color = value;
-  document.querySelector('.radix-themes')!.appendChild(probe);
+  document.querySelector('.kui-theme')!.appendChild(probe);
   const color = getComputedStyle(probe).color;
   probe.remove();
   return color;
@@ -33,7 +33,7 @@ describe('disabled triggers in a browser', () => {
         </Accordion.Root>
       </Theme>,
     );
-    const gray = resolve('var(--gray-a8)');
+    const gray = resolve('var(--neutral-a8)');
     const tab = screen.getByRole('tab', { name: 'B' });
     const trigger = screen.getByRole('button', { name: 'X' });
     for (const el of [tab, trigger]) {

@@ -15,7 +15,7 @@ describe('Rail (stacked) data-open', () => {
       </Shell.Root>,
     );
 
-    const left = document.querySelector('.rt-ShellRail') as HTMLElement;
+    const left = document.querySelector('.kui-ShellRail') as HTMLElement;
     expect(left).toBeTruthy();
     expect(left.hasAttribute('data-open')).toBe(true);
   });
@@ -30,7 +30,7 @@ describe('Rail (stacked) data-open', () => {
       </Shell.Root>,
     );
 
-    const left = document.querySelector('.rt-ShellRail') as HTMLElement;
+    const left = document.querySelector('.kui-ShellRail') as HTMLElement;
     expect(left).toBeTruthy();
     expect(left.hasAttribute('data-open')).toBe(false);
   });

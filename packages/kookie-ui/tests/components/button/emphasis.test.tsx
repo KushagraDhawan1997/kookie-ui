@@ -23,13 +23,13 @@ describe('emphasis is a button rank, and the same thing as its variant', () => {
       );
       const byName = (name: string) => screen.getByRole('button', { name });
       expect(byName('A').className).toBe(byName('B').className);
-      for (const name of ['A', 'C', 'D', 'E']) expect(byName(name)).toHaveClass(`rt-variant-${variant}`);
+      for (const name of ['A', 'C', 'D', 'E']) expect(byName(name)).toHaveClass(`kui-variant-${variant}`);
     });
   }
 
   it('a button with neither rests at medium', () => {
     renderWithProviders(<Button>A</Button>);
-    expect(screen.getByRole('button', { name: 'A' })).toHaveClass('rt-variant-raised');
+    expect(screen.getByRole('button', { name: 'A' })).toHaveClass('kui-variant-raised');
   });
 
   it('passing both is an error', () => {
@@ -46,7 +46,7 @@ describe('emphasis is a button rank, and the same thing as its variant', () => {
       </Toolbar.Root>,
     );
     const save = screen.getByRole('button', { name: 'Save' });
-    expect(save).toHaveClass('rt-variant-solid');
+    expect(save).toHaveClass('kui-variant-solid');
     expect(save).not.toHaveAttribute('data-accent-color', 'gray');
   });
 });

@@ -49,7 +49,7 @@ describe('Escape inside an overlay pane', () => {
     fireEvent.keyDown(screen.getByRole('textbox', { name: 'search' }), { key: 'Escape' });
 
     expect(own).toHaveBeenCalledTimes(1);
-    expect(q('.rt-ShellInspector').getAttribute('data-state')).toBe('open');
+    expect(q('.kui-ShellInspector').getAttribute('data-state')).toBe('open');
   });
 
   it('a component that stops the key keeps the pane open', () => {
@@ -63,7 +63,7 @@ describe('Escape inside an overlay pane', () => {
     );
 
     fireEvent.keyDown(screen.getByRole('textbox', { name: 'search' }), { key: 'Escape' });
-    expect(q('.rt-ShellInspector').getAttribute('data-state')).toBe('open');
+    expect(q('.kui-ShellInspector').getAttribute('data-state')).toBe('open');
   });
 
   it('with no handler of its own, Escape closes the pane', () => {
@@ -77,7 +77,7 @@ describe('Escape inside an overlay pane', () => {
     );
 
     fireEvent.keyDown(screen.getByRole('textbox', { name: 'search' }), { key: 'Escape' });
-    expect(q('.rt-ShellInspector').getAttribute('data-state')).toBe('closed');
+    expect(q('.kui-ShellInspector').getAttribute('data-state')).toBe('closed');
   });
 
   it('with focus on the document, Escape still closes the overlay', () => {
@@ -91,7 +91,7 @@ describe('Escape inside an overlay pane', () => {
     expect(document.activeElement).toBe(document.body);
 
     fireEvent.keyDown(document.body, { key: 'Escape' });
-    expect(q('.rt-ShellInspector').getAttribute('data-state')).toBe('closed');
+    expect(q('.kui-ShellInspector').getAttribute('data-state')).toBe('closed');
   });
 });
 
@@ -126,12 +126,12 @@ describe('focus with more than one overlay', () => {
 
     fireEvent.click(done);
 
-    expect(q('.rt-ShellInspector').getAttribute('data-state')).toBe('closed');
+    expect(q('.kui-ShellInspector').getAttribute('data-state')).toBe('closed');
     // The Trigger that opened the Inspector, inside the Sidebar that stays open.
     expect(document.activeElement).toBe(screen.getByRole('button', { name: 'details' }));
 
     fireEvent.keyDown(document.activeElement as HTMLElement, { key: 'Escape' });
-    expect(q('.rt-ShellSidebar').getAttribute('data-state')).toBe('closed');
+    expect(q('.kui-ShellSidebar').getAttribute('data-state')).toBe('closed');
   });
 });
 
@@ -159,7 +159,7 @@ describe('focus taken away after an overlay opens or closes', () => {
     const opener = screen.getByTestId('opener');
     opener.focus();
     fireEvent.click(opener);
-    expect(document.activeElement).toBe(q('.rt-ShellInspector'));
+    expect(document.activeElement).toBe(q('.kui-ShellInspector'));
 
     // The menu restores focus to itself, then goes away.
     opener.focus();
@@ -169,7 +169,7 @@ describe('focus taken away after an overlay opens or closes', () => {
       vi.advanceTimersToNextFrame();
     });
 
-    expect(document.activeElement).toBe(q('.rt-ShellInspector'));
+    expect(document.activeElement).toBe(q('.kui-ShellInspector'));
   });
 
   it('closing from a layer outside the frame returns focus once that layer lets go', () => {
@@ -227,7 +227,7 @@ describe('containment keeps up with the frame', () => {
         <Shell.Inspector defaultOpen>inspector</Shell.Inspector>
       </Shell.Root>,
     );
-    expect(q('.rt-ShellRoot').hasAttribute('data-overlay-live')).toBe(true);
+    expect(q('.kui-ShellRoot').hasAttribute('data-overlay-live')).toBe(true);
 
     await act(async () => {
       show();
@@ -249,15 +249,15 @@ describe('containment keeps up with the frame', () => {
     await act(async () => {
       rerender(<App busy={false} />);
     });
-    fireEvent.click(q('.rt-ShellScrim'));
+    fireEvent.click(q('.kui-ShellScrim'));
 
-    expect(isInert(q('.rt-ShellContent'))).toBe(false);
+    expect(isInert(q('.kui-ShellContent'))).toBe(false);
   });
 });
 
 describe('the page lock', () => {
   afterEach(() => {
-    document.documentElement.removeAttribute('data-rt-shell-lock');
+    document.documentElement.removeAttribute('data-kui-shell-lock');
   });
 
   it('a Shell given its own height leaves the page alone', () => {
@@ -267,8 +267,8 @@ describe('the page lock', () => {
         <Shell.Inspector defaultOpen>inspector</Shell.Inspector>
       </Shell.Root>,
     );
-    expect(q('.rt-ShellRoot').hasAttribute('data-overlay-live')).toBe(true);
-    expect(document.documentElement.hasAttribute('data-rt-shell-lock')).toBe(false);
+    expect(q('.kui-ShellRoot').hasAttribute('data-overlay-live')).toBe(true);
+    expect(document.documentElement.hasAttribute('data-kui-shell-lock')).toBe(false);
   });
 
   it('a full-height Shell and an auto-height Shell lock it, and the auto one says so', () => {
@@ -278,9 +278,9 @@ describe('the page lock', () => {
         <Shell.Inspector defaultOpen>inspector</Shell.Inspector>
       </Shell.Root>,
     );
-    expect(q('.rt-ShellRoot').getAttribute('data-height')).toBe('auto');
-    expect(document.documentElement.hasAttribute('data-rt-shell-lock')).toBe(true);
+    expect(q('.kui-ShellRoot').getAttribute('data-height')).toBe('auto');
+    expect(document.documentElement.hasAttribute('data-kui-shell-lock')).toBe(true);
     unmount();
-    expect(document.documentElement.hasAttribute('data-rt-shell-lock')).toBe(false);
+    expect(document.documentElement.hasAttribute('data-kui-shell-lock')).toBe(false);
   });
 });

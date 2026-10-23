@@ -117,7 +117,7 @@
 }
 
 .markdown li::marker {
-  color: var(--gray-a9);
+  color: var(--neutral-a9);
 }
 
 /* Loose lists and blockquotes hold their own blocks. */
@@ -143,7 +143,7 @@
 
 .markdown-heading-anchor {
   margin-left: 0.35em;
-  color: var(--gray-a8);
+  color: var(--neutral-a8);
   text-decoration: none;
   opacity: 0;
   transition: opacity 120ms;
@@ -159,7 +159,7 @@
 }
 
 .markdown-heading-anchor:hover {
-  color: var(--gray-a11);
+  color: var(--neutral-a11);
 }
 
 @media (prefers-reduced-motion: reduce) {

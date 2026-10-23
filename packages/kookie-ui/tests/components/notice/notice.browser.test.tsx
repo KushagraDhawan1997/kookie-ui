@@ -16,7 +16,7 @@ describe('Notice in a browser', () => {
         </div>
       </Theme>,
     );
-    const notice = document.querySelector('.rt-NoticeRoot')!;
+    const notice = document.querySelector('.kui-NoticeRoot')!;
     const style = getComputedStyle(notice);
     expect(style.position).toBe('static');
     expect(style.zIndex).toBe('auto');
@@ -33,8 +33,8 @@ describe('Notice in a browser', () => {
         </div>
       </Theme>,
     );
-    const strip = rect(document.querySelector('.rt-NoticeRoot'));
-    const dismiss = rect(document.querySelector('.rt-NoticeDismiss'));
+    const strip = rect(document.querySelector('.kui-NoticeRoot'));
+    const dismiss = rect(document.querySelector('.kui-NoticeDismiss'));
     expect(strip.width).toBeLessThanOrEqual(280.5);
     expect(dismiss.right).toBeLessThanOrEqual(strip.right + 0.5);
   });
@@ -46,8 +46,8 @@ describe('Notice in a browser', () => {
         <Notice size="3">Large</Notice>
       </Theme>,
     );
-    const [small, large] = Array.from(document.querySelectorAll('.rt-NoticeRoot'));
-    const font = (el: Element) => parseFloat(getComputedStyle(el.querySelector('.rt-NoticeText')!).fontSize);
+    const [small, large] = Array.from(document.querySelectorAll('.kui-NoticeRoot'));
+    const font = (el: Element) => parseFloat(getComputedStyle(el.querySelector('.kui-NoticeText')!).fontSize);
     expect(font(large!)).toBeGreaterThan(font(small!));
     expect(rect(large!).height).toBeGreaterThan(rect(small!).height);
   });
@@ -62,8 +62,8 @@ describe('Notice in a browser', () => {
         </div>
       </Theme>,
     );
-    const words = rect(document.querySelector('.rt-NoticeText'));
-    const answers = rect(document.querySelector('.rt-NoticeActions'));
+    const words = rect(document.querySelector('.kui-NoticeText'));
+    const answers = rect(document.querySelector('.kui-NoticeActions'));
     expect(answers.top).toBeGreaterThanOrEqual(words.bottom - 0.5);
     expect(answers.right).toBeLessThanOrEqual(320.5);
   });
@@ -93,19 +93,19 @@ describe('Chatbar notices and context in a browser', () => {
 
   it('stacks notices above the box and the context below it', () => {
     render(<Fixture />);
-    const notice = rect(document.querySelector('.rt-NoticeRoot'));
-    const box = rect(document.querySelector('.rt-ChatbarBox'));
-    const context = rect(document.querySelector('.rt-ChatbarContext'));
+    const notice = rect(document.querySelector('.kui-NoticeRoot'));
+    const box = rect(document.querySelector('.kui-ChatbarBox'));
+    const context = rect(document.querySelector('.kui-ChatbarContext'));
     expect(notice.bottom).toBeLessThanOrEqual(box.top + 0.5);
     expect(context.top).toBeGreaterThanOrEqual(box.bottom - 0.5);
   });
 
   it('keeps the chatbar open when a notice’s button is pressed', async () => {
     render(<Fixture />);
-    const root = document.querySelector('.rt-ChatbarRoot')!;
+    const root = document.querySelector('.kui-ChatbarRoot')!;
     await userEvent.click(document.querySelector('textarea')!);
     expect(root.getAttribute('data-state')).toBe('open');
-    await userEvent.click(document.querySelector('.rt-NoticeRoot button')!);
+    await userEvent.click(document.querySelector('.kui-NoticeRoot button')!);
     expect(root.getAttribute('data-state')).toBe('open');
   });
 
@@ -117,8 +117,8 @@ describe('Chatbar notices and context in a browser', () => {
         </Chatbar.Root>
       </Theme>,
     );
-    const root = rect(document.querySelector('.rt-ChatbarRoot'));
-    const context = rect(document.querySelector('.rt-ChatbarContext'));
+    const root = rect(document.querySelector('.kui-ChatbarRoot'));
+    const context = rect(document.querySelector('.kui-ChatbarContext'));
     expect(context.bottom).toBeLessThanOrEqual(root.bottom + 0.5);
   });
 });

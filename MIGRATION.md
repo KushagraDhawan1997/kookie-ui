@@ -294,3 +294,22 @@ python3 node_modules/@kushagradhawan/kookie-ui/codemods/components-0.21.py src
 ```
 
 It only renames, and it is safe to run twice. Dropped components, margin props, `flush` and icon-only buttons without `aria-label` need a person; TypeScript flags each one. Dialog title gaps do not show up as type errors, so check your dialogs.
+
+## 0.22.0: names
+
+Class names, private variables and colour tokens take v2's names. Nothing moves on screen. A codemod does all of it:
+
+```sh
+python3 node_modules/@kushagradhawan/kookie-ui/codemods/names-0.22.py src
+```
+
+| Before | After |
+| --- | --- |
+| `rt-` classes and variables (`rt-Button`, `rt-r-size-2`, `--rt-shell-gap`) | `kui-` (`kui-Button`, `kui-r-size-2`, `--kui-shell-gap`) |
+| the root class `radix-themes` | `kui-theme` |
+| `--gray-1` … `--gray-12`, `--gray-a1` … `--gray-a12`, `--gray-contrast`, `--gray-surface`, `--gray-indicator`, `--gray-track` | `--neutral-…` |
+| `--color-background` | `--color-page` |
+| `--color-panel`, `--color-panel-solid`, `--color-surface-solid`, `--color-dialog`, `--color-dialog-solid` | `--color-surface` |
+
+The `color="gray"` prop value does not change.
+

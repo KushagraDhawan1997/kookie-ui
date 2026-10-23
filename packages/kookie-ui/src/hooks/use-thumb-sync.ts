@@ -19,7 +19,7 @@ export function useThumbSync<T extends HTMLElement>() {
     let frame = 0;
     const write = () => {
       frame = 0;
-      for (const thumb of root.querySelectorAll<HTMLElement>(':scope > .rt-ScrollAreaScrollbar > .rt-ScrollAreaThumb')) {
+      for (const thumb of root.querySelectorAll<HTMLElement>(':scope > .kui-ScrollAreaScrollbar > .kui-ScrollAreaThumb')) {
         const scrollbar = thumb.parentElement as HTMLElement;
         const style = getComputedStyle(scrollbar);
         if (scrollbar.dataset.orientation === 'horizontal') {

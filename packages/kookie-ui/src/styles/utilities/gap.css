@@ -1,193 +1,193 @@
 @breakpoints {
-  .rt-r-gap {
+  .kui-r-gap {
     /* Keep this selector here to maintain the source order */
   }
-  .rt-r-gap-0 {
+  .kui-r-gap-0 {
     gap: 0;
   }
-  .rt-r-gap-1 {
+  .kui-r-gap-1 {
     gap: var(--space-1);
   }
-  .rt-r-gap-2 {
+  .kui-r-gap-2 {
     gap: var(--space-2);
   }
-  .rt-r-gap-3 {
+  .kui-r-gap-3 {
     gap: var(--space-3);
   }
-  .rt-r-gap-4 {
+  .kui-r-gap-4 {
     gap: var(--space-4);
   }
-  .rt-r-gap-5 {
+  .kui-r-gap-5 {
     gap: var(--space-5);
   }
-  .rt-r-gap-6 {
+  .kui-r-gap-6 {
     gap: var(--space-6);
   }
-  .rt-r-gap-7 {
+  .kui-r-gap-7 {
     gap: var(--space-7);
   }
-  .rt-r-gap-8 {
+  .kui-r-gap-8 {
     gap: var(--space-8);
   }
-  .rt-r-gap-9 {
+  .kui-r-gap-9 {
     gap: var(--space-9);
   }
-  .rt-r-gap-10 {
+  .kui-r-gap-10 {
     gap: var(--space-10);
   }
-  .rt-r-gap-11 {
+  .kui-r-gap-11 {
     gap: var(--space-11);
   }
-  .rt-r-gap-12 {
+  .kui-r-gap-12 {
     gap: var(--space-12);
   }
-  .rt-r-cg {
+  .kui-r-cg {
     /* Keep this selector here to maintain the source order */
   }
-  .rt-r-cg-0 {
+  .kui-r-cg-0 {
     column-gap: 0;
   }
-  .rt-r-cg-1 {
+  .kui-r-cg-1 {
     column-gap: var(--space-1);
   }
-  .rt-r-cg-2 {
+  .kui-r-cg-2 {
     column-gap: var(--space-2);
   }
-  .rt-r-cg-3 {
+  .kui-r-cg-3 {
     column-gap: var(--space-3);
   }
-  .rt-r-cg-4 {
+  .kui-r-cg-4 {
     column-gap: var(--space-4);
   }
-  .rt-r-cg-5 {
+  .kui-r-cg-5 {
     column-gap: var(--space-5);
   }
-  .rt-r-cg-6 {
+  .kui-r-cg-6 {
     column-gap: var(--space-6);
   }
-  .rt-r-cg-7 {
+  .kui-r-cg-7 {
     column-gap: var(--space-7);
   }
-  .rt-r-cg-8 {
+  .kui-r-cg-8 {
     column-gap: var(--space-8);
   }
-  .rt-r-cg-9 {
+  .kui-r-cg-9 {
     column-gap: var(--space-9);
   }
-  .rt-r-cg-10 {
+  .kui-r-cg-10 {
     column-gap: var(--space-10);
   }
-  .rt-r-cg-11 {
+  .kui-r-cg-11 {
     column-gap: var(--space-11);
   }
-  .rt-r-cg-12 {
+  .kui-r-cg-12 {
     column-gap: var(--space-12);
   }
-  .rt-r-rg {
+  .kui-r-rg {
     /* Keep this selector here to maintain the source order */
   }
-  .rt-r-rg-0 {
+  .kui-r-rg-0 {
     row-gap: 0;
   }
-  .rt-r-rg-1 {
+  .kui-r-rg-1 {
     row-gap: var(--space-1);
   }
-  .rt-r-rg-2 {
+  .kui-r-rg-2 {
     row-gap: var(--space-2);
   }
-  .rt-r-rg-3 {
+  .kui-r-rg-3 {
     row-gap: var(--space-3);
   }
-  .rt-r-rg-4 {
+  .kui-r-rg-4 {
     row-gap: var(--space-4);
   }
-  .rt-r-rg-5 {
+  .kui-r-rg-5 {
     row-gap: var(--space-5);
   }
-  .rt-r-rg-6 {
+  .kui-r-rg-6 {
     row-gap: var(--space-6);
   }
-  .rt-r-rg-7 {
+  .kui-r-rg-7 {
     row-gap: var(--space-7);
   }
-  .rt-r-rg-8 {
+  .kui-r-rg-8 {
     row-gap: var(--space-8);
   }
-  .rt-r-rg-9 {
+  .kui-r-rg-9 {
     row-gap: var(--space-9);
   }
-  .rt-r-rg-10 {
+  .kui-r-rg-10 {
     row-gap: var(--space-10);
   }
-  .rt-r-rg-11 {
+  .kui-r-rg-11 {
     row-gap: var(--space-11);
   }
-  .rt-r-rg-12 {
+  .kui-r-rg-12 {
     row-gap: var(--space-12);
   }
 }
 
-.rt-r-gap {
+.kui-r-gap {
   gap: var(--gap);
 }
-.rt-r-cg {
+.kui-r-cg {
   column-gap: var(--column-gap);
 }
-.rt-r-rg {
+.kui-r-rg {
   row-gap: var(--row-gap);
 }
 @media (--xs) {
-  .xs\:rt-r-gap {
+  .xs\:kui-r-gap {
     gap: var(--gap-xs);
   }
-  .xs\:rt-r-cg {
+  .xs\:kui-r-cg {
     column-gap: var(--column-gap-xs);
   }
-  .xs\:rt-r-rg {
+  .xs\:kui-r-rg {
     row-gap: var(--row-gap-xs);
   }
 }
 @media (--sm) {
-  .sm\:rt-r-gap {
+  .sm\:kui-r-gap {
     gap: var(--gap-sm);
   }
-  .sm\:rt-r-cg {
+  .sm\:kui-r-cg {
     column-gap: var(--column-gap-sm);
   }
-  .sm\:rt-r-rg {
+  .sm\:kui-r-rg {
     row-gap: var(--row-gap-sm);
   }
 }
 @media (--md) {
-  .md\:rt-r-gap {
+  .md\:kui-r-gap {
     gap: var(--gap-md);
   }
-  .md\:rt-r-cg {
+  .md\:kui-r-cg {
     column-gap: var(--column-gap-md);
   }
-  .md\:rt-r-rg {
+  .md\:kui-r-rg {
     row-gap: var(--row-gap-md);
   }
 }
 @media (--lg) {
-  .lg\:rt-r-gap {
+  .lg\:kui-r-gap {
     gap: var(--gap-lg);
   }
-  .lg\:rt-r-cg {
+  .lg\:kui-r-cg {
     column-gap: var(--column-gap-lg);
   }
-  .lg\:rt-r-rg {
+  .lg\:kui-r-rg {
     row-gap: var(--row-gap-lg);
   }
 }
 @media (--xl) {
-  .xl\:rt-r-gap {
+  .xl\:kui-r-gap {
     gap: var(--gap-xl);
   }
-  .xl\:rt-r-cg {
+  .xl\:kui-r-cg {
     column-gap: var(--column-gap-xl);
   }
-  .xl\:rt-r-rg {
+  .xl\:kui-r-rg {
     row-gap: var(--row-gap-xl);
   }
 }

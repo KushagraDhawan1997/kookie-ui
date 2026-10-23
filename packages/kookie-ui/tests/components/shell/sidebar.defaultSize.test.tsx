@@ -16,7 +16,7 @@ function App({ defaultSize }: { defaultSize: string | number }) {
 }
 
 function getEl() {
-  return screen.getByText('sidebar').closest('.rt-ShellSidebar') as HTMLElement;
+  return screen.getByText('sidebar').closest('.kui-ShellSidebar') as HTMLElement;
 }
 
 describe('Sidebar defaultSize normalization', () => {

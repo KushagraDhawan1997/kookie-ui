@@ -5,7 +5,7 @@ const fontFamilies = ['sans', 'mono', 'serif'] as const;
 const fontFamilyPropDef = {
   font: {
     type: 'enum',
-    className: 'rt-r-ff',
+    className: 'kui-r-ff',
     values: fontFamilies,
   },
 } satisfies {

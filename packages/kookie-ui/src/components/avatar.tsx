@@ -51,15 +51,15 @@ const Avatar = React.forwardRef<AvatarImplElement, AvatarProps>((props, forwarde
       data-radius={radius}
       data-disabled={isDisabled || undefined}
       data-has-indicator={hasIndicator || undefined}
-      className={classNames('rt-reset', 'rt-AvatarRoot', className)}
+      className={classNames('kui-reset', 'kui-AvatarRoot', className)}
       style={style}
       asChild={asChild}
     >
       {getSubtree({ asChild, children }, <AvatarImpl ref={forwardedRef} {...imageProps} />)}
       {badge !== undefined ? (
-        <span className="rt-AvatarBadge">{badge}</span>
+        <span className="kui-AvatarBadge">{badge}</span>
       ) : status !== undefined ? (
-        <span className="rt-AvatarStatus" data-accent-color={status} />
+        <span className="kui-AvatarStatus" data-accent-color={status} />
       ) : null}
     </AvatarPrimitive.Root>
   );
@@ -91,13 +91,13 @@ const AvatarImpl = React.memo(
 
       return (
         <>
-          {status === 'idle' || status === 'loading' ? <span className="rt-AvatarFallback" /> : null}
+          {status === 'idle' || status === 'loading' ? <span className="kui-AvatarFallback" /> : null}
 
           {status === 'error' ? (
             <AvatarPrimitive.Fallback
-              className={classNames('rt-AvatarFallback', {
-                'rt-one-letter': typeof fallback === 'string' && fallback.length === 1,
-                'rt-two-letters': typeof fallback === 'string' && fallback.length === 2,
+              className={classNames('kui-AvatarFallback', {
+                'kui-one-letter': typeof fallback === 'string' && fallback.length === 1,
+                'kui-two-letters': typeof fallback === 'string' && fallback.length === 2,
               })}
               delayMs={0}
             >
@@ -107,7 +107,7 @@ const AvatarImpl = React.memo(
 
           <AvatarPrimitive.Image
             ref={forwardedRef}
-            className="rt-AvatarImage"
+            className="kui-AvatarImage"
             {...imageProps}
             onLoadingStatusChange={handleLoadingStatusChange}
           />

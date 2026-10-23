@@ -8,15 +8,15 @@ import { mergeStyles } from '../../src/helpers/merge-styles.js';
 const SCALE = ['1', '2', '3'] as const;
 
 describe('getResponsiveClassNames', () => {
-  const base = { className: 'rt-r-gap', propValues: SCALE } as const;
+  const base = { className: 'kui-r-gap', propValues: SCALE } as const;
 
   test('a scale value is suffixed onto the class', () => {
-    expect(getResponsiveClassNames({ ...base, value: '2' })).toBe('rt-r-gap-2');
+    expect(getResponsiveClassNames({ ...base, value: '2' })).toBe('kui-r-gap-2');
   });
 
   test('an unknown value is rejected unless arbitrary values are allowed', () => {
     expect(getResponsiveClassNames({ ...base, value: '13px' })).toBeUndefined();
-    expect(getResponsiveClassNames({ ...base, value: '13px', allowArbitraryValues: true })).toBe('rt-r-gap');
+    expect(getResponsiveClassNames({ ...base, value: '13px', allowArbitraryValues: true })).toBe('kui-r-gap');
   });
 
   test('an empty value yields nothing', () => {
@@ -25,15 +25,15 @@ describe('getResponsiveClassNames', () => {
   });
 
   test('breakpoints other than initial are prefixed', () => {
-    expect(getResponsiveClassNames({ ...base, value: { initial: '1', md: '3' } })).toBe('rt-r-gap-1 md:rt-r-gap-3');
+    expect(getResponsiveClassNames({ ...base, value: { initial: '1', md: '3' } })).toBe('kui-r-gap-1 md:kui-r-gap-3');
   });
 
   test('non-breakpoint keys are skipped', () => {
-    expect(getResponsiveClassNames({ ...base, value: { md: '3', bogus: '1' } as never })).toBe('md:rt-r-gap-3');
+    expect(getResponsiveClassNames({ ...base, value: { md: '3', bogus: '1' } as never })).toBe('md:kui-r-gap-3');
   });
 
   test('undefined breakpoint values are skipped', () => {
-    expect(getResponsiveClassNames({ ...base, value: { initial: undefined, md: '3' } })).toBe('md:rt-r-gap-3');
+    expect(getResponsiveClassNames({ ...base, value: { initial: undefined, md: '3' } })).toBe('md:kui-r-gap-3');
   });
 
   test('a value set gives the same answer as scanning the array', () => {
@@ -53,12 +53,12 @@ describe('getResponsiveClassNames', () => {
   test('parseValue rewrites the suffix and negatives move outside the class', () => {
     expect(
       getResponsiveClassNames({
-        className: 'rt-r-mt',
+        className: 'kui-r-mt',
         propValues: ['-2'],
         value: '-2',
         parseValue: (v) => v,
       }),
-    ).toBe('-rt-r-mt-2');
+    ).toBe('-kui-r-mt-2');
   });
 });
 
@@ -103,13 +103,13 @@ describe('getResponsiveCustomProperties', () => {
 describe('getResponsiveStyles', () => {
   test('returns class names and custom properties together', () => {
     const [classNames, customProperties] = getResponsiveStyles({
-      className: 'rt-r-gap',
+      className: 'kui-r-gap',
       customProperties: ['--gap'],
       propValues: SCALE,
       value: { initial: '2', lg: '20px' },
     });
 
-    expect(classNames).toBe('rt-r-gap-2 lg:rt-r-gap');
+    expect(classNames).toBe('kui-r-gap-2 lg:kui-r-gap');
     expect(customProperties).toEqual({ '--gap-lg': '20px' });
   });
 });
@@ -121,22 +121,22 @@ describe('getMarginStyles', () => {
 
   test('each margin prop maps to its own class', () => {
     const [classNames] = getMarginStyles({ m: '1', mx: '2', my: '3', mt: '4', mr: '5', mb: '6', ml: '7' });
-    expect(classNames.split(' ').sort()).toEqual(['rt-r-m-1', 'rt-r-mb-6', 'rt-r-ml-7', 'rt-r-mr-5', 'rt-r-mt-4', 'rt-r-mx-2', 'rt-r-my-3'].sort());
+    expect(classNames.split(' ').sort()).toEqual(['kui-r-m-1', 'kui-r-mb-6', 'kui-r-ml-7', 'kui-r-mr-5', 'kui-r-mt-4', 'kui-r-mx-2', 'kui-r-my-3'].sort());
   });
 
   test('arbitrary margins emit the matching custom properties', () => {
     const [classNames, style] = getMarginStyles({ mx: '13px' });
-    expect(classNames).toBe('rt-r-mx');
+    expect(classNames).toBe('kui-r-mx');
     expect(style).toEqual({ '--margin-left': '13px', '--margin-right': '13px' });
   });
 
   test('responsive margins are supported', () => {
     const [classNames] = getMarginStyles({ mt: { initial: '1', md: '4' } });
-    expect(classNames).toBe('rt-r-mt-1 md:rt-r-mt-4');
+    expect(classNames).toBe('kui-r-mt-1 md:kui-r-mt-4');
   });
 
   test('only the props that were passed do any work', () => {
-    expect(getMarginStyles({ mt: '2' })[0]).toBe('rt-r-mt-2');
+    expect(getMarginStyles({ mt: '2' })[0]).toBe('kui-r-mt-2');
   });
 });
 

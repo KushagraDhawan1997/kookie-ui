@@ -60,7 +60,7 @@ export default function SpinnerTest() {
             </Flex>
           </Flex>
 
-          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               Uses <Code variant="soft">currentColor</Code> for leaf backgrounds
             </Text>
@@ -90,7 +90,7 @@ export default function SpinnerTest() {
             </Spinner>
           </Flex>
 
-          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               When <Code variant="soft">loading=true</Code>, spinner replaces children
             </Text>
@@ -132,7 +132,7 @@ export default function SpinnerTest() {
             </Button>
           </Flex>
 
-          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               Spinner has one size, 16px
             </Text>
@@ -162,7 +162,7 @@ export default function SpinnerTest() {
             </Button>
 
             {showMany && (
-              <Flex gap="4" wrap="wrap" p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+              <Flex gap="4" wrap="wrap" p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
                 {Array.from({ length: 50 }).map((_, i) => (
                   <Spinner key={i} />
                 ))}
@@ -170,7 +170,7 @@ export default function SpinnerTest() {
             )}
           </Flex>
 
-          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               Open DevTools → Performance tab to verify smooth 60fps with minimal CPU usage. Each spinner uses a single <Code variant="soft">transform: rotate()</Code> animation instead of 8 opacity animations.
             </Text>
@@ -236,11 +236,11 @@ export default function SpinnerTest() {
             </Text>
           </Box>
 
-          <Flex justify="center" p="9" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Flex justify="center" p="9" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
             <Spinner />
           </Flex>
 
-          <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
             <Text size="2" emphasis="medium">
               8 leaves with static decreasing opacity (1.0 → 0.2), rotated with stepped animation
             </Text>

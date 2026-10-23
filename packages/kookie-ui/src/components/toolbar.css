@@ -7,7 +7,7 @@
  * standing level with a button beside it. A ToolbarSeparator is a gray hairline.
  */
 
-.rt-Toolbar {
+.kui-Toolbar {
   --toolbar-group-inset: calc(var(--space-2) / 2);
 
   display: flex;
@@ -25,28 +25,28 @@
     min-width: var(--toolbar-control-height);
   }
 
-  &:where(.rt-r-size-1) {
+  &:where(.kui-r-size-1) {
     --toolbar-control-height: var(--control-height-1);
     --toolbar-radius: var(--radius-control-1);
     --toolbar-gap: var(--space-2);
     --toolbar-title-gap: var(--space-3);
   }
 
-  &:where(.rt-r-size-2) {
+  &:where(.kui-r-size-2) {
     --toolbar-control-height: var(--control-height-2);
     --toolbar-radius: var(--radius-control-2);
     --toolbar-gap: var(--space-3);
     --toolbar-title-gap: var(--space-4);
   }
 
-  &:where(.rt-r-size-3) {
+  &:where(.kui-r-size-3) {
     --toolbar-control-height: var(--control-height-3);
     --toolbar-radius: var(--radius-control-3);
     --toolbar-gap: var(--space-3);
     --toolbar-title-gap: var(--space-5);
   }
 
-  &:where(.rt-r-size-4) {
+  &:where(.kui-r-size-4) {
     --toolbar-control-height: var(--control-height-4);
     --toolbar-radius: var(--radius-control-4);
     --toolbar-gap: var(--space-4);
@@ -60,7 +60,7 @@
 /*                                     */
 /* * * * * * * * * * * * * * * * * * * */
 
-.rt-ToolbarGroup {
+.kui-ToolbarGroup {
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
@@ -68,7 +68,7 @@
   height: var(--toolbar-control-height);
   padding: var(--toolbar-group-inset);
   border-radius: var(--toolbar-radius);
-  background-color: var(--gray-a3);
+  background-color: var(--neutral-a3);
 
   &:where([data-orientation='vertical']) {
     flex-direction: column;
@@ -78,14 +78,14 @@
 }
 
 /* Over content, the well is a raised surface of its own, like a raised button beside it. */
-:where(.rt-Toolbar[data-backdrop]) .rt-ToolbarGroup {
-  background-color: var(--color-surface-solid);
+:where(.kui-Toolbar[data-backdrop]) .kui-ToolbarGroup {
+  background-color: var(--color-surface);
   box-shadow: var(--shadow-2);
 }
 
 /* A button in the group is hosted: the group's height minus the inset on both sides, and a
    concentric corner. Overriding the height variable (not `height`) keeps an icon button square. */
-.rt-ToolbarGroup > :where(.rt-BaseButton) {
+.kui-ToolbarGroup > :where(.kui-BaseButton) {
   --base-button-height: calc(var(--toolbar-control-height) - 2 * var(--toolbar-group-inset));
   border-radius: max(0px, calc(var(--toolbar-radius) - var(--toolbar-group-inset)));
 }
@@ -97,9 +97,9 @@
 /* * * * * * * * * * * * * * * * * * * */
 
 /* The same gray a Separator draws, at the height of the glyphs beside it rather than the row. */
-.rt-ToolbarSeparator {
+.kui-ToolbarSeparator {
   flex-shrink: 0;
-  background-color: var(--gray-a5);
+  background-color: var(--neutral-a5);
 
   &:where([data-orientation='vertical']) {
     width: var(--border-width-standard);
@@ -119,7 +119,7 @@
 /* * * * * * * * * * * * * * * * * * * */
 
 /* One line; truncates rather than wrapping, so the row stays one control row tall. */
-.rt-ToolbarTitle {
+.kui-ToolbarTitle {
   min-width: 0;
   flex-shrink: 1;
 }
@@ -127,10 +127,10 @@
 /* A title is a different kind of thing from the controls beside it, so it takes more air than
    they take from each other. It reaches inside a cluster, since a band is often written
    <Flex>{back}{title}</Flex>. No air against the row's own ends. */
-:where(.rt-Toolbar) .rt-ToolbarTitle:where(:not(:first-child)) {
+:where(.kui-Toolbar) .kui-ToolbarTitle:where(:not(:first-child)) {
   margin-inline-start: calc(var(--toolbar-title-gap) - var(--toolbar-gap));
 }
 
-:where(.rt-Toolbar) .rt-ToolbarTitle:where(:not(:last-child)) {
+:where(.kui-Toolbar) .kui-ToolbarTitle:where(:not(:last-child)) {
   margin-inline-end: calc(var(--toolbar-title-gap) - var(--toolbar-gap));
 }

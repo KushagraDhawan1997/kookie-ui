@@ -17,12 +17,12 @@ describe('Shell.Root height', () => {
         <Shell.Content>content</Shell.Content>
       </Shell.Root>,
     );
-    const root = container.querySelector('.rt-ShellRoot') as HTMLElement;
+    const root = container.querySelector('.kui-ShellRoot') as HTMLElement;
     expect(root.style.height).toBe('');
   });
 
   it('states 100dvh in the stylesheet, on a selector the default matches', () => {
-    expect(css).toMatch(/@supports \(height: 100dvh\)\s*\{\s*\.rt-ShellRoot\s*\{\s*height: 100dvh;/);
+    expect(css).toMatch(/@supports \(height: 100dvh\)\s*\{\s*\.kui-ShellRoot\s*\{\s*height: 100dvh;/);
     expect(css).not.toContain(":not([style*='height'])");
   });
 
@@ -32,7 +32,7 @@ describe('Shell.Root height', () => {
         <Shell.Content>content</Shell.Content>
       </Shell.Root>,
     );
-    expect((container.querySelector('.rt-ShellRoot') as HTMLElement).style.height).toBe('480px');
+    expect((container.querySelector('.kui-ShellRoot') as HTMLElement).style.height).toBe('480px');
   });
 });
 
@@ -48,7 +48,7 @@ describe('pane height prop', () => {
         </Shell.Inspector>
       </Shell.Root>,
     );
-    const inspector = container.querySelector('.rt-ShellInspector') as HTMLElement;
+    const inspector = container.querySelector('.kui-ShellInspector') as HTMLElement;
     expect(inspector.hasAttribute('height')).toBe(false);
   });
 });

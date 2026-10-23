@@ -69,7 +69,7 @@ const Root = React.forwardRef<HTMLDivElement, RootProps>(
       {...(scrollEdgeThreshold != null ? { scrollEdgeThreshold } : {})}
       {...(scrollMargin != null ? { scrollMargin } : {})}
     >
-      <Primitive.Root {...props} ref={forwardedRef} className={classNames('rt-MessageScrollerRoot', className)}>
+      <Primitive.Root {...props} ref={forwardedRef} className={classNames('kui-MessageScrollerRoot', className)}>
         {children}
       </Primitive.Root>
     </Primitive.Provider>
@@ -102,7 +102,7 @@ const Viewport = React.forwardRef<HTMLDivElement, ViewportProps>(({ className, '
       {...props}
       ref={ref}
       data-fade={fade ? '' : undefined}
-      className={classNames('rt-MessageScrollerViewport', className)}
+      className={classNames('kui-MessageScrollerViewport', className)}
     />
   );
 });
@@ -112,7 +112,7 @@ type ContentProps = React.ComponentPropsWithoutRef<'div'>;
 
 /** The list of messages, inside the viewport. */
 const Content = React.forwardRef<HTMLDivElement, ContentProps>(({ className, ...props }, forwardedRef) => (
-  <Primitive.Content {...props} ref={forwardedRef} className={classNames('rt-MessageScrollerContent', className)} />
+  <Primitive.Content {...props} ref={forwardedRef} className={classNames('kui-MessageScrollerContent', className)} />
 ));
 Content.displayName = 'MessageScroller.Content';
 
@@ -125,7 +125,7 @@ interface ItemProps extends React.ComponentPropsWithoutRef<'div'> {
 
 /** One row of the transcript. */
 const Item = React.forwardRef<HTMLDivElement, ItemProps>(({ className, ...props }, forwardedRef) => (
-  <Primitive.Item {...props} ref={forwardedRef} className={classNames('rt-MessageScrollerItem', className)} />
+  <Primitive.Item {...props} ref={forwardedRef} className={classNames('kui-MessageScrollerItem', className)} />
 ));
 Item.displayName = 'MessageScroller.Item';
 
@@ -158,7 +158,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           color={color}
           radius={radius}
           aria-label={label ?? (direction === 'end' ? 'Jump to the latest' : 'Jump to the first')}
-          className={classNames('rt-MessageScrollerButton', className)}
+          className={classNames('kui-MessageScrollerButton', className)}
           data-direction={direction}
         >
           {children ?? (

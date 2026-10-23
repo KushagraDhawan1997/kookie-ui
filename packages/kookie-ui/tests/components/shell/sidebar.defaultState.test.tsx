@@ -31,19 +31,19 @@ function App({ defaultState }: { defaultState?: 'collapsed' | 'thin' | 'expanded
 describe('Sidebar defaultState (uncontrolled)', () => {
   it('is expanded by default when defaultState not provided (legacy defaultMode)', () => {
     renderWithProviders(<App />);
-    const el = screen.getByText('sidebar').closest('.rt-ShellSidebar') as HTMLElement;
+    const el = screen.getByText('sidebar').closest('.kui-ShellSidebar') as HTMLElement;
     expect(el).toHaveAttribute('data-mode', 'expanded');
   });
 
   it('is open on mount when defaultState is expanded', () => {
     renderWithProviders(<App defaultState="expanded" />);
-    const el = screen.getByText('sidebar').closest('.rt-ShellSidebar') as HTMLElement;
+    const el = screen.getByText('sidebar').closest('.kui-ShellSidebar') as HTMLElement;
     expect(el).toHaveAttribute('data-mode', 'expanded');
   });
 
   it('toggles internally', async () => {
     renderWithProviders(<App />);
-    const el = () => screen.getByText('sidebar').closest('.rt-ShellSidebar') as HTMLElement;
+    const el = () => screen.getByText('sidebar').closest('.kui-ShellSidebar') as HTMLElement;
     expect(el()).toHaveAttribute('data-mode', 'expanded');
     await userEvent.click(screen.getByRole('button', { name: /toggle sidebar/i }));
     expect(el()).toHaveAttribute('data-mode', 'collapsed');

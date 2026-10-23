@@ -1,11 +1,11 @@
-.rt-Separator {
+.kui-Separator {
   /* Fills its container along its own axis, as in v2. */
   --separator-size: 100%;
   display: block;
   background-color: var(--accent-a5);
 }
 
-.rt-Separator:where(.rt-light) {
+.kui-Separator:where(.kui-light) {
   background-color: var(--accent-a3);
 }
 
@@ -16,12 +16,12 @@
  ***************************************************************************************************/
 
 @breakpoints {
-  .rt-Separator {
-    &:where(.rt-r-orientation-horizontal) {
+  .kui-Separator {
+    &:where(.kui-r-orientation-horizontal) {
       width: var(--separator-size);
       height: 1px;
     }
-    &:where(.rt-r-orientation-vertical) {
+    &:where(.kui-r-orientation-vertical) {
       width: 1px;
       height: var(--separator-size);
     }

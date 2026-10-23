@@ -1,11 +1,11 @@
 @import './_internal/base-menu.css';
 
-.rt-DropdownMenuContent {
+.kui-DropdownMenuContent {
   max-height: var(--radix-dropdown-menu-content-available-height);
   transform-origin: var(--radix-dropdown-menu-content-transform-origin);
 }
 
-.rt-DropdownMenuTriggerIcon {
+.kui-DropdownMenuTriggerIcon {
   flex-shrink: 0;
 
   /* Default size for when not in a sized button */
@@ -21,25 +21,25 @@
 
 @breakpoints {
   /* Size 1 Button */
-  .rt-Button:where(:not([data-icon-only]).rt-r-size-1) :where(.rt-DropdownMenuTriggerIcon) {
+  .kui-Button:where(:not([data-icon-only]).kui-r-size-1) :where(.kui-DropdownMenuTriggerIcon) {
     width: var(--trigger-icon-size-1);
     height: var(--trigger-icon-size-1);
   }
 
   /* Size 2 Button */
-  .rt-Button:where(:not([data-icon-only]).rt-r-size-2) :where(.rt-DropdownMenuTriggerIcon) {
+  .kui-Button:where(:not([data-icon-only]).kui-r-size-2) :where(.kui-DropdownMenuTriggerIcon) {
     width: var(--trigger-icon-size-2);
     height: var(--trigger-icon-size-2);
   }
 
   /* Size 3 Button */
-  .rt-Button:where(:not([data-icon-only]).rt-r-size-3) :where(.rt-DropdownMenuTriggerIcon) {
+  .kui-Button:where(:not([data-icon-only]).kui-r-size-3) :where(.kui-DropdownMenuTriggerIcon) {
     width: var(--trigger-icon-size-3);
     height: var(--trigger-icon-size-3);
   }
 
   /* Size 4 Button */
-  .rt-Button:where(:not([data-icon-only]).rt-r-size-4) :where(.rt-DropdownMenuTriggerIcon) {
+  .kui-Button:where(:not([data-icon-only]).kui-r-size-4) :where(.kui-DropdownMenuTriggerIcon) {
     width: var(--trigger-icon-size-4);
     height: var(--trigger-icon-size-4);
   }
@@ -57,44 +57,44 @@
  */
 
 /* The root wrapper does not affect layout in cascade mode */
-.rt-DropdownMenuDrillDownRoot {
+.kui-DropdownMenuDrillDownRoot {
   display: contents;
 }
 
 /* The top level is one box, so a navigation step animates a single element */
-.rt-DropdownMenuDrillDownRoot:where([data-submenu-behavior='drill-down']:not([data-drill-down-active])),
-.rt-DropdownMenuDrillDownPanel:where([data-drill-down-active]) {
+.kui-DropdownMenuDrillDownRoot:where([data-submenu-behavior='drill-down']:not([data-drill-down-active])),
+.kui-DropdownMenuDrillDownPanel:where([data-drill-down-active]) {
   display: flex;
   flex-direction: column;
 }
 
 /* A level below the top only holds the path to the active panel */
-.rt-DropdownMenuDrillDownPanel:where(:not([data-drill-down-active])) {
+.kui-DropdownMenuDrillDownPanel:where(:not([data-drill-down-active])) {
   display: contents;
 }
 
 /* Custom content (not menu parts) of a level below the top stays hidden */
-.rt-DropdownMenuDrillDownRoot:where([data-drill-down-active]),
-.rt-DropdownMenuDrillDownPanel:where(:not([data-drill-down-active])) {
-  & > :where(:not(.rt-DropdownMenuDrillDownPanel, .rt-BaseMenuGroup, .rt-BaseMenuRadioGroup)) {
+.kui-DropdownMenuDrillDownRoot:where([data-drill-down-active]),
+.kui-DropdownMenuDrillDownPanel:where(:not([data-drill-down-active])) {
+  & > :where(:not(.kui-DropdownMenuDrillDownPanel, .kui-BaseMenuGroup, .kui-BaseMenuRadioGroup)) {
     display: none;
   }
 }
 
 /* Groups on the path to the active panel lay out like the level they belong to */
-.rt-DropdownMenuDrillDownRoot:where([data-drill-down-active]),
-.rt-DropdownMenuDrillDownPanel:where(:not([data-drill-down-active])) {
-  & > :where(.rt-BaseMenuGroup, .rt-BaseMenuRadioGroup) {
+.kui-DropdownMenuDrillDownRoot:where([data-drill-down-active]),
+.kui-DropdownMenuDrillDownPanel:where(:not([data-drill-down-active])) {
+  & > :where(.kui-BaseMenuGroup, .kui-BaseMenuRadioGroup) {
     display: contents;
   }
 }
 
 /* Back row: a regular menu item with a medium-weight label */
-.rt-DropdownMenuDrillDownBackItem {
+.kui-DropdownMenuDrillDownBackItem {
   font-weight: var(--font-weight-medium);
 }
 
-.rt-DropdownMenuDrillDownBackIcon {
+.kui-DropdownMenuDrillDownBackIcon {
   margin-inline-start: calc(-2px * var(--scale));
   margin-inline-end: 0;
 }

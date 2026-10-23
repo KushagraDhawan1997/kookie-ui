@@ -208,7 +208,7 @@ export default function ShellControlledTest() {
           </Box>
 
           {/* Controlled state toggles */}
-          <Box mb="6" p="5" style={{ background: 'var(--gray-a3)', borderRadius: 'var(--radius-3)' }}>
+          <Box mb="6" p="5" style={{ background: 'var(--neutral-a3)', borderRadius: 'var(--radius-3)' }}>
             <Box mb="4">
               <Heading size="3">Direct State Controls</Heading>
             </Box>
@@ -416,7 +416,7 @@ export default function ShellControlledTest() {
           </Box>
 
           {/* Event Log */}
-          <Box p="5" style={{ background: 'var(--gray-a3)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--neutral-a3)', borderRadius: 'var(--radius-3)' }}>
             <Flex align="center" justify="between" mb="4">
               <Heading size="3">Event Log ({logs.length})</Heading>
               <Button size="1" variant="soft" color="gray" onClick={clearLogs}>
@@ -430,7 +430,7 @@ export default function ShellControlledTest() {
                 fontFamily: 'var(--code-font-family)',
                 fontSize: 'var(--font-size-1)',
                 lineHeight: '1.6',
-                background: 'var(--gray-1)',
+                background: 'var(--neutral-1)',
                 borderRadius: 'var(--radius-2)',
                 padding: 'var(--space-3)',
               }}
@@ -548,7 +548,7 @@ export default function ShellControlledTest() {
               flex: 1,
               fontFamily: 'var(--code-font-family)',
               fontSize: 'var(--font-size-1)',
-              background: 'var(--gray-1)',
+              background: 'var(--neutral-1)',
               borderRadius: 'var(--radius-2)',
               padding: 'var(--space-3)',
               overflow: 'auto',

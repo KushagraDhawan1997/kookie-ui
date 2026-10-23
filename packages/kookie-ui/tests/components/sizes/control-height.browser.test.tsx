@@ -24,7 +24,7 @@ describe('one control height per size', () => {
           </Tabs.Root>
         </Theme>,
       );
-      const heights = ['.rt-Button', '.rt-TextFieldRoot', '.rt-SelectTrigger', '.rt-BaseTabListTrigger'].map(
+      const heights = ['.kui-Button', '.kui-TextFieldRoot', '.kui-SelectTrigger', '.kui-BaseTabListTrigger'].map(
         (selector) => container.querySelector<HTMLElement>(selector)!.getBoundingClientRect().height,
       );
       expect(new Set(heights).size, `heights ${heights.join(', ')}`).toBe(1);

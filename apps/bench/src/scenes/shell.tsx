@@ -7,7 +7,7 @@ export function ShellScene() {
   const [version, rerender] = useVersion();
   const scroller = React.useRef<HTMLDivElement>(null);
   const api = React.useMemo(
-    () => ({ rerender, scroller: () => scroller.current?.closest('.rt-ScrollAreaViewport') as HTMLElement | null }),
+    () => ({ rerender, scroller: () => scroller.current?.closest('.kui-ScrollAreaViewport') as HTMLElement | null }),
     [rerender],
   );
   useScene(api);
@@ -32,7 +32,7 @@ export function ShellScene() {
                   {Array.from({ length: 20 }, (_, i) => (
                     <Sidebar.MenuItem key={i}>
                       <Sidebar.MenuButton isActive={i === (version % 20)}>
-                        <span className="rt-SidebarMenuLabel">Page {g * 20 + i}</span>
+                        <span className="kui-SidebarMenuLabel">Page {g * 20 + i}</span>
                       </Sidebar.MenuButton>
                     </Sidebar.MenuItem>
                   ))}

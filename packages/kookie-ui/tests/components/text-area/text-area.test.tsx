@@ -6,7 +6,7 @@ import { TextArea } from '../../../src/components/index';
 describe('TextArea', () => {
   it('renders with default size (2)', () => {
     const { container } = renderWithProviders(<TextArea />);
-    expect(container.querySelector('.rt-TextAreaRoot')).toHaveClass('rt-r-size-2');
+    expect(container.querySelector('.kui-TextAreaRoot')).toHaveClass('kui-r-size-2');
   });
 
   it('sets aria-invalid from the error prop', () => {

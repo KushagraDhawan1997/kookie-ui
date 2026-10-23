@@ -1,130 +1,130 @@
 /* prettier-ignore */
-:where(.radix-themes) {
+:where(.kui-theme) {
   --shadow-1:
-    0 0 0 0.25px var(--gray-a6),
+    0 0 0 0.25px var(--neutral-a6),
     inset 0 1px 1px 0 var(--black-a2);
 
   --shadow-2:
-    0 0 0 0.25px var(--gray-a3),
+    0 0 0 0.25px var(--neutral-a3),
     0 1px 3px 0 var(--black-a2),
     0 1px 2px -1px var(--black-a2);
 
   --shadow-3:
-    0 0 0 0.25px var(--gray-a6),
+    0 0 0 0.25px var(--neutral-a6),
     0 4px 6px -1px var(--black-a2),
     0 2px 4px -2px var(--black-a2);
 
   --shadow-4:
-    0 0 0 0.5px var(--gray-a6),
+    0 0 0 0.5px var(--neutral-a6),
     0 10px 15px -3px var(--black-a3),
     0 4px 6px -4px var(--black-a3);
 
   --shadow-5:
-    0 0 0 0.5px var(--gray-a6),
+    0 0 0 0.5px var(--neutral-a6),
     0 20px 25px -5px var(--black-a3),
     0 8px 10px -6px var(--black-a3);
 
   --shadow-6:
-    0 0 0 0.5px var(--gray-a6),
+    0 0 0 0.5px var(--neutral-a6),
     0 25px 50px -12px var(--black-a5);
 }
 
 /* prettier-ignore */
 @supports (color: color-mix(in oklab, white, black)) {
-  :where(.radix-themes) {
+  :where(.kui-theme) {
     --shadow-1:
-      0 0 0 0.25px var(--gray-a6),
+      0 0 0 0.25px var(--neutral-a6),
       inset 0 1px 1px 0 var(--black-a2);
 
     --shadow-2:
-      0 0 0 0.25px var(--gray-a3),
+      0 0 0 0.25px var(--neutral-a3),
       0 1px 3px 0 var(--black-a2),
       0 1px 2px -1px var(--black-a2);
 
     --shadow-3:
-      0 0 0 0.25px var(--gray-a6),
+      0 0 0 0.25px var(--neutral-a6),
       0 4px 6px -1px var(--black-a2),
       0 2px 4px -2px var(--black-a2);
 
     --shadow-4:
-      0 0 0 0.5px var(--gray-a6),
+      0 0 0 0.5px var(--neutral-a6),
       0 10px 15px -3px var(--black-a3),
       0 4px 6px -4px var(--black-a3);
 
     --shadow-5:
-      0 0 0 0.5px var(--gray-a6),
+      0 0 0 0.5px var(--neutral-a6),
       0 20px 25px -5px var(--black-a3),
       0 8px 10px -6px var(--black-a3);
 
     --shadow-6:
-      0 0 0 0.5px var(--gray-a6),
+      0 0 0 0.5px var(--neutral-a6),
       0 25px 50px -12px var(--black-a5);
   }
 }
 
 /* prettier-ignore */
 :is(.dark, .dark-theme),
-:is(.dark, .dark-theme) :where(.radix-themes:not(.light, .light-theme)) {
+:is(.dark, .dark-theme) :where(.kui-theme:not(.light, .light-theme)) {
   
   --shadow-1:
-    inset 0 0 0 0.5px var(--gray-a6),
+    inset 0 0 0 0.5px var(--neutral-a6),
     inset 0 1px 1px 0 var(--black-a3);
 
   --shadow-2:
-    0 0 0 0.5px var(--gray-a6),
+    0 0 0 0.5px var(--neutral-a6),
     0 1px 3px 0 var(--black-a3),
     0 1px 2px -1px var(--black-a3);
 
   --shadow-3:
-    0 0 0 0.5px var(--gray-a6),
+    0 0 0 0.5px var(--neutral-a6),
     0 4px 6px -1px var(--black-a3),
     0 2px 4px -2px var(--black-a3);
 
   --shadow-4:
-    0 0 0 0.5px var(--gray-a6),
+    0 0 0 0.5px var(--neutral-a6),
     0 10px 15px -3px var(--black-a3),
     0 4px 6px -4px var(--black-a3);
 
   --shadow-5:
-    0 0 0 0.5px var(--gray-a6),
+    0 0 0 0.5px var(--neutral-a6),
     0 20px 25px -5px var(--black-a3),
     0 8px 10px -6px var(--black-a3);
 
   --shadow-6:
-    0 0 0 0.5px var(--gray-a6),
+    0 0 0 0.5px var(--neutral-a6),
     0 25px 50px -12px var(--black-a5);
 }
 
 /* prettier-ignore */
 @supports (color: color-mix(in oklab, white, black)) {
   :is(.dark, .dark-theme),
-  :is(.dark, .dark-theme) :where(.radix-themes:not(.light, .light-theme)) {
+  :is(.dark, .dark-theme) :where(.kui-theme:not(.light, .light-theme)) {
     --shadow-1:
-      inset 0 0 0 0.5px var(--gray-a6),
+      inset 0 0 0 0.5px var(--neutral-a6),
       inset 0 1px 1px 0 var(--black-a3);
 
     --shadow-2:
-      0 0 0 0.5px var(--gray-a6),
+      0 0 0 0.5px var(--neutral-a6),
       0 1px 3px 0 var(--black-a3),
       0 1px 2px -1px var(--black-a3);
 
     --shadow-3:
-      0 0 0 0.5px var(--gray-a6),
+      0 0 0 0.5px var(--neutral-a6),
       0 4px 6px -1px var(--black-a3),
       0 2px 4px -2px var(--black-a3);
 
     --shadow-4:
-      0 0 0 0.5px var(--gray-a6),
+      0 0 0 0.5px var(--neutral-a6),
       0 10px 15px -3px var(--black-a3),
       0 4px 6px -4px var(--black-a3);
 
     --shadow-5:
-      0 0 0 0.5px var(--gray-a6),
+      0 0 0 0.5px var(--neutral-a6),
       0 20px 25px -5px var(--black-a3),
       0 8px 10px -6px var(--black-a3);
 
     --shadow-6:
-      0 0 0 0.5px var(--gray-a6),
+      0 0 0 0.5px var(--neutral-a6),
       0 25px 50px -12px var(--black-a5);
   }
 }

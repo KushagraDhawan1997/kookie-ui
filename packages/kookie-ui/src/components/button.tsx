@@ -163,7 +163,7 @@ const Button = React.forwardRef(
         {...tooltipAccessibilityProps}
         ref={forwardedRef}
         data-icon-only={iconOnly || undefined}
-        className={classNames('rt-Button', className)}
+        className={classNames('kui-Button', className)}
         style={style}
       />
     );

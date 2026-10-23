@@ -1,4 +1,4 @@
-.rt-BaseTabList {
+.kui-BaseTabList {
   display: flex;
   justify-content: flex-start;
   overflow-x: auto;
@@ -14,7 +14,7 @@
   }
 }
 
-.rt-BaseTabListTrigger {
+.kui-BaseTabListTrigger {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,23 +24,23 @@
   scroll-behavior: smooth;
 }
 
-.rt-BaseTabListTriggerInner,
-.rt-BaseTabListTriggerInnerHidden {
+.kui-BaseTabListTriggerInner,
+.kui-BaseTabListTriggerInnerHidden {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.rt-BaseTabListTriggerInner {
+.kui-BaseTabListTriggerInner {
   position: absolute;
 
-  :where(.rt-BaseTabListTrigger[data-state='inactive']) & {
+  :where(.kui-BaseTabListTrigger[data-state='inactive']) & {
     letter-spacing: var(--tab-inactive-letter-spacing);
     word-spacing: var(--tab-inactive-word-spacing);
  /* 100ms - allows staggered effect vs active state's 0ms */
   }
 
-  :where(.rt-BaseTabListTrigger[data-state='active']) & {
+  :where(.kui-BaseTabListTrigger[data-state='active']) & {
     font-weight: var(--font-weight-medium);
     letter-spacing: var(--tab-active-letter-spacing);
     word-spacing: var(--tab-active-word-spacing);
@@ -48,7 +48,7 @@
   }
 }
 
-.rt-BaseTabListTriggerInnerHidden {
+.kui-BaseTabListTriggerInnerHidden {
   visibility: hidden;
   font-weight: var(--font-weight-medium);
   letter-spacing: var(--tab-active-letter-spacing);
@@ -65,22 +65,22 @@
  * Height is the control ladder. The hover pill pads by --control-px-N; half a control gap on each
  * side of it sets neighbouring pills one --control-gap-N apart.
  */
-.rt-BaseTabListTrigger {
+.kui-BaseTabListTrigger {
   box-sizing: border-box;
   height: var(--tab-height);
   padding-inline: var(--tab-padding-x);
 }
 
-.rt-BaseTabListTriggerInner,
-.rt-BaseTabListTriggerInnerHidden {
+.kui-BaseTabListTriggerInner,
+.kui-BaseTabListTriggerInnerHidden {
   box-sizing: border-box;
   padding: var(--tab-inner-padding-y) var(--tab-inner-padding-x);
   border-radius: var(--tab-inner-border-radius);
 }
 
 @breakpoints {
-  .rt-BaseTabList {
-    &:where(.rt-r-size-1) {
+  .kui-BaseTabList {
+    &:where(.kui-r-size-1) {
       font-size: var(--font-size-1);
       line-height: var(--line-height-1);
       letter-spacing: var(--letter-spacing-1);
@@ -97,11 +97,11 @@
         height: var(--icon-size-1);
       }
 
-      & :where(.rt-BaseTabListTriggerInner, .rt-BaseTabListTriggerInnerHidden) {
+      & :where(.kui-BaseTabListTriggerInner, .kui-BaseTabListTriggerInnerHidden) {
         gap: var(--control-gap-1);
       }
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       font-size: var(--font-size-2);
       line-height: var(--line-height-2);
       letter-spacing: var(--letter-spacing-2);
@@ -118,11 +118,11 @@
         height: var(--icon-size-2);
       }
 
-      & :where(.rt-BaseTabListTriggerInner, .rt-BaseTabListTriggerInnerHidden) {
+      & :where(.kui-BaseTabListTriggerInner, .kui-BaseTabListTriggerInnerHidden) {
         gap: var(--control-gap-2);
       }
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       font-size: var(--font-size-3);
       line-height: var(--line-height-3);
       letter-spacing: var(--letter-spacing-3);
@@ -139,11 +139,11 @@
         height: var(--icon-size-3);
       }
 
-      & :where(.rt-BaseTabListTriggerInner, .rt-BaseTabListTriggerInnerHidden) {
+      & :where(.kui-BaseTabListTriggerInner, .kui-BaseTabListTriggerInnerHidden) {
         gap: var(--control-gap-3);
       }
     }
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       font-size: var(--font-size-4);
       line-height: var(--line-height-4);
       letter-spacing: var(--letter-spacing-4);
@@ -160,7 +160,7 @@
         height: var(--icon-size-4);
       }
 
-      & :where(.rt-BaseTabListTriggerInner, .rt-BaseTabListTriggerInnerHidden) {
+      & :where(.kui-BaseTabListTriggerInner, .kui-BaseTabListTriggerInnerHidden) {
         gap: var(--control-gap-4);
       }
     }
@@ -173,33 +173,33 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-BaseTabList {
-  box-shadow: inset 0 calc(-1 * var(--border-width-standard)) 0 0 var(--gray-a5);
+.kui-BaseTabList {
+  box-shadow: inset 0 calc(-1 * var(--border-width-standard)) 0 0 var(--neutral-a5);
 }
 
-.rt-BaseTabListTrigger {
-  color: var(--gray-a11);
+.kui-BaseTabListTrigger {
+  color: var(--neutral-a11);
 
   @media (hover: hover) {
     &:where(:hover) {
-      color: var(--gray-12);
+      color: var(--neutral-12);
     }
-    &:where(:hover) :where(.rt-BaseTabListTriggerInner) {
-      background-color: var(--gray-a3);
+    &:where(:hover) :where(.kui-BaseTabListTriggerInner) {
+      background-color: var(--neutral-a3);
     }
-    &:where(:focus-visible:hover) :where(.rt-BaseTabListTriggerInner) {
+    &:where(:focus-visible:hover) :where(.kui-BaseTabListTriggerInner) {
       background-color: var(--accent-a3);
     }
   }
   /* Hover is one step up, press two. */
-  &:where(:active:not([data-disabled])) :where(.rt-BaseTabListTriggerInner) {
-    background-color: var(--gray-a4);
+  &:where(:active:not([data-disabled])) :where(.kui-BaseTabListTriggerInner) {
+    background-color: var(--neutral-a4);
   }
   &:where([data-state='active'], [data-active]) {
-    color: var(--gray-12);
+    color: var(--neutral-12);
   }
   /* Drawn inside the trigger: the scrolling list clips anything outside it. */
-  &:where(:focus-visible) :where(.rt-BaseTabListTriggerInner) {
+  &:where(:focus-visible) :where(.kui-BaseTabListTriggerInner) {
     outline: var(--focus-ring-width, 2px) solid var(--focus-8);
     outline-offset: var(--focus-outline-offset-inset);
     scroll-margin: var(--space-3);
@@ -219,22 +219,22 @@
 
 /* Forced colors support */
 @media (forced-colors: active) {
-  .rt-BaseTabListTrigger:where([data-state='active'])::before {
+  .kui-BaseTabListTrigger:where([data-state='active'])::before {
     background-color: Highlight;
   }
 
-  .rt-BaseTabListTrigger:where(:focus-visible) :where(.rt-BaseTabListTriggerInner) {
+  .kui-BaseTabListTrigger:where(:focus-visible) :where(.kui-BaseTabListTriggerInner) {
     outline: 2px solid Highlight;
     outline-offset: 2px;
   }
 }
 
 /* Disabled: the same treatment as a disabled menu item, a colour remap with no opacity. It keeps no hover or press fill. */
-.rt-BaseTabListTrigger:where([data-disabled]) {
-  color: var(--gray-a8);
+.kui-BaseTabListTrigger:where([data-disabled]) {
+  color: var(--neutral-a8);
   cursor: default;
 
-  & :where(.rt-BaseTabListTriggerInner) {
+  & :where(.kui-BaseTabListTriggerInner) {
     background-color: transparent;
   }
 }

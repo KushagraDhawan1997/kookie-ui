@@ -21,7 +21,7 @@ const Blockquote = React.forwardRef<BlockquoteElement, BlockquoteProps>((props, 
       asChild
       {...blockquoteProps}
       ref={forwardedRef}
-      className={classNames('rt-Blockquote', className)}
+      className={classNames('kui-Blockquote', className)}
     >
       <Comp>{children}</Comp>
     </Text>

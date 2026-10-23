@@ -8,7 +8,7 @@ import type { PropDef } from '../props/prop-def.js';
 const sizes = ['1', '2', '3', '4'] as const;
 
 const selectRootPropDefs = {
-  size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
+  size: { type: 'enum', className: 'kui-r-size', values: sizes, default: '2', responsive: true },
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;
 };
@@ -16,7 +16,7 @@ const selectRootPropDefs = {
 const triggerVariants = ['raised', 'surface', 'soft', 'outline', 'ghost'] as const;
 
 const selectTriggerPropDefs = {
-  variant: { type: 'enum', className: 'rt-variant', values: triggerVariants, default: 'raised' },
+  variant: { type: 'enum', className: 'kui-variant', values: triggerVariants, default: 'raised' },
   error: { type: 'boolean' },
   loading: { type: 'boolean' },
   disabled: { type: 'boolean' },

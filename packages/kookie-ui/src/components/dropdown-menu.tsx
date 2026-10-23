@@ -201,20 +201,20 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
             asChild={false}
             ref={forwardedRef}
             className={classNames(
-              'rt-PopperContent',
-              'rt-BaseMenuContent',
-          'rt-variant-soft',
-              'rt-DropdownMenuContent',
+              'kui-PopperContent',
+              'kui-BaseMenuContent',
+          'kui-variant-soft',
+              'kui-DropdownMenuContent',
               className,
             )}
           >
             {virtualized ? (
-              <div className={classNames('rt-BaseMenuViewport', 'rt-DropdownMenuViewport', 'rt-virtualized')}>
+              <div className={classNames('kui-BaseMenuViewport', 'kui-DropdownMenuViewport', 'kui-virtualized')}>
                 {contentBody}
               </div>
             ) : (
               <ScrollArea type="auto" scrollbars="vertical">
-                <div className={classNames('rt-BaseMenuViewport', 'rt-DropdownMenuViewport')}>
+                <div className={classNames('kui-BaseMenuViewport', 'kui-DropdownMenuViewport')}>
                   {contentBody}
                 </div>
               </ScrollArea>
@@ -238,7 +238,7 @@ const DropdownMenuLabel = React.forwardRef<DropdownMenuLabelElement, DropdownMen
         {...props}
         asChild={false}
         ref={forwardedRef}
-        className={classNames('rt-BaseMenuLabel', 'rt-DropdownMenuLabel', className)}
+        className={classNames('kui-BaseMenuLabel', 'kui-DropdownMenuLabel', className)}
       />
     );
   },
@@ -267,10 +267,10 @@ const DropdownMenuItem = React.forwardRef<DropdownMenuItemElement, DropdownMenuI
         aria-keyshortcuts={shortcut ? toAriaKeyShortcuts(shortcut) : undefined}
         {...itemProps}
         ref={forwardedRef}
-        className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-DropdownMenuItem', className)}
+        className={classNames('kui-reset', 'kui-BaseMenuItem', 'kui-DropdownMenuItem', className)}
       >
         <Slot.Slottable>{children}</Slot.Slottable>
-        {shortcut && <MenuShortcut shortcut={shortcut} className="rt-DropdownMenuShortcut" />}
+        {shortcut && <MenuShortcut shortcut={shortcut} className="kui-DropdownMenuShortcut" />}
       </DropdownMenuPrimitive.Item>
     );
   },
@@ -286,7 +286,7 @@ const DropdownMenuGroup = React.forwardRef<DropdownMenuGroupElement, DropdownMen
       {...props}
       asChild={false}
       ref={forwardedRef}
-      className={classNames('rt-BaseMenuGroup', 'rt-DropdownMenuGroup', className)}
+      className={classNames('kui-BaseMenuGroup', 'kui-DropdownMenuGroup', className)}
     />
   ),
 );
@@ -303,7 +303,7 @@ const DropdownMenuRadioGroup = React.forwardRef<
     {...props}
     asChild={false}
     ref={forwardedRef}
-    className={classNames('rt-BaseMenuRadioGroup', 'rt-DropdownMenuRadioGroup', className)}
+    className={classNames('kui-BaseMenuRadioGroup', 'kui-DropdownMenuRadioGroup', className)}
   />
 ));
 DropdownMenuRadioGroup.displayName = 'DropdownMenu.RadioGroup';
@@ -331,16 +331,16 @@ const DropdownMenuRadioItem = React.forwardRef<
       ref={forwardedRef}
       data-accent-color={color}
       className={classNames(
-        'rt-BaseMenuItem',
-        'rt-BaseMenuRadioItem',
-        'rt-DropdownMenuItem',
-        'rt-DropdownMenuRadioItem',
+        'kui-BaseMenuItem',
+        'kui-BaseMenuRadioItem',
+        'kui-DropdownMenuItem',
+        'kui-DropdownMenuRadioItem',
         className,
       )}
     >
       {children}
-      <DropdownMenuPrimitive.ItemIndicator className="rt-BaseMenuItemIndicator rt-DropdownMenuItemIndicator">
-        <ThickDotIcon className="rt-BaseMenuItemIndicatorIcon rt-DropdownMenuItemIndicatorIcon" />
+      <DropdownMenuPrimitive.ItemIndicator className="kui-BaseMenuItemIndicator kui-DropdownMenuItemIndicator">
+        <ThickDotIcon className="kui-BaseMenuItemIndicatorIcon kui-DropdownMenuItemIndicatorIcon" />
       </DropdownMenuPrimitive.ItemIndicator>
     </DropdownMenuPrimitive.RadioItem>
   );
@@ -372,18 +372,18 @@ const DropdownMenuCheckboxItem = React.forwardRef<
       ref={forwardedRef}
       data-accent-color={color}
       className={classNames(
-        'rt-BaseMenuItem',
-        'rt-BaseMenuCheckboxItem',
-        'rt-DropdownMenuItem',
-        'rt-DropdownMenuCheckboxItem',
+        'kui-BaseMenuItem',
+        'kui-BaseMenuCheckboxItem',
+        'kui-DropdownMenuItem',
+        'kui-DropdownMenuCheckboxItem',
         className,
       )}
     >
       {children}
-      <DropdownMenuPrimitive.ItemIndicator className="rt-BaseMenuItemIndicator rt-DropdownMenuItemIndicator">
-        <ThickCheckIcon className="rt-BaseMenuItemIndicatorIcon rt-DropdownMenuItemIndicatorIcon" />
+      <DropdownMenuPrimitive.ItemIndicator className="kui-BaseMenuItemIndicator kui-DropdownMenuItemIndicator">
+        <ThickCheckIcon className="kui-BaseMenuItemIndicatorIcon kui-DropdownMenuItemIndicatorIcon" />
       </DropdownMenuPrimitive.ItemIndicator>
-      {shortcut && <MenuShortcut shortcut={shortcut} className="rt-DropdownMenuShortcut" />}
+      {shortcut && <MenuShortcut shortcut={shortcut} className="kui-DropdownMenuShortcut" />}
     </DropdownMenuPrimitive.CheckboxItem>
   );
 });
@@ -489,18 +489,18 @@ const DropdownMenuSubTrigger = React.forwardRef<
         onKeyDown={handleKeyDown}
         ref={forwardedRef}
         className={classNames(
-          'rt-reset',
-          'rt-BaseMenuItem',
-          'rt-BaseMenuSubTrigger',
-          'rt-DropdownMenuItem',
-          'rt-DropdownMenuSubTrigger',
-          'rt-DropdownMenuDrillDownSubTrigger',
+          'kui-reset',
+          'kui-BaseMenuItem',
+          'kui-BaseMenuSubTrigger',
+          'kui-DropdownMenuItem',
+          'kui-DropdownMenuSubTrigger',
+          'kui-DropdownMenuDrillDownSubTrigger',
           className,
         )}
       >
         {children}
-        <div className="rt-BaseMenuShortcut rt-DropdownMenuShortcut">
-          <ThickChevronRightIcon className="rt-BaseMenuSubTriggerIcon rt-DropdownMenuSubTriggerIcon" />
+        <div className="kui-BaseMenuShortcut kui-DropdownMenuShortcut">
+          <ThickChevronRightIcon className="kui-BaseMenuSubTriggerIcon kui-DropdownMenuSubTriggerIcon" />
         </div>
       </DropdownMenuPrimitive.Item>
     );
@@ -513,16 +513,16 @@ const DropdownMenuSubTrigger = React.forwardRef<
       asChild={false}
       ref={forwardedRef}
       className={classNames(
-        'rt-BaseMenuItem',
-        'rt-BaseMenuSubTrigger',
-        'rt-DropdownMenuItem',
-        'rt-DropdownMenuSubTrigger',
+        'kui-BaseMenuItem',
+        'kui-BaseMenuSubTrigger',
+        'kui-DropdownMenuItem',
+        'kui-DropdownMenuSubTrigger',
         className,
       )}
     >
       {children}
-      <div className="rt-BaseMenuShortcut rt-DropdownMenuShortcut">
-        <ThickChevronRightIcon className="rt-BaseMenuSubTriggerIcon rt-DropdownMenuSubTriggerIcon" />
+      <div className="kui-BaseMenuShortcut kui-DropdownMenuShortcut">
+        <ThickChevronRightIcon className="kui-BaseMenuSubTriggerIcon kui-DropdownMenuSubTriggerIcon" />
       </div>
     </DropdownMenuPrimitive.SubTrigger>
   );
@@ -542,7 +542,7 @@ const DropdownMenuSeparator = React.forwardRef<
       {...props}
       asChild={false}
       ref={forwardedRef}
-      className={classNames('rt-BaseMenuSeparator', 'rt-DropdownMenuSeparator', className)}
+      className={classNames('kui-BaseMenuSeparator', 'kui-DropdownMenuSeparator', className)}
     />
   );
 });
@@ -572,14 +572,14 @@ function DrillDownBackItem({ label, name }: { label: React.ReactNode; name: stri
       textValue={labelText || 'Back'}
       onSelect={handleSelect}
       className={classNames(
-        'rt-reset',
-        'rt-BaseMenuItem',
-        'rt-DropdownMenuItem',
-        'rt-DropdownMenuDrillDownBackItem',
+        'kui-reset',
+        'kui-BaseMenuItem',
+        'kui-DropdownMenuItem',
+        'kui-DropdownMenuDrillDownBackItem',
       )}
     >
-      <ThickChevronLeftIcon className="rt-BaseMenuSubTriggerIcon rt-DropdownMenuDrillDownBackIcon" />
-      <span className="rt-DropdownMenuDrillDownBackLabel">{label}</span>
+      <ThickChevronLeftIcon className="kui-BaseMenuSubTriggerIcon kui-DropdownMenuDrillDownBackIcon" />
+      <span className="kui-DropdownMenuDrillDownBackLabel">{label}</span>
     </DropdownMenuPrimitive.Item>
   );
 }
@@ -694,22 +694,22 @@ const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, Dropdo
             asChild={false}
             ref={forwardedRef}
             className={classNames(
-              'rt-PopperContent',
-              'rt-BaseMenuContent',
-          'rt-variant-soft',
-              'rt-BaseMenuSubContent',
-              'rt-DropdownMenuContent',
-              'rt-DropdownMenuSubContent',
+              'kui-PopperContent',
+              'kui-BaseMenuContent',
+          'kui-variant-soft',
+              'kui-BaseMenuSubContent',
+              'kui-DropdownMenuContent',
+              'kui-DropdownMenuSubContent',
               className,
             )}
           >
             {virtualized ? (
-              <div className={classNames('rt-BaseMenuViewport', 'rt-DropdownMenuViewport', 'rt-virtualized')}>
+              <div className={classNames('kui-BaseMenuViewport', 'kui-DropdownMenuViewport', 'kui-virtualized')}>
                 {body}
               </div>
             ) : (
               <ScrollArea type="auto" scrollbars="vertical">
-                <div className={classNames('rt-BaseMenuViewport', 'rt-DropdownMenuViewport')}>{body}</div>
+                <div className={classNames('kui-BaseMenuViewport', 'kui-DropdownMenuViewport')}>{body}</div>
               </ScrollArea>
             )}
           </DropdownMenuPrimitive.SubContent>
@@ -761,12 +761,12 @@ const DrillDownPanel = React.forwardRef<DropdownMenuSubContentElement, DrillDown
         data-drill-down-panel={sub.id}
         data-drill-down-active={isTop ? true : undefined}
         data-animation-direction={isTop ? (direction ?? undefined) : undefined}
-        className={classNames('rt-DropdownMenuDrillDownPanel', className)}
+        className={classNames('kui-DropdownMenuDrillDownPanel', className)}
       >
         {isTop && (
           <>
             <DrillDownBackItem label={sub.label} name={name} />
-            <DropdownMenuPrimitive.Separator className="rt-BaseMenuSeparator rt-DropdownMenuSeparator" />
+            <DropdownMenuPrimitive.Separator className="kui-BaseMenuSeparator kui-DropdownMenuSeparator" />
           </>
         )}
         <DrillDownLevelContext.Provider value={isTop}>{children}</DrillDownLevelContext.Provider>
@@ -785,7 +785,7 @@ const DropdownMenuTriggerIcon = React.forwardRef<
   <ChevronDownIcon
     {...props}
     ref={forwardedRef}
-    className={classNames('rt-DropdownMenuTriggerIcon', className)}
+    className={classNames('kui-DropdownMenuTriggerIcon', className)}
   />
 ));
 DropdownMenuTriggerIcon.displayName = 'DropdownMenu.TriggerIcon';

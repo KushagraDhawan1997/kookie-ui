@@ -65,8 +65,8 @@ const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>
 
     // Same selector as in the CSS to find the right slot
     const isRightSlot = target.closest(`
-        .rt-TextFieldSlot[data-side='right'],
-        .rt-TextFieldSlot:not([data-side='right']) ~ .rt-TextFieldSlot:not([data-side='left'])
+        .kui-TextFieldSlot[data-side='right'],
+        .kui-TextFieldSlot:not([data-side='right']) ~ .kui-TextFieldSlot:not([data-side='left'])
       `);
 
     const cursorPosition = isRightSlot ? input.value.length : 0;
@@ -86,15 +86,15 @@ const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>
       data-accent-color={color}
       data-radius={radius}
       style={style}
-      className={classNames('rt-TextFieldRoot', className, {
-        'rt-error': isInvalid,
+      className={classNames('kui-TextFieldRoot', className, {
+        'kui-error': isInvalid,
       })}
       onPointerDown={handlePointerDown}
     >
-      <input spellCheck="false" {...nativeInputProps} {...ariaProps} ref={composeRefs(inputRef, forwardedRef)} className="rt-reset rt-TextFieldInput" />
+      <input spellCheck="false" {...nativeInputProps} {...ariaProps} ref={composeRefs(inputRef, forwardedRef)} className="kui-reset kui-TextFieldInput" />
       {children}
       {inputProps.errorMessage && (
-        <div id={errorId} className="rt-TextFieldErrorMessage" role="alert">
+        <div id={errorId} className="kui-TextFieldErrorMessage" role="alert">
           {inputProps.errorMessage}
         </div>
       )}
@@ -369,7 +369,7 @@ const TextFieldSlot = React.forwardRef<TextFieldSlotElement, TextFieldSlotProps>
   const virtualCursor = isScrubbing
     ? ReactDOM.createPortal(
         <img
-          className="rt-TextFieldSlotScrubCursor"
+          className="kui-TextFieldSlotScrubCursor"
           src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='black' stroke='white' stroke-width='1' d='M0 12 L5 7 L5 10 L19 10 L19 7 L24 12 L19 17 L19 14 L5 14 L5 17 Z'/%3E%3C/svg%3E"
           alt=""
           style={{
@@ -396,7 +396,7 @@ const TextFieldSlot = React.forwardRef<TextFieldSlotElement, TextFieldSlotProps>
       data-scrubbing={isScrubbing || undefined}
       {...slotProps}
       ref={composeRefs(slotRef, forwardedRef)}
-      className={classNames('rt-TextFieldSlot', className)}
+      className={classNames('kui-TextFieldSlot', className)}
       onPointerDown={scrub ? handlePointerDown : undefined}
       onPointerMove={scrub ? handlePointerMove : undefined}
       onPointerUp={scrub ? handlePointerUp : undefined}

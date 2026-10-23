@@ -1,4 +1,4 @@
-.rt-BaseCheckboxRoot {
+.kui-BaseCheckboxRoot {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -35,7 +35,7 @@
   }
 }
 
-.rt-BaseCheckboxIndicator {
+.kui-BaseCheckboxIndicator {
   position: absolute;
   width: var(--checkbox-indicator-size);
   height: var(--checkbox-indicator-size);
@@ -62,23 +62,23 @@
  * clamped below a circle.
  */
 @breakpoints {
-  .rt-BaseCheckboxRoot {
-    &:where(.rt-r-size-1) {
+  .kui-BaseCheckboxRoot {
+    &:where(.kui-r-size-1) {
       --checkbox-size: var(--mark-1, calc(16px * var(--scale)));
       --checkbox-indicator-size: calc(10px * var(--scale));
       --checkbox-border-radius: min(calc(var(--radius-1) * var(--spacing-multiplier-medium)), var(--checkbox-radius-max));
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       --checkbox-size: var(--mark-2, calc(20px * var(--scale)));
       --checkbox-indicator-size: calc(12px * var(--scale));
       --checkbox-border-radius: min(calc(var(--radius-1) * var(--spacing-multiplier-medium)), var(--checkbox-radius-max));
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       --checkbox-size: var(--mark-3, calc(24px * var(--scale)));
       --checkbox-indicator-size: calc(14px * var(--scale));
       --checkbox-border-radius: min(var(--radius-1), var(--checkbox-radius-max));
     }
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       --checkbox-size: var(--mark-4, calc(26px * var(--scale)));
       --checkbox-indicator-size: calc(16px * var(--scale));
       --checkbox-border-radius: min(var(--radius-1), var(--checkbox-radius-max));
@@ -94,7 +94,7 @@
 
 /* solid */
 
-.rt-BaseCheckboxRoot:where(.rt-variant-solid) {
+.kui-BaseCheckboxRoot:where(.kui-variant-solid) {
   &:where([data-state='unchecked']) {
     &::before {
       background-color: transparent;
@@ -107,32 +107,32 @@
       background-color: var(--accent-solid);
       box-shadow: inset 0 0 0 1px var(--accent-solid);
     }
-    & :where(.rt-BaseCheckboxIndicator) {
+    & :where(.kui-BaseCheckboxIndicator) {
       color: var(--accent-solid-contrast);
     }
   }
 
   &:where(:disabled) {
     &::before {
-      box-shadow: inset 0 0 0 1px var(--gray-a6);
-      background-color: var(--gray-a3);
+      box-shadow: inset 0 0 0 1px var(--neutral-a6);
+      background-color: var(--neutral-a3);
     }
-    & :where(.rt-BaseCheckboxIndicator) {
-      color: var(--gray-a8);
+    & :where(.kui-BaseCheckboxIndicator) {
+      color: var(--neutral-a8);
     }
   }
 }
 
 /* raised */
 
-.rt-BaseCheckboxRoot:where(.rt-variant-raised) {
+.kui-BaseCheckboxRoot:where(.kui-variant-raised) {
   position: relative;
   top: var(--raised-elevation-offset);
 
   &:where([data-state='unchecked']) {
     &::before {
       color: var(--accent-ink);
-      background-color: var(--color-surface-solid);
+      background-color: var(--color-surface);
       box-shadow: var(--shadow-2);
     }
   }
@@ -141,7 +141,7 @@
     &::before {
       background-color: var(--accent-3);
     }
-    & :where(.rt-BaseCheckboxIndicator) {
+    & :where(.kui-BaseCheckboxIndicator) {
       color: var(--accent-ink);
     }
   }
@@ -156,12 +156,12 @@
 
   &:where(:disabled) {
     &::before {
-      background-color: var(--gray-a3);
+      background-color: var(--neutral-a3);
       box-shadow: none;
       background-image: none;
     }
-    & :where(.rt-BaseCheckboxIndicator) {
-      color: var(--gray-a8);
+    & :where(.kui-BaseCheckboxIndicator) {
+      color: var(--neutral-a8);
     }
     top: 0;
   }
@@ -169,30 +169,30 @@
 
 /* soft */
 
-.rt-BaseCheckboxRoot:where(.rt-variant-soft) {
+.kui-BaseCheckboxRoot:where(.kui-variant-soft) {
   &::before {
     background-color: var(--accent-3);
   }
 
   &:where([data-state='checked'], [data-state='indeterminate']) {
-    & :where(.rt-BaseCheckboxIndicator) {
+    & :where(.kui-BaseCheckboxIndicator) {
       color: var(--accent-ink);
     }
   }
 
   &:where(:disabled) {
     &::before {
-      background-color: var(--gray-a3);
+      background-color: var(--neutral-a3);
     }
-    & :where(.rt-BaseCheckboxIndicator) {
-      color: var(--gray-a8);
+    & :where(.kui-BaseCheckboxIndicator) {
+      color: var(--neutral-a8);
     }
   }
 }
 
 /* outline */
 
-.rt-BaseCheckboxRoot:where(.rt-variant-outline) {
+.kui-BaseCheckboxRoot:where(.kui-variant-outline) {
   &:where([data-state='unchecked']) {
     &::before {
       box-shadow: inset 0 0 0 1px var(--accent-6);
@@ -205,25 +205,25 @@
       background-color: var(--accent-2);
       box-shadow: inset 0 0 0 1px var(--accent-7);
     }
-    & :where(.rt-BaseCheckboxIndicator) {
+    & :where(.kui-BaseCheckboxIndicator) {
       color: var(--accent-ink);
     }
   }
 
   &:where(:disabled) {
     &::before {
-      box-shadow: inset 0 0 0 1px var(--gray-a7);
+      box-shadow: inset 0 0 0 1px var(--neutral-a7);
       background-color: transparent;
     }
-    & :where(.rt-BaseCheckboxIndicator) {
-      color: var(--gray-a8);
+    & :where(.kui-BaseCheckboxIndicator) {
+      color: var(--neutral-a8);
     }
   }
 }
 
 /* surface */
 
-.rt-BaseCheckboxRoot:where(.rt-variant-surface) {
+.kui-BaseCheckboxRoot:where(.kui-variant-surface) {
   &:where([data-state='unchecked']) {
     &::before {
       background-color: var(--accent-2);
@@ -236,18 +236,18 @@
       background-color: var(--accent-3);
       box-shadow: inset 0 0 0 1px var(--accent-8);
     }
-    & :where(.rt-BaseCheckboxIndicator) {
+    & :where(.kui-BaseCheckboxIndicator) {
       color: var(--accent-ink);
     }
   }
 
   &:where(:disabled) {
     &::before {
-      box-shadow: inset 0 0 0 1px var(--gray-a6);
-      background-color: var(--gray-a2);
+      box-shadow: inset 0 0 0 1px var(--neutral-a6);
+      background-color: var(--neutral-a2);
     }
-    & :where(.rt-BaseCheckboxIndicator) {
-      color: var(--gray-a8);
+    & :where(.kui-BaseCheckboxIndicator) {
+      color: var(--neutral-a8);
     }
   }
 }
@@ -260,29 +260,29 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-BaseCheckboxRoot {
+.kui-BaseCheckboxRoot {
   --checkbox-unchecked-hover: var(--accent-a2);
   --checkbox-unchecked-active: var(--accent-a3);
   --checkbox-checked-hover: var(--accent-4);
   --checkbox-checked-active: var(--accent-5);
 
-  &:where(.rt-variant-solid) {
+  &:where(.kui-variant-solid) {
     --checkbox-checked-hover: var(--accent-solid-hover);
     --checkbox-checked-active: var(--accent-solid-active);
   }
-  &:where(.rt-variant-raised) {
-    --checkbox-unchecked-hover: var(--color-surface-solid);
+  &:where(.kui-variant-raised) {
+    --checkbox-unchecked-hover: var(--color-surface);
     --checkbox-unchecked-active: var(--accent-3);
   }
-  &:where(.rt-variant-soft) {
+  &:where(.kui-variant-soft) {
     --checkbox-unchecked-hover: var(--accent-4);
     --checkbox-unchecked-active: var(--accent-5);
   }
-  &:where(.rt-variant-outline) {
+  &:where(.kui-variant-outline) {
     --checkbox-checked-hover: var(--accent-3);
     --checkbox-checked-active: var(--accent-4);
   }
-  &:where(.rt-variant-surface) {
+  &:where(.kui-variant-surface) {
     --checkbox-unchecked-hover: var(--accent-3);
     --checkbox-unchecked-active: var(--accent-4);
   }
@@ -301,11 +301,11 @@
   &:where(:active:not(:disabled, [data-disabled])):where([data-state='checked'], [data-state='indeterminate'])::before {
     background-color: var(--checkbox-checked-active);
   }
-  &:where(.rt-variant-solid:active:not(:disabled, [data-disabled])):where([data-state='checked'], [data-state='indeterminate'])::before {
+  &:where(.kui-variant-solid:active:not(:disabled, [data-disabled])):where([data-state='checked'], [data-state='indeterminate'])::before {
     box-shadow: inset 0 0 0 1px var(--checkbox-checked-active);
   }
   @media (hover: hover) {
-    &:where(.rt-variant-solid:hover:not(:disabled, [data-disabled])):where([data-state='checked'], [data-state='indeterminate'])::before {
+    &:where(.kui-variant-solid:hover:not(:disabled, [data-disabled])):where([data-state='checked'], [data-state='indeterminate'])::before {
       box-shadow: inset 0 0 0 1px var(--checkbox-checked-hover);
     }
   }
@@ -318,7 +318,7 @@
  ***************************************************************************************************/
 
 /* The focus ring lives on Checkbox and CheckboxGroup. */
-.rt-BaseCheckboxRoot {
+.kui-BaseCheckboxRoot {
   /* Disabled is a colour remap (per variant above), never opacity; the cursor stays default. */
   &:where(:disabled, [data-disabled]) {
     cursor: default;

@@ -4,8 +4,8 @@ import { renderWithProviders, screen } from '../../test-utils';
 import { fireEvent } from '@testing-library/react';
 import { Shell } from '../../../src/components/index';
 
-const root = () => document.querySelector('.rt-ShellRoot') as HTMLElement;
-const paneChildren = () => [...root().children].filter((child) => !child.classList.contains('rt-ShellScrim'));
+const root = () => document.querySelector('.kui-ShellRoot') as HTMLElement;
+const paneChildren = () => [...root().children].filter((child) => !child.classList.contains('kui-ShellScrim'));
 
 /**
  * Since 0.8.0 the Root renders its children as given. Each pane claims its own
@@ -26,8 +26,8 @@ describe('Shell.Root children', () => {
       </Shell.Root>,
     );
 
-    const order = paneChildren().map((child) => child.getAttribute('data-testid') ?? [...child.classList].find((c) => c.startsWith('rt-Shell') && c !== 'rt-ShellPane'));
-    expect(order).toEqual(['before', 'rt-ShellHeader', 'rt-ShellRail', 'rt-ShellPanel', 'rt-ShellContent', 'rt-ShellInspector', 'after']);
+    const order = paneChildren().map((child) => child.getAttribute('data-testid') ?? [...child.classList].find((c) => c.startsWith('kui-Shell') && c !== 'kui-ShellPane'));
+    expect(order).toEqual(['before', 'kui-ShellHeader', 'kui-ShellRail', 'kui-ShellPanel', 'kui-ShellContent', 'kui-ShellInspector', 'after']);
   });
 
   it('drives a pane wrapped in a plain element', () => {
@@ -44,7 +44,7 @@ describe('Shell.Root children', () => {
     );
 
     const trigger = screen.getByRole('button', { name: 'inspector' });
-    const inspector = document.querySelector('.wrapper > .rt-ShellInspector') as HTMLElement;
+    const inspector = document.querySelector('.wrapper > .kui-ShellInspector') as HTMLElement;
     expect(trigger.getAttribute('aria-controls')).toBe(inspector.id);
     expect(trigger.getAttribute('aria-expanded')).toBe('false');
 
@@ -75,7 +75,7 @@ describe('Shell.Root children', () => {
     expect(trigger.hasAttribute('aria-controls')).toBe(false);
 
     rerender(<App withInspector />);
-    const inspector = document.querySelector('.rt-ShellInspector') as HTMLElement;
+    const inspector = document.querySelector('.kui-ShellInspector') as HTMLElement;
     expect(inspector.getAttribute('data-state')).toBe('open');
     expect(trigger.getAttribute('aria-controls')).toBe(inspector.id);
     expect(trigger.getAttribute('aria-expanded')).toBe('true');
@@ -99,9 +99,9 @@ describe('Shell.Root children', () => {
       </Shell.Root>,
     );
 
-    expect(document.querySelector('.rt-ShellRail')).not.toBeNull();
-    expect(document.querySelector('.rt-ShellPanel')).not.toBeNull();
-    expect(document.querySelector('.rt-ShellSidebar')).not.toBeNull();
+    expect(document.querySelector('.kui-ShellRail')).not.toBeNull();
+    expect(document.querySelector('.kui-ShellPanel')).not.toBeNull();
+    expect(document.querySelector('.kui-ShellSidebar')).not.toBeNull();
   });
 });
 
@@ -134,8 +134,8 @@ describe('Rail and Panel are independent', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'rail' }));
 
-    expect(document.querySelector('.rt-ShellRail')?.getAttribute('data-state')).toBe('closed');
-    expect(document.querySelector('.rt-ShellPanel')?.getAttribute('data-state')).toBe('open');
+    expect(document.querySelector('.kui-ShellRail')?.getAttribute('data-state')).toBe('closed');
+    expect(document.querySelector('.kui-ShellPanel')?.getAttribute('data-state')).toBe('open');
     expect(onPanel).not.toHaveBeenCalled();
   });
 
@@ -149,8 +149,8 @@ describe('Rail and Panel are independent', () => {
     fireEvent.click(screen.getByRole('button', { name: 'panel' }));
     fireEvent.click(screen.getByRole('button', { name: 'panel' }));
 
-    expect(document.querySelector('.rt-ShellPanel')?.getAttribute('data-state')).toBe('open');
-    expect(document.querySelector('.rt-ShellRail')?.getAttribute('data-state')).toBe('closed');
+    expect(document.querySelector('.kui-ShellPanel')?.getAttribute('data-state')).toBe('open');
+    expect(document.querySelector('.kui-ShellRail')?.getAttribute('data-state')).toBe('closed');
     expect(onRail).not.toHaveBeenCalled();
   });
 });

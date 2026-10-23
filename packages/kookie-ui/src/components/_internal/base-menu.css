@@ -1,4 +1,4 @@
-.rt-BaseMenuContent {
+.kui-BaseMenuContent {
   --scrollarea-scrollbar-vertical-margin-top: var(--base-menu-content-padding);
   --scrollarea-scrollbar-vertical-margin-bottom: var(--base-menu-content-padding);
   --scrollarea-scrollbar-horizontal-margin-left: var(--base-menu-content-padding);
@@ -10,7 +10,7 @@
   overflow: hidden;
   z-index: 200; /* Above dialogs (100) so menus inside dialogs/sheets work */
 
-  background-color: var(--color-panel-solid);
+  background-color: var(--color-surface);
   box-shadow: var(--shadow-5);
 
   /* Limit paint scope to the menu */
@@ -18,7 +18,7 @@
   isolation: isolate;
 }
 
-.rt-BaseMenuViewport {
+.kui-BaseMenuViewport {
   flex: 1 1 0%;
   display: flex;
   flex-direction: column;
@@ -27,12 +27,12 @@
   box-sizing: border-box;
 
   /* Remove right padding when virtualized so scrollbar sits at the edge */
-  &:where(.rt-virtualized) {
+  &:where(.kui-virtualized) {
     padding-inline-end: 0;
   }
 }
 
-.rt-BaseMenuItem {
+.kui-BaseMenuItem {
   display: flex;
   align-items: center;
   gap: var(--base-menu-item-gap);
@@ -71,7 +71,7 @@
  * The trailing slot (a shortcut, a submenu chevron) sits the row's inset from the far edge,
  * the same distance as from the top and bottom. The label keeps the row's text padding.
  */
-.rt-BaseMenuShortcut {
+.kui-BaseMenuShortcut {
   display: flex;
   align-items: center;
   margin-inline-start: auto;
@@ -84,18 +84,18 @@
  * insets. Kbd loads later and sets its own block padding, so this needs the extra class.
  */
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-BaseMenuShortcut .rt-Kbd {
+.kui-BaseMenuShortcut .kui-Kbd {
   height: var(--base-menu-line-height);
   padding-top: 0;
   padding-bottom: 0;
 }
 
-.rt-BaseMenuSubTriggerIcon {
-  color: var(--gray-12);
+.kui-BaseMenuSubTriggerIcon {
+  color: var(--neutral-12);
 }
 
 /* The check or radio mark sits in the leading icon box, at the plain padding. */
-.rt-BaseMenuItemIndicator {
+.kui-BaseMenuItemIndicator {
   position: absolute;
   inset-inline-start: var(--base-menu-item-px);
   top: 0;
@@ -107,13 +107,13 @@
 }
 
 /* The mark and the chevron are small glyphs, not icons. */
-.rt-BaseMenuItem :where(.rt-BaseMenuItemIndicatorIcon, .rt-BaseMenuSubTriggerIcon, .rt-SelectItemIndicatorIcon) {
+.kui-BaseMenuItem :where(.kui-BaseMenuItemIndicatorIcon, .kui-BaseMenuSubTriggerIcon, .kui-SelectItemIndicatorIcon) {
   width: var(--base-menu-indicator-icon-size);
   height: var(--base-menu-indicator-icon-size);
 }
 
 /* A separator keeps the panel's own rhythm above and below, and spans the rows' text. */
-.rt-BaseMenuSeparator {
+.kui-BaseMenuSeparator {
   box-sizing: content-box;
   height: 1px;
   padding-top: var(--base-menu-content-padding);
@@ -123,7 +123,7 @@
   background-clip: content-box;
 }
 
-.rt-BaseMenuLabel {
+.kui-BaseMenuLabel {
   display: flex;
   align-items: center;
   min-height: var(--base-menu-item-height);
@@ -135,19 +135,19 @@
   font-size: var(--base-menu-font-size);
   line-height: var(--base-menu-line-height);
   letter-spacing: var(--base-menu-letter-spacing);
-  color: var(--gray-a11);
+  color: var(--neutral-a11);
   user-select: none;
   cursor: default;
 
   /* After items, the extra air is inside the label's own box, never a margin on it. */
-  :where(.rt-BaseMenuItem) + & {
+  :where(.kui-BaseMenuItem) + & {
     min-height: calc(var(--base-menu-item-height) + var(--space-3));
     padding-top: calc(var(--base-menu-item-padding-y) + var(--space-3));
   }
 }
 
 /* Chevrons point the other way in right-to-left menus */
-.rt-BaseMenuContent:where([dir='rtl']) :where(.rt-BaseMenuSubTriggerIcon) {
+.kui-BaseMenuContent:where([dir='rtl']) :where(.kui-BaseMenuSubTriggerIcon) {
   transform: scaleX(-1);
 }
 
@@ -168,10 +168,10 @@
  * padding, the mark's icon box and the gap. Select and Combobox rows always carry a mark.
  * Browsers without :has() keep the room.
  */
-.rt-BaseMenuContent,
-.rt-SidebarHeader,
-.rt-SidebarFooter,
-.rt-SidebarSearchPopover {
+.kui-BaseMenuContent,
+.kui-SidebarHeader,
+.kui-SidebarFooter,
+.kui-SidebarSearchPopover {
   --base-menu-item-height: max(24px, calc(var(--base-menu-line-height) + 2 * var(--base-menu-item-padding-y)));
   --base-menu-item-padding-x: calc(
     var(--base-menu-item-px) + min(var(--radius-full, 0px), var(--base-menu-item-px-pill) - var(--base-menu-item-px))
@@ -183,7 +183,7 @@
   --base-menu-item-padding-right: var(--base-menu-item-padding-x);
   --base-menu-item-padding-left: var(--base-menu-item-padding-left-indicator);
 
-  &:where(:not(:has(.rt-BaseMenuCheckboxItem, .rt-BaseMenuRadioItem, .rt-SelectItem, .rt-ComboboxItem))) {
+  &:where(:not(:has(.kui-BaseMenuCheckboxItem, .kui-BaseMenuRadioItem, .kui-SelectItem, .kui-ComboboxItem))) {
     --base-menu-item-padding-left: var(--base-menu-item-padding-left-plain);
   }
 }
@@ -195,8 +195,8 @@
  ***************************************************************************************************/
 
 @breakpoints {
-  .rt-BaseMenuContent {
-    &:where(.rt-r-size-1) {
+  .kui-BaseMenuContent {
+    &:where(.kui-r-size-1) {
       --base-menu-content-padding: var(--panel-p-1);
       --base-menu-item-padding-y: var(--row-inset-1);
       --base-menu-item-px: var(--control-px-1);
@@ -211,7 +211,7 @@
       border-radius: var(--radius-surface-1);
     }
 
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       --base-menu-content-padding: var(--panel-p-2);
       --base-menu-item-padding-y: var(--row-inset-2);
       --base-menu-item-px: var(--control-px-2);
@@ -226,7 +226,7 @@
       border-radius: var(--radius-surface-2);
     }
 
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       --base-menu-content-padding: var(--panel-p-3);
       --base-menu-item-padding-y: var(--row-inset-3);
       --base-menu-item-px: var(--control-px-3);
@@ -241,7 +241,7 @@
       border-radius: var(--radius-surface-3);
     }
 
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       --base-menu-content-padding: var(--panel-p-4);
       --base-menu-item-padding-y: var(--row-inset-4);
       --base-menu-item-px: var(--control-px-4);
@@ -263,75 +263,75 @@
  * VARIANTS                                                                                        *
  *                                                                                                 *
  ***************************************************************************************************/
-.rt-BaseMenuItem:where([data-accent-color]) {
+.kui-BaseMenuItem:where([data-accent-color]) {
   color: var(--accent-ink);
 }
-.rt-BaseMenuItem:where([data-disabled]) {
-  color: var(--gray-a8);
+.kui-BaseMenuItem:where([data-disabled]) {
+  color: var(--neutral-a8);
 }
-.rt-BaseMenuShortcut {
-  color: var(--gray-a11);
+.kui-BaseMenuShortcut {
+  color: var(--neutral-a11);
 }
 
 /* Kbd sets its own color and loads later, so a disabled item's shortcut needs the extra class to dim */
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-BaseMenuItem:where([data-disabled]) .rt-Kbd {
-  color: var(--gray-a8);
+.kui-BaseMenuItem:where([data-disabled]) .kui-Kbd {
+  color: var(--neutral-a8);
 }
-.rt-BaseMenuItem:where([data-disabled], [data-highlighted]),
-.rt-BaseMenuSubTrigger:where([data-state='open']) {
-  & :where(.rt-BaseMenuShortcut) {
+.kui-BaseMenuItem:where([data-disabled], [data-highlighted]),
+.kui-BaseMenuSubTrigger:where([data-state='open']) {
+  & :where(.kui-BaseMenuShortcut) {
     color: inherit;
   }
 }
-.rt-BaseMenuSeparator {
-  background-color: var(--gray-a6);
+.kui-BaseMenuSeparator {
+  background-color: var(--neutral-a6);
 }
 
 /* soft variant specific styles */
-.rt-BaseMenuContent:where(.rt-variant-soft) {
-  & :where(.rt-BaseMenuSubTrigger[data-state='open']) {
+.kui-BaseMenuContent:where(.kui-variant-soft) {
+  & :where(.kui-BaseMenuSubTrigger[data-state='open']) {
     background-color: var(--accent-3);
   }
 
-  & :where(.rt-BaseMenuItem[data-highlighted]) {
+  & :where(.kui-BaseMenuItem[data-highlighted]) {
     background-color: var(--accent-4);
 
     /* In soft variant, lift muted text a step while keeping the hierarchy */
-    & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
-      color: var(--gray-11) !important;
+    & :where(.kui-Text.kui-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
+      color: var(--neutral-11) !important;
     }
   }
 
   /* The soft fill is faint on its own; keyboard focus also gets a ring */
-  & :where(.rt-BaseMenuItem[data-highlighted]:focus-visible) {
+  & :where(.kui-BaseMenuItem[data-highlighted]:focus-visible) {
     box-shadow: inset 0 0 0 1px var(--accent-a8);
   }
 }
 
 /* The menu highlight is soft, and solid when the person asks for more contrast. */
 @media (prefers-contrast: more) {
-  .rt-BaseMenuContent:where(.rt-variant-soft) {
-    & :where(.rt-BaseMenuSubTrigger[data-state='open']) {
-      background-color: var(--gray-3);
+  .kui-BaseMenuContent:where(.kui-variant-soft) {
+    & :where(.kui-BaseMenuSubTrigger[data-state='open']) {
+      background-color: var(--neutral-3);
     }
 
     /* Gray fills with step 12 automatically; a coloured item re-resolves the solid tokens */
-    & :where(.rt-BaseMenuItem[data-highlighted]) {
+    & :where(.kui-BaseMenuItem[data-highlighted]) {
       background-color: var(--accent-solid);
       color: var(--accent-solid-contrast);
 
-      & :where(.rt-BaseMenuSubTriggerIcon) {
+      & :where(.kui-BaseMenuSubTriggerIcon) {
         color: var(--accent-solid-contrast);
       }
 
       /* Force all text elements to inherit hover color, including those with color="gray" */
-      & :where(.rt-Text) {
+      & :where(.kui-Text) {
         color: inherit !important;
       }
 
       /* Also target any element with data-accent-color="gray" */
-      & :where([data-accent-color='gray']:not(.rt-Chip)) {
+      & :where([data-accent-color='gray']:not(.kui-Chip)) {
         color: inherit !important;
       }
     }
@@ -340,16 +340,16 @@
 
 /* Forced colors support */
 @media (forced-colors: active) {
-  .rt-BaseMenuItem:where(:focus-visible) {
+  .kui-BaseMenuItem:where(:focus-visible) {
     outline: 2px solid Highlight;
     outline-offset: 2px;
   }
 
-  .rt-BaseMenuContent {
+  .kui-BaseMenuContent {
     border: 1px solid CanvasText;
   }
 
-  .rt-BaseMenuSeparator {
+  .kui-BaseMenuSeparator {
     background-color: CanvasText;
   }
 }

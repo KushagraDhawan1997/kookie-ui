@@ -26,7 +26,7 @@ const Flex = React.forwardRef<FlexElement, FlexProps>((props, forwardedRef) => {
     ...flexProps
   } = extractProps(props, flexPropDefs, layoutPropDefs, marginPropDefs);
   const Comp = asChild ? Slot : Tag;
-  return <Comp {...flexProps} ref={forwardedRef} className={classNames('rt-Flex', className)} />;
+  return <Comp {...flexProps} ref={forwardedRef} className={classNames('kui-Flex', className)} />;
 });
 Flex.displayName = 'Flex';
 

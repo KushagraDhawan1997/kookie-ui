@@ -4,11 +4,11 @@
 /* Disable selector-max-type rule to target `button` and `a` tags. */
 /* Make sure these tags are wrapped in `:where()` for 0 specificity. */
 
-.rt-Card {
+.kui-Card {
   --base-card-border-width: var(--card-border-width);
 
   /*
-   * A Card is a nesting surface (rt-SurfaceNest, tokens/radius.css): it pads by its own
+   * A Card is a nesting surface (kui-SurfaceNest, tokens/radius.css): it pads by its own
    * --kui-sf-p and draws --kui-sf-r, which inside another surface is the outer corner minus
    * the outer padding, so a Card in a Card stays concentric.
    */

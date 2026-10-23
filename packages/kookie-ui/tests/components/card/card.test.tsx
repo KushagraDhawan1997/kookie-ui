@@ -16,7 +16,7 @@ const read = (file: string) =>
   fs.readFileSync(path.join(SRC, file), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
 
 function card(container: HTMLElement) {
-  return container.querySelector('.rt-Card') as HTMLElement;
+  return container.querySelector('.kui-Card') as HTMLElement;
 }
 
 describe('Card', () => {
@@ -24,7 +24,7 @@ describe('Card', () => {
     expect(cardPropDefs.size.values).toEqual(['1', '2', '3', '4']);
     expect(cardPropDefs.size.default).toBe('2');
     const { container } = render(<Card />);
-    expect(card(container).classList.contains('rt-r-size-2')).toBe(true);
+    expect(card(container).classList.contains('kui-r-size-2')).toBe(true);
   });
 
   test('follows the Theme size when unset', () => {
@@ -34,14 +34,14 @@ describe('Card', () => {
         <Card size="1" />
       </Theme>,
     );
-    const [themed, explicit] = Array.from(container.querySelectorAll('.rt-Card'));
-    expect(themed.classList.contains('rt-r-size-3')).toBe(true);
-    expect(explicit.classList.contains('rt-r-size-1')).toBe(true);
+    const [themed, explicit] = Array.from(container.querySelectorAll('.kui-Card'));
+    expect(themed.classList.contains('kui-r-size-3')).toBe(true);
+    expect(explicit.classList.contains('kui-r-size-1')).toBe(true);
   });
 
   test('is a nesting surface', () => {
     const { container } = render(<Card />);
-    expect(card(container).classList.contains('rt-SurfaceNest')).toBe(true);
+    expect(card(container).classList.contains('kui-SurfaceNest')).toBe(true);
   });
 
   test('has no flush or inset prop', () => {
@@ -65,7 +65,7 @@ describe('Card', () => {
       expect(css).toContain(`--base-card-padding-top: var(--surface-p-${n})`);
       expect(css).toContain(`--base-card-border-radius: var(--radius-surface-${n})`);
     }
-    expect(css).not.toContain('rt-r-size-5');
+    expect(css).not.toContain('kui-r-size-5');
     expect(css).not.toMatch(/data-(flush|inset)/);
     expect(css).not.toContain('--inset-');
   });
@@ -84,14 +84,14 @@ describe('bleed', () => {
         <Box mx="bleed" data-testid="b" />
       </Card>,
     );
-    expect(container.querySelector('[data-testid="b"]')?.classList.contains('rt-r-mx-bleed')).toBe(true);
+    expect(container.querySelector('[data-testid="b"]')?.classList.contains('kui-r-mx-bleed')).toBe(true);
   });
 
   test('cancels the nearest surface padding', () => {
     const css = read('styles/utilities/margin.css');
     const sides = { m: 4, mx: 2, my: 2, mt: 1, mr: 1, mb: 1, ml: 1 };
     for (const [name, count] of Object.entries(sides)) {
-      const rule = css.match(new RegExp(`\\.rt-r-${name}-bleed \\{(\\s*--margin[^}]*)\\}`));
+      const rule = css.match(new RegExp(`\\.kui-r-${name}-bleed \\{(\\s*--margin[^}]*)\\}`));
       expect(rule, name).not.toBeNull();
       const decls = rule![1].match(/calc\(-1 \* var\(--kui-sf-p, 0px\)\)/g) ?? [];
       expect(decls.length, name).toBe(count);

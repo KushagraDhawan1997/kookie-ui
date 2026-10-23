@@ -3,8 +3,8 @@
  */
 .code-block {
   --code-block-radius: var(--radius-surface-1);
-  --code-block-border: var(--gray-a4);
-  --code-block-background: var(--gray-a2);
+  --code-block-border: var(--neutral-a4);
+  --code-block-background: var(--neutral-a2);
   --code-block-font-size: var(--font-size-2);
   --code-block-line-height: 1.7;
   --code-block-padding-x: var(--space-5);
@@ -52,7 +52,7 @@
   padding: 0 var(--space-3) 0 var(--space-6);
   line-height: var(--code-block-line-height);
   font-size: var(--code-block-font-size);
-  background: linear-gradient(to right, transparent, var(--color-background) var(--space-5));
+  background: linear-gradient(to right, transparent, var(--color-page) var(--space-5));
 }
 
 /* Re-apply the frame's tint over the opaque page color. */
@@ -107,18 +107,18 @@
   width: 2ch;
   margin-right: var(--space-5);
   text-align: right;
-  color: var(--gray-a8);
+  color: var(--neutral-a8);
   user-select: none;
 }
 
 .code-block-content [data-highlighted-line] {
   margin-inline: calc(var(--code-block-padding-x) * -1);
   padding-inline: var(--code-block-padding-x);
-  background-color: var(--gray-a3);
+  background-color: var(--neutral-a3);
 }
 
 .code-block-content pre[data-pending] {
-  color: var(--gray-12);
+  color: var(--neutral-12);
 }
 
 /* Shiki and rehype-pretty-code both emit dual-theme variables (defaultColor: false). */

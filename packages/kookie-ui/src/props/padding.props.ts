@@ -17,7 +17,7 @@ const paddingPropDefs = {
    */
   p: {
     type: 'enum | string',
-    className: 'rt-r-p',
+    className: 'kui-r-p',
     customProperties: ['--p'],
     values: paddingValues,
     responsive: true,
@@ -37,7 +37,7 @@ const paddingPropDefs = {
    */
   px: {
     type: 'enum | string',
-    className: 'rt-r-px',
+    className: 'kui-r-px',
     customProperties: ['--pl', '--pr'],
     values: paddingValues,
     responsive: true,
@@ -57,7 +57,7 @@ const paddingPropDefs = {
    */
   py: {
     type: 'enum | string',
-    className: 'rt-r-py',
+    className: 'kui-r-py',
     customProperties: ['--pt', '--pb'],
     values: paddingValues,
     responsive: true,
@@ -76,7 +76,7 @@ const paddingPropDefs = {
    */
   pt: {
     type: 'enum | string',
-    className: 'rt-r-pt',
+    className: 'kui-r-pt',
     customProperties: ['--pt'],
     values: paddingValues,
     responsive: true,
@@ -95,7 +95,7 @@ const paddingPropDefs = {
    */
   pr: {
     type: 'enum | string',
-    className: 'rt-r-pr',
+    className: 'kui-r-pr',
     customProperties: ['--pr'],
     values: paddingValues,
     responsive: true,
@@ -114,7 +114,7 @@ const paddingPropDefs = {
    */
   pb: {
     type: 'enum | string',
-    className: 'rt-r-pb',
+    className: 'kui-r-pb',
     customProperties: ['--pb'],
     values: paddingValues,
     responsive: true,
@@ -133,7 +133,7 @@ const paddingPropDefs = {
    */
   pl: {
     type: 'enum | string',
-    className: 'rt-r-pl',
+    className: 'kui-r-pl',
     customProperties: ['--pl'],
     values: paddingValues,
     responsive: true,

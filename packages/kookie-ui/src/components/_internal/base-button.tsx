@@ -162,7 +162,7 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
       data-disabled={disabled || undefined}
       onClick={handleClick}
       ref={forwardedRef}
-      className={classNames('rt-reset', 'rt-BaseButton', className)}
+      className={classNames('kui-reset', 'kui-BaseButton', className)}
       {...(shouldPassDisabled && { disabled: nativeDisabled })}
       {...(isNativeButtonElement && !hasExplicitTypeAttribute ? { type: 'button' } : {})}
     >

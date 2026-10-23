@@ -4,7 +4,7 @@
  */
 .preview-block {
   --preview-block-radius: var(--radius-surface-1);
-  --preview-block-border: var(--gray-a4);
+  --preview-block-border: var(--neutral-a4);
   --preview-block-padding: var(--space-7);
   --preview-block-min-height: 10rem;
 
@@ -22,12 +22,12 @@
   gap: var(--space-4);
   min-height: var(--space-8);
   padding: 0 var(--space-3) 0 var(--space-5);
-  background-color: var(--gray-a2);
+  background-color: var(--neutral-a2);
   border-bottom: 1px solid var(--preview-block-border);
 }
 
 .preview-block-label {
-  color: var(--gray-11);
+  color: var(--neutral-11);
   font-size: var(--font-size-2);
   line-height: var(--line-height-2);
 }

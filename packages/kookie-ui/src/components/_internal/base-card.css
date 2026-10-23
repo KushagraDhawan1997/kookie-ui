@@ -22,7 +22,7 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-BaseCard {
+.kui-BaseCard {
   /* Layout */
   display: block;
   position: relative;
@@ -73,29 +73,29 @@
  ***************************************************************************************************/
 
 @breakpoints {
-  .rt-BaseCard {
-    &:where(.rt-r-size-1) {
+  .kui-BaseCard {
+    &:where(.kui-r-size-1) {
       --base-card-padding-top: var(--surface-p-1);
       --base-card-padding-right: var(--surface-p-1);
       --base-card-padding-bottom: var(--surface-p-1);
       --base-card-padding-left: var(--surface-p-1);
       --base-card-border-radius: var(--radius-surface-1);
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       --base-card-padding-top: var(--surface-p-2);
       --base-card-padding-right: var(--surface-p-2);
       --base-card-padding-bottom: var(--surface-p-2);
       --base-card-padding-left: var(--surface-p-2);
       --base-card-border-radius: var(--radius-surface-2);
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       --base-card-padding-top: var(--surface-p-3);
       --base-card-padding-right: var(--surface-p-3);
       --base-card-padding-bottom: var(--surface-p-3);
       --base-card-padding-left: var(--surface-p-3);
       --base-card-border-radius: var(--radius-surface-3);
     }
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       --base-card-padding-top: var(--surface-p-4);
       --base-card-padding-right: var(--surface-p-4);
       --base-card-padding-bottom: var(--surface-p-4);
@@ -113,35 +113,35 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-BaseCard:where(.rt-variant-outline) {
+.kui-BaseCard:where(.kui-variant-outline) {
   --card-border-width: 1px;
   --v-bg: transparent;
-  --v-bg-hover: var(--gray-2);
-  --v-bg-active: var(--gray-3);
-  --v-border: var(--gray-6);
-  --v-border-hover: var(--gray-7);
-  --v-border-active: var(--gray-8);
+  --v-bg-hover: var(--neutral-2);
+  --v-bg-active: var(--neutral-3);
+  --v-border: var(--neutral-6);
+  --v-border-hover: var(--neutral-7);
+  --v-border-active: var(--neutral-8);
   --v-focus-color: var(--focus-8);
   --v-focus-offset: -1px;
 }
 
-.rt-BaseCard:where(.rt-variant-soft) {
+.kui-BaseCard:where(.kui-variant-soft) {
   --card-border-width: 0px;
-  --v-bg: var(--gray-2);
-  --v-bg-hover: var(--gray-3);
-  --v-bg-active: var(--gray-3);
-  --v-focus-color: var(--gray-8);
+  --v-bg: var(--neutral-2);
+  --v-bg-hover: var(--neutral-3);
+  --v-bg-active: var(--neutral-3);
+  --v-focus-color: var(--neutral-8);
   --v-focus-offset: -1px;
 }
 
-.rt-BaseCard:where(.rt-variant-surface) {
+.kui-BaseCard:where(.kui-variant-surface) {
   --card-border-width: 1px;
-  --v-bg: var(--gray-1);
-  --v-bg-hover: var(--gray-2);
-  --v-bg-active: var(--gray-3);
-  --v-border: var(--gray-6);
-  --v-border-hover: var(--gray-7);
-  --v-border-active: var(--gray-7);
+  --v-bg: var(--neutral-1);
+  --v-bg-hover: var(--neutral-2);
+  --v-bg-active: var(--neutral-3);
+  --v-border: var(--neutral-6);
+  --v-border-hover: var(--neutral-7);
+  --v-border-active: var(--neutral-7);
   --v-focus-color: var(--focus-8);
   --v-focus-offset: -1px;
 }
@@ -155,7 +155,7 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-BaseCard:where(.rt-variant-outline, .rt-variant-soft, .rt-variant-surface) {
+.kui-BaseCard:where(.kui-variant-outline, .kui-variant-soft, .kui-variant-surface) {
   /* Rest state */
   &::before {
     background-color: var(--v-bg);
@@ -195,13 +195,13 @@
   /* Tap highlight */
   @media (pointer: coarse) {
     &:where(:any-link, button, label):where(:active:not([data-state='open']))::before {
-      background-image: linear-gradient(var(--gray-a4), var(--gray-a4));
+      background-image: linear-gradient(var(--neutral-a4), var(--neutral-a4));
     }
   }
 }
 
 /* Soft variant ::after reset */
-.rt-BaseCard:where(.rt-variant-soft)::after {
+.kui-BaseCard:where(.kui-variant-soft)::after {
   box-shadow: none;
   border: none;
   outline: none;
@@ -214,7 +214,7 @@
  ***************************************************************************************************/
 
 /* Outline uses direct box-shadow on element */
-.rt-BaseCard:where(.rt-variant-outline) {
+.kui-BaseCard:where(.kui-variant-outline) {
   box-shadow: inset 0 0 0 1px var(--v-border);
 
   &::after {
@@ -239,11 +239,11 @@
 }
 
 /* Surface uses ::after for border ON TOP of children */
-.rt-BaseCard:where(.rt-variant-surface)::after {
+.kui-BaseCard:where(.kui-variant-surface)::after {
   box-shadow: inset 0 0 0 var(--base-card-border-width) var(--v-border);
 }
 
-.rt-BaseCard:where(.rt-variant-surface):where(:any-link, button, label) {
+.kui-BaseCard:where(.kui-variant-surface):where(:any-link, button, label) {
   @media (hover: hover) {
     &:where(:hover)::after {
       box-shadow: inset 0 0 0 var(--base-card-border-width) var(--v-border-hover);
@@ -264,10 +264,10 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-BaseCard:where(.rt-variant-ghost) {
+.kui-BaseCard:where(.kui-variant-ghost) {
   --card-border-width: 0px;
-  --v-bg-hover: var(--gray-3);
-  --v-bg-active: var(--gray-4);
+  --v-bg-hover: var(--neutral-3);
+  --v-bg-active: var(--neutral-4);
   --v-focus-color: var(--focus-8);
   --v-focus-offset: -1px;
 
@@ -309,7 +309,7 @@
   /* Tap highlight */
   @media (pointer: coarse) {
     &:where(:any-link, button, label):where(:active:not([data-state='open']))::before {
-      background-image: linear-gradient(var(--gray-a4), var(--gray-a4));
+      background-image: linear-gradient(var(--neutral-a4), var(--neutral-a4));
     }
   }
 }
@@ -322,9 +322,9 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-BaseCard:where(.rt-variant-raised) {
+.kui-BaseCard:where(.kui-variant-raised) {
   --card-border-width: 1px;
-  --card-background-color: var(--color-surface-solid);
+  --card-background-color: var(--color-surface);
   position: relative;
   top: var(--raised-elevation-offset);
   box-shadow: var(--shadow-2);
@@ -348,7 +348,7 @@
         box-shadow: var(--shadow-2);
 
         &::before {
-          background-color: var(--gray-2);
+          background-color: var(--neutral-2);
         }
 
         &::after {
@@ -359,7 +359,7 @@
 
     &:where([data-state='open']) {
       &::before {
-        background-color: var(--gray-3);
+        background-color: var(--neutral-3);
       }
 
       &::after {
@@ -369,7 +369,7 @@
 
     &:where(:active:not([data-state='open'])) {
       &::before {
-        background-color: var(--gray-3);
+        background-color: var(--neutral-3);
       }
 
       &::after {
@@ -380,7 +380,7 @@
 
   @media (pointer: coarse) {
     &:where(:any-link, button, label):where(:active:not([data-state='open']))::before {
-      background-image: linear-gradient(var(--gray-a4), var(--gray-a4));
+      background-image: linear-gradient(var(--neutral-a4), var(--neutral-a4));
     }
   }
 }
@@ -391,15 +391,15 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-BaseCard:where(:any-link, button, label) {
+.kui-BaseCard:where(:any-link, button, label) {
   @media (pointer: coarse) {
     &:where(:active:not(:focus-visible, [data-state='open']))::before {
-      background-image: linear-gradient(var(--gray-a4), var(--gray-a4));
+      background-image: linear-gradient(var(--neutral-a4), var(--neutral-a4));
     }
   }
 }
 
 /* A disabled interactive card keeps its look but stops reacting to the pointer. */
-.rt-BaseCard:where(:any-link, button, label):where(:disabled, [data-disabled]) {
+.kui-BaseCard:where(:any-link, button, label):where(:disabled, [data-disabled]) {
   cursor: default;
 }

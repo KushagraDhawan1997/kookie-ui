@@ -27,8 +27,8 @@
   white-space: nowrap;
 }
 
-/* Kookie sets --font-heading on .radix-themes, so the override has to live there too. */
-.radix-themes {
+/* Kookie sets --font-heading on .kui-theme, so the override has to live there too. */
+.kui-theme {
   --font-heading: 'Inter Tight', var(--font-sans);
 }
 
@@ -57,7 +57,7 @@ body {
 
 * {
   box-sizing: border-box;
-  /* outline: solid 0.1px var(--gray-a6); */
+  /* outline: solid 0.1px var(--neutral-a6); */
   /* box-sizing: border-box !important; */
 }
 
@@ -85,24 +85,24 @@ body {
 }
 
 [data-rehype-pretty-code-title] {
-  background-color: var(--gray-a4);
-  color: var(--gray-12);
+  background-color: var(--neutral-a4);
+  color: var(--neutral-12);
   padding: var(--space-3) var(--space-5);
   font-size: var(--font-size-2);
   font-weight: 500;
-  border-bottom: 1px solid var(--gray-a6);
+  border-bottom: 1px solid var(--neutral-a6);
   border-radius: var(--radius-3) var(--radius-3) 0 0;
 }
 
 pre + figcaption {
-  background-color: var(--gray-a2);
+  background-color: var(--neutral-a2);
   padding: var(--space-3) var(--space-5);
   margin: 0 0 var(--space-5);
-  border: 1px solid var(--gray-a6);
+  border: 1px solid var(--neutral-a6);
   border-top: none;
   border-radius: 0 0 var(--radius-3) var(--radius-3);
   font-size: var(--font-size-2);
-  color: var(--gray-11);
+  color: var(--neutral-11);
 }
 
 /* Scroll offset for headings when using anchor links */
@@ -127,8 +127,8 @@ h6 {
   position: relative;
   height: clamp(440px, 45vw, 560px);
   overflow: clip;
-  background-color: var(--gray-1);
-  background-image: radial-gradient(circle, var(--gray-a7) 1px, transparent 1.5px);
+  background-color: var(--neutral-1);
+  background-image: radial-gradient(circle, var(--neutral-a7) 1px, transparent 1.5px);
   background-size: var(--space-6) var(--space-6);
   background-position: center;
 }
@@ -143,24 +143,24 @@ h6 {
 
 .kd-hero-window {
   width: calc(30 * var(--space-7));
-  background-color: var(--color-background);
-  border: 1px solid var(--gray-a5);
+  background-color: var(--color-page);
+  border: 1px solid var(--neutral-a5);
   border-radius: var(--radius-6);
   overflow: clip;
 }
 
 /* v1's Shell draws no lines between panes; the hero's builder adds hairlines, as the app would. */
-.kd-hero .rt-ShellSidebar {
-  border-inline-end: 1px solid var(--gray-a5);
+.kd-hero .kui-ShellSidebar {
+  border-inline-end: 1px solid var(--neutral-a5);
 }
 
-.kd-hero .rt-ShellInspector {
-  border-inline-start: 1px solid var(--gray-a5);
+.kd-hero .kui-ShellInspector {
+  border-inline-start: 1px solid var(--neutral-a5);
 }
 
 .kd-hero-selected {
   border-radius: var(--radius-full);
-  outline: 1px solid var(--gray-12);
+  outline: 1px solid var(--neutral-12);
   outline-offset: 4px;
 }
 

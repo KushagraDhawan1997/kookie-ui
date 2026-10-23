@@ -1,4 +1,4 @@
-.rt-SliderRoot {
+.kui-SliderRoot {
   --slider-thumb-width: var(--space-4);
   --slider-thumb-height: var(--space-3);
 
@@ -27,7 +27,7 @@
   }
 }
 
-.rt-SliderTrack {
+.kui-SliderTrack {
   overflow: hidden;
   position: relative;
   flex-grow: 1;
@@ -42,7 +42,7 @@
   }
 }
 
-.rt-SliderRange {
+.kui-SliderRange {
   position: absolute;
   border-radius: inherit;
 
@@ -55,7 +55,7 @@
   }
 }
 
-.rt-SliderThumb {
+.kui-SliderThumb {
   display: block;
   width: var(--slider-thumb-width);
   height: var(--slider-thumb-height);
@@ -104,8 +104,8 @@
 /* Track thickness is v2's slider ladder (4/5/6/7). The thumb keeps v1's shape: its overshoot
  * still reads v1's track thickness, so a thinner track does not shrink it. */
 @breakpoints {
-  .rt-SliderRoot {
-    &:where(.rt-r-size-1) {
+  .kui-SliderRoot {
+    &:where(.kui-r-size-1) {
       --slider-track-size: var(--slider-track-1, calc(4px * var(--scale)));
       --slider-thumb-overshoot-base: var(--progress-slider-height-1);
       --slider-radius: var(--progress-slider-radius-1);
@@ -113,7 +113,7 @@
       --slider-thumb-height: var(--space-3);
       --slider-thumb-radius: calc(var(--radius-1) * 0.75);
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       --slider-track-size: var(--slider-track-2, calc(5px * var(--scale)));
       --slider-thumb-overshoot-base: var(--progress-slider-height-2);
       --slider-radius: var(--progress-slider-radius-2);
@@ -121,7 +121,7 @@
       --slider-thumb-height: calc(var(--space-3) + var(--space-2));
       --slider-thumb-radius: calc(var(--radius-2) * 0.75);
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       --slider-track-size: var(--slider-track-3, calc(6px * var(--scale)));
       --slider-thumb-overshoot-base: var(--progress-slider-height-3);
       --slider-radius: var(--progress-slider-radius-3);
@@ -129,7 +129,7 @@
       --slider-thumb-height: var(--space-4);
       --slider-thumb-radius: calc(var(--radius-3) * 0.75);
     }
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       --slider-track-size: var(--slider-track-4, calc(7px * var(--scale)));
       --slider-thumb-overshoot-base: var(--progress-slider-height-4);
       --slider-radius: var(--progress-slider-radius-4);
@@ -148,50 +148,50 @@
 
 /* surface */
 
-.rt-SliderRoot:where(.rt-variant-surface) {
-  & :where(.rt-SliderTrack) {
-    background-color: var(--gray-2);
-    box-shadow: inset 0 0 0 1px var(--gray-6);
+.kui-SliderRoot:where(.kui-variant-surface) {
+  & :where(.kui-SliderTrack) {
+    background-color: var(--neutral-2);
+    box-shadow: inset 0 0 0 1px var(--neutral-6);
 
     &:where([data-disabled]) {
-      box-shadow: inset 0 0 0 1px var(--gray-5);
+      box-shadow: inset 0 0 0 1px var(--neutral-5);
     }
   }
 
-  & :where(.rt-SliderRange) {
+  & :where(.kui-SliderRange) {
     background-color: var(--accent-solid);
   }
 }
 
 /* soft */
 
-.rt-SliderRoot:where(.rt-variant-soft) {
-  & :where(.rt-SliderTrack) {
-    background-color: var(--gray-3);
+.kui-SliderRoot:where(.kui-variant-soft) {
+  & :where(.kui-SliderTrack) {
+    background-color: var(--neutral-3);
   }
 
-  & :where(.rt-SliderRange) {
+  & :where(.kui-SliderRange) {
     background-color: var(--accent-solid);
   }
 
-  & :where(.rt-SliderThumb) {
+  & :where(.kui-SliderThumb) {
     --slider-thumb-box-shadow: var(--shadow-3);
   }
 }
 
 /* outline */
 
-.rt-SliderRoot:where(.rt-variant-outline) {
-  & :where(.rt-SliderTrack) {
+.kui-SliderRoot:where(.kui-variant-outline) {
+  & :where(.kui-SliderTrack) {
     /* Base state: no background, just border */
-    box-shadow: inset 0 0 0 1px var(--gray-6);
+    box-shadow: inset 0 0 0 1px var(--neutral-6);
   }
 
-  & :where(.rt-SliderRange) {
+  & :where(.kui-SliderRange) {
     background-color: var(--accent-solid);
   }
 
-  & :where(.rt-SliderThumb) {
+  & :where(.kui-SliderThumb) {
     --slider-thumb-box-shadow: var(--shadow-3);
   }
 }
@@ -199,22 +199,22 @@
 /* all disabled Sliders: a colour remap, never opacity, and a default cursor */
 
 [data-disabled] {
-  .rt-SliderRoot:where(&) {
+  .kui-SliderRoot:where(&) {
     cursor: default;
   }
-  .rt-SliderTrack:where(&) {
-    background-color: var(--gray-a3) !important;
+  .kui-SliderTrack:where(&) {
+    background-color: var(--neutral-a3) !important;
     box-shadow: none !important;
   }
-  .rt-SliderRange:where(&) {
+  .kui-SliderRange:where(&) {
     background-color: var(--accent-a3) !important;
   }
-  .rt-SliderThumb:where(&) {
+  .kui-SliderThumb:where(&) {
     cursor: default;
   }
-  .rt-SliderThumb:where(&)::after {
+  .kui-SliderThumb:where(&)::after {
     cursor: default;
-    background-color: var(--gray-3) !important;
+    background-color: var(--neutral-3) !important;
     box-shadow: none !important;
   }
 }
@@ -225,11 +225,11 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-SliderContainer {
+.kui-SliderContainer {
   position: relative;
 }
 
-.rt-SliderTicks {
+.kui-SliderTicks {
   position: absolute;
   top: calc(100% + var(--space-3));
   left: 0;
@@ -238,7 +238,7 @@
   height: 44px;
 }
 
-.rt-SliderTick {
+.kui-SliderTick {
   position: absolute;
   top: 0;
   display: flex;
@@ -257,45 +257,45 @@
 }
 
 @media (hover: hover) {
-  .rt-SliderTick:where(:hover) {
-    :where(.rt-SliderTickMark) {
-      background-color: var(--gray-12) !important;
+  .kui-SliderTick:where(:hover) {
+    :where(.kui-SliderTickMark) {
+      background-color: var(--neutral-12) !important;
     }
 
-    :where(.rt-SliderTickLabel) {
-      color: var(--gray-12) !important;
+    :where(.kui-SliderTickLabel) {
+      color: var(--neutral-12) !important;
       font-weight: var(--font-weight-medium);
     }
   }
 }
 
-.rt-SliderTick:where(:active) {
-  :where(.rt-SliderTickMark) {
-    background-color: var(--gray-12) !important;
+.kui-SliderTick:where(:active) {
+  :where(.kui-SliderTickMark) {
+    background-color: var(--neutral-12) !important;
   }
 
-  :where(.rt-SliderTickLabel) {
-    color: var(--gray-12) !important;
+  :where(.kui-SliderTickLabel) {
+    color: var(--neutral-12) !important;
     font-weight: var(--font-weight-medium);
   }
 }
 
-.rt-SliderTick:where(:focus-visible) {
+.kui-SliderTick:where(:focus-visible) {
   outline: var(--focus-ring-width, 2px) solid var(--focus-8);
   outline-offset: var(--focus-ring-offset, 2px);
 }
 
-.rt-SliderTickMark {
+.kui-SliderTickMark {
   width: 1px;
   height: var(--space-3);
-  background-color: var(--gray-6);
+  background-color: var(--neutral-6);
   border-radius: 1px;
 }
 
-.rt-SliderTickLabel {
+.kui-SliderTickLabel {
   font-size: var(--font-size-1);
   line-height: var(--line-height-1);
-  color: var(--gray-11);
+  color: var(--neutral-11);
   font-weight: var(--font-weight-regular);
   white-space: nowrap;
   overflow: hidden;

@@ -696,7 +696,7 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
             <div
               {...divProps}
               ref={composedRootRef}
-              className={classNames('rt-ChatbarRoot', `rt-r-size-${size}`, className)}
+              className={classNames('kui-ChatbarRoot', `kui-r-size-${size}`, className)}
               style={{ position: 'relative', width, maxWidth, ...style }}
               data-state={open ? 'open' : 'closed'}
               data-disabled={disabled ? '' : undefined}
@@ -715,23 +715,23 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
                 onChange={handleFileInputChange}
               />
               {notices ? (
-                <div className="rt-ChatbarNotices">
+                <div className="kui-ChatbarNotices">
                   <NoticeSizeContext.Provider value={size}>{notices}</NoticeSizeContext.Provider>
                 </div>
               ) : null}
               <div {...(dropzone ? getRootProps() : {})} style={{ width: '100%', flex: '1 1 auto', minHeight: 0 }} onPointerDown={handleContainerPointerDown}>
                 <div
-                  className={classNames('rt-ChatbarBox', `rt-variant-${variant ?? 'raised'}`)}
+                  className={classNames('kui-ChatbarBox', `kui-variant-${variant ?? 'raised'}`)}
                   style={{ position: 'relative' }}
                   data-accent-color={color}
                   data-radius={radius}
                 >
-                  <div className="rt-ChatbarGrid">
+                  <div className="kui-ChatbarGrid">
                     {children}
                   </div>
                   {dragActive && (
-                    <div className="rt-ChatbarDropOverlay" aria-hidden>
-                      <div className="rt-ChatbarDropContent">
+                    <div className="kui-ChatbarDropOverlay" aria-hidden>
+                      <div className="kui-ChatbarDropContent">
                         <Text emphasis="medium" size={size} weight="medium">
                           Drop files here to attach
                         </Text>
@@ -741,7 +741,7 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
                 </div>
               </div>
               {context ? (
-                <Text as="div" size={size === '3' ? '2' : '1'} emphasis="medium" className="rt-ChatbarContext">
+                <Text as="div" size={size === '3' ? '2' : '1'} emphasis="medium" className="kui-ChatbarContext">
                   {context}
                 </Text>
               ) : null}
@@ -960,11 +960,11 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>((props, fo
 
   const Comp = asChild ? Slot : 'textarea';
   return (
-    <div className={classNames('rt-ChatbarField', 'rt-ChatbarTextarea', className)}>
+    <div className={classNames('kui-ChatbarField', 'kui-ChatbarTextarea', className)}>
       <Comp
         {...textareaProps}
         ref={composedRef}
-        className="rt-ChatbarInput"
+        className="kui-ChatbarInput"
         value={value}
         onChange={handleChange}
         onFocus={handleFocus}
@@ -995,7 +995,7 @@ const InlineStart = React.forwardRef<HTMLDivElement, InlineSlotProps>((props, fo
   if (ctx.open) return null;
   const Comp = asChild ? Slot : 'div';
   return (
-    <Comp {...divProps} ref={forwardedRef} className={classNames('rt-ChatbarInlineStart', className)}>
+    <Comp {...divProps} ref={forwardedRef} className={classNames('kui-ChatbarInlineStart', className)}>
       {children}
     </Comp>
   );
@@ -1008,7 +1008,7 @@ const InlineEnd = React.forwardRef<HTMLDivElement, InlineSlotProps>((props, forw
   if (ctx.open) return null;
   const Comp = asChild ? Slot : 'div';
   return (
-    <Comp {...divProps} ref={forwardedRef} className={classNames('rt-ChatbarInlineEnd', className)}>
+    <Comp {...divProps} ref={forwardedRef} className={classNames('kui-ChatbarInlineEnd', className)}>
       {children}
     </Comp>
   );
@@ -1037,8 +1037,8 @@ const AttachmentsRow = React.forwardRef<HTMLDivElement, AttachmentsRowProps>((pr
   const Comp = asChild ? Slot : 'div';
   return (
     <div>
-      <Comp {...divProps} ref={forwardedRef} className={classNames('rt-ChatbarAttachmentsRow', className)} role="list" aria-label={divProps['aria-label'] ?? 'Attachments'}>
-        <ScrollArea className="rt-ChatbarScrollArea" scrollbars="horizontal">
+      <Comp {...divProps} ref={forwardedRef} className={classNames('kui-ChatbarAttachmentsRow', className)} role="list" aria-label={divProps['aria-label'] ?? 'Attachments'}>
+        <ScrollArea className="kui-ChatbarScrollArea" scrollbars="horizontal">
           <Flex align="center" gap="3" minWidth="fit-content">
             {ctx.attachments.map((att) => (
               <Attachment key={att.id} attachment={att} asChild={!!renderAttachment}>
@@ -1064,7 +1064,7 @@ function moveFocusOffPill(button: HTMLButtonElement, textareaRef: React.RefObjec
   const pills = pill?.parentElement ? Array.from(pill.parentElement.children) : [];
   const index = pill ? pills.indexOf(pill) : -1;
   const neighbour = pills[index + 1] ?? pills[index - 1];
-  const nextButton = neighbour?.querySelector<HTMLButtonElement>('.rt-ChatbarItemRemove');
+  const nextButton = neighbour?.querySelector<HTMLButtonElement>('.kui-ChatbarItemRemove');
   if (nextButton) nextButton.focus();
   else textareaRef.current?.focus({ preventScroll: true });
 }
@@ -1082,15 +1082,15 @@ const Pill: React.FC<{
   const ctx = useChatbarContext();
   return (
     <>
-      <span className="rt-ChatbarItemLead" data-kind={leadKind} aria-hidden>
+      <span className="kui-ChatbarItemLead" data-kind={leadKind} aria-hidden>
         {lead}
       </span>
-      <Text className="rt-ChatbarItemLabel" size={ctx.size} truncate>
+      <Text className="kui-ChatbarItemLabel" size={ctx.size} truncate>
         {label}
         {detail ? <VisuallyHidden>, {detail}</VisuallyHidden> : null}
       </Text>
       {onRemove && (
-        <Button iconOnly className="rt-ChatbarItemRemove" aria-label={removeLabel} size="1" variant="ghost" color="gray" onClick={onRemove}>
+        <Button iconOnly className="kui-ChatbarItemRemove" aria-label={removeLabel} size="1" variant="ghost" color="gray" onClick={onRemove}>
           <CloseIcon />
         </Button>
       )}
@@ -1124,7 +1124,7 @@ const Attachment = React.forwardRef<HTMLDivElement, AttachmentProps>((props, for
     attachment.status === 'uploading' ? (
       <Spinner />
     ) : isImage ? (
-      <img className="rt-ChatbarAttachmentImage" src={attachment.url} alt="" />
+      <img className="kui-ChatbarAttachmentImage" src={attachment.url} alt="" />
     ) : (
       <FileTextIcon />
     );
@@ -1133,7 +1133,7 @@ const Attachment = React.forwardRef<HTMLDivElement, AttachmentProps>((props, for
     <Comp
       {...divProps}
       ref={forwardedRef}
-      className={classNames(children ? 'rt-ChatbarAttachment' : 'rt-ChatbarAttachment rt-ChatbarItem', className)}
+      className={classNames(children ? 'kui-ChatbarAttachment' : 'kui-ChatbarAttachment kui-ChatbarItem', className)}
       role="listitem"
       data-kind={isImage ? 'image' : 'file'}
       data-status={attachment.status}
@@ -1191,13 +1191,13 @@ const Item = React.forwardRef<HTMLDivElement, ItemProps>((props, forwardedRef) =
     <div
       {...divProps}
       ref={forwardedRef}
-      className={classNames('rt-ChatbarItem', className)}
+      className={classNames('kui-ChatbarItem', className)}
       role="listitem"
       data-accent-color={image ? undefined : (color ?? 'gray')}
       title={children}
     >
       <Pill
-        lead={image ? <img className="rt-ChatbarAttachmentImage" src={image} alt="" /> : icon}
+        lead={image ? <img className="kui-ChatbarAttachmentImage" src={image} alt="" /> : icon}
         leadKind={image ? 'image' : 'icon'}
         label={children}
         removeLabel={removeLabel ?? `Remove ${children}`}
@@ -1224,7 +1224,7 @@ const AttachTrigger = React.forwardRef<HTMLButtonElement, AttachTriggerProps>((p
     <Comp
       {...buttonProps}
       ref={forwardedRef}
-      className={classNames('rt-ChatbarAttachTrigger', buttonProps.className)}
+      className={classNames('kui-ChatbarAttachTrigger', buttonProps.className)}
       type={buttonProps.type ?? 'button'}
       aria-label={buttonProps['aria-label'] ?? 'Add attachments'}
       disabled={disabled}
@@ -1254,7 +1254,7 @@ const Row = React.forwardRef<HTMLDivElement, RowProps>((props, forwardedRef) => 
   const Comp = asChild ? Slot : 'div';
   return (
     <div>
-      <Comp {...divProps} ref={forwardedRef} className={classNames('rt-ChatbarRow', className)}>
+      <Comp {...divProps} ref={forwardedRef} className={classNames('kui-ChatbarRow', className)}>
         <Flex align="center" justify="between" width="100%">
           {children}
         </Flex>
@@ -1268,13 +1268,13 @@ type RowSlotProps = React.ComponentPropsWithoutRef<'div'>;
 
 const RowStart = React.forwardRef<HTMLDivElement, RowSlotProps>((props, forwardedRef) => {
   const { className, ...divProps } = props;
-  return <div {...divProps} ref={forwardedRef} className={classNames('rt-ChatbarRowStart', className)} />;
+  return <div {...divProps} ref={forwardedRef} className={classNames('kui-ChatbarRowStart', className)} />;
 });
 RowStart.displayName = 'Chatbar.RowStart';
 
 const RowEnd = React.forwardRef<HTMLDivElement, RowSlotProps>((props, forwardedRef) => {
   const { className, ...divProps } = props;
-  return <div {...divProps} ref={forwardedRef} className={classNames('rt-ChatbarRowEnd', className)} />;
+  return <div {...divProps} ref={forwardedRef} className={classNames('kui-ChatbarRowEnd', className)} />;
 });
 RowEnd.displayName = 'Chatbar.RowEnd';
 
@@ -1395,7 +1395,7 @@ const Send = React.forwardRef<HTMLButtonElement, SendProps>((props, forwardedRef
       size={sizeProp ?? ctx.size}
       {...(emphasis ? { emphasis } : { variant: variantProp ?? (ctx.open || mode !== 'send' ? 'solid' : 'ghost') })}
       disabled={inactive}
-      className={classNames('rt-ChatbarSend', className)}
+      className={classNames('kui-ChatbarSend', className)}
       style={{ opacity: visible ? 1 : 0, pointerEvents: visible ? undefined : 'none', ...style }}
       // Hidden Send must not be reachable by keyboard or announced
       aria-hidden={visible ? undefined : true}

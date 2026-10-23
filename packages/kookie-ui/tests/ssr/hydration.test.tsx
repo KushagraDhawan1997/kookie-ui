@@ -71,16 +71,16 @@ describe('server markup', () => {
 
     expect(html).toContain('data-is-root-theme="true"');
     expect(html).toContain('data-accent-color=');
-    expect(html).toContain('radix-themes');
+    expect(html).toContain('kui-theme');
   });
 
   test('contains the class names generated from props', () => {
     const html = renderToString(<Screen />);
 
-    expect(html).toContain('rt-r-p-4');
-    expect(html).toContain('rt-r-gap-3');
-    expect(html).toContain('rt-r-fd-column');
-    expect(html).toContain('md:rt-r-fd-row');
+    expect(html).toContain('kui-r-p-4');
+    expect(html).toContain('kui-r-gap-3');
+    expect(html).toContain('kui-r-fd-column');
+    expect(html).toContain('md:kui-r-fd-row');
   });
 
   test('renders the shell at the initial breakpoint', () => {
@@ -145,7 +145,7 @@ describe('hydration', () => {
   test('data-os is added after hydration, not before', () => {
     const { container, messages, cleanup } = hydrate(<Screen />);
     try {
-      const root = container.querySelector('.radix-themes') as HTMLElement;
+      const root = container.querySelector('.kui-theme') as HTMLElement;
       expect(root.dataset.os).toBe('macos');
       expect(messages.filter((m) => HYDRATION_NOISE.test(m))).toEqual([]);
     } finally {

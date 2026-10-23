@@ -32,24 +32,24 @@ describe('choice controls on the v2 ladders', () => {
           </Tabs.Root>
         </Theme>,
       );
-      expect(box(container.querySelector('.rt-CheckboxRoot')!)).toEqual([MARK[size], MARK[size]]);
-      expect(box(container.querySelector('.rt-RadioRoot')!)).toEqual([MARK[size], MARK[size]]);
-      expect(box(container.querySelector('.rt-SwitchRoot')!)).toEqual([...TRACK[size]]);
+      expect(box(container.querySelector('.kui-CheckboxRoot')!)).toEqual([MARK[size], MARK[size]]);
+      expect(box(container.querySelector('.kui-RadioRoot')!)).toEqual([MARK[size], MARK[size]]);
+      expect(box(container.querySelector('.kui-SwitchRoot')!)).toEqual([...TRACK[size]]);
 
       const height = { '1': 28, '2': 32, '3': 40, '4': 48 }[size];
       const px = { '1': 8, '2': 10, '3': 13, '4': 16 }[size];
-      const segmented = container.querySelector('.rt-SegmentedControlRoot')!;
+      const segmented = container.querySelector('.kui-SegmentedControlRoot')!;
       expect(segmented.getBoundingClientRect().height).toBe(height);
-      const label = getComputedStyle(container.querySelector('.rt-SegmentedControlItemLabel')!);
+      const label = getComputedStyle(container.querySelector('.kui-SegmentedControlItemLabel')!);
       expect(parseFloat(label.paddingInlineStart)).toBe(px);
-      const inner = getComputedStyle(container.querySelector('.rt-BaseTabListTriggerInner')!);
+      const inner = getComputedStyle(container.querySelector('.kui-BaseTabListTriggerInner')!);
       expect(parseFloat(inner.paddingInlineStart)).toBe(px);
-      expect(container.querySelector('.rt-BaseTabListTrigger')!.getBoundingClientRect().height).toBe(height);
+      expect(container.querySelector('.kui-BaseTabListTrigger')!.getBoundingClientRect().height).toBe(height);
 
       // Track on v2's slider ladder; the thumb keeps v1's paint (thumb box + v1 overshoot).
-      const track = container.querySelector('.rt-SliderTrack')!.getBoundingClientRect().height;
+      const track = container.querySelector('.kui-SliderTrack')!.getBoundingClientRect().height;
       expect(track).toBe({ '1': 4, '2': 5, '3': 6, '4': 7 }[size]);
-      const thumb = box(container.querySelector('.rt-SliderThumb')!, '::after');
+      const thumb = box(container.querySelector('.kui-SliderThumb')!, '::after');
       expect(thumb).toEqual([...{ '1': [14, 10], '2': [19, 15], '3': [20, 16], '4': [25, 21] }[size]]);
     });
   }
@@ -62,7 +62,7 @@ describe('choice controls on the v2 ladders', () => {
         <Switch disabled aria-label="Switch" />
       </Theme>,
     );
-    for (const selector of ['.rt-CheckboxRoot', '.rt-RadioRoot', '.rt-SwitchRoot']) {
+    for (const selector of ['.kui-CheckboxRoot', '.kui-RadioRoot', '.kui-SwitchRoot']) {
       const el = container.querySelector(selector)!;
       expect(getComputedStyle(el).cursor, selector).toBe('default');
       expect(getComputedStyle(el).opacity, selector).toBe('1');

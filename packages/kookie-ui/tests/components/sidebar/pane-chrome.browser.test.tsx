@@ -29,8 +29,8 @@ describe('a Sidebar row in Shell.Sidebar sits on the control ladder', () => {
           </Shell.Root>
         </Theme>,
       );
-      const fromShell = container.querySelector<HTMLElement>('.rt-ShellSidebar .rt-SidebarMenuButton')!.getBoundingClientRect();
-      const button = container.querySelector<HTMLElement>('.rt-Button')!.getBoundingClientRect().height;
+      const fromShell = container.querySelector<HTMLElement>('.kui-ShellSidebar .kui-SidebarMenuButton')!.getBoundingClientRect();
+      const button = container.querySelector<HTMLElement>('.kui-Button')!.getBoundingClientRect().height;
       expect(fromShell.height).toBe(button);
       expect(fromShell.width).toBeGreaterThan(0);
     });

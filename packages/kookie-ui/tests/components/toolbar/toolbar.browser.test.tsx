@@ -43,7 +43,7 @@ describe('Toolbar announces itself', () => {
     render(<Row />);
     const toolbar = screen.getByRole('toolbar', { name: 'Formatting' });
     expect(toolbar.getAttribute('aria-orientation')).toBe('horizontal');
-    expect(toolbar.classList.contains('rt-Toolbar')).toBe(true);
+    expect(toolbar.classList.contains('kui-Toolbar')).toBe(true);
   });
 
   it('a toolbar button is a real <button>, with no extra role on top of it', () => {
@@ -51,7 +51,7 @@ describe('Toolbar announces itself', () => {
     const bold = screen.getByRole('button', { name: 'Bold' });
     expect(bold.tagName).toBe('BUTTON');
     expect(bold.getAttribute('role')).toBeNull();
-    expect(bold.classList.contains('rt-Button')).toBe(true);
+    expect(bold.classList.contains('kui-Button')).toBe(true);
   });
 
   it('throws outside a Toolbar rather than silently becoming a plain button', () => {
@@ -401,7 +401,7 @@ describe('ToolbarSeparator', () => {
         <Separator data-testid="twin" />
       </Theme>,
     );
-    const separator = screen.getByRole('toolbar').querySelector('.rt-ToolbarSeparator')!;
+    const separator = screen.getByRole('toolbar').querySelector('.kui-ToolbarSeparator')!;
     expect(separator.getAttribute('role')).toBe('separator');
     expect(separator.getAttribute('aria-orientation')).toBe('vertical');
     const box = rect(separator);
@@ -423,7 +423,7 @@ describe('ToolbarSeparator', () => {
         </Toolbar>
       </Theme>,
     );
-    const separator = screen.getByRole('toolbar').querySelector('.rt-ToolbarSeparator')!;
+    const separator = screen.getByRole('toolbar').querySelector('.kui-ToolbarSeparator')!;
     const box = rect(separator);
     expect(box.height).toBeCloseTo(1, 1);
     expect(box.width).toBeGreaterThan(4);
@@ -453,7 +453,7 @@ describe('ToolbarTitle', () => {
         </Toolbar>
       </Theme>,
     );
-    expect(screen.getByRole('toolbar').querySelector('.rt-ToolbarTitle')).toBeNull();
+    expect(screen.getByRole('toolbar').querySelector('.kui-ToolbarTitle')).toBeNull();
   });
 
   it('truncates rather than wrapping, so the row stays one control row tall', () => {
@@ -468,7 +468,7 @@ describe('ToolbarTitle', () => {
       </Theme>,
     );
     const toolbar = screen.getByRole('toolbar');
-    const title = toolbar.querySelector('.rt-ToolbarTitle')!;
+    const title = toolbar.querySelector('.kui-ToolbarTitle')!;
     expect(getComputedStyle(title).whiteSpace).toBe('nowrap');
     expect(rect(toolbar).width).toBeLessThanOrEqual(200.5);
     expect(rect(toolbar).height).toBeCloseTo(rect(screen.getByRole('button', { name: 'Share' })).height, 1);

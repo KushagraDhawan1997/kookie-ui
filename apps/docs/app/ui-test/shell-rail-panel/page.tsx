@@ -86,7 +86,7 @@ export default function ShellRailPanelTest() {
             </Button>
           </Flex>
 
-          <Box mb="7" p="5" style={{ background: 'var(--gray-2)', borderRadius: 'var(--radius-3)' }}>
+          <Box mb="7" p="5" style={{ background: 'var(--neutral-2)', borderRadius: 'var(--radius-3)' }}>
             <Box mb="3">
               <Heading size="3">Test Configuration</Heading>
             </Box>
@@ -134,7 +134,7 @@ export default function ShellRailPanelTest() {
             </Text>
           </Box>
 
-          <Box p="5" style={{ background: 'var(--gray-3)', borderRadius: 'var(--radius-3)' }}>
+          <Box p="5" style={{ background: 'var(--neutral-3)', borderRadius: 'var(--radius-3)' }}>
             <Box mb="3">
               <Heading size="3">Controls</Heading>
             </Box>

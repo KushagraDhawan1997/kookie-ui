@@ -72,7 +72,7 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
   const ceiling = React.useCallback(() => {
     const container = containerRef.current;
     const handle = handleRef.current;
-    const frame = container?.closest('.rt-ShellRoot')?.getBoundingClientRect();
+    const frame = container?.closest('.kui-ShellRoot')?.getBoundingClientRect();
     if (!container || !frame || !handle) return maxSize;
     const pane = container.getBoundingClientRect();
     const hitBox = handle.getBoundingClientRect();
@@ -108,7 +108,7 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <div
       ref={setRef}
-      className={classNames('rt-ShellResizer', className)}
+      className={classNames('kui-ShellResizer', className)}
       data-orientation={orientation}
       data-edge={edge}
       role="separator"

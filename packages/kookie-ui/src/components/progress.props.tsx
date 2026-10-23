@@ -6,7 +6,7 @@ import type { PropDef } from '../props/prop-def.js';
 const variants = ['surface', 'soft', 'outline'] as const;
 
 const progressPropDefs = {
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'surface' },
+  variant: { type: 'enum', className: 'kui-variant', values: variants, default: 'surface' },
   ...colorPropDef,
   ...radiusPropDef,
   duration: { type: 'string' },

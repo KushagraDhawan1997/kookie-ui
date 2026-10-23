@@ -25,7 +25,7 @@ function ControlledFixture() {
 describe('Inspector controlled open', () => {
   it('parent drives state; callback emitted', async () => {
     renderWithProviders(<ControlledFixture />);
-    const el = () => screen.getByText('inspector').closest('.rt-ShellInspector') as HTMLElement;
+    const el = () => screen.getByText('inspector').closest('.kui-ShellInspector') as HTMLElement;
     expect(el()).toHaveAttribute('data-mode', 'collapsed');
     await userEvent.click(screen.getByRole('button', { name: /toggle inspector/i }));
     expect(el()).toHaveAttribute('data-mode', 'expanded');

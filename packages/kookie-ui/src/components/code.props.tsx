@@ -14,11 +14,11 @@ const codePropDefs = {
   ...asChildPropDef,
   size: {
     type: 'enum',
-    className: 'rt-r-size',
+    className: 'kui-r-size',
     values: sizes,
     responsive: true,
   },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'soft' },
+  variant: { type: 'enum', className: 'kui-variant', values: variants, default: 'soft' },
   ...weightPropDef,
   ...grayAccentColorPropDef,
   ...emphasisPropDef,

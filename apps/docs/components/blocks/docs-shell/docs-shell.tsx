@@ -63,7 +63,7 @@ export function DocsShell({
         defaultState={{ initial: 'collapsed', sm: 'expanded' }}
         presentation={{ initial: 'overlay', sm: 'fixed' }}
         // The soft sidebar fill that Sidebar.Root's `variant="soft"` used to paint.
-        style={{ backgroundColor: 'var(--gray-2)' }}
+        style={{ backgroundColor: 'var(--neutral-2)' }}
       >
         <DocsSidebar
           navigation={navigation}

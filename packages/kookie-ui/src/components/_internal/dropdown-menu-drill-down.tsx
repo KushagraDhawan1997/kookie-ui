@@ -45,7 +45,7 @@ interface DrillDownState {
 const INITIAL_STATE: DrillDownState = { stack: [], direction: null, lastChange: null };
 
 const PANEL_ITEM_SELECTOR = '[role^="menuitem"]:not([data-disabled])';
-const BACK_ITEM_CLASS = 'rt-DropdownMenuDrillDownBackItem';
+const BACK_ITEM_CLASS = 'kui-DropdownMenuDrillDownBackItem';
 
 function escapeAttributeValue(value: string) {
   return value.replace(/["\\]/g, '\\$&');
@@ -91,8 +91,8 @@ class DrillDownStore {
     const root = this.rootElement;
     if (!root) return null;
     return (
-      root.closest<HTMLElement>('.rt-ScrollAreaViewport') ??
-      root.closest<HTMLElement>('.rt-BaseMenuViewport')
+      root.closest<HTMLElement>('.kui-ScrollAreaViewport') ??
+      root.closest<HTMLElement>('.kui-BaseMenuViewport')
     );
   }
 
@@ -272,7 +272,7 @@ function DrillDownRoot({ store, behavior, open, children }: DrillDownRootProps) 
       {/* Event capture only records the input modality; it does not handle interaction. */}
       <div
         ref={rootRef}
-        className="rt-DropdownMenuDrillDownRoot"
+        className="kui-DropdownMenuDrillDownRoot"
         data-submenu-behavior={behavior}
         data-drill-down-active={isRoot ? undefined : true}
         data-animation-direction={isDrillDown ? (direction ?? undefined) : undefined}

@@ -24,7 +24,7 @@ const VariableHeightMenuItem = React.memo(function VariableHeightMenuItem({
         style={{
           fontWeight: isHeader ? 600 : 400,
           fontSize: isHeader ? 11 : 14,
-          color: isHeader ? 'var(--gray-11)' : undefined,
+          color: isHeader ? 'var(--neutral-11)' : undefined,
           textTransform: isHeader ? 'uppercase' : undefined,
           letterSpacing: isHeader ? '0.05em' : undefined,
         }}
@@ -131,7 +131,7 @@ export default function DropdownMenuTest() {
         </DropdownMenu.Root>
         <Box mt="3">
           <Text as="p" size="1" emphasis="medium">
-            Open DevTools → Elements → search for &quot;rt-VirtualMenuItem&quot; → only ~15 elements rendered.
+            Open DevTools → Elements → search for &quot;kui-VirtualMenuItem&quot; → only ~15 elements rendered.
           </Text>
         </Box>
       </Box>
@@ -161,7 +161,7 @@ export default function DropdownMenuTest() {
         </DropdownMenu.Root>
         <Box mt="3">
           <Text as="p" size="1" emphasis="medium">
-            Open DevTools → Elements → search for &quot;rt-DropdownMenuItem&quot; → all 200 elements rendered.
+            Open DevTools → Elements → search for &quot;kui-DropdownMenuItem&quot; → all 200 elements rendered.
           </Text>
         </Box>
       </Box>
@@ -459,7 +459,7 @@ export default function DropdownMenuTest() {
       </Box>
 
       {/* Controls for cascade testing */}
-      <Box mb="7" p="5" style={{ background: 'var(--gray-2)', borderRadius: 'var(--radius-3)' }}>
+      <Box mb="7" p="5" style={{ background: 'var(--neutral-2)', borderRadius: 'var(--radius-3)' }}>
         <Box mb="5">
           <Heading size="3">SubContent Props (for cascade mode)</Heading>
         </Box>
@@ -509,7 +509,7 @@ export default function DropdownMenuTest() {
       {/* Position testing with cascade */}
       <Flex gap="5" wrap="wrap" mb="7">
         {/* Left-positioned menu */}
-        <Box p="5" style={{ background: 'var(--gray-2)', borderRadius: 'var(--radius-3)', flex: 1, minWidth: 200 }}>
+        <Box p="5" style={{ background: 'var(--neutral-2)', borderRadius: 'var(--radius-3)', flex: 1, minWidth: 200 }}>
           <Box mb="4">
             <Text size="2" weight="semibold" as="div">Left Edge (cascade)</Text>
           </Box>
@@ -549,7 +549,7 @@ export default function DropdownMenuTest() {
         </Box>
 
         {/* Right-positioned menu */}
-        <Box p="5" style={{ background: 'var(--gray-2)', borderRadius: 'var(--radius-3)', flex: 1, minWidth: 200 }}>
+        <Box p="5" style={{ background: 'var(--neutral-2)', borderRadius: 'var(--radius-3)', flex: 1, minWidth: 200 }}>
           <Box mb="4">
             <Text size="2" weight="semibold" as="div">Right Edge (cascade)</Text>
           </Box>
@@ -601,7 +601,7 @@ export default function DropdownMenuTest() {
       <ContextMenuChecks />
 
       {/* Info Box */}
-      <Box p="5" style={{ background: 'var(--gray-3)', borderRadius: 'var(--radius-3)' }}>
+      <Box p="5" style={{ background: 'var(--neutral-3)', borderRadius: 'var(--radius-3)' }}>
         <Box mb="3">
           <Heading size="3">API Reference</Heading>
         </Box>

@@ -78,7 +78,7 @@ export default function TextFieldScrubTest() {
           </TextField.Slot>
         </TextField.Root>
 
-        <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+        <Box p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
           <Text size="2" emphasis="medium">
             <Code variant="soft">scrub</Code> enabled, <Code variant="soft">scrubStep={'{1}'}</Code>, no constraints
           </Text>
@@ -130,7 +130,7 @@ export default function TextFieldScrubTest() {
           <Text size="5" style={{ color: 'white' }}>{constrainedValue}%</Text>
         </Box>
 
-        <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+        <Box p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
           <Text size="2" emphasis="medium">
             <Code variant="soft">scrubMin={'{0}'}</Code>, <Code variant="soft">scrubMax={'{100}'}</Code> — Delta becomes 0 at boundaries
           </Text>
@@ -198,7 +198,7 @@ export default function TextFieldScrubTest() {
           </Box>
         </Flex>
 
-        <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+        <Box p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
           <Text size="2" emphasis="medium">
             <Code variant="soft">scrubSensitivity</Code> controls pixels per step. Higher = more movement required
           </Text>
@@ -252,7 +252,7 @@ export default function TextFieldScrubTest() {
           </Flex>
         </Flex>
 
-        <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+        <Box p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
           <Text size="2" emphasis="medium">
             <Code variant="soft">scrubShiftMultiplier</Code> and <Code variant="soft">scrubAltMultiplier</Code> customize modifier behavior
           </Text>
@@ -402,7 +402,7 @@ export default function TextFieldScrubTest() {
           </TextField.Root>
         </Flex>
 
-        <Box p="7" style={{ minHeight: 200, background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+        <Box p="7" style={{ minHeight: 200, background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
           <Box style={{ 
             width: width, 
             height: height, 
@@ -413,7 +413,7 @@ export default function TextFieldScrubTest() {
           }} />
         </Box>
 
-        <Box p="5" style={{ background: 'var(--gray-a2)', borderRadius: 'var(--radius-3)' }}>
+        <Box p="5" style={{ background: 'var(--neutral-a2)', borderRadius: 'var(--radius-3)' }}>
           <Text size="2" emphasis="medium">
             Combined implementation: compact size, constraints, modifiers, and visual feedback
           </Text>

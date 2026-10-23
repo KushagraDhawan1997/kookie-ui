@@ -9,8 +9,8 @@ const sizes = ['1', '2', '3', '4'] as const;
 const variants = ['raised', 'surface', 'soft', 'ghost', 'outline'] as const;
 
 const textFieldRootPropDefs = {
-  size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised' },
+  size: { type: 'enum', className: 'kui-r-size', values: sizes, default: '2', responsive: true },
+  variant: { type: 'enum', className: 'kui-variant', values: variants, default: 'raised' },
   // Error and validation props
   error: { type: 'boolean', default: false },
   errorMessage: { type: 'string', default: undefined },

@@ -96,7 +96,7 @@ Every typeface decision lives in two tiers, and nowhere else.
 --font-serif  /* backs font="serif", Em and Quote */
 ```
 
-**Roles** — which stack each kind of text uses. Declared on `.radix-themes`:
+**Roles** — which stack each kind of text uses. Declared on `.kui-theme`:
 
 ```css
 --font-body     /* Text, inputs, buttons, and anything that does not opt out */
@@ -156,16 +156,16 @@ Swap a typeface everywhere it is used by overriding a stack at `:root`:
 }
 ```
 
-Give a single role its own typeface by overriding it at `.radix-themes`:
+Give a single role its own typeface by overriding it at `.kui-theme`:
 
 ```css showLineNumbers
 /* Serif headings over a sans body */
-.radix-themes {
+.kui-theme {
   --font-heading: var(--font-serif);
 }
 ```
 
-Roles are declared on `.radix-themes` rather than `:root` because `<Theme>` switches them per subtree — an override at `:root` sits on an ancestor and would be overruled. Stacks are the opposite: declare those at `:root`.
+Roles are declared on `.kui-theme` rather than `:root` because `<Theme>` switches them per subtree — an override at `:root` sits on an ancestor and would be overruled. Stacks are the opposite: declare those at `:root`.
 
 ## Theme Props
 

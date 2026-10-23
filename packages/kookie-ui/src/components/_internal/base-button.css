@@ -20,7 +20,7 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-BaseButton {
+.kui-BaseButton {
   /* Reset all inherited styles to ensure consistent base */
   all: unset;
   box-sizing: border-box;
@@ -96,7 +96,7 @@
   }
 
   /* Loading: busy, not frozen */
-  &:where(.rt-loading) {
+  &:where(.kui-loading) {
     position: relative;
     cursor: progress;
   }
@@ -120,23 +120,23 @@
 }
 
 /* An edge holding an icon keeps the plain padding under a pill */
-.rt-BaseButton:where([data-icon-start]) {
+.kui-BaseButton:where([data-icon-start]) {
   padding-inline-start: var(--base-button-px);
 }
 
-.rt-BaseButton:where([data-icon-end]) {
+.kui-BaseButton:where([data-icon-end]) {
   padding-inline-end: var(--base-button-px);
 }
 
 /* An icon-only button is square: no inline padding, and aspect-ratio rather than a width ladder,
    so a hosted icon button whose height comes from its container (Toolbar, Chatbar) stays square. */
-.rt-BaseButton:where([data-icon-only]) {
+.kui-BaseButton:where([data-icon-only]) {
   padding-inline: 0;
   aspect-ratio: 1;
 }
 
 /* Full width mode */
-.rt-BaseButton:where(.rt-full-width) {
+.kui-BaseButton:where(.kui-full-width) {
   display: flex;
   width: 100%;
 }
@@ -151,8 +151,8 @@
  ***************************************************************************************************/
 
 @breakpoints {
-  .rt-BaseButton {
-    &:where(.rt-r-size-1) {
+  .kui-BaseButton {
+    &:where(.kui-r-size-1) {
       --base-button-height: var(--control-height-1);
       --base-button-px: var(--control-px-1);
       --base-button-px-pill: var(--control-px-pill-1);
@@ -161,7 +161,7 @@
       --base-button-radius: var(--radius-1);
     }
 
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       --base-button-height: var(--control-height-2);
       --base-button-px: var(--control-px-2);
       --base-button-px-pill: var(--control-px-pill-2);
@@ -170,7 +170,7 @@
       --base-button-radius: var(--radius-2);
     }
 
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       --base-button-height: var(--control-height-3);
       --base-button-px: var(--control-px-3);
       --base-button-px-pill: var(--control-px-pill-3);
@@ -179,7 +179,7 @@
       --base-button-radius: var(--radius-3);
     }
 
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       --base-button-height: var(--control-height-4);
       --base-button-px: var(--control-px-4);
       --base-button-px-pill: var(--control-px-pill-4);
@@ -200,7 +200,7 @@
  ***************************************************************************************************/
 
 /* Soft variant palette */
-.rt-BaseButton:where(.rt-variant-soft) {
+.kui-BaseButton:where(.kui-variant-soft) {
   --v-color: var(--accent-ink);
   --v-bg: var(--accent-3);
   --v-bg-a: var(--accent-a3);
@@ -214,7 +214,7 @@
 }
 
 /* Ghost variant palette */
-.rt-BaseButton:where(.rt-variant-ghost) {
+.kui-BaseButton:where(.kui-variant-ghost) {
   --v-color: var(--accent-ink);
   --v-bg: transparent;
   --v-bg-a: transparent;
@@ -228,7 +228,7 @@
 }
 
 /* Outline variant palette */
-.rt-BaseButton:where(.rt-variant-outline) {
+.kui-BaseButton:where(.kui-variant-outline) {
   --v-color: var(--accent-ink);
   --v-bg: transparent;
   --v-bg-a: transparent;
@@ -247,11 +247,11 @@
   --v-border-open-a: var(--accent-a7);
   --v-border-active: var(--accent-8);
   --v-border-active-a: var(--accent-a8);
-  --v-border-disabled: var(--gray-a7);
+  --v-border-disabled: var(--neutral-a7);
 }
 
 /* Surface variant palette */
-.rt-BaseButton:where(.rt-variant-surface) {
+.kui-BaseButton:where(.kui-variant-surface) {
   --v-color: var(--accent-ink);
   --v-bg: var(--accent-2);
   --v-bg-a: var(--accent-a2);
@@ -261,7 +261,7 @@
   --v-bg-active-a: var(--accent-a4);
   --v-bg-pressed: var(--accent-4);
   --v-bg-pressed-a: var(--accent-a4);
-  --v-bg-disabled: var(--gray-a2);
+  --v-bg-disabled: var(--neutral-a2);
   --v-border: var(--accent-6);
   --v-border-a: var(--accent-a6);
   --v-border-hover: var(--accent-7);
@@ -270,7 +270,7 @@
   --v-border-open-a: var(--accent-a8);
   --v-border-active: var(--accent-8);
   --v-border-active-a: var(--accent-a8);
-  --v-border-disabled: var(--gray-a6);
+  --v-border-disabled: var(--neutral-a6);
 }
 
 /***************************************************************************************************
@@ -283,7 +283,7 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-BaseButton:where(.rt-variant-soft, .rt-variant-ghost, .rt-variant-outline, .rt-variant-surface) {
+.kui-BaseButton:where(.kui-variant-soft, .kui-variant-ghost, .kui-variant-outline, .kui-variant-surface) {
   /* Rest state */
   color: var(--v-color);
   background-color: var(--v-bg);
@@ -314,14 +314,14 @@
 
   /* Disabled state */
   &:where([data-disabled], [aria-disabled='true']) {
-    color: var(--gray-a8);
-    background-color: var(--v-bg-disabled, var(--gray-a3));
+    color: var(--neutral-a8);
+    background-color: var(--v-bg-disabled, var(--neutral-a3));
     box-shadow: none;
   }
 }
 
 /* Border variants: outline and surface */
-.rt-BaseButton:where(.rt-variant-outline, .rt-variant-surface) {
+.kui-BaseButton:where(.kui-variant-outline, .kui-variant-surface) {
   /* Rest state border */
   box-shadow: inset 0 0 0 1px var(--v-border);
 
@@ -358,15 +358,15 @@
  ***************************************************************************************************/
 
 /* Raised variant - surface at rest, then gray 2 on hover and gray 3 on press */
-.rt-BaseButton:where(.rt-variant-raised) {
+.kui-BaseButton:where(.kui-variant-raised) {
   position: relative;
   color: var(--accent-ink);
-  background-color: var(--color-surface-solid);
+  background-color: var(--color-surface);
   box-shadow: var(--shadow-2);
 
   @media (hover: hover) {
     &:where(:hover:not([data-disabled], [aria-disabled='true'])) {
-      background-color: var(--gray-2);
+      background-color: var(--neutral-2);
       box-shadow: var(--shadow-2);
     }
   }
@@ -374,20 +374,20 @@
   &:where([data-state='open']),
   &:where(:active:not([data-state='open'], [data-disabled], [aria-disabled='true'])),
   &:where([data-state='on']:not([data-disabled], [aria-disabled='true'])) {
-    background-color: var(--gray-3);
+    background-color: var(--neutral-3);
     box-shadow: var(--shadow-1);
   }
 
   @media (pointer: coarse) {
     &:where(:active:not([data-state='open'], [data-disabled], [aria-disabled='true'])) {
-      outline: var(--raised-shadow-blur-large) solid var(--gray-a4);
+      outline: var(--raised-shadow-blur-large) solid var(--neutral-a4);
       outline-offset: 0;
     }
   }
 
   &:where([data-disabled], [aria-disabled='true']) {
-    color: var(--gray-a8);
-    background-color: var(--gray-a3);
+    color: var(--neutral-a8);
+    background-color: var(--neutral-a3);
     box-shadow: none;
     top: 0;
   }
@@ -395,7 +395,7 @@
 
 /* Solid variant - accent solid at rest, solid-hover on hover, solid-active on press
    (gray resolves the three to step 12 and the filters carry the change) */
-.rt-BaseButton:where(.rt-variant-solid) {
+.kui-BaseButton:where(.kui-variant-solid) {
   background-color: var(--accent-solid);
   color: var(--accent-solid-contrast);
 
@@ -430,8 +430,8 @@
   }
 
   &:where([data-disabled], [aria-disabled='true']) {
-    color: var(--gray-a8);
-    background-color: var(--gray-a3);
+    color: var(--neutral-a8);
+    background-color: var(--neutral-a3);
     box-shadow: none;
     filter: none;
     opacity: 1;
@@ -444,16 +444,16 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-BaseButton:where([data-disabled][aria-pressed], [aria-disabled='true'][aria-pressed]) {
+.kui-BaseButton:where([data-disabled][aria-pressed], [aria-disabled='true'][aria-pressed]) {
   transform: none;
-  color: var(--gray-a8);
-  background-color: var(--gray-a3);
+  color: var(--neutral-a8);
+  background-color: var(--neutral-a3);
   box-shadow: none;
   filter: none;
   opacity: 1;
 
   /* Raised needs special handling for top position */
-  &:where(.rt-variant-raised) {
+  &:where(.kui-variant-raised) {
     top: 0;
   }
 }

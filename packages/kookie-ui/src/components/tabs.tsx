@@ -21,7 +21,7 @@ const TabsRoot = React.forwardRef<TabsRootElement, TabsRootProps>((props, forwar
     <TabsPrimitive.Root
       {...rootProps}
       ref={forwardedRef}
-      className={classNames('rt-TabsRoot', className)}
+      className={classNames('kui-TabsRoot', className)}
     />
   );
 });
@@ -44,7 +44,7 @@ const TabsList = React.forwardRef<TabsListElement, TabsListProps>((ownProps, for
       {...listProps}
       asChild={false}
       ref={forwardedRef}
-      className={classNames('rt-BaseTabList', 'rt-TabsList', className)}
+      className={classNames('kui-BaseTabList', 'kui-TabsList', className)}
     />
   );
 });
@@ -61,10 +61,10 @@ const TabsTrigger = React.forwardRef<TabsTriggerElement, TabsTriggerProps>(
         {...triggerProps}
         asChild={false}
         ref={forwardedRef}
-        className={classNames('rt-reset', 'rt-BaseTabListTrigger', 'rt-TabsTrigger', className)}
+        className={classNames('kui-reset', 'kui-BaseTabListTrigger', 'kui-TabsTrigger', className)}
       >
-        <span className="rt-BaseTabListTriggerInner rt-TabsTriggerInner">{children}</span>
-        <span className="rt-BaseTabListTriggerInnerHidden rt-TabsTriggerInnerHidden">
+        <span className="kui-BaseTabListTriggerInner kui-TabsTriggerInner">{children}</span>
+        <span className="kui-BaseTabListTriggerInnerHidden kui-TabsTriggerInnerHidden">
           {children}
         </span>
       </TabsPrimitive.Trigger>
@@ -85,7 +85,7 @@ const TabsContent = React.forwardRef<TabsContentElement, TabsContentProps>(
       <TabsPrimitive.Content
         {...contentProps}
         ref={forwardedRef}
-        className={classNames('rt-TabsContent', className)}
+        className={classNames('kui-TabsContent', className)}
         aria-live="polite"
         aria-atomic="true"
       />

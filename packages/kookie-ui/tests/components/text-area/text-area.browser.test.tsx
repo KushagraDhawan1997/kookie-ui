@@ -26,7 +26,7 @@ describe('TextArea on the control ladder', () => {
           <TextArea size={size} variant="outline" rows={1} style={{ height: 0 }} aria-label="floor" />
         </Theme>,
       );
-      const [outline, soft, floor] = container.querySelectorAll<HTMLElement>('.rt-TextAreaRoot');
+      const [outline, soft, floor] = container.querySelectorAll<HTMLElement>('.kui-TextAreaRoot');
       for (const root of [outline, soft]) {
         const { x, y } = inset(root);
         expect(x).toBeCloseTo(px[size], 1);
@@ -45,7 +45,7 @@ describe('TextArea on the control ladder', () => {
         <TextArea variant="surface" aria-invalid aria-label="c" />
       </Theme>,
     );
-    const [plain, viaError, viaAria] = container.querySelectorAll<HTMLElement>('.rt-TextAreaRoot');
+    const [plain, viaError, viaAria] = container.querySelectorAll<HTMLElement>('.kui-TextAreaRoot');
     expect(getComputedStyle(viaError).boxShadow).toBe(getComputedStyle(viaAria).boxShadow);
     expect(getComputedStyle(viaError).boxShadow).not.toBe(getComputedStyle(plain).boxShadow);
     expect(getComputedStyle(viaError).backgroundColor).toBe(getComputedStyle(plain).backgroundColor);

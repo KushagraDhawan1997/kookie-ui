@@ -10,7 +10,7 @@ const popoverContentPropDefs = {
   ...asChildPropDef,
   size: {
     type: 'enum',
-    className: 'rt-r-size',
+    className: 'kui-r-size',
     values: contentSizes,
     default: '2',
     responsive: true,

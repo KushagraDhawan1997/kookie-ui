@@ -39,7 +39,7 @@ describe('animations avoid layout properties', () => {
    * are allowed. They are also scoped to the panel's own subtree rather than a
    * whole shell pane.
    */
-  const ALLOWED_KEYFRAMES = new Set(['rt-slide-down', 'rt-slide-up', 'rt-sidebar-slide-down', 'rt-sidebar-slide-up']);
+  const ALLOWED_KEYFRAMES = new Set(['kui-slide-down', 'kui-slide-up', 'kui-sidebar-slide-down', 'kui-sidebar-slide-up']);
 
   it('no keyframes animate a layout property', () => {
     const violations: { file: string; keyframes: string; property: string; line: number }[] = [];
@@ -103,7 +103,7 @@ describe('animations avoid layout properties', () => {
 
   it('the progress indicator is positioned by transform, not width', () => {
     const progress = fs.readFileSync(path.join(SRC, 'components/progress.css'), 'utf8');
-    const indicator = progress.slice(progress.indexOf('.rt-ProgressIndicator'));
+    const indicator = progress.slice(progress.indexOf('.kui-ProgressIndicator'));
 
     expect(indicator).toContain('transform: translateX(');
     // A full-width bar slid into place, rather than a bar grown to a width.

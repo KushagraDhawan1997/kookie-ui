@@ -29,7 +29,7 @@ const Text = React.memo(
       ...textProps
     } = extractProps(props, textPropDefs);
 
-    const combinedClassName = className ? `rt-Text ${className}` : 'rt-Text';
+    const combinedClassName = className ? `kui-Text ${className}` : 'kui-Text';
 
     if (asChild) {
       return (

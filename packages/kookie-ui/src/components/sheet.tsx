@@ -209,13 +209,13 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>(
     return (
       <DialogPrimitive.Portal container={container} forceMount={forceMount}>
         <Theme asChild>
-          <DialogPrimitive.Overlay className="rt-BaseDialogOverlay rt-DialogOverlay rt-SheetOverlay">
+          <DialogPrimitive.Overlay className="kui-BaseDialogOverlay kui-DialogOverlay kui-SheetOverlay">
             <DialogPrimitive.Content
               {...contentProps}
               ref={combinedRef}
               className={classNames(
-                'rt-BaseDialogContent',
-                'rt-SheetContent',
+                'kui-BaseDialogContent',
+                'kui-SheetContent',
                 className,
                 extractedClassName,
               )}

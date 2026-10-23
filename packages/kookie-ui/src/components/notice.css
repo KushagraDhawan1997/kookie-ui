@@ -3,7 +3,7 @@
  * It takes space and never floats: no position, no z-index.
  */
 
-.rt-NoticeRoot {
+.kui-NoticeRoot {
   box-sizing: border-box;
   display: flex;
   /* The icon and the actions sit on the first line, so a long message wraps under itself. */
@@ -20,12 +20,12 @@
 }
 
 /* Gray is the resting category: its fill is one step quieter and its words are the ordinary ink. */
-.rt-NoticeRoot:where([data-accent-color='gray']) {
-  background-color: var(--gray-a3);
-  color: var(--gray-12);
+.kui-NoticeRoot:where([data-accent-color='gray']) {
+  background-color: var(--neutral-a3);
+  color: var(--neutral-12);
 }
 
-.rt-NoticeIcon {
+.kui-NoticeIcon {
   display: flex;
   flex: none;
   align-items: center;
@@ -39,13 +39,13 @@
   }
 }
 
-.rt-NoticeText {
+.kui-NoticeText {
   flex: 1 1 auto;
   min-width: 0;
   overflow-wrap: anywhere;
 }
 
-.rt-NoticeActions {
+.kui-NoticeActions {
   display: flex;
   flex: none;
   align-items: center;
@@ -55,42 +55,42 @@
 }
 
 /* A question wraps its answers under the words when the strip is narrow. */
-.rt-NoticeRoot:where([data-kind='confirmation']) {
+.kui-NoticeRoot:where([data-kind='confirmation']) {
   flex-wrap: wrap;
 
-  & :where(.rt-NoticeActions) {
+  & :where(.kui-NoticeActions) {
     margin-left: auto;
   }
 }
 
-.rt-NoticeRoot {
+.kui-NoticeRoot {
   /* A notice is a surface: it pads and rounds like a Card of the same size, with one gap. */
   gap: var(--layout-space-4);
   border-radius: var(--notice-radius);
   padding: var(--notice-padding);
 
-  &:where(.rt-r-size-1) {
+  &:where(.kui-r-size-1) {
     --notice-padding: var(--surface-p-1);
     --notice-radius: var(--radius-surface-1);
     --notice-line: var(--line-height-1);
     --notice-control: var(--control-height-1);
     --notice-icon-size: var(--content-icon-size-1);
   }
-  &:where(.rt-r-size-2) {
+  &:where(.kui-r-size-2) {
     --notice-padding: var(--surface-p-2);
     --notice-radius: var(--radius-surface-2);
     --notice-line: var(--line-height-2);
     --notice-control: var(--control-height-2);
     --notice-icon-size: var(--content-icon-size-2);
   }
-  &:where(.rt-r-size-3) {
+  &:where(.kui-r-size-3) {
     --notice-padding: var(--surface-p-3);
     --notice-radius: var(--radius-surface-3);
     --notice-line: var(--line-height-3);
     --notice-control: var(--control-height-3);
     --notice-icon-size: var(--content-icon-size-3);
   }
-  &:where(.rt-r-size-4) {
+  &:where(.kui-r-size-4) {
     --notice-padding: var(--surface-p-4);
     --notice-radius: var(--radius-surface-4);
     --notice-line: var(--line-height-4);

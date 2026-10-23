@@ -22,35 +22,35 @@ function rule(selector: string): string {
  */
 describe('Shell layering and placement', () => {
   it('the content is its own stacking context at all times, so nothing inside it paints over a pane', () => {
-    expect(rule('.rt-ShellContent')).toMatch(/isolation:\s*isolate/);
+    expect(rule('.kui-ShellContent')).toMatch(/isolation:\s*isolate/);
   });
 
   it('every Root states the rail offset, so a nested Shell never inherits its parent’s', () => {
-    expect(rule('.rt-ShellRoot')).toMatch(/--shell-rail-offset:\s*0px/);
+    expect(rule('.kui-ShellRoot')).toMatch(/--shell-rail-offset:\s*0px/);
   });
 
   it('a floating Sidebar starts beside the Rail, as a floating Panel does', () => {
-    expect(rule('.rt-ShellSidebar')).toMatch(/inset-inline-start:\s*var\(--rt-shell-offset, 0px\)/);
-    expect(rule('.rt-ShellPanel')).toMatch(/inset-inline-start:\s*var\(--rt-shell-offset, 0px\)/);
+    expect(rule('.kui-ShellSidebar')).toMatch(/inset-inline-start:\s*var\(--kui-shell-offset, 0px\)/);
+    expect(rule('.kui-ShellPanel')).toMatch(/inset-inline-start:\s*var\(--kui-shell-offset, 0px\)/);
   });
 
   it('every overlay cap leaves the dismiss strip after the pane’s own start', () => {
-    const caps = css.match(/--rt-shell-cap:\s*calc\([^;]+\);/g) ?? [];
+    const caps = css.match(/--kui-shell-cap:\s*calc\([^;]+\);/g) ?? [];
     expect(caps.length).toBeGreaterThan(0);
-    for (const cap of caps) expect(cap).toContain('var(--rt-shell-start, 0px)');
+    for (const cap of caps) expect(cap).toContain('var(--kui-shell-start, 0px)');
   });
 
   it('a pane with a handle sits above the pane beside it', () => {
-    expect(rule('.rt-ShellPane:has(> .rt-ShellResizer)')).toMatch(/z-index:\s*var\(--rt-shell-z, 2\)/);
+    expect(rule('.kui-ShellPane:has(> .kui-ShellResizer)')).toMatch(/z-index:\s*var\(--kui-shell-z, 2\)/);
   });
 
   it('the handle flips by the nearest direction, not by any rtl ancestor', () => {
     expect(css).not.toMatch(/\[dir='rtl'\]/);
-    expect(css).toContain(".rt-ShellResizer[data-orientation='vertical'][data-edge='end']:dir(rtl)");
+    expect(css).toContain(".kui-ShellResizer[data-orientation='vertical'][data-edge='end']:dir(rtl)");
   });
 
   it('a peeking Panel that follows the Rail outranks the follower placement', () => {
-    expect(() => rule('.rt-ShellRail ~ .rt-ShellPanel[data-presentation-follows][data-peek][data-state]')).not.toThrow();
+    expect(() => rule('.kui-ShellRail ~ .kui-ShellPanel[data-presentation-follows][data-peek][data-state]')).not.toThrow();
   });
 
   it('the shared inset gap counts only a neighbour shown in the frame', () => {
@@ -60,8 +60,8 @@ describe('Shell layering and placement', () => {
   });
 
   it('an auto-height Shell places its overlays and scrim on the window', () => {
-    const fixed = rule(".rt-ShellRoot[data-height='auto'] > .rt-ShellScrim");
+    const fixed = rule(".kui-ShellRoot[data-height='auto'] > .kui-ShellScrim");
     expect(fixed).toMatch(/position:\s*fixed/);
-    expect(() => rule(".rt-ShellRoot[data-height='auto'] > .rt-ShellPane[data-presentation='overlay']")).not.toThrow();
+    expect(() => rule(".kui-ShellRoot[data-height='auto'] > .kui-ShellPane[data-presentation='overlay']")).not.toThrow();
   });
 });
