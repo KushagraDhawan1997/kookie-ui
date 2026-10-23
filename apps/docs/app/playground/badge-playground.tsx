@@ -34,7 +34,7 @@ const accentColors = [
 ] as const;
 
 const variants = ['solid', 'soft', 'surface', 'outline', 'ghost'] as const;
-const sizes = ['1', '2', '3'] as const;
+const sizes = ['1', '2', '3', '4'] as const;
 const radiusOptions = ['none', 'small', 'medium', 'large', 'full'] as const;
 
 type BadgePlaygroundProps = {

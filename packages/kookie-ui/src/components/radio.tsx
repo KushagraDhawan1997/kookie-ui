@@ -7,6 +7,7 @@ import { composeEventHandlers } from 'radix-ui/internal';
 import { radioPropDefs } from './radio.props.js';
 import { marginPropDefs } from '../props/margin.props.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 
 import type { MarginProps } from '../props/margin.props.js';
 import type { ComponentPropsWithout } from '../helpers/component-props.js';
@@ -24,7 +25,8 @@ type RadioInputProps = ComponentPropsWithout<
 >;
 interface RadioProps extends RadioInputProps, MarginProps, RadioOwnProps {}
 
-const Radio = React.forwardRef<RadioElement, RadioProps>((props, forwardedRef) => {
+const Radio = React.forwardRef<RadioElement, RadioProps>((ownProps, forwardedRef) => {
+  const props = useThemeSizeProps(ownProps, radioPropDefs.size);
   const { className, color, onChange, onValueChange, ...radioProps } = extractProps(
     props,
     radioPropDefs,

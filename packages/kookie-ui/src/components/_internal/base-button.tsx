@@ -7,7 +7,7 @@ import { Flex } from '../flex.js';
 import { Spinner } from '../spinner.js';
 import { VisuallyHidden } from '../visually-hidden.js';
 import { extractProps } from '../../helpers/extract-props.js';
-import { mapResponsiveProp, mapButtonSizeToSpinnerSize } from '../../helpers/map-prop-values.js';
+import { useThemeSizeProps } from '../../helpers/theme-size.js';
 import { marginPropDefs } from '../../props/margin.props.js';
 
 import type { MarginProps } from '../../props/margin.props.js';
@@ -59,8 +59,8 @@ interface BaseButtonProps extends PolymorphicBaseButtonProps {}
  * <BaseButton as="a" href="/link">Link Button</BaseButton>
  * ```
  */
-const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((props, forwardedRef) => {
-  const { size = baseButtonPropDefs.size.default } = props;
+const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProps, forwardedRef) => {
+  const props = useThemeSizeProps(ownProps, baseButtonPropDefs.size);
 
   // Extract button-specific props from the combined props object
   const {
@@ -71,9 +71,44 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((props, 
     color,
     radius,
     flush,
-    disabled = props.loading, // Loading state automatically disables the button
+    disabled: nativeDisabled,
     ...baseButtonProps
   } = extractProps(props, baseButtonPropDefs, marginPropDefs);
+
+  // Loading blocks activation but keeps the native `disabled` off, so the button keeps focus
+  // and its place in the tab order (aria-disabled carries the state). An explicit `disabled`
+  // stays native.
+  const loading = Boolean(props.loading);
+  const disabled = Boolean(nativeDisabled) || loading;
+  const { onClick } = baseButtonProps as { onClick?: React.MouseEventHandler<HTMLElement> };
+  const handleClick = React.useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      if (loading) {
+        event.preventDefault();
+        return;
+      }
+      onClick?.(event);
+    },
+    [loading, onClick],
+  );
+
+  // Which edges start or end with an icon. A bare edge pads wider under a full radius; an edge
+  // holding an icon keeps the plain padding (the icon already stands between text and curve).
+  const { iconStart, iconEnd } = React.useMemo(() => {
+    const content =
+      asChild && React.isValidElement(children) ? (children.props as { children?: React.ReactNode }).children : children;
+    // Fragments are see-through: their own first and last children are the edges.
+    const flatten = (nodes: React.ReactNode): React.ReactNode[] =>
+      React.Children.toArray(nodes).flatMap((node) =>
+        React.isValidElement(node) && node.type === React.Fragment
+          ? flatten((node.props as { children?: React.ReactNode }).children)
+          : [node],
+      );
+    const items = flatten(content);
+    const isIcon = (node: React.ReactNode) =>
+      React.isValidElement(node) && (node.type === 'svg' || typeof node.type !== 'string');
+    return { iconStart: isIcon(items[0]), iconEnd: isIcon(items[items.length - 1]) };
+  }, [asChild, children]);
 
 
   // asChild takes precedence over as prop for Radix Slot integration
@@ -94,7 +129,7 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((props, 
 
   // Generate unique ID for loading announcements
   const loadingId = React.useId();
-  const describedById = props.loading ? `${loadingId}-loading` : undefined;
+  const describedById = loading ? `${loadingId}-loading` : undefined;
 
   // Extract button text for accessibility announcements
   const buttonText = React.useMemo(() => {
@@ -121,16 +156,20 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((props, 
 
   return (
     <Comp
-      // The `data-disabled` attribute enables correct styles when doing `<Button asChild disabled>`
-      data-disabled={disabled || undefined}
       data-accent-color={color}
       data-radius={radius}
       data-flush={flush ? 'true' : undefined}
+      data-icon-start={iconStart || undefined}
+      data-icon-end={iconEnd || undefined}
       {...baseButtonProps}
       {...accessibilityProps}
+      // After the spread: `data-disabled` styles `<Button asChild disabled>`, and a wrapping
+      // Radix Toggle (asChild) passes `data-disabled={undefined}` that must not erase it.
+      data-disabled={disabled || undefined}
+      onClick={handleClick}
       ref={forwardedRef}
       className={classNames('rt-reset', 'rt-BaseButton', className)}
-      {...(shouldPassDisabled && { disabled })}
+      {...(shouldPassDisabled && { disabled: nativeDisabled })}
       {...(isNativeButtonElement && !hasExplicitTypeAttribute ? { type: 'button' } : {})}
     >
       {props.loading ? (
@@ -155,7 +194,7 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((props, 
           {/* Centered spinner overlay during loading state */}
           <Flex asChild align="center" justify="center" position="absolute" inset="0">
             <span>
-              <Spinner size={mapResponsiveProp(size, mapButtonSizeToSpinnerSize)} aria-hidden="true" />
+              <Spinner aria-hidden="true" />
             </span>
           </Flex>
         </>

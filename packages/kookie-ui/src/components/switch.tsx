@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { Switch as SwitchPrimitive } from 'radix-ui';
 
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { marginPropDefs } from '../props/margin.props.js';
 import { switchPropDefs } from './switch.props.js';
 
@@ -19,7 +20,8 @@ interface SwitchProps
     >,
     MarginProps,
     SwitchOwnProps {}
-const Switch = React.forwardRef<SwitchElement, SwitchProps>((props, forwardedRef) => {
+const Switch = React.forwardRef<SwitchElement, SwitchProps>((ownProps, forwardedRef) => {
+  const props = useThemeSizeProps(ownProps, switchPropDefs.size);
   const { className, color, ...switchProps } = extractProps(
     props,
     switchPropDefs,

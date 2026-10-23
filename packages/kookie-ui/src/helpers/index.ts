@@ -13,3 +13,4 @@ export * from './map-prop-values.js';
 export * from './merge-styles.js';
 export * from './normalize-to-px.js';
 export * from './require-react-element.js';
+export * from './theme-size.js';

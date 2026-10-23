@@ -3,6 +3,7 @@ import classNames from 'classnames';
 
 import { tableRootPropDefs, tableRowPropDefs, tableCellPropDefs } from './table.props.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { getResponsiveClassNames } from '../helpers/get-responsive-styles.js';
 import { marginPropDefs } from '../props/margin.props.js';
 import { ScrollArea } from './scroll-area.js';
@@ -17,7 +18,8 @@ interface TableRootProps
   extends ComponentPropsWithout<'div', RemovedProps>,
     MarginProps,
     TableRootOwnProps {}
-const TableRoot = React.forwardRef<TableRootElement, TableRootProps>((props, forwardedRef) => {
+const TableRoot = React.forwardRef<TableRootElement, TableRootProps>((ownProps, forwardedRef) => {
+  const props = useThemeSizeProps(ownProps, tableRootPropDefs.size);
   const { layout: layoutPropDef, ...rootPropDefs } = tableRootPropDefs;
   const { className, children, layout, ...rootProps } = extractProps(
     props,

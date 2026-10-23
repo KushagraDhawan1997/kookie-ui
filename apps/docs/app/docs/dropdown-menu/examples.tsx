@@ -154,7 +154,7 @@ export function DropdownMenuExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 2: User Account Menu */}
       <Flex direction="column" gap="5">
@@ -234,7 +234,7 @@ export function DropdownMenuExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 3: Settings with Checkboxes and Radio */}
       <Flex direction="column" gap="5">
@@ -328,7 +328,7 @@ const [theme, setTheme] = React.useState('system');
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 4: Drill-Down Navigation */}
       <Flex direction="column" gap="5">
@@ -428,7 +428,7 @@ const [theme, setTheme] = React.useState('system');
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 5: Responsive Submenu Behavior */}
       <Flex direction="column" gap="5">
@@ -513,7 +513,7 @@ const [theme, setTheme] = React.useState('system');
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 6: Virtualized Menu for Large Lists */}
       <Flex direction="column" gap="5">
@@ -591,7 +591,7 @@ const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 7: Simple Virtualized List */}
       <Flex direction="column" gap="5">

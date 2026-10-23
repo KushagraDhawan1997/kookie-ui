@@ -47,7 +47,7 @@ export function ToggleButtonExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 2: Bookmark Action */}
       <Flex direction="column" gap="5">
@@ -82,7 +82,7 @@ export function ToggleButtonExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 3: Notification Toggle */}
       <Flex direction="column" gap="5">

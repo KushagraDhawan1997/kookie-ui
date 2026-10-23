@@ -45,7 +45,7 @@ export default function TextFieldScrubTest() {
         </Text>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Test 1: Basic Scrubbing */}
       <Flex direction="column" gap="6">
@@ -83,7 +83,7 @@ export default function TextFieldScrubTest() {
         </Box>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Test 2: Constraints */}
       <Flex direction="column" gap="6">
@@ -133,7 +133,7 @@ export default function TextFieldScrubTest() {
         </Box>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Test 3: Sensitivity */}
       <Flex direction="column" gap="6">
@@ -195,7 +195,7 @@ export default function TextFieldScrubTest() {
         </Box>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Test 4: Modifiers */}
       <Flex direction="column" gap="6">
@@ -247,7 +247,7 @@ export default function TextFieldScrubTest() {
         </Box>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Test 5: Real-World Application */}
       <Flex direction="column" gap="6">

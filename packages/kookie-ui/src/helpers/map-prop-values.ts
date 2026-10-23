@@ -1,5 +1,3 @@
-import type { baseButtonPropDefs } from '../components/_internal/base-button.props.js';
-import type { spinnerPropDefs } from '../components/spinner.props.js';
 import type { textPropDefs } from '../components/text.props.js';
 import type { Responsive } from '../props/prop-def.js';
 
@@ -16,19 +14,4 @@ function mapResponsiveProp<Input extends string, Output>(
   );
 }
 
-
-function mapButtonSizeToSpinnerSize(
-  size: (typeof baseButtonPropDefs.size.values)[number]
-): (typeof spinnerPropDefs.size.values)[number] {
-  switch (size) {
-    case '1':
-      return '1';
-    case '2':
-    case '3':
-      return '2';
-    case '4':
-      return '3';
-  }
-}
-
-export { mapResponsiveProp, mapButtonSizeToSpinnerSize };
+export { mapResponsiveProp };

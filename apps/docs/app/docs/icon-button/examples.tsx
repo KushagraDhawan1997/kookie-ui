@@ -56,7 +56,7 @@ export function IconButtonExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 2: Card Actions */}
       <Flex direction="column" gap="5">
@@ -104,7 +104,7 @@ export function IconButtonExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 3: Compact Data Table Controls */}
       <Flex direction="column" gap="5">
@@ -152,7 +152,7 @@ export function IconButtonExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 4: Dialog Close */}
       <Flex direction="column" gap="5">

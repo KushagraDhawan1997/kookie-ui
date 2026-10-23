@@ -100,7 +100,7 @@ const handleSubmit = () => {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 2: Feedback Form */}
       <Flex direction="column" gap="5">
@@ -159,7 +159,7 @@ const handleSubmit = async () => {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 3: Character Counter */}
       <Flex direction="column" gap="5">
@@ -203,7 +203,7 @@ const maxLength = 280;
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 4: Note Taking */}
       <Flex direction="column" gap="5">
@@ -244,7 +244,7 @@ const maxLength = 280;
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 5: Product Description */}
       <Flex direction="column" gap="5">

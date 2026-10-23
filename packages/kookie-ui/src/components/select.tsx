@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { Select as SelectPrimitive, ScrollArea as ScrollAreaPrimitive } from 'radix-ui';
 
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSize } from '../helpers/theme-size.js';
 import { marginPropDefs } from '../props/margin.props.js';
 import { ChevronDownIcon, ThickCheckIcon } from './icons.js';
 import {
@@ -27,7 +28,8 @@ const SelectContext = React.createContext<SelectContextValue>({});
 
 interface SelectRootProps extends SelectPrimitive.SelectProps, SelectContextValue {}
 const SelectRoot: React.FC<SelectRootProps> = (props) => {
-  const { children, size = selectRootPropDefs.size.default, ...rootProps } = props;
+  const { children, size: sizeProp, ...rootProps } = props;
+  const size = useThemeSize(sizeProp, selectRootPropDefs.size);
   return (
     <SelectPrimitive.Root {...rootProps}>
       <SelectContext.Provider value={React.useMemo(() => ({ size }), [size])}>
@@ -172,7 +174,7 @@ const SelectContent = React.forwardRef<SelectContentElement, SelectContentProps>
                 </ScrollAreaPrimitive.Viewport>
               </SelectPrimitive.Viewport>
               <ScrollAreaPrimitive.Scrollbar
-                className="rt-ScrollAreaScrollbar rt-r-size-1"
+                className="rt-ScrollAreaScrollbar"
                 orientation="vertical"
               >
                 <ScrollAreaPrimitive.Thumb className="rt-ScrollAreaThumb" />

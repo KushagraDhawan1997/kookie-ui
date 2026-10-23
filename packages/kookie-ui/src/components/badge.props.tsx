@@ -9,7 +9,7 @@ const variants = ['raised', 'solid', 'soft', 'surface', 'outline', 'ghost'] as c
 
 const badgePropDefs = {
   ...asChildPropDef,
-  size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '1', responsive: true },
+  size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
   variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'raised' },
   ...grayAccentColorPropDef,
   ...radiusPropDef,

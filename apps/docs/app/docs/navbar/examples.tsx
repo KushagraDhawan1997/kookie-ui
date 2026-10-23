@@ -51,7 +51,7 @@ export function NavbarExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 2: Marketing Navbar */}
       <Flex direction="column" gap="5">
@@ -110,7 +110,7 @@ export function NavbarExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 3: Slot Architecture */}
       <Flex direction="column" gap="5">
@@ -202,7 +202,7 @@ export function NavbarExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 4: With Icons */}
       <Flex direction="column" gap="5">
@@ -268,7 +268,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 5: Dashboard with User Menu */}
       <Flex direction="column" gap="5">
@@ -341,7 +341,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 6: Minimal */}
       <Flex direction="column" gap="5">
@@ -376,7 +376,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 7: Size Variations */}
       <Flex direction="column" gap="5">
@@ -454,7 +454,7 @@ import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugei
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 8: Logo Only (Centered) */}
       <Flex direction="column" gap="5">

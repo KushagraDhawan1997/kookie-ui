@@ -93,7 +93,7 @@ The Root component manages state and provides context to all child components.
 
 | Prop | Type | Description |
 | ---- | ---- | ----------- |
-| `size` | `'1' \| '2' \| '3' \| '4'` | Combobox density: 1 (24px) for toolbars, 2 (32px) for standard forms, 3 (40px) for prominent selections, 4 (48px) to match Button size 4; its list stops at size 3. Supports responsive objects |
+| `size` | `'1' \| '2' \| '3' \| '4'` | Combobox density: 1 (28px) for toolbars, 2 (32px) for standard forms, 3 (40px) for prominent selections, 4 (48px) to match Button size 4; its list stops at size 3. Supports responsive objects |
 | `value` | `string \| null` | Controlled selection value |
 | `defaultValue` | `string \| null` | Initial selection value for uncontrolled usage |
 | `onValueChange` | `(value: string \| null) => void` | Callback fired when selection changes |
@@ -286,7 +286,7 @@ Rows use the soft highlight. When the system asks for more contrast (`prefers-co
 Set `size` on Root to control density across the entire combobox. Affects trigger height, content padding, and item spacing.
 
 ```tsx
-// Size 1 - 24px trigger, for toolbars and dense interfaces
+// Size 1 - 28px trigger, for toolbars and dense interfaces
 <Combobox.Root size="1">
   <Combobox.Trigger variant="surface" aria-label="Option">
     <Combobox.Value placeholder="Size 1" />

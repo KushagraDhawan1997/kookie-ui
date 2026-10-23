@@ -154,7 +154,7 @@ export function createMarkdownComponents(options: MarkdownComponentOptions = {})
     li: ({ children }: ChildrenProps) => <li>{children}</li>,
 
     blockquote: ({ children }: ChildrenProps) => <Blockquote>{children}</Blockquote>,
-    hr: () => <Separator size="4" />,
+    hr: () => <Separator />,
 
     table: ({ children }: ChildrenProps) => (
       <Table.Root size="2" variant="ghost" className="markdown-table">

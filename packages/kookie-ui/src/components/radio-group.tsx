@@ -8,6 +8,7 @@ import { RadioGroup as RadioGroupPrimitive } from 'radix-ui';
 import { radioGroupRootPropDefs } from './radio-group.props.js';
 import { Text } from './text.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSize } from '../helpers/theme-size.js';
 import { marginPropDefs } from '../props/margin.props.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
@@ -40,12 +41,13 @@ const RadioGroupRoot = React.forwardRef<RadioGroupRootElement, RadioGroupRootPro
   (
     {
       color = radioGroupRootPropDefs.color.default,
-      size = radioGroupRootPropDefs.size.default,
+      size: sizeProp,
       variant = radioGroupRootPropDefs.variant.default,
       ...props
     }: ScopedProps<RadioGroupRootProps>,
     forwardedRef
   ) => {
+    const size = useThemeSize(sizeProp, radioGroupRootPropDefs.size);
     const { __scopeRadioGroup, className, ...rootProps } = extractProps(props, marginPropDefs);
     const radioGroupScope = useRadioGroupScope(__scopeRadioGroup);
     return (

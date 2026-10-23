@@ -60,7 +60,7 @@ export function AvatarExamples() {
                   Admin
                 </Badge>
               </Flex>
-              <Separator size="4" />
+              <Separator />
               <Flex justify="between" align="center">
                 <Flex gap="4" align="center">
                   <Avatar size="4" fallback="JD" color="blue" variant="solid" />
@@ -77,7 +77,7 @@ export function AvatarExamples() {
                   Member
                 </Badge>
               </Flex>
-              <Separator size="4" />
+              <Separator />
               <Flex justify="between" align="center">
                 <Flex gap="4" align="center">
                   <Avatar size="4" fallback="AL" color="green" variant="solid" />
@@ -99,7 +99,7 @@ export function AvatarExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 2: Messages */}
       <Flex direction="column" gap="5">
@@ -155,7 +155,7 @@ export function AvatarExamples() {
                   <Text size="2">This looks great! Love the new design direction.</Text>
                 </Flex>
               </Flex>
-              <Separator size="4" />
+              <Separator />
               <Flex gap="4" align="start">
                 <Avatar size="3" fallback="EW" color="pink" variant="soft" />
                 <Flex direction="column" gap="0" style={{ flex: 1 }}>
@@ -180,7 +180,7 @@ export function AvatarExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 3: Profile Header */}
       <Flex direction="column" gap="5">
@@ -253,7 +253,7 @@ export function AvatarExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 4: Status Indicators */}
       <Flex direction="column" gap="5">
@@ -299,7 +299,7 @@ export function AvatarExamples() {
                   </Flex>
                 </Flex>
               </Flex>
-              <Separator size="4" />
+              <Separator />
               <Flex justify="between" align="center">
                 <Flex gap="4" align="center">
                   <Avatar size="4" fallback="AB" variant="soft" status="amber" />
@@ -313,7 +313,7 @@ export function AvatarExamples() {
                   </Flex>
                 </Flex>
               </Flex>
-              <Separator size="4" />
+              <Separator />
               <Flex justify="between" align="center">
                 <Flex gap="4" align="center">
                   <Avatar size="4" fallback="CD" variant="soft" status="gray" />
@@ -332,7 +332,7 @@ export function AvatarExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 5: Custom Badge */}
       <Flex direction="column" gap="5">
@@ -368,7 +368,7 @@ export function AvatarExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 6: Company Logos */}
       <Flex direction="column" gap="5">
@@ -403,7 +403,7 @@ export function AvatarExamples() {
                   </Flex>
                 </Flex>
               </Flex>
-              <Separator size="4" />
+              <Separator />
               <Flex justify="between" align="center">
                 <Flex gap="4" align="center">
                   <Avatar size="4" src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" fallback="GO" fit="contain" variant="surface" />
@@ -417,7 +417,7 @@ export function AvatarExamples() {
                   </Flex>
                 </Flex>
               </Flex>
-              <Separator size="4" />
+              <Separator />
               <Flex justify="between" align="center">
                 <Flex gap="4" align="center">
                   <Avatar size="4" src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" fallback="AP" fit="contain" variant="surface" />
@@ -436,7 +436,7 @@ export function AvatarExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 7: Invite Members */}
       <Flex direction="column" gap="5">

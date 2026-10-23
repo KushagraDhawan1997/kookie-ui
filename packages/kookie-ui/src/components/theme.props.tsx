@@ -6,6 +6,7 @@ import type { GetPropDefTypes, PropDef } from '../props/prop-def.js';
 
 const appearances = ['inherit', 'light', 'dark'] as const;
 const fontFamilies = ['sans', 'mono', 'serif'] as const;
+const sizes = ['1', '2', '3', '4'] as const;
 
 const themePropDefs = {
   ...asChildPropDef,
@@ -61,6 +62,14 @@ const themePropDefs = {
    * `--font-heading` override in your own CSS survives a `fontFamily` switch.
    */
   headingFontFamily: { type: 'enum', values: fontFamilies },
+  /**
+   * The app-wide size index. Every component on the 1-4 control and surface
+   * scale that states no `size` of its own takes this one; an explicit
+   * `size` always wins. Nested Themes override it for their subtree.
+   *
+   * @default '2'
+   */
+  size: { type: 'enum', values: sizes, default: '2' },
 } satisfies {
   hasBackground: PropDef<boolean>;
   appearance: PropDef<(typeof appearances)[number]>;
@@ -69,6 +78,7 @@ const themePropDefs = {
   radius: PropDef<(typeof radii)[number]>;
   fontFamily: PropDef<(typeof fontFamilies)[number]>;
   headingFontFamily: PropDef<(typeof fontFamilies)[number]>;
+  size: PropDef<(typeof sizes)[number]>;
 };
 
 type ThemeOwnProps = GetPropDefTypes<typeof themePropDefs & typeof asChildPropDef>;

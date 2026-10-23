@@ -47,6 +47,7 @@ import { navigationRest, detailRest, toPaneValue, startAnchoredGrowth, withoutRe
 import { useShell, useSidebarMode } from './shell.context.js';
 import { useResponsivePresentation } from './shell.hooks.js';
 import { readBreakpoint } from '../hooks/use-breakpoint.js';
+import { useThemeSize } from '../helpers/theme-size.js';
 import { PaneChromeScope, PaneFooter, PaneHeader, Scroll, ShellSizeContext } from './_internal/pane-chrome.js';
 import type { PaneSize } from './_internal/pane-chrome.js';
 import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, PaneMode, PaneName, PaneTarget, ResponsivePresentation, SidebarMode } from './shell.types.js';
@@ -56,7 +57,7 @@ import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, PaneMode, PaneNa
 export interface ShellRootProps extends React.ComponentPropsWithoutRef<'div'> {
   children: React.ReactNode;
   height?: 'full' | 'auto' | string | number;
-  /** The index the panes' chrome takes: `Shell.PaneHeader`, `Shell.Scroll`, `Shell.PaneFooter` and the Sidebar rows in them. Default `2`. */
+  /** The index the panes' chrome takes: `Shell.PaneHeader`, `Shell.Scroll`, `Shell.PaneFooter` and the Sidebar rows in them. Defaults to the nearest Theme's size (3 when the Theme is 4), else `2`. */
   size?: PaneSize;
 }
 
@@ -96,7 +97,12 @@ function triggerFor(doc: Document, id: string, within?: HTMLElement[]): HTMLElem
 
 type LivePane = { name: PaneName; id: string; el: HTMLElement };
 
-const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, children, height = 'full', size = '2', style, onKeyDown, onFocus, ...props }, ref) => {
+/** Shell.Root's own range; a Theme size above it maps to 3. */
+const shellSizePropDef = { values: ['1', '2', '3'] as const };
+
+const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, children, height = 'full', size: sizeProp, style, onKeyDown, onFocus, ...props }, ref) => {
+  // No size of its own: the nearest Theme's, mapped into 1-3.
+  const size = useThemeSize(sizeProp, shellSizePropDef);
   const [store] = React.useState(createShellStore);
   const subscribe = React.useCallback((listener: () => void) => subscribeShellStore(store, listener), [store]);
   // Subscribed for the re-render, not for a value: a pane opening or closing

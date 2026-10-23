@@ -2,7 +2,7 @@ import { colorPropDef } from '../../props/color.prop.js';
 
 import type { PropDef } from '../../props/prop-def.js';
 
-const sizes = ['1', '2', '3'] as const;
+const sizes = ['1', '2', '3', '4'] as const;
 const variants = ['raised', 'solid', 'soft', 'outline', 'surface'] as const;
 
 const baseRadioPropDefs = {

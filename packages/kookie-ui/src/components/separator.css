@@ -1,4 +1,6 @@
 .rt-Separator {
+  /* Fills its container along its own axis, as in v2. */
+  --separator-size: 100%;
   display: block;
   background-color: var(--accent-a5);
 }
@@ -22,29 +24,6 @@
     &:where(.rt-r-orientation-vertical) {
       width: 1px;
       height: var(--separator-size);
-    }
-  }
-}
-
-/***************************************************************************************************
- *                                                                                                 *
- * SIZES                                                                                           *
- *                                                                                                 *
- ***************************************************************************************************/
-
-@breakpoints {
-  .rt-Separator {
-    &:where(.rt-r-size-1) {
-      --separator-size: var(--space-5);
-    }
-    &:where(.rt-r-size-2) {
-      --separator-size: var(--space-7);
-    }
-    &:where(.rt-r-size-3) {
-      --separator-size: var(--space-10);
-    }
-    &:where(.rt-r-size-4) {
-      --separator-size: 100%;
     }
   }
 }

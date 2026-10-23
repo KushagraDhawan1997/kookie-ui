@@ -24,16 +24,20 @@ import classNames from 'classnames';
 import { Button } from './button.js';
 import { IconButton } from './icon-button.js';
 import { Text } from './text.js';
+import { useThemeSize } from '../helpers/theme-size.js';
 import { accentColorPropDef } from '../props/color.prop.js';
 
 type NoticeSize = '1' | '2' | '3';
 
 /** The size a notice takes when it doesn't set one. `Chatbar.Root` provides its own size here. */
 const NoticeSizeContext = React.createContext<NoticeSize | undefined>(undefined);
+
+/** Notice's own range; a Theme size of 4 maps to 3. */
+const noticeSizePropDef = { values: ['1', '2', '3'] as const };
 type NoticeColor = (typeof accentColorPropDef)['color']['values'][number];
 
 interface StripProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'color' | 'children'> {
-  /** Padding, text and button size. Default `2`. */
+  /** Padding, text and button size. Defaults to the nearest Theme's size (3 when the Theme is 4). */
   size?: NoticeSize;
   /**
    * The category of the message, not its volume. Default `gray`. Use a colour only when it adds a
@@ -98,7 +102,7 @@ Strip.displayName = 'Strip';
 /** A condition that is true now, with at most one action that fixes it. */
 const Notice = React.forwardRef<HTMLDivElement, NoticeProps>(({ icon, action, onDismiss, dismissLabel = 'Dismiss', size: sizeProp, ...props }, forwardedRef) => {
   const contextSize = React.useContext(NoticeSizeContext);
-  const size = sizeProp ?? contextSize ?? '2';
+  const size = useThemeSize(sizeProp ?? contextSize, noticeSizePropDef);
   const trailing =
     action || onDismiss ? (
       <span className="rt-NoticeActions">
@@ -120,7 +124,7 @@ Notice.displayName = 'Notice';
 const Confirmation = React.forwardRef<HTMLDivElement, ConfirmationProps>(
   ({ confirmLabel, cancelLabel = 'Not now', onConfirm, onCancel, busy = false, size: sizeProp, color = 'gray', ...props }, forwardedRef) => {
     const contextSize = React.useContext(NoticeSizeContext);
-    const size = sizeProp ?? contextSize ?? '2';
+    const size = useThemeSize(sizeProp ?? contextSize, noticeSizePropDef);
     return (
     <Strip
       {...props}

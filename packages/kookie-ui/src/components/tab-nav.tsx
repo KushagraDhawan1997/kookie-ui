@@ -4,6 +4,7 @@ import { NavigationMenu } from 'radix-ui';
 
 import { tabNavRootPropDefs } from './tab-nav.props.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { getSubtree } from '../helpers/get-subtree.js';
 import { marginPropDefs } from '../props/margin.props.js';
 
@@ -19,7 +20,8 @@ interface TabNavRootProps
   extends Omit<TabNavRootElementProps, 'defaultValue' | 'dir' | 'color'>,
     MarginProps,
     TabNavOwnProps {}
-const TabNavRoot = React.forwardRef<TabNavRootElement, TabNavRootProps>((props, forwardedRef) => {
+const TabNavRoot = React.forwardRef<TabNavRootElement, TabNavRootProps>((ownProps, forwardedRef) => {
+  const props = useThemeSizeProps(ownProps, tabNavRootPropDefs.size);
   const { children, className, color, ...rootProps } = extractProps(
     props,
     tabNavRootPropDefs,

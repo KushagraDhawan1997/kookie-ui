@@ -1,18 +1,13 @@
 @import './_internal/base-checkbox.css';
 
+/* The disabled cursor lives in the base mark. */
 .rt-CheckboxRoot {
-  &:where(:focus-visible) {
-    &::before {
-      outline: 2px solid var(--focus-8);
-      outline-offset: 2px;
-    }
+  &:where(:focus-visible)::before {
+    outline: var(--focus-ring-width, 2px) solid var(--focus-8);
+    outline-offset: var(--focus-ring-offset, 2px);
   }
 
-  &:where(:disabled) {
-    cursor: var(--cursor-disabled);
-
-    &::before {
-      background-color: var(--gray-a3);
-    }
+  &:where(:disabled)::before {
+    background-color: var(--gray-a3);
   }
 }

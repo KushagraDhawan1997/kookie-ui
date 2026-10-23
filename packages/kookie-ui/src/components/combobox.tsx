@@ -25,6 +25,7 @@ import { useCallbackRef, useComposedRefs, useControllableState, useLayoutEffect 
 import { Command as CommandPrimitive, useCommandState } from 'cmdk';
 
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSize } from '../helpers/theme-size.js';
 import { comboboxRootPropDefs, comboboxTriggerPropDefs, comboboxContentPropDefs } from './combobox.props.js';
 import { marginPropDefs } from '../props/margin.props.js';
 import { ChevronDownIcon, ThickCheckIcon } from './icons.js';
@@ -206,7 +207,7 @@ function readElementLabel(el: HTMLElement): string | undefined {
 const ComboboxRoot: React.FC<ComboboxRootProps> = (props) => {
   const {
     children,
-    size = comboboxRootPropDefs.size.default,
+    size: sizeProp,
     value: valueProp,
     defaultValue = null,
     onValueChange,
@@ -228,6 +229,7 @@ const ComboboxRoot: React.FC<ComboboxRootProps> = (props) => {
     displayValue: displayValueProp,
     ...rootProps
   } = props;
+  const size = useThemeSize(sizeProp, comboboxRootPropDefs.size);
 
   const [open, setOpen] = useControllableState({
     prop: openProp,

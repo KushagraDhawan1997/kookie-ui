@@ -38,7 +38,7 @@ const SectionHeaderRoot = React.forwardRef<HTMLDivElement, SectionHeaderRootProp
       >
         {children}
       </Flex>
-      {separator && <Separator size="4" />}
+      {separator && <Separator />}
     </Flex>
   ),
 );

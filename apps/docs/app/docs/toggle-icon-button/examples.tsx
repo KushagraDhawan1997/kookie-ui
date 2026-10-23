@@ -47,7 +47,7 @@ export function ToggleIconButtonExamples() {
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 2: Card Actions */}
       <Flex direction="column" gap="5">
@@ -130,7 +130,7 @@ const [pinned, setPinned] = React.useState(false);
         </PreviewBlock>
       </Flex>
 
-      <Separator size="4" />
+      <Separator />
 
       {/* Example 3: Formatting Toolbar */}
       <Flex direction="column" gap="5">
