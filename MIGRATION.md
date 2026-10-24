@@ -441,7 +441,7 @@ Most of 0.24.0 fixes bugs and needs nothing from an app. These changes can need 
 | Component or token | What changed | What to do |
 | --- | --- | --- |
 | `Switch`, `Slider`, `Checkbox`, `CheckboxGroup`, `Radio`, `RadioGroup` | No `variant` prop | Remove `variant` from these |
-| `--shadow-2-active` | Removed | Use `--control-chrome-active` |
+| Raised and solid `Button` | Moved from `--shadow-2` and `--shadow-1` to `--control-chrome` and `--control-chrome-active` | Nothing, unless your CSS overrode their shadow |
 | `--shadow-1..6` in your CSS | v2's values, no hairline ring | Use a role token (`--surface-chrome`, `--control-chrome`, `--floating-chrome`, `--dialog-chrome`, `--grip-chrome`) where you meant a card, a control, a popup, a dialog or a thumb |
 | `TextField`, `TextArea`, `Select` | White with a hairline edge and a small shadow | Nothing |
 
