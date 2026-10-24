@@ -2,6 +2,14 @@
 
 Each release groups its changes as Major, Minor or Quiet. Major is a new product or a change to what it is. Minor is a change you notice when you use it. Quiet is a small touch, a fix, a rename or a removal, or how the work is made. Breaking lists the changes that need an edit in your app.
 
+## 0.26.2 (October 25)
+
+1. `Quiet` **Fields hover in dark mode.** A text field, text area or select trigger changes its fill on hover in dark mode too.
+2. `Quiet` **Notes caught up.** The upgrade guide lists the shadow, spinner, Chatbar, Shell and tooltip changes the earlier notes left out. `--field-edge`, which nothing read, is gone.
+3. `Quiet` **Toolbar clicks in floating headers.** Every control in a floating pane toolbar takes clicks.
+4. `Quiet` **Steadier first paint and layout.** Panel and Bottom panes keep their size on load, and a field with an error stays one box in a grid.
+5. `Quiet` **Smaller fixes.** Done buttons keep component labels, Slider commits snapped values, ScrollArea fades only the axis that scrolls, and `/props` imports work on the server.
+
 ## 0.26.1 (October 25)
 
 1. `Quiet` **Pressed soft buttons stay flat.** Pressing a soft or ghost button darkens it without a dark inset.
@@ -19,7 +27,7 @@ Each release groups its changes as Major, Minor or Quiet. Major is a new product
 
 ### Minor
 
-- **A ground for raised surfaces.** `--color-ground` sits one step below the surface, so a white card reads as lifted.
+- **A ground token for app pages.** `--color-ground` is a background one step below the surface, for an app page that holds raised cards. No component reads it.
 
 ### Quiet
 

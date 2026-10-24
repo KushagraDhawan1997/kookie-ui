@@ -25,4 +25,25 @@ describe('Shell pane sizes on the server', () => {
     expect(html).toContain('--sidebar-size:232px');
     expect(html).toContain('--inspector-size:400px');
   });
+
+  it('does the same for Shell.Panel and Shell.Bottom', () => {
+    const html = renderToString(
+      <Theme>
+        <Shell.Root>
+          <Shell.Rail defaultOpen presentation="fixed">
+            Rail
+          </Shell.Rail>
+          <Shell.Panel defaultOpen defaultSize={300} presentation="fixed">
+            Panel
+          </Shell.Panel>
+          <Shell.Content>Canvas</Shell.Content>
+          <Shell.Bottom defaultOpen defaultSize={320} presentation="fixed">
+            Console
+          </Shell.Bottom>
+        </Shell.Root>
+      </Theme>,
+    );
+    expect(html).toContain('--panel-size:300px');
+    expect(html).toContain('--bottom-size:320px');
+  });
 });

@@ -148,7 +148,13 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
       if (iconOnly) return tick;
       const items = flattenFragments(nodes);
       const first = items.findIndex((node) => !(typeof node === 'string' && !node.trim()));
-      if (iconStart && first !== -1) return items.map((node, index) => (index === first ? tick : node));
+      // Before the DOM has been read (a button that mounts done), the edges are only a guess from
+      // the children, and a label component can look like an icon. Replace only a real svg then,
+      // so the label is never swapped out; otherwise put the tick before it.
+      const firstNode = items[first];
+      const replaceable =
+        first !== -1 && iconStart && (domEdges !== null || (React.isValidElement(firstNode) && firstNode.type === 'svg'));
+      if (replaceable) return items.map((node, index) => (index === first ? tick : node));
       return [tick, ...items];
     };
     if (asChild && React.isValidElement(children)) {
@@ -156,7 +162,7 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
       return React.cloneElement(element, undefined, swap(element.props.children));
     }
     return swap(children);
-  }, [done, children, iconOnly, iconStart, asChild]);
+  }, [done, children, iconOnly, iconStart, domEdges, asChild]);
 
   // asChild takes precedence over as prop for Radix Slot integration
   // When asChild is true, we use Slot.Root to merge props onto the child element

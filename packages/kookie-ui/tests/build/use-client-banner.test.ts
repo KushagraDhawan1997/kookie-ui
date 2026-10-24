@@ -10,7 +10,7 @@ import { buildOptions, listEntries } from '../../scripts/esbuild-shared.js';
 /**
  * esbuild drops module directives when it bundles, so without a banner no file in dist carries
  * "use client" and a React Server Component that imports any component fails at load. This runs
- * the real build options on two entries into a temp dir.
+ * the real build options into temp dirs, on a few entries and on every entry.
  */
 const root = path.resolve(__dirname, '../..');
 const out = fs.mkdtempSync(path.join(os.tmpdir(), 'kookie-use-client-'));
@@ -47,7 +47,10 @@ describe('built output directives', () => {
     });
     for (const options of builds) await esbuild.build(options);
 
-    const files = fs.readdirSync(out, { recursive: true }).map(String).filter((file) => file.endsWith('.js'));
+    const files = fs
+      .readdirSync(out, { recursive: true })
+      .map(String)
+      .filter((file) => file.endsWith('.js'));
     const clientFiles = files.filter((file) => !file.includes('appearance-script'));
     expect(clientFiles.some((file) => file.startsWith('chunk-'))).toBe(true);
     for (const file of clientFiles) expect(firstLine(path.join(out, file)).startsWith('"use client";')).toBe(true);
@@ -83,5 +86,89 @@ describe('built output directives', () => {
     } finally {
       fs.rmSync(helpersOut, { recursive: true, force: true });
     }
+  });
+
+  /**
+   * Builds every entry with the real options for one format, then follows each relative import
+   * from a server-safe entry. Each must resolve to a built file, and none may reach a "use client"
+   * file except the theme-size hooks that `/helpers` re-exports on purpose.
+   */
+  const CLIENT_BOUNDARIES = new Set(['hooks/theme-size.js']);
+  const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+  const external = [...Object.keys(pkg.dependencies ?? {}), ...Object.keys(pkg.peerDependencies ?? {})];
+  const importPattern = /(?:\bfrom\s*|\bimport\s*\(?\s*|\brequire\s*\(\s*)["']([^"']+)["']/g;
+
+  async function walkServerEntries(format: 'esm' | 'cjs') {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), `kookie-server-safe-${format}-`));
+    try {
+      const base = {
+        absWorkingDir: root,
+        outdir: dir,
+        format,
+        target: 'es2020',
+        minify: true,
+        bundle: true,
+        ...(format === 'esm' ? { splitting: true } : {}),
+        write: true,
+        logLevel: 'silent' as const,
+        external,
+      };
+      await Promise.all(buildOptions(base).map((options: object) => esbuild.build(options)));
+
+      const broken: string[] = [];
+      const clientReached: string[] = [];
+      const boundaries = new Set<string>();
+      const bareImports = new Set<string>();
+      const seen = new Set<string>();
+      const queue = ['props/index.js', 'helpers/index.js'];
+      while (queue.length > 0) {
+        const file = queue.shift()!;
+        if (seen.has(file)) continue;
+        seen.add(file);
+        const code = fs.readFileSync(path.join(dir, file), 'utf8');
+        for (const [, specifier] of code.matchAll(importPattern)) {
+          if (!specifier!.startsWith('.')) {
+            bareImports.add(specifier!);
+            continue;
+          }
+          const target = path.posix.join(path.posix.dirname(file), specifier!);
+          if (!fs.existsSync(path.join(dir, target))) {
+            broken.push(`${file} -> ${specifier}`);
+            continue;
+          }
+          if (firstLine(path.join(dir, target)).startsWith('"use client";')) {
+            if (CLIENT_BOUNDARIES.has(target)) boundaries.add(target);
+            else clientReached.push(`${file} -> ${target}`);
+            continue;
+          }
+          queue.push(target);
+        }
+      }
+      return { broken, clientReached, bareImports: [...bareImports], boundaries: [...boundaries] };
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  }
+
+  const isExternal = (specifier: string) => external.some((name) => specifier === name || specifier.startsWith(`${name}/`));
+
+  it.each(['esm', 'cjs'] as const)(
+    'keeps /props and /helpers server-safe in the full %s build',
+    async (format) => {
+      const { broken, clientReached, bareImports, boundaries } = await walkServerEntries(format);
+      // The walk really followed the output: /helpers reaches the theme-size hooks it re-exports.
+      expect(boundaries).toEqual(['hooks/theme-size.js']);
+      expect(broken).toEqual([]);
+      expect(clientReached).toEqual([]);
+      expect(bareImports.filter((specifier) => !isExternal(specifier))).toEqual([]);
+    },
+    60_000,
+  );
+
+  it('treats component prop files as server-safe', () => {
+    const { server } = listEntries(root);
+    expect(server).toContain('src/components/heading.props.tsx');
+    expect(server).toContain('src/components/_internal/base-tab-list.props.ts');
+    expect(server).not.toContain('src/components/heading.tsx');
   });
 });

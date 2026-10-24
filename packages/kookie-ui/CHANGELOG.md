@@ -1,3 +1,21 @@
+## [0.26.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.26.1...v0.26.2) (2026-10-25)
+
+### Fixes
+
+* **text-field, text-area, select:** in dark mode a raised field's fill changes on hover. The hover fill was the same neutral 2 as the dark surface; it is neutral 3 now.
+* **color:** `--field-edge` is removed. No component read it: a field's edge and shadow come from `--control-chrome`.
+* **shell:** in a floating `Shell.PaneHeader` or `PaneFooter`, every interactive element in the Toolbar takes clicks, including a plain button, Switch, Checkbox and controls inside a layout box. The empty stretch still passes clicks through.
+* **shell:** `Shell.Panel` and `Shell.Bottom` put a numeric `defaultSize` or `size` in the server HTML, so they no longer jump on load.
+* **toolbar:** in a Popover, Dialog, Sheet or menu opened from a Shell, a Toolbar with no `size` takes the Theme size, not the Shell's step.
+* **button:** a button that mounts with `done` keeps a label that is a component; only an svg at the start is swapped for the tick.
+* **text-field, text-area:** with `errorMessage`, the field and message sit in one wrapper that takes `className` and `style`, so a grid or row treats them as one box.
+* **text-field:** a slot holding a control, such as a show-password button, no longer describes the input.
+* **slider:** with `snapToTicks`, a key press commits the snapped value.
+* **scroll-area:** content wider than a vertical-only scroll area no longer adds a fade or a tab stop on the hidden axis.
+* **popover:** the toolbar no longer measures itself or writes an offset nothing reads.
+* **package:** the `/props` entry is server-safe again. Component prop definitions no longer ship with `"use client"`.
+* **docs:** the 0.18 to 0.26 notes and MIGRATION.md list changes they left out: shadow moves per component, the button spinner size, `Chatbar.Textarea` `className`, Shell landmarks, `Shell.Scroll`'s ref, `MessageScroller.Button`'s jump, raw Radix tooltips and `data-os`.
+
 ## [0.26.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.26.0...v0.26.1) (2026-10-25)
 
 ### Fixes
@@ -12,7 +30,7 @@ Shadows by role, as in v2, and one look for each mark. See MIGRATION.md.
 ### Breaking changes
 
 * **switch, slider, checkbox, checkbox-group, radio, radio-group:** no `variant` prop. Each has one soft look: a well for the track or box, the accent when on, and a thumb that casts `--grip-chrome`.
-* **shadow:** components read role tokens (`--surface-chrome`, `--control-chrome`, `--control-chrome-active`, `--grip-chrome`, `--floating-chrome`, `--dialog-chrome`). `--shadow-1..6` stay as a palette for app code, with v2's values and no hairline ring. Raised and solid buttons moved from `--shadow-2` and `--shadow-1` to `--control-chrome` and `--control-chrome-active`.
+* **shadow:** components read role tokens (`--surface-chrome`, `--control-chrome`, `--control-chrome-active`, `--grip-chrome`, `--floating-chrome`, `--dialog-chrome`). `--shadow-1..6` stay as a palette for app code, with v2's values and no hairline ring. Raised buttons moved from `--shadow-2` to `--control-chrome`. Solid buttons had no shadow at rest and now cast `--control-chrome`. Both press to `--control-chrome-active`. Cards, panes, menus, popovers, dialogs and the chatbar lost their hairline ring and cast their role's shadow; see MIGRATION.md.
 * **text-field, text-area, select:** the default field is white with a hairline edge and a small soft shadow, the same as a raised button.
 
 ### Features
@@ -30,7 +48,7 @@ Shadows by role, as in v2, and one look for each mark. See MIGRATION.md.
 
 ### Fixes
 
-* **helpers:** the theme-size context lives in a client module, so `/helpers` imports in a Server Component and there is one context.
+* **helpers:** the theme-size context lives in a client module, so `/helpers` imports in a Server Component. The ESM build has one context. The CommonJS build still bundles a copy into each entry, so a CommonJS `/helpers` hook does not see the root Theme's size.
 * **sheet:** the 90vw default width applies again on side sheets.
 * **popover:** a toolbar's Left and Right sections stay in their columns.
 * **button:** `asChild` with `loading` keeps the child's class, state, ref and click guard.
@@ -40,7 +58,7 @@ Shadows by role, as in v2, and one look for each mark. See MIGRATION.md.
 
 ### Features
 
-* **color:** `--color-ground`, the ground a raised surface sits on (neutral 1).
+* **color:** `--color-ground`, a background token for app pages (neutral 1). No component reads it.
 
 ## [0.25.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.24.0...v0.25.0) (2026-10-24)
 
@@ -53,6 +71,7 @@ The fixes from a full audit of every component, each with a test, and four break
 * **theme:** no longer bundles Radix Tooltip; a new `TooltipProvider` shares the open delay. Theme alone is 18KB instead of 74KB minified.
 * **package:** React 19 only. **sheet:** `align` is gone.
 * **separator:** announced to screen readers unless `decorative`.
+* **theme:** the root Theme no longer sets `data-os`.
 
 ### Fixes
 
@@ -86,7 +105,8 @@ About 50 component fixes, the toolbar parts v2's docs use, and a docs page for e
 * **select:** `readOnly` and `loading` keep the list closed.
 * **slider:** names, live values, ticks and handles behave correctly.
 * **sidebar:** arrow keys move past sub-menu triggers; sub-menu rows are in a list.
-* **virtual-menu, message-scroller, chatbar, navbar, table, separator, spinner, chip, notice, code, progress:** see MIGRATION.md.
+* **virtual-menu, spinner, chip, code:** see MIGRATION.md.
+* **message-scroller, chatbar, navbar, table, separator, notice, progress:** fixes that need no change in an app.
 
 ## [0.23.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.22.1...v0.23.0) (2026-10-23)
 

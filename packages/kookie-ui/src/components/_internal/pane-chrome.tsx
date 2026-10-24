@@ -14,6 +14,7 @@ import classNames from 'classnames';
 
 import { ScrollArea } from '../scroll-area.js';
 import { ShellStoreContext } from './shell-store.js';
+import { PaneBandSizeContext, type BandSize } from './pane-band-context.js';
 
 type PaneSize = '1' | '2' | '3';
 
@@ -60,19 +61,11 @@ function useChromeClasses() {
   return ['kui-ShellPaneChrome', `kui-r-size-${size}`, `kui-menu-variant-${menuVariant}`];
 }
 
-type BandSize = '1' | '2' | '3' | '4';
-
 /**
  * The index a Toolbar in a pane's header or footer rests at when it states none: one step above
  * the Shell's, so the band reads as chrome over the rows (v2 BAND_STEP). 4 has no step above.
  */
 const BAND_STEP = { '1': '2', '2': '3', '3': '4', '4': '4' } as const satisfies Record<BandSize, BandSize>;
-
-/**
- * Set by `Shell.PaneHeader` and `Shell.PaneFooter` to their band size, and by `Shell.Scroll` to
- * null (a scrolling list has no band). Unset (`undefined`) everywhere else.
- */
-const PaneBandSizeContext = React.createContext<BandSize | null | undefined>(undefined);
 
 function useBandSize(): BandSize {
   const visual = useSidebarVisual();

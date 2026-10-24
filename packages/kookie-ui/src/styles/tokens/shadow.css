@@ -11,10 +11,10 @@
  * --control-chrome-active: the same control while pressed. The drop tightens toward the surface.
  * --grip-chrome: the thumb of a switch or slider.
  * --control-light: an optional light across a raised control's top half (a background image); none by default.
- * --floating-chrome: a popover, menu, select list, hover card or tooltip.
+ * --floating-chrome: a popover, menu, combobox or select list.
  * --dialog-chrome: a dialog. Like v2, a dialog is a surface that covers the page.
  *
- * Fields (text field, text area, select trigger) cast nothing. They are a flat soft fill.
+ * Fields (text field, text area, select trigger) read --control-chrome, like a raised button.
  */
 
 /* prettier-ignore */

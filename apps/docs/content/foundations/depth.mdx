@@ -10,14 +10,15 @@ npm install @kushagradhawan/kookie-ui
 
 ```css
 var(--surface-chrome)         /* A raised card, a chatbar, a shell pane */
-var(--control-chrome)         /* A raised button, chip, switch thumb, slider thumb */
+var(--control-chrome)         /* A raised button, chip, field, segmented indicator */
 var(--control-chrome-active)  /* The same control while pressed */
-var(--control-light)          /* The catch of light on a raised control */
-var(--floating-chrome)        /* A popover, menu or select list */
+var(--grip-chrome)            /* A switch or slider thumb */
+var(--control-light)          /* An optional light on a raised control */
+var(--floating-chrome)        /* A popover, menu, combobox or select list */
 var(--dialog-chrome)          /* A dialog or an overlay pane */
 ```
 
-`--control-light` is a gradient, not a shadow. Use it as a `background-image` on a raised control.
+`--control-light` is `none` by default. Set it to a gradient to add light, and it lands as a `background-image` on a raised control.
 
 A dialog is a surface that covers the page, so `--dialog-chrome` is the surface shadow.
 
@@ -29,13 +30,12 @@ A dialog is a surface that covers the page, so `--dialog-chrome` is the surface 
 
 ## Fields
 
-A text field, text area or select trigger casts no shadow. It is a flat soft fill with a faint edge. Hover moves the fill one step darker. Focus draws the focus ring. Disabled lightens the fill and fades the edge.
+A text field, text area or select trigger is the surface colour with `--control-chrome`, the same hairline and small shadow as a raised button. Hover moves the fill one step. Focus draws the focus ring. Disabled drops the shadow for a faint edge.
 
 ```css
 var(--field-fill)
 var(--field-fill-hover)
 var(--field-fill-disabled)
-var(--field-edge)
 var(--field-edge-disabled)
 ```
 

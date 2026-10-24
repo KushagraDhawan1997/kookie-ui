@@ -12,8 +12,9 @@ const orientations = ['horizontal', 'vertical'] as const;
 const toolbarRootPropDefs = {
   /**
    * Size step of the row and of every control in it that doesn't set its own `size`.
-   * Matches Button's sizes: 1 (28px) to 4 (48px). Unset inside `Shell.PaneHeader` or
-   * `Shell.PaneFooter`, it rests one step above the Shell's `size`.
+   * Matches Button's sizes: 1 (28px) to 4 (48px). Unset inside a Shell, it rests one step above
+   * the Shell's `size`, except in a pane's `Shell.Scroll` list and in a Popover, Dialog, Sheet or
+   * menu. Elsewhere it takes Theme size, else 2.
    */
   size: { type: 'enum', className: 'kui-r-size', values: sizes, default: '2' },
   /**

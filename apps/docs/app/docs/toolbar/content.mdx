@@ -82,7 +82,7 @@ export function EditorToolbar({ bold, italic, onBold, onItalic, onUndo, onShare 
 
 ## Size
 
-`size` picks the row's height and hands it to every button inside that doesn't set its own: 28, 32, 40 or 48 pixels for 1 to 4. Size 2 is the default, or the Theme's size when one is set. Inside a Shell, a Toolbar with no `size` sits one step above the Shell's size: in a `Shell.PaneHeader` or `Shell.PaneFooter`, in `Shell.Content`, and anywhere else in the Shell except a pane's `Shell.Scroll` list. The title's text grows with the size too.
+`size` picks the row's height and hands it to every button inside that doesn't set its own: 28, 32, 40 or 48 pixels for 1 to 4. Size 2 is the default, or the Theme's size when one is set. Inside a Shell, a Toolbar with no `size` sits one step above the Shell's size: in a `Shell.PaneHeader` or `Shell.PaneFooter`, in `Shell.Content`, and anywhere else in the Shell except a pane's `Shell.Scroll` list. A Popover, Dialog, Sheet or menu opened from the Shell is not part of it, so a Toolbar there takes the Theme's size. The title's text grows with the size too.
 
 ## Button looks
 
@@ -190,7 +190,7 @@ Toolbar takes the padding and position props a [Box](/docs/box) takes, such as `
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `size` | `'1' \| '2' \| '3' \| '4'` | Theme size, else `'2'` | The height step for the row and its buttons. Not responsive |
+| `size` | `'1' \| '2' \| '3' \| '4'` | One step above the Shell in a Shell; else Theme size, else `'2'` | The height step for the row and its buttons. Not responsive |
 | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | The row's direction and the arrow keys it answers |
 | `backdrop` | `boolean` | `false` | Gives every control its own surface, for a row over content |
 | `loop` | `boolean` | `true` | The arrow keys wrap from the last control to the first |

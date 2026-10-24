@@ -184,7 +184,7 @@ export function MainNav() {${
         : ''
     }
   return (
-    <Shell.Sidebar>${
+    <Shell.Sidebar aria-label="Main">${
       search
         ? `
       <Shell.PaneHeader>
@@ -192,7 +192,7 @@ export function MainNav() {${
       </Shell.PaneHeader>`
         : ''
     }
-      <Shell.Scroll role="navigation" aria-label="Main">
+      <Shell.Scroll>
 ${menu('Workspace', `${rows(workspaceRows, '      ')}\n${sub}`).replace(/^/gm, '    ')}
         <Sidebar.Separator />
 ${menu('Settings', rows(settingsRows, '      ')).replace(/^/gm, '    ')}
@@ -207,13 +207,13 @@ ${menu('Settings', rows(settingsRows, '      ')).replace(/^/gm, '    ')}
   const component = (
     <Box width="100%" height={`calc(${height} - 2 * var(--preview-block-padding))`} overflow="hidden" style={{ border: '1px solid var(--neutral-a4)', borderRadius: 'var(--radius-4)' }}>
       <Shell.Root height="100%" size={size}>
-        <Shell.Sidebar presentation="fixed" defaultState="expanded" expandedSize={260}>
+        <Shell.Sidebar aria-label="Main" presentation="fixed" defaultState="expanded" expandedSize={260}>
           {search ? (
             <Shell.PaneHeader>
               <Sidebar.Search value={query} onValueChange={setQuery} placeholder="Search pages..." />
             </Shell.PaneHeader>
           ) : null}
-          <Shell.Scroll role="navigation" aria-label="Main">
+          <Shell.Scroll>
             {renderGroup(
               'Workspace',
               <>

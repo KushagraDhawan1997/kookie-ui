@@ -90,16 +90,13 @@ function Choice({ value, items }: { value: string; items: readonly string[] }) {
  * `Toolbar`, the canvas toolbars float over the work area, and the lists scroll under them. The
  * controls sit one step smaller than the toolbars, the way the v2 figure's do.
  */
-/** A pane header does not stretch its toolbar in v1, so the row states it (the docs sidebar does the same). */
-const FILL = { flex: 1 } as const;
-
 function Builder() {
   return (
     <Theme accentColor="gray" radius="full" className="kd-hero-window">
       <Shell.Root height="704px" size="1">
         <Shell.Sidebar defaultState="expanded" defaultSize={232} presentation="fixed">
           <Shell.PaneHeader>
-            <Toolbar.Root backdrop style={FILL}>
+            <Toolbar.Root backdrop>
               <SegmentedControl.Root defaultValue="layers" size="2">
                 <SegmentedControl.Item value="layers">Layers</SegmentedControl.Item>
                 <SegmentedControl.Item value="add">Add</SegmentedControl.Item>
@@ -135,7 +132,7 @@ function Builder() {
         </Shell.Sidebar>
         <Shell.Content>
           <Shell.PaneHeader float>
-            <Toolbar.Root backdrop style={FILL}>
+            <Toolbar.Root backdrop>
               <Flex align="center" gap="2">
                 <Toolbar.Button iconOnly aria-label="Layers">
                   {icon(SidebarLeftIcon)}
@@ -190,7 +187,7 @@ function Builder() {
             </Card>
           </Flex>
           <Shell.PaneFooter float>
-            <Toolbar.Root backdrop style={FILL}>
+            <Toolbar.Root backdrop>
               <Toolbar.Group>
                 <Toolbar.Button iconOnly aria-label="Undo">
                   {icon(Undo02Icon)}
@@ -210,7 +207,7 @@ function Builder() {
         </Shell.Content>
         <Shell.Inspector defaultOpen defaultSize={272} presentation="fixed">
           <Shell.PaneHeader>
-            <Toolbar.Root backdrop style={FILL}>
+            <Toolbar.Root backdrop>
               <Toolbar.Title>Button</Toolbar.Title>
               <Toolbar.Button iconOnly aria-label="Show code">
                 {icon(SourceCodeIcon)}

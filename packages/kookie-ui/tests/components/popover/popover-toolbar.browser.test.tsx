@@ -42,6 +42,9 @@ describe('Popover toolbar', () => {
     await frame();
     expect(content.scrollTop).toBe(300);
     expect(offset()).toBe(0);
+    // Sticky needs no measuring: nothing is written on the content.
+    expect(content.style.getPropertyValue('--popover-toolbar-offset')).toBe('');
+    expect(content.hasAttribute('data-has-toolbar')).toBe(false);
   });
 
   it('keeps each section in its own column when the others are left out', async () => {
