@@ -60,8 +60,8 @@ const LAYERS: readonly Layer[] = [
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <Flex direction="column" gap="3">
-      <Text size="2" weight="medium">
+    <Flex direction="column" gap="2">
+      <Text size="1" weight="medium">
         {label}
       </Text>
       {children}
@@ -71,7 +71,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function Choice({ value, items }: { value: string; items: readonly string[] }) {
   return (
-    <Select.Root defaultValue={value} size="2">
+    <Select.Root defaultValue={value} size="1">
       {/* The label is passed in, so the server HTML shows it before the list exists. */}
       <Select.Trigger>{value}</Select.Trigger>
       <Select.Content>
@@ -85,22 +85,32 @@ function Choice({ value, items }: { value: string; items: readonly string[] }) {
   );
 }
 
+/**
+ * The same composition as the v2 figure: every pane takes its header from `Shell.PaneHeader` and a
+ * `Toolbar`, the canvas toolbars float over the work area, and the lists scroll under them. The
+ * controls sit one step smaller than the toolbars, the way the v2 figure's do.
+ */
+/** A pane header does not stretch its toolbar in v1, so the row states it (the docs sidebar does the same). */
+const FILL = { flex: 1 } as const;
+
 function Builder() {
   return (
     <Theme accentColor="gray" radius="full" className="kd-hero-window">
-      <Shell.Root height="704px">
+      <Shell.Root height="704px" size="1">
         <Shell.Sidebar defaultState="expanded" defaultSize={232} presentation="fixed">
-          <Flex direction="column" gap="4" p="4">
-            <Flex align="center" justify="between">
+          <Shell.PaneHeader>
+            <Toolbar.Root backdrop style={FILL}>
               <SegmentedControl.Root defaultValue="layers" size="2">
                 <SegmentedControl.Item value="layers">Layers</SegmentedControl.Item>
                 <SegmentedControl.Item value="add">Add</SegmentedControl.Item>
               </SegmentedControl.Root>
-              <Button iconOnly variant="ghost" color="gray" size="2" aria-label="Search">
+              <Toolbar.Button iconOnly aria-label="Search">
                 {icon(Search01Icon)}
-              </Button>
-            </Flex>
-            <Flex direction="column" gap="2">
+              </Toolbar.Button>
+            </Toolbar.Root>
+          </Shell.PaneHeader>
+          <Shell.Scroll fade>
+            <Flex direction="column" gap="1">
               {LAYERS.map((layer, i) => (
                 <Flex
                   key={i}
@@ -110,29 +120,29 @@ function Builder() {
                   pr="3"
                   style={{
                     paddingInlineStart: 4 + layer.depth * 14,
-                    borderRadius: "var(--radius-full)",
-                    background: layer.selected ? "var(--neutral-a4)" : undefined,
+                    borderRadius: 'var(--radius-full)',
+                    background: layer.selected ? 'var(--neutral-a3)' : undefined,
                   }}
                 >
-                  <Box width="16px" style={{ color: "var(--neutral-a10)", display: "grid" }}>
+                  <Box width="16px" style={{ color: 'var(--neutral-a10)', display: 'grid' }}>
                     {layer.open ? icon(ArrowDown01Icon, 14) : layer.closed ? icon(ArrowRight01Icon, 14) : null}
                   </Box>
                   <Text size="2">{layer.label}</Text>
                 </Flex>
               ))}
             </Flex>
-          </Flex>
+          </Shell.Scroll>
         </Shell.Sidebar>
         <Shell.Content>
-          <Box position="relative" height="100%">
-            <Flex position="absolute" top="0" left="0" right="0" p="4" align="center" justify="between">
-              <Toolbar.Root size="2">
+          <Shell.PaneHeader float>
+            <Toolbar.Root backdrop style={FILL}>
+              <Flex align="center" gap="2">
                 <Toolbar.Button iconOnly aria-label="Layers">
                   {icon(SidebarLeftIcon)}
                 </Toolbar.Button>
                 <Toolbar.Title>Sign in</Toolbar.Title>
-              </Toolbar.Root>
-              <Toolbar.Root size="2">
+              </Flex>
+              <Flex align="center" gap="2">
                 <Toolbar.Group>
                   <Toolbar.Button iconOnly aria-label="Desktop">
                     {icon(ComputerIcon)}
@@ -148,72 +158,72 @@ function Builder() {
                 <Toolbar.Button iconOnly aria-label="Inspector">
                   {icon(SidebarRightIcon)}
                 </Toolbar.Button>
-              </Toolbar.Root>
-            </Flex>
-            <Flex justify="center" style={{ paddingTop: 128 }}>
-              <Card size="3" style={{ width: 384 }}>
-                <Flex direction="column" gap="6">
-                  <Flex direction="column" gap="3">
-                    <Heading size="6">Sign in</Heading>
-                    <Text size="3" color="gray">
-                      Use the email for your workspace.
-                    </Text>
-                  </Flex>
-                  <Flex direction="column" gap="5">
-                    <Field label="Email">
-                      <TextField.Root size="2" defaultValue="ada@kookie.studio" />
-                    </Field>
-                    <Field label="Password">
-                      <TextField.Root size="2" type="password" defaultValue="kookie-ui" />
-                    </Field>
-                  </Flex>
-                  <Flex gap="3" justify="end">
-                    <Button variant="ghost" color="gray">
-                      Cancel
-                    </Button>
-                    <Box className="kd-hero-selected">
-                      <Button variant="solid">Continue</Button>
-                    </Box>
-                  </Flex>
+              </Flex>
+            </Toolbar.Root>
+          </Shell.PaneHeader>
+          <Flex justify="center" className="kd-hero-canvas">
+            <Card size="3" className="kd-hero-composition">
+              <Flex direction="column" gap="5">
+                <Flex direction="column" gap="2">
+                  <Heading size="6">Sign in</Heading>
+                  <Text size="3" color="gray">
+                    Use the email for your workspace.
+                  </Text>
                 </Flex>
-              </Card>
-            </Flex>
-            <Flex position="absolute" bottom="0" left="0" right="0" p="4" align="center" justify="between">
-              <Toolbar.Root size="2">
-                <Toolbar.Group>
-                  <Toolbar.Button iconOnly aria-label="Undo">
-                    {icon(Undo02Icon)}
-                  </Toolbar.Button>
-                  <Toolbar.Button iconOnly aria-label="Redo">
-                    {icon(Redo02Icon)}
-                  </Toolbar.Button>
-                </Toolbar.Group>
-              </Toolbar.Root>
-              <Toolbar.Root size="2">
+                <Flex direction="column" gap="4">
+                  <Field label="Email">
+                    <TextField.Root size="2" defaultValue="ada@kookie.studio" />
+                  </Field>
+                  <Field label="Password">
+                    <TextField.Root size="2" type="password" defaultValue="kookie-ui" />
+                  </Field>
+                </Flex>
+                <Flex gap="2" justify="end">
+                  <Button variant="ghost" color="gray">
+                    Cancel
+                  </Button>
+                  <Box className="kd-hero-selected">
+                    <Button variant="solid">Continue</Button>
+                  </Box>
+                </Flex>
+              </Flex>
+            </Card>
+          </Flex>
+          <Shell.PaneFooter float>
+            <Toolbar.Root backdrop style={FILL}>
+              <Toolbar.Group>
+                <Toolbar.Button iconOnly aria-label="Undo">
+                  {icon(Undo02Icon)}
+                </Toolbar.Button>
+                <Toolbar.Button iconOnly aria-label="Redo">
+                  {icon(Redo02Icon)}
+                </Toolbar.Button>
+              </Toolbar.Group>
+              <Flex align="center" gap="2">
                 <Toolbar.Button iconOnly aria-label="Show outlines">
                   {icon(ViewIcon)}
                 </Toolbar.Button>
                 <Toolbar.Button>100%</Toolbar.Button>
-              </Toolbar.Root>
-            </Flex>
-          </Box>
+              </Flex>
+            </Toolbar.Root>
+          </Shell.PaneFooter>
         </Shell.Content>
         <Shell.Inspector defaultOpen defaultSize={272} presentation="fixed">
-          <Flex direction="column" gap="6" p="4">
-            <Flex align="center" justify="between" pl="3">
-              <Text size="2" weight="medium">
-                Button
-              </Text>
-              <Button iconOnly variant="ghost" color="gray" size="2" aria-label="Show code">
+          <Shell.PaneHeader>
+            <Toolbar.Root backdrop style={FILL}>
+              <Toolbar.Title>Button</Toolbar.Title>
+              <Toolbar.Button iconOnly aria-label="Show code">
                 {icon(SourceCodeIcon)}
-              </Button>
-            </Flex>
-            <Flex direction="column" gap="6" px="3">
+              </Toolbar.Button>
+            </Toolbar.Root>
+          </Shell.PaneHeader>
+          <Shell.Scroll fade>
+            <Flex direction="column" gap="5">
               <Field label="Label">
-                <TextField.Root size="2" defaultValue="Continue" />
+                <TextField.Root size="1" defaultValue="Continue" />
               </Field>
               <Field label="Size">
-                <SegmentedControl.Root defaultValue="2" size="2">
+                <SegmentedControl.Root defaultValue="2" size="1">
                   <SegmentedControl.Item value="1">1</SegmentedControl.Item>
                   <SegmentedControl.Item value="2">2</SegmentedControl.Item>
                   <SegmentedControl.Item value="3">3</SegmentedControl.Item>
@@ -221,16 +231,16 @@ function Builder() {
                 </SegmentedControl.Root>
               </Field>
               <Field label="Emphasis">
-                <Choice value="Loud" items={["Quiet", "Medium", "Loud"]} />
+                <Choice value="Loud" items={['Quiet', 'Medium', 'Loud']} />
               </Field>
               <Field label="Tone">
-                <Choice value="Accent" items={["Accent", "Neutral", "Destructive"]} />
+                <Choice value="Accent" items={['Accent', 'Neutral', 'Destructive']} />
               </Field>
               <Field label="Gap">
-                <Slider size="2" defaultValue={[40]} aria-label="Gap" />
+                <Slider size="1" defaultValue={[40]} aria-label="Gap" />
               </Field>
             </Flex>
-          </Flex>
+          </Shell.Scroll>
         </Shell.Inspector>
       </Shell.Root>
     </Theme>
