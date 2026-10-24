@@ -1,3 +1,9 @@
+## [0.25.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.25.1...v0.25.2) (2026-10-24)
+
+### Fixes
+
+* **shell:** a Toolbar in `Shell.PaneHeader` or `Shell.PaneFooter` fills the row, so its leading and trailing groups sit at the two ends. In a floating row, only the Toolbar's controls and groups take clicks; the empty stretch passes them to the content.
+
 ## [0.25.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.25.0...v0.25.1) (2026-10-24)
 
 ### Fixes

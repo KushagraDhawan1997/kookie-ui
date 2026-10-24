@@ -101,7 +101,7 @@ export function DocsSidebar({ navigation, logo, headerActions, footer, pathname 
       {/* The rows float over the list, as in v2: the list runs the pane's full height, starts
           clear of them, and fades out as it passes under them. */}
       <Shell.PaneHeader float>
-        <Toolbar backdrop size="3" aria-label="Site" style={{ flex: 1 }}>
+        <Toolbar backdrop size="3" aria-label="Site">
           {searchOpen ? (
             <>
               <TextField.Root
@@ -165,7 +165,7 @@ export function DocsSidebar({ navigation, logo, headerActions, footer, pathname 
 
       {footer && (
         <Shell.PaneFooter float>
-          <Toolbar backdrop size="3" aria-label="Site settings" style={{ flex: 1 }}>
+          <Toolbar backdrop size="3" aria-label="Site settings">
             {footer}
           </Toolbar>
         </Shell.PaneFooter>

@@ -2,6 +2,10 @@
 
 Each item is marked Major, Minor or Quiet. Major is a new product or a change to what it is. Minor is a change you notice when you use it. Quiet is a small touch, a fix, a rename or a removal, or how the work is made.
 
+## 0.25.2 (October 24)
+
+1. `Quiet` **Pane toolbars reach both ends.** A Toolbar in a pane header or footer fills it, so its groups sit at the two ends.
+
 ## 0.25.1 (October 24)
 
 1. `Quiet` **Fixes from Womp's review.** Server imports, Sheet width, Popover toolbar columns, loading links, rail search and the More menu work again.

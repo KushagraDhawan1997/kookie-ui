@@ -249,12 +249,17 @@
   z-index: 1;
   pointer-events: none;
 
-  & > :where(*),
-  & > :where(.kui-Toolbar) > :where(*) {
+  & > :where(*) {
     pointer-events: auto;
   }
+  /* A Toolbar spans the row, and so may a cluster inside it. pointer-events inherits, so the
+     Toolbar passes clicks through and only its controls and groups take them back: the empty
+     stretch between them lets clicks reach the content. */
   & > :where(.kui-Toolbar) {
     pointer-events: none;
+  }
+  & > :where(.kui-Toolbar) :where(.kui-ToolbarGroup, .kui-BaseButton, .kui-TextFieldRoot, .kui-SelectTrigger, .kui-SegmentedControlRoot, [href], [tabindex]) {
+    pointer-events: auto;
   }
 }
 .kui-ShellPaneHeader[data-float] {

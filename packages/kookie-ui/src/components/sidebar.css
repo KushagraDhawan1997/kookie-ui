@@ -337,6 +337,11 @@
   & :where(.kui-SidebarMenuButton) {
     flex: 1;
   }
+
+  /* A Toolbar fills the header, so its leading and trailing groups sit at the two ends. */
+  & > :where(.kui-Toolbar) {
+    flex: 1;
+  }
 }
 
 .kui-SidebarFooter:where(.kui-SidebarFooter--container) {
@@ -349,6 +354,11 @@
 
   /* Make MenuButtons expand to full width */
   & :where(.kui-SidebarMenuButton) {
+    flex: 1;
+  }
+
+  /* A Toolbar fills the footer, so its leading and trailing groups sit at the two ends. */
+  & > :where(.kui-Toolbar) {
     flex: 1;
   }
 }
