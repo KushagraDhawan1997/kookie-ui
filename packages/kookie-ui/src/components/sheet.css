@@ -1,4 +1,6 @@
-:where(.kui-SheetContent) {
+/* The class sits outside :where() so the 90vw default outranks the dialog's width: 100% in
+   base-dialog.css (same weight, later in the cascade). The width prop sets --width. */
+.kui-SheetContent {
   position: fixed !important;
   /* Use physical properties to integrate with width/height responsive utilities */
   width: var(--width, 90vw);
@@ -11,7 +13,7 @@
 
 /* iOS dynamic viewport height - accounts for browser chrome */
 @supports (height: 100dvh) {
-  :where(.kui-SheetContent) {
+  .kui-SheetContent {
     height: 100dvh;
     max-height: 100dvh;
   }

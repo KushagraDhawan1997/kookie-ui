@@ -72,7 +72,8 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function Choice({ value, items }: { value: string; items: readonly string[] }) {
   return (
     <Select.Root defaultValue={value} size="2">
-      <Select.Trigger />
+      {/* The label is passed in, so the server HTML shows it before the list exists. */}
+      <Select.Trigger>{value}</Select.Trigger>
       <Select.Content>
         {items.map((item) => (
           <Select.Item key={item} value={item}>

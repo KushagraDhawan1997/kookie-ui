@@ -333,6 +333,18 @@ function toDropdownItem(node: React.ReactNode, key: React.Key): React.ReactNode 
   return <DropdownMenu.Item key={key}>{node}</DropdownMenu.Item>;
 }
 
+// The sub-list is a <ul>, so each row needs its own <li>. A MenuButton written straight into
+// MenuSubContent gets a MenuItem around it, rather than leaving an <a> or <button> in the list.
+function wrapBareMenuButtons(children: React.ReactNode): React.ReactNode {
+  return React.Children.map(children, (child, index) =>
+    React.isValidElement(child) && child.type === SidebarMenuButton ? (
+      <SidebarMenuItem key={child.key ?? index}>{child}</SidebarMenuItem>
+    ) : (
+      child
+    ),
+  );
+}
+
 const SidebarMenuSubContent = React.forwardRef<React.ElementRef<typeof Accordion.Content>, SidebarMenuSubContentProps>(({ className, children, ...props }, forwardedRef) => {
   const visual = useSidebarVisual();
   const mode = React.useContext(SidebarSubMenuModeContext);
@@ -360,7 +372,7 @@ const SidebarMenuSubContent = React.forwardRef<React.ElementRef<typeof Accordion
 
   return (
     <Accordion.Content {...props} ref={forwardedRef} className={classNames('kui-SidebarMenuSubContent', className)}>
-      <ul className="kui-SidebarMenuSubList">{children}</ul>
+      <ul className="kui-SidebarMenuSubList">{wrapBareMenuButtons(children)}</ul>
     </Accordion.Content>
   );
 });
@@ -473,6 +485,9 @@ const SidebarSearch = React.forwardRef<HTMLDivElement, SidebarSearchProps>(
     // Arrow key navigation within the popover (input ↔ results)
     const handlePopoverKeyDown = React.useCallback(
       (e: React.KeyboardEvent<HTMLDivElement>) => {
+        // A result row already moved focus with its own arrow handling (focusAdjacentSidebarButton
+        // scopes to this popover); moving again would skip a row.
+        if (e.defaultPrevented) return;
         const container = popoverRef.current;
         if (!container) return;
 

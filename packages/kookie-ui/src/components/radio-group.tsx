@@ -8,7 +8,7 @@ import { RadioGroup as RadioGroupPrimitive } from 'radix-ui';
 import { radioGroupRootPropDefs } from './radio-group.props.js';
 import { Text } from './text.js';
 import { extractProps } from '../helpers/extract-props.js';
-import { useThemeSize } from '../helpers/theme-size.js';
+import { useThemeSize } from '../hooks/theme-size.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';

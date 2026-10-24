@@ -50,6 +50,19 @@ export type ResizableOptions = {
  */
 const clampTo = (value: number, min: number | undefined, max: number | undefined) => Math.max(min ?? value, Math.min(max ?? value, value));
 
+/**
+ * The pane's starting size for the first render, so the server HTML already has it and the first
+ * paint is right. Only a number can be known before the pane exists (a percentage needs the
+ * Shell's width); the effects below still own the size after mount.
+ */
+export function useInitialPaneSize(size: number | string | undefined, defaultSize: number | string | undefined, minSize: number, maxSize: number) {
+  const [initial] = React.useState(() => {
+    const value = size ?? defaultSize;
+    return typeof value === 'number' && Number.isFinite(value) ? `${clampTo(value, minSize, maxSize)}px` : undefined;
+  });
+  return initial;
+}
+
 /** Everything a resizable pane shares: size props, persistence, and the handle's context. */
 export function useResizablePane(options: ResizableOptions): PaneResizeContextValue {
   const { name, elementRef, cssVarName, orientation, minSize, maxSize, resizable, size, defaultSize, paneId, persistence } = options;

@@ -53,4 +53,35 @@ describe('built output directives', () => {
     for (const file of clientFiles) expect(firstLine(path.join(out, file)).startsWith('"use client";')).toBe(true);
     expect(fs.readFileSync(path.join(out, 'hooks/appearance-script.js'), 'utf8')).not.toContain('use client');
   });
+
+  it('keeps the helpers entry server-safe and points it at the one client theme-size module', async () => {
+    const helpersOut = fs.mkdtempSync(path.join(os.tmpdir(), 'kookie-helpers-'));
+    try {
+      const base = {
+        absWorkingDir: root,
+        outdir: helpersOut,
+        format: 'esm' as const,
+        target: 'es2020',
+        bundle: true,
+        splitting: true,
+        write: true,
+        logLevel: 'silent' as const,
+        external: ['react', 'react-dom', 'radix-ui', 'classnames', '@radix-ui/*', 'motion', 'motion/*'],
+      };
+      const { client } = listEntries(root);
+      expect(client).toContain('src/hooks/theme-size.ts');
+      const builds = buildOptions(base, { client: ['src/hooks/theme-size.ts'], server: ['src/helpers/index.ts'] });
+      for (const options of builds) await esbuild.build(options);
+
+      const helpers = fs.readFileSync(path.join(helpersOut, 'helpers/index.js'), 'utf8');
+      // A server component must be able to load /helpers, so it never calls createContext itself.
+      expect(helpers).not.toContain('use client');
+      expect(helpers).not.toContain('createContext');
+      // It re-exports the context from the client module, so /helpers and the components share it.
+      expect(helpers).toMatch(/from\s*["']\.\.\/hooks\/theme-size\.js["']/);
+      expect(firstLine(path.join(helpersOut, 'hooks/theme-size.js')).startsWith('"use client";')).toBe(true);
+    } finally {
+      fs.rmSync(helpersOut, { recursive: true, force: true });
+    }
+  });
 });

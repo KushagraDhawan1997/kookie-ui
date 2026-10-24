@@ -31,6 +31,30 @@ export function listEntries(root = process.cwd()) {
 }
 
 /**
+ * A server-safe module may re-export client code (`helpers/index.ts` re-exports the theme-size
+ * context and hooks). Bundling that code into the server-safe output would call `createContext` in
+ * a server component and give the client a second context. So the server-safe build keeps every
+ * relative import of a client module external: the output imports the client build's file at the
+ * same relative path, which carries "use client".
+ */
+function externalClientModules(root) {
+  return {
+    name: 'external-client-modules',
+    setup(build) {
+      build.onResolve({ filter: /^\.\.?\// }, (args) => {
+        const target = path.resolve(args.resolveDir, args.path);
+        const stem = target.replace(/\.js$/, '');
+        const source = ['.ts', '.tsx'].map((ext) => stem + ext).find((file) => fs.existsSync(file));
+        if (!source) return undefined;
+        const file = path.posix.join(...path.relative(root, source).split(path.sep));
+        if (!file.startsWith('src/') || isServerSafe(file)) return undefined;
+        return { path: args.path.endsWith('.js') ? args.path : `${args.path}.js`, external: true };
+      });
+    },
+  };
+}
+
+/**
  * Returns the client and server-safe build options. `base` holds what both share (format, outdir,
  * externals and so on). `entries` defaults to every source file.
  */
@@ -38,6 +62,10 @@ export function buildOptions(base, entries = listEntries(base.absWorkingDir)) {
   const shared = { ...base, outbase: 'src' };
   return [
     { ...shared, entryPoints: entries.client, banner: { js: USE_CLIENT_BANNER } },
-    { ...shared, entryPoints: entries.server },
+    {
+      ...shared,
+      entryPoints: entries.server,
+      plugins: [...(base.plugins ?? []), externalClientModules(base.absWorkingDir ?? process.cwd())],
+    },
   ].filter((options) => options.entryPoints.length > 0);
 }

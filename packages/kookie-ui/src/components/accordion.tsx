@@ -12,7 +12,7 @@ import {
 import { ChevronDownIcon } from './icons.js';
 import { Slottable } from './slot.js';
 import { extractProps } from '../helpers/extract-props.js';
-import { useThemeSizeProps } from '../helpers/theme-size.js';
+import { useThemeSizeProps } from '../hooks/theme-size.js';
 
 import type {
   AccordionRootOwnProps,

@@ -6,7 +6,7 @@ import { useComposedRefs } from 'radix-ui/internal';
 import { PaneResizeContext } from './shell-resize.js';
 import { InspectorHandle, PaneHandle } from './shell-handles.js';
 import { usePane, paneAttributes, usePresentationTable } from './shell-pane.js';
-import { splitHandles, useResizablePane, type SizeChangeMeta } from './shell-resizable.js';
+import { splitHandles, useInitialPaneSize, useResizablePane, type SizeChangeMeta } from './shell-resizable.js';
 import { useInsetRegistration, warnOnce } from './shell-store.js';
 import { detailRest, endAnchoredGrowth, toPaneValue, withoutRemovedPaneProps } from './shell-rest.js';
 import { readBreakpoint } from '../../hooks/use-breakpoint.js';
@@ -129,6 +129,7 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
   const { handles, content } = splitHandles(children, InspectorHandle);
   const handle = resizable && pane.shown !== false && !pane.overlaying ? <PaneResizeContext.Provider value={resize}>{handles.length > 0 ? handles : <PaneHandle />}</PaneResizeContext.Provider> : null;
 
+  const initialSize = useInitialPaneSize(size, defaultSize, minSize, maxSize);
   return (
     <div
       {...withoutRemovedPaneProps(domProps)}
@@ -143,6 +144,7 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
         {
           ...style,
           '--inspector-expanded-size': `${expandedSize}px`,
+          ...(initialSize ? { '--inspector-size': initialSize } : {}),
           '--inspector-min-size': `${minSize}px`,
           '--inspector-max-size': `${maxSize}px`,
         } as CSSPropertiesWithVars

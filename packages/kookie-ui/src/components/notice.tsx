@@ -23,7 +23,7 @@ import classNames from 'classnames';
 
 import { Button } from './button.js';
 import { Text } from './text.js';
-import { ThemeSizeContext, useThemeSize } from '../helpers/theme-size.js';
+import { ThemeSizeContext, useThemeSize } from '../hooks/theme-size.js';
 import { accentColorPropDef } from '../props/color.prop.js';
 
 type NoticeSize = '1' | '2' | '3' | '4';

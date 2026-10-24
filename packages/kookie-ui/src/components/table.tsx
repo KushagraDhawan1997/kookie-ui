@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import { tableRootPropDefs, tableRowPropDefs, tableCellPropDefs } from './table.props.js';
 import { extractProps } from '../helpers/extract-props.js';
-import { useThemeSizeProps } from '../helpers/theme-size.js';
+import { useThemeSizeProps } from '../hooks/theme-size.js';
 import { getResponsiveClassNames } from '../helpers/get-responsive-styles.js';
 import { ScrollArea } from './scroll-area.js';
 

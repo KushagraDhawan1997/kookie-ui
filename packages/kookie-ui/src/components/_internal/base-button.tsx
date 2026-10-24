@@ -8,7 +8,7 @@ import { Flex } from '../flex.js';
 import { Spinner } from '../spinner.js';
 import { TickIcon } from '../icons.js';
 import { extractProps } from '../../helpers/extract-props.js';
-import { useThemeSizeProps } from '../../helpers/theme-size.js';
+import { useThemeSizeProps } from '../../hooks/theme-size.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../../helpers/component-props.js';
 import type { GetPropDefTypes } from '../../props/prop-def.js';
@@ -213,6 +213,56 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
     return {};
   }, [loading, describedById, ariaDescribedByProp, nativeDisabled, shouldPassDisabled, asChild]);
 
+  /**
+   * The inside of the button. A button that takes `loading` (true or false) keeps its content in
+   * a `kui-BaseButtonContent` wrapper, so starting or stopping `loading` keeps the children in
+   * place (their state survives). A button that never loads skips it, which saves a node per
+   * button. `display: contents` keeps the button's flex gap; while loading the wrapper is
+   * `visibility: hidden` under the spinner.
+   *
+   * `display: contents` removes the content from the accessibility tree in some browsers, so
+   * while loading the wrapper is `aria-hidden` and a `kui-sr-only` copy carries the name.
+   */
+  const renderInner = (inner: React.ReactNode, label: React.ReactNode) => {
+    if (!canLoad) return inner;
+    return (
+      <>
+        <span className="kui-BaseButtonContent" aria-hidden={loading || undefined}>
+          {inner}
+        </span>
+        {loading ? (
+          <>
+            {/* The label stays the name; the hidden "Loading" only describes (aria-describedby reads hidden text). */}
+            <span className="kui-sr-only">
+              <span id={describedById} aria-hidden>
+                Loading
+              </span>
+              {label}
+            </span>
+
+            {/* Centered spinner overlay during loading state */}
+            <Flex asChild align="center" justify="center" position="absolute" inset="0">
+              <span>
+                <Spinner aria-hidden="true" />
+              </span>
+            </Flex>
+          </>
+        ) : null}
+      </>
+    );
+  };
+  const asChildContent =
+    asChild && canLoad && React.isValidElement(content)
+      ? React.cloneElement(
+          content as React.ReactElement<{ children?: React.ReactNode }>,
+          undefined,
+          renderInner(
+            (content.props as { children?: React.ReactNode }).children,
+            React.isValidElement(children) ? (children.props as { children?: React.ReactNode }).children : null,
+          ),
+        )
+      : content;
+
   return (
     <Comp
       data-accent-color={color}
@@ -232,48 +282,12 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
       {...(shouldPassDisabled && { disabled: nativeDisabled })}
       {...(isNativeButtonElement && !hasExplicitTypeAttribute ? { type: 'button' } : {})}
     >
-      {asChild && !loading ? (
-        // asChild: Slot merges onto the single child, so the content can't take a wrapper or a sibling.
-        content
+      {asChild ? (
+        // asChild: Slot merges onto the single child, so the wrapper, spinner and label copy go
+        // inside that child, never beside it.
+        asChildContent
       ) : (
-        <>
-          {/**
-           * A button that takes `loading` (true or false) keeps its content in this wrapper, so
-           * starting or stopping `loading` keeps the children in place (their state survives). A
-           * button that never loads skips it, which saves a node per button. `display: contents`
-           * keeps the button's flex
-           * gap; while loading the wrapper is `visibility: hidden` under the spinner.
-           *
-           * `display: contents` removes the content from the accessibility tree in some browsers,
-           * so while loading the wrapper is `aria-hidden` and a `kui-sr-only` copy carries the name.
-           */}
-          {canLoad ? (
-            <span className="kui-BaseButtonContent" aria-hidden={loading || undefined}>
-              {content}
-            </span>
-          ) : (
-            content
-          )}
-
-          {loading ? (
-            <>
-              {/* The label stays the name; the hidden "Loading" only describes (aria-describedby reads hidden text). */}
-              <span className="kui-sr-only">
-                <span id={describedById} aria-hidden>
-                  Loading
-                </span>
-                {children}
-              </span>
-
-              {/* Centered spinner overlay during loading state */}
-              <Flex asChild align="center" justify="center" position="absolute" inset="0">
-                <span>
-                  <Spinner aria-hidden="true" />
-                </span>
-              </Flex>
-            </>
-          ) : null}
-        </>
+        renderInner(content, children)
       )}
     </Comp>
   );

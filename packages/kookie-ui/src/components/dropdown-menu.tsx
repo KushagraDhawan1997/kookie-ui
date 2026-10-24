@@ -16,7 +16,7 @@ import {
 import { Theme, useThemeContext } from './theme.js';
 import { ChevronDownIcon, ThickCheckIcon, ThickChevronLeftIcon, ThickChevronRightIcon, ThickDotIcon } from './icons.js';
 import { extractProps } from '../helpers/extract-props.js';
-import { useThemeSizeProps } from '../helpers/theme-size.js';
+import { useThemeSizeProps } from '../hooks/theme-size.js';
 import {
   DrillDownLevelContext,
   DrillDownRoot,

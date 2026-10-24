@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { Select as SelectPrimitive, ScrollArea as ScrollAreaPrimitive } from 'radix-ui';
 
 import { extractProps } from '../helpers/extract-props.js';
-import { useThemeSize } from '../helpers/theme-size.js';
+import { useThemeSize } from '../hooks/theme-size.js';
 import { ChevronDownIcon, ThickCheckIcon } from './icons.js';
 import { Spinner } from './spinner.js';
 import {
