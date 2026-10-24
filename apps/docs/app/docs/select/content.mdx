@@ -1,0 +1,188 @@
+---
+title: Select
+description: A select lets people choose one value from a list that opens from a field.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/select.tsx
+---
+
+A select shows the current value in a field and opens a list when someone presses it, so they can pick one option. When the list is long enough that people need to search it, use a [Combobox](/docs/combobox). When the list starts an action instead of setting a value, use a [Dropdown Menu](/docs/dropdown-menu).
+
+## Playground
+
+import SelectPlayground from '../../playground/select-playground';
+
+<SelectPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Flex, Select, Text } from '@kushagradhawan/kookie-ui';
+
+export function TimeZoneField({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  return (
+    <Flex direction="column" gap="1">
+      <Text as="label" htmlFor="time-zone" size="2" weight="medium">
+        Time zone
+      </Text>
+      <Select.Root value={value} onValueChange={onChange}>
+        <Select.Trigger id="time-zone" placeholder="Choose a time zone" />
+        <Select.Content>
+          <Select.Item value="america-new-york">New York</Select.Item>
+          <Select.Item value="europe-london">London</Select.Item>
+          <Select.Item value="asia-kolkata">Kolkata</Select.Item>
+        </Select.Content>
+      </Select.Root>
+    </Flex>
+  );
+}
+```
+
+## Anatomy
+
+```tsx
+<Select.Root>
+  <Select.Trigger />
+  <Select.Content>
+    <Select.Group>
+      <Select.Label />
+      <Select.Item />
+    </Select.Group>
+    <Select.Separator />
+  </Select.Content>
+</Select.Root>
+```
+
+- **Root:** Holds the value and the open state, and sets the size for every part.
+- **Trigger:** The field that shows the chosen value and opens the list.
+- **Content:** The list, rendered in a portal above the page.
+- **Item:** One option. The chosen item shows a check mark.
+- **Group:** A set of related items.
+- **Label:** A heading for a group. It can't be chosen.
+- **Separator:** A line between groups.
+
+## Best practices
+
+**Use a select for five or more options.** With fewer, a [Radio Group](/docs/radio-group) or a [Segmented Control](/docs/segmented-control) shows every choice at once, so people don't have to open anything to compare them.
+
+**Give the field a visible label.** The trigger's text is the current value, not the question. Point a `label` at the trigger's `id`, or set `aria-label` when the context makes the purpose clear.
+
+**Write a placeholder that asks for the choice.** "Choose a time zone" says what is missing. Don't repeat the label, and don't use the placeholder as the only label, because it disappears once a value is chosen.
+
+**Order options in a way people can predict.** Use alphabetical order for names, numeric order for sizes and quantities, and group related options under a `Label` when the list has more than about ten.
+
+**Don't use a select for actions.** An item that deletes, exports or opens something belongs in a [Dropdown Menu](/docs/dropdown-menu). A select only changes a value.
+
+## Variant
+
+`variant` sets the look of the trigger. `raised` is the default and suits most forms. Use `surface` or `outline` to match a [TextField](/docs/text-field) with the same variant in one form, `soft` on a tinted background, and `ghost` inside a toolbar or a table cell, where a border would add noise.
+
+## Size
+
+`size` on `Root` picks one of four heights for the trigger: 28, 32, 40 and 48 pixels. The list uses the same size. Size 2 is the default. A select is as tall as a [Button](/docs/button) or a TextField of the same size, so a row of controls lines up. `size` accepts a responsive object, such as `{ initial: '3', md: '2' }`.
+
+## Examples
+
+### Grouped options
+
+Group items under a `Label` when the list has natural sections. People scan the headings first and then the items under one heading.
+
+```tsx
+<Select.Content>
+  <Select.Group>
+    <Select.Label>Americas</Select.Label>
+    <Select.Item value="america-new-york">New York</Select.Item>
+    <Select.Item value="america-chicago">Chicago</Select.Item>
+  </Select.Group>
+  <Select.Separator />
+  <Select.Group>
+    <Select.Label>Europe</Select.Label>
+    <Select.Item value="europe-london">London</Select.Item>
+    <Select.Item value="europe-berlin">Berlin</Select.Item>
+  </Select.Group>
+</Select.Content>
+```
+
+### Invalid value
+
+Set `error` when a form check fails. The trigger shows a red border and sets `aria-invalid`. Put the message in text next to the field, because the colour alone doesn't say what is wrong.
+
+```tsx
+<Select.Trigger id="plan" error={!plan} placeholder="Choose a plan" />
+```
+
+### List below the trigger
+
+By default the list opens over the trigger, with the chosen item lined up on the field. Set `position="popper"` on `Content` to open it below the trigger, like a menu, at least as wide as the trigger.
+
+### Form submission
+
+Set `name` on `Root` to send the value with a form. Inside a form, the select renders a hidden native `select` for the form to read, and `required` blocks submission until a value is chosen.
+
+## Props
+
+### Root
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` | | The chosen value, when you control it |
+| `defaultValue` | `string` | | The value at first render, when the select controls it |
+| `onValueChange` | `(value: string) => void` | | Called when someone chooses an item |
+| `open` | `boolean` | | Whether the list is open, when you control it |
+| `defaultOpen` | `boolean` | `false` | Whether the list is open at first render |
+| `onOpenChange` | `(open: boolean) => void` | | Called when the list opens or closes |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | The height step for the trigger and the list |
+| `name` | `string` | | The name the value is submitted under |
+| `required` | `boolean` | `false` | Blocks form submission until a value is chosen |
+| `disabled` | `boolean` | `false` | Disables the whole select |
+| `dir` | `'ltr' \| 'rtl'` | | The reading direction |
+
+### Trigger
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'raised' \| 'surface' \| 'soft' \| 'outline' \| 'ghost'` | `'raised'` | The look of the field |
+| `placeholder` | `ReactNode` | | Shows when no value is chosen |
+| `color` | `AccentColor` | Theme accent | The colour |
+| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Theme radius | The corner |
+| `error` | `boolean` | `false` | Shows the invalid state and sets `aria-invalid` |
+| `loading` | `boolean` | `false` | Replaces the chevron with a spinner, sets `aria-busy` and stops the list from opening |
+| `disabled` | `boolean` | `false` | Disables the trigger |
+| `readOnly` | `boolean` | `false` | Sets `aria-readonly`. The trigger stays focusable, but the list doesn't open and the value doesn't change |
+
+Trigger also accepts every attribute of the HTML `button` element. Children of the trigger replace the text of the chosen value.
+
+### Content
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `position` | `'item-aligned' \| 'popper'` | `'item-aligned'` | Opens over the trigger, or below it |
+| `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'bottom'` | Where the list opens. With `popper` only |
+| `sideOffset` | `number` | `4` | The gap to the trigger in pixels. With `popper` only |
+| `align` | `'start' \| 'center' \| 'end'` | `'start'` | How the list lines up with the trigger. With `popper` only |
+| `color` | `AccentColor` | Theme accent | The colour of the highlight |
+| `container` | `HTMLElement` | `document.body` | The element the portal renders into |
+
+### Item
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` | | The value this item sets. Required, and can't be an empty string |
+| `disabled` | `boolean` | `false` | Stops the item from being chosen |
+| `textValue` | `string` | | The text for typeahead, when the children aren't plain text |
+
+Group, Label and Separator accept the attributes of the HTML `div` element.
+
+## Accessibility
+
+| Key | Action |
+| --- | --- |
+| Enter, Space, Arrow Down or Arrow Up | Opens the list from the trigger |
+| Arrow Down or Arrow Up | Moves the highlight through the items |
+| Home or End | Moves the highlight to the first or last item |
+| Enter or Space | Chooses the highlighted item and closes the list |
+| A letter key | Moves the highlight to the next item that starts with it |
+| Escape | Closes the list without changing the value |
+
+- **Name:** The trigger has the `combobox` role, which doesn't take its name from its content. Give it a `label` with `htmlFor`, `aria-label` or `aria-labelledby`.
+- **Announcements:** A screen reader announces the label, the chosen value and whether the list is expanded. In the list, it announces each item and which one is selected.
+- **States:** `error`, `loading` and `readOnly` set `aria-invalid`, `aria-busy` and `aria-readonly` on the trigger.
+- **Focus:** Focus moves into the list when it opens and returns to the trigger when it closes. The focus ring shows for the keyboard only.

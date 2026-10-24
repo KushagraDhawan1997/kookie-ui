@@ -1,252 +1,206 @@
 ---
 title: Sidebar
-description: Navigation rows for a Shell sidebar
+description: Sidebar provides the navigation rows, groups, sub-menus and search that go inside a Shell pane.
 source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/sidebar.tsx
 ---
 
-import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
-import { Box, Shell, Sidebar, Text } from '@kushagradhawan/kookie-ui';
-import { HugeiconsIcon } from '@hugeicons/react';
-import { Home01Icon, InboxIcon, Search01Icon, Settings01Icon } from '@hugeicons/core-free-icons';
+Sidebar is the set of navigation rows in an app: a list of links, grouped and labelled, with sub-menus and a search field. The column that holds them is a [Shell](/docs/shell) pane. For a list of commands that opens from a button, use a [Dropdown Menu](/docs/dropdown-menu).
 
-Sidebar is the set of navigation rows: menus, groups, sub-menus and search. `Shell.Sidebar` is the pane that holds them. The pane renders anything, and with `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter` it is the sidebar.
+## Playground
 
-<PreviewBlock height="20rem">
-  <Box width="100%" height="100%">
-  <Shell.Root height="100%">
-    <Shell.Sidebar defaultState="expanded" presentation="fixed" style={{ backgroundColor: 'var(--neutral-2)' }}>
-      <Shell.Scroll role="navigation" aria-label="Main">
-        <Sidebar.Menu>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton isActive>
-              <HugeiconsIcon icon={Home01Icon} strokeWidth={1.75} />
-              Home
-            </Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton badge="3">
-              <HugeiconsIcon icon={InboxIcon} strokeWidth={1.75} />
-              Inbox
-            </Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-        </Sidebar.Menu>
-      </Shell.Scroll>
-      <Shell.PaneFooter>
-        <Sidebar.MenuButton>
-          <HugeiconsIcon icon={Settings01Icon} strokeWidth={1.75} />
-          Settings
-        </Sidebar.MenuButton>
-      </Shell.PaneFooter>
-    </Shell.Sidebar>
-    <Shell.Content>
-      <Box p="6">
-        <Text size="2" emphasis="medium">Page content</Text>
-      </Box>
-    </Shell.Content>
-  </Shell.Root>
-  </Box>
-</PreviewBlock>
+import SidebarPlayground from '../../playground/sidebar-playground';
+
+<SidebarPlayground />
 
 ## Usage
 
 ```tsx showLineNumbers
 import { Shell, Sidebar } from '@kushagradhawan/kookie-ui';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Home01Icon, InboxIcon } from '@hugeicons/core-free-icons';
+import Link from 'next/link';
 
-<Shell.Root>
-  <Shell.Sidebar>
-    <Shell.PaneHeader>{/* Logo, controls */}</Shell.PaneHeader>
-    <Shell.Scroll role="navigation" aria-label="Main">
-      <Sidebar.Group>
-        <Sidebar.GroupLabel>Workspace</Sidebar.GroupLabel>
-        <Sidebar.GroupContent>
-          <Sidebar.Menu>
-            <Sidebar.MenuItem>
-              <Sidebar.MenuButton isActive>Home</Sidebar.MenuButton>
-            </Sidebar.MenuItem>
-          </Sidebar.Menu>
-        </Sidebar.GroupContent>
-      </Sidebar.Group>
-    </Shell.Scroll>
-    <Shell.PaneFooter>{/* Profile, settings */}</Shell.PaneFooter>
-  </Shell.Sidebar>
-  <Shell.Content>{/* Page */}</Shell.Content>
-</Shell.Root>
-```
-
-## Parts
-
-| Part | Description |
-| ---- | ----------- |
-| `Shell.PaneHeader` | The row above the scrolling region. |
-| `Shell.Scroll` | The region that scrolls. Not a landmark: pass `role="navigation"` and `aria-label` for navigation. |
-| `Shell.PaneFooter` | The row below the scrolling region. |
-| `Sidebar.Search` | A search field above the rows. |
-| `Sidebar.Group`, `GroupLabel`, `GroupContent` | A labelled set of rows. |
-| `Sidebar.Menu`, `MenuItem`, `MenuButton` | The rows. |
-| `Sidebar.MenuSub`, `MenuSubTrigger`, `MenuSubContent` | A collapsible set of nested rows. |
-| `Sidebar.Separator` | A line between groups. |
-
-## In a Rail
-
-The same rows in `Shell.Rail` draw as tiles: an icon with a small label under it. A sub-menu opens as a dropdown.
-
-<PreviewBlock height="24rem">
-  <Box width="100%" height="100%">
-  <Shell.Root height="100%">
-    <Shell.Rail defaultOpen presentation="fixed" style={{ backgroundColor: 'var(--neutral-2)' }}>
+export function MainNav({ pathname }: { pathname: string }) {
+  return (
+    <Shell.Sidebar>
       <Shell.Scroll role="navigation" aria-label="Main">
         <Sidebar.Menu>
           <Sidebar.MenuItem>
-            <Sidebar.MenuButton isActive>
-              <HugeiconsIcon icon={Home01Icon} strokeWidth={1.75} />
-              Home
+            <Sidebar.MenuButton asChild isActive={pathname === '/'}>
+              <Link href="/">
+                <HugeiconsIcon icon={Home01Icon} strokeWidth={1.75} />
+                Home
+              </Link>
             </Sidebar.MenuButton>
           </Sidebar.MenuItem>
           <Sidebar.MenuItem>
-            <Sidebar.MenuButton>
-              <HugeiconsIcon icon={InboxIcon} strokeWidth={1.75} />
-              Inbox
-            </Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton>
-              <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
-              Search
+            <Sidebar.MenuButton asChild isActive={pathname === '/inbox'} badge="3">
+              <Link href="/inbox">
+                <HugeiconsIcon icon={InboxIcon} strokeWidth={1.75} />
+                Inbox
+              </Link>
             </Sidebar.MenuButton>
           </Sidebar.MenuItem>
         </Sidebar.Menu>
       </Shell.Scroll>
-      <Shell.PaneFooter>
-        <Sidebar.MenuButton>
-          <HugeiconsIcon icon={Settings01Icon} strokeWidth={1.75} />
-          Settings
-        </Sidebar.MenuButton>
-      </Shell.PaneFooter>
-    </Shell.Rail>
-    <Shell.Content>
-      <Box p="6">
-        <Text size="2" emphasis="medium">Page content</Text>
-      </Box>
-    </Shell.Content>
-  </Shell.Root>
-  </Box>
-</PreviewBlock>
-
-## Sizes
-
-`Shell.Root size` (`'1'`, `'2'` or `'3'`, default `'2'`) sets the index. A row is as tall as a Button of that size.
-
-## Highlight
-
-Rows use the soft highlight. When the system asks for more contrast (`prefers-contrast: more`), they use the solid one.
-
-## MenuButton Props
-
-Interactive button for navigation items.
-
-| Prop       | Type                    | Default | Description                                              |
-| ---------- | ----------------------- | ------- | -------------------------------------------------------- |
-| `isActive` | `boolean`               | `false` | Marks the item as currently active/selected              |
-| `asChild`  | `boolean`               | `false` | Merges props with child element (for routing links)      |
-| `shortcut` | `ReactNode`             | —       | Keyboard shortcut displayed on the right                 |
-| `badge`    | `string \| BadgeConfig` | —       | Badge content or full configuration object               |
-
-### BadgeConfig
-
-```tsx
-type BadgeConfig = {
-  content: React.ReactNode;
-  variant?: 'solid' | 'soft' | 'surface' | 'outline';
-  size?: '1' | '2';
-  color?: AccentColor;
-  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
-};
+    </Shell.Sidebar>
+  );
+}
 ```
 
-## MenuSub Props
-
-Container for a collapsible sub-menu.
-
-| Prop          | Type      | Default | Description                            |
-| ------------- | --------- | ------- | -------------------------------------- |
-| `defaultOpen` | `boolean` | `false` | Whether the sub-menu starts expanded   |
-
-## Badges
-
-Add badges to menu buttons for notifications or status indicators.
-
-### Simple Badge
-
-Pass a string for a simple badge:
+## Anatomy
 
 ```tsx
-<Sidebar.MenuButton badge="3">
-  <InboxIcon />
-  Inbox
-</Sidebar.MenuButton>
+<Shell.Sidebar>
+  <Shell.PaneHeader>
+    <Sidebar.Search />
+  </Shell.PaneHeader>
+  <Shell.Scroll>
+    <Sidebar.Group>
+      <Sidebar.GroupLabel />
+      <Sidebar.GroupContent>
+        <Sidebar.Menu>
+          <Sidebar.MenuItem>
+            <Sidebar.MenuButton />
+          </Sidebar.MenuItem>
+          <Sidebar.MenuItem>
+            <Sidebar.MenuSub>
+              <Sidebar.MenuSubTrigger />
+              <Sidebar.MenuSubContent />
+            </Sidebar.MenuSub>
+          </Sidebar.MenuItem>
+        </Sidebar.Menu>
+      </Sidebar.GroupContent>
+    </Sidebar.Group>
+    <Sidebar.Separator />
+  </Shell.Scroll>
+  <Shell.PaneFooter />
+</Shell.Sidebar>
 ```
 
-### Configured Badge
+- **Menu:** A list of rows, a `ul`.
+- **MenuItem:** One row's slot, an `li`.
+- **MenuButton:** The row people press. Render a link with `asChild`.
+- **MenuSub, MenuSubTrigger, MenuSubContent:** A row that opens a nested list.
+- **Group, GroupLabel, GroupContent:** A set of rows under a plain-text label.
+- **Separator:** A line between groups.
+- **Search:** A search field for the rows.
 
-Pass an object for full badge customization:
+## Best practices
+
+**Make every row a link.** A sidebar row goes somewhere, so render your router's link with `asChild`. People can then open it in a new tab and see its address.
+
+**Mark the current page with `isActive`.** It highlights the row and sets `aria-current="page"`, so a screen reader announces where you are too.
+
+**Put an icon on every row or on none.** A column where some rows have icons and others don't is hard to scan. In a Rail, the icon is what people see, so every row needs one.
+
+**Group by what people look for.** A short group label, such as "Workspace" or "Settings", helps people find a row in a long list. A list of five rows needs no groups.
+
+**Keep commands out of the list.** "New project" or "Log out" is an action. Put it in a Button in the pane's header or footer, or in a [Dropdown Menu](/docs/dropdown-menu).
+
+## Size
+
+The rows take their size from `Shell.Root size`: `'1'`, `'2'` or `'3'`. Without it, they follow the Theme's size, and a Theme size of 4 maps to 3. A row is as tall as a [Button](/docs/button) of the same size, and its badge and shortcut follow. Rows outside a Shell pane are size 2.
+
+## Examples
+
+### Unread count
+
+`badge` shows a [Chip](/docs/chip) at the end of the row. Pass a string for a soft chip, or an object to set its look.
 
 ```tsx
-<Sidebar.MenuButton
-  badge={{
-    content: 'New',
-    variant: 'solid',
-    color: 'crimson',
-  }}
->
-  <SparklesIcon />
+<Sidebar.MenuButton badge={{ content: 'New', variant: 'solid', color: 'crimson' }}>
+  <HugeiconsIcon icon={SparklesIcon} strokeWidth={1.75} />
   Features
 </Sidebar.MenuButton>
 ```
 
-## Shortcuts
+### Keyboard shortcut
 
-Display keyboard shortcuts on menu buttons:
+`shortcut` shows a [Kbd](/docs/kbd) at the end of the row. It only shows the keys. Bind the shortcut yourself.
 
 ```tsx
 <Sidebar.MenuButton shortcut="⌘K">
-  <SearchIcon />
+  <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
   Search
 </Sidebar.MenuButton>
 ```
 
-## With Routing
+### Nested pages
 
-Use `asChild` to integrate with routing libraries like Next.js:
+`Sidebar.MenuSub` opens and closes its rows in place. Set `defaultOpen` when the current page is inside it. In a Rail, the same sub-menu opens as a dropdown beside the tile.
 
-```tsx
-import Link from 'next/link';
-
+```tsx showLineNumbers
 <Sidebar.MenuItem>
-  <Sidebar.MenuButton asChild isActive={pathname === '/dashboard'}>
-    <Link href="/dashboard">
-      <DashboardIcon />
-      Dashboard
-    </Link>
-  </Sidebar.MenuButton>
+  <Sidebar.MenuSub defaultOpen>
+    <Sidebar.MenuSubTrigger>Projects</Sidebar.MenuSubTrigger>
+    <Sidebar.MenuSubContent>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton asChild isActive>
+          <Link href="/projects/atlas">Atlas</Link>
+        </Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+    </Sidebar.MenuSubContent>
+  </Sidebar.MenuSub>
 </Sidebar.MenuItem>
 ```
 
+### Filtering the rows
+
+`Sidebar.Search` is controlled: filter the rows with its `value`. In a Rail it becomes a search tile that opens a popover, and its children render there as the results.
+
+```tsx
+<Sidebar.Search value={query} onValueChange={setQuery} placeholder="Search pages..." />
+```
+
+## Props
+
+### MenuButton
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `isActive` | `boolean` | `false` | Marks the current page and sets `aria-current="page"` |
+| `badge` | `string \| BadgeConfig` | | A chip at the end of the row |
+| `shortcut` | `ReactNode` | | Keys shown at the end of the row |
+| `asChild` | `boolean` | `false` | Renders the child element, such as a link, with the row's look |
+
+`BadgeConfig` is `{ content, variant?, size?, color?, radius? }`, with the [Chip](/docs/chip) values. MenuButton accepts the attributes of the HTML `button` element.
+
+### MenuSub
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `defaultOpen` | `boolean` | `false` | Starts with the nested rows showing |
+
+MenuSubTrigger takes `asChild`. With it, you supply the chevron yourself.
+
+### GroupLabel
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `asChild` | `boolean` | `false` | Renders the child element, such as a heading, with the label's look |
+
+### Search
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` | | The text in the field. Required |
+| `onValueChange` | `(value: string) => void` | | Runs on each change. Required |
+| `placeholder` | `string` | `'Search...'` | The placeholder, and the field's name without the trailing dots |
+| `children` | `ReactNode` | | In a Rail, the results shown under the field |
+
+Menu accepts the attributes of `ul`, MenuItem those of `li`, Separator the [Separator](/docs/separator) props, and the other parts those of `div`.
+
 ## Accessibility
 
-- `aria-current="page"` marks the active row.
-- Arrow Up and Arrow Down move between rows. Arrow Left and Arrow Right close and open a sub-menu.
-- Give `Shell.Scroll` `role="navigation"` and an `aria-label` when it holds navigation.
+| Key | Action |
+| --- | --- |
+| Arrow Down or Arrow Up | From a row's button or a sub-menu's trigger, moves to the next or previous visible row in the same `Shell.Scroll` |
+| Enter or Space | Opens a row, or opens and closes a sub-menu |
+| Escape | In Search, clears the text |
 
-## Changelog
-
-### 0.15.0
-
-- Removed: `Sidebar.Root`, `Sidebar.Content`, `Sidebar.Header`, `Sidebar.Footer`, `menuVariant` and thin mode. Put the rows in `Shell.Sidebar`, between `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter`, or in `Shell.Rail` for tiles.
-
-### 0.14.1
-
-- Added: Sidebar rows work in `Shell.Sidebar` and `Shell.Panel`, and draw as tiles in `Shell.Rail`.
-
-### Removed
-
-- `highContrast` on `Sidebar.Root` and in `BadgeConfig`. Gray and text contrast are now automatic.
+- **Landmark:** The rows aren't a landmark on their own. Give `Shell.Scroll` `role="navigation"` and an `aria-label`, such as "Main".
+- **Current page:** `isActive` sets `aria-current="page"`, which a screen reader reads with the row's name.
+- **Roles:** The rows are a list of links, not a `menu`, so a screen reader announces them as a list.
+- **Group label:** It's plain text with no role, so it isn't announced as an empty group.
+- **Search:** The field has `role="search"` around it and takes its name from `placeholder`. The clear button is named "Clear search". In a Rail, the popover's arrow keys move between the field and the results.

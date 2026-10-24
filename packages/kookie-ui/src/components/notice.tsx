@@ -23,7 +23,7 @@ import classNames from 'classnames';
 
 import { Button } from './button.js';
 import { Text } from './text.js';
-import { useThemeSize } from '../helpers/theme-size.js';
+import { ThemeSizeContext, useThemeSize } from '../helpers/theme-size.js';
 import { accentColorPropDef } from '../props/color.prop.js';
 
 type NoticeSize = '1' | '2' | '3' | '4';
@@ -50,7 +50,10 @@ interface StripProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'color'
 interface NoticeProps extends StripProps {
   /** An icon before the message. It is hidden from assistive technology. */
   icon?: React.ReactNode;
-  /** One action that fixes the condition, such as `<Button>Add credits</Button>`. */
+  /**
+   * One action that fixes the condition, such as `<Button>Add credits</Button>`. A control in it
+   * that sets no `size` takes the notice's size.
+   */
   action?: React.ReactNode;
   /**
    * Called when the person presses the dismiss button, which shows only when this is set.
@@ -105,7 +108,7 @@ const Notice = React.forwardRef<HTMLDivElement, NoticeProps>(({ icon, action, on
   const trailing =
     action || onDismiss ? (
       <span className="kui-NoticeActions">
-        {action}
+        {action ? <ThemeSizeContext.Provider value={size}>{action}</ThemeSizeContext.Provider> : null}
         {onDismiss ? (
           <Button iconOnly size={size} variant="ghost" color="gray" aria-label={dismissLabel} className="kui-NoticeDismiss" onClick={onDismiss}>
             <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden>

@@ -185,3 +185,11 @@
   margin-top: 1px;
   margin-bottom: 1px;
 }
+
+/* A sub-menu's rows are list items, so their list is a list. Zero specificity: only the UA's
+   list indent is removed. */
+:where(.kui-SidebarMenuSubList) {
+  list-style: none;
+  margin-block: 0;
+  padding: 0;
+}

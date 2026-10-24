@@ -1,0 +1,168 @@
+---
+title: Accordion
+description: An accordion stacks headed sections that people open one at a time or together, such as a list of questions and answers.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/accordion.tsx
+---
+
+An accordion shows a list of headings, and each heading opens the section below it. Use it when people need one or two answers from a long list and the rest would only push them down the page. When the sections are views of one thing that people switch between, use [Tabs](/docs/tabs).
+
+## Playground
+
+import AccordionPlayground from '../../playground/accordion-playground';
+
+<AccordionPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Accordion } from '@kushagradhawan/kookie-ui';
+
+const questions = [
+  { id: 'refunds', question: 'Can I get a refund?', answer: 'Yes, within 30 days of purchase.' },
+  { id: 'seats', question: 'Can I add more seats later?', answer: 'Add seats from Billing at any time.' },
+];
+
+export function BillingFaq() {
+  return (
+    <Accordion.Root type="single" defaultValue="refunds">
+      {questions.map((item) => (
+        <Accordion.Item key={item.id} value={item.id}>
+          <Accordion.Header>
+            <Accordion.Trigger>{item.question}</Accordion.Trigger>
+          </Accordion.Header>
+          <Accordion.Content>{item.answer}</Accordion.Content>
+        </Accordion.Item>
+      ))}
+    </Accordion.Root>
+  );
+}
+```
+
+## Anatomy
+
+```tsx
+<Accordion.Root type="single">
+  <Accordion.Item value="a">
+    <Accordion.Header>
+      <Accordion.Trigger />
+    </Accordion.Header>
+    <Accordion.Content />
+  </Accordion.Item>
+</Accordion.Root>
+```
+
+- **Root:** The container. It holds the open state, the size and the look.
+- **Item:** One section. Its `value` names it in the open state.
+- **Header:** The heading element that wraps the trigger, an `h3` by default.
+- **Trigger:** The button that opens and closes the section. It draws a chevron at the far edge that turns when the section opens.
+- **Content:** The section body, shown when the item is open.
+
+## Best practices
+
+**Write each heading so people can decide without opening it.** "Can I get a refund?" tells people whether the answer is theirs. "Refunds" makes them open the section to find out.
+
+**Don't hide what everyone needs.** Content inside a closed section is easy to miss. Keep required steps, warnings and the main task on the page itself.
+
+**Use `type="single"` when the sections compete for attention.** Opening one closes the others, so the list stays short. Use `type="multiple"` when people compare sections side by side.
+
+**Don't nest accordions.** A section that opens more sections hides content two levels deep. Split the content into pages or use [Tabs](/docs/tabs) inside the section.
+
+## Type
+
+`type` is required and sets how many sections can be open.
+
+| Type | Behaviour | Use it for |
+| --- | --- | --- |
+| `single` | One section at a time. Opening one closes the other | FAQs and settings groups |
+| `multiple` | Any number at once | Sections people compare or keep open |
+
+A single accordion is collapsible by default, so pressing the open heading closes it. Pass `collapsible={false}` to keep one section open at all times.
+
+## Variant
+
+`variant` sets the container's look. `raised` is the default: a surface with a shadow.
+
+| Variant | Look |
+| --- | --- |
+| `raised` | Surface colour with a shadow |
+| `soft` | A tinted fill in the accent colour |
+| `surface` | A tinted fill with an accent border |
+| `outline` | An accent border, no fill |
+| `ghost` | No fill and no border. Sections are split by hairlines only |
+
+Use `ghost` when the accordion sits inside a [Card](/docs/card) or a page section that already draws a container. Set `color="gray"` to keep the tinted variants neutral.
+
+## Examples
+
+### Open several at once
+
+Pass an array to `defaultValue` with `type="multiple"`. Each value is an item's `value`.
+
+```tsx
+<Accordion.Root type="multiple" defaultValue={['shipping', 'returns']} variant="ghost">
+  {/* items */}
+</Accordion.Root>
+```
+
+### Controlled
+
+Hold the open state yourself when another control opens a section, such as a link that jumps to an answer.
+
+```tsx
+const [open, setOpen] = React.useState('refunds');
+
+<Accordion.Root type="single" value={open} onValueChange={setOpen}>
+  {/* items */}
+</Accordion.Root>
+```
+
+### Section that can't open
+
+Set `disabled` on an item to keep it closed and skip it with the keyboard. Say why nearby, because a disabled heading doesn't explain itself.
+
+## Props
+
+### Root
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `type` | `'single' \| 'multiple'` | | Required. How many sections can be open |
+| `value` | `string` or `string[]` | | The open item, or items for `multiple`. Controlled |
+| `defaultValue` | `string` or `string[]` | | The open item, or items, on first render |
+| `onValueChange` | `(value) => void` | | Called when a section opens or closes |
+| `collapsible` | `boolean` | `true` | `single` only. Lets the open section close |
+| `disabled` | `boolean` | `false` | Disables every item |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Which arrow keys move between headings |
+| `dir` | `'ltr' \| 'rtl'` | | Reading direction |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | Theme size | Padding, text size and chevron of headings and content, and the corner |
+| `variant` | `'raised' \| 'soft' \| 'surface' \| 'outline' \| 'ghost'` | `'raised'` | The container's look |
+| `color` | `AccentColor` | Theme accent | The colour of the tinted variants and the text |
+| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Theme radius | The container's corner |
+| `asChild` | `boolean` | `false` | Renders the child element instead of a `div` |
+
+### Item
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` | | Required. Names the item in the open state |
+| `disabled` | `boolean` | `false` | Keeps the item closed and out of keyboard reach |
+| `asChild` | `boolean` | `false` | Renders the child element instead of a `div` |
+
+### Header, Trigger and Content
+
+Each takes `asChild`. Content also takes `forceMount`, which keeps a closed section in the DOM. Header renders an `h3`, Trigger a `button` and Content a `div`, and each accepts that element's attributes.
+
+## Accessibility
+
+| Key | Action |
+| --- | --- |
+| Enter or Space | Opens or closes the focused section |
+| Tab | Moves focus to the next heading or control |
+| Arrow Down or Arrow Up | Moves focus to the next or previous heading |
+| Home or End | Moves focus to the first or last heading |
+
+- **Name:** The trigger's text names the button. The chevron is hidden from screen readers.
+- **State:** The trigger sets `aria-expanded` and `aria-controls`, so a screen reader announces whether the section is open.
+- **Headings:** Each trigger sits in an `h3`. Set Header's `asChild` with another heading element when the page outline needs a different level.
+- **Content:** The open section is a region labelled by its trigger.
+- **Focus:** Focus stays on the trigger when a section opens. Content doesn't take focus.

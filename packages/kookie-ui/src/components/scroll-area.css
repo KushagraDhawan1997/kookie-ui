@@ -129,10 +129,9 @@
  * with nothing past it fades over 0px, and the fade ramps in over the first pixels of scrolling.
  * A floating band over an edge sets `--scroll-fade-start` or `--scroll-fade-end` to its height.
  *
- * Shared by ScrollArea (on its viewport) and MessageScroller (on its viewport). Scrollbars are
+ * Shared by ScrollArea (on its viewport, both axes) and MessageScroller (on its viewport, block axis only). Scrollbars are
  * siblings of the viewport, outside the mask, so the thumb stays crisp.
  */
-:where(.kui-ScrollAreaRoot[data-fade]) > .kui-ScrollAreaViewport,
 .kui-MessageScrollerViewport:where([data-fade]) {
   mask-image: linear-gradient(
     to bottom,
@@ -141,6 +140,33 @@
     black calc(100% - min(var(--scroll-overflow-end, 0px), var(--scroll-fade-end, var(--scroll-fade-size)))),
     transparent 100%
   );
+}
+
+/* ScrollArea scrolls both ways, so it fades on both axes: one layer each, intersected, so a corner
+   with content hidden both ways fades both ways. The inline layer runs from the inline start, so
+   right-to-left flips its direction. */
+:where(.kui-ScrollAreaRoot[data-fade]) > .kui-ScrollAreaViewport {
+  --scroll-fade-x-direction: to right;
+  mask-image:
+    linear-gradient(
+      var(--scroll-fade-x-direction),
+      transparent 0%,
+      black min(var(--scroll-overflow-x-start, 0px), var(--scroll-fade-size)),
+      black calc(100% - min(var(--scroll-overflow-x-end, 0px), var(--scroll-fade-size))),
+      transparent 100%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      black min(var(--scroll-overflow-start, 0px), var(--scroll-fade-start, var(--scroll-fade-size))),
+      black calc(100% - min(var(--scroll-overflow-end, 0px), var(--scroll-fade-end, var(--scroll-fade-size)))),
+      transparent 100%
+    );
+  mask-composite: intersect;
+
+  &:where(:dir(rtl)) {
+    --scroll-fade-x-direction: to left;
+  }
 }
 
 :root,

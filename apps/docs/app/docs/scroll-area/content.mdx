@@ -1,0 +1,118 @@
+---
+title: Scroll Area
+description: A scroll area lets content scroll inside a fixed space, with scrollbars that match the theme.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/scroll-area.tsx
+---
+
+A scroll area holds content that is larger than the space you give it, such as a long list in a panel or a wide table. It uses the browser's own scrolling and draws thin themed scrollbars on top. For a chat thread that sticks to the newest message, use [Message Scroller](/docs/message-scroller).
+
+## Playground
+
+import ScrollAreaPlayground from '../../playground/scroll-area-playground';
+
+<ScrollAreaPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Box, Flex, ScrollArea, Text } from '@kushagradhawan/kookie-ui';
+
+export function ActivityPanel({ events }: { events: { id: string; text: string }[] }) {
+  return (
+    <Box height="320px">
+      <ScrollArea scrollbars="vertical" fade>
+        <Flex direction="column" gap="3" p="4">
+          {events.map((event) => (
+            <Text key={event.id} size="2">
+              {event.text}
+            </Text>
+          ))}
+        </Flex>
+      </ScrollArea>
+    </Box>
+  );
+}
+```
+
+## Best practices
+
+**Give it a size.** A scroll area fills the width and height of its parent. Set the height on a parent [Box](/docs/box), or the area grows with its content and never scrolls.
+
+**Scroll on one axis.** Set `scrollbars` to the direction the content runs. Content that scrolls both ways is harder to read and to move through.
+
+**Don't nest scroll areas on the same axis.** A vertical list inside a vertical panel traps the wheel and the trackpad in whichever one is under the pointer.
+
+**Let the page scroll when it can.** A scroll area suits panels, sidebars and menus with a fixed size. The main content of a page reads better when the page itself scrolls.
+
+## Scrollbars
+
+`scrollbars` picks which bars render: `vertical`, `horizontal` or `both`, the default. With both, a corner fills the space where they meet.
+
+`type` sets when the bars show. It comes from Radix.
+
+| Type | When the bars show |
+| --- | --- |
+| `hover` | While the pointer is over the area. This is the default |
+| `scroll` | While the content is scrolling |
+| `auto` | Whenever the content overflows |
+| `always` | All the time, even when nothing overflows |
+
+`scrollHideDelay` is how long, in milliseconds, the bars stay after the pointer leaves or scrolling stops. It is 0 by default, and 600 with `type="scroll"`.
+
+## Fade
+
+`fade` fades the content toward each edge when there is more to scroll past it, on both axes. An edge with nothing beyond it doesn't fade. The fade is a mask on the content, so it works on any background. In a right-to-left layout the side fades follow the reading direction.
+
+## Examples
+
+### Horizontal row
+
+A row of filters or cards that is wider than its container scrolls sideways, and the page keeps the vertical scroll. [Table](/docs/table) already wraps itself in a scroll area, so it doesn't need one.
+
+```tsx
+<ScrollArea scrollbars="horizontal">
+  <Flex gap="2" pb="3">
+    {filters.map((filter) => (
+      <Chip key={filter}>{filter}</Chip>
+    ))}
+  </Flex>
+</ScrollArea>
+```
+
+### Scrolling with the keyboard
+
+While the content overflows, the viewport is in the tab order, so keyboard users can reach it and scroll with the arrow keys. The area then shows a focus ring. Give it an `aria-label`, so a screen reader can say what it holds.
+
+```tsx
+<ScrollArea height="240px" aria-label="Terms of service">
+  <Text as="p">…</Text>
+</ScrollArea>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scrollbars` | `'vertical' \| 'horizontal' \| 'both'` | `'both'` | Which scrollbars render |
+| `type` | `'hover' \| 'scroll' \| 'auto' \| 'always'` | `'hover'` | When the scrollbars show |
+| `scrollHideDelay` | `number` | `0`, or `600` with `type="scroll"` | Milliseconds before the scrollbars hide |
+| `fade` | `boolean` | `false` | Fades each edge when there is more to scroll past it |
+| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Theme radius | The corner of the scrollbars |
+| `width`, `minWidth`, `maxWidth` | `string`, responsive | `'100%'` for `width` | The width of the area |
+| `height`, `minHeight`, `maxHeight` | `string`, responsive | `'100%'` for `height` | The height of the area |
+| `dir` | `'ltr' \| 'rtl'` | `'ltr'` | The reading direction, for the scrollbars and the fade |
+| `asChild` | `boolean` | `false` | Renders the child element as the root |
+
+`className`, `style` and the size props go on the root. Every other prop, including `ref`, `tabIndex` and `aria-*`, goes on the scrolling viewport, which accepts every attribute of the HTML `div` element.
+
+## Accessibility
+
+| Key | Action |
+| --- | --- |
+| Arrow keys | Scroll when focus is inside the viewport |
+| Page Up or Page Down | Scroll by a page |
+| Home or End | Scroll to the start or the end |
+
+- **Native scrolling:** The viewport scrolls with the browser's own scrolling, so the keyboard, the wheel, touch and assistive tools all work as they do on any page.
+- **Focus:** The viewport is in the tab order while it has something to scroll. Inside a menu or a listbox it stays out, because the menu moves focus. Set `tabIndex` to choose yourself. Focus on items inside it scrolls them into view.
+- **Name:** Give a scrolling viewport an `aria-label`. A named viewport is a region, so a screen reader can find it and say what it holds.

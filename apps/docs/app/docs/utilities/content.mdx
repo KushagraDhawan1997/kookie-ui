@@ -1,0 +1,113 @@
+---
+title: Utilities
+description: Utilities are small helpers for labelling icons, hiding text visually, portalling content, merging props and resetting element styles.
+source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/packages/kookie-ui/src/components
+---
+
+These components draw nothing of their own. They help you build accessible, composable UI around the other components. To set colours, radius and appearance for a part of the page, use Theme, covered in [Theming](/start/theming).
+
+## Playground
+
+import UtilitiesPlayground from '../../playground/utilities-playground';
+
+<UtilitiesPlayground />
+
+## AccessibleIcon
+
+AccessibleIcon gives a standalone icon a name for screen readers. It hides the icon with `aria-hidden` and adds `label` as visually hidden text next to it.
+
+```tsx
+import { AccessibleIcon } from '@kushagradhawan/kookie-ui';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { CheckmarkCircle02Icon } from '@hugeicons/core-free-icons';
+
+<AccessibleIcon label="Verified">
+  <HugeiconsIcon icon={CheckmarkCircle02Icon} strokeWidth={1.75} />
+</AccessibleIcon>
+```
+
+Use it only for an icon that means something on its own, such as a status mark. An icon next to a text label is decoration, and an icon-only [Button](/docs/button) takes `aria-label` instead.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | | The name a screen reader announces. Required |
+| `children` | `ReactElement` | | One icon element. Required |
+
+## VisuallyHidden
+
+VisuallyHidden hides its content from the screen but keeps it for screen readers. Use it for a heading or label that sighted users don't need because the layout already makes it clear.
+
+```tsx
+import { VisuallyHidden } from '@kushagradhawan/kookie-ui';
+
+<Dialog.Title>
+  <VisuallyHidden>Search</VisuallyHidden>
+</Dialog.Title>
+```
+
+Don't hide text that everyone needs, such as an error message or the label of a form field that has no other visible label. It renders a `span` and accepts `asChild` and every attribute of the HTML `span` element.
+
+## Portal
+
+Portal renders its children at the end of `document.body`, or inside `container`, outside the parent's DOM. Use it for your own overlays. Dialog, Popover, Tooltip and the menus already portal their content.
+
+```tsx
+import { Box, Portal, Theme } from '@kushagradhawan/kookie-ui';
+
+<Portal>
+  <Theme asChild>
+    <Box position="fixed" bottom="4" right="4">
+      <UploadStatus />
+    </Box>
+  </Theme>
+</Portal>
+```
+
+Content portalled to `body` leaves the [Theme](/start/theming) it was written in, so wrap it in `<Theme asChild>` to keep the theme's colours and radius, as Kookie's own overlays do. Portal renders nothing on the server and mounts on the client.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `container` | `Element \| DocumentFragment \| null` | `document.body` | Where the content renders |
+| `asChild` | `boolean` | `false` | Renders the child element instead of a `div` |
+
+Portal also accepts every attribute of the HTML `div` element.
+
+## Slot
+
+Slot merges its props onto its only child and renders that child. It is how `asChild` works across Kookie, and you can use it to give your own components an `asChild` prop.
+
+```tsx showLineNumbers
+import { Slot, Slottable } from '@kushagradhawan/kookie-ui';
+
+function NavItem({ asChild, icon, children, ...props }: NavItemProps) {
+  const Comp = asChild ? Slot : 'button';
+  return (
+    <Comp className="nav-item" {...props}>
+      {icon}
+      <Slottable>{children}</Slottable>
+    </Comp>
+  );
+}
+```
+
+When both Slot and the child set the same prop, the child wins. Class names join, styles merge with the child's values on top, refs combine, and both event handlers run, the child's first.
+
+**Slottable** marks which child receives the props when the component renders other elements around it, like the icon above. Without it, Slot needs exactly one child.
+
+## Reset
+
+Reset removes the browser's default styles from its only child: margins, fonts, list bullets, button and input styles, and the focus outline. Use it when you build a control from a native element and want to start from nothing.
+
+```tsx
+import { Reset } from '@kushagradhawan/kookie-ui';
+
+<Reset>
+  <ul>
+    {items.map((item) => (
+      <li key={item.id}>{item.name}</li>
+    ))}
+  </ul>
+</Reset>
+```
+
+Reset adds a class to the child and renders no element of its own. It takes one React element as its child and accepts any props, which it passes to that child. Reset removes the focus outline, so add a visible focus style to any control you reset.

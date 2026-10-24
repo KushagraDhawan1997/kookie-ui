@@ -1,18 +1,10 @@
 ---
 title: Avatar
-description: A component for displaying user profile images with fallback initials or icons.
+description: An avatar shows a person, team or organisation as a picture, with initials when there is no picture.
 source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/avatar.tsx
 ---
 
-import { Notice } from '@kushagradhawan/kookie-ui';
-import { HugeiconsIcon } from '@hugeicons/react';
-import { Alert02Icon } from '@hugeicons/core-free-icons';
-
-<Notice icon={<HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />}>This component's API and documentation are under review and may change. Use with caution in production.</Notice>
-
-Avatar displays a user's profile image with graceful fallback to initials or an icon when the image fails to load. It supports multiple sizes, variants, and colors for various contexts.
-
-This is an enhanced version of the Avatar from [Radix Themes](https://www.radix-ui.com/themes/docs/components/avatar), built on [Radix UI Avatar](https://www.radix-ui.com/primitives/docs/components/avatar).
+An avatar shows who someone is: a profile picture, a team logo or a pair of initials. When the image is missing or fails to load, it shows the `fallback` instead. A picture that is content, such as a photo in a post, is an [Image](/docs/image).
 
 ## Playground
 
@@ -20,277 +12,113 @@ import AvatarPlayground from '../../playground/avatar-playground';
 
 <AvatarPlayground />
 
-## Installation
-
-```bash
-npm install @kushagradhawan/kookie-ui
-```
-
 ## Usage
 
-```tsx
-import { Avatar, Flex } from '@kushagradhawan/kookie-ui';
+```tsx showLineNumbers
+import { Avatar, Flex, Text } from '@kushagradhawan/kookie-ui';
 
-export function MyAvatars() {
+export function Author({ name, email, photo }: { name: string; email: string; photo?: string }) {
+  const initials = name.split(' ').map((part) => part[0]).join('').slice(0, 2);
   return (
-    <Flex gap="4">
-      <Avatar src="/profile.jpg" fallback="JD" />
-      <Avatar fallback="AB" />
-      <Avatar fallback="CD" color="violet" />
+    <Flex gap="3" align="center">
+      <Avatar src={photo} alt="" fallback={initials} />
+      <Flex direction="column">
+        <Text size="2" weight="medium">{name}</Text>
+        <Text size="2" emphasis="medium">{email}</Text>
+      </Flex>
     </Flex>
   );
 }
 ```
 
+## Best practices
+
+**Always give a fallback.** `fallback` is required because an image can fail at any time. Use one or two initials for a person and an icon for a team or an empty slot.
+
+**Put the name next to the avatar.** A face or two letters is hard to tell apart in a list. Show the name in text beside it, and give the image an empty `alt` so a screen reader doesn't read the name twice.
+
+**Don't rely on colour alone for status.** The `status` dot is a coloured circle. Give it a `statusLabel`, such as "Online", and say the state in words nearby or in a [Tooltip](/docs/tooltip) for people who can't tell the colours apart.
+
+**Keep one size in a list.** Avatars in a row or a column share a size, so names line up. Change the size between contexts, such as a comment list and a profile header, not within one.
+
+**Use colour for a category, not for decoration.** An avatar rests gray. Set `color` when it means something, such as a colour per workspace, and keep that mapping the same everywhere.
+
+## Size
+
+`size` picks one of nine square sizes. Sizes 1 to 4 are 28, 32, 40 and 48 pixels, the same heights as a [Button](/docs/button) of that size, so an avatar lines up with the controls beside it. Sizes 5 to 9 are 56, 64, 80, 96 and 128 pixels, for profile headers and cards. When you leave it unset, the avatar follows the nearest Theme size, from 1 to 4. `size` accepts a responsive object.
+
+## Variant
+
+`variant` sets the look of the fallback. An image covers it.
+
+| Variant | Look | Use it for |
+| --- | --- | --- |
+| `raised` | A surface with a shadow | Most avatars. This is the default |
+| `soft` | A tinted fill | Avatars in a dense list |
+| `solid` | A strong fill | One avatar that needs to stand out, such as the current user |
+| `surface` | A light fill and a border | Avatars on a tinted background |
+| `outline` | A border only | Empty slots, such as an unassigned task |
+
+## Examples
+
+### Presence
+
+`status` adds a dot in the bottom-right corner in the colour you pass. It grows with the avatar. `statusLabel` names the dot for screen readers.
+
+```tsx
+<Avatar fallback="MK" status="green" statusLabel="Online" />
+```
+
+### Count or badge
+
+`badge` puts any content in the same corner, such as a [Chip](/docs/chip) with a count. `badge` and `status` share the corner, so pass only one. If you pass both, `badge` wins.
+
+```tsx
+<Avatar fallback="MK" badge={<Chip size="1" variant="solid" color="red">3</Chip>} />
+```
+
+### Logo that must not be cropped
+
+`fit` sets how the image fills the square. The default `cover` crops to fill. Use `contain` for a logo that must show in full.
+
+```tsx
+<Avatar src="/logos/acme.png" alt="Acme" fallback="AC" fit="contain" radius="medium" />
+```
+
+### Avatar that opens a profile
+
+Render a link or a button with `asChild`. The avatar adds a hover filter to the image and a focus ring for the keyboard. Give the element a name, because initials alone don't say where it goes.
+
+```tsx
+<Avatar asChild fallback="MK">
+  <a href="/people/mira" aria-label="Mira Kapoor's profile" />
+</Avatar>
+```
+
 ## Props
 
 | Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `src` | `string` | - | The image source URL. |
-| `fallback` | `React.ReactNode` | *required* | Content to display when the image fails to load. |
-| `size` | `'1' \| '2' \| '3' \| ... \| '9'` | `'3'` | Controls the size. Supports responsive values. |
-| `variant` | `'raised' \| 'solid' \| 'soft' \| 'surface' \| 'outline'` | `'raised'` | The visual style of the fallback. |
-| `color` | `AccentColor` | `'gray'` | Rests gray. Set a color to mark a category. |
-| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | - | Override the border radius. |
-| `status` | `AccentColor` | - | Status indicator color. Renders a colored dot at bottom-right. |
-| `badge` | `React.ReactNode` | - | Custom badge content. Renders at bottom-right. |
-| `fit` | `'cover' \| 'contain' \| 'fill' \| 'scale-down' \| 'none'` | `'cover'` | Controls how the image fits within the avatar. Supports responsive values. |
-| `onLoadingStatusChange` | `function` | - | Callback when image loading status changes. |
-| `asChild` | `boolean` | `false` | Merge props onto the child element. |
+| --- | --- | --- | --- |
+| `fallback` | `ReactNode` | | Required. Shows when there is no image or it fails to load |
+| `src` | `string` | | The image URL |
+| `alt` | `string` | | The image's text alternative |
+| `size` | `'1'` to `'9'`, responsive | Theme size | The size step |
+| `variant` | `'raised' \| 'solid' \| 'soft' \| 'surface' \| 'outline'` | `'raised'` | The look of the fallback |
+| `color` | `AccentColor` | `'gray'` | The fallback colour. Gray fills with step 12 |
+| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Theme radius | The corner |
+| `status` | `AccentColor` | | Shows a dot of this colour in the corner. Not with `badge` |
+| `statusLabel` | `string` | | The name a screen reader reads for the status dot, such as "Online" |
+| `badge` | `ReactNode` | | Shows content in the corner. Wins over `status` |
+| `fit` | `'cover' \| 'contain' \| 'fill' \| 'scale-down' \| 'none'`, responsive | `'cover'` | How the image fills the square |
+| `onLoadingStatusChange` | `(status: 'idle' \| 'loading' \| 'loaded' \| 'error') => void` | | Called when the image starts, finishes or fails to load |
+| `asChild` | `boolean` | `false` | Renders the child element, such as a link or a button, with the avatar inside |
+| `ref` | `Ref<HTMLSpanElement>` | | The outer `span` |
 
-## With Image
+Avatar also accepts every attribute of the HTML `img` element, and those go on the `img`. `ref`, `className` and `style` go on the outer `span`.
 
-Display a user's profile image.
+## Accessibility
 
-```tsx
-<Avatar
-  src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453"
-  fallback="JD"
-  size="4"
-/>
-```
-
-## Fallback
-
-When no image is provided or it fails to load, the fallback content is displayed.
-
-```tsx
-<Flex gap="4">
-  <Avatar fallback="JD" />
-  <Avatar fallback="AB" color="violet" />
-  <Avatar fallback="CD" color="green" />
-</Flex>
-```
-
-## Sizes
-
-Avatars support 9 sizes from compact (1) to large (9).
-
-```tsx
-<Flex gap="4" align="center">
-  <Avatar size="1" fallback="1" />
-  <Avatar size="2" fallback="2" />
-  <Avatar size="3" fallback="3" />
-  <Avatar size="4" fallback="4" />
-  <Avatar size="5" fallback="5" />
-  <Avatar size="6" fallback="6" />
-</Flex>
-```
-
-## Variants
-
-Control the fallback appearance with variants.
-
-```tsx
-<Flex gap="4">
-  <Avatar fallback="CL" variant="raised" />
-  <Avatar fallback="SO" variant="solid" />
-  <Avatar fallback="SF" variant="soft" />
-  <Avatar fallback="SU" variant="surface" />
-  <Avatar fallback="OL" variant="outline" />
-</Flex>
-```
-
-## Colors
-
-Use colors to differentiate users or roles.
-
-```tsx
-<Flex gap="4">
-  <Avatar
-    fallback="JD"
-    color="blue"
-  />
-  <Avatar
-    fallback="AB"
-    color="green"
-  />
-  <Avatar
-    fallback="CD"
-    color="violet"
-  />
-  <Avatar
-    fallback="EF"
-    color="pink"
-  />
-  <Avatar
-    fallback="GH"
-    color="amber"
-  />
-</Flex>
-```
-
-## Radius
-
-Customize the border radius.
-
-```tsx
-<Flex gap="4">
-  <Avatar fallback="JD" radius="none" />
-  <Avatar fallback="JD" radius="small" />
-  <Avatar fallback="JD" radius="medium" />
-  <Avatar fallback="JD" radius="large" />
-  <Avatar fallback="JD" radius="full" />
-</Flex>
-```
-
-## Status
-
-Add a status indicator dot to show presence or state.
-
-```tsx
-<Flex gap="4">
-  <Avatar fallback="JD" status="green" />
-  <Avatar fallback="AB" status="amber" />
-  <Avatar fallback="CD" status="gray" />
-</Flex>
-```
-
-The status indicator scales automatically with the avatar size.
-
-```tsx
-<Flex gap="4" align="center">
-  <Avatar
-    fallback="JD"
-    size="3"
-    status="green"
-  />
-  <Avatar
-    fallback="AB"
-    size="5"
-    status="green"
-  />
-  <Avatar
-    fallback="CD"
-    size="7"
-    status="green"
-  />
-</Flex>
-```
-
-## Badge
-
-Use the `badge` prop for custom indicator content like icons or notification counts.
-
-```tsx
-<Flex gap="4">
-  <Avatar
-    fallback="JD"
-    badge={<Chip size="1">3</Chip>}
-  />
-  <Avatar
-    fallback="AB"
-    badge={<HugeiconsIcon icon={CheckmarkCircle02Icon} />}
-  />
-</Flex>
-```
-
-Note: `status` and `badge` cannot be used together. If both are provided, `badge` takes precedence and a warning is logged in development.
-
-## Fit
-
-Control how images are scaled within the avatar container. This is useful for logos or images that shouldn't be cropped.
-
-```tsx
-<Flex gap="4">
-  <Avatar
-    src="/company-logo.png"
-    fallback="CO"
-    fit="cover"
-  />
-  <Avatar
-    src="/company-logo.png"
-    fallback="CO"
-    fit="contain"
-  />
-</Flex>
-```
-
-- `cover` (default): Scales image to fill the container, may crop edges
-- `contain`: Scales image to fit entirely within container, may leave empty space
-- `fill`: Stretches image to fill container exactly, may distort
-- `scale-down`: Like contain but never scales up beyond original size
-- `none`: Image keeps original size
-
-The `fit` prop also supports responsive values:
-
-```tsx
-<Avatar
-  src="/logo.png"
-  fallback="LO"
-  fit={{ initial: 'cover', md: 'contain' }}
-/>
-```
-
-## Enhancements
-
-Kookie UI extends Radix Themes Avatar with practical improvements:
-
-### Sizes
-
-Nine sizes, with two-letter fallback font sizes at every size. Sizes 1-3 take the control corner of their size; sizes 4-9 share the size 4 control corner.
-
-### Additional Variants
-
-Three new variants beyond Radix's `solid` and `soft`: `raised` provides a raised 3D surface appearance with shadow, `surface` adds a subtle bordered background, and `outline` renders a border-only fallback with no fill.
-
-### Status Indicator
-
-`status` prop renders a colored dot at the bottom-right corner that scales automatically with the avatar size. Accepts any accent color for presence or state indication.
-
-### Badge Slot
-
-`badge` prop accepts arbitrary React content rendered at the bottom-right corner for notification counts, verification icons, or other indicators. Mutually exclusive with `status`; `badge` takes precedence if both are provided.
-
-### Image Fit Control
-
-Responsive `fit` prop controls `object-fit` on the avatar image. Useful for logos or non-square images that shouldn't be cropped. Supports `cover`, `contain`, `fill`, `scale-down`, and `none`.
-
-### Interactive Avatar Support
-
-When rendered as a `button`, `a`, or `[role="button"]` via `asChild`, avatars gain hover, active, focus, and disabled states with subtle image brightness/saturation filters. Each variant applies appropriate interactive colors. Disabled detection propagates from the child element automatically.
-
-## Changelog
-
-### Added
-
-- `raised`, `surface`, and `outline` variants
-- `status` prop for colored presence indicators
-- `badge` prop for custom indicator content
-- `fit` prop with responsive support for image scaling control
-- Interactive states for button/link usage via `asChild`
-- Disabled state detection from child element props
-- Image hover/active filters with dark mode awareness
-
-### Changed
-
-- Sizes 1-3 take the control corner of their size; sizes 4-9 share the size 4 control corner (round when the theme radius is full)
-- Two-letter fallback font sizes defined for all sizes (Radix only defined sizes 1-4)
-- Soft variant uses solid colors (`--accent-3`) instead of alpha (`--accent-a3`) for better consistency
-- Solid gray fallback fills with step 12 and uses `--neutral-1` text
-
-### Removed
-
-- `highContrast` prop. Gray fills with step 12 on its own, and fallback text reads the strong ink.
-- `material` and `panelBackground` props. Every surface is solid.
-
+- **Image:** Give `alt` the person's name when the avatar stands alone. Use `alt=""` when the name is already in text beside it.
+- **Fallback:** A screen reader reads the fallback text, such as the initials. An icon fallback has no text, so give the avatar a name in the text beside it.
+- **Status:** With `statusLabel` the dot is an image with that name. Without it the dot is hidden from screen readers.
+- **Focus:** A plain avatar is not focusable. An avatar rendered as a link or a button shows the focus ring for the keyboard only. A disabled child sets the avatar's disabled look.

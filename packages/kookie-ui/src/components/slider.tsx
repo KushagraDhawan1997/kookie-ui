@@ -26,18 +26,34 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
     props,
     sliderPropDefs,
   );
-  const { ticks, showTickLabels, snapToTicks, unit } = props;
+  const {
+    ticks,
+    unit,
+    value: valueProp,
+    defaultValue,
+    onValueChange,
+    onValueCommit,
+    'aria-label': ariaLabel,
+    'aria-labelledby': ariaLabelledBy,
+    ...rootProps
+  } = sliderProps;
+  const { showTickLabels, snapToTicks } = props;
 
-  const min = sliderProps.min ?? 0;
-  const max = sliderProps.max ?? 100;
+  const min = rootProps.min ?? 0;
+  const max = rootProps.max ?? 100;
 
-  // Current value for accessibility
-  const currentValue = sliderProps.value ?? sliderProps.defaultValue ?? [min];
-  const isRange = Array.isArray(currentValue) && currentValue.length > 1;
+  // The slider keeps its own copy of the value when uncontrolled, so the handles, their
+  // labels and a tick press all read the current value rather than the first one.
+  const [uncontrolledValue, setUncontrolledValue] = React.useState<number[]>(
+    () => defaultValue ?? [min],
+  );
+  const isControlled = valueProp !== undefined;
+  const currentValue = isControlled ? valueProp : uncontrolledValue;
+  const tickIdPrefix = React.useId();
 
   // For snapping to ticks, we need to handle this differently
   // Radix slider doesn't support arbitrary step values, so we'll handle snapping in the onValueChange
-  const step = sliderProps.step;
+  const step = rootProps.step;
 
   // Optimized snap-to-ticks with memoized sorted ticks
   const sortedTicks = React.useMemo(
@@ -108,7 +124,6 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
   const announceRef = React.useRef<HTMLDivElement>(null);
   const announceTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const { onValueChange } = sliderProps;
   // Handle value changes with snapping
   const handleValueChange = React.useCallback(
     (newValue: number[]) => {
@@ -131,9 +146,10 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
         }, 1000);
       }
 
+      if (!isControlled) setUncontrolledValue(finalValue);
       onValueChange?.(finalValue);
     },
-    [snapToTicks, ticks, snapToNearestTick, formatValueText, onValueChange],
+    [snapToTicks, ticks, snapToNearestTick, formatValueText, onValueChange, isControlled],
   );
 
   // Cleanup timeout on unmount
@@ -159,35 +175,30 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
         data-accent-color={color}
         data-radius={radius}
         ref={forwardedRef}
-        {...sliderProps}
+        {...rootProps}
+        value={currentValue}
         step={step}
         onValueChange={handleValueChange}
+        onValueCommit={onValueCommit}
         asChild={false}
         className={classNames('kui-SliderRoot', className)}
-        // Essential ARIA attributes for WCAG 2.2 AA compliance
-        aria-valuemin={min}
-        aria-valuemax={max}
-        aria-valuenow={Array.isArray(currentValue) ? currentValue[0] : (currentValue as number)}
-        aria-valuetext={formatValueText(currentValue as number[])}
-        aria-label={props['aria-label'] || `${isRange ? 'Range' : 'Value'} slider`}
       >
         <SliderPrimitive.Track className="kui-SliderTrack">
           <SliderPrimitive.Range
             className="kui-SliderRange"
-            data-inverted={sliderProps.inverted ? '' : undefined}
+            data-inverted={rootProps.inverted ? '' : undefined}
           />
         </SliderPrimitive.Track>
-        {(sliderProps.value ?? sliderProps.defaultValue ?? []).map((value, index) => (
+        {currentValue.map((value, index) => (
           <SliderPrimitive.Thumb
             key={index}
             className="kui-SliderThumb"
             {...(tabIndex !== undefined ? { tabIndex } : undefined)}
-            aria-label={
-              isRange
-                ? `${index === 0 ? 'Minimum' : index === 1 ? 'Maximum' : `Thumb ${index + 1}`} value: ${unit ? `${value} ${unit}` : value}`
-                : `Slider value: ${unit ? `${value} ${unit}` : value}`
-            }
-            aria-valuetext={unit ? `${value} ${unit}` : value.toString()}
+            // The caller's name goes to every handle. Without one, Radix names the two
+            // handles of a range "Minimum" and "Maximum".
+            aria-label={ariaLabel}
+            aria-labelledby={ariaLabelledBy}
+            aria-valuetext={unit ? `${value} ${unit}` : undefined}
           />
         ))}
       </SliderPrimitive.Root>
@@ -201,15 +212,23 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
                 // Only `left` varies per tick; the centring transform lives in `.kui-SliderTick`.
                 style={{ left: `${tick.percentage}%` }}
                 onClick={() => {
-                  const currentValues = sliderProps.value ?? sliderProps.defaultValue ?? [min];
-                  const newValue = Array.isArray(currentValues)
-                    ? currentValues.map(() => tick.value)
-                    : [tick.value];
+                  // Move only the handle nearest the tick. When handles share a value, a
+                  // tick above it moves the last of them and a tick below moves the first.
+                  let nearest = 0;
+                  currentValue.forEach((v, i) => {
+                    const distance = Math.abs(v - tick.value);
+                    const best = Math.abs(currentValue[nearest] - tick.value);
+                    if (distance < best || (distance === best && tick.value > v)) nearest = i;
+                  });
+                  const newValue = currentValue
+                    .map((v, i) => (i === nearest ? tick.value : v))
+                    .sort((x, y) => x - y);
 
                   handleValueChange(newValue);
+                  onValueCommit?.(newValue);
                 }}
                 aria-label={`Set to ${tick.label || (unit ? `${tick.value} ${unit}` : tick.value)}`}
-                aria-describedby={tick.label ? undefined : `tick-${tick.index}-value`}
+                aria-describedby={tick.label ? undefined : `${tickIdPrefix}-tick-${tick.index}`}
                 type="button"
               >
                 <div className="kui-SliderTickMark" />
@@ -217,7 +236,7 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
                   <div className="kui-SliderTickLabel">{tick.label}</div>
                 )}
                 {!tick.label && (
-                  <span id={`tick-${tick.index}-value`} className="sr-only">
+                  <span id={`${tickIdPrefix}-tick-${tick.index}`} className="kui-sr-only">
                     {unit ? `${tick.value} ${unit}` : tick.value}
                   </span>
                 )}

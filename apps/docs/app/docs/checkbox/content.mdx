@@ -1,0 +1,168 @@
+---
+title: Checkbox
+description: A checkbox turns one option on or off, and a checkbox group lets people pick any number of options from a list.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/checkbox.tsx
+---
+
+A checkbox marks an option as chosen or not chosen, and the choice takes effect when the form is saved. A setting that applies the moment it changes is a [Switch](/docs/switch). Picking exactly one option from a list is a [Radio Group](/docs/radio-group).
+
+## Playground
+
+import CheckboxPlayground from '../../playground/checkbox-playground';
+
+<CheckboxPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { CheckboxGroup, Flex, Text } from '@kushagradhawan/kookie-ui';
+
+export function NotificationForm() {
+  return (
+    <Flex direction="column" gap="3">
+      <Text as="div" weight="medium" id="notify-label">
+        Email me about
+      </Text>
+      <CheckboxGroup.Root
+        name="notify"
+        defaultValue={['mentions']}
+        aria-labelledby="notify-label"
+      >
+        <CheckboxGroup.Item value="mentions">Mentions</CheckboxGroup.Item>
+        <CheckboxGroup.Item value="comments">Comments on my posts</CheckboxGroup.Item>
+        <CheckboxGroup.Item value="digest">Weekly digest</CheckboxGroup.Item>
+      </CheckboxGroup.Root>
+    </Flex>
+  );
+}
+```
+
+## Anatomy
+
+A single `Checkbox` stands on its own. A group is a compound component:
+
+```tsx
+<CheckboxGroup.Root>
+  <CheckboxGroup.Item value="a">Label</CheckboxGroup.Item>
+</CheckboxGroup.Root>
+```
+
+- **CheckboxGroup.Root:** Holds the list of checked values and sets `size`, `variant` and `color` for every item.
+- **CheckboxGroup.Item:** One checkbox. With children it renders a label around the box and the text. Without children it renders the box alone, for your own layout.
+
+## Best practices
+
+**Use a checkbox when the choice waits for a save.** People expect to tick boxes and then press a button. If the change should apply at once, use a [Switch](/docs/switch).
+
+**Write the label as the thing that becomes true.** "Send me the weekly digest" reads as a statement people agree to. A negative label such as "Don't send emails" makes a ticked box mean no.
+
+**Put every checkbox inside its label.** A click on the text then toggles the box, which gives a much larger target than the box alone. `CheckboxGroup.Item` does this for you, and a single `Checkbox` goes inside `<Text as="label">`.
+
+**List the options in a column.** One option per line is faster to scan than a row, and the group already stacks its items with a gap.
+
+**Use indeterminate only for a parent of other checkboxes.** It means some children are checked and some are not. It is not a third answer such as "maybe".
+
+## Size
+
+`size` picks the box: 16, 20, 24 and 26 pixels for sizes 1 to 4. Size 2 is the default. The box takes the line height of the text around it, so it lines up with the first line of its label. In a group, the label text follows the group's size.
+
+## Examples
+
+### Single checkbox
+
+Wrap a lone checkbox and its text in `Text as="label"`, so the text toggles the box too.
+
+```tsx
+<Text as="label" size="2">
+  <Flex gap="2">
+    <Checkbox defaultChecked />
+    Remember me on this device
+  </Flex>
+</Text>
+```
+
+### Select all
+
+A parent checkbox is `'indeterminate'` while only some of its children are checked. Clicking it checks them all.
+
+```tsx
+const allChecked = selected.length === rows.length;
+const someChecked = selected.length > 0 && !allChecked;
+
+<Checkbox
+  aria-label="Select all rows"
+  checked={allChecked ? true : someChecked ? 'indeterminate' : false}
+  onCheckedChange={(checked) => setSelected(checked === true ? rows.map((r) => r.id) : [])}
+/>
+```
+
+### Required agreement
+
+`required` stops the form from submitting until the box is checked. Inside a `form`, the checkbox submits its `name` and `value` like a native input.
+
+```tsx
+<Text as="label" size="2">
+  <Flex gap="2">
+    <Checkbox name="terms" required />
+    I agree to the terms of service
+  </Flex>
+</Text>
+```
+
+## Props
+
+### Checkbox
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `checked` | `boolean \| 'indeterminate'` | | The checked state, controlled |
+| `defaultChecked` | `boolean \| 'indeterminate'` | `false` | The checked state at first render |
+| `onCheckedChange` | `(checked: boolean \| 'indeterminate') => void` | | Fires with the new state |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | The box size |
+| `variant` | `'raised' \| 'solid' \| 'soft' \| 'outline' \| 'surface'` | `'raised'` | The look |
+| `color` | `AccentColor` | Theme accent | The colour when checked |
+| `disabled` | `boolean` | `false` | Blocks changes |
+| `required` | `boolean` | `false` | Must be checked before the form submits |
+| `name` | `string` | | The field name in a form |
+| `value` | `string` | `'on'` | The value sent with the form when checked |
+
+Checkbox also accepts every attribute of the HTML `button` element.
+
+### CheckboxGroup.Root
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string[]` | | The checked values, controlled |
+| `defaultValue` | `string[]` | `[]` | The checked values at first render |
+| `onValueChange` | `(value: string[]) => void` | | Fires with the new list |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | The box and label size |
+| `variant` | `'raised' \| 'solid' \| 'soft' \| 'outline' \| 'surface'` | `'raised'` | The look of every item |
+| `color` | `AccentColor` | Theme accent | The colour of every item |
+| `name` | `string` | | The field name each item submits under |
+| `disabled` | `boolean` | `false` | Disables every item |
+| `required` | `boolean` | `false` | At least one item must be checked before the form submits |
+| `dir` | `'ltr' \| 'rtl'` | | The reading direction |
+| `asChild` | `boolean` | `false` | Renders the child element as the group |
+
+CheckboxGroup.Root also accepts every attribute of the HTML `div` element.
+
+### CheckboxGroup.Item
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` | | Required. The value this item adds to the list |
+| `disabled` | `boolean` | `false` | Disables this item |
+
+CheckboxGroup.Item also accepts every attribute of the HTML `button` element.
+
+## Accessibility
+
+| Key | Action |
+| --- | --- |
+| Space | Checks or unchecks the focused box |
+| Tab | Moves focus to the next box, or out of the control |
+
+- **Name:** The label text names the checkbox when the box sits inside a `label`. A checkbox with no visible text needs `aria-label`.
+- **State:** The box is a `button` with `role="checkbox"`. A screen reader announces checked, not checked, or mixed for `'indeterminate'`.
+- **Group:** The root has `role="group"`. Give it a name with `aria-labelledby` that points at the question above the options.
+- **Focus:** Each box in a group is its own tab stop, as with native checkboxes.

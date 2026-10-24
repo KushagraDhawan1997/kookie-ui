@@ -1,0 +1,106 @@
+---
+title: Progress
+description: A progress bar shows how far along a task is, such as an upload, an import or a setup step.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/progress.tsx
+---
+
+A progress bar shows how much of a task is done. Pass `value` when you know it, and leave it out when you don't. For a short wait with nothing to measure, a [Spinner](/docs/spinner) takes less room. To let people pick a value on a track, use a [Slider](/docs/slider).
+
+## Playground
+
+import ProgressPlayground from '../../playground/progress-playground';
+
+<ProgressPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Flex, Progress, Text } from '@kushagradhawan/kookie-ui';
+
+export function UploadProgress({ fileName, percent }: { fileName: string; percent: number }) {
+  return (
+    <Flex direction="column" gap="2">
+      <Flex justify="between" gap="3">
+        <Text id="upload-label" size="2">
+          Uploading {fileName}
+        </Text>
+        <Text size="2" emphasis="medium">
+          {percent}%
+        </Text>
+      </Flex>
+      <Progress value={percent} aria-labelledby="upload-label" />
+    </Flex>
+  );
+}
+```
+
+## Best practices
+
+**Show a value whenever you have one.** A bar that moves with real numbers tells people how long to wait. A bar without a value only says that something is happening.
+
+**Say what is in progress.** Put a label above the bar, such as "Uploading report.pdf", and connect it with `aria-labelledby`. A bar on its own doesn't say what it measures.
+
+**Show the number too.** Put the percentage or "3 of 12 files" next to the label. The bar is hard to read precisely, and the number gives people something to compare.
+
+**Never move it backwards.** If the total grows during the task, recalculate in a way that keeps the bar still or moving forward. A bar that jumps back makes people think the task restarted.
+
+**Use a Spinner for waits under a few seconds.** A bar that appears and fills at once is noise. Use a [Spinner](/docs/spinner), or the `loading` prop on a [Button](/docs/button) when the wait follows a press.
+
+## Value
+
+`value` is a number from 0 to `max`, which is 100 unless you set it. With `max={12}`, a `value` of 3 fills a quarter of the bar. A value outside that range is ignored and the bar treats it as unknown.
+
+Without `value`, the bar is indeterminate: it fills from the start to the end over `duration`, then starts again. `duration` is 5 seconds unless you set it, such as `duration="2s"` or `duration="800ms"`. Set it close to how long the task usually takes, so the bar feels like it matches the work. `duration` applies only while `value` is `undefined` or `null`.
+
+## Variant
+
+| Variant | Look |
+| --- | --- |
+| `surface` | A light track with a border. This is the default |
+| `soft` | A filled track with no border |
+| `outline` | A border with no fill |
+
+The bar is 6 pixels tall and grows to fill its row in a Flex. The filled part uses `color`.
+
+## Examples
+
+### Counting steps
+
+Set `max` to the number of steps, so the value reads in steps rather than percent.
+
+```tsx
+<Progress value={3} max={12} aria-label="Importing contacts" getValueLabel={(value, max) => `${value} of ${max} files`} />
+```
+
+### Unknown length
+
+Pass `null` while the server hasn't told you the total yet, then pass the value once you know. The bar switches from indeterminate to filled in place.
+
+```tsx
+<Progress value={total ? (done / total) * 100 : null} aria-label="Preparing export" />
+```
+
+### Status colours
+
+Use `color` to match what the bar reports, such as `green` once a check has passed or `red` for a quota that is almost full. Keep the text saying the same thing, because colour alone doesn't reach everyone.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `number \| null` | | How much is done, from 0 to `max`. Leave it out for an indeterminate bar |
+| `max` | `number` | `100` | The value that fills the bar |
+| `getValueLabel` | `(value: number, max: number) => string` | Percent | The text a screen reader reads for the value |
+| `duration` | `` `${number}s` \| `${number}ms` `` | `'5s'` | How long one indeterminate fill takes. Only without `value` |
+| `variant` | `'surface' \| 'soft' \| 'outline'` | `'surface'` | The look |
+| `color` | `AccentColor` | Theme accent | The colour of the filled part |
+| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Theme radius | The corner |
+
+Progress also accepts every attribute of the HTML `div` element.
+
+## Accessibility
+
+- **Name:** Progress has `role="progressbar"` and no name of its own. Pass `aria-labelledby` pointing at the visible label, or `aria-label`.
+- **Value:** It sets `aria-valuenow`, `aria-valuemin` of 0 and `aria-valuemax`. A screen reader reads the value as a percentage, such as "25%", or as the text from `getValueLabel`.
+- **Indeterminate:** Without a value, it sets no `aria-valuenow` or `aria-valuetext`, so a screen reader reads the name with no amount.
+- **Focus:** It doesn't take focus or respond to the pointer. To announce progress as it changes, update a nearby `role="status"` element at milestones rather than on every tick.

@@ -97,6 +97,23 @@ function wrapTextNodes(node: React.ReactNode): React.ReactNode {
   return node;
 }
 
+// Arrow Up and Down move between the visible buttons of the same sidebar, as a
+// convenience on top of Tab. Sub-menu triggers take part, so the one-item Accordion
+// behind each sub-menu doesn't keep focus on its own trigger.
+function focusAdjacentSidebarButton(event: React.KeyboardEvent<HTMLElement>) {
+  if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+  const scope = event.currentTarget.closest('.kui-SidebarContent, .kui-SidebarSearchPopover');
+  const buttons = scope
+    ? Array.from(scope.querySelectorAll<HTMLElement>('.kui-SidebarMenuButton')).filter((el) => el.offsetParent !== null)
+    : [];
+  const index = buttons.indexOf(event.currentTarget);
+  const next = buttons[index + (event.key === 'ArrowDown' ? 1 : -1)];
+  if (index !== -1 && next) {
+    event.preventDefault();
+    next.focus();
+  }
+}
+
 const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonProps>(
   ({ asChild = false, isActive = false, shortcut, badge, className, children, onKeyDown, ...props }, forwardedRef) => {
     const visual = useSidebarVisual();
@@ -105,22 +122,10 @@ const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonP
 
     const Comp = asChild ? Slot : 'button';
 
-    // Enter and Space are left to the native button or link. Arrow keys move between
-    // the visible buttons of the same sidebar, as a convenience on top of Tab.
+    // Enter and Space are left to the native button or link.
     const handleKeyDown = React.useCallback(
       (event: React.KeyboardEvent<HTMLButtonElement>) => {
-        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-          const scope = event.currentTarget.closest('.kui-SidebarContent, .kui-SidebarSearchPopover');
-          const buttons = scope
-            ? Array.from(scope.querySelectorAll<HTMLElement>('.kui-SidebarMenuButton')).filter((el) => el.offsetParent !== null)
-            : [];
-          const index = buttons.indexOf(event.currentTarget);
-          const next = buttons[index + (event.key === 'ArrowDown' ? 1 : -1)];
-          if (index !== -1 && next) {
-            event.preventDefault();
-            next.focus();
-          }
-        }
+        focusAdjacentSidebarButton(event);
         onKeyDown?.(event);
       },
       [onKeyDown],
@@ -262,7 +267,7 @@ interface SidebarMenuSubTriggerProps extends React.ComponentPropsWithoutRef<type
 }
 
 const SidebarMenuSubTrigger = React.forwardRef<React.ElementRef<typeof Accordion.Trigger>, SidebarMenuSubTriggerProps>(
-  ({ asChild = false, className, children, ...props }, forwardedRef) => {
+  ({ asChild = false, className, children, onKeyDown, ...props }, forwardedRef) => {
     const mode = React.useContext(SidebarSubMenuModeContext);
 
     if (mode === 'dropdown') {
@@ -270,6 +275,7 @@ const SidebarMenuSubTrigger = React.forwardRef<React.ElementRef<typeof Accordion
         <DropdownMenu.Trigger>
           <button
             {...(props as any)}
+            onKeyDown={onKeyDown}
             ref={forwardedRef as any}
             type="button"
             aria-haspopup="menu"
@@ -286,6 +292,11 @@ const SidebarMenuSubTrigger = React.forwardRef<React.ElementRef<typeof Accordion
         <div>
           <Accordion.Trigger
             {...props}
+            onKeyDown={(event) => {
+              // Runs before the Accordion's own arrow handling, which would keep focus here.
+              focusAdjacentSidebarButton(event);
+              onKeyDown?.(event);
+            }}
             ref={forwardedRef}
             asChild={asChild}
             className={classNames('kui-reset', 'kui-BaseMenuItem', 'kui-SidebarMenuButton', 'kui-SidebarMenuSubTrigger', className)}
@@ -357,7 +368,7 @@ const SidebarMenuSubContent = React.forwardRef<React.ElementRef<typeof Accordion
 
   return (
     <Accordion.Content {...props} ref={forwardedRef} className={classNames('kui-SidebarMenuSubContent', className)}>
-      <div className="kui-SidebarMenuSubList">{children}</div>
+      <ul className="kui-SidebarMenuSubList">{children}</ul>
     </Accordion.Content>
   );
 });

@@ -3,3 +3,13 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* An inline box can't clip its text, so an inline element that truncates becomes an inline block
+   no wider than its container. `bottom` keeps it on the line, because a clipped inline block puts
+   its baseline at its bottom edge. Inside a flex or grid layout the element is a block anyway. */
+/* stylelint-disable-next-line selector-max-type */
+.kui-truncate:where(span, code, a, label) {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: bottom;
+}

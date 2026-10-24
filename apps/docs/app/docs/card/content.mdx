@@ -1,18 +1,10 @@
 ---
 title: Card
-description: A container component for grouping related content with consistent styling and spacing.
+description: A card groups related content on one surface, such as a settings section, a summary or a choice.
 source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/card.tsx
 ---
 
-import { Notice } from '@kushagradhawan/kookie-ui';
-import { HugeiconsIcon } from '@hugeicons/react';
-import { Alert02Icon } from '@hugeicons/core-free-icons';
-
-<Notice icon={<HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />}>This component's API and documentation are under review and may change. Use with caution in production.</Notice>
-
-Card is a versatile container component for grouping related content. It provides consistent styling, spacing, and visual hierarchy through its variant and size props.
-
-This is an enhanced version of the Card from [Radix Themes](https://www.radix-ui.com/themes/docs/components/card).
+A card puts related content on one surface with its own padding and corner, so people read it as one unit. A list of records with the same fields reads better as a [Table](/docs/table). A message about a condition that is true now is a [Notice](/docs/notice).
 
 ## Playground
 
@@ -20,133 +12,121 @@ import CardPlayground from '../../playground/card-playground';
 
 <CardPlayground />
 
-## Installation
-
-```bash
-npm install @kushagradhawan/kookie-ui
-```
-
 ## Usage
 
-```tsx
-import { Card, Text, Heading, Flex, Button } from '@kushagradhawan/kookie-ui';
+```tsx showLineNumbers
+import { Button, Card, Flex, Heading, Text } from '@kushagradhawan/kookie-ui';
 
-export function MyCard() {
+export function PlanCard({ onUpgrade }: { onUpgrade: () => void }) {
   return (
     <Card>
       <Flex direction="column" gap="3">
-        <Heading size="3">Card Title</Heading>
-        <Text size="2">Card content goes here.</Text>
-        <Button size="2">Action</Button>
+        <Heading as="h3" size="3">Free plan</Heading>
+        <Text size="2" emphasis="medium">
+          3 projects and 1 GB of storage. Upgrade to add your team.
+        </Text>
+        <Flex justify="end">
+          <Button emphasis="loud" onClick={onUpgrade}>
+            Upgrade plan
+          </Button>
+        </Flex>
       </Flex>
     </Card>
   );
 }
 ```
 
-## Props
+## Best practices
 
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `size` | `'1' \| '2' \| '3' \| '4'` | `'2'` | Padding and corner. Unset, it follows the Theme size. Supports responsive values. |
-| `variant` | `'surface' \| 'outline' \| 'raised' \| 'ghost' \| 'soft'` | `'raised'` | The visual style of the card. |
-| `asChild` | `boolean` | `false` | Merge props onto the child element using Radix Slot. |
+**Use a card only when the content belongs together.** A card tells people that what is inside it is one thing. Wrapping every section of a page in a card adds borders and padding without telling them anything new.
 
-## Variants
+**Put the layout inside the card.** A Card has no gap or direction of its own. Place a `Flex` or `Grid` inside it and set the spacing there.
 
-### Surface
+**Make the whole card the link, or nothing.** When a card opens a page, render the link with `asChild` so the full surface is one target. A card that holds a link and two buttons should stay a plain `div`, because nested targets are hard to press.
 
-A subtle elevated card with a light background.
+**Use one variant for cards at the same level.** Cards side by side in a grid read as a set when they share a look. Change the variant only when the card means something different, such as `soft` for an empty state.
 
-```tsx
-<Card variant="surface">
-  <Text>Surface variant with subtle elevation</Text>
-</Card>
-```
+**Don't use a card to hold a single sentence.** A short message that has no action is text. Use [Text](/docs/text), or a [Notice](/docs/notice) when it must stand apart.
 
-### Outline
+## Variant
 
-A visible border.
+`variant` sets how the card stands apart from the page.
 
-```tsx
-<Card variant="outline">
-  <Text>Outline variant with visible border</Text>
-</Card>
-```
+| Variant | Look | Use it for |
+| --- | --- | --- |
+| `raised` | Solid surface with a shadow | Most cards. This is the default |
+| `surface` | Light fill and a border | Cards on a busy or tinted background |
+| `outline` | A border and no fill | Dense layouts where shadows would add noise |
+| `soft` | A gray fill and no border | Empty states and secondary groups |
+| `ghost` | No fill and no border | Links and buttons that should sit flat on the page until hover |
 
-### Raised
+When the card is a link, a `button` or a `label`, every variant shows a hover and a press state.
 
-A solid, opaque card with subtle shadow.
+## Size
 
-```tsx
-<Card variant="raised">
-  <Text>Raised variant with solid background</Text>
-</Card>
-```
+`size` sets the padding and the corner. Sizes 1 to 4 pad by 16, 24, 32 and 40 pixels. When you leave it unset, the card follows the size of the nearest [Theme](/start/theming). Use size 1 for compact cards in a grid and size 3 or 4 for a card that is the main content of a page. `size` accepts a responsive object, such as `{ initial: '1', md: '2' }`.
 
-### Ghost
+## Examples
 
-No visible container, useful for grouping content without visual boundaries.
+### Card that opens a page
+
+Render your router's link with `asChild`. The element stays an anchor, so it opens in a new tab like any link, and the card shows a focus ring for the keyboard.
 
 ```tsx
-<Card variant="ghost">
-  <Text>Ghost variant with no visible container</Text>
-</Card>
-```
-
-### Soft
-
-A muted background with no border.
-
-```tsx
-<Card variant="soft">
-  <Text>Soft variant with muted background</Text>
-</Card>
-```
-
-## Sizes
-
-Sizes 1 to 4 set the padding (16, 24, 32, 40px) and the corner. Unset, a Card follows the Theme size.
-
-```tsx
-<Flex direction="column" gap="5">
-  <Card size="1"><Text>Size 1</Text></Card>
-  <Card size="2"><Text>Size 2 - Default</Text></Card>
-  <Card size="3"><Text>Size 3</Text></Card>
-  <Card size="4"><Text>Size 4</Text></Card>
-</Flex>
-```
-
-## Bleed
-
-`bleed` on a `Box` margin prop pulls a child out by the Card's padding, so it reaches the Card's edge. The Card clips it to its corner.
-
-```tsx
-<Card>
-  <Box mx="bleed" mt="bleed" mb="4">
-    <img src="/image.jpg" alt="Full bleed image" style={{ display: 'block', width: '100%' }} />
-  </Box>
-  <Text>Caption</Text>
-</Card>
-```
-
-## Nesting
-
-A Card inside a Card draws its corner as the outer corner minus the outer padding, never below 0.
-
-## Interactive Cards
-
-Use `asChild` to make the entire card interactive.
-
-```tsx
-import { Link } from 'react-router-dom';
-
 <Card asChild>
-  <Link to="/details">
-    <Flex direction="column" gap="3">
-      <Heading size="3">Clickable Card</Heading>
-      <Text size="2">Click anywhere to navigate</Text>
+  <Link href="/projects/atlas">
+    <Flex direction="column" gap="1">
+      <Heading as="h3" size="3">Atlas</Heading>
+      <Text size="2" emphasis="medium">Updated 2 hours ago</Text>
     </Flex>
   </Link>
 </Card>
 ```
+
+### Choosing one option
+
+A card that holds a checked [Checkbox](/docs/checkbox) or [Radio](/docs/radio) shows an accent fill and border. Render it as a `label` so a press anywhere on the card toggles the control.
+
+```tsx
+<Card asChild>
+  <label>
+    <Flex gap="3" align="start">
+      <Radio name="plan" value="pro" />
+      <Text size="2">Pro, with unlimited projects</Text>
+    </Flex>
+  </label>
+</Card>
+```
+
+### Image to the edge
+
+Set a margin of `bleed` on a `Box` to pull it out by the card's padding, so an image reaches the edge. The card clips it to its corner.
+
+```tsx
+<Card>
+  <Box mx="bleed" mt="bleed" mb="4">
+    <Image src="/cover.jpg" alt="Mountain lake at dawn" />
+  </Box>
+  <Text size="2">Lake Louise</Text>
+</Card>
+```
+
+### Card inside a card
+
+A card inside another card draws its corner as the outer corner minus the outer padding, so the two corners stay parallel. You don't need to set a radius.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'raised' \| 'surface' \| 'outline' \| 'soft' \| 'ghost'` | `'raised'` | How the card stands apart from the page |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | Theme size | The padding and corner step |
+| `asChild` | `boolean` | `false` | Renders the child element, such as a link or a label, with the card's look |
+
+Card also accepts every attribute of the HTML `div` element.
+
+## Accessibility
+
+- **Structure:** A card is a `div` and adds no role. Start it with a heading when it is a section, so people who use a screen reader can find it by heading.
+- **Links:** A card rendered as a link announces all of its text as the link name. Keep the content short, and put the most important words first.
+- **Focus:** A plain card is not focusable. A card rendered as a link, a `button` or a `label` shows the focus ring for the keyboard only.

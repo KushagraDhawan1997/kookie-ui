@@ -7,7 +7,6 @@
   height: 100vh;
   max-height: 100vh;
   margin: 0 !important;
-  border-radius: 0 !important;
   will-change: transform;
 }
 
@@ -19,8 +18,10 @@
   }
 }
 
-/* Logical side anchoring (RTL-aware via logical inset) */
-:where(.kui-SheetContent[data-side='start']) {
+/* Logical side anchoring (RTL-aware via logical inset). The two corners on the panel's own
+   edge are square; the two facing the page keep the size's overlay corner. The class sits
+   outside :where() so these corners outrank the size radius in base-dialog.css. */
+.kui-SheetContent:where([data-side='start']) {
   inset-block: 0 !important;
   inset-inline-start: 0 !important;
   margin: 0 !important;
@@ -29,7 +30,7 @@
   /* iOS safe area for home indicator */
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
-:where(.kui-SheetContent[data-side='end']) {
+.kui-SheetContent:where([data-side='end']) {
   inset-block: 0 !important;
   inset-inline-end: 0 !important;
   margin: 0 !important;
@@ -38,7 +39,7 @@
   /* iOS safe area for home indicator */
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
-:where(.kui-SheetContent[data-side='top']) {
+.kui-SheetContent:where([data-side='top']) {
   inset-block-start: 0 !important;
   inset-inline: 0 !important;
   width: auto;
@@ -48,7 +49,7 @@
   border-start-start-radius: 0;
   border-start-end-radius: 0;
 }
-:where(.kui-SheetContent[data-side='bottom']) {
+.kui-SheetContent:where([data-side='bottom']) {
   inset-block-end: 0 !important;
   inset-inline: 0 !important;
   width: auto;

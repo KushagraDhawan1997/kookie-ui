@@ -91,7 +91,7 @@ const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>
       })}
       onPointerDown={handlePointerDown}
     >
-      <input spellCheck="false" {...nativeInputProps} {...ariaProps} ref={composeRefs(inputRef, forwardedRef)} className="kui-reset kui-TextFieldInput" />
+      <input {...nativeInputProps} required={required || undefined} {...ariaProps} ref={composeRefs(inputRef, forwardedRef)} className="kui-reset kui-TextFieldInput" />
       {children}
       {inputProps.errorMessage && (
         <div id={errorId} className="kui-TextFieldErrorMessage" role="alert">

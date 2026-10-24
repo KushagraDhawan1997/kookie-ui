@@ -19,6 +19,20 @@
 
   isolation: isolate;
 
+  /* An icon is one line tall, so it never changes the chip's height. */
+  /* stylelint-disable-next-line selector-max-type */
+  & :where(svg) {
+    flex: none;
+    width: var(--chip-icon-size);
+    height: var(--chip-icon-size);
+  }
+
+  /* A chip with a tooltip is focusable, and shows the ring every control does. */
+  &:where(:focus-visible) {
+    outline: var(--focus-ring-width) solid var(--focus-8);
+    outline-offset: var(--focus-ring-offset);
+  }
+
   /* Forced colors support */
   @media (forced-colors: active) {
     border: 1px solid CanvasText;
@@ -37,6 +51,7 @@
 @breakpoints {
   .kui-Chip {
     &:where(.kui-r-size-1) {
+      --chip-icon-size: var(--icon-size-1);
       font-size: var(--font-size-1);
       line-height: var(--line-height-1);
       letter-spacing: var(--letter-spacing-1);
@@ -45,6 +60,7 @@
       border-radius: max(calc(var(--radius-1) * var(--spacing-multiplier-medium)), var(--radius-full));
     }
     &:where(.kui-r-size-2) {
+      --chip-icon-size: var(--icon-size-2);
       font-size: var(--font-size-1);
       line-height: var(--line-height-1);
       letter-spacing: var(--letter-spacing-1);
@@ -57,6 +73,7 @@
       }
     }
     &:where(.kui-r-size-3) {
+      --chip-icon-size: var(--icon-size-3);
       font-size: var(--font-size-2);
       line-height: var(--line-height-2);
       letter-spacing: var(--letter-spacing-2);
@@ -70,6 +87,7 @@
       }
     }
     &:where(.kui-r-size-4) {
+      --chip-icon-size: var(--icon-size-4);
       font-size: var(--font-size-3);
       line-height: var(--line-height-3);
       letter-spacing: var(--letter-spacing-3);
@@ -95,14 +113,6 @@
 .kui-Chip:where(.kui-variant-solid) {
   background-color: var(--accent-solid);
   color: var(--accent-solid-contrast);
-
-  &:where([data-disabled]) {
-    color: var(--neutral-a8);
-    background-color: var(--neutral-a3);
-    outline: none;
-    filter: none;
-    cursor: default;
-  }
 }
 
 /* surface */
@@ -117,22 +127,10 @@
 
 .kui-Chip:where(.kui-variant-soft, .kui-variant-ghost) {
   color: var(--accent-ink);
-
-  &:where([data-disabled]) {
-    color: var(--neutral-a8);
-    background-color: var(--neutral-a3);
-    cursor: default;
-  }
 }
 
 .kui-Chip:where(.kui-variant-soft) {
   background-color: var(--accent-3);
-
-  &:where([data-disabled]) {
-    color: var(--neutral-a8);
-    background-color: var(--neutral-a3);
-    cursor: default;
-  }
 }
 
 /* outline */

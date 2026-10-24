@@ -12,13 +12,13 @@
       border-radius: var(--radius-surface-1);
     }
     &:where(.kui-r-size-2) {
-      border-radius: var(--radius-surface-1);
+      border-radius: var(--radius-surface-2);
     }
     &:where(.kui-r-size-3) {
-      border-radius: var(--radius-surface-1);
+      border-radius: var(--radius-surface-3);
     }
     &:where(.kui-r-size-4) {
-      border-radius: var(--radius-surface-1);
+      border-radius: var(--radius-surface-4);
     }
   }
 }
@@ -98,6 +98,38 @@
 :where(.kui-AccordionRoot:where(.kui-r-size-4)) .kui-AccordionTrigger {
   padding: var(--space-6) var(--space-7);
   font-size: var(--font-size-4);
+}
+
+/* Disclosure chevron: at the far end of the trigger, turned up while the section is open */
+.kui-AccordionChevron {
+  flex-shrink: 0;
+  width: var(--icon-size-2);
+  height: var(--icon-size-2);
+  margin-inline-start: var(--space-3);
+  color: var(--neutral-a11);
+}
+
+:where(.kui-AccordionTrigger[data-state='open']) .kui-AccordionChevron {
+  rotate: 180deg;
+}
+
+:where(.kui-AccordionRoot:where(.kui-r-size-1)) .kui-AccordionChevron {
+  width: var(--icon-size-1);
+  height: var(--icon-size-1);
+}
+
+:where(.kui-AccordionRoot:where(.kui-r-size-3)) .kui-AccordionChevron {
+  width: var(--icon-size-3);
+  height: var(--icon-size-3);
+}
+
+:where(.kui-AccordionRoot:where(.kui-r-size-4)) .kui-AccordionChevron {
+  width: var(--icon-size-4);
+  height: var(--icon-size-4);
+}
+
+:where(.kui-AccordionTrigger[data-disabled]) .kui-AccordionChevron {
+  color: inherit;
 }
 
 /* Trigger hover states */

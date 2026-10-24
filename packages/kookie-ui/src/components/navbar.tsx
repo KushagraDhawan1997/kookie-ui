@@ -3,7 +3,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { Flex } from './flex.js';
-import { Slot } from './slot.js';
 
 import type { FlexProps } from './flex.js';
 import type { MarginProps } from '../props/margin.props.js';
@@ -70,29 +69,18 @@ type NavbarLogoProps = NavbarSlotFlexProps & {
   asChild?: boolean;
 };
 
+// With `asChild`, Flex renders the child, so the layout props become classes on it, not attributes.
 const NavbarLogo = React.forwardRef<HTMLDivElement, NavbarLogoProps>(
-  ({ asChild, gap = '2', align = 'center', justify = 'start', className, ...props }, ref) => {
-    if (asChild) {
-      return (
-        <Slot
-          ref={ref}
-          className={classNames('kui-NavbarLogo', className)}
-          {...props}
-        />
-      );
-    }
-
-    return (
-      <Flex
-        ref={ref}
-        gap={gap}
-        align={align}
-        justify={justify}
-        className={classNames('kui-NavbarLogo', className)}
-        {...props}
-      />
-    );
-  }
+  ({ gap = '2', align = 'center', justify = 'start', className, ...props }, ref) => (
+    <Flex
+      ref={ref}
+      gap={gap}
+      align={align}
+      justify={justify}
+      className={classNames('kui-NavbarLogo', className)}
+      {...props}
+    />
+  ),
 );
 NavbarLogo.displayName = 'Navbar.Logo';
 
@@ -102,30 +90,19 @@ type NavbarNavigationProps = NavbarSlotFlexProps & {
 };
 
 const NavbarNavigation = React.forwardRef<HTMLDivElement, NavbarNavigationProps>(
-  ({ asChild, gap = '4', align = 'center', justify = 'center', className, ...props }, ref) => {
-    if (asChild) {
-      return (
-        <Slot
-          ref={ref}
-          className={classNames('kui-NavbarNavigation', className)}
-          role="navigation"
-          {...props}
-        />
-      );
-    }
-
-    return (
-      <Flex
-        ref={ref}
-        gap={gap}
-        align={align}
-        justify={justify}
-        className={classNames('kui-NavbarNavigation', className)}
-        role="navigation"
-        {...props}
-      />
-    );
-  }
+  ({ gap = '4', align = 'center', justify = 'center', className, ...props }, ref) => (
+    <Flex
+      ref={ref}
+      gap={gap}
+      align={align}
+      justify={justify}
+      className={classNames('kui-NavbarNavigation', className)}
+      role="navigation"
+      // A landmark needs a name to be told apart from other navigation on the page.
+      aria-label={props['aria-labelledby'] === undefined ? 'Main' : undefined}
+      {...props}
+    />
+  ),
 );
 NavbarNavigation.displayName = 'Navbar.Navigation';
 
@@ -135,28 +112,16 @@ type NavbarActionsProps = NavbarSlotFlexProps & {
 };
 
 const NavbarActions = React.forwardRef<HTMLDivElement, NavbarActionsProps>(
-  ({ asChild, gap = '4', align = 'center', justify = 'end', className, ...props }, ref) => {
-    if (asChild) {
-      return (
-        <Slot
-          ref={ref}
-          className={classNames('kui-NavbarActions', className)}
-          {...props}
-        />
-      );
-    }
-
-    return (
-      <Flex
-        ref={ref}
-        gap={gap}
-        align={align}
-        justify={justify}
-        className={classNames('kui-NavbarActions', className)}
-        {...props}
-      />
-    );
-  }
+  ({ gap = '4', align = 'center', justify = 'end', className, ...props }, ref) => (
+    <Flex
+      ref={ref}
+      gap={gap}
+      align={align}
+      justify={justify}
+      className={classNames('kui-NavbarActions', className)}
+      {...props}
+    />
+  ),
 );
 NavbarActions.displayName = 'Navbar.Actions';
 

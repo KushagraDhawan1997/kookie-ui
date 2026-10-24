@@ -13,43 +13,38 @@ import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-p
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
 interface AvatarProps extends AvatarImplProps {}
-const Avatar = React.forwardRef<AvatarImplElement, AvatarProps>((ownProps, forwardedRef) => {
+const Avatar = React.forwardRef<AvatarElement, AvatarProps>((ownProps, forwardedRef) => {
   // An unset size follows the Theme, like a control. Sizes above 4 are only explicit.
   const props = useThemeSizeProps(ownProps, avatarPropDefs.size);
-  const {
-    asChild,
-    children,
-    className,
-    style,
-    color,
-    radius,
-    status,
-    badge,
-    ...imageProps
-  } = extractProps(props, avatarPropDefs);
+  const { asChild, children, className, style, color, radius, status, statusLabel, badge, ...imageProps } = extractProps(props, avatarPropDefs);
 
   if (process.env.NODE_ENV !== 'production') {
     if (status !== undefined && badge !== undefined) {
-      console.warn(
-        'Avatar: Cannot use both `status` and `badge` props together. ' +
-          'The `badge` prop will be used and `status` will be ignored.'
-      );
+      console.warn('Avatar: Cannot use both `status` and `badge` props together. ' + 'The `badge` prop will be used and `status` will be ignored.');
     }
   }
 
   // Cheap boolean checks — no memoization needed
-  const isDisabled =
-    asChild &&
-    children != null &&
-    React.isValidElement(children) &&
-    ((children.props as any).disabled === true ||
-      (children.props as any)['data-disabled'] === true);
+  const isDisabled = asChild && children != null && React.isValidElement(children) && ((children.props as any).disabled === true || (children.props as any)['data-disabled'] === true);
 
   const hasIndicator = badge !== undefined || status !== undefined;
 
+  const indicator =
+    badge !== undefined ? (
+      <span className="kui-AvatarBadge">{badge}</span>
+    ) : status !== undefined ? (
+      <span
+        className="kui-AvatarStatus"
+        data-accent-color={status}
+        role={statusLabel ? 'img' : undefined}
+        aria-label={statusLabel || undefined}
+        aria-hidden={statusLabel ? undefined : true}
+      />
+    ) : null;
+
   return (
-    // TODO as a rule, should we rather spread the props on root?
     <AvatarPrimitive.Root
+      ref={forwardedRef}
       data-accent-color={color}
       data-radius={radius}
       data-disabled={isDisabled || undefined}
@@ -58,67 +53,58 @@ const Avatar = React.forwardRef<AvatarImplElement, AvatarProps>((ownProps, forwa
       style={style}
       asChild={asChild}
     >
-      {getSubtree({ asChild, children }, <AvatarImpl ref={forwardedRef} {...imageProps} />)}
-      {badge !== undefined ? (
-        <span className="kui-AvatarBadge">{badge}</span>
-      ) : status !== undefined ? (
-        <span className="kui-AvatarStatus" data-accent-color={status} />
-      ) : null}
+      {/* With asChild, Slot takes exactly one child, so the indicator goes inside it. */}
+      {getSubtree(
+        { asChild, children },
+        <>
+          <AvatarImpl {...imageProps} />
+          {indicator}
+        </>,
+      )}
     </AvatarPrimitive.Root>
   );
 });
 Avatar.displayName = 'Avatar';
 
-type AvatarImplElement = React.ElementRef<typeof AvatarPrimitive.Image>;
+type AvatarElement = React.ElementRef<typeof AvatarPrimitive.Root>;
 type AvatarOwnProps = GetPropDefTypes<typeof avatarPropDefs>;
 
-interface AvatarImplProps
-  extends ComponentPropsWithout<typeof AvatarPrimitive.Image, RemovedProps>,
-    AvatarOwnProps {
+interface AvatarImplProps extends ComponentPropsWithout<typeof AvatarPrimitive.Image, RemovedProps>, AvatarOwnProps {
   // TODO: See if we can automate making prop defs with `required: true` non nullable
   fallback: NonNullable<AvatarOwnProps['fallback']>;
 }
 
-const AvatarImpl = React.memo(
-  React.forwardRef<AvatarImplElement, AvatarImplProps>(
-    ({ fallback, onLoadingStatusChange, ...imageProps }, forwardedRef) => {
-      const [status, setStatus] = React.useState<'idle' | 'loading' | 'loaded' | 'error'>('idle');
+const AvatarImpl = React.memo(({ fallback, onLoadingStatusChange, ...imageProps }: AvatarImplProps) => {
+  const [status, setStatus] = React.useState<'idle' | 'loading' | 'loaded' | 'error'>('idle');
 
-      const handleLoadingStatusChange = React.useCallback(
-        (newStatus: 'idle' | 'loading' | 'loaded' | 'error') => {
-          onLoadingStatusChange?.(newStatus);
-          setStatus(newStatus);
-        },
-        [onLoadingStatusChange],
-      );
-
-      return (
-        <>
-          {status === 'idle' || status === 'loading' ? <span className="kui-AvatarFallback" /> : null}
-
-          {status === 'error' ? (
-            <AvatarPrimitive.Fallback
-              className={classNames('kui-AvatarFallback', {
-                'kui-one-letter': typeof fallback === 'string' && fallback.length === 1,
-                'kui-two-letters': typeof fallback === 'string' && fallback.length === 2,
-              })}
-              delayMs={0}
-            >
-              {fallback}
-            </AvatarPrimitive.Fallback>
-          ) : null}
-
-          <AvatarPrimitive.Image
-            ref={forwardedRef}
-            className="kui-AvatarImage"
-            {...imageProps}
-            onLoadingStatusChange={handleLoadingStatusChange}
-          />
-        </>
-      );
+  const handleLoadingStatusChange = React.useCallback(
+    (newStatus: 'idle' | 'loading' | 'loaded' | 'error') => {
+      onLoadingStatusChange?.(newStatus);
+      setStatus(newStatus);
     },
-  ),
-);
+    [onLoadingStatusChange],
+  );
+
+  return (
+    <>
+      {status === 'idle' || status === 'loading' ? <span className="kui-AvatarFallback" /> : null}
+
+      {status === 'error' ? (
+        <AvatarPrimitive.Fallback
+          className={classNames('kui-AvatarFallback', {
+            'kui-one-letter': typeof fallback === 'string' && fallback.length === 1,
+            'kui-two-letters': typeof fallback === 'string' && fallback.length === 2,
+          })}
+          delayMs={0}
+        >
+          {fallback}
+        </AvatarPrimitive.Fallback>
+      ) : null}
+
+      <AvatarPrimitive.Image className="kui-AvatarImage" {...imageProps} onLoadingStatusChange={handleLoadingStatusChange} />
+    </>
+  );
+});
 
 AvatarImpl.displayName = 'AvatarImpl';
 

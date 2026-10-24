@@ -1,0 +1,90 @@
+---
+title: Separator
+description: A separator draws a thin line between groups of content.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/separator.tsx
+---
+
+A separator is a one-pixel line that divides groups of content, such as sections of a card or sets of buttons in a toolbar. Often space alone does the job: a larger `gap` on a [Flex](/docs/flex) separates groups without adding a line.
+
+## Playground
+
+import SeparatorPlayground from '../../playground/separator-playground';
+
+<SeparatorPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Card, Flex, Heading, Separator, Text } from '@kushagradhawan/kookie-ui';
+
+export function PlanSummary() {
+  return (
+    <Card>
+      <Flex direction="column" gap="3">
+        <Heading size="3">Pro plan</Heading>
+        <Text size="2" emphasis="medium">
+          Unlimited projects and priority support.
+        </Text>
+        <Separator />
+        <Flex justify="between">
+          <Text size="2">Billed monthly</Text>
+          <Text size="2" weight="medium">$24</Text>
+        </Flex>
+      </Flex>
+    </Card>
+  );
+}
+```
+
+## Best practices
+
+**Try space before a line.** Group related items with a small gap and unrelated ones with a larger gap. Add a separator only when space can't show where one group ends.
+
+**Don't separate every item.** A line between each row of a list adds noise. Use one between groups, not between members of a group.
+
+**Mark it as a separator only when it carries meaning.** Most separators are decoration and stay hidden from screen readers. Set `decorative={false}` when the line divides content a reader should know about, such as two parts of a menu.
+
+## Orientation
+
+`orientation` is `horizontal` by default, a line 1 pixel tall across the full width of its parent. `vertical` is 1 pixel wide and as tall as its parent, for dividing groups in a row. `orientation` accepts a responsive object, so a separator can turn with a layout that switches from row to column.
+
+The separator has no margin props. Set the space around it with `gap` on the parent.
+
+## Examples
+
+### Toolbar groups
+
+A vertical separator takes the height of its row. Leave the Flex at its default `align="stretch"`, so the line runs the full height of the buttons.
+
+```tsx
+<Flex gap="2">
+  <Button iconOnly emphasis="quiet" aria-label="Bold">
+    <HugeiconsIcon icon={TextBoldIcon} strokeWidth={1.75} />
+  </Button>
+  <Separator orientation="vertical" />
+  <Button iconOnly emphasis="quiet" aria-label="Insert link">
+    <HugeiconsIcon icon={Link01Icon} strokeWidth={1.75} />
+  </Button>
+</Flex>
+```
+
+### A softer line
+
+`light` draws the line at a lower contrast, for separators inside dense content where the default line is too strong.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `orientation` | `'horizontal' \| 'vertical'`, responsive | `'horizontal'` | The direction of the line |
+| `color` | `AccentColor` | `'gray'` | The colour of the line |
+| `light` | `boolean` | `false` | Draws the line at a lower contrast |
+| `decorative` | `boolean` | `true` | Hides the separator from screen readers. Set `false` to give it the `separator` role |
+
+Separator renders a `span` and accepts every attribute of the HTML `span` element.
+
+## Accessibility
+
+- **Decorative:** By default the separator has no role, so screen readers skip it.
+- **Semantic:** With `decorative={false}` it takes `role="separator"`. A vertical one also gets `aria-orientation="vertical"`. A responsive `orientation` announces its `initial` value.
+- **Focus:** The separator never takes focus.

@@ -186,6 +186,9 @@
   left: 0;
   height: 100%;
   pointer-events: none;
+  /* Width and position come from the item count and selected index, set by the root. */
+  width: calc(100% / var(--segmented-control-count, 1));
+  transform: translateX(calc(var(--segmented-control-index, 0) * 100%));
 
   &::before {
     inset: var(--border-width-standard); /* 1px */
@@ -200,7 +203,8 @@
     display: block;
   }
 
-  :where(.kui-SegmentedControlItem[disabled]) ~ & {
+  /* Greyed only when the selected segment is disabled, not when any other segment is. */
+  :where(.kui-SegmentedControlItem[data-state='on'][disabled]) ~ & {
     --segmented-control-indicator-background-color: var(--neutral-a3);
 
     &::before {
@@ -208,139 +212,13 @@
       box-shadow: none;
     }
   }
-
-  /* Horizontal orientation (default) - width based on number of items */
-  &:where(:nth-child(2)) {
-    width: calc(100% / 1);
-  }
-  &:where(:nth-child(3)) {
-    width: calc(100% / 2);
-  }
-  &:where(:nth-child(4)) {
-    width: calc(100% / 3);
-  }
-  &:where(:nth-child(5)) {
-    width: calc(100% / 4);
-  }
-  &:where(:nth-child(6)) {
-    width: calc(100% / 5);
-  }
-  &:where(:nth-child(7)) {
-    width: calc(100% / 6);
-  }
-  &:where(:nth-child(8)) {
-    width: calc(100% / 7);
-  }
-  &:where(:nth-child(9)) {
-    width: calc(100% / 8);
-  }
-  &:where(:nth-child(10)) {
-    width: calc(100% / 9);
-  }
-  &:where(:nth-child(11)) {
-    width: calc(100% / 10);
-  }
-
-  /* Horizontal transforms (default) */
-  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(1)) ~ & {
-    transform: translateX(0%);
-  }
-  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(2)) ~ & {
-    transform: translateX(100%);
-  }
-  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(3)) ~ & {
-    transform: translateX(200%);
-  }
-  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(4)) ~ & {
-    transform: translateX(300%);
-  }
-  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(5)) ~ & {
-    transform: translateX(400%);
-  }
-  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(6)) ~ & {
-    transform: translateX(500%);
-  }
-  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(7)) ~ & {
-    transform: translateX(600%);
-  }
-  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(8)) ~ & {
-    transform: translateX(700%);
-  }
-  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(9)) ~ & {
-    transform: translateX(800%);
-  }
-  :where(.kui-SegmentedControlItem[data-state='on']:nth-child(10)) ~ & {
-    transform: translateX(900%);
-  }
 }
 
-/* Vertical orientation - indicator height based on number of items */
+/* Vertical orientation */
 :where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator {
   width: 100%;
-  height: unset;
-}
-
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(2) {
-  height: calc(100% / 1);
-}
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(3) {
-  height: calc(100% / 2);
-}
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(4) {
-  height: calc(100% / 3);
-}
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(5) {
-  height: calc(100% / 4);
-}
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(6) {
-  height: calc(100% / 5);
-}
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(7) {
-  height: calc(100% / 6);
-}
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(8) {
-  height: calc(100% / 7);
-}
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(9) {
-  height: calc(100% / 8);
-}
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(10) {
-  height: calc(100% / 9);
-}
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator:nth-child(11) {
-  height: calc(100% / 10);
-}
-
-/* Vertical transforms */
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(1) ~ .kui-SegmentedControlIndicator {
-  transform: translateY(0%);
-}
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(2) ~ .kui-SegmentedControlIndicator {
-  transform: translateY(100%);
-}
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(3) ~ .kui-SegmentedControlIndicator {
-  transform: translateY(200%);
-}
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(4) ~ .kui-SegmentedControlIndicator {
-  transform: translateY(300%);
-}
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(5) ~ .kui-SegmentedControlIndicator {
-  transform: translateY(400%);
-}
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(6) ~ .kui-SegmentedControlIndicator {
-  transform: translateY(500%);
-}
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(7) ~ .kui-SegmentedControlIndicator {
-  transform: translateY(600%);
-}
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(8) ~ .kui-SegmentedControlIndicator {
-  transform: translateY(700%);
-}
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(9) ~ .kui-SegmentedControlIndicator {
-  transform: translateY(800%);
-}
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-state='on']:nth-child(10) ~ .kui-SegmentedControlIndicator {
-  transform: translateY(900%);
+  height: calc(100% / var(--segmented-control-count, 1));
+  transform: translateY(calc(var(--segmented-control-index, 0) * 100%));
 }
 
 /* * * * * * * * * * * * * * * * * * * */

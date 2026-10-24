@@ -9,3 +9,37 @@
   outline: var(--focus-ring-width, 2px) solid var(--focus-8);
   outline-offset: var(--focus-ring-offset, 2px);
 }
+
+/*
+ * Vertical: the list is a column beside the panels, its hairline on the inline end, and the
+ * active line runs down that edge.
+ */
+.kui-TabsRoot:where([data-orientation='vertical']) {
+  display: flex;
+}
+
+.kui-TabsList:where([data-orientation='vertical']) {
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-shadow: inset calc(-1 * var(--border-width-standard)) 0 0 0 var(--neutral-a5);
+
+  &:where(:dir(rtl)) {
+    box-shadow: inset var(--border-width-standard) 0 0 0 var(--neutral-a5);
+  }
+
+  :where(&) .kui-TabsTrigger {
+    justify-content: flex-start;
+  }
+
+  :where(&) .kui-TabsTrigger:where([data-state='active'])::before {
+    top: 0;
+    bottom: 0;
+    left: auto;
+    right: auto;
+    inset-inline-end: 0;
+    width: var(--focus-ring-width, 2px);
+    height: auto;
+  }
+}

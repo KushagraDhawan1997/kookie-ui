@@ -1,8 +1,10 @@
 import * as React from 'react';
 
 /**
- * Publishes how much content is hidden past each block edge of a scroller, as
- * `--scroll-overflow-start` and `--scroll-overflow-end` (px) on the element.
+ * Publishes how much content is hidden past each edge of a scroller, as
+ * `--scroll-overflow-start` and `--scroll-overflow-end` (block axis) and
+ * `--scroll-overflow-x-start` and `--scroll-overflow-x-end` (inline axis, from
+ * the inline start, so right-to-left reads the same) in px on the element.
  * The scroll fade reads them, so an edge fades only while content is hidden
  * there, and the fade ramps in over the first pixels of scrolling.
  *
@@ -21,6 +23,11 @@ export function useScrollEdges<T extends HTMLElement>(enabled: boolean) {
       const end = Math.max(0, element.scrollHeight - element.clientHeight - element.scrollTop);
       element.style.setProperty('--scroll-overflow-start', `${start}px`);
       element.style.setProperty('--scroll-overflow-end', `${end}px`);
+      // scrollLeft runs negative in right-to-left, so its size is the distance from the inline start.
+      const xStart = Math.abs(element.scrollLeft);
+      const xEnd = Math.max(0, element.scrollWidth - element.clientWidth - xStart);
+      element.style.setProperty('--scroll-overflow-x-start', `${xStart}px`);
+      element.style.setProperty('--scroll-overflow-x-end', `${xEnd}px`);
     };
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(write);
@@ -39,6 +46,8 @@ export function useScrollEdges<T extends HTMLElement>(enabled: boolean) {
       mutations?.disconnect();
       element.style.removeProperty('--scroll-overflow-start');
       element.style.removeProperty('--scroll-overflow-end');
+      element.style.removeProperty('--scroll-overflow-x-start');
+      element.style.removeProperty('--scroll-overflow-x-end');
     };
   }, [enabled, element]);
 

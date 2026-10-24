@@ -6,6 +6,7 @@ import { useComposedRefs, useLayoutEffect } from 'radix-ui/internal';
 import { baseButtonPropDefs } from './base-button.props.js';
 import { Flex } from '../flex.js';
 import { Spinner } from '../spinner.js';
+import { TickIcon } from '../icons.js';
 import { extractProps } from '../../helpers/extract-props.js';
 import { useThemeSizeProps } from '../../helpers/theme-size.js';
 
@@ -24,7 +25,19 @@ type PolymorphicBaseButtonProps<C extends React.ElementType = 'button'> = {
   /** Element type to render as (e.g., 'a', 'span', etc.) */
   as?: C;
 } & BaseButtonOwnProps &
-  ComponentPropsWithout<C, RemovedProps | keyof BaseButtonOwnProps | 'as'>;
+  BaseButtonDoneProps &
+  ComponentPropsWithout<C, RemovedProps | keyof BaseButtonOwnProps | 'as' | 'done'>;
+
+interface BaseButtonDoneProps {
+  /**
+   * Shows a tick in place of the icon to say that the action finished. The tick takes the
+   * icon's box, so nothing moves, and the icon comes back as soon as `done` is false again. On
+   * an `iconOnly` button the tick replaces the content. It doesn't block the press. Screen
+   * readers don't announce the tick, so also change the label or `aria-label` (for example,
+   * `Copy` to `Copied`).
+   */
+  done?: boolean;
+}
 
 /**
  * BaseButton props interface that combines all available props
@@ -67,6 +80,7 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
     color,
     radius,
     disabled: nativeDisabled,
+    done = false,
     ...baseButtonProps
   } = extractProps(props, baseButtonPropDefs);
 
@@ -101,13 +115,7 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
     const content =
       asChild && React.isValidElement(children) ? (children.props as { children?: React.ReactNode }).children : children;
     // Fragments are see-through: their own first and last children are the edges.
-    const flatten = (nodes: React.ReactNode): React.ReactNode[] =>
-      React.Children.toArray(nodes).flatMap((node) =>
-        React.isValidElement(node) && node.type === React.Fragment
-          ? flatten((node.props as { children?: React.ReactNode }).children)
-          : [node],
-      );
-    const items = flatten(content);
+    const items = flattenFragments(content);
     const isIcon = (node: React.ReactNode) => React.isValidElement(node) && node.type === 'svg';
     return { iconStart: isIcon(items[0]), iconEnd: isIcon(items[items.length - 1]) };
   }, [asChild, children]);
@@ -116,13 +124,34 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
   const composedRef = useComposedRefs(forwardedRef, elementRef as React.Ref<BaseButtonElement>);
   useLayoutEffect(() => {
     const element = elementRef.current;
-    // While loading the label sits in a wrapper; keep the edges read before it.
-    if (!element || loading) return;
+    // While loading the label sits in a wrapper, and while done the tick stands at the start;
+    // keep the edges read before either.
+    if (!element || loading || done) return;
     const iconStart = edgeIsSvg(element, 'start');
     const iconEnd = edgeIsSvg(element, 'end');
     setDomEdges((prev) => (prev && prev.iconStart === iconStart && prev.iconEnd === iconEnd ? prev : { iconStart, iconEnd }));
   });
   const { iconStart, iconEnd } = domEdges ?? childEdges;
+
+  // Done swaps the icon for a tick in the same place: the leading icon when there is one, the
+  // whole content on an icon-only button. Without a leading icon the tick goes before the label.
+  const iconOnly = Boolean((baseButtonProps as Record<string, unknown>)['data-icon-only']);
+  const content = React.useMemo(() => {
+    if (!done) return children;
+    const tick = <TickIcon key="kui-done-tick" className="kui-BaseButtonTick" aria-hidden />;
+    const swap = (nodes: React.ReactNode): React.ReactNode => {
+      if (iconOnly) return tick;
+      const items = flattenFragments(nodes);
+      const first = items.findIndex((node) => !(typeof node === 'string' && !node.trim()));
+      if (iconStart && first !== -1) return items.map((node, index) => (index === first ? tick : node));
+      return [tick, ...items];
+    };
+    if (asChild && React.isValidElement(children)) {
+      const element = children as React.ReactElement<{ children?: React.ReactNode }>;
+      return React.cloneElement(element, undefined, swap(element.props.children));
+    }
+    return swap(children);
+  }, [done, children, iconOnly, iconStart, asChild]);
 
   // asChild takes precedence over as prop for Radix Slot integration
   // When asChild is true, we use Slot.Root to merge props onto the child element
@@ -167,6 +196,7 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
       data-radius={radius}
       data-icon-start={iconStart || undefined}
       data-icon-end={iconEnd || undefined}
+      data-done={done || undefined}
       {...baseButtonProps}
       {...accessibilityProps}
       // After the spread: `data-disabled` styles `<Button asChild disabled>`, and a wrapping
@@ -189,7 +219,7 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
            * Both are classes, not style attributes, so a loading button carries no inline style.
            */}
           <span className="kui-BaseButtonContent" aria-hidden>
-            {children}
+            {content}
           </span>
 
           {/* The label stays the name; the hidden "Loading" only describes (aria-describedby reads hidden text). */}
@@ -208,12 +238,21 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
           </Flex>
         </>
       ) : (
-        children
+        content
       )}
     </Comp>
   );
 });
 BaseButton.displayName = 'BaseButton';
+
+/** The child list with fragments opened up: a fragment's own children are the edges. */
+function flattenFragments(nodes: React.ReactNode): React.ReactNode[] {
+  return React.Children.toArray(nodes).flatMap((node) =>
+    React.isValidElement(node) && node.type === React.Fragment
+      ? flattenFragments((node.props as { children?: React.ReactNode }).children)
+      : [node],
+  );
+}
 
 /** Whether the first or last rendered node of `element` (blank text and comments skipped) is an svg. */
 function edgeIsSvg(element: Element, edge: 'start' | 'end'): boolean {

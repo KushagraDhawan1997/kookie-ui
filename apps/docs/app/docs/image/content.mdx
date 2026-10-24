@@ -1,0 +1,143 @@
+---
+title: Image
+description: Image shows a picture that loads lazily, fills its box and takes the theme's corner.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/image.tsx
+---
+
+Image renders one `img` element with no wrapper. It loads lazily, fills the box you give it and rests on a quiet neutral fill until the picture arrives. A person's photo or initials is an [Avatar](/docs/avatar).
+
+## Playground
+
+import ImagePlayground from '../../playground/image-playground';
+
+<ImagePlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Card, Flex, Image, Text } from '@kushagradhawan/kookie-ui';
+
+export function ListingCard() {
+  return (
+    <Card size="2">
+      <Flex direction="column" gap="3">
+        <Image
+          src="/listings/loft.jpg"
+          alt="A bright loft with a sofa under tall windows"
+          width="100%"
+          height="200px"
+        />
+        <Flex direction="column" gap="1">
+          <Text size="2" weight="medium">Riverside loft</Text>
+          <Text size="2" emphasis="medium">2 beds, from $180 a night</Text>
+        </Flex>
+      </Flex>
+    </Card>
+  );
+}
+```
+
+## Best practices
+
+**Write `alt` for what the picture shows.** Describe what someone would miss without it, such as "A bright loft with a sofa under tall windows". The types require `alt`.
+
+**Pass an empty `alt` for decoration.** When a picture adds nothing the text doesn't already say, set `alt=""`. A screen reader then skips it.
+
+**Set a width and a height.** With both set, the box holds its place while the picture loads, so the content below doesn't jump. The neutral fill shows in that box until the picture arrives.
+
+**Load the first picture on the screen eagerly.** Image sets `loading="lazy"` by default. Set `loading="eager"` on a hero picture that is visible when the page opens, so it doesn't wait.
+
+**Don't use it for icons.** An icon belongs in a HugeIcons component, which follows the text colour and size of the control around it.
+
+## Fit
+
+`fit` sets how the picture fills its box, as CSS `object-fit`. It matters only when the box has a different shape from the picture.
+
+| Fit | Behaviour | Use it for |
+| --- | --- | --- |
+| `cover` | Fills the box and crops the edges | Photos in cards and grids. This is the default |
+| `contain` | Shows the whole picture, with space around it | Logos, screenshots and product shots |
+| `fill` | Stretches to the box | Pictures already cut to the box's shape |
+| `scale-down` | Like `contain`, but never larger than the picture | Small pictures in a large box |
+| `none` | Keeps the picture's own size and crops it | Pixel art and fixed-size assets |
+
+## Size and corner
+
+`width` and `height` set the CSS size of the `img` itself, as any CSS length, and accept responsive objects. `minWidth`, `maxWidth`, `minHeight` and `maxHeight` work the same way. Without a width, the picture shows at its own size and never grows wider than its container.
+
+`radius` sets the corner. With no `radius`, Image takes the theme's corner. `radius="none"` squares it.
+
+## Examples
+
+### Grid of photos
+
+Give every Image the same height and leave `fit` at `cover`, so photos of different shapes line up.
+
+```tsx
+<Grid columns="3" gap="2">
+  {photos.map((photo) => (
+    <Image
+      key={photo.id}
+      src={photo.url}
+      alt={photo.description}
+      width="100%"
+      height="160px"
+    />
+  ))}
+</Grid>
+```
+
+### Logo on a card
+
+`fit="contain"` shows the whole logo without cropping it.
+
+```tsx
+<Image
+  src="/logos/northwind.svg"
+  alt="Northwind"
+  width="120px"
+  height="40px"
+  fit="contain"
+/>
+```
+
+### Picture that fails to load
+
+If the address is broken, the neutral fill stays in the box, so the layout doesn't change. Pass `onError` to replace the picture or report the failure. Image calls your `onLoad` and `onError` as usual.
+
+### Hero picture
+
+The picture at the top of a page is visible straight away, so skip lazy loading.
+
+```tsx
+<Image
+  src="/hero.jpg"
+  alt="The dashboard on a laptop"
+  width="100%"
+  height={{ initial: '240px', md: '420px' }}
+  loading="eager"
+/>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `src` | `string` | | The picture's address. Required |
+| `alt` | `string` | | The text alternative. Required. Pass `""` for decoration |
+| `fit` | `'cover' \| 'contain' \| 'fill' \| 'scale-down' \| 'none'` | `'cover'` | How the picture fills its box |
+| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Theme radius | The corner |
+| `width` | `string`, responsive | | The CSS width of the `img` |
+| `height` | `string`, responsive | | The CSS height of the `img` |
+| `minWidth`, `maxWidth` | `string`, responsive | | The CSS minimum and maximum width |
+| `minHeight`, `maxHeight` | `string`, responsive | | The CSS minimum and maximum height |
+| `loading` | `'lazy' \| 'eager'` | `'lazy'` | When the browser loads the picture |
+| `decoding` | `'async' \| 'sync' \| 'auto'` | `'async'` | How the browser decodes the picture |
+
+Image also accepts every attribute of the HTML `img` element except `width` and `height`, which the props above replace. `className`, `style` and the ref all go to the `img`.
+
+## Accessibility
+
+- **Name:** A screen reader announces the `alt` text as an image. The types require `alt`, so a picture can't be left without one by mistake.
+- **Decoration:** With `alt=""`, the picture has the presentation role and a screen reader skips it.
+- **Text in pictures:** Don't put words that people need inside a picture. If you must, repeat them in `alt` or in the text nearby.

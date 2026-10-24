@@ -1,0 +1,163 @@
+---
+title: Table
+description: A table lays out records in rows and columns so people can compare them, such as members, invoices or deploys.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/table.tsx
+---
+
+A table shows records that share the same fields, one row per record and one column per field, so people can scan down a column and compare. It renders a real HTML `table`. Content that people read once, such as the settings of one item, reads better as a list of label and value pairs or a [Card](/docs/card).
+
+## Playground
+
+import TablePlayground from '../../playground/table-playground';
+
+<TablePlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Chip, Table } from '@kushagradhawan/kookie-ui';
+
+export function MembersTable({ members }: { members: { id: string; name: string; email: string; role: string }[] }) {
+  return (
+    <Table.Root variant="surface">
+      <Table.Header>
+        <Table.Row>
+          <Table.ColumnHeaderCell>Name</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>Email</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell justify="end">Role</Table.ColumnHeaderCell>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {members.map((member) => (
+          <Table.Row key={member.id}>
+            <Table.RowHeaderCell>{member.name}</Table.RowHeaderCell>
+            <Table.Cell>{member.email}</Table.Cell>
+            <Table.Cell justify="end"><Chip variant="soft">{member.role}</Chip></Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table.Root>
+  );
+}
+```
+
+## Anatomy
+
+```tsx
+<Table.Root>
+  <Table.Header>
+    <Table.Row>
+      <Table.ColumnHeaderCell />
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.RowHeaderCell />
+      <Table.Cell />
+    </Table.Row>
+  </Table.Body>
+</Table.Root>
+```
+
+- **Root:** The outer `div`, a scroll area and the `table` inside it. It sets the size and the look.
+- **Header:** The `thead`, which holds the row of column names.
+- **Body:** The `tbody`, which holds the records.
+- **Row:** A `tr`. It sets the vertical alignment of its cells.
+- **ColumnHeaderCell:** A `th` with `scope="col"`, which names a column.
+- **RowHeaderCell:** A `th` with `scope="row"`, which names a row, such as the person in a members table.
+- **Cell:** A `td`, which holds one value.
+
+## Best practices
+
+**Use a table for data, not for layout.** A screen reader announces rows and columns, so a table used to place things side by side reads as nonsense. Use a [Grid](/docs/grid) for layout.
+
+**Name every column.** Put a `ColumnHeaderCell` above each column, even an actions column. A screen reader reads the header with each cell, so "Role: Admin" makes sense where "Admin" alone may not.
+
+**Mark the cell that names the row.** Use `RowHeaderCell` for the name, the title or the ID. It reads the same as a cell but tells assistive technology what each row is about.
+
+**Align numbers to the end.** Set `justify="end"` on the header and the cells of a number column, so digits line up by place and the header sits over them.
+
+**Keep each cell to one value.** A cell with a name, an email and a date is hard to scan or sort. Split it into columns, or drop the fields that people don't compare.
+
+## Variant
+
+`variant` sets how the table stands apart from the page.
+
+| Variant | Look | Use it for |
+| --- | --- | --- |
+| `ghost` | Lines between rows only | Tables inside a Card or a page section. This is the default |
+| `surface` | A border, a corner and a tinted header | A table that stands alone on the page |
+
+## Size
+
+`size` sets the text and the cell padding together. Size 2 uses 14-pixel text with 8 pixels above and below each cell and 12 at the sides. Size 1 uses 12-pixel text for dense data, and sizes 3 and 4 use 16 and 18-pixel text. When you leave it unset, the table follows the nearest Theme size. `size` accepts a responsive object.
+
+## Examples
+
+### Wide tables on small screens
+
+The table scrolls sideways inside its root when it is wider than its container, so the page doesn't scroll. Set `minWidth` on a column that must not get narrower than its content.
+
+```tsx
+<Table.ColumnHeaderCell minWidth="200px">Project</Table.ColumnHeaderCell>
+```
+
+### Fixed column widths
+
+`layout="fixed"` makes columns take the widths you set on the header cells instead of sizing to their content. Use it when rows load in pages and the columns must not shift.
+
+```tsx
+<Table.Root layout="fixed">
+  <Table.Header>
+    <Table.Row>
+      <Table.ColumnHeaderCell width="40%">Name</Table.ColumnHeaderCell>
+      <Table.ColumnHeaderCell>Updated</Table.ColumnHeaderCell>
+    </Table.Row>
+  </Table.Header>
+</Table.Root>
+```
+
+### Rows with mixed heights
+
+Cells line up to the top by default. Set `align="center"` on a row that mixes an [Avatar](/docs/avatar) with a line of text, so the text centres beside it.
+
+## Props
+
+### Root
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'ghost' \| 'surface'` | `'ghost'` | How the table stands apart from the page |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | Theme size | The text and cell padding step |
+| `layout` | `'auto' \| 'fixed'`, responsive | | The table layout. `fixed` takes widths from the first row |
+
+Root also accepts every attribute of the HTML `div` element. They go on the outer `div`, except `aria-label`, `aria-labelledby` and `aria-describedby`, which go on the `table`.
+
+### Row
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `align` | `'start' \| 'center' \| 'end' \| 'baseline'`, responsive | | The vertical alignment of the row's cells |
+
+Row also accepts every attribute of the HTML `tr` element.
+
+### Cell, ColumnHeaderCell and RowHeaderCell
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `justify` | `'start' \| 'center' \| 'end'`, responsive | | The horizontal alignment of the content |
+| `width`, `minWidth`, `maxWidth` | `string`, responsive | | The width of the cell |
+| `p`, `px`, `py`, `pt`, `pr`, `pb`, `pl` | `'0'` to `'12'` or a CSS length, responsive | | The padding of the cell |
+
+Cell accepts every attribute of the HTML `td` element. The two header cells accept every attribute of the HTML `th` element.
+
+### Header and Body
+
+Header and Body take no props of their own. They accept every attribute of the HTML `thead` and `tbody` elements.
+
+## Accessibility
+
+- **Structure:** The parts render native `table`, `thead`, `tbody`, `tr`, `th` and `td` elements, so a screen reader announces the number of rows and columns and lets people move cell by cell.
+- **Headers:** Column header cells have `scope="col"` and row header cells have `scope="row"`. A screen reader reads the matching headers as people move through the cells.
+- **Name:** `aria-label` or `aria-labelledby` on Root names the table. A `caption` element as the first child of Root also names it, and shows the name on the page.
+- **Scrolling:** A wide table scrolls inside its root. The scrollbar shows when the pointer is over the table, so keep the most important columns first.

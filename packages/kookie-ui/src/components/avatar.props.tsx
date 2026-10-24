@@ -21,6 +21,11 @@ const avatarPropDefs = {
    */
   status: { type: 'enum', values: accentColors, default: undefined },
   /**
+   * The words the status dot stands for, such as "Online". A screen reader reads them with the
+   * avatar. Without it the dot is hidden from screen readers.
+   */
+  statusLabel: { type: 'string', default: undefined },
+  /**
    * Custom badge content. Renders at the bottom-right corner.
    * Cannot be used together with `status`.
    */
@@ -36,6 +41,7 @@ const avatarPropDefs = {
   variant: PropDef<(typeof variants)[number]>;
   fallback: PropDef<React.ReactNode>;
   status: PropDef<(typeof accentColors)[number] | undefined>;
+  statusLabel: PropDef<string | undefined>;
   badge: PropDef<React.ReactNode>;
   fit: PropDef<(typeof objectFitValues)[number]>;
 };

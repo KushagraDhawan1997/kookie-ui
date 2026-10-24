@@ -6,6 +6,7 @@ import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 import { appearanceScript } from '@kushagradhawan/kookie-ui/appearance-script';
 import { BASE_URL } from '../lib/constants';
+import { DevOutlineGate } from '../components/dev-outline';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -187,6 +188,7 @@ export default function RootLayout({
           })}
         </Script>
         <Analytics />
+        <DevOutlineGate />
       </body>
     </html>
   );

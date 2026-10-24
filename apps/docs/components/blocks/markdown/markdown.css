@@ -93,26 +93,25 @@
  * Text
  * -------------------------------------------------------------------------------------------*/
 
-.markdown :is(ul, ol):where(:not([class*='rt-'])) {
-  margin-block: 0;
+.markdown :is(ul, ol):where(:not([class*='kui-'])) {
   padding-left: 1.5em;
 }
 
-.markdown ul:where(:not([class*='rt-'])) {
+.markdown ul:where(:not([class*='kui-'])) {
   list-style-type: disc;
 }
 
-.markdown ol:where(:not([class*='rt-'])) {
+.markdown ol:where(:not([class*='kui-'])) {
   list-style-type: decimal;
 }
 
 /* A component's own list (Sidebar.Menu and the like) is not prose. */
-.markdown li:where(:not([class*='rt-'])) {
+.markdown li:where(:not([class*='kui-'])) {
   padding-left: 0.25em;
 }
 
-.markdown li:where(:not([class*='rt-'])) + li,
-.markdown li:where(:not([class*='rt-'])) > :is(ul, ol) {
+.markdown li:where(:not([class*='kui-'])) + li,
+.markdown li:where(:not([class*='kui-'])) > :is(ul, ol) {
   margin-top: var(--markdown-list-gap);
 }
 

@@ -21,8 +21,16 @@ const Spinner = React.forwardRef<SpinnerElement, SpinnerProps>((props, forwarded
 
   if (!loading) return children;
 
+  // Decorative unless named: a named spinner is a status message, an unnamed one is hidden.
+  const named =
+    spinnerProps['aria-label'] !== undefined || spinnerProps['aria-labelledby'] !== undefined;
+
   const spinner = (
-    <span {...spinnerProps} ref={forwardedRef} className={classNames('kui-Spinner', className)}>
+    <span
+      role={named ? 'status' : undefined}
+      aria-hidden={named ? undefined : true}
+      {...spinnerProps}
+      ref={forwardedRef} className={classNames('kui-Spinner', className)}>
       <span className="kui-SpinnerWheel">
         <span className="kui-SpinnerLeaf" />
         <span className="kui-SpinnerLeaf" />
@@ -40,7 +48,7 @@ const Spinner = React.forwardRef<SpinnerElement, SpinnerProps>((props, forwarded
 
   return (
     <Flex asChild position="relative" align="center" justify="center">
-      <span>
+      <span aria-busy="true">
         {/**
          * `display: contents` removes the content from the accessibility tree in some browsers,
          * so we force remove it with `aria-hidden`

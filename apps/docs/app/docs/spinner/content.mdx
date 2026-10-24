@@ -1,0 +1,91 @@
+---
+title: Spinner
+description: A spinner shows that something is loading when you can't say how long it will take.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/spinner.tsx
+---
+
+A spinner shows that something is loading. It doesn't say how much is done, so use it for short waits. When you know how far along a task is, use a [Progress](/docs/progress) bar. When the wait follows a button press, use the button's own `loading` prop instead.
+
+## Playground
+
+import SpinnerPlayground from '../../playground/spinner-playground';
+
+<SpinnerPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Flex, Spinner, Text } from '@kushagradhawan/kookie-ui';
+
+export function CommentsLoading() {
+  return (
+    <Flex align="center" justify="center" gap="2" py="6" role="status">
+      <Spinner />
+      <Text size="2" emphasis="medium">
+        Loading comments
+      </Text>
+    </Flex>
+  );
+}
+```
+
+## Best practices
+
+**Say what is loading.** Put a short label next to the spinner, such as "Loading comments". A spinner on its own says nothing to a screen reader and little to anyone else.
+
+**Show it where the content will appear.** Put the spinner in the panel, the list or the cell that is waiting, not in the corner of the page. People look where the result is going to be.
+
+**Hold the spinner back for quick loads.** If a load usually finishes in a moment, wait a few hundred milliseconds before showing the spinner. A spinner that flashes on and off is more distracting than a short pause.
+
+**Use the button's `loading` prop for presses.** A [Button](/docs/button) with `loading` shows its own spinner, keeps its width and blocks a second press. Don't put a Spinner inside a button yourself.
+
+**Use a Progress bar for long tasks.** A wait of more than a few seconds needs a sense of how long is left. Show a [Progress](/docs/progress) bar with a value when you have one.
+
+## Loading
+
+`loading` turns the spinner on and off. It is `true` unless you set it, so a bare `<Spinner />` always spins.
+
+With children, `loading` swaps the children for the spinner in the same space. The children stay in the layout, hidden, so the area keeps its size and nothing around it moves. When `loading` is `false`, the children show as they are.
+
+```tsx
+<Spinner loading={refreshing}>
+  <Text size="2">{count} results</Text>
+</Spinner>
+```
+
+The spinner is 16 pixels square and takes the current text colour. To change its colour, set `color` on the element around it. It turns once every 800 milliseconds, and three times more slowly when the system asks for reduced motion.
+
+## Examples
+
+### Loading a table cell
+
+Wrap the value with `loading` while it refreshes. The column keeps its width, so the table doesn't shift as each row finishes.
+
+```tsx
+<Table.Cell>
+  <Spinner loading={row.pending}>
+    <Text size="2">{row.total}</Text>
+  </Spinner>
+</Table.Cell>
+```
+
+### Waiting for a reply
+
+In a chat, show a spinner with a label where the next message will appear, then replace both with the message. The [Chatbar](/docs/chatbar) send button shows its own spinner while a reply is submitted.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `loading` | `boolean` | `true` | Shows the spinner. With children, `false` shows the children instead |
+| `children` | `ReactNode` | | Content the spinner replaces while loading, keeping its space |
+
+Spinner also accepts every attribute of the HTML `span` element.
+
+## Accessibility
+
+- **Silent by default:** The spinner is hidden from screen readers. Pair it with visible text, and put that text in an element with `role="status"` so a screen reader reads it when it appears.
+- **Named:** With an `aria-label`, such as "Loading comments", the spinner takes `role="status"` and a screen reader reads the name. Use it when there is no visible text.
+- **Busy regions:** When a whole area is reloading, set `aria-busy` on that area while the spinner shows.
+- **Hidden children:** While loading, children are hidden from screen readers as well as from view, so their old value isn't read as current. Their wrapper has `aria-busy`.
+- **Motion:** With reduced motion turned on, the spinner keeps moving, three times more slowly, so it still shows that something is happening.

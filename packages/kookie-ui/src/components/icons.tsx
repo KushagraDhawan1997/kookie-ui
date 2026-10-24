@@ -146,4 +146,14 @@ const FileTextIcon = React.forwardRef<IconElement, IconProps>((_props, _forwarde
 });
 FileTextIcon.displayName = 'FileTextIcon';
 
-export { CloseIcon, PaperclipIcon, FileIcon, FileTextIcon };
+/** The tick a button shows in place of its icon while `done`. Drawn on the 24 grid at the icon set's stroke. */
+const TickIcon = React.forwardRef<IconElement, IconProps>((props, forwardedRef) => {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props} ref={forwardedRef}>
+      <path d="M5 12.75L9.5 17.25L19 7.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+});
+TickIcon.displayName = 'TickIcon';
+
+export { CloseIcon, PaperclipIcon, FileIcon, FileTextIcon, TickIcon };

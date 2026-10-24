@@ -9,6 +9,8 @@ import {
   accordionTriggerPropDefs,
   accordionContentPropDefs,
 } from './accordion.props.js';
+import { ChevronDownIcon } from './icons.js';
+import { Slottable } from './slot.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../helpers/theme-size.js';
 
@@ -23,9 +25,13 @@ import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-p
 
 // Root component
 type AccordionRootElement = React.ElementRef<typeof AccordionPrimitive.Root>;
-interface AccordionRootProps
-  extends ComponentPropsWithout<typeof AccordionPrimitive.Root, RemovedProps>,
-    AccordionRootOwnProps {}
+// Radix's Root props are a union of single and multiple. Omit each member on its own, so
+// `defaultValue`, `value` and `collapsible` survive with the right type for each `type`.
+type AccordionRootRadixProps =
+  | Omit<AccordionPrimitive.AccordionSingleProps, 'asChild' | 'color'>
+  | Omit<AccordionPrimitive.AccordionMultipleProps, 'asChild' | 'color'>;
+
+type AccordionRootProps = AccordionRootRadixProps & AccordionRootOwnProps;
 
 const AccordionRoot = React.forwardRef<AccordionRootElement, AccordionRootProps>(
   (ownProps, forwardedRef) => {
@@ -133,23 +139,14 @@ const AccordionTrigger = React.forwardRef<AccordionTriggerElement, AccordionTrig
   ({ children, ...props }, forwardedRef) => {
     const { className, ...triggerProps } = extractProps(props, accordionTriggerPropDefs);
 
-    // Radix UI handles focus management automatically
-    const triggerRef = React.useRef<HTMLButtonElement>(null);
-
     return (
       <AccordionPrimitive.Trigger
         {...triggerProps}
-        ref={(node) => {
-          triggerRef.current = node;
-          if (typeof forwardedRef === 'function') {
-            forwardedRef(node);
-          } else if (forwardedRef) {
-            forwardedRef.current = node;
-          }
-        }}
+        ref={forwardedRef}
         className={classNames('kui-AccordionTrigger', className)}
       >
-        {children}
+        <Slottable>{children}</Slottable>
+        <ChevronDownIcon className="kui-AccordionChevron" aria-hidden />
       </AccordionPrimitive.Trigger>
     );
   },
@@ -171,7 +168,6 @@ const AccordionContent = React.forwardRef<AccordionContentElement, AccordionCont
         {...contentProps}
         ref={forwardedRef}
         className={classNames('kui-AccordionContent', className)}
-        aria-live="polite"
       >
         <div className="kui-AccordionContentInner">{children}</div>
       </AccordionPrimitive.Content>

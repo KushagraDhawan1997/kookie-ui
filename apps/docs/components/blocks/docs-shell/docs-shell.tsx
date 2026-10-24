@@ -1,10 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { Box, Flex, Button, Shell } from '@kushagradhawan/kookie-ui';
+import { Box, Flex, Shell, Toolbar, ToolbarButton, ToolbarSlot } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { SidebarLeftIcon } from '@hugeicons/core-free-icons';
-import { createPortal } from 'react-dom';
 import { DocsSidebar } from './docs-sidebar';
 import type { DocsLinkComponent, DocsLogoConfig, DocsNavigationConfig } from './types';
 
@@ -26,19 +25,15 @@ export interface DocsShellProps {
   linkComponent?: DocsLinkComponent;
   /** A band at the top of the content pane, edge to edge, with the top bar floating over it. */
   hero?: React.ReactNode;
+  /**
+   * Controls at the end of the top bar, inside its `Toolbar`: `ToolbarGroup`s, `ToolbarButton`s
+   * or a `ToolbarOverflow`. The page's own actions follow them.
+   */
+  toolbar?: React.ReactNode;
 }
 
-/** Where a page puts its own actions: the end of the shell's top bar. */
-const PageActionsSlot = React.createContext<HTMLElement | null>(null);
-
-/**
- * Renders a page's actions (copy page, source and so on) in the shell's top bar, not in the page
- * header, so the header holds only the title and the description. Renders nothing outside a shell.
- */
-export function DocsShellPageActions({ children }: { children: React.ReactNode }) {
-  const slot = React.useContext(PageActionsSlot);
-  return slot ? createPortal(children, slot) : null;
-}
+/** The `ToolbarSlot` at the end of the top bar. A page fills it with `<ToolbarFill name={DOCS_PAGE_ACTIONS}>`. */
+export const DOCS_PAGE_ACTIONS = 'docs-page-actions';
 
 /** Documentation app frame: a searchable sidebar beside the page content. */
 export function DocsShell({
@@ -53,9 +48,8 @@ export function DocsShell({
   pathname = '',
   linkComponent,
   hero,
+  toolbar,
 }: DocsShellProps) {
-  const [actionsSlot, setActionsSlot] = React.useState<HTMLElement | null>(null);
-
   return (
     <Shell.Root height={height}>
       <Shell.Sidebar
@@ -76,31 +70,33 @@ export function DocsShell({
       </Shell.Sidebar>
 
       <Shell.Content className="kd-shell-content">
-        {/* The top bar: the sidebar button at the start, the current page's actions at the end.
-            With a hero, the bar floats over it, so the hero runs to the pane's top edge. */}
-        <Box position="relative">
-          {hero}
-          <Flex
-            align="center"
-            justify="between"
-            gap="4"
-            px={{ initial: '5', sm: '6' }}
-            pt="5"
-            position={hero ? 'absolute' : undefined}
-            top="0"
-            left="0"
-            right="0"
-          >
-            <Button iconOnly variant="ghost" size="3" color="gray" asChild aria-label="Toggle navigation">
-              <Shell.Trigger target="sidebar">
+        {/* The top bar floats over the page, the way the sidebar's header floats over its list:
+            the pane gives it its inset and the page starts below it. The sidebar button comes
+            first, then `toolbar`, then the current page's actions (Source and the like) through a
+            ToolbarSlot. One Toolbar for the whole band, as in v2: one tab stop, arrow keys between
+            every control, and `backdrop` gives each control and group a raised surface. Its size
+            is one step above the Shell's. */}
+        <Shell.PaneHeader float>
+          <Toolbar backdrop aria-label="Page" flexGrow="1">
+            <Shell.Trigger target="sidebar" asChild>
+              <ToolbarButton iconOnly aria-label="Toggle navigation">
                 {mobileTriggerIcon ?? <HugeiconsIcon icon={SidebarLeftIcon} strokeWidth={1.75} />}
-              </Shell.Trigger>
-            </Button>
-            <Flex ref={setActionsSlot} align="center" gap="5" />
-          </Flex>
-        </Box>
+              </ToolbarButton>
+            </Shell.Trigger>
+            {/* The trailing cluster grows, so a ToolbarOverflow in `toolbar` has the room to measure. */}
+            <Flex className="kd-toolbar-trailing" align="center" justify="end" gap="3" flexGrow="1" minWidth="0">
+              {toolbar}
+              <ToolbarSlot name={DOCS_PAGE_ACTIONS} />
+            </Flex>
+          </Toolbar>
+        </Shell.PaneHeader>
 
-        <PageActionsSlot.Provider value={actionsSlot}>{children}</PageActionsSlot.Provider>
+        <Shell.Scroll fade>
+          {/* The page starts below the bar. A hero gives that room back, so it runs to the pane's
+              top edge with the bar over it. */}
+          {hero && <Box mt="calc(-1 * var(--kui-pane-inset-start))">{hero}</Box>}
+          {children}
+        </Shell.Scroll>
       </Shell.Content>
     </Shell.Root>
   );

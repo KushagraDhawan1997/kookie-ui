@@ -1,0 +1,170 @@
+---
+title: Radio Group
+description: A radio group lets people pick exactly one option from a short list that stays visible.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/radio-group.tsx
+---
+
+A radio group shows every option at once and lets people choose one of them. When people can choose more than one, use a [Checkbox](/docs/checkbox) group. A long list fits better in a [Select](/docs/select), and switching between views of the same content is a [Segmented Control](/docs/segmented-control).
+
+## Playground
+
+import RadioGroupPlayground from '../../playground/radio-group-playground';
+
+<RadioGroupPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Flex, RadioGroup, Text } from '@kushagradhawan/kookie-ui';
+
+export function DeliveryOptions() {
+  return (
+    <Flex direction="column" gap="3">
+      <Text as="div" weight="medium" id="delivery-label">
+        Delivery
+      </Text>
+      <RadioGroup.Root
+        name="delivery"
+        defaultValue="standard"
+        aria-labelledby="delivery-label"
+      >
+        <RadioGroup.Item value="standard">Standard, 3 to 5 days</RadioGroup.Item>
+        <RadioGroup.Item value="express">Express, next day</RadioGroup.Item>
+        <RadioGroup.Item value="pickup">Pick up in store</RadioGroup.Item>
+      </RadioGroup.Root>
+    </Flex>
+  );
+}
+```
+
+## Anatomy
+
+```tsx
+<RadioGroup.Root>
+  <RadioGroup.Item value="a">Label</RadioGroup.Item>
+</RadioGroup.Root>
+```
+
+- **RadioGroup.Root:** Holds the selected value and sets `size`, `variant` and `color` for every item.
+- **RadioGroup.Item:** One option. With children it renders a label around the circle and the text. Without children it renders the circle alone, for your own layout.
+
+`Radio` is a separate component: a native `input type="radio"` with the same look, for forms that manage their own radio inputs.
+
+## Best practices
+
+**Use a radio group for two to about six options.** People can compare every choice without opening anything. Past that, the list gets long to scan, and a [Select](/docs/select) takes less room.
+
+**Select a sensible default.** A preselected option tells people what most of them choose and saves a step. Leave the group empty only when no answer is safe to assume, such as a question people must think about.
+
+**Give the group a visible question.** "Delivery" above the options says what the choice is for. Point `aria-labelledby` at it so screen readers announce it too.
+
+**Keep labels short and parallel.** Each label should answer the same question in the same form, so people compare options rather than sentences.
+
+**Don't use a radio group for an on and off setting.** One option that is on or off is a [Switch](/docs/switch) or a [Checkbox](/docs/checkbox). A pair of radios for "On" and "Off" doubles the reading for one decision.
+
+## Size
+
+`size` picks the circle: 16, 20, 24 and 26 pixels for sizes 1 to 4. Size 2 is the default. The label text in a group follows the same size, and the circle takes the line height of that text, so it lines up with the first line of the label.
+
+## Examples
+
+### Options with a description
+
+Pass your own layout as children. The whole block becomes the label, so a click anywhere on it selects the option.
+
+```tsx
+<RadioGroup.Root defaultValue="monthly" aria-label="Billing period">
+  <RadioGroup.Item value="monthly">
+    <Flex direction="column">
+      <Text weight="medium">Monthly</Text>
+      <Text emphasis="medium">Billed every month, cancel any time</Text>
+    </Flex>
+  </RadioGroup.Item>
+  <RadioGroup.Item value="yearly">
+    <Flex direction="column">
+      <Text weight="medium">Yearly</Text>
+      <Text emphasis="medium">Two months free, billed once a year</Text>
+    </Flex>
+  </RadioGroup.Item>
+</RadioGroup.Root>
+```
+
+### Required answer
+
+Leave out `defaultValue` and set `required` when people must make a choice. The form won't submit until one option is selected.
+
+```tsx
+<RadioGroup.Root name="role" required aria-labelledby="role-label">
+  <RadioGroup.Item value="admin">Admin</RadioGroup.Item>
+  <RadioGroup.Item value="member">Member</RadioGroup.Item>
+</RadioGroup.Root>
+```
+
+### Native radio inputs
+
+`Radio` renders a real `input type="radio"`. Inputs with the same `name` form a group, as in plain HTML. `onValueChange` fires with the input's `value` when it is selected.
+
+```tsx
+<Text as="label" size="2">
+  <Flex gap="2">
+    <Radio name="plan" value="free" defaultChecked />
+    Free
+  </Flex>
+</Text>
+```
+
+## Props
+
+### RadioGroup.Root
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` | | The selected value, controlled |
+| `defaultValue` | `string` | | The selected value at first render |
+| `onValueChange` | `(value: string) => void` | | Fires with the new value |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | The circle and label size |
+| `variant` | `'raised' \| 'solid' \| 'soft' \| 'outline' \| 'surface'` | `'raised'` | The look of every item |
+| `color` | `AccentColor` | Theme accent | The colour of every item |
+| `name` | `string` | | The field name in a form |
+| `disabled` | `boolean` | `false` | Disables every item |
+| `required` | `boolean` | `false` | An option must be selected before the form submits |
+| `orientation` | `'horizontal' \| 'vertical'` | | Which arrow keys move between items. Both work when unset |
+| `loop` | `boolean` | `true` | Arrow keys wrap from the last item to the first |
+| `dir` | `'ltr' \| 'rtl'` | | The reading direction for arrow keys |
+| `asChild` | `boolean` | `false` | Renders the child element as the group |
+
+RadioGroup.Root also accepts every attribute of the HTML `div` element.
+
+### RadioGroup.Item
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` | | Required. The value this option selects |
+| `disabled` | `boolean` | `false` | Disables this option |
+
+RadioGroup.Item also accepts every attribute of the HTML `button` element.
+
+### Radio
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` | | Required. The value the input submits |
+| `onValueChange` | `(value: string) => void` | | Fires with `value` when the input is selected |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | The circle size |
+| `variant` | `'raised' \| 'solid' \| 'soft' \| 'outline' \| 'surface'` | `'raised'` | The look |
+| `color` | `AccentColor` | Theme accent | The colour when selected |
+
+Radio also accepts every attribute of the HTML `input` element that applies to radio inputs, such as `name`, `checked`, `defaultChecked`, `disabled` and `required`.
+
+## Accessibility
+
+| Key | Action |
+| --- | --- |
+| Tab | Moves focus into the group, onto the selected option, and out again |
+| Arrow keys | Move to the next or previous option and select it |
+| Space | Selects the focused option |
+
+- **Name:** Name the group with `aria-labelledby` or `aria-label`. Each item takes its name from its label text. An item without children needs its own `aria-label`.
+- **State:** The root has `role="radiogroup"` and each item has `role="radio"`. A screen reader announces the option, whether it is selected, and its position in the group.
+- **Focus:** The group is one tab stop. Focus enters on the selected option, or on the first option when none is selected.
+- **Radio:** `Radio` is a native input, so the browser handles its keyboard and announcements. Wrap it in a `label` so the text names it.

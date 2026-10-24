@@ -1,12 +1,10 @@
 ---
 title: Text
-description: A foundational typography component for rendering inline and block text.
+description: Text sets the size, weight and colour of body copy, labels and captions.
 source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/text.tsx
 ---
 
-Text is the foundational typography component for rendering inline and block text. It provides consistent sizing, weight, and color options following the design system's type scale.
-
-This is an enhanced version of the Text from [Radix Themes](https://www.radix-ui.com/themes/docs/components/text).
+Text renders a run of copy at a step of the type scale: a paragraph, a label, a caption or a hint. A title for a page or a section is a [Heading](/docs/heading). Text that takes someone somewhere is a [Link](/docs/link).
 
 ## Playground
 
@@ -14,164 +12,121 @@ import TextPlayground from '../../playground/text-playground';
 
 <TextPlayground />
 
-## Installation
-
-```bash
-npm install @kushagradhawan/kookie-ui
-```
-
 ## Usage
 
-```tsx
-import { Text, Flex } from '@kushagradhawan/kookie-ui';
+```tsx showLineNumbers
+import { Flex, Switch, Text } from '@kushagradhawan/kookie-ui';
 
-export function MyText() {
+export function NotificationSetting() {
   return (
-    <Flex direction="column" gap="3">
-      <Text size="3">Regular body text</Text>
-      <Text size="2" emphasis="medium">Secondary text</Text>
-      <Text size="1" weight="medium">Small label</Text>
+    <Flex justify="between" align="center" gap="4">
+      <Flex direction="column" gap="1">
+        <Text as="label" htmlFor="digest" size="2" weight="medium">
+          Weekly digest
+        </Text>
+        <Text as="p" size="2" emphasis="medium">
+          A summary of activity in your projects, sent every Monday.
+        </Text>
+      </Flex>
+      <Switch id="digest" />
     </Flex>
   );
 }
 ```
 
-## Props
+## Best practices
 
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `as` | `'span' \| 'div' \| 'label' \| 'p'` | `'span'` | The HTML element to render. |
-| `size` | `'1' \| '2' \| '3' \| ... \| '9'` | - | The font size. Supports responsive values. |
-| `font` | `'sans' \| 'mono' \| 'serif'` | - | The font family. Overrides the theme font. |
-| `weight` | `'regular' \| 'medium' \| 'semibold'` | - | The font weight. Supports responsive values. |
-| `color` | `AccentColor` | - | The text color. Inherits the parent color if not set. |
-| `emphasis` | `'loud' \| 'medium' \| 'quiet'` | - | How strongly the text reads. With no `color`, it uses the gray ladder. |
-| `align` | `'left' \| 'center' \| 'right'` | - | Text alignment. Supports responsive values. |
-| `truncate` | `boolean` | `false` | Truncate text with ellipsis when it overflows. |
-| `wrap` | `'wrap' \| 'nowrap' \| 'pretty' \| 'balance'` | - | Text wrapping behavior. |
-| `leadingTrim` | `boolean` | `false` | Remove leading trim for precise vertical alignment. |
-| `asChild` | `boolean` | `false` | Merge props onto the child element. |
+**Rank text with emphasis, not with gray.** Use `emphasis="medium"` for secondary copy and `emphasis="quiet"` for hints and metadata. The levels follow the theme, so they stay readable in light and dark mode.
 
-## Sizes
+**Pick the element with `as`.** Text renders a `span` by default. Set `as="p"` for a paragraph, `as="label"` for a form label and `as="div"` for a block. A screen reader reads the element, not the size.
 
-Text supports sizes from 1 (smallest) to 9 (largest).
+**Keep body copy at sizes 2 and 3.** Size 2 (14px) suits interface text and size 3 (16px) suits reading. Larger sizes are for short lines such as a lead sentence or a number on a dashboard.
 
-```tsx
-<Flex direction="column" gap="3">
-  <Text size="1">Size 1 - Fine print (12px)</Text>
-  <Text size="2">Size 2 - UI text (14px)</Text>
-  <Text size="3">Size 3 - Body text (16px)</Text>
-  <Text size="4">Size 4 - Large body (18px)</Text>
-  <Text size="5">Size 5 - Lead text (20px)</Text>
-  <Text size="6">Size 6 - Title (24px)</Text>
-  <Text size="7">Size 7 - Section (32px)</Text>
-  <Text size="8">Size 8 - Display (44px)</Text>
-  <Text size="9">Size 9 - Hero (64px)</Text>
-</Flex>
-```
+**Use colour for meaning.** Set `color="red"` on an error message or `color="green"` on a success line. Colour on ordinary copy makes it harder to tell which line matters.
 
-## Weights
-
-Control text weight with the `weight` prop. Three weights are available.
-
-```tsx
-<Flex direction="column" gap="3">
-  <Text weight="regular">Regular weight</Text>
-  <Text weight="medium">Medium weight</Text>
-  <Text weight="semibold">Semibold weight</Text>
-</Flex>
-```
-
-## Colors
-
-Use semantic colors for different text purposes. Colored text reads a strong ink by default, so an error stays red and easy to read.
-
-```tsx
-<Flex direction="column" gap="3">
-  <Text>Default text color</Text>
-  <Text color="blue">Link or info text</Text>
-  <Text color="green">Success text</Text>
-  <Text color="red">Error text</Text>
-</Flex>
-```
+**Don't use Text for a title.** A large Text still reads as a `span` or `p`. Use a [Heading](/docs/heading), so the page has an outline people can move through.
 
 ## Emphasis
 
-Use `emphasis` to rank text. `loud` is the strongest, `medium` is for secondary copy and `quiet` is for hints and metadata. Without `color`, the levels step down the gray scale. With `color`, they fade the same color.
+`emphasis` sets how strongly text reads. With no `color` set, the levels step down the neutral ink. With a `color` set, they fade that colour.
+
+| Emphasis | Use it for |
+| --- | --- |
+| `loud` | Primary copy that must stand out |
+| `medium` | Descriptions and secondary copy |
+| `quiet` | Hints, timestamps and metadata |
+
+With no `color` and no `emphasis`, Text inherits its colour, so it matches the Button, Card or Notice it sits in.
+
+## Size
+
+`size` picks a step from 1 to 9: 12, 14, 16, 18, 20, 24, 32, 44 and 64 pixels at the default scale. Each step sets its own line height and letter spacing. With no `size`, Text inherits the font size around it. `size` accepts a responsive object, such as `{ initial: '2', md: '3' }`.
+
+## Examples
+
+### Error message under a field
+
+Set `color` so the message reads as an error, and keep it at the field's size.
 
 ```tsx
-<Flex direction="column" gap="3">
-  <Text emphasis="loud">Primary text</Text>
-  <Text emphasis="medium">Secondary text</Text>
-  <Text emphasis="quiet">Hint text</Text>
-  <Text color="red" emphasis="medium">Secondary error text</Text>
-</Flex>
-```
-
-Text with no `color` and no `emphasis` inherits its color, so it matches the Button or Card it sits in.
-
-## Semantic Elements
-
-Use the `as` prop to render appropriate HTML elements.
-
-```tsx
-// Paragraph
-<Text as="p" size="3">
-  This renders as a paragraph element.
-</Text>
-
-// Label
-<Text as="label" size="2" htmlFor="email">
-  Email address
-</Text>
-
-// Div for block content
-<Text as="div" size="2">
-  Block-level text content
+<Text as="p" size="1" color="red">
+  Enter an email address with an @ sign.
 </Text>
 ```
 
-## Truncation
+### One line in a narrow space
 
-Truncate long text with ellipsis.
+`truncate` keeps the text on one line and ends it with an ellipsis. Give the parent a width so the text has a limit to truncate against.
 
 ```tsx
-<Text truncate style={{ maxWidth: 200 }}>
-  This is a very long text that will be truncated with an ellipsis
+<Box maxWidth="240px">
+  <Text as="div" size="2" truncate>
+    quarterly-report-final-version-approved.pdf
+  </Text>
+</Box>
+```
+
+### Text aligned to the edge of a box
+
+`trim` removes the space above the first line or below the last line, so the text lines up with an icon or the edge of a card. Use `start`, `end` or `both`.
+
+```tsx
+<Text as="p" size="3" trim="both">
+  Your plan renews on 1 March.
 </Text>
 ```
 
-## Text Alignment
+### Styling another element
 
-Align text horizontally.
-
-```tsx
-<Flex direction="column" gap="3" width="100%">
-  <Text align="left">Left aligned text</Text>
-  <Text align="center">Center aligned text</Text>
-  <Text align="right">Right aligned text</Text>
-</Flex>
-```
-
-## Responsive Props
-
-Size and weight support responsive values.
+`asChild` puts Text's styles on its child, such as a `time` element.
 
 ```tsx
-<Text
-  size={{ initial: '2', sm: '3', md: '4' }}
-  weight={{ initial: 'regular', md: 'medium' }}
->
-  Responsive text that grows on larger screens
+<Text asChild size="1" emphasis="quiet">
+  <time dateTime="2026-03-01">1 March</time>
 </Text>
 ```
 
-## Polymorphic Usage
+## Props
 
-Use `asChild` for custom elements while keeping Text styles.
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `as` | `'span' \| 'div' \| 'label' \| 'p'` | `'span'` | The element to render |
+| `size` | `'1'` to `'9'`, responsive | | The type step. Inherits when unset |
+| `weight` | `'regular' \| 'medium' \| 'semibold'`, responsive | | The font weight. Inherits when unset |
+| `font` | `'sans' \| 'mono' \| 'serif'` | | The font family, in place of the theme font |
+| `color` | `AccentColor` | | The colour. Inherits when unset |
+| `emphasis` | `'loud' \| 'medium' \| 'quiet'` | | How strongly the text reads |
+| `align` | `'left' \| 'center' \| 'right'`, responsive | | The text alignment |
+| `trim` | `'normal' \| 'start' \| 'end' \| 'both'`, responsive | | Removes the space above or below the text |
+| `truncate` | `boolean` | | Keeps one line and ends it with an ellipsis |
+| `wrap` | `'wrap' \| 'nowrap' \| 'pretty' \| 'balance'`, responsive | | How lines break |
+| `asChild` | `boolean` | `false` | Renders the child element with Text's styles |
 
-```tsx
-<Text asChild size="2" color="blue">
-  <a href="/settings">Go to settings</a>
-</Text>
-```
+Text also accepts every attribute of the element set by `as`.
+
+## Accessibility
+
+- **Element:** A screen reader reads the element, not the look. Use `as="p"` for paragraphs, so people can move between them.
+- **Labels:** `as="label"` with `htmlFor` names a form control and lets people click the label to focus it.
+- **Truncation:** Truncated text is still read in full by a screen reader. A pointer user can't see the rest, so add a [Tooltip](/docs/tooltip) or a `title` when the hidden part matters.
+- **Colour:** Don't rely on colour alone to carry a meaning. Put the meaning in the words too, such as "Error:" or "Saved".

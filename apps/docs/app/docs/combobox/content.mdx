@@ -1,18 +1,10 @@
 ---
 title: Combobox
-description: A searchable dropdown that combines select functionality with powerful filtering. Perfect for finding options in large lists, building command palettes, or when users need quick access through search.
+description: A combobox lets people search a long list and choose one value from it.
 source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/combobox.tsx
 ---
 
-import { Notice } from '@kushagradhawan/kookie-ui';
-import { HugeiconsIcon } from '@hugeicons/react';
-import { Alert02Icon } from '@hugeicons/core-free-icons';
-
-<Notice icon={<HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />}>This component's API and documentation are under review and may change. Use with caution in production.</Notice>
-
-A searchable dropdown that combines select functionality with powerful filtering. Perfect for finding options in large lists, building command palettes, or when users need quick access through search.
-
-Built on top of [cmdk](https://cmdk.paco.me/) for search and filtering, and [Radix Popover](https://www.radix-ui.com/primitives/docs/components/popover) for positioning and focus management.
+A combobox shows the current value in a field and opens a list with a search box, so people can type to narrow a long list before they choose. For a short list that people can scan without searching, use a [Select](/docs/select). For a list of actions rather than values, use a [Dropdown Menu](/docs/dropdown-menu).
 
 ## Playground
 
@@ -20,43 +12,27 @@ import ComboboxPlayground from '@/app/playground/combobox-playground';
 
 <ComboboxPlayground />
 
-## Installation
-
-```bash
-npm install @kushagradhawan/kookie-ui
-```
-
 ## Usage
 
-The trigger shows `displayValue` for the selected value. Without it, the trigger shows the raw `value` (for example `apple`, not `Apple`).
-
-```tsx
+```tsx showLineNumbers
 import { Combobox } from '@kushagradhawan/kookie-ui';
 
-const fruits = [
-  { value: 'apple', label: 'Apple' },
-  { value: 'banana', label: 'Banana' },
-  { value: 'cherry', label: 'Cherry' },
-];
+const countries: Record<string, string> = { in: 'India', jp: 'Japan', gb: 'United Kingdom' };
+const countryName = (code: string | null) => (code ? countries[code] : undefined);
 
-// Module scope keeps the function stable across renders
-const getFruitLabel = (value: string | null) => fruits.find((fruit) => fruit.value === value)?.label;
-
-export function FruitPicker() {
+export function CountryFilter({ value, onChange }: { value: string | null; onChange: (value: string | null) => void }) {
   return (
-    <Combobox.Root displayValue={getFruitLabel}>
-      <Combobox.Trigger aria-label="Fruit">
-        <Combobox.Value placeholder="Select a fruit" />
-      </Combobox.Trigger>
+    <Combobox.Root value={value} onValueChange={onChange} displayValue={countryName} placeholder="Any country">
+      <Combobox.Trigger aria-label="Country" />
       <Combobox.Content>
-        <Combobox.Input placeholder="Search fruits..." />
+        <Combobox.Input placeholder="Search countries" />
         <Combobox.List>
-          {fruits.map((fruit) => (
-            <Combobox.Item key={fruit.value} value={fruit.value}>
-              {fruit.label}
+          <Combobox.Empty>No countries found</Combobox.Empty>
+          {Object.entries(countries).map(([code, name]) => (
+            <Combobox.Item key={code} value={code}>
+              {name}
             </Combobox.Item>
           ))}
-          <Combobox.Empty>No fruits found</Combobox.Empty>
         </Combobox.List>
       </Combobox.Content>
     </Combobox.Root>
@@ -66,740 +42,213 @@ export function FruitPicker() {
 
 ## Anatomy
 
-Combobox is a compound component with the following parts:
-
 ```tsx
 <Combobox.Root>
-  <Combobox.Trigger>
-    <Combobox.Value />
-  </Combobox.Trigger>
+  <Combobox.Trigger />
   <Combobox.Content>
     <Combobox.Input />
     <Combobox.List>
+      <Combobox.Empty />
       <Combobox.Group>
         <Combobox.Label />
         <Combobox.Item />
       </Combobox.Group>
       <Combobox.Separator />
-      <Combobox.Empty />
     </Combobox.List>
   </Combobox.Content>
 </Combobox.Root>
 ```
 
-## Root Props
+- **Root:** Holds the value, the search text and the open state, and sets the size.
+- **Trigger:** The field that shows the chosen value and opens the list.
+- **Value:** The chosen value as text, for a trigger with a custom layout.
+- **Content:** The panel that opens below the trigger, rendered in a portal.
+- **Input:** The search box at the top of the panel.
+- **List:** The scrolling list of options.
+- **Empty:** Shows when the search matches no option.
+- **Item:** One option. The chosen item shows a check mark.
+- **Group, Label and Separator:** Sections of the list, a heading for a section, and a line between sections.
 
-The Root component manages state and provides context to all child components.
+## Best practices
 
-| Prop | Type | Description |
-| ---- | ---- | ----------- |
-| `size` | `'1' \| '2' \| '3' \| '4'` | Combobox density: 1 (28px) for toolbars, 2 (32px) for standard forms, 3 (40px) for prominent selections, 4 (48px) to match Button size 4. The list takes the same size. Supports responsive objects |
-| `value` | `string \| null` | Controlled selection value |
-| `defaultValue` | `string \| null` | Initial selection value for uncontrolled usage |
-| `onValueChange` | `(value: string \| null) => void` | Callback fired when selection changes |
-| `open` | `boolean` | Controlled open state |
-| `defaultOpen` | `boolean` | Initial open state |
-| `onOpenChange` | `(open: boolean) => void` | Callback fired when dropdown opens/closes |
-| `placeholder` | `string` | Text shown when no option is selected (default: "Select an option") |
-| `searchPlaceholder` | `string` | Placeholder for search input (default: "Search...") |
-| `searchValue` | `string` | Controlled search input value |
-| `defaultSearchValue` | `string` | Initial search value |
-| `onSearchValueChange` | `(value: string) => void` | Callback fired when search changes |
-| `shouldFilter` | `boolean` | Enable built-in fuzzy search (default: true) |
-| `filter` | `(value, search, keywords) => number` | Custom filter function. Returns 0-1 where 0 is no match, 1 is exact match |
-| `loop` | `boolean` | Allow keyboard navigation to cycle through options (default: true) |
-| `disabled` | `boolean` | Prevents all interaction with the combobox |
-| `resetSearchOnSelect` | `boolean` | Clear the search when an option is selected (default: true) |
-| `resetSearchOnClose` | `boolean` | Clear the search when the popup is dismissed without a selection (default: true) |
-| `color` | `AccentColor` | Semantic color for the trigger and selected items |
-| `displayValue` | `string \| ((value) => string \| undefined)` | Text shown in the trigger for the selected value. Without it the raw value is shown. Pass a stable function (module scope or `useCallback`); an inline function runs on every render |
+**Use a combobox when people know what they're looking for.** Countries, time zones, people and repositories are long lists with known names, so typing a few letters is faster than scrolling. For fewer than about ten options, a [Select](/docs/select) is quicker to read.
 
-## Trigger Props
+**Give the field a visible label.** The trigger has the `combobox` role, which doesn't take its name from its content. Point a `label` at the trigger's `id`, or set `aria-label`. The same name labels the panel, the search box and the list.
 
-The Trigger component renders as a button that opens the dropdown.
+**Always add an Empty message.** Without it, a search that matches nothing shows a blank panel, and people can't tell whether the list is still loading.
 
-| Prop | Type | Description |
-| ---- | ---- | ----------- |
-| `variant` | `'raised' \| 'surface' \| 'soft' \| 'outline' \| 'ghost'` | Trigger button style: raised for elevated, surface for standard fields, outline for bordered, soft for subtle, ghost for minimal |
-| `color` | `AccentColor` | Semantic color. Overrides color from Root if provided |
-| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Corner radius scale |
-| `loading` | `boolean` | Shows a spinner, sets `aria-busy`, and keeps the popup from opening. The trigger stays focusable |
-| `error` | `boolean` | Visual error state and `aria-invalid`, typically for validation failures |
-| `readOnly` | `boolean` | Shows the value and sets `aria-readonly`. The popup does not open |
-| `disabled` | `boolean` | Prevents interaction. Overrides Root disabled if provided |
-| `width` | `string` | Trigger width (CSS value) |
-| `placeholder` | `string` | Override placeholder from Root |
-| `aria-label` | `string` | Accessible name. The trigger needs one of `aria-label`, `aria-labelledby`, or a `<label htmlFor>` |
+**Show a label, not the stored value.** Set `displayValue` on `Root` so the trigger shows "United Kingdom" rather than "gb". Without it, the trigger shows the raw value.
 
-## Content Props
+**Search the words people use.** Search matches the text of each item. Add `keywords` for other names, such as "UK" and "Britain" for the United Kingdom.
 
-The Content component renders the dropdown surface containing the search input and options list.
+## Variant
 
-| Prop | Type | Description |
-| ---- | ---- | ----------- |
-| `size` | `'1' \| '2' \| '3' \| '4'` | Override size from Root. Affects padding and item height |
-| `color` | `AccentColor` | Semantic color for items. Falls back to Root color, then theme accent |
-| `width`, `minWidth`, `maxWidth` | `string` | Surface width. `minWidth` defaults to the trigger width, `maxWidth` to 480px |
-| `aria-label` | `string` | Accessible name for the popup, search field and list. Defaults to the trigger's name |
-| `container` | `HTMLElement` | Portal container. Defaults to `document.body` |
-| `forceMount` | `boolean` | Keep content mounted while closed. Last resort: closed content keeps its positioning and dismiss listeners running. Use `displayValue` on Root instead |
+`variant` on `Trigger` sets the look of the field. `raised` is the default and suits most forms. Use `surface` or `outline` to match a [TextField](/docs/text-field) with the same variant, `soft` on a tinted background, and `ghost` in a toolbar or a table cell. The search box uses its own `variant` on `Input`, `soft` by default.
 
-## Input Props
+## Size
 
-The Input component renders the search field inside Content.
+`size` on `Root` picks one of four heights for the trigger: 28, 32, 40 and 48 pixels. The panel, the search box and the items use the same size unless you set `size` on `Content`. Size 2 is the default. `size` accepts a responsive object, such as `{ initial: '3', md: '2' }`.
 
-| Prop | Type | Description |
-| ---- | ---- | ----------- |
-| `variant` | `'raised' \| 'surface' \| 'soft' \| 'outline' \| 'ghost'` | Input field style. Defaults to 'soft' |
-| `placeholder` | `string` | Search input placeholder. Overrides searchPlaceholder from Root |
-| `startAdornment` | `ReactNode` | Icon or element before input (e.g., search icon) |
-| `endAdornment` | `ReactNode` | Icon or element after input |
-| `value` | `string` | Override controlled search value from Root |
-| `onValueChange` | `(value: string) => void` | Override search change handler from Root |
+## Examples
 
-## Item Props
+### Search on the server
 
-| Prop | Type | Description |
-| ---- | ---- | ----------- |
-| `value` | `string` | Value passed to `onValueChange`. Without it, the item's text is used |
-| `label` | `string` | Text matched by search. Defaults to the text of the children. Set it when the children are components whose text is not written in the JSX |
-| `keywords` | `string[]` | Extra search terms |
-| `disabled` | `boolean` | Skips the item in keyboard navigation and blocks selection |
-| `onSelect` | `(value: string) => void` | Called when the item is selected |
-
-Search matches the item's visible text, its `value`, and its `keywords`.
-
-## Other Components
-
-- **`Combobox.Value`** - Shows `displayValue`, else the raw selected value, else the placeholder
-- **`Combobox.List`** - Scrollable listbox that holds the items. `label` overrides its accessible name
-- **`Combobox.Group`** - Groups related items together
-- **`Combobox.Label`** - Non-interactive heading. Inside a Group, it names the group for screen readers
-- **`Combobox.Separator`** - Visual separator between items or groups
-- **`Combobox.Empty`** - Shown when no results match search. Only visible when filtering produces zero matches
-
-## Trigger Variants
-
-### Raised
-
-Elevated style with subtle shadow for maximum visual impact.
+Set `shouldFilter={false}` when your API does the search. Control `searchValue` to send each query, and render only the items the server returns.
 
 ```tsx
-<Combobox.Root size="2">
-  <Combobox.Trigger variant="raised" aria-label="Option">
-    <Combobox.Value placeholder="Select option" />
-  </Combobox.Trigger>
+<Combobox.Root
+  shouldFilter={false}
+  searchValue={query}
+  onSearchValueChange={setQuery}
+>
+  <Combobox.Trigger aria-label="Assignee" loading={isFetching} />
   <Combobox.Content>
-    <Combobox.Input placeholder="Search..." />
+    <Combobox.Input placeholder="Search people" />
     <Combobox.List>
-      <Combobox.Item value="1">Option 1</Combobox.Item>
-      <Combobox.Item value="2">Option 2</Combobox.Item>
+      <Combobox.Empty>No one matches "{query}"</Combobox.Empty>
+      {results.map((person) => (
+        <Combobox.Item key={person.id} value={person.id}>
+          {person.name}
+        </Combobox.Item>
+      ))}
     </Combobox.List>
   </Combobox.Content>
 </Combobox.Root>
 ```
 
-### Surface
+While `loading` or `readOnly` is set, the trigger stays focusable but doesn't open.
 
-Elevated surface style for standard form fields.
+### Grouped options
+
+Group items under a `Label` when the list has natural sections, such as recent and all projects. A group whose items all fail the search hides itself.
 
 ```tsx
-<Combobox.Root size="2">
-  <Combobox.Trigger variant="surface" aria-label="Option">
-    <Combobox.Value placeholder="Select option" />
-  </Combobox.Trigger>
-  <Combobox.Content>
-    <Combobox.Input placeholder="Search..." />
-    <Combobox.List>
-      <Combobox.Item value="1">Option 1</Combobox.Item>
-      <Combobox.Item value="2">Option 2</Combobox.Item>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
+<Combobox.List>
+  <Combobox.Group>
+    <Combobox.Label>Recent</Combobox.Label>
+    <Combobox.Item value="atlas">Atlas</Combobox.Item>
+  </Combobox.Group>
+  <Combobox.Separator />
+  <Combobox.Group>
+    <Combobox.Label>All projects</Combobox.Label>
+    <Combobox.Item value="beacon">Beacon</Combobox.Item>
+    <Combobox.Item value="compass">Compass</Combobox.Item>
+  </Combobox.Group>
+</Combobox.List>
 ```
 
-### Soft
+### Rich items
 
-Subtle background for secondary selections.
+An item can hold an avatar or a second line of text. Search reads the text inside the children. When the children are components whose text isn't in the JSX, set `label` to the text to search.
 
 ```tsx
-<Combobox.Root size="2">
-  <Combobox.Trigger variant="soft" aria-label="Option">
-    <Combobox.Value placeholder="Select option" />
-  </Combobox.Trigger>
-  <Combobox.Content>
-    <Combobox.Input placeholder="Search..." />
-    <Combobox.List>
-      <Combobox.Item value="1">Option 1</Combobox.Item>
-      <Combobox.Item value="2">Option 2</Combobox.Item>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
+<Combobox.Item value={user.id} label={user.name}>
+  <UserRow user={user} />
+</Combobox.Item>
 ```
 
-### Outline
-
-Bordered style for clear field boundaries.
-
-```tsx
-<Combobox.Root size="2">
-  <Combobox.Trigger variant="outline" aria-label="Option">
-    <Combobox.Value placeholder="Select option" />
-  </Combobox.Trigger>
-  <Combobox.Content>
-    <Combobox.Input placeholder="Search..." />
-    <Combobox.List>
-      <Combobox.Item value="1">Option 1</Combobox.Item>
-      <Combobox.Item value="2">Option 2</Combobox.Item>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-```
-
-### Ghost
-
-Minimal style for utility controls.
-
-```tsx
-<Combobox.Root size="2">
-  <Combobox.Trigger variant="ghost" aria-label="Option">
-    <Combobox.Value placeholder="Select option" />
-  </Combobox.Trigger>
-  <Combobox.Content>
-    <Combobox.Input placeholder="Search..." />
-    <Combobox.List>
-      <Combobox.Item value="1">Option 1</Combobox.Item>
-      <Combobox.Item value="2">Option 2</Combobox.Item>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-```
-
-## Highlight
-
-Rows use the soft highlight. When the system asks for more contrast (`prefers-contrast: more`), they use the solid one.
-
-## Sizes
-
-Set `size` on Root to control density across the entire combobox. Affects trigger height, content padding, and item spacing.
-
-```tsx
-// Size 1 - 28px trigger, for toolbars and dense interfaces
-<Combobox.Root size="1">
-  <Combobox.Trigger variant="surface" aria-label="Option">
-    <Combobox.Value placeholder="Size 1" />
-  </Combobox.Trigger>
-  <Combobox.Content>
-    <Combobox.Input placeholder="Search..." />
-    <Combobox.List>
-      <Combobox.Item value="1">Option 1</Combobox.Item>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-
-// Size 2 - 32px trigger, standard for most forms
-<Combobox.Root size="2">
-  <Combobox.Trigger variant="surface" aria-label="Option">
-    <Combobox.Value placeholder="Size 2" />
-  </Combobox.Trigger>
-  <Combobox.Content>
-    <Combobox.Input placeholder="Search..." />
-    <Combobox.List>
-      <Combobox.Item value="1">Option 1</Combobox.Item>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-
-// Size 3 - 40px trigger, for prominent selections and touch targets
-<Combobox.Root size="3">
-  <Combobox.Trigger variant="surface" aria-label="Option">
-    <Combobox.Value placeholder="Size 3" />
-  </Combobox.Trigger>
-  <Combobox.Content>
-    <Combobox.Input placeholder="Search..." />
-    <Combobox.List>
-      <Combobox.Item value="1">Option 1</Combobox.Item>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-```
-
-## Colors
-
-Use the `color` prop on Root to set semantic colors for the trigger and selected items. Chromatic colors highlight with step 9. Gray highlights with step 12 and inverts the text.
-
-```tsx
-// Standard color
-<Combobox.Root size="2" color="crimson">
-  <Combobox.Trigger variant="soft" aria-label="Priority">
-    <Combobox.Value placeholder="Select priority" />
-  </Combobox.Trigger>
-  <Combobox.Content>
-    <Combobox.Input placeholder="Search..." />
-    <Combobox.List>
-      <Combobox.Item value="high">High Priority</Combobox.Item>
-      <Combobox.Item value="medium">Medium Priority</Combobox.Item>
-      <Combobox.Item value="low">Low Priority</Combobox.Item>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-
-// Gray highlights with step 12
-<Combobox.Root size="2" color="gray">
-  <Combobox.Trigger variant="soft" aria-label="Priority">
-    <Combobox.Value placeholder="Select priority" />
-  </Combobox.Trigger>
-  <Combobox.Content>
-    <Combobox.Input placeholder="Search..." />
-    <Combobox.List>
-      <Combobox.Item value="high">High Priority</Combobox.Item>
-      <Combobox.Item value="medium">Medium Priority</Combobox.Item>
-      <Combobox.Item value="low">Low Priority</Combobox.Item>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-```
-
-## States
-
-### Loading
-
-Set `loading` on Trigger while options are fetched. It shows a spinner, sets `aria-busy`, and keeps the popup closed.
-
-```tsx
-<Combobox.Root size="2">
-  <Combobox.Trigger variant="surface" aria-label="Option" loading>
-    <Combobox.Value placeholder="Loading options..." />
-  </Combobox.Trigger>
-  <Combobox.Content>
-    <Combobox.Input placeholder="Search..." />
-    <Combobox.List>
-      <Combobox.Item value="1">Option 1</Combobox.Item>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-```
-
-### Disabled
-
-Set `disabled` on Root to prevent all interaction with the combobox.
-
-```tsx
-<Combobox.Root size="2" disabled>
-  <Combobox.Trigger variant="surface" aria-label="Option">
-    <Combobox.Value placeholder="Disabled" />
-  </Combobox.Trigger>
-  <Combobox.Content>
-    <Combobox.Input placeholder="Search..." />
-    <Combobox.List>
-      <Combobox.Item value="1">Option 1</Combobox.Item>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-```
-
-### Error
-
-Use `error` on Trigger to indicate validation failures. It also sets `aria-invalid`.
-
-```tsx
-<Combobox.Root size="2">
-  <Combobox.Trigger variant="surface" aria-label="Option" error>
-    <Combobox.Value placeholder="Invalid selection" />
-  </Combobox.Trigger>
-  <Combobox.Content>
-    <Combobox.Input placeholder="Search..." />
-    <Combobox.List>
-      <Combobox.Item value="1">Option 1</Combobox.Item>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-```
-
-### Read Only
-
-Use `readOnly` on Trigger to show the selected value without allowing changes. The trigger stays focusable and the popup does not open.
-
-```tsx
-<Combobox.Root size="2" value="1" displayValue="Option 1">
-  <Combobox.Trigger variant="surface" aria-label="Option" readOnly>
-    <Combobox.Value placeholder="Read only" />
-  </Combobox.Trigger>
-  <Combobox.Content>
-    <Combobox.Input placeholder="Search..." />
-    <Combobox.List>
-      <Combobox.Item value="1">Option 1</Combobox.Item>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-```
-
-## Groups and Labels
-
-Organize options with groups and labels for better scannability in large lists. A Label inside a Group names that group for screen readers.
-
-```tsx
-<Combobox.Root size="2">
-  <Combobox.Trigger variant="surface" aria-label="Framework">
-    <Combobox.Value placeholder="Select framework" />
-  </Combobox.Trigger>
-  <Combobox.Content>
-    <Combobox.Input placeholder="Search frameworks..." />
-    <Combobox.List>
-      <Combobox.Group>
-        <Combobox.Label>React Ecosystem</Combobox.Label>
-        <Combobox.Item value="react">React</Combobox.Item>
-        <Combobox.Item value="next">Next.js</Combobox.Item>
-        <Combobox.Item value="remix">Remix</Combobox.Item>
-      </Combobox.Group>
-      <Combobox.Separator />
-      <Combobox.Group>
-        <Combobox.Label>Vue Ecosystem</Combobox.Label>
-        <Combobox.Item value="vue">Vue</Combobox.Item>
-        <Combobox.Item value="nuxt">Nuxt</Combobox.Item>
-      </Combobox.Group>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-```
-
-## Controlled State
-
-Control the selection and search values for full state management. Search also works uncontrolled; control it only when you need the text.
-
-```tsx
-const options = [
-  { value: '1', label: 'Option 1' },
-  { value: '2', label: 'Option 2' },
-  { value: '3', label: 'Option 3' },
-];
-const getOptionLabel = (value: string | null) => options.find((option) => option.value === value)?.label;
-
-function ControlledCombobox() {
-  const [value, setValue] = React.useState<string | null>(null);
-  const [searchValue, setSearchValue] = React.useState('');
-
-  return (
-    <Combobox.Root
-      size="2"
-      value={value}
-      onValueChange={setValue}
-      searchValue={searchValue}
-      onSearchValueChange={setSearchValue}
-      displayValue={getOptionLabel}
-    >
-      <Combobox.Trigger variant="surface" aria-label="Option">
-        <Combobox.Value placeholder="Select..." />
-      </Combobox.Trigger>
-      <Combobox.Content>
-        <Combobox.Input placeholder="Search..." />
-        <Combobox.List>
-          {options.map((option) => (
-            <Combobox.Item key={option.value} value={option.value}>
-              {option.label}
-            </Combobox.Item>
-          ))}
-        </Combobox.List>
-      </Combobox.Content>
-    </Combobox.Root>
-  );
-}
-```
-
-## Display Value
-
-Use the `displayValue` prop on Root to show a label for the selected value. Without it, the trigger shows the raw value. Keep the function stable (module scope or `useCallback`) so it does not run on every render.
-
-```tsx
-const countries = [
-  { code: 'us', name: 'United States' },
-  { code: 'uk', name: 'United Kingdom' },
-  { code: 'ca', name: 'Canada' },
-];
-
-// Module scope: a stable function
-const getCountryName = (value: string | null) => countries.find((c) => c.code === value)?.name;
-
-function CountryPicker() {
-  const [selectedCountry, setSelectedCountry] = React.useState<string | null>('us');
-
-  return (
-    <Combobox.Root
-      size="2"
-      value={selectedCountry}
-      onValueChange={setSelectedCountry}
-      displayValue={getCountryName}
-    >
-      <Combobox.Trigger variant="surface" aria-label="Country">
-        <Combobox.Value placeholder="Select country" />
-      </Combobox.Trigger>
-      <Combobox.Content>
-        <Combobox.Input placeholder="Search..." />
-        <Combobox.List>
-          {countries.map((country) => (
-            <Combobox.Item key={country.code} value={country.code}>
-              {country.name}
-            </Combobox.Item>
-          ))}
-        </Combobox.List>
-      </Combobox.Content>
-    </Combobox.Root>
-  );
-}
-
-// Using a static string
-<Combobox.Root size="2" value="us" displayValue="United States">
-  <Combobox.Trigger variant="surface" aria-label="Country">
-    <Combobox.Value />
-  </Combobox.Trigger>
-  {/* ... */}
-</Combobox.Root>
-```
-
-## Custom Filtering
-
-### Disable Built-in Filtering
-
-For server-side search, disable the built-in filtering and fetch options with a data library such as React Query.
-
-```tsx
-import { useQuery, keepPreviousData } from '@tanstack/react-query';
-
-function AsyncCombobox() {
-  const [searchValue, setSearchValue] = React.useState('');
-  const deferredSearch = React.useDeferredValue(searchValue);
-
-  const { data: options = [], isFetching } = useQuery({
-    queryKey: ['options', deferredSearch],
-    queryFn: () => fetchOptions(deferredSearch), // your typed API client
-    placeholderData: keepPreviousData,
-  });
-
-  return (
-    <Combobox.Root
-      size="2"
-      shouldFilter={false}
-      searchValue={searchValue}
-      onSearchValueChange={setSearchValue}
-    >
-      <Combobox.Trigger variant="surface" aria-label="Option">
-        <Combobox.Value placeholder="Search..." />
-      </Combobox.Trigger>
-      <Combobox.Content>
-        <Combobox.Input placeholder="Type to search..." />
-        <Combobox.List>
-          {options.map((option) => (
-            <Combobox.Item key={option.id} value={option.id}>
-              {option.label}
-            </Combobox.Item>
-          ))}
-          <Combobox.Empty>{isFetching ? 'Searching...' : 'No results'}</Combobox.Empty>
-        </Combobox.List>
-      </Combobox.Content>
-    </Combobox.Root>
-  );
-}
-```
-
-### Custom Filter Function
-
-Provide custom ranking logic for more control over search results. The item's visible text is passed as the first keyword.
-
-```tsx
-const customFilter = (value: string, search: string, keywords?: string[]) => {
-  const searchLower = search.toLowerCase();
-  const terms = [value, ...(keywords ?? [])].map((term) => term.toLowerCase());
-
-  // Exact match gets highest score
-  if (terms.some((term) => term === searchLower)) return 1;
-
-  // Starts with search gets high score
-  if (terms.some((term) => term.startsWith(searchLower))) return 0.8;
-
-  // Contains search gets medium score
-  if (terms.some((term) => term.includes(searchLower))) return 0.5;
-
-  return 0; // No match
-};
-
-<Combobox.Root size="2" filter={customFilter}>
-  <Combobox.Trigger variant="surface" aria-label="Library">
-    <Combobox.Value placeholder="Select..." />
-  </Combobox.Trigger>
-  <Combobox.Content>
-    <Combobox.Input placeholder="Search..." />
-    <Combobox.List>
-      <Combobox.Item value="react" keywords={['library', 'ui', 'frontend']}>
-        React
-      </Combobox.Item>
-      <Combobox.Item value="vue" keywords={['framework', 'ui', 'frontend']}>
-        Vue
-      </Combobox.Item>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-```
-
-## Empty State
-
-Use `Combobox.Empty` to provide helpful feedback when no results match the search.
-
-```tsx
-<Combobox.Root size="2">
-  <Combobox.Trigger variant="surface" aria-label="Framework">
-    <Combobox.Value placeholder="Select..." />
-  </Combobox.Trigger>
-  <Combobox.Content>
-    <Combobox.Input placeholder="Search..." />
-    <Combobox.List>
-      <Combobox.Item value="react">React</Combobox.Item>
-      <Combobox.Item value="vue">Vue</Combobox.Item>
-      <Combobox.Item value="angular">Angular</Combobox.Item>
-      <Combobox.Empty>No options found. Try a different search.</Combobox.Empty>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-```
-
-## Input Adornments
-
-Add icons or elements before or after the search input for better visual context.
-
-```tsx
-import { HugeiconsIcon } from '@hugeicons/react';
-import { Search01Icon } from '@hugeicons/core-free-icons';
-
-<Combobox.Root size="2">
-  <Combobox.Trigger variant="surface" aria-label="Option">
-    <Combobox.Value placeholder="Select..." />
-  </Combobox.Trigger>
-  <Combobox.Content>
-    <Combobox.Input
-      placeholder="Search..."
-      startAdornment={<HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />}
-    />
-    <Combobox.List>
-      <Combobox.Item value="1">Option 1</Combobox.Item>
-      <Combobox.Item value="2">Option 2</Combobox.Item>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-```
-
-## Responsive
-
-Use responsive objects with `size` on Root to adapt sizing across different breakpoints.
-
-```tsx
-<Combobox.Root size={{ initial: '1', sm: '2', md: '3' }}>
-  <Combobox.Trigger variant="surface" aria-label="Option">
-    <Combobox.Value placeholder="Responsive size" />
-  </Combobox.Trigger>
-  <Combobox.Content>
-    <Combobox.Input placeholder="Search..." />
-    <Combobox.List>
-      <Combobox.Item value="1">Option 1</Combobox.Item>
-      <Combobox.Item value="2">Option 2</Combobox.Item>
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-```
+### Invalid value
+
+Set `error` on `Trigger` when a form check fails. The trigger shows a red border and sets `aria-invalid`. Put the message in text next to the field, because the colour alone doesn't say what is wrong.
+
+## Props
+
+### Root
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string \| null` | | The chosen value, when you control it |
+| `defaultValue` | `string \| null` | `null` | The value at first render |
+| `onValueChange` | `(value: string \| null) => void` | | Called when someone chooses an item |
+| `displayValue` | `string \| (value) => string \| undefined` | | The text the trigger shows for the value. Pass a stable function |
+| `placeholder` | `string` | `'Select an option'` | Shows in the trigger when no value is chosen |
+| `searchPlaceholder` | `string` | `'Search...'` | Shows in the empty search box |
+| `searchValue` | `string` | | The search text, when you control it |
+| `defaultSearchValue` | `string` | `''` | The search text at first render |
+| `onSearchValueChange` | `(value: string) => void` | | Called when the search text changes |
+| `shouldFilter` | `boolean` | `true` | Filters and sorts items by the search. Set `false` to filter yourself |
+| `filter` | `(value, search, keywords) => number` | | Your own match score, from 0 (hidden) to 1 |
+| `resetSearchOnSelect` | `boolean` | `true` | Clears the search when an item is chosen |
+| `resetSearchOnClose` | `boolean` | `true` | Clears the search when the panel closes without a choice |
+| `loop` | `boolean` | `true` | Wraps the arrow keys from the last item to the first |
+| `open` | `boolean` | | Whether the panel is open, when you control it |
+| `defaultOpen` | `boolean` | `false` | Whether the panel is open at first render |
+| `onOpenChange` | `(open: boolean) => void` | | Called when the panel opens or closes |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | The height step |
+| `color` | `AccentColor` | Theme accent | The colour of the trigger and the panel |
+| `disabled` | `boolean` | `false` | Disables the trigger and every item |
+| `modal` | `boolean` | `false` | Blocks the rest of the page while the panel is open |
+
+### Trigger
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'raised' \| 'surface' \| 'soft' \| 'outline' \| 'ghost'` | `'raised'` | The look of the field |
+| `placeholder` | `string` | Root's `placeholder` | Shows when no value is chosen |
+| `color` | `AccentColor` | Root's `color` | The colour |
+| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Theme radius | The corner |
+| `width` | `string`, responsive | | The CSS width |
+| `error` | `boolean` | `false` | Shows the invalid state and sets `aria-invalid` |
+| `loading` | `boolean` | `false` | Shows a spinner, sets `aria-busy` and doesn't open |
+| `readOnly` | `boolean` | `false` | Sets `aria-readonly` and doesn't open |
+| `disabled` | `boolean` | Root's `disabled` | Disables the trigger |
+
+Trigger also accepts every attribute of the HTML `button` element. A single child element replaces the default layout of the value and the chevron.
+
+### Value
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `placeholder` | `string` | Root's `placeholder` | Shows when no value is chosen |
+
+### Content
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | Root's `size` | The height step of the panel |
+| `color` | `AccentColor` | Root's `color` | The colour of the highlight |
+| `width`, `minWidth` | `string`, responsive | | The CSS width and minimum width |
+| `maxWidth` | `string`, responsive | `'480px'` | The CSS maximum width |
+| `height`, `minHeight`, `maxHeight` | `string`, responsive | | The CSS height limits |
+| `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'bottom'` | Where the panel opens |
+| `align` | `'start' \| 'center' \| 'end'` | `'start'` | How the panel lines up with the trigger |
+| `sideOffset` | `number` | `4` | The gap to the trigger in pixels |
+| `container` | `HTMLElement` | `document.body` | The element the portal renders into |
+
+### Input
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'raised' \| 'surface' \| 'soft' \| 'ghost' \| 'outline'` | `'soft'` | The look of the search box |
+| `placeholder` | `string` | Root's `searchPlaceholder` | Shows in the empty search box |
+| `startAdornment`, `endAdornment` | `ReactNode` | | Content before or after the text, such as an icon |
+
+Input also accepts the attributes of the HTML `input` element.
+
+### Item
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` | The text of the children | The value this item sets |
+| `label` | `string` | The text of the children | The text that search matches |
+| `keywords` | `string[]` | | More words that search matches |
+| `disabled` | `boolean` | Root's `disabled` | Stops the item from being chosen |
+| `onSelect` | `(value: string) => void` | | Called when this item is chosen |
+
+`Group` accepts `heading` and `forceMount`. `Separator` accepts `alwaysRender`, which keeps it visible during a search. `List` accepts `label`, which defaults to the trigger's name. Each part also accepts the attributes of the HTML `div` element.
 
 ## Accessibility
 
-The trigger follows the WAI-ARIA combobox pattern with a dialog popup. The popup holds a search field (itself a combobox) that controls the listbox of options.
+| Key | Action |
+| --- | --- |
+| Enter, Space or Arrow Down | Opens the panel from the trigger |
+| A letter key | Types into the search box and filters the list |
+| Arrow Down or Arrow Up | Moves the highlight through the items |
+| Home or End | Moves the highlight to the first or last item |
+| Enter | Chooses the highlighted item and closes the panel |
+| Escape | Closes the panel without changing the value |
 
-### Labelling
-
-The combobox role does not take its name from its content, so the trigger needs a label. Use `aria-label`, `aria-labelledby`, or a `<label htmlFor>` pointing at the trigger. The same name labels the popup, the search field and the listbox. In development, an unlabelled trigger logs a warning.
-
-```tsx
-<Flex direction="column" gap="2">
-  <Text as="label" size="2" weight="medium" htmlFor="country">
-    Country
-  </Text>
-  <Combobox.Root size="2">
-    <Combobox.Trigger id="country" variant="surface">
-      <Combobox.Value placeholder="Select country" />
-    </Combobox.Trigger>
-    <Combobox.Content>
-      <Combobox.Input placeholder="Search..." />
-      <Combobox.List>
-        <Combobox.Item value="us">United States</Combobox.Item>
-        <Combobox.Item value="uk">United Kingdom</Combobox.Item>
-      </Combobox.List>
-    </Combobox.Content>
-  </Combobox.Root>
-</Flex>
-```
-
-### Keyboard Navigation
-
-- **Space/Enter/Arrow Down** - Open the dropdown when the trigger is focused
-- **Type** - Filter options in real time
-- **Arrow Down/Up** - Move the highlight through options
-- **Home/End** - Jump to first/last option
-- **Enter** - Select the highlighted option and close
-- **Escape** - Close without selecting
-- **Tab** - Close the dropdown and move focus to the next element
-
-When the dropdown opens, the highlight starts on the selected option. Without a `Combobox.Input`, focus moves to the list so the keys above still work.
-
-### ARIA Attributes
-
-- `role="combobox"` with `aria-haspopup="dialog"`, `aria-expanded` and `aria-controls` on the trigger
-- `aria-invalid`, `aria-busy`, `aria-readonly` and `aria-disabled` follow the `error`, `loading`, `readOnly` and `disabled` props
-- The search field has `aria-controls` pointing at the listbox and `aria-activedescendant` pointing at the highlighted option
-- `aria-selected` marks the highlighted option; `aria-checked` marks the chosen option
-
-### Screen Readers
-
-- The number of matching results, or "No results", is announced after typing pauses
-- The chosen option is exposed with `aria-checked`
-- Group labels name their groups
-- The loading state is exposed with `aria-busy`
-
-### Focus Management
-
-- The search field receives focus when the dropdown opens
-- Focus returns to the trigger when the dropdown closes
-- In Windows High Contrast mode, the highlighted option shows a system outline
-
-## Changelog
-
-### Added
-
-- Initial Combobox component with search and filtering
-- Built on cmdk for fuzzy search and keyboard navigation
-  - Trigger variants: raised, surface, soft, outline, ghost
-- Four sizes (1 to 4) with responsive support
-- Custom filter function support via `filter` prop
-- `displayValue` prop for showing labels without mounting items
-- Groups, labels, and separators for organization
-- Empty state component for no-results feedback
-- Loading, error, disabled, and read-only states
-- Input adornments (startAdornment, endAdornment)
-- Full controlled state support (value, searchValue, open)
-- `resetSearchOnSelect` and `resetSearchOnClose` options to control search clearing
-- Result count announcements for screen readers
-- Color prop for semantic styling
-- Margin props with responsive support
-- Windows High Contrast mode support
-
-### Removed
-
-- `highContrast` prop. Gray highlights with step 12 on its own, and text reads the strong ink by default.
-- `material` prop. Every surface is solid.
-
-### Fixed
-
-- Uncontrolled search can be typed into
-- Search matches the item's visible text, not only its value
-- Typing, hovering and selecting no longer re-render every item
-- Hover and keyboard highlight use one source, so only one option is lit
-- Opening highlights the selected option
-- Responsive `size` builds valid class names for the search field
-- `readOnly` and `loading` keep the popup closed
-- Trigger ARIA matches the dialog popup and `aria-controls` points at it
-- Performance optimization with lazy mounting (forceMount control)
-- Focus management when opening/closing dropdown
+- **Name:** The trigger needs a name from a `label`, `aria-label` or `aria-labelledby`. In development, a trigger without one logs a warning. The panel, the search box and the list take the same name.
+- **Announcements:** The trigger announces its name, the value and whether the panel is expanded. After typing pauses, a live region announces the number of results, or "No results".
+- **Selection:** The highlighted item sets `aria-selected`, and the chosen item sets `aria-checked`. Group labels name their groups.
+- **Focus:** Focus moves to the search box when the panel opens, and the highlight starts on the chosen item. Without an `Input`, focus moves to the list so the keys still work. Focus returns to the trigger when the panel closes.

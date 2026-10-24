@@ -22,6 +22,9 @@ const Progress = React.forwardRef<ProgressElement, ProgressProps>((props, forwar
     progressPropDefs
   );
 
+  // `null` and `undefined` both mean indeterminate, as in Radix, so both keep a custom duration.
+  const isDeterminate = progressProps.value != null;
+
   return (
     <ProgressPrimitive.Root
       data-accent-color={color}
@@ -30,9 +33,9 @@ const Progress = React.forwardRef<ProgressElement, ProgressProps>((props, forwar
       className={classNames('kui-ProgressRoot', className)}
       style={mergeStyles(
         {
-          '--progress-duration': 'value' in progressProps ? undefined : duration,
-          '--progress-value': 'value' in progressProps ? progressProps.value : undefined,
-          '--progress-max': 'max' in progressProps ? progressProps.max : undefined,
+          '--progress-duration': isDeterminate ? undefined : duration,
+          '--progress-value': isDeterminate ? progressProps.value : undefined,
+          '--progress-max': progressProps.max ?? undefined,
         },
         style
       )}

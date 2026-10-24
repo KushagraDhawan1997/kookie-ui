@@ -29,4 +29,15 @@ describe('TextArea', () => {
     const message = screen.getByText('Required');
     expect(screen.getByRole('textbox').getAttribute('aria-describedby')).toContain(message.id);
   });
+
+  it('passes required to the textarea', () => {
+    renderWithProviders(<TextArea required />);
+    expect(screen.getByRole('textbox')).toBeRequired();
+  });
+
+  it('leaves required off by default', () => {
+    renderWithProviders(<TextArea />);
+    expect(screen.getByRole('textbox')).not.toBeRequired();
+  });
 });
+

@@ -37,6 +37,24 @@ describe('Notice', () => {
     expect(screen.getByRole('button', { name: 'Add credits' })).toBeInTheDocument();
   });
 
+  it('sizes an action that sets no size of its own', () => {
+    renderWithProviders(
+      <Notice size="3" action={<Button>Add credits</Button>}>
+        You are out of credits
+      </Notice>,
+    );
+    expect(screen.getByRole('button', { name: 'Add credits' }).className).toContain('kui-r-size-3');
+  });
+
+  it('keeps the size an action sets', () => {
+    renderWithProviders(
+      <Notice size="3" action={<Button size="1">Add credits</Button>}>
+        You are out of credits
+      </Notice>,
+    );
+    expect(screen.getByRole('button', { name: 'Add credits' }).className).toContain('kui-r-size-1');
+  });
+
   it('defaults to gray and size 2', () => {
     renderWithProviders(<Notice>Hello</Notice>);
     const notice = screen.getByRole('status');

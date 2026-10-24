@@ -1,0 +1,152 @@
+---
+title: Slider
+description: A slider sets a number, or a range between two numbers, by dragging a handle along a track.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/slider.tsx
+---
+
+A slider picks a value from a continuous range, such as volume, brightness or a price limit, where the rough position matters more than the exact number. When people need to type an exact value, use a [Text Field](/docs/text-field) with `type="number"`. A bar that only shows progress is a [Progress](/docs/progress).
+
+## Playground
+
+import SliderPlayground from '../../playground/slider-playground';
+
+<SliderPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Flex, Slider, Text } from '@kushagradhawan/kookie-ui';
+
+export function VolumeSetting({ volume, setVolume }: { volume: number; setVolume: (v: number) => void }) {
+  return (
+    <Flex direction="column" gap="2">
+      <Flex justify="between">
+        <Text size="2" weight="medium" id="volume-label">
+          Volume
+        </Text>
+        <Text size="2" emphasis="medium">
+          {volume}%
+        </Text>
+      </Flex>
+      <Slider
+        value={[volume]}
+        onValueChange={([v]) => setVolume(v)}
+        unit="%"
+        aria-labelledby="volume-label"
+      />
+    </Flex>
+  );
+}
+```
+
+## Best practices
+
+**Show the current value next to the slider.** The handle's position gives a rough idea, and a number beside it confirms the exact setting. Update it as the handle moves.
+
+**Use a slider when the exact number doesn't matter much.** Dragging to 37 out of 100 is slow and imprecise. If people need an exact value, give them a [Text Field](/docs/text-field), alone or beside the slider.
+
+**Apply the value when people let go, if the change is expensive.** `onValueChange` fires on every step of a drag. Use `onValueCommit` to save to a server or run a slow filter once the drag ends.
+
+**Set a `step` that matches the unit.** A step of 5 for a percentage or 10 for a price stops the value landing on numbers nobody would choose.
+
+**Don't use a slider for a few named choices.** "Small, medium, large" is a [Segmented Control](/docs/segmented-control) or a [Radio Group](/docs/radio-group), where every option is visible and labelled.
+
+## Value
+
+`value` and `defaultValue` are arrays. The slider draws one handle for each number, so `[50]` is a single value and `[20, 80]` is a range. With neither, the slider starts with one handle at `min`. `min` and `max` default to 0 and 100, and `step` defaults to 1.
+
+## Size
+
+`size` sets the track thickness: 4, 5, 6 and 7 pixels for sizes 1 to 4, with a handle that grows to match. Size 2 is the default. `size` accepts a responsive object, such as `{ initial: '3', md: '2' }`.
+
+## Examples
+
+### Price range
+
+Two numbers make a range with two handles. `minStepsBetweenThumbs` keeps the handles apart, so the range can't close to nothing.
+
+```tsx
+<Slider
+  defaultValue={[200, 800]}
+  min={0}
+  max={1000}
+  step={50}
+  minStepsBetweenThumbs={1}
+  aria-label="Price range"
+/>
+```
+
+### Marked positions
+
+`ticks` draws a mark under the track for each value, with an optional label. Each mark is a button that moves the nearest handle to it. Add `snapToTicks` when only those values are allowed. The marks sit below the slider without taking up layout space, so leave room under it.
+
+```tsx
+<Box mb="8">
+  <Slider
+    defaultValue={[50]}
+    ticks={[
+      { value: 0, label: 'Low' },
+      { value: 50, label: 'Medium' },
+      { value: 100, label: 'High' },
+    ]}
+    snapToTicks
+    aria-label="Quality"
+  />
+</Box>
+```
+
+### Saving when the drag ends
+
+Update the shown value on every change, and save once with `onValueCommit`.
+
+```tsx
+<Slider
+  value={[brightness]}
+  onValueChange={([v]) => setBrightness(v)}
+  onValueCommit={([v]) => saveBrightness(v)}
+  aria-label="Brightness"
+/>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `number[]` | | The handle values, controlled |
+| `defaultValue` | `number[]` | | The handle values at first render |
+| `onValueChange` | `(value: number[]) => void` | | Fires on every change, including during a drag |
+| `onValueCommit` | `(value: number[]) => void` | | Fires when a drag, key press or tick press ends |
+| `min` | `number` | `0` | The lowest value |
+| `max` | `number` | `100` | The highest value |
+| `step` | `number` | `1` | The amount each step moves |
+| `minStepsBetweenThumbs` | `number` | `0` | The least number of steps between two handles |
+| `ticks` | `{ value: number; label?: string }[]` | | Marks under the track. Each one moves the nearest handle to its value |
+| `showTickLabels` | `boolean` | `true` | Shows the tick labels. Set `false` to show only the marks |
+| `snapToTicks` | `boolean` | `false` | Moves each value to the nearest tick |
+| `unit` | `string` | | The unit read out with the value, such as `%` |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | The track thickness and handle size |
+| `variant` | `'surface' \| 'soft' \| 'outline'` | `'surface'` | The look of the track |
+| `color` | `AccentColor` | Theme accent | The colour of the filled range |
+| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Theme radius | The corner of the track and handle |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | The direction of the track |
+| `inverted` | `boolean` | `false` | Puts the lowest value at the other end |
+| `disabled` | `boolean` | `false` | Blocks changes and shows the disabled colours |
+| `name` | `string` | | The field name in a form |
+| `dir` | `'ltr' \| 'rtl'` | | The reading direction |
+
+Slider also accepts every attribute of the HTML `span` element. `tabIndex` goes to each handle.
+
+## Accessibility
+
+| Key | Action |
+| --- | --- |
+| Arrow keys | Move the focused handle by one step |
+| Shift and an arrow key | Moves the handle by ten steps |
+| Page Up or Page Down | Moves the handle by ten steps |
+| Home or End | Moves the handle to the lowest or highest value |
+| Tab | Moves focus to the next handle or control |
+
+- **Name:** Give the slider `aria-label` or `aria-labelledby`, and each handle takes that name. Both handles of a range share it. Without a name, the two handles of a range are called "Minimum" and "Maximum".
+- **Value:** Each handle has `role="slider"` and its own value. The screen reader reads the value with `unit`, and a live region announces the new value after each change, such as "50 % out of 100 %".
+- **Ticks:** Each tick is a button named "Set to" and its label or value, so keyboard users can reach the marked positions too.
+- **Focus:** The focus ring shows on the handle for the keyboard only.

@@ -22,6 +22,7 @@
 
 import * as React from 'react';
 import classNames from 'classnames';
+import { Slot } from 'radix-ui';
 import { useComposedRefs } from 'radix-ui/internal';
 import { PaneResizeContext } from './_internal/shell-resize.js';
 import { PaneHandle, PanelHandle } from './_internal/shell-handles.js';
@@ -48,7 +49,7 @@ import { useShell, useSidebarMode } from './shell.context.js';
 import { useResponsivePresentation } from './shell.hooks.js';
 import { readBreakpoint } from '../hooks/use-breakpoint.js';
 import { useThemeSize } from '../helpers/theme-size.js';
-import { PaneChromeScope, PaneFooter, PaneHeader, Scroll, ShellSizeContext } from './_internal/pane-chrome.js';
+import { PaneChromeScope, PaneFooter, PaneHeader, Scroll, ShellContentContext, ShellSizeContext } from './_internal/pane-chrome.js';
 import type { PaneSize } from './_internal/pane-chrome.js';
 import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, PaneMode, PaneName, PaneTarget, ResponsivePresentation, SidebarMode } from './shell.types.js';
 
@@ -365,6 +366,7 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
   return (
     <ShellStoreContext.Provider value={store}>
       <ShellSizeContext.Provider value={size}>
+      <ShellContentContext.Provider value={false}>
       <ShellInsetContext.Provider value={insetContext}>
         {/* The Root is not a widget: it hears Escape bubbling up from the panes,
             after their own handlers, to close the overlays. */}
@@ -387,6 +389,7 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
           <div className="kui-ShellScrim" aria-hidden onClick={closeOverlays} />
         </div>
       </ShellInsetContext.Provider>
+      </ShellContentContext.Provider>
       </ShellSizeContext.Provider>
     </ShellStoreContext.Provider>
   );
@@ -679,9 +682,17 @@ interface ShellContentProps extends React.ComponentPropsWithoutRef<'main'> {
   inset?: boolean;
 }
 
-const Content = React.forwardRef<HTMLElement, ShellContentProps>(({ className, inset, ...props }, ref) => {
+/**
+ * The work area. It scrolls as it is; with a `Shell.Scroll` child it becomes a column and the
+ * Scroll scrolls instead, so a `Shell.PaneHeader float` beside it stays pinned over the page.
+ */
+const Content = React.forwardRef<HTMLElement, ShellContentProps>(({ className, inset, children, ...props }, ref) => {
   useInsetRegistration('content', inset);
-  return <main {...props} ref={ref} className={classNames('kui-ShellContent', className)} data-inset={inset || undefined} />;
+  return (
+    <main {...props} ref={ref} className={classNames('kui-ShellContent', className)} data-inset={inset || undefined}>
+      <ShellContentContext.Provider value={true}>{children}</ShellContentContext.Provider>
+    </main>
+  );
 });
 Content.displayName = 'Shell.Content';
 
@@ -692,6 +703,12 @@ type TriggerAction = 'toggle' | 'expand' | 'collapse';
 interface TriggerProps extends React.ComponentPropsWithoutRef<'button'> {
   target: PaneTarget;
   action?: TriggerAction;
+  /**
+   * Renders the single child in place of the trigger's own button, with the trigger's click,
+   * `aria-controls`, `aria-expanded` and data attributes merged onto it. Use it to make a
+   * `Button` the trigger: `<Shell.Trigger asChild><Button iconOnly aria-label="Toggle sidebar">…</Button></Shell.Trigger>`.
+   */
+  asChild?: boolean;
   /**
    * Whether to show a preview of the target pane on hover while it is closed
    * and not an overlay. Defaults to false.
@@ -706,9 +723,10 @@ interface TriggerProps extends React.ComponentPropsWithoutRef<'button'> {
  * A button that drives a pane by name, through the registry. It sets
  * `aria-controls` and `aria-expanded` (left off while an untouched pane
  * cannot know its state yet), renders `type="button"`, and runs the
- * consumer's `onClick` first: calling `preventDefault()` there cancels it.
+ * consumer's `onClick` first: calling `preventDefault()` there cancels it. With `asChild` the
+ * child is the button, and its own `type` stands.
  */
-const Trigger = React.forwardRef<HTMLButtonElement, TriggerProps>(({ target, action = 'toggle', peekOnHover, onClick, onMouseEnter, onMouseLeave, children, ...props }, ref) => {
+const Trigger = React.forwardRef<HTMLButtonElement, TriggerProps>(({ target, action = 'toggle', peekOnHover, asChild = false, onClick, onMouseEnter, onMouseLeave, children, ...props }, ref) => {
   const store = useShellStore('Shell.Trigger');
   React.useEffect(() => {
     if (target === 'left') warnOnce('Shell.Trigger target="left" is deprecated and is removed in 1.0. Use target="rail".');
@@ -742,10 +760,13 @@ const Trigger = React.forwardRef<HTMLButtonElement, TriggerProps>(({ target, act
     if (peekOnHover && store.peek === name) setShellPeek(store, null);
   };
 
+  const Comp = asChild ? Slot.Root : 'button';
   return (
-    <button
+    <Comp
       // A button's default type is `submit`. Stated before the spread, so a consumer's own wins.
-      type="button"
+      // An asChild child states its own (Button already says `button`; a link has none), so the
+      // key is left off rather than passed as undefined.
+      {...(!asChild && { type: 'button' as const })}
       aria-controls={entry?.id}
       aria-expanded={shown}
       {...props}
@@ -757,7 +778,7 @@ const Trigger = React.forwardRef<HTMLButtonElement, TriggerProps>(({ target, act
       data-shell-action={action}
     >
       {children}
-    </button>
+    </Comp>
   );
 });
 Trigger.displayName = 'Shell.Trigger';

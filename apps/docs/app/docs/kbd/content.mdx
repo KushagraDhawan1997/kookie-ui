@@ -1,0 +1,89 @@
+---
+title: Kbd
+description: Kbd shows a key or a keyboard shortcut, such as ⌘ K or Shift Enter, inside text or next to a command.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/kbd.tsx
+---
+
+Kbd shows a key or a shortcut in the shape of a key. Use it in help text, menus and tooltips to tell people what to press. For code, a file name or a command people type, use [Code](/docs/code).
+
+## Playground
+
+import KbdPlayground from '../../playground/kbd-playground';
+
+<KbdPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Kbd, Text } from '@kushagradhawan/kookie-ui';
+
+export function SearchHint() {
+  return (
+    <Text as="p" size="2" emphasis="medium">
+      Press <Kbd size="2">⌘ K</Kbd> to search, or <Kbd size="2">Esc</Kbd> to close.
+    </Text>
+  );
+}
+```
+
+## Best practices
+
+**Match the size to the text around it.** Set `size` to the size of the surrounding [Text](/docs/text), so the key sits on the same line without pushing it apart.
+
+**Show the keys for the person's platform.** Show ⌘ on macOS and Ctrl on Windows and Linux. A shortcut for the wrong keyboard is worse than none.
+
+**Put one shortcut in one Kbd.** Write the keys of a combination together, such as `<Kbd>⌘ K</Kbd>`. Kbd keeps them on one line and spaces them evenly.
+
+**Keep shortcuts out of the main path.** A shortcut speeds up people who already know the screen. Every action still needs a button or a menu item people can find without it.
+
+**Don't use it for code.** Kbd means "press this". A command or a value people type belongs in [Code](/docs/code).
+
+## Size
+
+`size` takes a step from 1 to 9 that matches the font sizes of [Text](/docs/text), so `size="2"` fits next to `<Text size="2">`. Without `size`, Kbd uses size 1. The padding and the corner scale with it. `size` accepts a responsive object, such as `{ initial: '1', md: '2' }`.
+
+## Variant
+
+| Variant | Look |
+| --- | --- |
+| `raised` | A key with an edge and a shadow. This is the default |
+| `soft` | A flat, tinted key, for dense lists such as menus |
+
+## Examples
+
+### Shortcuts in a menu
+
+Put the shortcut at the end of the item, so people learn it while they use the menu. The [Sidebar](/docs/sidebar) does this for its items with a `shortcut`.
+
+```tsx
+<Flex justify="between" align="center" gap="4">
+  <Text size="2">New file</Text>
+  <Kbd size="1" variant="soft">⌘ N</Kbd>
+</Flex>
+```
+
+### A key people can press
+
+When a key on screen does something, such as a list of shortcuts people can try, render a button with `asChild`. Kbd adds hover, pressed and focus styles to a button or a link.
+
+```tsx
+<Kbd asChild>
+  <button type="button" onClick={openSearch}>⌘ K</button>
+</Kbd>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'1'` to `'9'`, responsive | | The font size step. Without it, size 1 |
+| `variant` | `'raised' \| 'soft'` | `'raised'` | The look |
+| `asChild` | `boolean` | `false` | Renders the child element, such as a button, with the key's look |
+
+Kbd also accepts every attribute of the HTML `kbd` element.
+
+## Accessibility
+
+- **Semantics:** Kbd renders a `kbd` element, which marks the text as keyboard input. Screen readers read the text inside it.
+- **Symbols:** Screen readers read symbols such as ⌘ and ⇧ in different ways, and some skip them. Where it matters, write the name in the text around the key, such as "Command K".
+- **Pressable keys:** With `asChild` on a `button`, it takes focus and responds to Enter and Space like any button, with a focus ring for the keyboard.
