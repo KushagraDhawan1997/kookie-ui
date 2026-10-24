@@ -1,0 +1,128 @@
+---
+title: Switch
+description: A switch turns a setting on or off, and the change takes effect straight away.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/switch.tsx
+---
+
+A switch turns one setting on or off, and the setting applies the moment it changes. An option that waits for a save button is a [Checkbox](/docs/checkbox). A pressed state on a toolbar button, such as bold, is a [Toggle](/docs/toggle).
+
+## Playground
+
+import SwitchPlayground from '../../playground/switch-playground';
+
+<SwitchPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Card, Flex, Switch, Text } from '@kushagradhawan/kookie-ui';
+
+export function AutoSaveSetting({ on, setOn }: { on: boolean; setOn: (on: boolean) => void }) {
+  return (
+    <Card size="2">
+      <Text as="label" size="2">
+        <Flex justify="between" align="center" gap="4">
+          <Flex direction="column">
+            <Text weight="medium">Auto-save</Text>
+            <Text emphasis="medium">Save changes as you type</Text>
+          </Flex>
+          <Switch checked={on} onCheckedChange={setOn} />
+        </Flex>
+      </Text>
+    </Card>
+  );
+}
+```
+
+## Best practices
+
+**Apply the change as soon as the switch moves.** People read a switch as a light switch: flip it and something happens. If the setting only applies after a save, use a [Checkbox](/docs/checkbox), because a switch that does nothing until later looks broken.
+
+**Name the setting, not the state.** "Auto-save" with a switch beside it is clear in both positions. "Turn on auto-save" reads wrong once it is already on.
+
+**Put the switch inside its label.** A click on the text then flips the switch. Wrap both in `<Text as="label">`, as in the usage example.
+
+**Don't use a switch for a choice between two named options.** "Monthly or yearly" is a [Radio Group](/docs/radio-group) or a [Segmented Control](/docs/segmented-control). A switch only answers on or off.
+
+**Keep the switch where people put it.** If the setting saves to a server, show the new position at once. If the request fails, move it back and say why.
+
+## Size
+
+`size` sets the track: 34 by 20, 40 by 24, 44 by 26 and 48 by 28 pixels for sizes 1 to 4. Size 2 is the default. Match the size of the text beside it, so a list of settings lines up. `size` accepts a responsive object, such as `{ initial: '3', md: '2' }`.
+
+## Variant
+
+`variant` sets how the track looks while off. Every variant fills the track with the accent colour while on.
+
+| Variant | Off look |
+| --- | --- |
+| `surface` | A light fill with a border. This is the default |
+| `soft` | A gray fill with no border |
+| `outline` | A border with no fill |
+
+## Examples
+
+### A list of settings
+
+Stack switches in a column, each inside its own label. Keep the switches on one side so people scan down a single line of controls.
+
+```tsx
+<Flex direction="column" gap="3">
+  <Text as="label" size="2">
+    <Flex justify="between" gap="4">
+      Email notifications
+      <Switch defaultChecked />
+    </Flex>
+  </Text>
+  <Text as="label" size="2">
+    <Flex justify="between" gap="4">
+      Push notifications
+      <Switch />
+    </Flex>
+  </Text>
+</Flex>
+```
+
+### Unavailable setting
+
+`disabled` blocks changes and shows the disabled colours. Say near the switch why it can't change, such as "Managed by your organisation".
+
+```tsx
+<Switch disabled defaultChecked aria-label="Single sign-on" />
+```
+
+### In a form
+
+Inside a `form`, a switch submits its `name` and `value` while it is on, like a native checkbox.
+
+```tsx
+<Switch name="newsletter" value="yes" aria-label="Subscribe to the newsletter" />
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `checked` | `boolean` | | Whether the switch is on, controlled |
+| `defaultChecked` | `boolean` | `false` | Whether the switch starts on |
+| `onCheckedChange` | `(checked: boolean) => void` | | Fires with the new state |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | The track size |
+| `variant` | `'surface' \| 'soft' \| 'outline'` | `'surface'` | The look of the track while off |
+| `color` | `AccentColor` | Theme accent | The track colour while on |
+| `disabled` | `boolean` | `false` | Blocks changes |
+| `required` | `boolean` | `false` | Must be on before the form submits |
+| `name` | `string` | | The field name in a form |
+| `value` | `string` | `'on'` | The value sent with the form while on |
+
+Switch also accepts every attribute of the HTML `button` element.
+
+## Accessibility
+
+| Key | Action |
+| --- | --- |
+| Space or Enter | Turns the switch on or off |
+| Tab | Moves focus to the next control |
+
+- **Name:** The label text names the switch when the switch sits inside a `label`. A switch with no visible text needs `aria-label`.
+- **State:** The switch is a `button` with `role="switch"`. A screen reader announces its name and whether it is on or off.
+- **Focus:** The focus ring shows for the keyboard only. A disabled switch leaves the tab order.

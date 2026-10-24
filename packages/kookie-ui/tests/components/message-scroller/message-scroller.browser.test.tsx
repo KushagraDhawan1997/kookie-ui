@@ -88,6 +88,22 @@ describe('MessageScroller in a browser', () => {
     expect(getComputedStyle(button()).opacity).toBe('0');
   });
 
+  it('moves keyboard focus to the viewport when the button is pressed, not to the page', async () => {
+    render(<Transcript count={30} />);
+    await until(() => viewport().scrollTop > 0);
+    const el = viewport();
+    await act(async () => {
+      el.dispatchEvent(new WheelEvent('wheel', { deltaY: -400, bubbles: true }));
+      el.scrollTop = 0;
+      el.dispatchEvent(new Event('scroll'));
+    });
+    await until(() => button().getAttribute('data-active') === 'true');
+    button().focus();
+    await userEvent.keyboard('{Enter}');
+    expect(document.activeElement).toBe(el);
+    await until(() => distanceFromEnd(el) < 2, 4000);
+  });
+
   it('centres the jump button by its margins, not a transform', async () => {
     render(<Transcript count={30} />);
     await settle();

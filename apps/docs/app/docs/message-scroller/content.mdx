@@ -1,0 +1,166 @@
+---
+title: Message Scroller
+description: Message Scroller shows a conversation's messages and keeps the newest in view as they arrive, unless the reader has scrolled away.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/message-scroller.tsx
+---
+
+Message Scroller is the scrolling transcript of a chat. It follows new messages and streamed replies while the reader is at the end, stays put once they scroll up, and keeps their place when older messages load above. For a scrolling region that holds anything else, use a [Scroll Area](/docs/scroll-area).
+
+## Playground
+
+import MessageScrollerPlayground from '../../playground/message-scroller-playground';
+
+<MessageScrollerPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Box, Flex, MessageScroller, Text } from '@kushagradhawan/kookie-ui';
+
+export function Conversation({ messages }: { messages: Message[] }) {
+  return (
+    <MessageScroller.Root style={{ height: '100%' }}>
+      <MessageScroller.Viewport aria-label="Conversation">
+        <MessageScroller.Content>
+          {messages.map((message) => (
+            <MessageScroller.Item key={message.id} messageId={message.id} scrollAnchor={message.role === 'user'}>
+              <Box px="4" py="3">
+                <Text size="2">{message.text}</Text>
+              </Box>
+            </MessageScroller.Item>
+          ))}
+        </MessageScroller.Content>
+      </MessageScroller.Viewport>
+      <MessageScroller.Button />
+    </MessageScroller.Root>
+  );
+}
+```
+
+The Root needs a height, from its parent or its own style, so the viewport has something to scroll. Message Scroller needs React 19.
+
+## Anatomy
+
+```tsx
+<MessageScroller.Root>
+  <MessageScroller.Viewport>
+    <MessageScroller.Content>
+      <MessageScroller.Item />
+    </MessageScroller.Content>
+  </MessageScroller.Viewport>
+  <MessageScroller.Button />
+</MessageScroller.Root>
+```
+
+- **Root:** Holds the scroll state. Every other part goes inside it.
+- **Viewport:** The element that scrolls.
+- **Content:** The list of messages.
+- **Item:** One message.
+- **Button:** Jumps back to the latest message. It shows only while the reader is away from the end, centred over the bottom edge of the transcript.
+
+## Best practices
+
+**Anchor the reader's own messages.** Set `scrollAnchor` on the messages people send. When one arrives, it moves near the top of the viewport and the reply streams in below it, so people read the reply from its start.
+
+**Give every message a stable `messageId`.** Use the id your data already has. It lets `useMessageScroller().scrollToMessage` find the message and `useMessageScrollerVisibility` report it.
+
+**Don't take the reader back while they are reading.** Leave `autoScroll` on. It follows new content only while the reader is at the end, and the Button gives them a way back when they're ready.
+
+**Name the transcript.** Pass `aria-label` to the Viewport, such as "Conversation". Without a name it isn't a landmark people can jump to.
+
+**Keep the composer outside.** Put the [Chatbar](/docs/chatbar) below the Root, not inside the Viewport, so it stays in place while the messages scroll.
+
+## Following new messages
+
+`autoScroll` keeps the newest content in view while the reader is at the end, which includes a reply that grows as it streams. Once the reader scrolls up with the wheel, touch or the keyboard, the transcript stays where they left it until they return to the end. Turn it off for a log people read from the top.
+
+`defaultScrollPosition` sets where the transcript opens:
+
+| Value | Opens at | Use it for |
+| --- | --- | --- |
+| `end` | The latest message. This is the default | Most chats |
+| `start` | The first message | A transcript people read from the top |
+| `last-anchor` | The last anchored message, or the end when the rest fits | Returning to a conversation mid-reply |
+
+## Examples
+
+### Loading older messages
+
+When you add messages above the first one, the reader's place stays where it was. Set `preserveScrollOnPrepend={false}` on the Viewport to turn this off.
+
+### Jumping to a message
+
+`useMessageScroller` returns `scrollToEnd`, `scrollToStart` and `scrollToMessage`. Call it from a component inside the Root, such as a search result that opens the message it matched.
+
+```tsx
+const { scrollToMessage } = useMessageScroller();
+
+scrollToMessage(result.messageId, { align: 'center', behavior: 'smooth' });
+```
+
+### Fading under a floating bar
+
+The Viewport fades messages toward an edge while there is more past it. When a bar floats over an edge, set `--scroll-fade-start` or `--scroll-fade-end` on the Viewport to its height, so messages fade as they pass under it. Set `fade={false}` to turn the fade off.
+
+## Props
+
+### Root
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `autoScroll` | `boolean` | `true` | Follows new content while the reader is at the end |
+| `defaultScrollPosition` | `'end' \| 'start' \| 'last-anchor'` | `'end'` | Where the transcript opens |
+| `scrollEdgeThreshold` | `number` | `8` | Pixels from the end that still count as at the end |
+| `scrollMargin` | `number` | `0` | Pixels kept above a message that is scrolled to or anchored |
+
+### Viewport
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `aria-label` | `string` | | The transcript's name, such as "Conversation" |
+| `preserveScrollOnPrepend` | `boolean` | `true` | Keeps the reader's place when messages are added above |
+| `fade` | `boolean` | `true` | Fades messages toward an edge with more past it |
+
+### Item
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `messageId` | `string` | | A stable id, for `scrollToMessage` |
+| `scrollAnchor` | `boolean` | `false` | Moves the message near the top when it arrives |
+
+### Button
+
+Button takes the [Button](/docs/button) props except `iconOnly` and `fullWidth`. It is always icon-only, with a down arrow when it has no children.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `direction` | `'end' \| 'start'` | `'end'` | Jumps to the latest message, or to the first |
+| `behavior` | `ScrollBehavior` | `'smooth'` | How the jump scrolls |
+| `aria-label` | `string` | `'Jump to the latest'` | The name. `'Jump to the first'` for `direction="start"` |
+| `variant` | Button variant | `'surface'` | The look. Or set `emphasis` |
+| `color` | `AccentColor` | `'gray'` | The colour |
+| `radius` | Button radius | `'full'` | The corner |
+
+### Hooks
+
+| Hook | Returns |
+| --- | --- |
+| `useMessageScroller()` | `{ scrollToEnd, scrollToStart, scrollToMessage }`. Each takes `{ align, behavior, scrollMargin }` |
+| `useMessageScrollerScrollable()` | `{ start, end }`: whether there is more to scroll each way |
+| `useMessageScrollerVisibility()` | `{ visibleMessageIds, currentAnchorId }`: which messages are in view |
+
+Each hook must be called inside a Root. Root, Viewport, Content and Item accept the attributes of the HTML `div` element.
+
+## Accessibility
+
+| Key | Action |
+| --- | --- |
+| Tab | Moves focus to the viewport, then to the Button when it shows |
+| Arrow Up or Arrow Down | Scrolls the focused viewport, and stops following |
+| Page Up, Page Down, Space | Scrolls a page, and stops following |
+| Home or End | Goes to the start or end of the transcript, and stops following |
+
+- **Region:** The Viewport is a focusable `role="region"`, named by its `aria-label`. It shows a focus ring for the keyboard only.
+- **New messages:** The Content has `role="log"`, so a screen reader announces messages as they are added without moving focus.
+- **Button:** While the reader is at the end, the Button is hidden, `inert` and out of the tab order. Its name is "Jump to the latest" unless you pass your own `aria-label`.
+- **Focus:** Pressing the Button scrolls to the end and moves focus to the Viewport, so the Button can hide and keyboard focus stays in the transcript.

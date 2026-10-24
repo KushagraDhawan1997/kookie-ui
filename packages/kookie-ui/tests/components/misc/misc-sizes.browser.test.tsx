@@ -59,18 +59,29 @@ describe('chip ladder', () => {
     expect([px(rest, 'padding-top'), px(rest, 'padding-left'), px(rest, 'column-gap')]).toEqual([4, 8, 4]);
   });
 
-  it('disabled is a remap: default cursor, still hit-tests', () => {
+  // Chip has no disabled state. Only the shared reset's cursor reacts to data-disabled.
+  it('has no disabled state: data-disabled leaves the look alone', () => {
     const { container } = render(
       <Theme>
+        <Chip variant="soft">On</Chip>
         <Chip variant="soft" data-disabled="">
+          Off
+        </Chip>
+        <Chip variant="solid">On</Chip>
+        <Chip variant="solid" data-disabled="">
           Off
         </Chip>
       </Theme>,
     );
-    const b = container.querySelector('.kui-Chip')!;
-    expect(getComputedStyle(b).cursor).toBe('default');
-    expect(getComputedStyle(b).pointerEvents).not.toBe('none');
-    expect(getComputedStyle(b).opacity).toBe('1');
+    const [soft, softOff, solid, solidOff] = [...container.querySelectorAll('.kui-Chip')].map((el) => getComputedStyle(el));
+    for (const [on, off] of [
+      [soft, softOff],
+      [solid, solidOff],
+    ]) {
+      expect(off.color).toBe(on.color);
+      expect(off.backgroundColor).toBe(on.backgroundColor);
+      expect(off.boxShadow).toBe(on.boxShadow);
+    }
   });
 });
 

@@ -28,8 +28,9 @@
   font-style: normal;
   text-align: start;
 
-  /* Allows the `resize` property to work on the div */
+  /* Allows the `resize` property to work on the div. Vertical by default, as in v2; the `resize` prop overrides it. */
   overflow: hidden;
+  resize: vertical;
 
   isolation: isolate;
 

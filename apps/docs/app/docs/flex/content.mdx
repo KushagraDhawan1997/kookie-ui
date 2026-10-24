@@ -1,0 +1,114 @@
+---
+title: Flex
+description: Flex lines up its children in a row or a column and sets the space between them.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/flex.tsx
+---
+
+Flex places its children along one axis, as a row or a column, with `gap` between them. Use it for toolbars, form rows, stacks of text and anything that runs in one direction. When children need to line up in rows and columns at once, use [Grid](/docs/grid).
+
+## Playground
+
+import FlexPlayground from '../../playground/flex-playground';
+
+<FlexPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Avatar, Button, Flex, Text } from '@kushagradhawan/kookie-ui';
+
+export function MemberRow({ name, email }: { name: string; email: string }) {
+  return (
+    <Flex align="center" gap="3" py="2">
+      <Avatar fallback={name[0]} />
+      <Flex direction="column" flexGrow="1" minWidth="0">
+        <Text size="2" weight="medium" truncate>
+          {name}
+        </Text>
+        <Text size="2" emphasis="medium" truncate>
+          {email}
+        </Text>
+      </Flex>
+      <Button emphasis="quiet">Remove</Button>
+    </Flex>
+  );
+}
+```
+
+## Best practices
+
+**Space children with `gap`, not margins.** `gap` sets one distance between every child and leaves no extra space at the ends. It also works with components that don't take margin props.
+
+**Let one child grow.** Give the flexible child `flexGrow="1"` and `minWidth="0"`, and leave the rest at their natural size. Without `minWidth="0"`, long text can't shrink or truncate.
+
+**Turn a row into a column on small screens.** A responsive `direction`, such as `{ initial: 'column', sm: 'row' }`, keeps one layout for every width.
+
+**Use Grid for two dimensions.** Flex with `wrap` lines up items in each row but not across rows. Cards in a gallery or fields in a form belong in a [Grid](/docs/grid).
+
+## Direction and alignment
+
+`direction` sets the main axis. `justify` places children along it and `align` places them across it.
+
+| Prop | Values | Default |
+| --- | --- | --- |
+| `direction` | `row`, `column`, `row-reverse`, `column-reverse` | `row` |
+| `justify` | `start`, `center`, `end`, `between` | `start` |
+| `align` | `start`, `center`, `end`, `baseline`, `stretch` | `stretch` |
+| `wrap` | `nowrap`, `wrap`, `wrap-reverse` | `nowrap` |
+
+`justify="between"` pushes the first and last children to the ends, as in a header with a title on the left and actions on the right. `align="baseline"` lines up text of different sizes on one baseline.
+
+## Gap
+
+`gap` takes a step from the space scale, `'0'` to `'12'`, or a CSS string. Steps 2, 3 and 4 are 4, 8 and 12 pixels, and cover most rows of controls. `gapX` and `gapY` set the column and row gap apart, which matters once `wrap` is on. The full scale is on the [Box](/docs/box) page.
+
+## Examples
+
+### Page header
+
+```tsx
+<Flex justify="between" align="center" gap="3">
+  <Heading size="5">Projects</Heading>
+  <Button emphasis="loud">New project</Button>
+</Flex>
+```
+
+### Stacked form fields
+
+```tsx
+<Flex direction="column" gap="4" maxWidth="400px">
+  <TextField.Root aria-label="Name" />
+  <TextField.Root aria-label="Email" type="email" />
+</Flex>
+```
+
+### Wrapping chips
+
+`wrap="wrap"` moves children to a new line when the row runs out of room. Set `gapY` when the rows need a different gap from the items.
+
+```tsx
+<Flex wrap="wrap" gapX="2" gapY="2">
+  {tags.map((tag) => (
+    <Chip key={tag}>{tag}</Chip>
+  ))}
+</Flex>
+```
+
+### Hidden on small screens
+
+`display` accepts a responsive object. `display={{ initial: 'none', md: 'flex' }}` hides the row below 1024 pixels.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `as` | `'div' \| 'span'` | `'div'` | The element to render |
+| `asChild` | `boolean` | `false` | Renders the child element with the flex props |
+| `display` | `'none' \| 'inline-flex' \| 'flex'`, responsive | `'flex'` | The CSS display |
+| `direction` | `'row' \| 'column' \| 'row-reverse' \| 'column-reverse'`, responsive | `'row'` | The main axis |
+| `justify` | `'start' \| 'center' \| 'end' \| 'between'`, responsive | `'start'` | Placement along the main axis |
+| `align` | `'start' \| 'center' \| 'end' \| 'baseline' \| 'stretch'`, responsive | `'stretch'` | Placement across the main axis |
+| `wrap` | `'nowrap' \| 'wrap' \| 'wrap-reverse'`, responsive | `'nowrap'` | Whether children wrap onto new lines |
+| `gap`, `gapX`, `gapY` | `'0'`–`'12'` or `string`, responsive | | Space between children |
+
+Flex also takes every layout prop that [Box](/docs/box#props) takes: padding, margin, width, height, position, inset, overflow, and the flex and grid child props. It accepts every attribute of the HTML `div` element, or `span` with `as="span"`.

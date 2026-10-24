@@ -1,32 +1,29 @@
 ---
 title: Notice
-description: A message about a condition that is true now.
+description: A notice tells people about a condition that is true now, such as a usage limit or a lost connection.
 source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/notice.tsx
 ---
 
-import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
-import { Button, Flex, Notice } from '@kushagradhawan/kookie-ui';
-import { HugeiconsIcon } from '@hugeicons/react';
-import { Alert02Icon } from '@hugeicons/core-free-icons';
+A notice states a condition that is true now and that nobody just caused: a usage limit, a lost connection, a finished job. It takes space in the layout and never floats, so it can't cover what it is about. A question that waits for an answer is a `Confirmation`, on this page. A choice that must be made before anything else is an [Alert Dialog](/docs/alert-dialog).
 
-Notice tells the person about a condition that is true now and that nobody just caused: a usage limit, a lost connection, a finished job. It takes space in the layout and never floats, so it cannot cover what it is about.
+## Playground
 
-<PreviewBlock height="10rem">
-  <Flex direction="column" gap="4" width="100%" maxWidth="28rem">
-    <Notice icon={<HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />} action={<Button size="2" variant="soft" color="gray">Add credits</Button>}>You have used 90% of this month's credits.</Notice>
-  </Flex>
-</PreviewBlock>
+import NoticePlayground from '../../playground/notice-playground';
+
+<NoticePlayground />
 
 ## Usage
 
 ```tsx showLineNumbers
 import { Button, Notice } from '@kushagradhawan/kookie-ui';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Alert02Icon } from '@hugeicons/core-free-icons';
 
-export function UsageNotice({ onDismiss }: { onDismiss: () => void }) {
+export function CreditsNotice({ onAddCredits, onDismiss }: { onAddCredits: () => void; onDismiss: () => void }) {
   return (
     <Notice
       icon={<HugeiconsIcon icon={Alert02Icon} strokeWidth={1.75} />}
-      action={<Button>Add credits</Button>}
+      action={<Button variant="soft" color="gray" onClick={onAddCredits}>Add credits</Button>}
       onDismiss={onDismiss}
     >
       You have used 90% of this month's credits.
@@ -35,24 +32,91 @@ export function UsageNotice({ onDismiss }: { onDismiss: () => void }) {
 }
 ```
 
+## Best practices
+
+**Show one notice at a time.** Two notices stacked above the same content compete, and people read neither. Show the one that matters most, and show the next when the first is resolved.
+
+**Give it one action, and make that action fix the condition.** "Add credits" fixes a usage limit. "Learn more" doesn't, so put it in the message as a [Link](/docs/link) instead.
+
+**Remember a dismissal in your app.** The dismiss button only calls `onDismiss`. Remove the notice and store the choice yourself, because the component can't remember it across a reload.
+
+**Use colour only when it adds a fact.** A notice rests gray. Use `red` for a condition that stops the next step, such as a failed payment. A red notice for a routine message teaches people to ignore red.
+
+**Don't use a notice for a single sentence.** A message with no action and no dismiss button is text. Use [Text](/docs/text) unless it must stand apart from the page.
+
+## Size
+
+`size` sets the padding, the corner, the text and the dismiss button together. Sizes 1 to 4 pad by 16, 24, 32 and 40 pixels, like a [Card](/docs/card) of the same size. When you leave it unset, the notice follows the nearest Theme size. Inside a [Chatbar](/docs/chatbar), it follows the chatbar's size.
+
+A button in the `action` that sets no `size` takes the notice's size, so it centres on the first line of text.
+
+## Colour
+
+`color` sets the category of the message, not its volume. Gray uses the ordinary text colour on a gray tint. Any other colour tints the fill and the text with that colour.
+
+## Examples
+
+### Lost connection
+
+A notice with no action and no dismiss button is right when the app will clear it on its own, such as when the connection comes back.
+
+```tsx
+<Notice icon={<HugeiconsIcon icon={WifiDisconnected01Icon} strokeWidth={1.75} />}>
+  You're offline. Changes will sync when you reconnect.
+</Notice>
+```
+
+### Asking before a costly step
+
+`Confirmation` holds a question with a quiet no and a loud yes, and no dismiss button, because closing a question doesn't answer it. Name the yes after the action. `busy` shows a spinner on the yes and disables the no while the action runs.
+
+```tsx
+<Confirmation
+  confirmLabel="Allow up to $18"
+  onConfirm={onAllow}
+  onCancel={onDecline}
+  busy={allowing}
+>
+  This run may use more than your daily budget.
+</Confirmation>
+```
+
+### In a chat
+
+Pass notices to the `notices` slot of `Chatbar.Root`. They sit above the composer and take the chatbar's size.
+
 ## Props
 
-| Prop | Type | Description |
-| ---- | ---- | ----------- |
-| `size` | `'1' \| '2' \| '3' \| '4'` | Padding, text and button size. Default `'2'` |
-| `color` | `AccentColor` | The category of the message. Default `'gray'`. Use a colour only when it adds a fact the words don't give |
-| `icon` | `ReactNode` | An icon before the message, hidden from assistive technology |
-| `action` | `ReactNode` | One action that fixes the condition |
-| `onDismiss` | `() => void` | Shows a dismiss button. Dismissing hides the message; your app removes it and remembers the choice |
-| `dismissLabel` | `string` | Accessible name of the dismiss button. Default `'Dismiss'` |
+### Notice
 
-A notice with no action and no dismiss button is a sentence. Use `Text` unless it must stand apart from the page.
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` | | Required. The message |
+| `icon` | `ReactNode` | | An icon before the message, hidden from assistive technology |
+| `action` | `ReactNode` | | One action that fixes the condition. A button in it takes the notice's size |
+| `onDismiss` | `() => void` | | Shows a dismiss button and is called when it is pressed |
+| `dismissLabel` | `string` | `'Dismiss'` | The accessible name of the dismiss button |
+| `size` | `'1' \| '2' \| '3' \| '4'` | Theme size | The padding, corner, text and button size |
+| `color` | `AccentColor` | `'gray'` | The category of the message |
 
-## Confirmation
+### Confirmation
 
-`Confirmation` is the same strip for a question that waits for an answer: a quiet no before a loud yes, and no dismiss button. It takes `confirmLabel`, `cancelLabel` (default `'Not now'`), `onConfirm`, `onCancel` and `busy`.
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` | | Required. The question |
+| `confirmLabel` | `string` | | Required. The label of the yes. Name the action |
+| `cancelLabel` | `string` | `'Not now'` | The label of the no |
+| `onConfirm` | `() => void` | | Required. Called when the yes is pressed |
+| `onCancel` | `() => void` | | Required. Called when the no is pressed |
+| `busy` | `boolean` | `false` | Shows a spinner on the yes and disables the no |
+| `size` | `'1' \| '2' \| '3' \| '4'` | Theme size | The padding, corner, text and button size |
+| `color` | `AccentColor` | `'gray'` | The category, and the colour of the yes |
+
+Both also accept every attribute of the HTML `div` element.
 
 ## Accessibility
 
-- The strip is `role="status"` with `aria-live="polite"`, so a notice that appears is announced without moving focus.
-- Neither Notice nor Confirmation takes focus.
+- **Announcement:** Both have `role="status"` and `aria-live="polite"`. A screen reader announces the message when it appears, after it finishes what it is reading.
+- **Focus:** Neither takes focus when it appears, so people can keep typing. A person can answer a confirmation in the composer instead.
+- **Icon:** The icon is hidden from assistive technology. The message must make sense without it.
+- **Dismiss:** The dismiss button is an icon-only button named by `dismissLabel`. Change the label when "Dismiss" is not clear, such as "Hide usage warning".

@@ -6,7 +6,7 @@ source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/comp
 
 import { BlockInstallation } from '@/components/block-doc-page';
 
-Docs Shell is the frame of a documentation site: a searchable sidebar built from a navigation config, beside the page content. On small screens the sidebar becomes an overlay opened from a menu button. It is built on Kookie UI's `Shell` and `Sidebar`.
+Docs Shell is the frame of a documentation site: a searchable sidebar built from a navigation config, beside the page content, with a toolbar across the top of the content. On small screens the sidebar becomes an overlay opened from the toolbar's first button. It is built on Kookie UI's `Shell`, `Sidebar` and `Toolbar`.
 
 This site runs on it. The sidebar to the left is a Docs Shell.
 
@@ -66,7 +66,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
 
 | File | Contains |
 | ---- | -------- |
-| `docs-shell.tsx` | `DocsShell`: the `Shell` layout and mobile trigger |
+| `docs-shell.tsx` | `DocsShell`: the `Shell` layout, and a floating header over the page's `Shell.Scroll` holding the toolbar, with the sidebar button and a `ToolbarSlot` for the page's actions |
 | `docs-sidebar.tsx` | `DocsSidebar`: a floating header with the logo and search, the grouped menu, and a floating footer. Usable on its own inside any `Shell.Sidebar` |
 | `types.ts` | Navigation, logo and link types |
 
@@ -77,12 +77,13 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
 | `navigation` | `DocsNavigationConfig` | - | Groups and items for the sidebar. |
 | `pathname` | `string` | `''` | Current path. The matching item is marked active. |
 | `linkComponent` | `DocsLinkComponent` | `<a>` | Your router's link, such as `next/link`. |
-| `hero` | `ReactNode` | | A band at the top of the content pane, edge to edge. The top bar floats over it. |
+| `hero` | `ReactNode` | - | A band at the top of the content pane, edge to edge. The toolbar floats over it. |
+| `toolbar` | `ReactNode` | - | Controls at the end of the toolbar: `ToolbarGroup`s, `ToolbarButton`s or a `ToolbarOverflow`. The page's own actions follow them. |
 | `logo` | `DocsLogoConfig` | - | Logo in the sidebar header. |
 | `headerActions` | `ReactNode` | - | Beside the logo, e.g. a version badge. |
 | `sidebarFooter` | `ReactNode` | - | The floating footer toolbar's contents, e.g. a theme switch. |
 | `sidebarResizable` | `boolean` | `true` | Let people drag the sidebar edge. |
-| `mobileTriggerIcon` | `ReactNode` | Menu icon | Icon for the small-screen menu button. |
+| `mobileTriggerIcon` | `ReactNode` | Sidebar icon | Icon for the sidebar button at the start of the toolbar. |
 | `height` | `Shell.Root` height | - | Height of the shell. |
 
 ### Navigation Item
@@ -117,6 +118,37 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
+### Toolbar
+
+Pass your own controls with `toolbar`. Wrap them in `ToolbarOverflow` and the ones that don't fit move into a More menu on small screens.
+
+```tsx showLineNumbers
+<DocsShell
+  navigation={navigation}
+  toolbar={
+    <ToolbarOverflow label="More actions">
+      <ToolbarGroup>
+        <ToolbarButton asChild iconOnly aria-label="GitHub">
+          <a href="https://github.com/acme/docs">
+            <HugeiconsIcon icon={GithubIcon} strokeWidth={1.75} />
+          </a>
+        </ToolbarButton>
+      </ToolbarGroup>
+    </ToolbarOverflow>
+  }
+>
+  {children}
+</DocsShell>
+```
+
+A page adds its own controls with `ToolbarFill`. [Docs Page](/docs/blocks/docs-page) puts its Source button there.
+
+```tsx
+<ToolbarFill name={DOCS_PAGE_ACTIONS}>
+  <ToolbarButton>Edit</ToolbarButton>
+</ToolbarFill>
+```
+
 ### Nested Pages
 
 ```tsx showLineNumbers
@@ -132,4 +164,6 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
 
 ## Accessibility
 
-Search filters the menu as you type and shows a flat list of matches. The logo link and the small-screen menu button have accessible names. Active items are marked through `Sidebar.MenuButton`, which sets `aria-current`.
+Search filters the menu as you type and shows a flat list of matches. The logo link and the sidebar button have accessible names. Active items are marked through `Sidebar.MenuButton`, which sets `aria-current`.
+
+The toolbar is one tab stop. The arrow keys move between its controls, including the ones a page adds through `ToolbarFill`.

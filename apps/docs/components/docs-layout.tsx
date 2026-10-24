@@ -5,9 +5,8 @@ import Link from 'next/link';
 import { DocsShell } from '@/components/blocks/docs-shell/docs-shell';
 import { docsNavigation } from '../navigation-config';
 import { DarkModeToggle } from './dark-mode';
-import { Chip, Button, ToolbarGroup } from '@kushagradhawan/kookie-ui';
-import { HugeiconsIcon } from '@hugeicons/react';
-import { GithubIcon } from '@hugeicons/core-free-icons';
+import { Chip } from '@kushagradhawan/kookie-ui';
+import { PageToolbar } from './page-toolbar/page-toolbar';
 
 export function DocsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -27,18 +26,9 @@ export function DocsLayout({ children }: { children: React.ReactNode }) {
           v{process.env.KOOKIE_UI_VERSION}
         </Chip>
       }
-      sidebarFooter={
-        <>
-          <DarkModeToggle />
-          <ToolbarGroup>
-            <Button iconOnly asChild variant="ghost" color="gray" size="3" aria-label="GitHub">
-              <Link href="https://github.com/KushagraDhawan1997/kookie-ui" target="_blank" rel="noopener noreferrer">
-                <HugeiconsIcon icon={GithubIcon} strokeWidth={1.75} />
-              </Link>
-            </Button>
-          </ToolbarGroup>
-        </>
-      }
+      // The repository moved to the page's top bar, as in v2.
+      sidebarFooter={<DarkModeToggle />}
+      toolbar={<PageToolbar />}
     >
       {children}
     </DocsShell>

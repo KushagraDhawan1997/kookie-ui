@@ -92,6 +92,40 @@
 
 /* * * * * * * * * * * * * * * * * * * */
 /*                                     */
+/*              Overflow               */
+/*                                     */
+/* * * * * * * * * * * * * * * * * * * */
+
+/* Takes the room the row leaves and packs its controls at the end, so the ones that don't fit
+   move into the "More" menu from the end. The empty part of it lets clicks through. */
+.kui-ToolbarOverflow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--toolbar-gap);
+  flex: 1 1 0%;
+  min-width: 0;
+  pointer-events: none;
+
+  & > * {
+    pointer-events: auto;
+  }
+}
+
+/* One seat per child, so a child that renders nothing keeps every index in place. A seat never
+   shrinks, because its width is the measurement; an empty one leaves the layout and its gaps. */
+.kui-ToolbarOverflowSeat {
+  display: flex;
+  align-items: center;
+  flex: none;
+
+  &:where(:empty) {
+    display: none;
+  }
+}
+
+/* * * * * * * * * * * * * * * * * * * */
+/*                                     */
 /*              Separator              */
 /*                                     */
 /* * * * * * * * * * * * * * * * * * * */

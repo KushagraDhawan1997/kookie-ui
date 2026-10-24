@@ -1,0 +1,166 @@
+---
+title: Alert Dialog
+description: An alert dialog asks people to confirm or cancel an action before it happens, such as deleting a project.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/alert-dialog.tsx
+---
+
+An alert dialog interrupts the page with one question and two answers, and it stays open until people pick one. Use it before an action that can't be undone, or one that loses work. A task with fields to fill in is a [Dialog](/docs/dialog).
+
+## Playground
+
+import AlertDialogPlayground from '../../playground/alert-dialog-playground';
+
+<AlertDialogPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { AlertDialog, Button, Flex } from '@kushagradhawan/kookie-ui';
+
+export function DeleteProject({ name, onDelete }: { name: string; onDelete: () => void }) {
+  return (
+    <AlertDialog.Root>
+      <AlertDialog.Trigger>
+        <Button color="red">Delete project</Button>
+      </AlertDialog.Trigger>
+      <AlertDialog.Content size="1">
+        <AlertDialog.Title>Delete {name}?</AlertDialog.Title>
+        <AlertDialog.Description>
+          Its files and history are removed for everyone. You can't undo this.
+        </AlertDialog.Description>
+        <Flex gap="2" justify="end" mt="5">
+          <AlertDialog.Cancel>
+            <Button emphasis="quiet" color="gray">Cancel</Button>
+          </AlertDialog.Cancel>
+          <AlertDialog.Action>
+            <Button color="red" onClick={onDelete}>Delete project</Button>
+          </AlertDialog.Action>
+        </Flex>
+      </AlertDialog.Content>
+    </AlertDialog.Root>
+  );
+}
+```
+
+## Anatomy
+
+```tsx
+<AlertDialog.Root>
+  <AlertDialog.Trigger />
+  <AlertDialog.Content>
+    <AlertDialog.Title />
+    <AlertDialog.Description />
+    <AlertDialog.Cancel />
+    <AlertDialog.Action />
+  </AlertDialog.Content>
+</AlertDialog.Root>
+```
+
+- **Root:** Holds the open state.
+- **Trigger:** The element that opens the alert. It takes one child element, usually a Button.
+- **Content:** The panel, rendered in a portal with a dimmed overlay behind it.
+- **Title:** The question. It renders a Heading at size 5.
+- **Description:** What happens if people go ahead. It renders a `p` Text at size 3.
+- **Cancel:** Closes the alert without acting. It takes one child element.
+- **Action:** Closes the alert after its child's `onClick` runs. It takes one child element.
+
+## Best practices
+
+**Ask a question that names the action.** "Delete Q3 report?" can be answered without the body. "Are you sure?" can't.
+
+**Label the action button with the same verb.** "Delete project" under "Delete project?" confirms what the press does. "OK" and "Yes" make people re-read the question.
+
+**Say what is lost in the description.** One or two sentences: what goes, who it affects, and whether it can be undone.
+
+**Keep the destructive button medium and red.** Use `color="red"` without `emphasis="loud"`. A loud red button invites the press the alert exists to slow down.
+
+**Put Cancel first.** Focus lands on Cancel when the alert opens, wherever it sits. Placing it before Action also makes it the first stop for Tab and for reading order.
+
+**Don't use it for routine actions.** An alert on every save trains people to dismiss alerts without reading. Offer undo instead where you can, and keep alerts for what can't be undone.
+
+## Size
+
+`size` sets the padding, the corner and the largest width, as on [Dialog](/docs/dialog). Size 1 caps at 360px and suits a question with two buttons. Size 2, at 440px, is the default, and an unset size follows the Theme size. Sizes 3 and 4 cap at 560px and 720px and are rarely right for an alert.
+
+## Examples
+
+### Destructive confirmation
+
+The usage above is the common case: a red trigger, a question, a quiet Cancel and a red Action that repeats the verb.
+
+### Wait for the result
+
+Hold the open state when the action is a request. Keep the alert open with a loading button until the request finishes, so a failure can be shown in place.
+
+```tsx
+const [open, setOpen] = React.useState(false);
+const [deleting, setDeleting] = React.useState(false);
+
+async function remove() {
+  setDeleting(true);
+  await deleteProject();
+  setDeleting(false);
+  setOpen(false);
+}
+
+<AlertDialog.Root open={open} onOpenChange={setOpen}>
+  {/* trigger, title, description, cancel */}
+  <Button color="red" loading={deleting} onClick={remove}>
+    Delete project
+  </Button>
+</AlertDialog.Root>
+```
+
+The loading button sits outside `AlertDialog.Action`, because Action closes the alert as soon as it is pressed.
+
+## Props
+
+### Root
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `open` | `boolean` | | The open state. Controlled |
+| `defaultOpen` | `boolean` | `false` | The open state on first render |
+| `onOpenChange` | `(open: boolean) => void` | | Called when the alert opens or closes |
+
+### Content
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | Theme size | Padding, corner and maximum width |
+| `align` | `'start' \| 'center'`, responsive | `'center'` | Where the panel sits in the window |
+| `width` | `string`, responsive | | A fixed width |
+| `minWidth` | `string`, responsive | | The narrowest width |
+| `maxWidth` | `string`, responsive | The size's width | The widest width. Overrides the size's cap |
+| `height` | `string`, responsive | | A fixed height |
+| `minHeight` | `string`, responsive | | The shortest height |
+| `maxHeight` | `string`, responsive | | The tallest height |
+| `container` | `HTMLElement` | `document.body` | Where the portal renders |
+| `forceMount` | `boolean` | | Keeps the alert in the DOM while closed |
+| `onEscapeKeyDown` | `(event) => void` | | Called on Escape. Call `preventDefault()` to keep it open |
+| `onCloseAutoFocus` | `(event) => void` | | Called when focus returns to the trigger. Call `preventDefault()` to move it yourself |
+
+Content also accepts every attribute of the HTML `div` element.
+
+### Title and Description
+
+Title takes every Heading prop and Description every Text prop.
+
+### Trigger, Cancel and Action
+
+Each takes one child element and passes its behaviour to it. They accept every attribute of the HTML `button` element.
+
+## Accessibility
+
+| Key | Action |
+| --- | --- |
+| Escape | Closes the alert, as Cancel does |
+| Tab | Moves focus to the next button in the alert |
+| Shift + Tab | Moves focus to the previous button in the alert |
+| Enter or Space | Presses the focused button |
+
+- **Role:** The panel has `role="alertdialog"`, so a screen reader announces it as an alert that needs an answer. Content behind it is hidden from assistive technology.
+- **Name:** `AlertDialog.Title` names the alert. Always include one.
+- **Description:** `AlertDialog.Description` describes the alert, so a screen reader reads it after the title. Pass `aria-describedby` on Content to point at something else.
+- **Focus:** Focus moves to Cancel when the alert opens, and Tab cycles inside it. Focus returns to the trigger when it closes. Call `preventDefault()` in `onCloseAutoFocus` to move it somewhere else.
+- **Dismissal:** A press on the overlay doesn't close the alert. People answer with a button or Escape.

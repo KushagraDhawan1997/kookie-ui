@@ -1,6 +1,5 @@
 'use client';
 
-import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import { VirtualMenu } from './virtual-menu.js';
 import classNames from 'classnames';
@@ -30,7 +29,7 @@ import {
   useStackEntry,
   useSubContext,
 } from './_internal/dropdown-menu-drill-down.js';
-import { MenuProvider } from './_internal/menu-context.js';
+import { MenuCloseProvider, MenuProvider } from './_internal/menu-context.js';
 import {
   MenuShortcut,
   getMenuAlignOffset,
@@ -66,9 +65,13 @@ const DropdownMenuRoot: React.FC<DropdownMenuRootProps> = (props) => {
     [handleOpenChangeProp],
   );
 
+  const close = React.useCallback(() => handleOpenChange(false), [handleOpenChange]);
+
   return (
     <DropdownMenuOpenContext.Provider value={open}>
-      <DropdownMenuPrimitive.Root {...props} onOpenChange={handleOpenChange} />
+      <MenuCloseProvider value={close}>
+        <DropdownMenuPrimitive.Root {...props} open={open} onOpenChange={handleOpenChange} />
+      </MenuCloseProvider>
     </DropdownMenuOpenContext.Provider>
   );
 };
@@ -338,7 +341,7 @@ const DropdownMenuRadioItem = React.forwardRef<
         className,
       )}
     >
-      {children}
+      <Slot.Slottable>{children}</Slot.Slottable>
       <DropdownMenuPrimitive.ItemIndicator className="kui-BaseMenuItemIndicator kui-DropdownMenuItemIndicator">
         <ThickDotIcon className="kui-BaseMenuItemIndicatorIcon kui-DropdownMenuItemIndicatorIcon" />
       </DropdownMenuPrimitive.ItemIndicator>
@@ -379,7 +382,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
         className,
       )}
     >
-      {children}
+      <Slot.Slottable>{children}</Slot.Slottable>
       <DropdownMenuPrimitive.ItemIndicator className="kui-BaseMenuItemIndicator kui-DropdownMenuItemIndicator">
         <ThickCheckIcon className="kui-BaseMenuItemIndicatorIcon kui-DropdownMenuItemIndicatorIcon" />
       </DropdownMenuPrimitive.ItemIndicator>

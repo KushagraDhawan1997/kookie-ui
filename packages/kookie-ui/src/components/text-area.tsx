@@ -52,7 +52,6 @@ const TextArea = React.forwardRef<TextAreaElement, TextAreaProps>((ownProps, for
   const {
     error,
     errorMessage,
-   
     required,
     'aria-describedby': _ariaDescribedby,
     'aria-labelledby': _ariaLabelledby,
@@ -72,6 +71,7 @@ const TextArea = React.forwardRef<TextAreaElement, TextAreaProps>((ownProps, for
         className="kui-reset kui-TextAreaInput"
         ref={forwardedRef}
         {...nativeTextAreaProps}
+        required={required || undefined}
         {...ariaProps}
       />
       {textAreaProps.errorMessage && (

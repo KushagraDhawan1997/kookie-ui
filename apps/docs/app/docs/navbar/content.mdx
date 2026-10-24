@@ -1,37 +1,37 @@
 ---
 title: Navbar
-description: A horizontal navigation bar component with semantic slots for organizing logos, navigation links, and action buttons.
+description: Navbar lays out a site's top bar, with a logo at the start, links in the centre and actions at the end.
 source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/navbar.tsx
 ---
 
-Build consistent navigation experiences with semantic slots for logo, navigation, and actions. The Navbar component provides a flexible foundation for headers that work across all screen sizes.
+Navbar is the bar across the top of a website. It places a logo at the start, the main links in the centre and actions such as "Sign in" at the end, and it stays at the top of the window as the page scrolls. The top row of an app with panes is `Shell.Header` in a [Shell](/docs/shell).
 
-Built with compound components for maximum flexibility—compose Logo, Navigation, and Actions slots to create any navbar layout.
+## Playground
 
-## Installation
+import NavbarPlayground from '../../playground/navbar-playground';
 
-```bash
-npm install @kushagradhawan/kookie-ui
-```
+<NavbarPlayground />
 
 ## Usage
 
-```tsx
-import { Navbar, Button, Text } from '@kushagradhawan/kookie-ui';
+```tsx showLineNumbers
+import { Button, Navbar, Text } from '@kushagradhawan/kookie-ui';
+import Link from 'next/link';
 
-export function MyNavbar() {
+export function SiteHeader() {
   return (
-    <Navbar.Root>
-      <Navbar.Logo>
-        <Text weight="semibold">Brand</Text>
+    <Navbar.Root position="sticky">
+      <Navbar.Logo asChild>
+        <Link href="/" aria-label="Acme home">
+          <Text weight="medium">Acme</Text>
+        </Link>
       </Navbar.Logo>
-      <Navbar.Navigation>
-        <Button variant="ghost">Home</Button>
-        <Button variant="ghost">About</Button>
-        <Button variant="ghost">Contact</Button>
+      <Navbar.Navigation aria-label="Main">
+        <Button asChild emphasis="quiet"><Link href="/pricing">Pricing</Link></Button>
+        <Button asChild emphasis="quiet"><Link href="/docs">Docs</Link></Button>
       </Navbar.Navigation>
       <Navbar.Actions>
-        <Button variant="soft">Sign In</Button>
+        <Button asChild emphasis="loud"><Link href="/signup">Get started</Link></Button>
       </Navbar.Actions>
     </Navbar.Root>
   );
@@ -40,474 +40,114 @@ export function MyNavbar() {
 
 ## Anatomy
 
-The Navbar is a compound component with four parts:
-
 ```tsx
 <Navbar.Root>
-  <Navbar.Logo>{/* Brand identity */}</Navbar.Logo>
-  <Navbar.Navigation>{/* Primary links */}</Navbar.Navigation>
-  <Navbar.Actions>{/* CTAs and controls */}</Navbar.Actions>
+  <Navbar.Logo />
+  <Navbar.Navigation />
+  <Navbar.Actions />
 </Navbar.Root>
 ```
 
-| Part | Description |
-| ---- | ----------- |
-| `Navbar.Root` | The root container. Renders as `<header>` with positioning and height controls. |
-| `Navbar.Logo` | Left-aligned slot for brand identity. Never shrinks. |
-| `Navbar.Navigation` | Center slot for navigation links. Expands to fill available space. |
-| `Navbar.Actions` | Right-aligned slot for CTAs and user controls. Never shrinks. |
+- **Root:** The bar, a `header` element. Its three columns keep the navigation centred on the page however wide the logo and actions are.
+- **Logo:** The start column, for the brand. It's a link to the home page in most sites.
+- **Navigation:** The centre column, for the main links. It has `role="navigation"`.
+- **Actions:** The end column, for buttons such as "Sign in" or a profile menu. It stays in the end column even when there is no Navigation.
+
+## Best practices
+
+**Keep the main links to a few.** Navigation sits in the centre column, so a long list crowds the logo and actions. Put the rest in a footer or a [Dropdown Menu](/docs/dropdown-menu).
+
+**Make links links.** Render your router's link inside a Button with `asChild`. People can then open a page in a new tab and see where it goes.
+
+**Give one action the loud emphasis.** The action you most want people to take, such as "Get started", is loud, and "Sign in" beside it is quiet.
+
+**Leave room for a fixed bar.** A fixed Navbar sits over the page and takes no space. Pad the top of the page by the bar's height, or use `position="sticky"`, which keeps its place in the flow.
+
+**Use Shell.Header in an app.** Navbar is for pages that scroll. A frame with navigation panes, an inspector or a bottom panel is a [Shell](/docs/shell).
+
+## Position
+
+`position` sets how the bar stays on screen.
+
+| Position | What it does | Use it for |
+| --- | --- | --- |
+| `fixed` | Pins to the top of the window and takes no space. This is the default | Pages that leave room for it at the top |
+| `sticky` | Scrolls with the page until it reaches the top, then stays | Most sites. The bar keeps its place in the flow |
+| `static` | Scrolls away with the page | A bar at the top of a short page or a preview |
+
+Fixed and sticky bars sit above the page with a `z-index` of 50 and paint the page's background, so content scrolls behind them.
+
+## Size
+
+`size` sets the bar's padding, from `'1'` (8px by 12px) to `'4'` (24px by 32px). Size 2 (12px by 16px) is the default, or the Theme's size when one is set. The bar's height comes from its content, so match the buttons inside to it.
+
+## Examples
+
+### Profile menu in the actions
+
+Actions is a [Flex](/docs/flex), so put the controls in it side by side.
+
+```tsx showLineNumbers
+<Navbar.Actions>
+  <Button iconOnly emphasis="quiet" aria-label="Notifications" tooltip="Notifications">
+    <HugeiconsIcon icon={Notification01Icon} strokeWidth={1.75} />
+  </Button>
+  <DropdownMenu.Root>
+    <DropdownMenu.Trigger>
+      <Button emphasis="quiet">Account</Button>
+    </DropdownMenu.Trigger>
+    <DropdownMenu.Content>{/* Profile, settings, sign out */}</DropdownMenu.Content>
+  </DropdownMenu.Root>
+</Navbar.Actions>
+```
+
+### Small screens
+
+Navbar doesn't change at narrow widths, so plan for them. Hide the links below `md` with the Flex `display` prop, and offer them from a menu button in the actions.
+
+```tsx showLineNumbers
+<Navbar.Navigation aria-label="Main" display={{ initial: 'none', md: 'flex' }}>
+  {/* links */}
+</Navbar.Navigation>
+<Navbar.Actions>
+  <DropdownMenu.Root>
+    <DropdownMenu.Trigger>
+      <Button iconOnly emphasis="quiet" aria-label="Menu">
+        <HugeiconsIcon icon={Menu01Icon} strokeWidth={1.75} />
+      </Button>
+    </DropdownMenu.Trigger>
+    <DropdownMenu.Content>{/* the same links */}</DropdownMenu.Content>
+  </DropdownMenu.Root>
+</Navbar.Actions>
+```
 
 ## Props
 
 ### Root
 
 | Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `position` | `'static' \| 'fixed' \| 'sticky'` | `'fixed'` | Positioning behavior of the navbar |
-| `size` | `'1' \| '2' \| '3' \| '4'` | `'2'` | Size of the navbar (controls padding) |
+| --- | --- | --- | --- |
+| `position` | `'fixed' \| 'sticky' \| 'static'` | `'fixed'` | How the bar stays on screen |
+| `size` | `'1' \| '2' \| '3' \| '4'` | Theme size, else `'2'` | The padding step |
 
-### Logo, Navigation, Actions
+Root accepts the attributes of the HTML `header` element.
 
-All slot components extend `FlexProps` and take every Flex layout prop except margin.
+### Logo, Navigation and Actions
+
+Each slot is a [Flex](/docs/flex) and takes its props except the margin props, since the bar spaces its columns.
 
 | Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `asChild` | `boolean` | `false` | Merge props with child element using Radix Slot pattern |
-| `gap` | `'0' - '12'` | Logo: `'2'`, others: `'4'` | Gap between child elements |
-| `align` | `'start' \| 'center' \| 'end' \| 'baseline' \| 'stretch'` | `'center'` | Align items along cross axis |
-| `justify` | `'start' \| 'center' \| 'end' \| 'between'` | Logo: `'start'`, Nav: `'center'`, Actions: `'end'` | Justify content along main axis |
-
-## Examples
-
-### Basic Navbar
-
-Simple navbar with logo and navigation links:
-
-```tsx showLineNumbers
-import { Navbar, Button, Avatar } from '@kushagradhawan/kookie-ui';
-
-export function BasicNavbar() {
-  return (
-    <Navbar.Root>
-      <Navbar.Logo>
-        <Avatar src="/logo.png" fallback="B" size="2" />
-      </Navbar.Logo>
-      <Navbar.Navigation>
-        <Button variant="ghost">Products</Button>
-        <Button variant="ghost">Solutions</Button>
-        <Button variant="ghost">Pricing</Button>
-      </Navbar.Navigation>
-    </Navbar.Root>
-  );
-}
-```
-
-### Marketing Navbar
-
-Full marketing navbar with all slots populated:
-
-```tsx showLineNumbers
-import { Navbar, Button, Avatar } from '@kushagradhawan/kookie-ui';
-
-export function MarketingNavbar() {
-  return (
-    <Navbar.Root>
-      <Navbar.Logo>
-        <Avatar src="/logo.png" fallback="B" size="2" />
-      </Navbar.Logo>
-
-      <Navbar.Navigation>
-        <Button variant="ghost">Features</Button>
-        <Button variant="ghost">Pricing</Button>
-        <Button variant="ghost">Blog</Button>
-        <Button variant="ghost">Docs</Button>
-      </Navbar.Navigation>
-
-      <Navbar.Actions gap="3">
-        <Button variant="ghost">Sign In</Button>
-        <Button variant="solid">Get Started</Button>
-      </Navbar.Actions>
-    </Navbar.Root>
-  );
-}
-```
-
-### Slot Architecture
-
-Navbar acts as a layout container with three semantic slots. Each slot has a specific purpose and behavior. Visualize the slot boundaries to understand the layout:
-
-```tsx showLineNumbers
-import { Navbar, Flex, Text } from '@kushagradhawan/kookie-ui';
-
-const slotStyle = {
-  border: '1px dashed var(--crimson-8)',
-  background: 'repeating-linear-gradient(135deg, transparent, transparent 4px, var(--crimson-3) 4px, var(--crimson-3) 5px)',
-};
-
-export function SlotVisualization() {
-  return (
-    <Navbar.Root position="static">
-      <Navbar.Logo>
-        <Flex p="4" align="center" justify="center" style={slotStyle}>
-          <Text size="2" emphasis="medium">Logo Slot</Text>
-        </Flex>
-      </Navbar.Logo>
-
-      <Navbar.Navigation style={{ flex: 1 }}>
-        <Flex py="4" px="7" align="center" justify="center" width="100%" style={slotStyle}>
-          <Text size="2" emphasis="medium">Navigation Slot (expands)</Text>
-        </Flex>
-      </Navbar.Navigation>
-
-      <Navbar.Actions>
-        <Flex p="4" align="center" justify="center" style={slotStyle}>
-          <Text size="2" emphasis="medium">Actions Slot</Text>
-        </Flex>
-      </Navbar.Actions>
-    </Navbar.Root>
-  );
-}
-```
-
-### With Icons
-
-Add icons to navigation items for visual clarity:
-
-```tsx showLineNumbers
-import { HugeiconsIcon } from '@hugeicons/react';
-import { Home01Icon, Settings01Icon, Notification01Icon, UserIcon } from '@hugeicons/core-free-icons';
-import { Navbar, Button, Text } from '@kushagradhawan/kookie-ui';
-
-export function IconNavbar() {
-  return (
-    <Navbar.Root>
-      <Navbar.Logo>
-        <Text weight="semibold">Brand</Text>
-      </Navbar.Logo>
-      <Navbar.Navigation>
-        <Button variant="ghost">
-          <HugeiconsIcon icon={Home01Icon} />
-          Home
-        </Button>
-        <Button variant="ghost">
-          <HugeiconsIcon icon={Settings01Icon} />
-          Settings
-        </Button>
-      </Navbar.Navigation>
-      <Navbar.Actions>
-        <Button iconOnly variant="ghost" aria-label="Notifications">
-          <HugeiconsIcon icon={Notification01Icon} />
-        </Button>
-        <Button iconOnly variant="ghost" aria-label="Profile">
-          <HugeiconsIcon icon={UserIcon} />
-        </Button>
-      </Navbar.Actions>
-    </Navbar.Root>
-  );
-}
-```
-
-### With Next.js Link
-
-Integrate with Next.js routing using `asChild`:
-
-```tsx showLineNumbers
-import Link from 'next/link';
-import { Navbar, Button, Text } from '@kushagradhawan/kookie-ui';
-
-export function NextNavbar() {
-  return (
-    <Navbar.Root>
-      <Navbar.Logo asChild>
-        <Link href="/">
-          <Text weight="semibold">Brand</Text>
-        </Link>
-      </Navbar.Logo>
-      <Navbar.Navigation>
-        <Button variant="ghost" asChild>
-          <Link href="/products">Products</Link>
-        </Button>
-        <Button variant="ghost" asChild>
-          <Link href="/about">About</Link>
-        </Button>
-      </Navbar.Navigation>
-    </Navbar.Root>
-  );
-}
-```
-
-### With User Menu
-
-Dashboard navbar with dropdown user menu:
-
-```tsx showLineNumbers
-import { Navbar, Button, Avatar, DropdownMenu, Text } from '@kushagradhawan/kookie-ui';
-
-export function DashboardNavbar() {
-  return (
-    <Navbar.Root>
-      <Navbar.Logo>
-        <Text weight="semibold">Dashboard</Text>
-      </Navbar.Logo>
-      <Navbar.Navigation>
-        <Button variant="ghost">Overview</Button>
-        <Button variant="ghost">Analytics</Button>
-        <Button variant="ghost">Reports</Button>
-      </Navbar.Navigation>
-      <Navbar.Actions>
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger>
-            <Button variant="ghost">
-              <Avatar size="1" fallback="JD" />
-              John Doe
-            </Button>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>Profile</DropdownMenu.Item>
-            <DropdownMenu.Item>Settings</DropdownMenu.Item>
-            <DropdownMenu.Separator />
-            <DropdownMenu.Item color="red">Sign Out</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu.Root>
-      </Navbar.Actions>
-    </Navbar.Root>
-  );
-}
-```
-
-### Minimal Logo Only
-
-When you only need branding without navigation:
-
-```tsx showLineNumbers
-import { Navbar, Button, Avatar } from '@kushagradhawan/kookie-ui';
-
-export function MinimalNavbar() {
-  return (
-    <Navbar.Root>
-      <Navbar.Logo>
-        <Avatar src="/logo.png" fallback="B" size="2" />
-      </Navbar.Logo>
-      <Navbar.Actions>
-        <Button variant="soft" color="gray">Contact</Button>
-      </Navbar.Actions>
-    </Navbar.Root>
-  );
-}
-```
-
-### With Shell Layout
-
-Combine Navbar with Shell for complete page layouts:
-
-```tsx showLineNumbers
-import { Navbar, Button, Text } from '@kushagradhawan/kookie-ui';
-import { Shell } from '@kushagradhawan/kookie-ui';
-
-export function AppLayout() {
-  return (
-    <Shell.Root>
-      <Navbar.Root position="fixed">
-        <Navbar.Logo>
-          <Text weight="semibold">App</Text>
-        </Navbar.Logo>
-        <Navbar.Navigation>
-          <Button variant="ghost">Dashboard</Button>
-          <Button variant="ghost">Projects</Button>
-        </Navbar.Navigation>
-        <Navbar.Actions>
-          <Button variant="soft">Sign In</Button>
-        </Navbar.Actions>
-      </Navbar.Root>
-      <Shell.Content>
-        {/* Page content */}
-      </Shell.Content>
-    </Shell.Root>
-  );
-}
-```
-
-## Position
-
-Use the `position` prop to control how the navbar behaves when scrolling.
-
-### Fixed
-
-Fixed navbars stay at the top of the viewport. Content scrolls beneath them. Add padding to your page content to prevent overlap.
-
-```tsx
-<Navbar.Root position="fixed">
-  <Navbar.Logo>
-    <Text weight="semibold">Brand</Text>
-  </Navbar.Logo>
-</Navbar.Root>
-```
-
-### Sticky
-
-Sticky navbars scroll with content until they reach the top, then stick in place.
-
-```tsx
-<Navbar.Root position="sticky">
-  <Navbar.Logo>
-    <Text weight="semibold">Brand</Text>
-  </Navbar.Logo>
-</Navbar.Root>
-```
-
-### Static
-
-Static navbars flow with the document and scroll out of view.
-
-```tsx
-<Navbar.Root position="static">
-  <Navbar.Logo>
-    <Text weight="semibold">Brand</Text>
-  </Navbar.Logo>
-</Navbar.Root>
-```
-
-## Size
-
-Use the `size` prop to control navbar padding. Height is content-driven, adjusting automatically to fit your content.
-
-### Size 1
-
-Compact padding for dense interfaces or mobile layouts.
-
-```tsx
-<Navbar.Root size="1">
-  <Navbar.Logo>
-    <Text weight="semibold">Brand</Text>
-  </Navbar.Logo>
-</Navbar.Root>
-```
-
-### Size 2
-
-Standard padding for most applications. The default size.
-
-```tsx
-<Navbar.Root size="2">
-  <Navbar.Logo>
-    <Text weight="semibold">Brand</Text>
-  </Navbar.Logo>
-</Navbar.Root>
-```
-
-### Size 3
-
-Spacious padding for prominent headers or when you want more breathing room.
-
-```tsx
-<Navbar.Root size="3">
-  <Navbar.Logo>
-    <Text weight="semibold">Brand</Text>
-  </Navbar.Logo>
-</Navbar.Root>
-```
-
-## Slots
-
-Navbar exposes three semantic slots that handle layout automatically. Understanding slot behavior helps you build effective navigation.
-
-### Logo
-
-The Logo slot is designed for brand identity elements. It never shrinks and stays left-aligned.
-
-```tsx
-<Navbar.Root>
-  <Navbar.Logo>
-    <img src="/logo.svg" alt="Company Logo" height={32} />
-  </Navbar.Logo>
-</Navbar.Root>
-```
-
-### Navigation
-
-The Navigation slot expands to fill available space and centers its content. Use it for primary navigation links.
-
-```tsx
-<Navbar.Root>
-  <Navbar.Navigation>
-    <Button variant="ghost">Products</Button>
-    <Button variant="ghost">Solutions</Button>
-    <Button variant="ghost">Pricing</Button>
-    <Button variant="ghost">Docs</Button>
-  </Navbar.Navigation>
-</Navbar.Root>
-```
-
-### Actions
-
-The Actions slot is right-aligned and never shrinks. Use it for CTAs, user menus, and utility controls.
-
-```tsx
-<Navbar.Root>
-  <Navbar.Actions>
-    <Button variant="ghost">Log In</Button>
-    <Button variant="solid">Sign Up</Button>
-  </Navbar.Actions>
-</Navbar.Root>
-```
-
-## Polymorphism
-
-### AsChild
-
-Use the `asChild` prop on any slot to merge its props with a child element. This is useful for custom wrappers or routing integration.
-
-```tsx
-<Navbar.Root>
-  <Navbar.Logo asChild>
-    <a href="/">
-      <Text weight="semibold">Brand</Text>
-    </a>
-  </Navbar.Logo>
-  <Navbar.Navigation asChild>
-    <nav>
-      <a href="/products">Products</a>
-      <a href="/about">About</a>
-    </nav>
-  </Navbar.Navigation>
-</Navbar.Root>
-```
+| --- | --- | --- | --- |
+| `asChild` | `boolean` | `false` | Renders the child element instead of a Flex |
+| `gap` | Flex gap | Logo `'2'`, others `'4'` | The space between the slot's children |
+| `align` | Flex align | `'center'` | The children's vertical alignment |
+| `justify` | Flex justify | Logo `'start'`, Navigation `'center'`, Actions `'end'` | Where the children sit in the column |
+
+With `asChild`, your element takes the slot's class and its Flex layout, including the default `gap`, `align` and `justify`.
 
 ## Accessibility
 
-The Navbar component follows WAI-ARIA best practices for navigation landmarks.
-
-### Semantic Structure
-
-- `Navbar.Root` renders as a semantic `<header>` element
-- `Navbar.Navigation` renders as a `<nav>` element with `role="navigation"`
-- Proper heading hierarchy should be maintained within logo content
-
-### Keyboard Navigation
-
-- All interactive elements within the navbar are keyboard accessible
-- Focus order follows visual order: logo, navigation, actions
-- Use Button or Link components for interactive elements to ensure proper focus handling
-
-### Screen Readers
-
-- The `<header>` landmark helps screen reader users identify the navigation area
-- The `<nav>` element within Navigation slot provides additional context
-- Ensure all interactive elements have appropriate labels
-
-## Changelog
-
-### Changed
-
-- Replaced `height` prop with `size` prop (1, 2, 3) for padding-based sizing
-- Height is now content-driven instead of fixed
-- Slots now extend `FlexProps` for full layout control (gap, align, justify, etc.)
-
-### Added
-
-- Initial release with compound component architecture
-- Semantic slots for Logo, Navigation, and Actions
-- Position variants: fixed, sticky, static
-- Size options: 1 (compact), 2 (default), 3 (spacious)
-- `asChild` prop for all slots using Radix Slot pattern
-- Responsive gap adjustments for mobile layouts
+- **Landmark:** Root is a `header`, which is the page's banner landmark when it isn't inside an `article`, `aside`, `main`, `nav` or `section`.
+- **Navigation:** It has `role="navigation"` and the name "Main". Pass your own `aria-label` or `aria-labelledby` when the page has other navigation.
+- **Logo:** A logo that is only an image needs a name. Set `aria-label` on the link, or `alt` on the image.
+- **Focus order:** The slots render in the order you write them, which is the order Tab moves through them. Keep it logo, navigation, actions.

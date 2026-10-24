@@ -4,7 +4,7 @@ import { useComposedRefs } from 'radix-ui/internal';
 import { useDropzone } from 'react-dropzone';
 
 import { Button } from './button.js';
-import { CloseIcon, FileTextIcon } from './icons.js';
+import { CloseIcon, FileTextIcon, PaperclipIcon } from './icons.js';
 import { Flex } from './flex.js';
 import { ScrollArea } from './scroll-area.js';
 import { Slot } from './slot.js';
@@ -1216,28 +1216,35 @@ interface AttachTriggerProps extends React.ComponentPropsWithoutRef<'button'> {
 }
 
 const AttachTrigger = React.forwardRef<HTMLButtonElement, AttachTriggerProps>((props, forwardedRef) => {
-  const { asChild, accept, multiple, disabled: disabledProp, onPointerDown, onClick, ...buttonProps } = props;
+  // The HTML `color` attribute is dropped: Button reads `color` as an accent colour.
+  const { asChild, accept, multiple, disabled: disabledProp, onPointerDown, onClick, children, color: _color, ...buttonProps } = props;
   const ctx = useChatbarContext();
   const disabled = disabledProp || ctx.disabled || ctx.readOnly;
-  const Comp = asChild ? Slot : 'button';
+  const triggerProps = {
+    ...buttonProps,
+    ref: forwardedRef,
+    className: classNames('kui-ChatbarAttachTrigger', buttonProps.className),
+    type: buttonProps.type ?? 'button',
+    'aria-label': buttonProps['aria-label'] ?? 'Add attachments',
+    disabled,
+    onPointerDown: (event: React.PointerEvent<HTMLButtonElement>) => {
+      onPointerDown?.(event);
+      if (!disabled && !event.defaultPrevented) ctx.beginFilePickerPress();
+    },
+    onClick: (event: React.MouseEvent<HTMLButtonElement>) => {
+      onClick?.(event);
+      if (disabled || event.defaultPrevented) return;
+      ctx.openFilePicker({ accept, multiple });
+    },
+  } as const;
+
+  if (asChild) return <Slot {...triggerProps}>{children}</Slot>;
+
+  // Without asChild, the trigger is a quiet icon-only Button at the Chatbar's size.
   return (
-    <Comp
-      {...buttonProps}
-      ref={forwardedRef}
-      className={classNames('kui-ChatbarAttachTrigger', buttonProps.className)}
-      type={buttonProps.type ?? 'button'}
-      aria-label={buttonProps['aria-label'] ?? 'Add attachments'}
-      disabled={disabled}
-      onPointerDown={(event: React.PointerEvent<HTMLButtonElement>) => {
-        onPointerDown?.(event);
-        if (!disabled && !event.defaultPrevented) ctx.beginFilePickerPress();
-      }}
-      onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-        onClick?.(event);
-        if (disabled || event.defaultPrevented) return;
-        ctx.openFilePicker({ accept, multiple });
-      }}
-    />
+    <Button iconOnly emphasis="quiet" color="gray" size={ctx.size} {...triggerProps}>
+      {children ?? <PaperclipIcon aria-hidden />}
+    </Button>
   );
 });
 AttachTrigger.displayName = 'Chatbar.AttachTrigger';

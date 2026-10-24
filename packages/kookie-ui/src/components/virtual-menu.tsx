@@ -3,7 +3,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { useMenuContext, getMenuItemHeight } from './_internal/menu-context.js';
+import { useMenuContext, useMenuClose, getMenuItemHeight } from './_internal/menu-context.js';
 
 import type { MenuSize } from './_internal/menu-context.js';
 
@@ -179,30 +179,75 @@ const SimpleItem = React.memo(
 // VirtualMenu Component
 // ============================================================================
 
-function VirtualMenuRoot<T>({
-  items,
-  itemLabel,
-  renderItem: RenderItem,
-  size: sizeProp,
-  estimatedItemSize: estimatedItemSizeProp,
-  overscan = 5,
-  onSelect,
-  className,
-  style,
-  'aria-label': ariaLabel,
-}: VirtualMenuProps<T>) {
+/**
+ * Measures the row height the menu's CSS draws (--base-menu-item-height), so rows follow
+ * the theme scale instead of the fixed 100% table. Returns undefined until measured.
+ */
+function useMeasuredRowHeight(
+  rootRef: React.RefObject<HTMLDivElement | null>,
+  enabled: boolean,
+  size: MenuSize | undefined,
+) {
+  const [height, setHeight] = React.useState<number | undefined>(undefined);
+  React.useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!enabled || !root) return;
+    const probe = document.createElement('div');
+    probe.className = 'kui-reset kui-BaseMenuItem kui-VirtualMenuItem';
+    probe.setAttribute('aria-hidden', 'true');
+    probe.style.visibility = 'hidden';
+    probe.textContent = '\u00a0';
+    root.appendChild(probe);
+    const measured = probe.getBoundingClientRect().height;
+    probe.remove();
+    setHeight(measured > 0 ? measured : undefined);
+  }, [rootRef, enabled, size]);
+  return enabled ? height : undefined;
+}
+
+function VirtualMenuRootInner<T>(
+  {
+    items,
+    itemLabel,
+    renderItem: RenderItem,
+    size: sizeProp,
+    estimatedItemSize: estimatedItemSizeProp,
+    overscan = 5,
+    onSelect,
+    className,
+    style,
+    'aria-label': ariaLabel,
+  }: VirtualMenuProps<T>,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
   const menuId = React.useId();
   const parentRef = React.useRef<HTMLDivElement>(null);
   const [highlightedIndex, setHighlightedIndex] = React.useState<number>(-1);
   const { isInsideMenu, size: contextSize, itemHeight: contextItemHeight } = useMenuContext();
+  const closeMenu = useMenuClose();
 
-  // Resolve item height: explicit prop > own size > parent menu > default size '2'.
-  // Heights follow the theme scaling, like the --base-menu-item-height token.
+  const setRootRef = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      parentRef.current = node;
+      if (typeof forwardedRef === 'function') forwardedRef(node);
+      else if (forwardedRef) forwardedRef.current = node;
+    },
+    [forwardedRef],
+  );
+
+  // Inside a menu, the CSS row height is measured so it tracks the theme scale.
+  const measuredItemHeight = useMeasuredRowHeight(
+    parentRef,
+    isInsideMenu && sizeProp == null && estimatedItemSizeProp == null,
+    contextSize,
+  );
+
+  // Resolve item height: explicit prop > own size > measured CSS row > parent menu > default size '2'.
   const estimatedItemSize =
     estimatedItemSizeProp ??
     (sizeProp
       ? getMenuItemHeight(sizeProp)
-      : (contextItemHeight ?? getMenuItemHeight(contextSize ?? '2')));
+      : (measuredItemHeight ?? contextItemHeight ?? getMenuItemHeight(contextSize ?? '2')));
 
   // Validate props
   if (!itemLabel && !RenderItem) {
@@ -241,11 +286,41 @@ function VirtualMenuRoot<T>({
 
   const virtualItems = virtualizer.getVirtualItems();
 
+  // Re-measure cached rows when the resolved row height changes.
+  React.useLayoutEffect(() => {
+    virtualizer.measure();
+  }, [virtualizer, estimatedItemSize]);
+
+  // Inside a menu, the menu focuses its own content on open (and a submenu on keyboard
+  // open). Hand that focus to the list so arrow keys reach the rows.
+  React.useEffect(() => {
+    const root = parentRef.current;
+    if (!isInsideMenu || !root) return;
+    const content = root.closest<HTMLElement>('[data-radix-menu-content]');
+    if (!content) return;
+    const handleFocusIn = (event: FocusEvent) => {
+      if (event.target === content) root.focus({ preventScroll: true });
+    };
+    content.addEventListener('focusin', handleFocusIn);
+    if (document.activeElement === content) root.focus({ preventScroll: true });
+    return () => content.removeEventListener('focusin', handleFocusIn);
+  }, [isInsideMenu]);
+
   // Refs for stable handler references
   const itemsRef = React.useRef(items);
   const onSelectRef = React.useRef(onSelect);
+  const closeMenuRef = React.useRef(closeMenu);
   itemsRef.current = items;
   onSelectRef.current = onSelect;
+  closeMenuRef.current = closeMenu;
+
+  // Choosing a row calls onSelect, then closes the parent menu like a menu item does.
+  const selectIndex = React.useCallback((idx: number) => {
+    const currentItems = itemsRef.current;
+    if (idx < 0 || idx >= currentItems.length) return;
+    onSelectRef.current?.(currentItems[idx], idx);
+    closeMenuRef.current?.();
+  }, []);
 
   const scrollToIndexRef = React.useRef(virtualizer.scrollToIndex);
   scrollToIndexRef.current = virtualizer.scrollToIndex;
@@ -263,14 +338,8 @@ function VirtualMenuRoot<T>({
 
   const handleItemClick = React.useCallback((e: React.MouseEvent<HTMLElement>) => {
     const index = e.currentTarget.dataset.index;
-    if (index != null) {
-      const idx = Number(index);
-      const currentItems = itemsRef.current;
-      if (idx >= 0 && idx < currentItems.length) {
-        onSelectRef.current?.(currentItems[idx], idx);
-      }
-    }
-  }, []);
+    if (index != null) selectIndex(Number(index));
+  }, [selectIndex]);
 
   const noop = React.useCallback(() => {}, []);
 
@@ -278,16 +347,11 @@ function VirtualMenuRoot<T>({
   const handleItemKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
+      e.stopPropagation();
       const index = e.currentTarget.dataset.index;
-      if (index != null) {
-        const idx = Number(index);
-        const currentItems = itemsRef.current;
-        if (idx >= 0 && idx < currentItems.length) {
-          onSelectRef.current?.(currentItems[idx], idx);
-        }
-      }
+      if (index != null) selectIndex(Number(index));
     }
-  }, []);
+  }, [selectIndex]);
 
   // Keyboard navigation
   const handleKeyDown = React.useCallback((e: React.KeyboardEvent) => {
@@ -327,9 +391,7 @@ function VirtualMenuRoot<T>({
       case 'Enter':
       case ' ': {
         e.preventDefault();
-        if (currentHighlightedIndex >= 0 && currentHighlightedIndex < currentItems.length) {
-          onSelectRef.current?.(currentItems[currentHighlightedIndex], currentHighlightedIndex);
-        }
+        selectIndex(currentHighlightedIndex);
         break;
       }
       case 'Tab': {
@@ -337,10 +399,17 @@ function VirtualMenuRoot<T>({
         break;
       }
       case 'Escape': {
-        (e.currentTarget as HTMLElement).blur();
+        // Inside a menu, the menu handles Escape and returns focus to its trigger.
+        if (!isInsideMenu) (e.currentTarget as HTMLElement).blur();
         break;
       }
     }
+  }, [selectIndex, isInsideMenu]);
+
+  // Keyboard focus on the list highlights the first row when none is highlighted.
+  const handleFocus = React.useCallback((e: React.FocusEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
+    if (highlightedIndexRef.current < 0 && itemsRef.current.length > 0) setHighlightedIndex(0);
   }, []);
 
   // Item ID generator
@@ -371,12 +440,13 @@ function VirtualMenuRoot<T>({
 
   return (
     <div
-      ref={parentRef}
+      ref={setRootRef}
       role={isInsideMenu ? 'group' : 'menu'}
       aria-label={ariaLabel}
       aria-activedescendant={safeHighlightedIndex >= 0 ? getItemId(safeHighlightedIndex) : undefined}
       tabIndex={0}
       onKeyDown={handleKeyDown}
+      onFocus={handleFocus}
       className={classNames('kui-VirtualMenuRoot', className)}
       style={rootStyle}
     >
@@ -429,6 +499,9 @@ function VirtualMenuRoot<T>({
   );
 }
 
+const VirtualMenuRoot = React.forwardRef(VirtualMenuRootInner) as (<T>(
+  props: VirtualMenuProps<T> & React.RefAttributes<HTMLDivElement>,
+) => React.ReactElement) & { displayName?: string };
 VirtualMenuRoot.displayName = 'VirtualMenu';
 
 // ============================================================================

@@ -1,423 +1,153 @@
 ---
 title: Button
-description: Use buttons to trigger actions throughout your interface. Buttons are promises of what happens next.
+description: A button starts an action, such as saving a form, sending a message or opening a dialog.
 source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/button.tsx
 ---
 
-Use buttons to trigger actions throughout your interface. Buttons are promises of what happens next. Design them to build user confidence and guide decision-making naturally.
-
-This is an enhanced version of the Button component from [Radix Themes](https://www.radix-ui.com/themes). For the original API reference, see the [Radix Themes Button documentation](https://www.radix-ui.com/themes/docs/components/button).
-
-{/* 
+A button starts an action when someone presses it: it saves, sends, deletes or opens something. A button that stays on or off is a [Toggle](/docs/toggle). A link that takes someone to another page is a link, even when it looks like a button.
 
 ## Playground
 
 import ButtonPlayground from '../../playground/button-playground';
 
-<ButtonPlayground /> 
-
-*/}
-
-## Playground
-
-import ButtonPlayground from '../../playground/button-playground';
-
-<ButtonPlayground /> 
-
-## Installation
-
-```bash
-npm install @kushagradhawan/kookie-ui
-```
+<ButtonPlayground />
 
 ## Usage
 
-```tsx
-import { Button } from '@kushagradhawan/kookie-ui';
+```tsx showLineNumbers
+import { Button, Flex } from '@kushagradhawan/kookie-ui';
 
-export function MyComponent() {
-  return <Button>Click me</Button>;
+export function SaveBar({ saving, onCancel, onSave }: { saving: boolean; onCancel: () => void; onSave: () => void }) {
+  return (
+    <Flex gap="2" justify="end">
+      <Button emphasis="quiet" color="gray" onClick={onCancel}>
+        Cancel
+      </Button>
+      <Button emphasis="loud" loading={saving} onClick={onSave}>
+        Save changes
+      </Button>
+    </Flex>
+  );
 }
 ```
 
+## Best practices
+
+**Give each screen one loud button.** Set `emphasis="loud"` on the action people are most likely to take, and let the others stay medium or quiet. Two loud buttons side by side give people no answer to "which one do I press?"
+
+**Rank buttons with emphasis, not with size.** Buttons in one row share one size, and `emphasis` tells them apart. A larger button reads as a different kind of control, not as the more important choice.
+
+**Start the label with a verb.** "Save changes", "Send invite" and "Delete project" tell people what happens. "OK", "Yes" and "Submit" make them read the rest of the screen to find out.
+
+**Don't make a destructive action the loud one.** Use `color="red"` for a button that deletes something, and confirm it in an [Alert Dialog](/docs/alert-dialog) when it cannot be undone. A loud red button invites the press it should slow down.
+
+**Prefer a message to a disabled button.** A disabled button doesn't say why it is disabled. Where you can, keep it enabled and explain what is missing when someone presses it.
+
+## Emphasis
+
+`emphasis` sets how much attention a button asks for. Each value maps to one look, so you choose the rank and the theme chooses the style.
+
+| Emphasis | Look | Use it for |
+| --- | --- | --- |
+| `loud` | `solid` | The main action on the screen |
+| `medium` | `raised` | Most buttons. This is the default |
+| `quiet` | `ghost` | Cancel, close and actions in a toolbar |
+
+`variant` sets the look directly, when you need `soft`, `surface` or `outline`, which have no rank of their own. Pass `emphasis` or `variant`, not both. The types reject the pair.
+
+## Size
+
+`size` picks one of four heights: 28, 32, 40 and 48 pixels. Size 2 is the default and suits most screens. Use size 1 in dense toolbars and size 3 or 4 where a touch target needs room. A button is as tall as a [TextField](/docs/text-field) or a [Select](/docs/select) of the same size, so a row of controls lines up. `size` accepts a responsive object, such as `{ initial: '3', md: '2' }`.
+
+## Examples
+
+### Icon and label
+
+Put the icon before the label, inside the button. The button sizes the icon and sets the gap, so don't size it yourself.
+
+```tsx
+<Button>
+  <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
+  New project
+</Button>
+```
+
+### Icon only
+
+`iconOnly` makes the button square. It has no visible text, so the types require `aria-label` or `aria-labelledby`. Add `tooltip` so people who use a pointer can see the name too.
+
+```tsx
+<Button iconOnly emphasis="quiet" aria-label="Search" tooltip="Search">
+  <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
+</Button>
+```
+
+### Waiting for a result
+
+`loading` replaces the content with a spinner and blocks presses until it clears, so a slow request can't be sent twice. The button keeps its width and its focus, so the layout doesn't jump and keyboard users stay in place.
+
+### Confirming a copy
+
+`done` shows a tick in place of the icon, in the same box, so nothing moves. The icon comes back when `done` is false. It doesn't block presses. Screen readers don't announce the tick, so change the label too.
+
+```tsx
+const [copied, setCopied] = React.useState(false);
+
+function copy() {
+  navigator.clipboard.writeText(url);
+  setCopied(true);
+  setTimeout(() => setCopied(false), 1500);
+}
+
+<Button iconOnly emphasis="quiet" done={copied} aria-label={copied ? 'Copied' : 'Copy link'} onClick={copy}>
+  <HugeiconsIcon icon={Copy01Icon} strokeWidth={1.75} />
+</Button>
+```
+
+### Navigation
+
+When a button-shaped control goes to another page, render your router's link with `asChild`. The element stays an anchor, so it opens in a new tab and shows its address like any link.
+
+```tsx
+<Button asChild>
+  <Link href="/settings">Open settings</Link>
+</Button>
+```
+
+### Full width
+
+`fullWidth` stretches the button across its container. Use it for the single action at the end of a narrow form or a mobile sheet. It isn't available with `iconOnly`.
+
 ## Props
 
-| Prop           | Type                                                                  | Description                                                                                     |
-| -------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `variant`      | `'raised' \| 'solid' \| 'soft' \| 'surface' \| 'outline' \| 'ghost'` | Button style variant: raised for elevated, solid for primary, outline for secondary, ghost for utility, soft/surface for content-heavy UIs |
-| `size`         | `'1' \| '2' \| '3' \| '4'`                                            | Button density: 1 (28px) for toolbars, 2 (32px) standard, 3 (40px) for important actions, 4 (48px) for hero sections. Supports responsive objects |
-| `color`        | `AccentColor`                                                         | Semantic color to communicate action intent. Gray fills with step 12 on its own |
-| `emphasis`     | `'loud' \| 'medium' \| 'quiet'`                                     | The button's rank: loud is `solid`, medium is `raised` (the default), quiet is `ghost`. Pass `emphasis` or `variant`, not both |
-| `iconOnly`     | `boolean`                                                             | Square button holding only an icon. Requires `aria-label` or `aria-labelledby`; rules out `fullWidth` |
-| `fullWidth`    | `boolean`                                                             | Makes button fill its container width. Useful for mobile layouts and form submissions          |
-| `radius`       | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'`                  | Corner radius scale: none for sharp edges, small/medium/large for progressive rounding, full for pill-shaped |
-| `loading`      | `boolean`                                                             | Replaces all content with a centered spinner and disables button automatically. For visible text during loading, use Spinner component around icons instead |
-| `disabled`     | `boolean`                                                             | Prevents interaction when action is unavailable, such as during form validation or when authentication is required |
-| `as`           | `ElementType`                                                         | Renders button as different HTML element while maintaining button styling. Useful for navigation links or routing integration |
-| `asChild`      | `boolean`                                                             | Merges button props with child element using Radix Slot pattern. Ideal for composition with routing libraries like Next.js Link |
-| `tooltip`      | `string \| ReactNode`                                                 | Content for tooltip. Appears on hover and focus for accessibility                               |
-| `tooltipSide`  | `'top' \| 'right' \| 'bottom' \| 'left'`                              | Position of tooltip relative to button                                                          |
-| `tooltipAlign` | `'start' \| 'center' \| 'end'`                                        | Alignment of tooltip                                                                            |
-
-## Variants
-
-Use the `variant` prop to set button style.
-
-### Raised
-
-Elevated style with subtle shadow for maximum visual impact and primary actions.
-
-```tsx
-<Button size="3" variant="raised">
-  Button
-</Button>
-```
-
-### Solid
-
-Filled background for primary actions and important CTAs.
-
-```tsx
-<Button size="3" variant="solid">
-  Button
-</Button>
-```
-
-### Soft
-
-Subtle background for secondary actions and content-heavy interfaces.
-
-```tsx
-<Button size="3" variant="soft">
-  Button
-</Button>
-```
-
-### Outline
-
-Bordered style for secondary actions and form controls.
-
-```tsx
-<Button size="3" variant="outline">
-  Button
-</Button>
-```
-
-### Surface
-
-Elevated surface for content-heavy UIs and card-based layouts.
-
-```tsx
-<Button size="3" variant="surface">
-  Button
-</Button>
-```
-
-### Ghost
-
-Minimal style for utility actions and inline text integration.
-
-```tsx
-<Button size="3" variant="ghost">
-  Button
-</Button>
-```
-
-## Sizes
-
-Set `size` for button density: `1` (28px), `2` (32px), `3` (40px), `4` (48px). Use `3` or `4` for mobile touch targets. Supports responsive objects like `{ initial: '1', sm: '2', md: '3', lg: '4' }`.
-
-### Size 1
-
-For toolbars and dense interfaces.
-
-```tsx
-<Button size="1">Button</Button>
-```
-
-### Size 2
-
-For standard interface contexts.
-
-```tsx
-<Button size="2">Button</Button>
-```
-
-### Size 3
-
-For important actions and mobile touch targets.
-
-```tsx
-<Button size="3">Button</Button>
-```
-
-### Size 4
-
-For hero sections and maximum impact.
-
-```tsx
-<Button size="4">Button</Button>
-```
-
-## Colors
-
-Use the `color` prop with semantic colors to communicate the action's intent to users. Chromatic colors fill with step 9. Gray fills with step 12 and inverts its text, so a gray button is the strongest neutral action.
-
-```tsx
-<Button size="3" color="crimson" variant="solid">
-  Delete
-</Button>
-<Button size="3" color="gray" variant="solid">
-  Save
-</Button>
-```
-
-## States
-
-### Loading
-
-Set `loading` to `true` to replace all content with a centered spinner and disable the button automatically. No need to set `disabled` manually.
-
-```tsx
-<Button
-  size="3"
-  color="gray"
-  loading
->
-  Submit
-</Button>
-```
-
-For a more sophisticated loading pattern where text remains visible, wrap your icon in a `Spinner` component:
-
-```tsx
-<Button disabled={isLoading}>
-  <Spinner loading={isLoading}>
-    <BookmarkIcon />
-  </Spinner>
-  Bookmark
-</Button>
-```
-
-### Disabled
-
-Set the `disabled` prop to `true` to prevent interaction when an action is unavailable, such as during form validation or when authentication is required.
-
-```tsx
-<Button
-  size="3"
-  disabled
-  tooltip="Please fill all required fields"
->
-  Save
-</Button>
-```
-
-### Interactive
-
-Buttons handle focus for keyboard navigation. For complex patterns, use `data-state` for custom visuals.
-
-```tsx
-<Button size="3" variant="raised" data-state="open">
-  Open
-</Button>
-<Button size="3" variant="raised" data-state="on">
-  On
-</Button>
-```
-
-## Layout
-
-### Full Width
-
-Set the `fullWidth` prop to `true` to make the button fill its container. This is useful for mobile layouts and form submissions.
-
-```tsx
-<Flex direction="column" gap="3" width="300px">
-  <Button size="3" variant="soft" color="gray" fullWidth>
-    Complete
-  </Button>
-</Flex>
-```
-
-### Spacing
-
-Button takes no margin props. Space buttons with the parent's `gap`, or wrap one in a `Box` with margin.
-
-```tsx
-<Flex gap="3">
-  <Button size="3" variant="soft" color="gray">
-    Cancel
-  </Button>
-  <Button size="3">Save</Button>
-</Flex>
-```
-
-## Tooltips
-
-Use the `tooltip` prop to add context to button actions, especially for icon buttons or unclear actions. Tooltips appear on hover and focus for accessibility. Always provide a tooltip for icon-only buttons.
-
-```tsx
-<Button
-  variant="soft"
-  size="3"
-  tooltip="Save your current progress"
->
-  Button
-</Button>
-```
-
-## Icons
-
-Place icons directly inside buttons; they'll be sized automatically based on the button's size.
-
-```tsx
-import { Check } from 'lucide-react';
-
-<Button size="3">
-  <Check />
-  Save
-</Button>
-```
-
-### Icon Only
-
-Set `iconOnly` for a square button holding only an icon. It has no visible text, so the type requires `aria-label` or `aria-labelledby`. It never takes the full width. Add a `tooltip` so sighted users get the name too.
-
-```tsx
-import { ChevronDown } from 'lucide-react';
-
-<Button
-  iconOnly
-  size="3"
-  variant="soft"
-  aria-label="More options"
-  tooltip="More options"
->
-  <ChevronDown />
-</Button>
-```
-
-A button that stays pressed is a [Toggle](/docs/toggle), which takes `iconOnly` too.
-
-## Polymorphism
-
-### As
-
-Use the `as` prop to render buttons as different HTML elements while maintaining button styling. This is useful for navigation links, routing integration, or custom interactive elements that need button appearance.
-
-```tsx
-<Button size="3" as="a" href="/home">
-  Go Home
-</Button>
-```
-
-### AsChild
-
-Use the `asChild` prop to merge button props with a child element using the Radix Slot pattern. This is ideal for composition with routing libraries like Next.js Link or React Router, as it applies button styling without creating an additional wrapper element.
-
-```tsx
-<Button size="3" asChild>
-  <a href="/dashboard">Go to Dashboard</a>
-</Button>
-```
-
-## Responsive
-
-Use responsive objects with the `size` prop to adapt button sizing across different breakpoints. The component uses a mobile-first approach where each breakpoint applies styles at its minimum width and above.
-
-```tsx
-<Button size={{ initial: '1', sm: '2', md: '3' }}>Button</Button>
-```
-
-## Form
-
-Use standard HTML form attributes to integrate buttons with forms. The component supports all form attributes for comprehensive form integration, including loading states for async operations and validation-based disabled states.
-
-```tsx
-<Button type="submit" size="3">
-  Submit
-</Button>
-```
-
-Button also supports customizable tooltip props for content, position, timing, and behavior.
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `emphasis` | `'loud' \| 'medium' \| 'quiet'` | `'medium'` | How much attention the button asks for |
+| `variant` | `'raised' \| 'solid' \| 'soft' \| 'surface' \| 'outline' \| 'ghost'` | `'raised'` | The look, set directly. Not with `emphasis` |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | The height step |
+| `color` | `AccentColor` | Theme accent | The colour. Gray fills with step 12 |
+| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Theme radius | The corner |
+| `loading` | `boolean` | `false` | Shows a spinner and blocks presses |
+| `done` | `boolean` | `false` | Shows a tick in place of the icon |
+| `disabled` | `boolean` | `false` | Blocks presses and shows the disabled colours |
+| `iconOnly` | `boolean` | `false` | Square, icon only. Requires `aria-label` or `aria-labelledby` |
+| `fullWidth` | `boolean` | `false` | Fills the container's width. Not with `iconOnly` |
+| `tooltip` | `ReactNode` | | Shows on hover and on keyboard focus |
+| `tooltipSide` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | Where the tooltip opens |
+| `tooltipAlign` | `'start' \| 'center' \| 'end'` | `'center'` | How the tooltip lines up with the button |
+| `asChild` | `boolean` | `false` | Renders the child element, such as a link, with the button's look |
+
+Button also accepts every attribute of the HTML `button` element.
 
 ## Accessibility
 
-Kookie UI's Button extends Radix's accessibility foundation with enhanced loading states and built-in tooltip support.
+| Key | Action |
+| --- | --- |
+| Enter or Space | Presses the button |
+| Tab | Moves focus to the next control |
 
-### Enhanced Loading States
-
-Loading states automatically apply comprehensive ARIA attributes:
-
-- `aria-busy="true"` - announces processing state
-- `aria-disabled="true"` - prevents interaction
-- `aria-describedby` - links to loading announcement
-- `aria-label` - dynamically includes "(loading)" status
-
-Loading announcements include: "[Button text] is loading, please wait..."
-
-### Keyboard Navigation
-
-- Full keyboard support with Enter and Space keys
-- Visible focus indicators for all variants
-- Enhanced focus management for Windows High Contrast mode
-
-### Screen Readers
-
-- Semantic button elements with proper roles
-- Loading state announcements
-- Tooltip associations via `aria-describedby`
-- Disabled state announcements
-
-## Enhancements
-
-Kookie UI extends Radix Themes Button with practical improvements:
-
-### Built-in Tooltip Support
-
-Native `tooltip` prop eliminates need for wrapper components. Tooltips automatically provide accessibility through `aria-describedby` associations and support positioning via `tooltipSide` and `tooltipAlign` props.
-
-### Enhanced Loading State
-
-Loading state replaces all button content with a centered spinner and disables interaction. Screen readers announce loading context with proper `aria-busy` and `aria-disabled` attributes. For patterns where text should remain visible during loading, wrap icons in the `Spinner` component instead.
-
-## Changelog
-
-### Added
-
-- Enhanced loading state accessibility with `aria-busy`, `aria-disabled`, and `aria-describedby` attributes
-- Built-in tooltip support through `tooltip`, `tooltipSide`, `tooltipAlign` props
-- `iconOnly` prop for square, icon-only buttons
-- Enhanced form integration with complete HTML form attribute support
-- **RTL (Right-to-Left) layout support** for international applications
-- **Windows High Contrast mode support** via `forced-colors` media query
-- **Enhanced reduced motion support** for users with vestibular disorders
-- **Improved loading state announcements** with contextual button text
-- **Tooltip accessibility integration** with proper `aria-describedby` associations
-
-### Changed
-
-- Improved 3D shadow system for classic variant with better depth perception
-- Enhanced active state feedback with subtle padding adjustments
-- Better contrast relationships in both light and dark themes
-- Comprehensive transition token system with duration and easing tokens
-- Automatic reduced motion support via `prefers-reduced-motion`
-
-### Removed
-
-- `highContrast` prop. Gray fills with step 12 on its own, and text reads the strong ink by default.
-- `material` and `panelBackground` props. Every surface is solid.
-- `IconButton`. Use `Button iconOnly`.
-- `flush` prop and margin props. Use the parent's `gap`, or a `Box` with margin.
-
-### Fixed
-
-- Better color saturation and brightness in high contrast mode
-- Enhanced focus indicators for improved accessibility
-- Consistent contrast ratios across all variants and states
-- Full TypeScript support for polymorphic `as` prop with better type inference
-- **Loading state accessibility** with proper button text context in announcements
-- **Focus management** with enhanced forced-colors support for Windows High Contrast
-- **Spinner animations** now respect `prefers-reduced-motion` user preference
-- **Tooltip associations** properly linked to buttons via unique IDs
+- **Name:** A screen reader announces the label. An icon-only button announces its `aria-label`, which the types require.
+- **Loading:** The button sets `aria-busy` and announces that it is loading. It stays in the tab order, so focus doesn't jump to the top of the page.
+- **Done:** The tick is hidden from screen readers. Change the label or `aria-label`, such as "Copy" to "Copied", so the change is heard.
+- **Disabled:** A disabled `button` element leaves the tab order. A disabled link or `asChild` element sets `aria-disabled` and ignores presses.
+- **Focus:** The focus ring shows for the keyboard only, and it uses the button's colour.

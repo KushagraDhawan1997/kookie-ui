@@ -1,0 +1,134 @@
+---
+title: Link
+description: Link takes people to another page, another part of the page or a file.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/link.tsx
+---
+
+Link renders an `a` element in the accent colour, set like [Text](/docs/text). It goes somewhere: another page, a section of this page or a download. A control that starts an action, such as saving or deleting, is a [Button](/docs/button).
+
+## Playground
+
+import LinkPlayground from '../../playground/link-playground';
+
+<LinkPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import NextLink from 'next/link';
+import { Flex, Link, Text } from '@kushagradhawan/kookie-ui';
+
+export function SignUpFooter() {
+  return (
+    <Flex direction="column" gap="2" align="center">
+      <Text as="p" size="2" emphasis="medium">
+        By signing up you agree to the{' '}
+        <Link asChild underline="always">
+          <NextLink href="/terms">terms of service</NextLink>
+        </Link>
+        .
+      </Text>
+      <Text as="p" size="2">
+        Already have an account? <Link href="/login">Log in</Link>
+      </Text>
+    </Flex>
+  );
+}
+```
+
+## Best practices
+
+**Underline links in running text.** In a paragraph, colour alone doesn't tell everyone which words are a link. Set `underline="always"` there. In a menu, a footer or a list of links, the default is enough.
+
+**Say where the link goes.** "View invoice" or "Read the setup guide" makes sense on its own. "Click here" and "Learn more" don't, and screen reader users often hear links as a list.
+
+**Use a link to go, and a button to do.** If pressing it changes data or opens a dialog, use a [Button](/docs/button). If it changes the address, use a Link. A button-shaped link is `<Button asChild>` around your router's link.
+
+**Render your router's link with `asChild`.** Link puts its styles on the child, so the element stays your router's anchor and keeps client-side navigation.
+
+**Mark links that leave your product.** Add `target="_blank"` and `rel="noopener noreferrer"` only when people need to keep the current page open, and say so in the label or with an icon.
+
+## Underline
+
+`underline` sets when the underline shows.
+
+| Underline | Behaviour | Use it for |
+| --- | --- | --- |
+| `auto` | Underlines on hover. Always underlined inside text that has its own `color` | Most links. This is the default |
+| `always` | Always underlined | Links in paragraphs and body copy |
+| `hover` | Underlines on hover only | Links in navigation and lists |
+| `none` | Never underlined | Links whose place on the screen already shows they are links |
+
+The underline is removed while the link shows its keyboard focus ring.
+
+## Size and colour
+
+With no `size`, a link inherits the font size of the text around it, so it fits into a sentence. `size` picks a step from 1 to 9 on the same scale as Text, for a link that stands on its own. `color` sets the link's colour. With no `color`, the link takes the theme accent.
+
+## Examples
+
+### Link in a paragraph
+
+Leave `size` unset so the link matches the sentence. Use `underline="always"` so the link shows without colour.
+
+```tsx
+<Text as="p" size="3">
+  Read the <Link href="/start/theming" underline="always">theming guide</Link> before you change tokens.
+</Text>
+```
+
+### Navigation list
+
+In a list where every item is a link, the underline adds noise. `hover` shows it only under the pointer.
+
+```tsx
+<Flex direction="column" gap="2">
+  <Link href="/account" size="2" underline="hover">
+    Account
+  </Link>
+  <Link href="/billing" size="2" underline="hover">
+    Billing
+  </Link>
+</Flex>
+```
+
+### Link to a reference
+
+Put a [Code](/docs/code) inside the link. The link hides its underline when Code is its only child, and the Code's tint changes on hover.
+
+```tsx
+<Link href="/docs/button">
+  <Code>Button</Code>
+</Link>
+```
+
+### Long link in a narrow space
+
+`truncate` keeps a long address on one line with an ellipsis. Give the parent a width so the link has a limit to truncate against.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `underline` | `'auto' \| 'always' \| 'hover' \| 'none'` | `'auto'` | When the underline shows |
+| `size` | `'1'` to `'9'`, responsive | | The type step. Inherits when unset |
+| `weight` | `'regular' \| 'medium' \| 'semibold'`, responsive | | The font weight. Inherits when unset |
+| `color` | `AccentColor` | Theme accent | The colour |
+| `trim` | `'normal' \| 'start' \| 'end' \| 'both'`, responsive | | Removes the space above or below the text |
+| `truncate` | `boolean` | | Keeps one line and ends it with an ellipsis |
+| `wrap` | `'wrap' \| 'nowrap' \| 'pretty' \| 'balance'`, responsive | | How lines break |
+| `asChild` | `boolean` | `false` | Renders the child element, such as a router link, with the link's styles |
+
+Link also accepts every attribute of the HTML `a` element.
+
+## Accessibility
+
+| Key | Action |
+| --- | --- |
+| Enter | Follows the link |
+| Tab | Moves focus to the next control |
+
+- **Name:** A screen reader announces "link" and the link's text. Make the text describe the destination, because people often hear a list of links with no surrounding sentence.
+- **Element:** Link renders an `a`. Give it an `href`, or it isn't focusable and isn't announced as a link. With `asChild`, the child must render an `a` with an `href`.
+- **Focus:** The focus ring shows for the keyboard only. It is a 2px outline in the focus colour, offset from the text.
+- **New tabs:** A link that opens a new tab moves people away from where they were. Say so in the label, such as "Pricing (opens in a new tab)".

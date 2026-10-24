@@ -144,32 +144,54 @@ type ButtonProps = Omit<KuiButtonProps, 'aria-label' | 'aria-labelledby' | 'vari
  * Place it inside `Root`, after the viewport. It sits over the viewport's bottom edge.
  */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ direction = 'end', behavior, className, children, size, variant = 'surface', emphasis, color = 'gray', radius = 'full', 'aria-label': label, ...props }, forwardedRef) => (
-    <Primitive.Button
-      direction={direction}
-      {...(behavior ? { behavior } : {})}
-      render={
-        <KuiButton
-          iconOnly
-          {...props}
-          ref={forwardedRef}
-          size={size}
-          {...(emphasis ? { emphasis } : { variant })}
-          color={color}
-          radius={radius}
-          aria-label={label ?? (direction === 'end' ? 'Jump to the latest' : 'Jump to the first')}
-          className={classNames('kui-MessageScrollerButton', className)}
-          data-direction={direction}
-        >
-          {children ?? (
-            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden style={direction === 'start' ? { transform: 'rotate(180deg)' } : undefined}>
-              <path d="M7.5 2.5v10M3.5 8.5l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          )}
-        </KuiButton>
-      }
-    />
-  ),
+  (
+    { direction = 'end', behavior = 'smooth', className, children, size, variant = 'surface', emphasis, color = 'gray', radius = 'full', 'aria-label': label, onClick, ...props },
+    forwardedRef,
+  ) => {
+    const { scrollToEnd, scrollToStart } = useMessageScroller();
+
+    // The primitive blurs the button on click, which drops keyboard focus to the page. Kookie
+    // jumps itself and moves focus to the viewport instead, since the button hides at the end.
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      onClick?.(event);
+      if (event.defaultPrevented) return;
+      event.preventDefault();
+      const viewport = event.currentTarget
+        .closest('.kui-MessageScrollerRoot')
+        ?.querySelector<HTMLElement>('.kui-MessageScrollerViewport');
+      viewport?.focus({ preventScroll: true });
+      if (direction === 'start') scrollToStart({ behavior });
+      else scrollToEnd({ behavior });
+    };
+
+    return (
+      <Primitive.Button
+        direction={direction}
+        behavior={behavior}
+        onClick={handleClick}
+        render={
+          <KuiButton
+            iconOnly
+            {...props}
+            ref={forwardedRef}
+            size={size}
+            {...(emphasis ? { emphasis } : { variant })}
+            color={color}
+            radius={radius}
+            aria-label={label ?? (direction === 'end' ? 'Jump to the latest' : 'Jump to the first')}
+            className={classNames('kui-MessageScrollerButton', className)}
+            data-direction={direction}
+          >
+            {children ?? (
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden style={direction === 'start' ? { transform: 'rotate(180deg)' } : undefined}>
+                <path d="M7.5 2.5v10M3.5 8.5l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            )}
+          </KuiButton>
+        }
+      />
+    );
+  },
 );
 Button.displayName = 'MessageScroller.Button';
 

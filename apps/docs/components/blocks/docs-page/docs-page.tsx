@@ -21,7 +21,7 @@ export interface DocsPageProps {
   headerActions?: React.ReactNode;
   /** Tabs under the header, e.g. Documentation and Examples. */
   headerTabs?: React.ReactNode;
-  /** Show the header's "Copy page" button. Off for pages that are an index, not a document. @default true */
+  /** @deprecated Copying moved to the docs toolbar, shown on every page with a Markdown twin. Ignored. */
   showCopyButton?: boolean;
   /** Rendered in a sticky column from the `lg` breakpoint. Without it, the column is centred. */
   tableOfContents?: React.ReactNode;
@@ -33,7 +33,7 @@ export interface DocsPageProps {
 
 /**
  * A documentation page: header, a reading column and an optional table of contents. The column
- * carries `data-content-area`, which the table of contents and "Copy page" read from.
+ * carries `data-content-area`, which the table of contents reads from.
  */
 export function DocsPage({
   children,
@@ -109,7 +109,8 @@ export function DocsPage({
           width="13rem"
           flexShrink="0"
           position="sticky"
-          top="7"
+          // Clears a floating toolbar over the page, as in Docs Shell.
+          top="var(--kui-pane-inset-start, var(--space-7))"
         >
           {tableOfContents}
         </Box>

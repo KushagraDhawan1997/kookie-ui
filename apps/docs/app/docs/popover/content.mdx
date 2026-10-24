@@ -1,0 +1,177 @@
+---
+title: Popover
+description: A popover opens a small panel next to the control that opened it, such as a filter form or a share panel.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/popover.tsx
+---
+
+A popover opens a panel beside its trigger and leaves the rest of the page in reach. Use it for a few controls that belong to one button, such as filters or a share link. A list of actions is a [Dropdown Menu](/docs/dropdown-menu), a short label on hover is a [Tooltip](/docs/tooltip), and a task that must be finished before people go on is a [Dialog](/docs/dialog).
+
+## Playground
+
+import PopoverPlayground from '../../playground/popover-playground';
+
+<PopoverPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Button, Checkbox, Flex, Popover, Text } from '@kushagradhawan/kookie-ui';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { FilterIcon } from '@hugeicons/core-free-icons';
+
+export function StatusFilter() {
+  return (
+    <Popover.Root>
+      <Popover.Trigger>
+        <Button>
+          <HugeiconsIcon icon={FilterIcon} strokeWidth={1.75} />
+          Filter
+        </Button>
+      </Popover.Trigger>
+      <Popover.Content width="240px">
+        <Flex direction="column" gap="3">
+          {['Open', 'In review', 'Closed'].map((status, index) => (
+            <Flex gap="2" align="center" key={status}>
+              <Checkbox id={`status-${index}`} defaultChecked={status === 'Open'} />
+              <Text as="label" htmlFor={`status-${index}`} size="2">
+                {status}
+              </Text>
+            </Flex>
+          ))}
+        </Flex>
+      </Popover.Content>
+    </Popover.Root>
+  );
+}
+```
+
+## Anatomy
+
+```tsx
+<Popover.Root>
+  <Popover.Trigger />
+  <Popover.Anchor />
+  <Popover.Content>
+    <Popover.Toolbar>
+      <Popover.Toolbar.Left />
+      <Popover.Toolbar.Center>
+        <Popover.Toolbar.Title />
+      </Popover.Toolbar.Center>
+      <Popover.Toolbar.Right />
+    </Popover.Toolbar>
+    <Popover.Close />
+  </Popover.Content>
+</Popover.Root>
+```
+
+- **Root:** Holds the open state.
+- **Trigger:** The element that opens the popover. It takes one child element, usually a Button.
+- **Anchor:** Optional. Places the popover against a different element than the trigger.
+- **Content:** The panel, rendered in a portal. It is at least as wide as the trigger.
+- **Toolbar:** Optional. A row pinned to the top of the panel, with left, center and right sections. The content's top padding grows to its height.
+- **Toolbar.Title:** A title in the toolbar. It names the popover for screen readers.
+- **Close:** Closes the popover when its child is pressed. It takes one child element.
+
+## Best practices
+
+**Keep the content small.** A popover holds a few controls. If it needs scrolling or several sections, use a [Dialog](/docs/dialog) or a page.
+
+**Apply changes as people make them.** A filter that updates the list on each tick needs no Apply button. If changes must wait, add one loud button at the end.
+
+**Open it from a press, not a hover.** A popover holds controls people use, and hover content vanishes when the pointer moves. Use a [Tooltip](/docs/tooltip) for a label on hover.
+
+**Don't put required steps in it.** People close a popover by pressing anywhere else. Anything they must finish belongs in a [Dialog](/docs/dialog).
+
+## Size
+
+`size` sets the padding and the corner, on the same steps as a [Card](/docs/card). Size 2 is the default, and an unset size follows the Theme size. Match the popover's size to the controls inside it.
+
+## Placement
+
+The panel opens below the trigger with an 8px gap and lines up with the trigger's start edge. It flips and shifts to stay at least 10px inside the window. Set `side` (`'top'`, `'right'`, `'bottom'`, `'left'`), `align` (`'start'`, `'center'`, `'end'`) or `sideOffset` to change it.
+
+## Examples
+
+### Share panel with a toolbar
+
+Use the toolbar for a title and a close button that stay pinned while the content scrolls.
+
+```tsx showLineNumbers
+<Popover.Content width="320px">
+  <Popover.Toolbar>
+    <Popover.Toolbar.Left>
+      <Popover.Toolbar.Title>Share</Popover.Toolbar.Title>
+    </Popover.Toolbar.Left>
+    <Popover.Toolbar.Right>
+      <Popover.Close>
+        <Button iconOnly emphasis="quiet" size="1" aria-label="Close">
+          <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
+        </Button>
+      </Popover.Close>
+    </Popover.Toolbar.Right>
+  </Popover.Toolbar>
+  {/* share link and people */}
+</Popover.Content>
+```
+
+### Anchored to a field
+
+`Popover.Anchor` places the panel against a wider element, such as a search field, while a small button inside it opens the popover.
+
+### Content that bleeds to the edge
+
+The panel publishes its padding, so a child with `m="bleed"` reaches the panel's edges, such as a full-width list.
+
+## Props
+
+### Root
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `open` | `boolean` | | The open state. Controlled |
+| `defaultOpen` | `boolean` | `false` | The open state on first render |
+| `onOpenChange` | `(open: boolean) => void` | | Called when the popover opens or closes |
+| `modal` | `boolean` | `false` | Blocks the rest of the page and keeps focus inside |
+
+### Content
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | Theme size | Padding and corner |
+| `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'bottom'` | Which side of the trigger it opens on |
+| `align` | `'start' \| 'center' \| 'end'` | `'start'` | How it lines up with the trigger |
+| `sideOffset` | `number` | `8` | The gap to the trigger, in pixels |
+| `collisionPadding` | `number` | `10` | The space kept from the window's edges |
+| `width` | `string`, responsive | | A fixed width |
+| `minWidth` | `string`, responsive | Trigger width | The narrowest width |
+| `maxWidth` | `string`, responsive | `'480px'` | The widest width |
+| `height` | `string`, responsive | | A fixed height |
+| `minHeight` | `string`, responsive | | The shortest height |
+| `maxHeight` | `string`, responsive | | The tallest height. Content scrolls past it |
+| `container` | `HTMLElement` | `document.body` | Where the portal renders |
+| `forceMount` | `boolean` | | Keeps the popover in the DOM while closed |
+| `onEscapeKeyDown` | `(event) => void` | | Called on Escape. Call `preventDefault()` to keep it open |
+| `onInteractOutside` | `(event) => void` | | Called on a press or focus outside. Call `preventDefault()` to keep it open |
+
+Content also accepts every attribute of the HTML `div` element.
+
+### Toolbar
+
+`Popover.Toolbar`, its `Left`, `Center` and `Right` sections, and `Toolbar.Title` take no props of their own. Each accepts the attributes of its element: `div` for the toolbar and sections, `span` for the title.
+
+### Trigger, Close and Anchor
+
+Trigger and Close take one child element and pass their behaviour to it. Anchor renders a `div` around its children.
+
+## Accessibility
+
+| Key | Action |
+| --- | --- |
+| Enter or Space | Opens or closes the popover from the trigger |
+| Escape | Closes the popover and returns focus to the trigger |
+| Tab | Moves focus through the panel, then out of it |
+
+- **Name:** `Popover.Toolbar.Title` names the panel with `aria-labelledby`. Without a toolbar, set `aria-label` on Content.
+- **State:** The trigger sets `aria-expanded` and `aria-controls`, so a screen reader announces whether the panel is open.
+- **Focus:** Focus moves into the panel when it opens and returns to the trigger when it closes. The page stays in reach, so Tab can leave the panel unless `modal` is set.
+- **Dismissal:** Escape and a press outside the panel both close it.

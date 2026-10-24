@@ -1,6 +1,5 @@
 'use client';
 
-import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import classNames from 'classnames';
 import { Select as SelectPrimitive, ScrollArea as ScrollAreaPrimitive } from 'radix-ui';
@@ -25,6 +24,9 @@ type SelectRootOwnProps = GetPropDefTypes<typeof selectRootPropDefs>;
 // extractProps caches its compiled prop defs on the identity of each record it is given:
 // a literal written at the call site would be a new object, and a recompile, every render.
 const selectSizePropDefs = { size: selectRootPropDefs.size };
+
+// Keys that open the list from the trigger, as in Radix.
+const OPEN_KEYS = [' ', 'Enter', 'ArrowUp', 'ArrowDown'];
 
 interface SelectContextValue extends SelectRootOwnProps {
   /** Whether the list is open. Undefined when Content is rendered outside a Kookie Select.Root. */
@@ -94,7 +96,6 @@ const SelectTrigger = React.forwardRef<SelectTriggerElement, SelectTriggerProps>
       selectTriggerPropDefs,
     );
 
-
     // The props win when set; otherwise a caller's own aria-* (a form library's aria-invalid)
     // stays, so both paths reach the accessibility tree and the CSS, as on TextField.
     const {
@@ -114,9 +115,28 @@ const SelectTrigger = React.forwardRef<SelectTriggerElement, SelectTriggerProps>
       [isInvalid, ariaInvalid, loading, ariaBusy, disabled, ariaDisabled, readOnly, ariaReadOnly],
     );
 
+    // Read-only and loading triggers stay focusable but do not open or take typeahead,
+    // as on Combobox. Radix skips its own handler when the event is default-prevented.
+    const isBlocked = Boolean(readOnly || loading);
+    const blockedHandlers = isBlocked
+      ? {
+          onPointerDown: (event: React.PointerEvent<HTMLButtonElement>) => event.preventDefault(),
+          onClick: (event: React.MouseEvent<HTMLButtonElement>) => {
+            event.preventDefault();
+            event.currentTarget.focus();
+          },
+          onKeyDown: (event: React.KeyboardEvent<HTMLButtonElement>) => {
+            const isModifierKey = event.ctrlKey || event.altKey || event.metaKey;
+            if (OPEN_KEYS.includes(event.key) || (!isModifierKey && event.key.length === 1)) {
+              event.preventDefault();
+            }
+          },
+        }
+      : undefined;
+
     return (
       // `disabled` goes to Radix, which merges it with Root's and sets the native attribute.
-      <SelectPrimitive.Trigger asChild disabled={disabled}>
+      <SelectPrimitive.Trigger asChild disabled={disabled} {...blockedHandlers}>
         <button
           data-accent-color={color}
           data-radius={radius}

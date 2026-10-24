@@ -4,11 +4,11 @@
  */
 'use client';
 
-import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import { VirtualMenu } from './virtual-menu.js';
 import classNames from 'classnames';
 import { ContextMenu as ContextMenuPrimitive, Slot } from 'radix-ui';
+import { useCallbackRef } from 'radix-ui/internal';
 
 import { ScrollArea } from './scroll-area.js';
 import {
@@ -23,7 +23,7 @@ import { ThickCheckIcon, ThickChevronRightIcon, ThickDotIcon } from './icons.js'
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
-import { MenuProvider } from './_internal/menu-context.js';
+import { MenuCloseProvider, MenuProvider } from './_internal/menu-context.js';
 import {
   MenuShortcut,
   getMenuAlignOffset,
@@ -36,9 +36,27 @@ import type { GetPropDefTypes, Responsive } from '../props/prop-def.js';
 
 interface ContextMenuRootProps
   extends React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Root> {}
-const ContextMenuRoot: React.FC<ContextMenuRootProps> = (props) => (
-  <ContextMenuPrimitive.Root {...props} />
-);
+const ContextMenuRoot: React.FC<ContextMenuRootProps> = (props) => {
+  const { open: openProp, onOpenChange } = props;
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false);
+  const open = openProp ?? uncontrolledOpen;
+
+  const handleOpenChangeProp = useCallbackRef(onOpenChange);
+  const handleOpenChange = React.useCallback(
+    (next: boolean) => {
+      setUncontrolledOpen(next);
+      handleOpenChangeProp(next);
+    },
+    [handleOpenChangeProp],
+  );
+  const close = React.useCallback(() => handleOpenChange(false), [handleOpenChange]);
+
+  return (
+    <MenuCloseProvider value={close}>
+      <ContextMenuPrimitive.Root {...props} open={open} onOpenChange={handleOpenChange} />
+    </MenuCloseProvider>
+  );
+};
 ContextMenuRoot.displayName = 'ContextMenu.Root';
 
 type ContextMenuTriggerElement = React.ElementRef<typeof ContextMenuPrimitive.Trigger>;

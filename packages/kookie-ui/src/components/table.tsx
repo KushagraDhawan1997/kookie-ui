@@ -18,10 +18,16 @@ interface TableRootProps
 const TableRoot = React.forwardRef<TableRootElement, TableRootProps>((ownProps, forwardedRef) => {
   const props = useThemeSizeProps(ownProps, tableRootPropDefs.size);
   const { layout: layoutPropDef, ...rootPropDefs } = tableRootPropDefs;
-  const { className, children, layout, ...rootProps } = extractProps(
-    props,
-    rootPropDefs
-  );
+  const {
+    className,
+    children,
+    layout,
+    // The table is what gets named, not the scroll wrapper around it.
+    'aria-label': ariaLabel,
+    'aria-labelledby': ariaLabelledBy,
+    'aria-describedby': ariaDescribedBy,
+    ...rootProps
+  } = extractProps(props, rootPropDefs);
   const tableLayoutClassNames = getResponsiveClassNames({
     value: layout,
     className: tableRootPropDefs.layout.className,
@@ -30,7 +36,14 @@ const TableRoot = React.forwardRef<TableRootElement, TableRootProps>((ownProps, 
   return (
     <div ref={forwardedRef} className={classNames('kui-TableRoot', className)} {...rootProps}>
       <ScrollArea>
-        <table className={classNames('kui-TableRootTable', tableLayoutClassNames)}>{children}</table>
+        <table
+          className={classNames('kui-TableRootTable', tableLayoutClassNames)}
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledBy}
+          aria-describedby={ariaDescribedBy}
+        >
+          {children}
+        </table>
       </ScrollArea>
     </div>
   );

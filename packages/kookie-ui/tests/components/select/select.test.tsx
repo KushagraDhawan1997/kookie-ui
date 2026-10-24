@@ -45,6 +45,26 @@ describe('Select.Trigger', () => {
     await user.keyboard('{Enter}');
     expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
   });
+
+  for (const state of ['readOnly', 'loading'] as const) {
+    it(`${state} keeps the trigger focusable but does not open or change the value`, async () => {
+      const user = userEvent.setup();
+      const onCallerKeyDown = vi.fn();
+      renderWithProviders(<Fruit {...{ [state]: true }} onKeyDown={onCallerKeyDown} />);
+      const trigger = screen.getByRole('combobox', { name: 'Fruit' });
+      expect(trigger).not.toBeDisabled();
+      await user.click(trigger);
+      expect(trigger).toHaveFocus();
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+      for (const key of ['{Enter}', ' ', '{ArrowDown}', '{ArrowUp}']) {
+        await user.keyboard(key);
+        expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+      }
+      await user.keyboard('b');
+      expect(trigger).toHaveTextContent('Apple');
+      expect(onCallerKeyDown).toHaveBeenCalled();
+    });
+  }
 });
 
 /**

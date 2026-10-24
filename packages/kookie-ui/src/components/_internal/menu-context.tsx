@@ -61,3 +61,14 @@ export function MenuProvider({ children, size }: MenuProviderProps) {
 export function useMenuContext() {
   return React.useContext(MenuContext);
 }
+
+/**
+ * Closes the whole menu from inside it. DropdownMenu.Root and ContextMenu.Root provide it,
+ * so a VirtualMenu row can close the menu on select the way a menu item does.
+ */
+const MenuCloseContext = React.createContext<(() => void) | undefined>(undefined);
+export const MenuCloseProvider = MenuCloseContext.Provider;
+
+export function useMenuClose() {
+  return React.useContext(MenuCloseContext);
+}

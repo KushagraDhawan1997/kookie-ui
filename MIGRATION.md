@@ -376,3 +376,40 @@ Gone from the 0.15 Image, so a 0.15 call site needs a hand edit where it used th
 ### Nothing else to change
 
 The rest of 0.23.0 is internal. Spinner rotates an inner wheel, so code that targeted the spinner root's animation should target `.kui-SpinnerWheel`. Accordion content no longer sets `will-change`.
+
+## 0.24.0: fixes, toolbar parts, docs
+
+Most of 0.24.0 fixes bugs and needs nothing from an app. These changes can need an edit.
+
+### Changes that can need an edit
+
+| Component | What changed | What to do |
+| --- | --- | --- |
+| `Avatar` | `ref`, `className` and `style` all go on the outer `span`. The ref was the `img` | Type the ref as `HTMLSpanElement` |
+| `Accordion` | The trigger draws its own chevron | Remove a chevron you added yourself |
+| `Chip` | It has no disabled look | Nothing, unless you relied on `data-disabled` styling it |
+| `TextArea` | It resizes vertically by default | Set `resize="none"` to keep the old behaviour |
+| `CheckboxGroup` | Each box is its own tab stop, like native checkboxes. `required` means at least one box is checked | Drop `orientation` and `loop`; they do nothing now |
+| `Blockquote` | Text-only props (`align`, `trim`, `font`) no longer style it | Wrap it in a `Text` if you need them |
+| `Code` | A ghost Code with no `color` takes the surrounding text colour | Set `color="gray"` to keep gray |
+| `Toolbar` | In `Shell.Content` it is one size above the Shell's, like the pane headers | Set `size` to keep the old size |
+| `Sheet` | The corners that face the page are rounded | Set `radius="none"` for square corners |
+
+### Behaviour you may notice
+
+- Closing a Dialog or AlertDialog returns focus to the button that opened it.
+- Choosing a VirtualMenu row closes the menu it sits in.
+- A ScrollArea whose content overflows is a tab stop, so keyboard users can scroll it.
+- An inline Code, Link or span Text with `truncate` is `inline-block`, so the ellipsis works.
+- A Slider's handles carry your `aria-label`. A Spinner is silent unless you name it.
+- TextField no longer turns spell check off.
+- A `ToolbarButton` outside a `Toolbar` renders as a plain button instead of throwing.
+
+### New
+
+- `Button done` shows a tick in place of the icon.
+- `Shell.Trigger asChild`.
+- `ToolbarButton asChild` for links, `ToolbarOverflow` with `useToolbarOverflow`, `ToolbarSlot` and `ToolbarFill`, and layout props on `Toolbar`.
+- `Shell.PaneHeader float` and `Shell.Scroll` work in `Shell.Content`, for a page with a pinned toolbar.
+- `Avatar statusLabel`, `SegmentedControl.Item disabled`, and `width` and `height` on `ScrollArea`.
+

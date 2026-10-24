@@ -360,4 +360,22 @@ describe('TextField.Slot scrubbing props', () => {
     const slot = screen.getByTestId('scrub-slot');
     expect(slot).not.toHaveAttribute('data-scrubbing');
   });
+
+describe('TextField.Root native attributes', () => {
+  it('passes required to the input', () => {
+    renderWithProviders(<TextField.Root required />);
+    expect(screen.getByRole('textbox')).toBeRequired();
+  });
+
+  it('leaves spell check to the browser', () => {
+    renderWithProviders(<TextField.Root />);
+    expect(screen.getByRole('textbox')).not.toHaveAttribute('spellcheck');
+  });
+
+  it('passes a caller spellCheck through', () => {
+    renderWithProviders(<TextField.Root spellCheck={false} />);
+    expect(screen.getByRole('textbox')).toHaveAttribute('spellcheck', 'false');
+  });
+});
+
 });

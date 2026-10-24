@@ -13,6 +13,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 
 import { ScrollArea } from '../scroll-area.js';
+import { ShellStoreContext } from './shell-store.js';
 
 type PaneSize = '1' | '2' | '3';
 
@@ -32,6 +33,13 @@ function useSidebarVisual() {
 
 /** The Shell's index. `Shell.Root size` sets it; panes hand it to their chrome. */
 const ShellSizeContext = React.createContext<PaneSize>('2');
+
+/**
+ * True inside `Shell.Content`. `Shell.Root` sets it back to false, so a Shell nested in the
+ * content gets pane chrome in its own panes. Read by `Shell.Scroll`: in the content it holds a
+ * page, not a menu, so it takes none of the menu's padding, gap or layering.
+ */
+const ShellContentContext = React.createContext(false);
 
 /**
  * Gives a Shell pane's children the Shell's index, so Sidebar parts size themselves. In a Rail
@@ -60,17 +68,32 @@ type BandSize = '1' | '2' | '3' | '4';
  */
 const BAND_STEP = { '1': '2', '2': '3', '3': '4', '4': '4' } as const satisfies Record<BandSize, BandSize>;
 
-/** Set by `Shell.PaneHeader` and `Shell.PaneFooter`; read by Toolbar as its fallback size. Null elsewhere. */
-const PaneBandSizeContext = React.createContext<BandSize | null>(null);
-
-function usePaneBandSize() {
-  return React.useContext(PaneBandSizeContext);
-}
+/**
+ * Set by `Shell.PaneHeader` and `Shell.PaneFooter` to their band size, and by `Shell.Scroll` to
+ * null (a scrolling list has no band). Unset (`undefined`) everywhere else.
+ */
+const PaneBandSizeContext = React.createContext<BandSize | null | undefined>(undefined);
 
 function useBandSize(): BandSize {
   const visual = useSidebarVisual();
   const shellSize = React.useContext(ShellSizeContext);
   return BAND_STEP[visual?.size ?? shellSize];
+}
+
+/**
+ * The size a Toolbar with no `size` of its own rests at, or null for none.
+ *
+ * In a pane's header or footer it is that band's size. Anywhere else inside a Shell, such as
+ * `Shell.Content` or a pane's body, it is the same step: one above the Shell's index, so a
+ * toolbar in the content area matches the ones in the pane headers beside it (v2 sizes every
+ * toolbar this way). A pane's scrolling list, and anything outside a Shell, has none.
+ */
+function usePaneBandSize(): BandSize | null {
+  const band = React.useContext(PaneBandSizeContext);
+  const inShell = React.useContext(ShellStoreContext) !== null;
+  const step = useBandSize();
+  if (band !== undefined) return band;
+  return inShell ? step : null;
 }
 
 interface PaneHeaderProps extends React.ComponentPropsWithoutRef<'div'> {
@@ -129,10 +152,24 @@ interface ScrollProps extends React.ComponentPropsWithoutRef<'div'> {
 
 /**
  * The one region of a pane that scrolls; it takes the room the header and footer leave.
- * It is not a landmark: for navigation, pass `role="navigation"` and an `aria-label`.
+ * In `Shell.Content` it is the page's scroller, and a `Shell.PaneHeader float` beside it pins
+ * the page's toolbar over it. It is not a landmark: for navigation, pass `role="navigation"` and an `aria-label`.
  */
 const Scroll = React.forwardRef<HTMLDivElement, ScrollProps>(({ className, children, fade = false, ...props }, forwardedRef) => {
   const chrome = useChromeClasses();
+  // A Sidebar.Root inside the content still gets a menu.
+  const contentPane = React.useContext(ShellContentContext);
+  const visual = useSidebarVisual();
+  const inContent = contentPane && visual === null;
+  if (inContent) {
+    return (
+      <ScrollArea type="hover" fade={fade} className="kui-ShellScroll">
+        <div {...props} ref={forwardedRef} className={classNames('kui-ShellScrollContent', className)}>
+          {children}
+        </div>
+      </ScrollArea>
+    );
+  }
   return (
     <ScrollArea type="hover" fade={fade} className="kui-ShellScroll">
       <div {...props} ref={forwardedRef} className={classNames('kui-BaseMenuContent', 'kui-SidebarContent', ...chrome, className)}>
@@ -146,5 +183,5 @@ const Scroll = React.forwardRef<HTMLDivElement, ScrollProps>(({ className, child
 });
 Scroll.displayName = 'Shell.Scroll';
 
-export { SidebarVisualContext, useSidebarVisual, ShellSizeContext, PaneChromeScope, PaneHeader, PaneFooter, Scroll, BAND_STEP, usePaneBandSize };
+export { SidebarVisualContext, useSidebarVisual, ShellSizeContext, ShellContentContext, PaneChromeScope, PaneHeader, PaneFooter, Scroll, BAND_STEP, usePaneBandSize };
 export type { SidebarVisualContextValue, PaneSize, BandSize, PaneHeaderProps, PaneFooterProps, ScrollProps };

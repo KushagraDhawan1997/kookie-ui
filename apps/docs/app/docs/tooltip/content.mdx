@@ -1,0 +1,126 @@
+---
+title: Tooltip
+description: A tooltip shows a short label for a control when people hover over it or focus it, such as the name of an icon button.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/tooltip.tsx
+---
+
+A tooltip shows a few words next to a control while the pointer rests on it or keyboard focus is on it. Use it to name an icon-only button or to show a keyboard shortcut. Content people need to read or act on belongs on the page, or in a [Popover](/docs/popover) that opens on a press.
+
+## Playground
+
+import TooltipPlayground from '../../playground/tooltip-playground';
+
+<TooltipPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Button, Flex, Tooltip } from '@kushagradhawan/kookie-ui';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Delete02Icon, Settings02Icon } from '@hugeicons/core-free-icons';
+
+export function RowActions() {
+  return (
+    <Flex gap="1">
+      <Tooltip content="Settings">
+        <Button iconOnly emphasis="quiet" aria-label="Settings">
+          <HugeiconsIcon icon={Settings02Icon} strokeWidth={1.75} />
+        </Button>
+      </Tooltip>
+      <Tooltip content="Delete">
+        <Button iconOnly emphasis="quiet" color="red" aria-label="Delete">
+          <HugeiconsIcon icon={Delete02Icon} strokeWidth={1.75} />
+        </Button>
+      </Tooltip>
+    </Flex>
+  );
+}
+```
+
+Button also takes a `tooltip` prop that does the same in one line: `<Button iconOnly tooltip="Settings" aria-label="Settings">`.
+
+## Best practices
+
+**Keep it to a few words.** A tooltip names or adds one detail, such as "Copy link" or "Bold ⌘B". Anything longer belongs in the interface, where people can read it at their own pace.
+
+**Don't put the only copy of important information in it.** Touch screens can't hover, and people who never move the pointer over the control never see it. A tooltip repeats or adds to what's visible. It never replaces it.
+
+**Don't put controls in it.** The tooltip closes when the pointer leaves, and it can't take focus. Use a [Popover](/docs/popover) for buttons and links.
+
+**Still label the control.** An icon-only button needs its own `aria-label`. The tooltip describes the control, but it doesn't give it a name.
+
+**Don't add one to a control that already has a visible label.** "Save" with a tooltip that says "Save" adds a delay and no meaning.
+
+## Placement
+
+`side` sets where the tooltip opens: `'top'` by default, or `'right'`, `'bottom'` or `'left'`. `align` lines it up with the control's `'start'`, `'center'` or `'end'`. The tooltip sits 4px from the control, flips to the opposite side when there is no room, and stays at least 10px inside the window. Its width stops at 360px and longer text wraps.
+
+## Delay
+
+A tooltip opens after the pointer rests for 200ms. `Theme` sets this delay for every tooltip in the app. Once one tooltip is open, moving to the next control shows its tooltip at once, so people can scan a toolbar. Set `delayDuration` on one tooltip to override the delay for it.
+
+## Examples
+
+### Keyboard shortcut
+
+Pair the action's name with its shortcut, so people learn it while they use the pointer.
+
+```tsx
+<Tooltip content="Bold ⌘B">
+  <Button iconOnly emphasis="quiet" aria-label="Bold">
+    <HugeiconsIcon icon={TextBoldIcon} strokeWidth={1.75} />
+  </Button>
+</Tooltip>
+```
+
+### Truncated text
+
+When a label is cut short with an ellipsis, a tooltip can show the full text. The trigger must be able to take focus, such as a link or a button, so keyboard users can reach it too.
+
+### Side placement in a sidebar
+
+In a narrow sidebar of icon buttons, set `side="right"` so the tooltip opens into the page instead of over the next button.
+
+```tsx
+<Tooltip content="Projects" side="right">
+  <Button iconOnly emphasis="quiet" aria-label="Projects">
+    <HugeiconsIcon icon={Folder01Icon} strokeWidth={1.75} />
+  </Button>
+</Tooltip>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `content` | `ReactNode` | | Required. The text shown in the tooltip |
+| `children` | `ReactElement` | | Required. One element that triggers the tooltip |
+| `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | Which side of the control it opens on |
+| `align` | `'start' \| 'center' \| 'end'` | `'center'` | How it lines up with the control |
+| `sideOffset` | `number` | `4` | The gap to the control, in pixels |
+| `collisionPadding` | `number` | `10` | The space kept from the window's edges |
+| `delayDuration` | `number` | `200` | Milliseconds before it opens. Theme sets the default |
+| `disableHoverableContent` | `boolean` | `false` | Closes the tooltip when the pointer moves onto it |
+| `open` | `boolean` | | The open state. Controlled |
+| `defaultOpen` | `boolean` | `false` | The open state on first render |
+| `onOpenChange` | `(open: boolean) => void` | | Called when the tooltip opens or closes |
+| `width` | `string`, responsive | | A fixed width |
+| `minWidth` | `string`, responsive | | The narrowest width |
+| `maxWidth` | `string`, responsive | `'360px'` | The widest width |
+| `container` | `HTMLElement` | `document.body` | Where the portal renders |
+| `forceMount` | `boolean` | | Keeps the tooltip in the DOM while closed |
+
+Tooltip also accepts the attributes of the HTML `div` element that holds the text, and its `ref` points to that element.
+
+## Accessibility
+
+| Key | Action |
+| --- | --- |
+| Tab | Moving focus to the control opens its tooltip |
+| Escape | Closes the tooltip |
+
+- **Name:** The control keeps its own name. A screen reader announces the tooltip text as the control's description, after its name.
+- **Role:** The text has `role="tooltip"` and the control points to it with `aria-describedby` while it is open.
+- **Focus:** The tooltip never takes focus. It opens on keyboard focus and closes when focus leaves.
+- **Trigger:** The child must be an element that can take focus, such as a Button. A tooltip on plain text or a disabled button can't be reached with the keyboard.
+- **Touch:** Touch screens don't show tooltips on hover. Make sure the control is clear without one.

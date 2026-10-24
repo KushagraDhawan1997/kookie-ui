@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from 'vitest/browser';
 import {
@@ -54,10 +54,20 @@ describe('Toolbar announces itself', () => {
     expect(bold.classList.contains('kui-Button')).toBe(true);
   });
 
-  it('throws outside a Toolbar rather than silently becoming a plain button', () => {
-    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    expect(() => render(<ToolbarButton>Loose</ToolbarButton>)).toThrow(/inside a Toolbar/);
-    spy.mockRestore();
+  it('outside a Toolbar it renders a plain button with the toolbar rest look, and does not throw', () => {
+    render(
+      <Theme>
+        <ToolbarButton>Loose</ToolbarButton>
+        <Button variant="soft" color="gray">
+          Twin
+        </Button>
+      </Theme>,
+    );
+    const loose = screen.getByRole('button', { name: 'Loose' });
+    expect(loose.tagName).toBe('BUTTON');
+    expect(getComputedStyle(loose).backgroundColor).toBe(
+      getComputedStyle(screen.getByRole('button', { name: 'Twin' })).backgroundColor,
+    );
   });
 });
 

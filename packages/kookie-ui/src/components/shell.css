@@ -224,6 +224,16 @@
   min-height: 0;
 }
 
+/*
+ * In the content it is the page's scroller. The content becomes a column that does not scroll
+ * itself, so a floating header beside the Scroll stays pinned while the page scrolls under it.
+ */
+.kui-ShellContent:has(> .kui-ShellScroll) {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 /* ── Floating header and footer ───────────────────────────────────────────── */
 
 /*
@@ -337,6 +347,10 @@
   --kui-pane-inset-end: calc(max(var(--kui-pane-row-end), var(--kui-pane-band-end, 0px)) + 2 * var(--kui-pane-pad-end));
   --scroll-fade-end: var(--kui-pane-inset-end);
   --scrollarea-scrollbar-vertical-margin-bottom: calc(var(--space-2) + var(--kui-pane-inset-end));
+}
+/* A link target or a focused control scrolls into view clear of the floating rows, not under them. */
+.kui-ShellScroll > .kui-ScrollAreaViewport {
+  scroll-padding-block: var(--kui-pane-inset-start, 0px) var(--kui-pane-inset-end, 0px);
 }
 .kui-ShellScroll > .kui-ScrollAreaViewport > * {
   padding-top: var(--kui-pane-inset-start, 0px);

@@ -1,12 +1,10 @@
 ---
 title: Text Area
-description: Text Area is a multi-line text input component for collecting longer text from users. Use it for forms, comments, descriptions, and any content requiring multiple lines of text input.
+description: A text area takes text that runs over several lines, such as a message, a description or feedback.
 source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/text-area.tsx
 ---
 
-Text Area is a multi-line text input component for collecting longer text from users. Use it for forms, comments, messages, descriptions, and any content requiring multiple lines of text input. The component supports error validation, resizing options, and all the variant styles from the design system.
-
-This is an enhanced version of the native HTML `<textarea>` element, styled to match the Kookie UI design system.
+A text area takes text that runs over several lines: a comment, a bio, a bug report. For a single line, such as a name or an email address, use a [Text Field](/docs/text-field). For a chat composer that grows as people type and takes attachments, use a [Chatbar](/docs/chatbar).
 
 ## Playground
 
@@ -14,427 +12,128 @@ import TextAreaPlayground from '../../playground/text-area-playground';
 
 <TextAreaPlayground />
 
-## Installation
-
-```bash
-npm install @kushagradhawan/kookie-ui
-```
-
 ## Usage
 
-```tsx
-import { TextArea } from '@kushagradhawan/kookie-ui';
+```tsx showLineNumbers
+import { Flex, Text, TextArea } from '@kushagradhawan/kookie-ui';
 
-export function MyComponent() {
-  return <TextArea placeholder="Enter description" />;
+export function FeedbackField() {
+  return (
+    <Flex direction="column" gap="1">
+      <Text as="label" htmlFor="feedback" size="2" weight="medium">
+        What could we do better?
+      </Text>
+      <TextArea
+        id="feedback"
+        rows={5}
+        maxLength={1000}
+      />
+    </Flex>
+  );
 }
 ```
 
-## Props
+## Best practices
 
-The TextArea component is the textarea element that accepts multi-line text input.
+**Give it a visible label.** Put the label above the text area and connect it with `htmlFor` or `aria-labelledby`. A placeholder disappears once someone starts typing.
 
-| Prop | Type | Description |
-| ---- | ---- | ----------- |
-| `size` | `'1' \| '2' \| '3' \| '4'` | Input density: 1 (28px min height) for compact interfaces, 2 (32px) standard, 3 (40px) for comfortable multi-line editing, 4 (48px) for the largest text. Supports responsive objects |
-| `variant` | `'raised' \| 'surface' \| 'soft' \| 'ghost' \| 'outline'` | Input style variant: raised for elevated, surface for standard forms, soft for subtle integration, outline for defined boundaries, ghost for minimal inline editing |
-| `color` | `AccentColor` | Semantic color for focus state and validation feedback. Use for visual categorization or status communication |
-| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Corner radius scale: none for sharp edges, small/medium/large for progressive rounding, full for maximum rounding |
-| `resize` | `'none' \| 'vertical' \| 'horizontal' \| 'both'` | Controls textarea resizing behavior. Default: user agent default (usually 'vertical') |
-| `error` | `boolean` | Marks field as invalid. Use with errorMessage for accessibility |
-| `errorMessage` | `string` | Error message displayed below textarea. Automatically connected via ARIA attributes for screen readers |
-| `required` | `boolean` | Marks field as required for forms |
-| `placeholder` | `string` | Placeholder text shown when textarea is empty |
-| `disabled` | `boolean` | Prevents interaction when textarea is unavailable |
-| `readOnly` | `boolean` | Makes textarea non-editable while keeping it focusable and copyable |
-| `defaultValue` | `string` | Initial uncontrolled value |
-| `value` | `string` | Controlled value |
-| `onChange` | `(event: ChangeEvent) => void` | Callback fired when textarea value changes |
-| `rows` | `number` | Number of visible text lines (native textarea attribute) |
-| `cols` | `number` | Visible width in characters (native textarea attribute) |
-| `maxLength` | `number` | Maximum character count |
-| `minLength` | `number` | Minimum character count |
-| `aria-describedby` | `string` | ID of element describing the textarea |
-| `aria-labelledby` | `string` | ID of element labeling the textarea |
+**Set the height to the answer you expect.** Use `rows` so a short note gets two or three lines and a report gets more. People write less when the box looks small.
 
-## Variants
+**Let people make it taller.** A text area resizes vertically by default, so people can drag the bottom edge when they write more than you planned for. Set `resize="none"` for a fixed layout, such as a dialog.
 
-Use the `variant` prop to set textarea style.
+**Say what is wrong and how to fix it.** Set `error` and pass an `errorMessage` such as "Describe the problem in at least 20 characters". Show it after someone leaves the field or submits, not while they type.
 
-### Raised
+**Use a Text Field for one line.** A text area tells people to write a lot. A name, a title or a search term belongs in a [Text Field](/docs/text-field).
 
-Elevated style with subtle shadow for maximum visual prominence and important inputs.
+## Variant
 
-```tsx
-<TextArea variant="raised" placeholder="Enter description" />
-```
+`variant` sets the look. The values match [Text Field](/docs/text-field), so both can sit in one form.
 
-### Surface
+| Variant | Use it for |
+| --- | --- |
+| `raised` | Most forms. This is the default |
+| `surface` | Fields on a plain background that need a clear edge |
+| `soft` | Fields inside a card or a panel that already has a border |
+| `outline` | Dense forms where a fill would feel heavy |
+| `ghost` | Inline editing, such as a note that looks like text until focused |
 
-Standard surface style for form inputs and general text entry.
+## Size
 
-```tsx
-<TextArea variant="surface" placeholder="Enter description" />
-```
-
-### Soft
-
-Subtle background for secondary inputs and content-heavy interfaces.
-
-```tsx
-<TextArea variant="soft" placeholder="Enter description" />
-```
-
-### Outline
-
-Bordered style for defined boundaries and structured forms.
-
-```tsx
-<TextArea variant="outline" placeholder="Enter description" />
-```
-
-### Ghost
-
-Minimal style for inline editing and seamless integration with text content.
-
-```tsx
-<TextArea variant="ghost" placeholder="Enter description" />
-```
-
-## Sizes
-
-Set `size` for textarea density: `1` (28px min height), `2` (32px), `3` (40px), `4` (48px). Use `3` for comfortable multi-line editing. Supports responsive objects like `{ initial: '1', sm: '2', md: '3' }`.
-
-### Size 1
-
-For compact interfaces and limited space.
-
-```tsx
-<TextArea size="1" placeholder="Enter description" />
-```
-
-### Size 2
-
-For standard form contexts and general interfaces.
-
-```tsx
-<TextArea size="2" placeholder="Enter description" />
-```
-
-### Size 3
-
-For comfortable editing and longer content.
-
-```tsx
-<TextArea size="3" placeholder="Enter description" />
-```
-
-## Colors
-
-Use the `color` prop with semantic colors to communicate textarea purpose or status. The color affects the focus state and can be used for visual categorization.
-
-```tsx
-<TextArea size="2" color="blue" placeholder="Description" />
-<TextArea size="2" color="green" placeholder="Approved comment" />
-<TextArea size="2" color="red" placeholder="Error feedback" />
-```
+`size` sets the text size and padding, and a minimum height of 28, 32, 40 or 48 pixels. Size 2 is the default. Use the same size as the text fields in the same form. `rows` sets how tall it actually is. `size` accepts a responsive object, such as `{ initial: '3', md: '2' }`.
 
 ## Resize
 
-Control how users can resize the textarea with the `resize` prop.
+`resize` sets which way people can drag to resize. It is `vertical` unless you set it.
 
-### None
+| Resize | Effect |
+| --- | --- |
+| `none` | Fixed size |
+| `vertical` | Taller or shorter. The best choice for most forms |
+| `horizontal` | Wider or narrower |
+| `both` | Any direction |
 
-Prevent resizing for fixed layouts.
-
-```tsx
-<TextArea resize="none" placeholder="Fixed size textarea" />
-```
-
-### Vertical
-
-Allow vertical resizing only (most common for multi-line text).
-
-```tsx
-<TextArea resize="vertical" placeholder="Resize vertically" />
-```
-
-### Horizontal
-
-Allow horizontal resizing only.
-
-```tsx
-<TextArea resize="horizontal" placeholder="Resize horizontally" />
-```
-
-### Both
-
-Allow resizing in both directions.
-
-```tsx
-<TextArea resize="both" placeholder="Resize freely" />
-```
-
-## States
-
-### Error
-
-Use `error` and `errorMessage` props to show validation errors. Error messages are automatically connected to the textarea via ARIA attributes.
-
-```tsx
-<TextArea
-  error
-  errorMessage="Description is required"
-  placeholder="Enter description"
-/>
-```
-
-### Disabled
-
-Set `disabled` to prevent interaction when textarea is unavailable.
-
-```tsx
-<TextArea disabled placeholder="Disabled textarea" />
-```
-
-### Read Only
-
-Use `readOnly` to make textarea non-editable while keeping it focusable and copyable.
-
-```tsx
-<TextArea readOnly value="Read-only content that can be selected and copied" />
-```
+`resize` accepts a responsive object, such as `{ initial: 'none', md: 'vertical' }`.
 
 ## Examples
 
-### Comment Form
+### Character limit
 
-Collect user comments with appropriate sizing and validation.
+`maxLength` stops typing at the limit. Show the count below so people know how much room is left.
 
-```tsx
-import { TextArea } from '@kushagradhawan/kookie-ui';
+```tsx showLineNumbers
+const [bio, setBio] = React.useState('');
 
-function CommentForm() {
-  const [comment, setComment] = React.useState('');
-  const [error, setError] = React.useState('');
-
-  const handleSubmit = () => {
-    if (comment.length < 10) {
-      setError('Comment must be at least 10 characters');
-    } else {
-      setError('');
-      // Submit comment
-    }
-  };
-
-  return (
-    <TextArea
-      size="2"
-      value={comment}
-      onChange={(e) => setComment(e.target.value)}
-      error={!!error}
-      errorMessage={error}
-      placeholder="Share your thoughts..."
-      rows={4}
-    />
-  );
-}
+<Flex direction="column" gap="1">
+  <TextArea
+    aria-label="Bio"
+    value={bio}
+    onChange={(event) => setBio(event.target.value)}
+    maxLength={160}
+  />
+  <Text size="1" emphasis="medium">{bio.length} / 160</Text>
+</Flex>
 ```
 
-### Product Description
+### Validation
 
-Use soft variant for content creation interfaces.
+`error` marks the text area as invalid and `errorMessage` shows below it, linked so a screen reader reads it with the field.
 
 ```tsx
 <TextArea
-  size="3"
-  variant="soft"
-  placeholder="Describe your product..."
-  rows={6}
+  aria-label="Steps to reproduce"
+  error
+  errorMessage="Describe what you did before the error appeared"
 />
 ```
 
-### Feedback Form
+### Read-only text
 
-Structured form input with outline variant.
+`readOnly` keeps the text selectable and focusable but stops edits. Use it for something people copy, such as a generated key or a log. Use `disabled` only when the field doesn't apply right now.
 
-```tsx
-<TextArea
-  size="2"
-  variant="outline"
-  placeholder="Tell us about your experience"
-  maxLength={500}
-  rows={5}
-/>
-```
+## Props
 
-### Code Snippet Input
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'raised' \| 'surface' \| 'soft' \| 'outline' \| 'ghost'` | `'raised'` | The look |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | Text size, padding and minimum height |
+| `resize` | `'none' \| 'vertical' \| 'horizontal' \| 'both'`, responsive | `'vertical'` | Which way people can resize it |
+| `color` | `AccentColor` | Theme accent | The colour of the focus ring |
+| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Theme radius | The corner |
+| `value` | `string` | | The value, when you control it |
+| `defaultValue` | `string` | | The starting value, when the field controls it |
+| `error` | `boolean` | `false` | Marks the field as invalid |
+| `errorMessage` | `string` | | Text shown below the field and linked to it |
+| `required` | `boolean` | `false` | Must be filled before the form submits |
 
-Fixed size textarea for code or formatted text.
-
-```tsx
-<TextArea
-  size="2"
-  variant="raised"
-  resize="none"
-  placeholder="Paste your code here"
-  style={{ fontFamily: 'monospace' }}
-  rows={10}
-/>
-```
-
-### Note Taking
-
-Expandable textarea for note-taking interfaces.
-
-```tsx
-import { TextArea } from '@kushagradhawan/kookie-ui';
-
-function NoteTaking() {
-  const [note, setNote] = React.useState('');
-
-  return (
-    <TextArea
-      size="2"
-      variant="ghost"
-      resize="vertical"
-      value={note}
-      onChange={(e) => setNote(e.target.value)}
-      placeholder="Start typing your notes..."
-    />
-  );
-}
-```
-
-### Character Counter
-
-Show remaining characters for limited text input.
-
-```tsx
-import { TextArea, Text } from '@kushagradhawan/kookie-ui';
-
-function LimitedTextArea() {
-  const [text, setText] = React.useState('');
-  const maxLength = 280;
-
-  return (
-    <div>
-      <TextArea
-        size="2"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        maxLength={maxLength}
-        placeholder="What's happening?"
-        rows={3}
-      />
-      <Text size="1" emphasis="medium">
-        {text.length} / {maxLength}
-      </Text>
-    </div>
-  );
-}
-```
-
-## Responsive
-
-Use responsive objects with the `size` prop to adapt textarea sizing across different breakpoints. The component uses a mobile-first approach.
-
-```tsx
-<TextArea
-  size={{ initial: '1', sm: '2', md: '3' }}
-  placeholder="Responsive textarea"
-/>
-```
-
-### Breakpoints
-
-| Breakpoint | Value  | Description                |
-| ---------- | ------ | -------------------------- |
-| `initial`  | -      | Base styles (mobile-first) |
-| `xs`       | 520px  | Extra small screens        |
-| `sm`       | 768px  | Small screens (tablets)    |
-| `md`       | 1024px | Medium screens (laptops)   |
-| `lg`       | 1280px | Large screens (desktops)   |
-| `xl`       | 1640px | Extra large screens        |
+TextArea also accepts every attribute of the HTML `textarea` element, such as `rows`, `placeholder`, `maxLength`, `disabled`, `readOnly` and `onChange`.
 
 ## Accessibility
 
-TextArea provides comprehensive accessibility through ARIA attributes and semantic HTML.
+| Key | Action |
+| --- | --- |
+| Tab | Moves focus into the text area |
+| Enter | Starts a new line |
 
-### Keyboard Navigation
-
-- **Tab** - Move focus to/from textarea
-- **Enter** - Insert new line
-- **Escape** - Clear focus (browser default)
-- **Arrow Keys** - Navigate cursor within text
-- **Shift + Arrow Keys** - Select text
-- **Ctrl/Cmd + A** - Select all text
-
-### ARIA Attributes
-
-- `aria-invalid="true"` - Automatically set when `error` is true
-- `aria-describedby` - Links to error message for screen reader announcements
-- `aria-labelledby` - Links to external label element
-- `role="alert"` - Error messages are announced immediately
-- `aria-live="polite"` - Error message updates are announced
-
-### Screen Readers
-
-- Error messages are automatically associated with the textarea
-- Required fields can be marked with `required` prop
-- Placeholder text provides hints without replacing labels
-- Multi-line editing is properly announced
-
-### Best Practices
-
-- Always provide a label (use `aria-labelledby` if label is external)
-- Use `errorMessage` instead of just `error` for clear feedback
-- Provide placeholder as hints, not as replacement for labels
-- Mark required fields with `required` prop
-- Consider `maxLength` for forms with character limits
-- Ensure sufficient color contrast for all states
-- Use appropriate `rows` attribute for initial size
-
-## Enhancements
-
-Kookie UI extends the native textarea with practical improvements:
-
-### Enhanced Error States
-
-Rich error handling with `error` and `errorMessage` props. Error messages automatically associate with textarea via `aria-describedby` for screen reader accessibility. Visual error indicators appear in both light and dark themes.
-
-### Advanced Validation
-
-Built-in support for required fields, min/max length validation, and character counting. Form integration with native HTML validation attributes and proper error messaging.
-
-### Responsive Sizing
-
-Size prop supports responsive objects for adaptive sizing across breakpoints. Mobile-first approach ensures optimal experience on all devices.
-
-## Changelog
-
-### Added
-
-- **Error validation system** with `error` and `errorMessage` props
-- **Automatic ARIA attributes** for error messages and validation states
-- **Resize control** with `resize` prop for user resizing behavior
-- **Responsive size support** with breakpoint objects
-- **Enhanced focus states** with better contrast
-- **Character limit support** with `maxLength` and `minLength` props
-
-### Removed
-
-- `material` and `panelBackground` props. Every surface is solid.
-
-### Changed
-
-- Enhanced focus states with better contrast
-- Improved error state styling with clearer visual feedback
-- Better placeholder styling for all variants
-
-### Fixed
-
-- Error messages properly linked via ARIA for screen readers
-- Focus management for all interactive states
-- Scrollbar styling consistency across browsers
-- Autofill color handling for password managers
+- **Label:** The text area renders no label of its own. Connect a visible label with `htmlFor` and `id`, or pass `aria-label`.
+- **Errors:** `error` sets `aria-invalid`. The `errorMessage` element is linked with `aria-describedby` and has `role="alert"`, so a screen reader reads it when it appears.
+- **Focus:** The focus ring wraps the whole box and uses the field's colour.

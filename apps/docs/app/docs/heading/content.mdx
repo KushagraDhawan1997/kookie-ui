@@ -1,12 +1,10 @@
 ---
 title: Heading
-description: A semantic heading component for titles and section headers with consistent styling.
+description: Heading titles a page, a section or a card and sets its level in the page outline.
 source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/heading.tsx
 ---
 
-Heading is a semantic typography component for titles and section headers. It provides consistent sizing, weight, and color options while maintaining proper HTML heading hierarchy for accessibility.
-
-This is an enhanced version of the Heading from [Radix Themes](https://www.radix-ui.com/themes/docs/components/heading).
+Heading renders an `h1` to `h6` element at a step of the type scale. It names the content that follows it, and screen reader users move through a page by its headings. Copy that only needs to look larger, such as a price or a lead sentence, is [Text](/docs/text).
 
 ## Playground
 
@@ -14,176 +12,124 @@ import HeadingPlayground from '../../playground/heading-playground';
 
 <HeadingPlayground />
 
-## Installation
-
-```bash
-npm install @kushagradhawan/kookie-ui
-```
-
 ## Usage
 
-```tsx
-import { Heading, Flex } from '@kushagradhawan/kookie-ui';
+```tsx showLineNumbers
+import { Button, Card, Flex, Heading, Text } from '@kushagradhawan/kookie-ui';
 
-export function MyHeadings() {
+export function BillingCard() {
   return (
-    <Flex direction="column" gap="5">
-      <Heading size="7">Page Title</Heading>
-      <Heading size="6">Section Title</Heading>
-      <Heading size="4">Subsection</Heading>
-    </Flex>
+    <Card size="2">
+      <Flex direction="column" gap="2" align="start">
+        <Heading as="h2" size="4">
+          Billing
+        </Heading>
+        <Text as="p" size="2" emphasis="medium">
+          Your next invoice is on 1 March.
+        </Text>
+        <Button size="2">Manage plan</Button>
+      </Flex>
+    </Card>
   );
 }
 ```
 
-## Props
+## Best practices
 
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `as` | `'h1' \| 'h2' \| 'h3' \| 'h4' \| 'h5' \| 'h6'` | `'h1'` | The HTML heading element to render. |
-| `size` | `'1' \| '2' \| '3' \| ... \| '9'` | `'6'` | The font size. Supports responsive values. |
-| `font` | `'sans' \| 'mono' \| 'serif'` | - | The font family. Overrides the theme font. |
-| `weight` | `'regular' \| 'medium' \| 'semibold'` | `'medium'` | The font weight. Supports responsive values. |
-| `color` | `AccentColor` | - | The text color. Inherits from the parent if not set. |
-| `emphasis` | `'loud' \| 'medium' \| 'quiet'` | `'loud'` with a color | How strongly the heading reads. Without a color it ranks gray text. |
-| `align` | `'left' \| 'center' \| 'right'` | - | Text alignment. Supports responsive values. |
-| `truncate` | `boolean` | `false` | Truncate text with ellipsis when it overflows. |
-| `wrap` | `'wrap' \| 'nowrap' \| 'pretty' \| 'balance'` | - | Text wrapping behavior. |
-| `leadingTrim` | `boolean` | `false` | Remove leading trim for precise vertical alignment. |
-| `asChild` | `boolean` | `false` | Merge props onto the child element. |
+**Set `as` on every heading but the page title.** Heading renders an `h1` by default. A page has one `h1`, so a section heading needs `as="h2"` and a heading inside that section needs `as="h3"`.
 
-## Sizes
+**Choose the level for the outline and the size for the look.** `as` and `size` are separate. A card title can be an `h3` at size 4 in one place and an `h2` at size 6 in another. Don't skip levels to get a smaller heading.
 
-Heading supports sizes from 1 (smallest) to 9 (largest display text).
+**Write the heading as a label for what follows.** "Billing" or "Team members" tells people what the section holds. A full sentence or a question is harder to scan in a list of headings.
 
-```tsx
-<Flex direction="column" gap="4">
-  <Heading size="9">Size 9 - Hero (64px)</Heading>
-  <Heading size="8">Size 8 - Display (44px)</Heading>
-  <Heading size="7">Size 7 - Page title (32px)</Heading>
-  <Heading size="6">Size 6 - Section (24px)</Heading>
-  <Heading size="5">Size 5 - Subsection (20px)</Heading>
-  <Heading size="4">Size 4 - Card title (18px)</Heading>
-  <Heading size="3">Size 3 - Label (16px)</Heading>
-</Flex>
-```
+**Rank headings with emphasis, not with gray.** Use `emphasis="medium"` for a heading that sits below a stronger one, such as a group label in a sidebar. Leave `color` for a heading that carries a meaning.
 
-## Semantic Levels
+**Don't use Heading for text that only needs weight.** A bold label in a table row or a form is [Text](/docs/text) with `weight="medium"`. Every Heading adds an entry to the page outline.
 
-Use the `as` prop to maintain proper heading hierarchy.
+## Size
 
-```tsx
-<article>
-  <Heading as="h1" size="7">Article Title</Heading>
-  <section>
-    <Heading as="h2" size="6">Section One</Heading>
-    <Heading as="h3" size="4">Subsection</Heading>
-  </section>
-  <section>
-    <Heading as="h2" size="6">Section Two</Heading>
-  </section>
-</article>
-```
+`size` picks a step from 1 to 9: 12, 14, 16, 18, 20, 24, 32, 44 and 64 pixels at the default scale. Size 6 is the default. The theme can adjust heading sizes and spacing with its own heading tokens.
 
-## Weights
+| Size | Use it for |
+| --- | --- |
+| `7` to `9` | A page title or a marketing hero |
+| `5` and `6` | A section title |
+| `3` and `4` | A card, dialog or panel title |
+| `1` and `2` | A small group label |
 
-Control heading weight with the `weight` prop. Headings default to `medium`.
-
-```tsx
-<Flex direction="column" gap="4">
-  <Heading size="6" weight="regular">Regular weight</Heading>
-  <Heading size="6" weight="medium">Medium weight</Heading>
-  <Heading size="6" weight="semibold">Semibold weight</Heading>
-</Flex>
-```
-
-## Colors
-
-Use colors sparingly for headings to maintain hierarchy.
-
-```tsx
-<Flex direction="column" gap="4">
-  <Heading size="6">Default color</Heading>
-  <Heading size="6" color="blue">Blue heading</Heading>
-  <Heading size="6" color="violet">Violet heading</Heading>
-</Flex>
-```
-
-A colored heading reads the strong ink for its color: gray reads step 12, and other colors mix step 11 toward 12 so they still read as their color.
+`size` accepts a responsive object, such as `{ initial: '6', md: '7' }`.
 
 ## Emphasis
 
-Use `emphasis` to rank headings without picking a gray step. `loud` is the default when a color is set. `medium` and `quiet` fade the ink. Without a color, the levels use gray steps 12, 11 and 10.
+`emphasis` sets how strongly a heading reads. With no `color` set, `loud`, `medium` and `quiet` step down the neutral ink. With a `color` set, the heading reads that colour's strong ink, and `medium` and `quiet` fade it. With no `color` and no `emphasis`, a heading inherits its colour.
+
+## Examples
+
+### Page and section titles
+
+Give the page one `h1` and its sections `h2`. Sizes can step down further than the levels.
 
 ```tsx
-<Flex direction="column" gap="4">
-  <Heading size="6" emphasis="loud">Loud heading</Heading>
-  <Heading size="6" emphasis="medium">Medium heading</Heading>
-  <Heading size="6" emphasis="quiet">Quiet heading</Heading>
-  <Heading
-    size="6"
-    color="blue"
-    emphasis="medium"
-  >
-    Medium blue heading
+<Flex direction="column" gap="5">
+  <Heading as="h1" size="7">
+    Settings
+  </Heading>
+  <Heading as="h2" size="5">
+    Profile
   </Heading>
 </Flex>
 ```
 
-## Text Alignment
+### Centred title over a few lines
 
-Align headings horizontally.
-
-```tsx
-<Flex direction="column" gap="4" width="100%">
-  <Heading size="5" align="left">Left aligned</Heading>
-  <Heading size="5" align="center">Center aligned</Heading>
-  <Heading size="5" align="right">Right aligned</Heading>
-</Flex>
-```
-
-## Truncation
-
-Truncate long headings with ellipsis.
+`wrap="balance"` evens out the line lengths, so a centred title doesn't leave one word on the last line.
 
 ```tsx
-<Heading size="5" truncate style={{ maxWidth: 300 }}>
-  This is a very long heading that will be truncated
+<Heading
+  as="h1"
+  size="8"
+  align="center"
+  wrap="balance"
+>
+  Plan, build and ship your next release
 </Heading>
 ```
 
-## Responsive Sizing
+### Title on one line
 
-Size supports responsive values for different breakpoints.
+`truncate` keeps a long title, such as a file name in a panel header, on one line and ends it with an ellipsis.
 
 ```tsx
-<Heading size={{ initial: '5', sm: '6', md: '7', lg: '8' }}>
-  Responsive heading that grows on larger screens
+<Heading as="h2" size="3" truncate>
+  Quarterly report, final version, approved by finance
 </Heading>
 ```
 
-## Text Wrapping
+### Title flush with a card edge
 
-Control how headings wrap with the `wrap` prop.
+`trim="start"` removes the space above the first line, so the title lines up with the top of the card's padding.
 
-```tsx
-// Balance text for centered headings
-<Heading size="7" align="center" wrap="balance">
-  Create Beautiful Interfaces with Kookie UI
-</Heading>
+## Props
 
-// Pretty wrap for better line breaks
-<Heading size="6" wrap="pretty">
-  A heading with prettier line breaks for optimal reading
-</Heading>
-```
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `as` | `'h1' \| 'h2' \| 'h3' \| 'h4' \| 'h5' \| 'h6'` | `'h1'` | The heading level |
+| `size` | `'1'` to `'9'`, responsive | `'6'` | The type step |
+| `weight` | `'regular' \| 'medium' \| 'semibold'`, responsive | Theme heading weight | The font weight |
+| `font` | `'sans' \| 'mono' \| 'serif'` | Theme heading font | The font family |
+| `color` | `AccentColor` | | The colour. Inherits when unset |
+| `emphasis` | `'loud' \| 'medium' \| 'quiet'` | | How strongly the heading reads |
+| `align` | `'left' \| 'center' \| 'right'`, responsive | | The text alignment |
+| `trim` | `'normal' \| 'start' \| 'end' \| 'both'`, responsive | | Removes the space above or below the text |
+| `truncate` | `boolean` | | Keeps one line and ends it with an ellipsis |
+| `wrap` | `'wrap' \| 'nowrap' \| 'pretty' \| 'balance'`, responsive | | How lines break |
+| `asChild` | `boolean` | `false` | Renders the child element with the heading's styles |
 
-## Changelog
+Heading also accepts every attribute of the HTML heading element set by `as`.
 
-### Added
+## Accessibility
 
-- `emphasis` prop with `loud`, `medium` and `quiet` levels
-
-### Removed
-
-- `highContrast` prop. A colored heading reads the strong ink by default. Use `emphasis="medium"` in place of `color="gray"` for muted headings.
+- **Level:** A screen reader announces the level, such as "heading level 2". People use the levels to jump between sections, so keep them in order without gaps.
+- **One page title:** Use one `h1` for each page. Set `as` on every other Heading, because the default is `h1`.
+- **Name:** A Heading's text names a section. To name a region, point `aria-labelledby` on the `section` at the heading's `id`.
+- **Truncation:** A screen reader reads a truncated heading in full. A pointer user can't see the rest, so add a `title` when the hidden part matters.

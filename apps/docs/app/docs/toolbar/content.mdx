@@ -1,85 +1,262 @@
 ---
 title: Toolbar
-description: A row of controls with one tab stop and arrow-key navigation.
+description: Toolbar groups the controls that act on one thing, such as a document or a selection, into a row with a single tab stop.
 source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/toolbar.tsx
 ---
 
-import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
-import { Flex, Toolbar } from '@kushagradhawan/kookie-ui';
-import { HugeiconsIcon } from '@hugeicons/react';
-import { TextBoldIcon, TextItalicIcon, TextUnderlineIcon, Undo02Icon, Redo02Icon } from '@hugeicons/core-free-icons';
+Toolbar is a row of controls that act on the same thing, such as formatting buttons above an editor. Tab moves into the row once, and the arrow keys move between its controls. For two or three buttons at the end of a form, use a [Flex](/docs/flex) of [Buttons](/docs/button), which keeps each one in the tab order.
 
-Toolbar is a row of controls that counts as one tab stop. Tab moves into it, the arrow keys move between its controls, and Tab moves out. It is built on [Radix Toolbar](https://www.radix-ui.com/primitives/docs/components/toolbar).
+## Playground
 
-For the bar at the top of an app, use `Shell.Header`.
+import ToolbarPlayground from '../../playground/toolbar-playground';
 
-<PreviewBlock height="10rem">
-  <Toolbar aria-label="Formatting">
-    <Toolbar.Title>Notes</Toolbar.Title>
-    <Flex gap="3" align="center">
-      <Toolbar.Group aria-label="Text style">
-        <Toolbar.Button iconOnly aria-label="Bold" aria-pressed>
-          <HugeiconsIcon icon={TextBoldIcon} strokeWidth={1.75} />
-        </Toolbar.Button>
-        <Toolbar.Button iconOnly aria-label="Italic" aria-pressed={false}>
-          <HugeiconsIcon icon={TextItalicIcon} strokeWidth={1.75} />
-        </Toolbar.Button>
-        <Toolbar.Button iconOnly aria-label="Underline" aria-pressed={false}>
-          <HugeiconsIcon icon={TextUnderlineIcon} strokeWidth={1.75} />
-        </Toolbar.Button>
-      </Toolbar.Group>
-      <Toolbar.Separator />
-      <Toolbar.Button iconOnly aria-label="Undo">
-        <HugeiconsIcon icon={Undo02Icon} strokeWidth={1.75} />
-      </Toolbar.Button>
-      <Toolbar.Button iconOnly aria-label="Redo">
-        <HugeiconsIcon icon={Redo02Icon} strokeWidth={1.75} />
-      </Toolbar.Button>
-    </Flex>
-  </Toolbar>
-</PreviewBlock>
+<ToolbarPlayground />
 
 ## Usage
 
 ```tsx showLineNumbers
 import { Flex, Toolbar } from '@kushagradhawan/kookie-ui';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { TextBoldIcon, TextItalicIcon, Undo02Icon } from '@hugeicons/core-free-icons';
 
-export function EditorToolbar() {
+export function EditorToolbar({ bold, italic, onBold, onItalic, onUndo, onShare }: EditorToolbarProps) {
   return (
     <Toolbar aria-label="Formatting">
-      <Toolbar.Title>Notes</Toolbar.Title>
+      <Toolbar.Title>Meeting notes</Toolbar.Title>
       <Flex gap="3" align="center">
+        <Toolbar.Button iconOnly aria-label="Undo" onClick={onUndo}>
+          <HugeiconsIcon icon={Undo02Icon} strokeWidth={1.75} />
+        </Toolbar.Button>
+        <Toolbar.Separator />
         <Toolbar.Group aria-label="Text style">
-          <Toolbar.Button iconOnly aria-label="Bold" aria-pressed={bold}>
+          <Toolbar.Button iconOnly aria-label="Bold" aria-pressed={bold} onClick={onBold}>
             <HugeiconsIcon icon={TextBoldIcon} strokeWidth={1.75} />
           </Toolbar.Button>
+          <Toolbar.Button iconOnly aria-label="Italic" aria-pressed={italic} onClick={onItalic}>
+            <HugeiconsIcon icon={TextItalicIcon} strokeWidth={1.75} />
+          </Toolbar.Button>
         </Toolbar.Group>
-        <Toolbar.Separator />
-        <Toolbar.Button>Share</Toolbar.Button>
+        <Toolbar.Button emphasis="loud" onClick={onShare}>Share</Toolbar.Button>
       </Flex>
     </Toolbar>
   );
 }
 ```
 
-The row spaces its direct children apart. Put controls that belong together in a `Flex`.
+## Anatomy
 
-## Parts
+```tsx
+<Toolbar>
+  <Toolbar.Title />
+  <Toolbar.Group>
+    <Toolbar.Button />
+  </Toolbar.Group>
+  <Toolbar.Separator />
+  <Toolbar.Button />
+  <Toolbar.Overflow>
+    <Toolbar.Button />
+  </Toolbar.Overflow>
+  <Toolbar.Slot />
+</Toolbar>
+```
 
-| Part | Description |
-| ---- | ----------- |
-| `Toolbar` | The row. Takes `size` (`'1'`–`'4'`, default `'2'`), `orientation` (`'horizontal'` or `'vertical'`), `backdrop` and `aria-label`. |
-| `Toolbar.Button` | Takes every Button prop. Set `iconOnly` with an `aria-label` for an icon button. Set `aria-pressed` for a toggle. |
-| `Toolbar.Group` | A quiet gray well around related buttons. `disabled` turns them all off. |
-| `Toolbar.Separator` | A hairline between clusters. |
-| `Toolbar.Title` | One truncating line at the leading edge. |
+- **Toolbar:** The row. It paints nothing and pushes its direct children apart, so the first sits at the start and the last at the end.
+- **Title:** One line at the leading edge that says what the row acts on. It truncates instead of wrapping.
+- **Button:** A [Button](/docs/button) that joins the row's arrow-key navigation.
+- **Group:** A gray well around buttons that belong together, such as bold, italic and underline.
+- **Separator:** A short line between two clusters.
+- **Overflow:** A cluster whose controls move into a "More" menu when the row runs out of room.
+- **Slot:** A place in the row that a Toolbar.Fill elsewhere in the app fills.
 
-Buttons rest as gray `soft`, or gray `ghost` inside a group, and take the toolbar's size. A `size`, `variant` or `color` you set wins.
+## Best practices
 
-Set `backdrop` when content passes behind the row, as in a floating `Shell.PaneHeader`. Buttons then rest `raised` and a group's well is raised too, so each control has a surface of its own.
+**Use it when the controls act on one thing.** A toolbar earns its single tab stop when its controls work on the same document, selection or view. Unrelated buttons are easier to reach with Tab in a plain [Flex](/docs/flex).
+
+**Name the toolbar.** Give it an `aria-label` that says what it acts on, such as "Formatting". A screen reader reads the name when focus moves in.
+
+**Show a toggle's state with `aria-pressed`.** A Toolbar.Button with `aria-pressed` wears the pressed look and is announced as a toggle button. For a set where only one can be on, such as text alignment, use a [Segmented Control](/docs/segmented-control).
+
+**Put only the most used commands in the row.** Wrap the rest in a Toolbar.Overflow, so they move into a "More" menu at narrow widths and the row stays one line.
+
+**Cluster with a Flex.** The row spaces its direct children apart. Wrap controls that sit together in a Flex, and use a Group only for a set that reads as one tool.
+
+## Size
+
+`size` picks the row's height and hands it to every button inside that doesn't set its own: 28, 32, 40 or 48 pixels for 1 to 4. Size 2 is the default, or the Theme's size when one is set. Inside a Shell, a Toolbar with no `size` sits one step above the Shell's size: in a `Shell.PaneHeader` or `Shell.PaneFooter`, in `Shell.Content`, and anywhere else in the Shell except a pane's `Shell.Scroll` list. The title's text grows with the size too.
+
+## Button looks
+
+Toolbar.Button rests as a gray `soft` button, and as a gray `ghost` inside a Group, so the row stays quiet. A `variant`, `emphasis` or `color` you set wins. Use `emphasis="loud"` for the one action the row leads to, such as "Share".
+
+`backdrop` gives every control a surface of its own for a row that content scrolls behind, such as a floating `Shell.PaneHeader`. Buttons then rest `raised`, and a Group's well is raised too.
+
+## Examples
+
+### Link
+
+`asChild` renders your own element with the button's look, such as a link. It stays in the arrow-key row, and a link gets no `type` attribute.
+
+```tsx
+<Toolbar aria-label="Document">
+  <Toolbar.Button asChild>
+    <a href="/docs/help">Help</a>
+  </Toolbar.Button>
+</Toolbar>
+```
+
+### Overflow
+
+Toolbar.Overflow takes the room the row leaves. When its controls don't fit, they move into a "More" menu, starting from the end. A Button shows as a menu item there, and an icon-only Button uses its `aria-label` as the item's text. A Group shows as a menu group.
+
+```tsx showLineNumbers
+<Toolbar aria-label="Formatting">
+  <Toolbar.Title>Meeting notes</Toolbar.Title>
+  <Toolbar.Overflow>
+    <Toolbar.Button iconOnly aria-label="Bold" onClick={onBold}>
+      <HugeiconsIcon icon={TextBoldIcon} strokeWidth={1.75} />
+    </Toolbar.Button>
+    <Toolbar.Button onClick={onExport}>Export</Toolbar.Button>
+    <Toolbar.Button onClick={onShare}>Share</Toolbar.Button>
+  </Toolbar.Overflow>
+</Toolbar>
+```
+
+For a control of your own, call `useToolbarOverflow()`. It returns `true` while the control is drawn in the menu, so it can render a menu form there.
+
+```tsx
+function Zoom() {
+  const inMenu = useToolbarOverflow();
+  return inMenu ? <DropdownMenu.Item onSelect={zoomIn}>Zoom in</DropdownMenu.Item> : <ZoomSlider />;
+}
+```
+
+### Page actions in a layout toolbar
+
+When a layout owns the toolbar and a page adds its own controls, put a Toolbar.Slot in the toolbar and a Toolbar.Fill with the same `name` in the page. The page's controls render in the toolbar, take its size, and join its arrow keys. A React portal can't do this: a Button portalled into the toolbar renders as a plain Button with its own tab stop.
+
+```tsx showLineNumbers
+// In the layout
+<Toolbar aria-label="Page">
+  <Toolbar.Button asChild>
+    <a href="/">Home</a>
+  </Toolbar.Button>
+  <Toolbar.Slot name="page-actions" />
+</Toolbar>
+
+// In the page
+<Toolbar.Fill name="page-actions">
+  <Toolbar.Button onClick={onPublish}>Publish</Toolbar.Button>
+</Toolbar.Fill>
+```
+
+The filled controls read the toolbar's context, not the page's, and appear once the page mounts in the browser.
+
+### Sticky row
+
+Toolbar takes the padding and position props a [Box](/docs/box) takes, such as `p`, `px`, `position` and `top`. It takes no margin props.
+
+```tsx
+<Toolbar aria-label="Formatting" position="sticky" top="0" px="3">{/* controls */}</Toolbar>
+```
+
+### Vertical tool strip
+
+`orientation="vertical"` stacks the controls, and the arrow keys become Up and Down. Use it for a strip of tools along the edge of a canvas.
+
+```tsx showLineNumbers
+<Toolbar orientation="vertical" aria-label="Tools">
+  <Toolbar.Group aria-label="Draw">
+    <Toolbar.Button iconOnly aria-label="Select" aria-pressed={tool === 'select'}>
+      <HugeiconsIcon icon={Cursor01Icon} strokeWidth={1.75} />
+    </Toolbar.Button>
+    <Toolbar.Button iconOnly aria-label="Pen" aria-pressed={tool === 'pen'}>
+      <HugeiconsIcon icon={PencilEdit01Icon} strokeWidth={1.75} />
+    </Toolbar.Button>
+  </Toolbar.Group>
+</Toolbar>
+```
+
+### Read-only document
+
+`disabled` on a Group turns off every button in it at once, such as the formatting tools while a document is locked.
+
+```tsx
+<Toolbar.Group aria-label="Text style" disabled={locked}>{/* buttons */}</Toolbar.Group>
+```
+
+## Props
+
+### Toolbar
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'1' \| '2' \| '3' \| '4'` | Theme size, else `'2'` | The height step for the row and its buttons. Not responsive |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | The row's direction and the arrow keys it answers |
+| `backdrop` | `boolean` | `false` | Gives every control its own surface, for a row over content |
+| `loop` | `boolean` | `true` | The arrow keys wrap from the last control to the first |
+| `dir` | `'ltr' \| 'rtl'` | Inherited | The reading direction for the arrow keys |
+| `p`, `px`, `py`, `pt`, `pr`, `pb`, `pl` | Space scale or CSS string | | Padding, as on [Box](/docs/box). Responsive |
+| `position`, `inset`, `top`, `right`, `bottom`, `left` | | | Position, as on [Box](/docs/box). Responsive |
+| `width`, `height`, `overflow`, `flexGrow`, `flexShrink` and the other Box layout props | | | As on [Box](/docs/box). Responsive |
+
+Toolbar accepts the attributes of the HTML `div` element.
+
+### Button
+
+Toolbar.Button takes every [Button](/docs/button) prop except `as`. With `iconOnly`, the types require `aria-label`.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `asChild` | `boolean` | `false` | Renders its one child, such as a link, with the button's look. It stays in the arrow-key row |
+
+Outside a Toolbar, such as through a React portal, it renders a plain Button with the same look and its own tab stop.
+
+### Group
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `disabled` | `boolean` | `false` | Turns off every button in the group |
+
+Group accepts the attributes of the HTML `div` element.
+
+### Title
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` | | The title. With none, nothing renders |
+| `id` | `string` | | Lets the toolbar's `aria-labelledby` point at the title |
+| `className`, `style` | | | Passed to the text |
+
+### Overflow
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | `'More'` | The accessible name of the "More" button |
+| `children` | `ReactNode` | | The controls, in order. The ones that don't fit move into the menu from the end |
+
+Overflow accepts the attributes of the HTML `div` element. `useToolbarOverflow()` returns `true` inside its menu.
+
+### Slot and Fill
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `name` | `string` | `'default'` | Pairs a Fill with its Slot. Use one name per slot |
+| `children` | `ReactNode` | | Fill only. The controls to render in the slot |
+
+Separator accepts the attributes of the HTML `div` element.
 
 ## Accessibility
 
-- The row is `role="toolbar"` and needs an `aria-label`.
-- Arrow keys move focus and wrap at the ends: Left and Right when horizontal, Up and Down when vertical.
-- `Toolbar.Button` throws outside a `Toolbar`.
+| Key | Action |
+| --- | --- |
+| Tab | Moves focus into the row, to the last control used, and then out of it |
+| Arrow Left or Arrow Right | Moves between controls in a horizontal row |
+| Arrow Up or Arrow Down | Moves between controls in a vertical row |
+| Home or End | Moves to the first or last control |
+| Enter or Space | Presses the focused button |
+
+- **Name:** The row has `role="toolbar"`. Name it with `aria-label`, or point `aria-labelledby` at the Title's `id`.
+- **Groups:** A Group has `role="group"`. Give it an `aria-label` so a screen reader names the set.
+- **Toggles:** A button with `aria-pressed` is announced as pressed or not pressed.
+- **Separator:** It's announced as a separator, and its direction is always opposite to the row's.
+- **Disabled:** The arrow keys skip a disabled button, including every button in a disabled Group.

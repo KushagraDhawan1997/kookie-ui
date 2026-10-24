@@ -1,0 +1,109 @@
+---
+title: Blockquote
+description: Blockquote sets off words quoted from another person or source with a bar on its left edge.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/blockquote.tsx
+---
+
+Blockquote renders a `blockquote` element with a coloured bar on its left edge and text set like [Text](/docs/text). Use it for words that come from someone else: a customer, a review or a document. A note, tip or warning from your own product is a [Notice](/docs/notice).
+
+## Playground
+
+import BlockquotePlayground from '../../playground/blockquote-playground';
+
+<BlockquotePlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Blockquote, Flex, Text } from '@kushagradhawan/kookie-ui';
+
+export function CustomerQuote() {
+  return (
+    <Flex direction="column" gap="2">
+      <Blockquote size="3">
+        We moved our whole support team over in a week, and nobody asked for the old tool back.
+      </Blockquote>
+      <Text as="p" size="2" emphasis="medium">
+        Priya Raman, Head of Support at Northwind
+      </Text>
+    </Flex>
+  );
+}
+```
+
+## Best practices
+
+**Use it only for quoted words.** A screen reader announces a blockquote as a quotation. Indenting your own copy with it tells people someone else said it.
+
+**Put the source outside the quote.** Blockquote has no attribution part. Add a [Text](/docs/text) with `emphasis="medium"` after it for the name, and set `cite` to the source's address when there is one.
+
+**Keep the quote short.** One to three sentences reads as a quote. A longer passage reads as a block of body copy with a bar beside it.
+
+**Don't use it for callouts.** For a tip, a warning or a status message, use a [Notice](/docs/notice). It has the role and the colours for that job.
+
+## Size and colour
+
+`size` picks a step from 1 to 9, the same scale as Text: 12, 14, 16, 18, 20, 24, 32, 44 and 64 pixels at the default scale. With no `size`, the quote inherits the font size around it. Use size 3 for a quote in body copy and size 5 or 6 for a pull quote on a marketing page.
+
+The bar takes the accent colour. Set `color` to change the bar and the text together. Set `emphasis` to fade the text: with no `color`, it steps down the neutral ink. The bar keeps its colour.
+
+## Examples
+
+### Quote in an article
+
+Inside running copy, match the paragraph's size, so the quote reads as part of the text.
+
+```tsx
+<Flex direction="column" gap="3">
+  <Text as="p" size="3">
+    The review found one main cause of the outage.
+  </Text>
+  <Blockquote size="3" cite="https://example.com/review">
+    The retry limit was set per request, not per user.
+  </Blockquote>
+</Flex>
+```
+
+### Pull quote
+
+A larger size and a lighter weight lift one line out of a long page.
+
+```tsx
+<Blockquote
+  size="6"
+  weight="regular"
+  wrap="balance"
+>
+  Ship the smallest change that tells you something.
+</Blockquote>
+```
+
+### Quote in a list of reviews
+
+Use `emphasis="medium"` when the quote sits next to stronger content, such as a product name.
+
+```tsx
+<Blockquote size="2" emphasis="medium">
+  Setup took ten minutes.
+</Blockquote>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'1'` to `'9'`, responsive | | The type step. Inherits when unset |
+| `weight` | `'regular' \| 'medium' \| 'semibold'`, responsive | | The font weight. Inherits when unset |
+| `color` | `AccentColor` | | The colour of the text and the bar. When unset, the text inherits and the bar takes the theme accent |
+| `emphasis` | `'loud' \| 'medium' \| 'quiet'` | | How strongly the text reads |
+| `truncate` | `boolean` | | Keeps one line and ends it with an ellipsis |
+| `wrap` | `'wrap' \| 'nowrap' \| 'pretty' \| 'balance'`, responsive | | How lines break |
+| `asChild` | `boolean` | `false` | Renders the child element with the quote's styles |
+
+Blockquote also accepts every attribute of the HTML `blockquote` element, including `cite`.
+
+## Accessibility
+
+- **Role:** The `blockquote` element tells a screen reader that the text is a quotation. Some screen readers announce where the quote starts and ends.
+- **Source:** `cite` holds an address but isn't shown or read aloud by most screen readers. Put the speaker's name in visible text next to the quote.
+- **Colour:** The bar is decoration. The quote doesn't depend on its colour to be understood.

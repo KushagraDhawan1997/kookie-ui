@@ -1,10 +1,9 @@
 'use client';
 
-import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import classNames from 'classnames';
 import { ToggleGroup as ToggleGroupPrimitive } from 'radix-ui';
-import { useControllableState } from 'radix-ui/internal';
+import { useComposedRefs, useControllableState } from 'radix-ui/internal';
 
 import { segmentedControlRootPropDefs } from './segmented-control.props.js';
 import { extractProps } from '../helpers/extract-props.js';
@@ -23,6 +22,8 @@ interface SegmentedControlRootProps
   onValueChange?(value: string): void;
 }
 
+const useIsomorphicLayoutEffect = typeof window === 'undefined' ? React.useEffect : React.useLayoutEffect;
+
 const SegmentedControlRoot = React.forwardRef<HTMLDivElement, SegmentedControlRootProps>(
   (ownProps, forwardedRef) => {
     const props = useThemeSizeProps(ownProps, segmentedControlRootPropDefs.size);
@@ -33,6 +34,7 @@ const SegmentedControlRoot = React.forwardRef<HTMLDivElement, SegmentedControlRo
       value: valueProp,
       defaultValue: defaultValueProp,
       onValueChange: onValueChangeProp,
+      style,
       ...rootProps
     } = extractProps(props, segmentedControlRootPropDefs);
 
@@ -42,11 +44,39 @@ const SegmentedControlRoot = React.forwardRef<HTMLDivElement, SegmentedControlRo
       defaultProp: defaultValueProp ?? '',
     });
 
+    // The indicator is sized and placed from the item count and the selected index, written
+    // as custom properties. They are read from the children on render, so the server markup
+    // is right, then corrected from the DOM, which also sees items inside fragments or
+    // wrapper components.
+    const rootRef = React.useRef<HTMLDivElement>(null);
+    const composedRef = useComposedRefs(forwardedRef, rootRef);
+    const items = React.Children.toArray(children).filter(React.isValidElement);
+    const renderedCount = items.length;
+    const renderedIndex = Math.max(
+      0,
+      items.findIndex((child) => (child.props as { value?: unknown }).value === value),
+    );
+    useIsomorphicLayoutEffect(() => {
+      const root = rootRef.current;
+      if (!root) return;
+      const domItems = Array.from(root.querySelectorAll(':scope > .kui-SegmentedControlItem'));
+      const index = domItems.findIndex((item) => item.getAttribute('data-state') === 'on');
+      root.style.setProperty('--segmented-control-count', String(domItems.length || 1));
+      root.style.setProperty('--segmented-control-index', String(Math.max(0, index)));
+    });
+
     return (
       <ToggleGroupPrimitive.Root
         data-disabled={props.disabled || undefined}
         data-radius={radius}
-        ref={forwardedRef}
+        ref={composedRef}
+        style={
+          {
+            '--segmented-control-count': renderedCount || 1,
+            '--segmented-control-index': renderedIndex,
+            ...style,
+          } as React.CSSProperties
+        }
         className={classNames('kui-SegmentedControlRoot', className)}
         onValueChange={(value) => {
           if (value) {
@@ -70,6 +100,8 @@ SegmentedControlRoot.displayName = 'SegmentedControl.Root';
 
 interface SegmentedControlItemOwnProps {
   value: string;
+  /** When true, this segment can't be selected. */
+  disabled?: boolean;
   /** When true, applies fixed square width for icon-only segments */
   iconOnly?: boolean;
 }
@@ -77,7 +109,7 @@ interface SegmentedControlItemOwnProps {
 interface SegmentedControlItemProps
   extends ComponentPropsWithout<
       typeof ToggleGroupPrimitive.Item,
-      RemovedProps | 'disabled' | 'type' | 'value'
+      RemovedProps | 'type' | 'value'
     >,
     SegmentedControlItemOwnProps {}
 
@@ -88,7 +120,6 @@ const SegmentedControlItem = React.forwardRef<HTMLButtonElement, SegmentedContro
       className={classNames('kui-reset', 'kui-SegmentedControlItem', className)}
       data-icon-only={iconOnly || undefined}
       {...props}
-      disabled={false}
       asChild={false}
     >
       <span className="kui-SegmentedControlItemSeparator" />

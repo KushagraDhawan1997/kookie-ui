@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import { Toggle as TogglePrimitive } from 'radix-ui';
 import { Button } from './button.js';
 import type { ButtonIconOnlyProps, ButtonProps, ButtonRankProps } from './button.js';
-import { useToggleState } from '../hooks/use-toggle-state.js';
 
 type ToggleOwnProps = {
   /** Whether the toggle is on. The controlled counterpart of `defaultPressed`. */
@@ -15,10 +14,11 @@ type ToggleOwnProps = {
 };
 
 /**
- * Toggle takes every `Button` prop except `as`. Set `iconOnly` for a square toggle holding only
+ * Toggle takes every `Button` prop except `as` and `done`: a toggle's state is `pressed`, and a
+ * tick in place of its icon would read as a second state. Set `iconOnly` for a square toggle holding only
  * an icon; the type then requires `aria-label` or `aria-labelledby`.
  */
-type ToggleProps = Omit<ButtonProps<'button'>, 'as' | 'variant' | 'emphasis' | 'iconOnly'> &
+type ToggleProps = Omit<ButtonProps<'button'>, 'as' | 'variant' | 'emphasis' | 'iconOnly' | 'done'> &
   ButtonRankProps &
   ButtonIconOnlyProps &
   ToggleOwnProps;
@@ -43,46 +43,28 @@ type ToggleElement = React.ElementRef<typeof Button>;
  */
 const Toggle = React.forwardRef<ToggleElement, ToggleProps>(
   ({ pressed, onPressedChange, defaultPressed, children, className, ...buttonProps }, forwardedRef) => {
-    const { 'aria-label': ariaLabel, 'aria-labelledby': ariaLabelledBy } = buttonProps as {
-      'aria-label'?: string;
-      'aria-labelledby'?: string;
-    };
-
-    // The label behind aria-labelledby is read once per id, not on every press.
-    const cachedLabelRef = React.useRef<string | null>(null);
+    // `done` is not a Toggle prop; a call that slips past the type drops it rather than showing a tick.
+    delete (buttonProps as { done?: boolean }).done;
+    // aria-pressed is the whole announcement: a screen reader reads the new state on its own.
+    const warnedRef = React.useRef(false);
     React.useEffect(() => {
-      cachedLabelRef.current = null;
-    }, [ariaLabelledBy]);
-
-    /**
-     * The name announced when the pressed state changes: aria-label, then the label
-     * aria-labelledby points at, then visible text.
-     */
-    const getAccessibleName = React.useCallback(() => {
-      if (ariaLabel) return ariaLabel;
-      if (ariaLabelledBy) {
-        if (cachedLabelRef.current === null) {
-          cachedLabelRef.current = document.getElementById(ariaLabelledBy)?.textContent || 'Toggle';
-        }
-        return cachedLabelRef.current;
+      if (
+        process.env.NODE_ENV === 'development' &&
+        pressed !== undefined &&
+        onPressedChange === undefined &&
+        !warnedRef.current
+      ) {
+        warnedRef.current = true;
+        console.warn(
+          'Toggle: You provided a `pressed` prop without an `onPressedChange` handler. ' +
+            'This will result in a read-only toggle button. If you want the button to be interactive, ' +
+            'you should provide an `onPressedChange` handler.',
+        );
       }
-      if (typeof children === 'string') return children;
-      if (React.isValidElement(children) && typeof (children.props as { children?: unknown })?.children === 'string') {
-        return (children.props as { children: string }).children;
-      }
-      return 'Toggle';
-    }, [ariaLabel, ariaLabelledBy, children]);
-
-    // Shared toggle state hook: accessibility announcements and controlled-state warnings.
-    const { handlePressedChange } = useToggleState({
-      pressed,
-      onPressedChange,
-      getAccessibleName,
-      componentName: 'Toggle',
-    });
+    }, [pressed, onPressedChange]);
 
     return (
-      <TogglePrimitive.Root pressed={pressed} onPressedChange={handlePressedChange} defaultPressed={defaultPressed} asChild>
+      <TogglePrimitive.Root pressed={pressed} onPressedChange={onPressedChange} defaultPressed={defaultPressed} asChild>
         <Button {...(buttonProps as ButtonProps)} ref={forwardedRef} className={classNames('kui-Toggle', className)}>
           {children}
         </Button>

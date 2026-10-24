@@ -18,8 +18,9 @@ const Code = React.forwardRef<CodeElement, CodeProps>((props, forwardedRef) => {
     props,
     codePropDefs,
   );
-  // Code ghost color prop should work as text color by default
-  const resolvedColor = props.variant === 'ghost' ? color || undefined : color;
+  // A ghost Code has no fill, so it rests on the surrounding text colour: only a colour the caller
+  // set reaches it, never the gray default.
+  const resolvedColor = props.variant === 'ghost' && !props.color ? undefined : color;
   const Comp = asChild ? Slot.Root : 'code';
   return (
     <Comp

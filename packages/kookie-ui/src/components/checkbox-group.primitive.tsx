@@ -2,13 +2,7 @@
 
 import * as React from 'react';
 import { Checkbox as CheckboxPrimitive, Direction } from 'radix-ui';
-import {
-  Context,
-  Primitive,
-  useComposedRefs,
-  RovingFocus,
-  useControllableState,
-} from 'radix-ui/internal';
+import { Context, Primitive, useControllableState } from 'radix-ui/internal';
 
 const { useDirection } = Direction;
 
@@ -20,9 +14,8 @@ const CHECKBOX_GROUP_NAME = 'CheckboxGroup';
 type ScopedProps<P> = P & { __scopeCheckboxGroup?: Context.Scope };
 const [createCheckboxGroupContext, createCheckboxGroupScope] = Context.createContextScope(
   CHECKBOX_GROUP_NAME,
-  [RovingFocus.createRovingFocusGroupScope, CheckboxPrimitive.createCheckboxScope],
+  [CheckboxPrimitive.createCheckboxScope],
 );
-const useRovingFocusGroupScope = RovingFocus.createRovingFocusGroupScope();
 const useCheckboxScope = CheckboxPrimitive.createCheckboxScope();
 
 type CheckboxGroupContextValue = {
@@ -38,15 +31,22 @@ const [CheckboxGroupProvider, useCheckboxGroupContext] =
   createCheckboxGroupContext<CheckboxGroupContextValue>(CHECKBOX_GROUP_NAME);
 
 type CheckboxGroupElement = React.ElementRef<typeof Primitive.div>;
-type RovingFocusGroupProps = React.ComponentPropsWithoutRef<typeof RovingFocus.Root>;
 type PrimitiveDivProps = React.ComponentPropsWithoutRef<typeof Primitive.div>;
 interface CheckboxGroupProps extends PrimitiveDivProps {
   name?: CheckboxGroupContextValue['name'];
   required?: React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>['required'];
   disabled?: React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>['disabled'];
-  dir?: RovingFocusGroupProps['dir'];
-  orientation?: RovingFocusGroupProps['orientation'];
-  loop?: RovingFocusGroupProps['loop'];
+  dir?: 'ltr' | 'rtl';
+  /**
+   * @deprecated Has no effect. Each checkbox is its own tab stop, as with native checkboxes,
+   * so there is no arrow-key navigation to orient.
+   */
+  orientation?: 'horizontal' | 'vertical';
+  /**
+   * @deprecated Has no effect. Each checkbox is its own tab stop, as with native checkboxes,
+   * so there is no arrow-key navigation to loop.
+   */
+  loop?: boolean;
   defaultValue?: string[];
   value?: CheckboxGroupContextValue['value'];
   onValueChange?: (value: string[]) => void;
@@ -61,13 +61,12 @@ const CheckboxGroup = React.forwardRef<CheckboxGroupElement, CheckboxGroupProps>
       value: valueProp,
       required = false,
       disabled = false,
-      orientation,
+      orientation: _orientation,
       dir,
-      loop = true,
+      loop: _loop,
       onValueChange,
       ...groupProps
     } = props;
-    const rovingFocusGroupScope = useRovingFocusGroupScope(__scopeCheckboxGroup);
     const direction = useDirection(dir);
     const [value = [], setValue] = useControllableState({
       prop: valueProp,
@@ -96,21 +95,13 @@ const CheckboxGroup = React.forwardRef<CheckboxGroupElement, CheckboxGroupProps>
         onItemCheck={handleItemCheck}
         onItemUncheck={handleItemUncheck}
       >
-        <RovingFocus.Root
-          asChild
-          {...rovingFocusGroupScope}
-          orientation={orientation}
+        <Primitive.div
+          role="group"
+          data-disabled={disabled ? '' : undefined}
           dir={direction}
-          loop={loop}
-        >
-          <Primitive.div
-            role="group"
-            data-disabled={disabled ? '' : undefined}
-            dir={direction}
-            {...groupProps}
-            ref={forwardedRef}
-          />
-        </RovingFocus.Root>
+          {...groupProps}
+          ref={forwardedRef}
+        />
       </CheckboxGroupProvider>
     );
   },
@@ -136,31 +127,29 @@ const CheckboxGroupItem = React.forwardRef<CheckboxGroupItemElement, CheckboxGro
     const { __scopeCheckboxGroup, disabled, ...itemProps } = props;
     const context = useCheckboxGroupContext(ITEM_NAME, __scopeCheckboxGroup);
     const isDisabled = context.disabled || disabled;
-    const rovingFocusGroupScope = useRovingFocusGroupScope(__scopeCheckboxGroup);
     const checkboxScope = useCheckboxScope(__scopeCheckboxGroup);
-    const ref = React.useRef<React.ElementRef<typeof CheckboxPrimitive.Root>>(null);
-    const composedRefs = useComposedRefs(forwardedRef, ref);
     const checked = context.value?.includes(itemProps.value);
+    // A required group needs at least one box checked, not every box: the items are
+    // required only while none is checked.
+    const isRequired = context.required && (context.value?.length ?? 0) === 0;
 
     return (
-      <RovingFocus.Item asChild {...rovingFocusGroupScope} focusable={!isDisabled} active={checked}>
-        <CheckboxPrimitive.Root
-          name={context.name}
-          disabled={isDisabled}
-          required={context.required}
-          checked={checked}
-          {...checkboxScope}
-          {...itemProps}
-          ref={composedRefs}
-          onCheckedChange={(checked) => {
-            if (checked) {
-              context.onItemCheck(props.value);
-            } else {
-              context.onItemUncheck(props.value);
-            }
-          }}
-        />
-      </RovingFocus.Item>
+      <CheckboxPrimitive.Root
+        name={context.name}
+        disabled={isDisabled}
+        required={isRequired}
+        checked={checked}
+        {...checkboxScope}
+        {...itemProps}
+        ref={forwardedRef}
+        onCheckedChange={(checked) => {
+          if (checked) {
+            context.onItemCheck(props.value);
+          } else {
+            context.onItemUncheck(props.value);
+          }
+        }}
+      />
     );
   },
 );

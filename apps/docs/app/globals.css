@@ -214,3 +214,12 @@ h6 {
   margin-inline: calc(50% - 50cqi);
 }
 
+
+/* The trailing cluster stretches across the floating bar; only its controls take clicks, so the
+   page under the empty middle stays clickable. */
+.kui-ShellPaneHeader .kd-toolbar-trailing {
+  pointer-events: none;
+}
+.kd-toolbar-trailing :where(button, a, [role='group'], [role='menuitem']) {
+  pointer-events: auto;
+}

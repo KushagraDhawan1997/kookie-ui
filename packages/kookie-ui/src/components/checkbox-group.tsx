@@ -76,21 +76,13 @@ const CheckboxGroupItem = React.forwardRef<CheckboxGroupItemElement, CheckboxGro
     const { __scopeCheckboxGroup, children, className, style, ...props } = _props;
     const { size } = useCheckboxGroupContext('CheckboxGroupItem', __scopeCheckboxGroup);
 
-    // Helper to safely convert size to Text-compatible size
-    const getTextSize = (sizeValue: any): '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' => {
-      if (typeof sizeValue === 'string' && /^[1-9]$/.test(sizeValue)) {
-        return sizeValue as any;
-      }
-      return '3';
-    };
-
     // Render `<Text as="label">` if children are provided, otherwise render
     // the solo checkbox to allow building out your custom layouts with it.
     if (children) {
       return (
         <Text
           as="label"
-          size={getTextSize(size)}
+          size={size}
           className={classNames('kui-CheckboxGroupItem', className)}
           style={style}
         >

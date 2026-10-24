@@ -1,314 +1,110 @@
 ---
 title: Shell
-description: The app frame, with panes that open, close and resize
+description: Shell lays out an app's frame, placing the header, navigation, content and side panels and opening, closing and resizing them.
 source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/shell.tsx
 ---
 
-Shell is the frame of an application. It places a header, navigation, the main content, an inspector and a bottom panel on a CSS grid. Each pane holds its own open state, follows the window when nobody has touched it, and becomes an overlay where there is no room for it.
+Shell is the frame of an application. It places a header, navigation, the main content, an inspector and a bottom panel on one grid, and each pane opens, closes and turns into an overlay where the window is too narrow for it. The rows inside a navigation pane are [Sidebar](/docs/sidebar). For a bar at the top of a marketing page with no panes, use a [Navbar](/docs/navbar).
 
-## Installation
+## Playground
 
-```bash
-npm install @kushagradhawan/kookie-ui
-```
+import ShellPlayground from '../../playground/shell-playground';
+
+<ShellPlayground />
 
 ## Usage
 
-```tsx
-import { Shell } from '@kushagradhawan/kookie-ui';
+```tsx showLineNumbers
+import { Button, Flex, Shell, Text } from '@kushagradhawan/kookie-ui';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { SidebarLeft01Icon } from '@hugeicons/core-free-icons';
 
-export function App() {
+export function AppFrame({ children }: { children: React.ReactNode }) {
   return (
     <Shell.Root>
-      <Shell.Sidebar>
-        <nav>Navigation</nav>
-      </Shell.Sidebar>
-      <Shell.Content>Main content</Shell.Content>
+      <Shell.Header>
+        <Flex align="center" gap="3" px="4" height="100%">
+          <Shell.Trigger target="sidebar" asChild>
+            <Button iconOnly emphasis="quiet" aria-label="Toggle navigation">
+              <HugeiconsIcon icon={SidebarLeft01Icon} strokeWidth={1.75} />
+            </Button>
+          </Shell.Trigger>
+          <Text weight="medium">Projects</Text>
+        </Flex>
+      </Shell.Header>
+      <Shell.Sidebar>{/* Sidebar rows */}</Shell.Sidebar>
+      <Shell.Content>{children}</Shell.Content>
     </Shell.Root>
   );
 }
 ```
 
-On a window 768px or wider the sidebar sits in the frame and is open. Below 768px it is an overlay and is closed until a `Shell.Trigger` opens it.
+From 768px up the sidebar sits in the frame, open. Below that it's an overlay, closed until the trigger opens it.
 
 ## Anatomy
 
-```tsx showLineNumbers
+```tsx
 <Shell.Root>
-  <Shell.Header>{/* the top row */}</Shell.Header>
-  <Shell.Rail>{/* a narrow column of icons */}</Shell.Rail>
-  <Shell.Panel>{/* the navigation the rail opens */}</Shell.Panel>
-  <Shell.Sidebar>{/* one navigation column, in place of Rail and Panel */}</Shell.Sidebar>
-  <Shell.Content>{/* the work area */}</Shell.Content>
-  <Shell.Inspector>{/* details at the inline end */}</Shell.Inspector>
-  <Shell.Bottom>{/* a panel along the bottom */}</Shell.Bottom>
-  <Shell.Trigger target="sidebar">{/* a button that drives a pane */}</Shell.Trigger>
+  <Shell.Header />
+  <Shell.Rail />
+  <Shell.Panel />
+  <Shell.Sidebar>
+    <Shell.PaneHeader />
+    <Shell.Scroll />
+    <Shell.PaneFooter />
+  </Shell.Sidebar>
+  <Shell.Content />
+  <Shell.Inspector />
+  <Shell.Bottom />
 </Shell.Root>
 ```
 
-Every part is optional except `Shell.Content`. The Root renders every child in the order you write it, and each part takes its own place on the Root's grid. A part must therefore be a direct child of `Shell.Root`, or sit in a wrapper with `display: contents`; inside any other wrapper the wrapper takes the grid cell. Any other child is a grid item too: give it a place (`grid-area` or `position`), or it takes the first free cell.
+- **Root:** The grid. It renders its children in the order you write them.
+- **Header:** The top row.
+- **Rail:** A narrow column of icons. Sidebar rows in it draw as tiles.
+- **Panel:** The wider navigation a Rail opens.
+- **Sidebar:** One navigation column, in place of a Rail and Panel.
+- **Content:** The work area. The only part every Shell needs.
+- **Inspector:** Details at the inline end.
+- **Bottom:** A panel along the bottom, such as a console.
+- **Trigger:** A button anywhere in the Root that drives a pane by name.
+- **PaneHeader, Scroll, PaneFooter:** A pane's top row, scrolling list and bottom row.
 
-### Pane chrome
+## Best practices
 
-`Shell.Sidebar`, `Shell.Panel` and `Shell.Rail` render anything. With these three parts they are a navigation column. In a Rail, the [Sidebar](/docs/sidebar) rows draw as tiles: an icon with a small label under it.
+**Use a Sidebar or a Rail with a Panel, not both.** They take the same column. A Sidebar suits most apps. A Rail with a Panel suits apps with several sections that each have their own navigation.
 
-```tsx showLineNumbers
-<Shell.Sidebar>
-  <Shell.PaneHeader>{/* logo, controls */}</Shell.PaneHeader>
-  <Shell.Scroll role="navigation" aria-label="Main">{/* Sidebar rows */}</Shell.Scroll>
-  <Shell.PaneFooter>{/* profile, settings */}</Shell.PaneFooter>
-</Shell.Sidebar>
-```
+**Keep panes as direct children of the Root.** Each pane takes its own place on the grid. Inside any other wrapper the wrapper takes the cell, unless it has `display: contents`.
 
-`Shell.Scroll` takes the room the header and footer leave. The [Sidebar](/docs/sidebar) rows inside take the Root's `size`.
-
-### Floating rows
-
-Set `float` on `Shell.PaneHeader` or `Shell.PaneFooter` and the list runs the pane's full height, scrolling behind the row. It starts and ends clear of the rows, and `fade` on `Shell.Scroll` fades it out as it passes under them. Put a `Toolbar backdrop` in a floating row so its buttons stay readable over the list.
-
-```tsx showLineNumbers
-<Shell.Sidebar>
-  <Shell.PaneHeader float>
-    <Toolbar backdrop size="3" aria-label="Site">{/* logo, search */}</Toolbar>
-  </Shell.PaneHeader>
-  <Shell.Scroll fade role="navigation" aria-label="Main">{/* Sidebar rows */}</Shell.Scroll>
-  <Shell.PaneFooter float>
-    <Toolbar backdrop size="3" aria-label="Settings">{/* settings */}</Toolbar>
-  </Shell.PaneFooter>
-</Shell.Sidebar>
-```
-
-A Panel with no `presentation` of its own takes the Rail's. In the server HTML it does so only when it comes after the Rail in the same parent; otherwise it follows the Rail once the page is hydrated.
-
-## Props
-
-### Root
-
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `height` | `'full' \| 'auto' \| string \| number` | `'full'` | The height of the frame. `'full'` is `100dvh`, with `100vh` where `dvh` is not supported. |
-| `size` | `'1' \| '2' \| '3'` | `'2'` | The index of the pane chrome and the Sidebar rows in it. |
-| `children` | `ReactNode` | | The parts, and anything else. |
-
-### Header
-
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `height` | `number` | `64` | The height of the row, in pixels. |
-
-### Sidebar
-
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `state` | `'collapsed' \| 'expanded'` | | The state, when you control it. |
-| `defaultState` | `SidebarMode \| Responsive<SidebarMode>` | | The starting state. With no value the sidebar is untouched and follows the window. |
-| `onStateChange` | `(state, { reason }) => void` | | Called when a user changes the state. `reason` is `'toggle'` or `'dismiss'`. |
-| `presentation` | `'fixed' \| 'overlay' \| 'stacked' \| Responsive<…>` | `{ initial: 'overlay', sm: 'fixed' }` | How the sidebar sits in the frame. |
-| `expandedSize` | `number` | `288` | The open width, in pixels. |
-| `inset` | `boolean` | | Lifts the pane off the frame. See [Inset](#inset). |
-
-The sidebar also takes the [resize props](#resize).
-
-### Rail
-
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `open` | `boolean` | | The open state, when you control it. |
-| `defaultOpen` | `boolean \| Responsive<boolean>` | | The starting state. With no value the rail is untouched: open where it is in the frame, closed where it is an overlay. |
-| `onOpenChange` | `(open, { reason }) => void` | | Called when a user opens or closes the rail. |
-| `presentation` | `'fixed' \| 'overlay' \| 'stacked' \| Responsive<…>` | `'fixed'` | How the rail sits in the frame. |
-| `expandedSize` | `number` | `64` | The width, in pixels. |
-| `inset` | `boolean` | | Lifts the pane off the frame. |
-
-### Panel
-
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `open` | `boolean` | | The open state, when you control it. |
-| `defaultOpen` | `boolean \| Responsive<boolean>` | | The starting state. With no value the panel is closed. |
-| `onOpenChange` | `(open, { reason }) => void` | | Called when a user opens or closes the panel. |
-| `presentation` | `'fixed' \| 'overlay' \| 'stacked' \| Responsive<…>` | the Rail's | With no value, the panel takes the rail's presentation. |
-| `expandedSize` | `number` | `288` | The open width, in pixels. |
-| `inset` | `boolean` | | Lifts the pane off the frame. |
-
-The panel also takes the [resize props](#resize).
-
-### Content
-
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `inset` | `boolean` | | Lifts the pane off the frame. |
-
-### Inspector
-
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `open` | `boolean` | | The open state, when you control it. |
-| `defaultOpen` | `boolean \| Responsive<boolean>` | | The starting state. With no value the inspector is closed. |
-| `onOpenChange` | `(open, { reason }) => void` | | Called when a user opens or closes the inspector. |
-| `presentation` | `'fixed' \| 'overlay' \| 'stacked' \| Responsive<…>` | `{ initial: 'overlay', sm: 'fixed' }` | How the inspector sits in the frame. |
-| `expandedSize` | `number` | `320` | The open width, in pixels. |
-| `inset` | `boolean` | | Lifts the pane off the frame. |
-
-The inspector also takes the [resize props](#resize).
-
-### Bottom
-
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `open` | `boolean` | | The open state, when you control it. |
-| `defaultOpen` | `boolean \| Responsive<boolean>` | | The starting state. With no value the panel is closed. |
-| `onOpenChange` | `(open, { reason }) => void` | | Called when a user opens or closes the panel. |
-| `presentation` | `'fixed' \| 'overlay' \| 'stacked' \| Responsive<…>` | `'fixed'` | How the panel sits in the frame. |
-| `expandedSize` | `number` | `200` | The open height, in pixels. |
-| `inset` | `boolean` | | Lifts the pane off the frame. |
-
-The bottom panel also takes the [resize props](#resize).
-
-### Trigger
-
-`Shell.Trigger` is a `<button>`. Wrap it with `Button` through `asChild` to style it. Set `iconOnly` and `aria-label` for an icon.
-
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `target` | `'rail' \| 'panel' \| 'sidebar' \| 'inspector' \| 'bottom'` | | The pane it drives. |
-| `action` | `'toggle' \| 'expand' \| 'collapse'` | `'toggle'` | What a press does. |
-
-The trigger renders `type="button"`, `aria-controls` (the pane's id) and `aria-expanded`. Your `onClick` runs first. Call `event.preventDefault()` in it to cancel the trigger's action.
-
-### Resize
-
-Panel, Sidebar, Inspector and Bottom take these props.
-
-| Prop | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| `resizable` | `boolean` | `false` | Shows a handle on the pane's inner edge. |
-| `size` | `number \| string` | | The size, when you control it. |
-| `defaultSize` | `number \| string` | | The starting size. |
-| `onSizeChange` | `(size, { reason }) => void` | | Called with the new size. `reason` is `'init'`, `'resize'` or `'controlled'`. |
-| `sizeUpdate` | `'throttle' \| 'debounce'` | | Rate-limits `onSizeChange` across repeated resize ends, such as key presses on the handle. A drag calls `onSizeChange` once, when it ends. Use `onResize` for live sizes. |
-| `sizeUpdateMs` | `number` | `50` | The interval for `sizeUpdate`. |
-| `minSize` | `number` | per pane | The smallest size, in pixels. |
-| `maxSize` | `number` | per pane | The largest size, in pixels. A drag or a key press also stops before the handle leaves the frame. |
-| `collapsible` | `boolean` | `true` | A double-click on the handle closes the pane. Reopen it with a Trigger. |
-| `onResizeStart` | `(size) => void` | | Called when a drag starts. |
-| `onResize` | `(size) => void` | | Called during a drag, at most once per animation frame, and once more with the final size. |
-| `onResizeEnd` | `(size) => void` | | Called when a drag ends. |
+**Give every pane a Trigger.** An overlay pane is closed until something opens it, and a pane closed by a double-click on its handle needs a way back.
 
 ## Presentation
 
-`presentation` says how a pane sits in the frame. It takes one value or a responsive object.
+`presentation` sets how a pane sits in the frame. It takes one value or a responsive object such as `{ initial: 'overlay', md: 'fixed' }`.
 
-### Fixed
+- `fixed` takes its own column or row, and the content gets narrower. Use it on wide windows.
+- `overlay` covers the frame with a scrim. Escape or a press on the scrim closes it. Use it on narrow windows.
+- `stacked` sits over the content with no scrim and takes no space from it.
 
-The pane takes its own column or row, and the content is narrower by its size.
+When the Root has a number or a length as its `height`, the Shell sits inside a page and an overlay covers only the Shell. Otherwise it covers the window.
 
-### Overlay
+The breakpoints are `xs` 520px, `sm` 768px, `md` 1024px, `lg` 1280px and `xl` 1640px.
 
-The pane covers the frame. A scrim covers everything else, the rest of the frame is `inert`, and focus moves into the pane. Escape or a press on the scrim closes it, and focus goes back where it was. An overlay that nobody has opened stays closed.
+## State
 
-How far an overlay reaches depends on the Root's `height`:
+A pane is in one of three states:
 
-- `'full'` (the default): the overlay covers the window, and the page does not scroll while it is open.
-- `'auto'`: the frame grows with its content and the page scrolls, so the overlay and the scrim are placed on the window.
-- A number or a length: the Shell sits inside a page, and the overlay and the scrim cover only the Shell's box. The page still scrolls.
+- **Untouched:** No state props. It follows the window: navigation is open in the frame and closed as an overlay, and detail panes are closed. The stylesheet decides, so the first paint is right. A responsive `defaultOpen`, such as `{ initial: false, lg: true }`, sets the answer per breakpoint.
+- **Touched:** Once someone opens or closes it, or you pass a single `defaultOpen`, it keeps that state at every width.
+- **Controlled:** Pass `open` and `onOpenChange` (`state` and `onStateChange` on Sidebar). Don't pass both a value and its default.
 
-### Stacked
-
-The pane sits over the content without a scrim and without taking space from it.
-
-## States
-
-### Untouched
-
-A pane with no `open`, `defaultOpen`, `state` or `defaultState` is untouched. It renders `data-state="auto"`, and the stylesheet shows or hides it at each breakpoint:
-
-- Rail and Sidebar are open where they are in the frame and closed where they are an overlay.
-- Panel, Inspector and Bottom are closed.
-
-A responsive `defaultOpen` or `defaultState` also leaves the pane untouched, with your object as the answer at each breakpoint:
-
-```tsx
-<Shell.Inspector defaultOpen={{ initial: false, lg: true }}>…</Shell.Inspector>
-```
-
-The server HTML already carries the answer for every breakpoint, so the first paint is right before any script runs.
-
-### Touched
-
-When a user opens or closes a pane, it keeps that state at every width. A single-value `defaultOpen` or `defaultState` starts the pane in that state in the same way.
-
-### Controlled
-
-Pass `open` (or `state` on the Sidebar) with its change handler. The pane shows what you pass. Do not pass both the controlled prop and its default.
-
-### Callbacks
-
-`onOpenChange` and `onStateChange` are called only when a user acts. `reason` is:
-
-- `'toggle'` for a Trigger, a double-click on the handle, or a drag past `collapseThreshold`.
-- `'dismiss'` for Escape or a press on the scrim.
-
-They are not called on mount, and not called when the window crosses a breakpoint. The deprecated `onExpand` and `onCollapse` follow the same rule, and also fire when a controlled `open` or `state` changes whether the pane is shown.
+`onOpenChange` runs only when a person acts, never on mount or at a breakpoint. Its `reason` is `'toggle'` for a trigger or the handle, and `'dismiss'` for Escape or the scrim. Panes don't drive each other: to close the Panel with the Rail, do it in the Rail's `onOpenChange`.
 
 ## Examples
 
-### Header and Sidebar
+### Resizable inspector
 
-```tsx showLineNumbers
-<Shell.Root>
-  <Shell.Header>
-    <Flex align="center" gap="3" px="4" height="100%">
-      <Button iconOnly variant="ghost" color="gray" aria-label="Toggle navigation" asChild>
-        <Shell.Trigger target="sidebar">
-          <HugeiconsIcon icon={SidebarLeft01Icon} strokeWidth={1.75} />
-        </Shell.Trigger>
-      </Button>
-      <Text weight="medium">Projects</Text>
-    </Flex>
-  </Shell.Header>
-  <Shell.Sidebar>
-    <nav>Navigation</nav>
-  </Shell.Sidebar>
-  <Shell.Content>Main content</Shell.Content>
-</Shell.Root>
-```
-
-### Rail and Panel
-
-```tsx showLineNumbers
-<Shell.Root>
-  <Shell.Rail>
-    <Button iconOnly variant="ghost" color="gray" aria-label="Toggle panel" asChild>
-      <Shell.Trigger target="panel">
-        <HugeiconsIcon icon={SidebarLeft01Icon} strokeWidth={1.75} />
-      </Shell.Trigger>
-    </Button>
-  </Shell.Rail>
-  <Shell.Panel defaultOpen={{ initial: false, md: true }}>
-    <nav>Navigation</nav>
-  </Shell.Panel>
-  <Shell.Content>Main content</Shell.Content>
-</Shell.Root>
-```
-
-The rail and the panel do not drive each other. To close the panel when the rail closes, write it:
-
-```tsx showLineNumbers
-const [railOpen, setRailOpen] = React.useState(true);
-const [panelOpen, setPanelOpen] = React.useState(true);
-
-<Shell.Rail
-  open={railOpen}
-  onOpenChange={(open) => {
-    setRailOpen(open);
-    if (!open) setPanelOpen(false);
-  }}
-/>
-<Shell.Panel open={panelOpen} onOpenChange={setPanelOpen} />
-```
-
-### Resizable Inspector
+`resizable` adds a handle on the pane's inner edge. Shell doesn't store sizes, so keep the width in your own state to restore it on the next visit.
 
 ```tsx showLineNumbers
 const [width, setWidth] = React.useState(320);
@@ -320,90 +116,137 @@ const [width, setWidth] = React.useState(320);
   minSize={240}
   maxSize={480}
 >
-  Properties
+  {/* Properties */}
 </Shell.Inspector>
 ```
 
-Keep the size in your own state to save it between visits.
+### Navigation with a logo and a profile row
 
-### Controlled Sidebar
+`Shell.PaneHeader` and `Shell.PaneFooter` stay put while `Shell.Scroll` scrolls between them. With `float`, the rows sit over the list and it scrolls behind them. Add `fade` to the Scroll and `backdrop` to a Toolbar in the row so its buttons stay readable.
 
 ```tsx showLineNumbers
-const [state, setState] = React.useState<'collapsed' | 'expanded'>('expanded');
-
-<Shell.Sidebar state={state} onStateChange={setState}>
-  <nav>Navigation</nav>
+<Shell.Sidebar>
+  <Shell.PaneHeader float>
+    <Toolbar backdrop aria-label="Workspace">{/* Logo, search */}</Toolbar>
+  </Shell.PaneHeader>
+  <Shell.Scroll fade role="navigation" aria-label="Main">
+    {/* Sidebar rows */}
+  </Shell.Scroll>
+  <Shell.PaneFooter>{/* Profile */}</Shell.PaneFooter>
 </Shell.Sidebar>
 ```
 
-## Inset
+### Page with a pinned toolbar
 
-`inset` lifts a pane off the frame. The pane gets a margin, rounded corners and a shadow, and the frame paints a gray backdrop behind the middle row. Two inset panes side by side share one gap.
+The same parts work in `Shell.Content`. With a `Shell.Scroll` in it, the content stops scrolling and the Scroll scrolls the page. A `Shell.PaneHeader float` beside it stays pinned, with the same inset as a sidebar's header, and the page starts below it. Link targets and focused controls scroll into view below it too.
 
-```tsx
-<Shell.Root>
-  <Shell.Sidebar inset>…</Shell.Sidebar>
-  <Shell.Content inset>…</Shell.Content>
-</Shell.Root>
+```tsx showLineNumbers
+<Shell.Content>
+  <Shell.PaneHeader float>
+    <Toolbar backdrop aria-label="Page">{/* Page actions */}</Toolbar>
+  </Shell.PaneHeader>
+  <Shell.Scroll fade>{/* Page */}</Shell.Scroll>
+</Shell.Content>
 ```
 
-Change the gap on the Root:
+The floating row's height is published as `--kui-pane-inset-start` inside the Scroll. Use it to place something under the row, such as a sticky table of contents (`top: var(--kui-pane-inset-start)`), or to pull a full-bleed band up to the pane's top edge.
 
-```css
-.kui-ShellRoot {
-  --shell-inset-gap: var(--space-4);
-}
-```
+## Props
 
-## Responsive
+### Root
 
-`presentation`, `defaultOpen` and `defaultState` take responsive objects. A breakpoint takes the value of the largest key at or below it.
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `height` | `'full' \| 'auto' \| string \| number` | `'full'` | The frame's height. `'full'` is `100dvh` |
+| `size` | `'1' \| '2' \| '3'` | Theme size, else `'2'` | The size of the pane rows and the Sidebar rows in them. A Theme size of 4 maps to 3 |
 
-| Breakpoint | Width |
-| ---------- | ----- |
-| `initial` | below 520px |
-| `xs` | 520px |
-| `sm` | 768px |
-| `md` | 1024px |
-| `lg` | 1280px |
-| `xl` | 1640px |
+### Header
 
-The values are written to the pane as `data-presentation-<bp>` and `data-auto-<bp>`, and the stylesheet reads them at these widths.
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `height` | `number` | `64` | The row's height in pixels |
+
+### Sidebar
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `state` | `'expanded' \| 'collapsed'` | | The state, when you control it |
+| `defaultState` | `'expanded' \| 'collapsed'`, responsive | | The starting state. Unset, it follows the window |
+| `onStateChange` | `(state, { reason }) => void` | | Runs when a person changes the state |
+| `presentation` | `'fixed' \| 'overlay' \| 'stacked'`, responsive | `{ initial: 'overlay', sm: 'fixed' }` | How it sits in the frame |
+| `expandedSize` | `number` | `288` | The open width in pixels |
+| `inset` | `boolean` | `false` | Adds a margin, rounded corners and a shadow over a gray backdrop |
+
+Sidebar also takes the resize props, with `minSize` 200 and `maxSize` 400.
+
+### Rail, Panel, Inspector and Bottom
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `open` | `boolean` | | The open state, when you control it |
+| `defaultOpen` | `boolean`, responsive | | The starting state. Unset, the pane is untouched |
+| `onOpenChange` | `(open, { reason }) => void` | | Runs when a person opens or closes the pane |
+| `presentation` | `'fixed' \| 'overlay' \| 'stacked'`, responsive | See below | How it sits in the frame |
+| `expandedSize` | `number` | See below | The open width, or height for Bottom, in pixels |
+| `inset` | `boolean` | `false` | Lifts the pane off the frame |
+
+| Pane | `presentation` | `expandedSize` | `minSize` / `maxSize` | Untouched |
+| --- | --- | --- | --- | --- |
+| Rail | `'fixed'` | 64 | Not resizable | Open in the frame, closed as an overlay |
+| Panel | The Rail's | 288 | 100 / 800 | Closed |
+| Inspector | `{ initial: 'overlay', sm: 'fixed' }` | 320 | 200 / 500 | Closed |
+| Bottom | `'fixed'` | 200 | 100 / 400 | Closed |
+
+### Resize props
+
+Sidebar, Panel, Inspector and Bottom take these.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `resizable` | `boolean` | `false` | Shows a handle on the inner edge |
+| `size` | `number \| string` | | The size, when you control it |
+| `defaultSize` | `number \| string` | | The starting size |
+| `onSizeChange` | `(size, { reason }) => void` | | Runs with the new size when a drag or key press ends, and once on mount with `defaultSize` |
+| `sizeUpdate` | `'throttle' \| 'debounce'` | | Rate-limits `onSizeChange` across repeated key presses |
+| `sizeUpdateMs` | `number` | `50` | The interval for `sizeUpdate` |
+| `minSize` | `number` | Per pane | The smallest size in pixels |
+| `maxSize` | `number` | Per pane | The largest size in pixels |
+| `collapsible` | `boolean` | `true` | A double-click on the handle closes the pane |
+| `onResizeStart`, `onResize`, `onResizeEnd` | `(size) => void` | | Run as a drag starts, moves (once per frame at most) and ends |
+
+### Content
+
+Content takes `inset`, like the panes. With a `Shell.Scroll` child, the Scroll scrolls the page instead of the content.
+
+### Trigger
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `target` | `'rail' \| 'panel' \| 'sidebar' \| 'inspector' \| 'bottom'` | | The pane it drives |
+| `action` | `'toggle' \| 'expand' \| 'collapse'` | `'toggle'` | What a press does |
+| `asChild` | `boolean` | `false` | Renders its one child as the trigger, such as a Button |
+
+Trigger renders a `button` with `type="button"`. With `asChild`, it puts its press and its ARIA on the child instead, so `<Shell.Trigger asChild><Button>` renders one button. Your `onClick` runs first, and `event.preventDefault()` cancels the trigger's action.
+
+### PaneHeader, Scroll and PaneFooter
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `float` | `boolean` | `false` | PaneHeader and PaneFooter only. The row sits over the list |
+| `fade` | `boolean` | `false` | Scroll only. Fades the list toward an edge with more past it |
+
+Header accepts the attributes of the HTML `header` element, Content those of `main`, Trigger those of `button`, and every other part those of `div`.
 
 ## Accessibility
 
-- `Shell.Header` renders `<header>` and `Shell.Content` renders `<main>`.
-- `Shell.Trigger` sets `aria-controls` and `aria-expanded`.
-- An open overlay makes the rest of the frame `inert`, moves focus into the pane, and returns focus when the pane closes.
-- Escape closes open overlays. It is handled as the key bubbles up to the Root, after the panes' own handlers: a component inside a pane that answers Escape itself, and calls `preventDefault()` or `stopPropagation()`, keeps the pane open. A dialog or menu opened from a pane closes first.
-- The resize handle is a focusable `role="separator"` with `aria-controls`, `aria-valuenow`, `aria-valuemin` and `aria-valuemax`. The arrow keys move it by 8px (32px with Shift), and Home and End go to the limits. It shows a focus line on `:focus-visible`.
+| Key | Action |
+| --- | --- |
+| Escape | Closes open overlays and returns focus |
+| Arrow keys | On a resize handle, move it by 8px, or 32px with Shift |
+| Home or End | On a resize handle, go to the smallest or largest size |
 
-## Changelog
-
-### 0.16.0
-
-- Added: `float` on `Shell.PaneHeader` and `Shell.PaneFooter`, and `fade` on `Shell.Scroll`.
-
-### 0.15.0
-
-- Removed: the sidebar's thin state, `thinSize` and `toggleModes`. A trigger goes between collapsed and expanded. For a column of icons, put the rows in `Shell.Rail`.
-
-### 0.14.0
-
-- Added: `Shell.PaneHeader`, `Shell.Scroll`, `Shell.PaneFooter`, and `size` on `Shell.Root`. Sidebar rows in `Shell.Rail` draw as tiles.
-- Deprecated: the sidebar's thin mode and `thinSize`. Removed in 0.15.0.
-
-### 0.8.0
-
-- The Shell is rebuilt. See the package changelog for the full list.
-- Untouched panes follow the window through the stylesheet. Callbacks fire only when a user acts.
-- Sidebar and Inspector are overlays below 768px.
-- The Rail and the Panel do not drive each other.
-- An overlay is the same element as the pane, not a portalled sheet.
-- The resize handle is `role="separator"`.
-- No motion.
-- Deprecated: `Shell.Left`, `target="left"`, `peekOnHover`, `snapPoints`, `snapTolerance`, `collapseThreshold`, `paneId`, `persistence`, a responsive controlled `open` or `state`, `useShell()` and `useResponsivePresentation()`.
-
-### 0.7.1
-
-- Bug fixes: Root typing, Panel `onExpand`/`onCollapse`, Trigger `type` and `aria-controls`, Bottom arrow keys, the `100dvh` height, the handle's focus line, and the `height` prop on panes.
+- **Landmarks:** Header is a `header` and Content is a `main`. `Shell.Scroll` is not a landmark, so give it `role="navigation"` and an `aria-label` when it holds navigation.
+- **Trigger:** It sets `aria-controls` to the pane's id and `aria-expanded` to its state. On an untouched pane, `aria-expanded` is left off until the state is known.
+- **Overlay:** Opening one moves focus into the pane and makes the rest of the frame `inert`. Closing it returns focus to where it was, or to the pane's trigger.
+- **Escape:** A menu or dialog opened from a pane closes first. A handler in the pane that calls `preventDefault()` keeps the pane open.
+- **Resize handle:** It's a focusable `role="separator"` named "Resize Sidebar pane" (or the pane's name), with `aria-valuenow`, `aria-valuemin` and `aria-valuemax`.

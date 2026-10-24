@@ -55,11 +55,18 @@ export {
   ToolbarButton,
   ToolbarSeparator,
   ToolbarTitle,
+  ToolbarOverflow,
+  ToolbarSlot,
+  ToolbarFill,
+  useToolbarOverflow,
   type ToolbarProps,
   type ToolbarGroupProps,
   type ToolbarButtonProps,
   type ToolbarSeparatorProps,
   type ToolbarTitleProps,
+  type ToolbarOverflowProps,
+  type ToolbarSlotProps,
+  type ToolbarFillProps,
 } from './toolbar.js';
 export { Tooltip, type TooltipProps } from './tooltip.js';
 export { VirtualMenu, type VirtualMenuProps, type VirtualMenuItemProps, type VirtualMenuRenderItemProps } from './virtual-menu.js';

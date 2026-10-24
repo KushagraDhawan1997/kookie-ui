@@ -1,3 +1,30 @@
+## [0.24.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.23.0...v0.24.0) (2026-10-24)
+
+About 50 component fixes, the toolbar parts v2's docs use, and a docs page for every component. See MIGRATION.md.
+
+### Breaking changes
+
+* **avatar:** `ref` goes on the outer span, with `className` and `style`.
+* **checkbox-group:** one tab stop per box; `orientation` and `loop` do nothing.
+* **blockquote:** Text-only props no longer apply.
+
+### Features
+
+* **button:** `done`.
+* **shell:** `Shell.Trigger asChild`; `Shell.PaneHeader float` and `Shell.Scroll` in `Shell.Content`.
+* **toolbar:** `ToolbarButton asChild`, `ToolbarOverflow`, `useToolbarOverflow`, `ToolbarSlot`, `ToolbarFill`, layout props.
+* **accordion:** a built-in chevron. **avatar:** `statusLabel`. **segmented-control:** disabled items. **scroll-area:** `width` and `height`.
+
+### Fixes
+
+* **dialog, alert-dialog, sheet:** focus returns to the trigger; the description is announced; the extra focus traps and unused live regions are gone.
+* **tabs, accordion, toggle:** no more extra screen-reader announcements.
+* **text-field, text-area:** `required` reaches the element.
+* **select:** `readOnly` and `loading` keep the list closed.
+* **slider:** names, live values, ticks and handles behave correctly.
+* **sidebar:** arrow keys move past sub-menu triggers; sub-menu rows are in a list.
+* **virtual-menu, message-scroller, chatbar, navbar, table, separator, spinner, chip, notice, code, progress:** see MIGRATION.md.
+
 ## [0.23.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.22.1...v0.23.0) (2026-10-23)
 
 Fewer Chrome layers, less inline CSS, less memory. See MIGRATION.md.

@@ -62,4 +62,19 @@ describe('TextArea on the control ladder', () => {
     expect(getComputedStyle(textarea, '::placeholder').opacity).toBe('1');
     expect(getComputedStyle(textarea).cursor).toBe('default');
   });
+
+  it('resizes vertically by default, and the resize prop overrides it', () => {
+    const { container } = render(
+      <Theme>
+        <TextArea aria-label="default" />
+        <TextArea resize="none" aria-label="none" />
+        <TextArea resize="both" aria-label="both" />
+      </Theme>,
+    );
+    const [plain, none, both] = container.querySelectorAll<HTMLElement>('.kui-TextAreaRoot');
+    expect(getComputedStyle(plain).resize).toBe('vertical');
+    expect(getComputedStyle(none).resize).toBe('none');
+    expect(getComputedStyle(both).resize).toBe('both');
+  });
 });
+

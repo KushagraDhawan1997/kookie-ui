@@ -115,7 +115,7 @@ type PageHeaderMediaProps = Omit<AvatarProps, 'radius'> & {
   overlap?: boolean;
 };
 
-const PageHeaderMedia = React.forwardRef<HTMLImageElement, PageHeaderMediaProps>(
+const PageHeaderMedia = React.forwardRef<HTMLSpanElement, PageHeaderMediaProps>(
   ({ type = 'avatar', overlap = false, size = '6', style, ...props }, ref) => {
     const { hasBanner } = React.useContext(PageHeaderContext);
     const shouldOverlap = overlap && hasBanner && type === 'avatar';

@@ -41,15 +41,14 @@ const Chip = React.forwardRef<ChipElement, ChipProps>((props, forwardedRef) => {
     ...chipProps
   } = extractProps(props, chipPropDefs);
 
-
-
-  // Memoize component variable to prevent unnecessary re-renders
-  const Comp = React.useMemo(() => (asChild ? Slot.Root : 'span'), [asChild]);
+  const Comp = asChild ? Slot.Root : 'span';
 
   const chip = (
     <Comp
       data-accent-color={color}
       data-radius={radius}
+      // A tooltip opens on focus, so a chip that has one joins the tab order.
+      tabIndex={tooltip ? 0 : undefined}
       {...chipProps}
       ref={forwardedRef}
       className={classNames('kui-reset', 'kui-Chip', className)}

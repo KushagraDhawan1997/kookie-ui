@@ -61,7 +61,6 @@ const nextConfig = {
       ['/docs/icon-button', '/docs/button'],
       ['/docs/toggle-button', '/docs/toggle'],
       ['/docs/toggle-icon-button', '/docs/toggle'],
-      ['/docs/image', '/docs'],
     ].map(([source, destination]) => ({ source, destination, permanent: true }));
   },
   images: {
