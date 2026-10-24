@@ -1,3 +1,10 @@
+## [0.26.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.26.0...v0.26.1) (2026-10-25)
+
+### Fixes
+
+* **button:** a pressed soft or ghost button no longer shows a dark inset well; it darkens its fill and casts nothing.
+* **docs:** the 0.26.0 notes named a `--shadow-2-active` token that was never released. They now say raised and solid buttons moved to `--control-chrome` and `--control-chrome-active`.
+
 ## [0.26.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.25.2...v0.26.0) (2026-10-25)
 
 Shadows by role, as in v2, and one look for each mark. See MIGRATION.md.
@@ -5,7 +12,7 @@ Shadows by role, as in v2, and one look for each mark. See MIGRATION.md.
 ### Breaking changes
 
 * **switch, slider, checkbox, checkbox-group, radio, radio-group:** no `variant` prop. Each has one soft look: a well for the track or box, the accent when on, and a thumb that casts `--grip-chrome`.
-* **shadow:** components read role tokens (`--surface-chrome`, `--control-chrome`, `--control-chrome-active`, `--grip-chrome`, `--floating-chrome`, `--dialog-chrome`). `--shadow-1..6` stay as a palette for app code, with v2's values and no hairline ring. `--shadow-2-active` is gone.
+* **shadow:** components read role tokens (`--surface-chrome`, `--control-chrome`, `--control-chrome-active`, `--grip-chrome`, `--floating-chrome`, `--dialog-chrome`). `--shadow-1..6` stay as a palette for app code, with v2's values and no hairline ring. Raised and solid buttons moved from `--shadow-2` and `--shadow-1` to `--control-chrome` and `--control-chrome-active`.
 * **text-field, text-area, select:** the default field is white with a hairline edge and a small soft shadow, the same as a raised button.
 
 ### Features

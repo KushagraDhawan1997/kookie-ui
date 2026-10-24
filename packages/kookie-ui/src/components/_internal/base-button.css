@@ -311,7 +311,9 @@
   /* Active state */
   &:where(:active:not([data-state='open'], [data-disabled], [aria-disabled='true'])) {
     background-color: var(--v-bg-active);
-    box-shadow: var(--shadow-1);
+    /* A pressed soft or ghost button darkens its fill and casts nothing. Outline and surface
+       keep their edge through their own rules. */
+    box-shadow: none;
   }
 
   /* Pressed state (toggle on) */
