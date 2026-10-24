@@ -10,9 +10,7 @@ new version, and the app then moves to that version. Because of this, consistenc
 package and not in the memory of each engineer. The documentation is at
 [womp-ui.kookie.design](https://womp-ui.kookie.design).
 
-It was Kookie UI v1. It started as a fork of Radix Themes, and it now moves to Base UI one
-component at a time. My new design system, [Kookie UI](https://ui.kookie.design), started from
-what I learned here, but it has no code from this package.
+It started as a fork of Radix Themes, and it now moves to Base UI one component at a time.
 
 ## What's Different from Radix Themes
 
