@@ -964,3 +964,13 @@
     color: var(--accent-solid-contrast);
   }
 }
+
+/* High contrast drops background colours, so the current row lost its only mark. It takes the
+ * system highlight pair instead, as a chosen segment does. */
+@media (forced-colors: active) {
+  .kui-SidebarMenuButton:where([data-active]) {
+    forced-color-adjust: none;
+    background-color: Highlight;
+    color: HighlightText;
+  }
+}

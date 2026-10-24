@@ -472,7 +472,10 @@
   .kui-SegmentedControlIndicator::before {
     background-color: Highlight;
   }
+  /* The browser paints a Canvas backplate behind forced text, which covered the chosen label
+   * with a white box. The chosen segment opts out and paints its own system pair. */
   .kui-SegmentedControlItem:where([data-state='on']) {
+    forced-color-adjust: none;
     color: HighlightText;
   }
   .kui-SegmentedControlRoot:where([data-disabled]),
