@@ -351,7 +351,8 @@
     outline-offset: 2px;
   }
 
-  .kui-BaseMenuContent {
+  /* A floating menu needs an edge; a sidebar's menu sits in a pane that already has one. */
+  .kui-BaseMenuContent:not(:where(.kui-SidebarContent)) {
     border: 1px solid CanvasText;
   }
 
