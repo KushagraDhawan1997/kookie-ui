@@ -2,6 +2,8 @@
 
 Read `docs/LOG.md` first. It records the decisions behind v1 and why they were made. Where this file disagrees with it, the log wins.
 
+The front page hero follows the art direction in `../kushagradhawan-v3/FIGURES.md` (the ground and the composition). Read it before you change the hero.
+
 ## Performance > Everything
 
 **Performance is the best user experience.** Every decision—architecture, component design, data fetching, rendering—must prioritize performance. A fast, responsive UI beats a feature-rich slow one every time.

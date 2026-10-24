@@ -183,6 +183,15 @@ h6 {
   border-inline-start: 1px solid var(--neutral-a5);
 }
 
+/* The sign-in card sits under the floating toolbar, the same distance down as in the v2 figure. */
+.kd-hero-canvas {
+  padding-top: calc(var(--space-11) + var(--space-5));
+}
+
+.kd-hero-composition {
+  width: calc(12 * var(--space-7));
+}
+
 .kd-hero-selected {
   border-radius: var(--radius-full);
   outline: 1px solid var(--neutral-12);
