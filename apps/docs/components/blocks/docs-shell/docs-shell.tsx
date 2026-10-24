@@ -78,14 +78,14 @@ export function DocsShell({
             every control, and `backdrop` gives each control and group a raised surface. Its size
             is one step above the Shell's. */}
         <Shell.PaneHeader float>
-          <Toolbar backdrop aria-label="Page" flexGrow="1">
+          <Toolbar backdrop aria-label="Page">
             <Shell.Trigger target="sidebar" asChild>
               <ToolbarButton iconOnly aria-label="Toggle navigation">
                 {mobileTriggerIcon ?? <HugeiconsIcon icon={SidebarLeftIcon} strokeWidth={1.75} />}
               </ToolbarButton>
             </Shell.Trigger>
             {/* The trailing cluster grows, so a ToolbarOverflow in `toolbar` has the room to measure. */}
-            <Flex className="kd-toolbar-trailing" align="center" justify="end" gap="3" flexGrow="1" minWidth="0">
+            <Flex align="center" justify="end" gap="3" flexGrow="1" minWidth="0">
               {toolbar}
               <ToolbarSlot name={DOCS_PAGE_ACTIONS} />
             </Flex>
