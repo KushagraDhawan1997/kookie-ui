@@ -68,7 +68,7 @@ export function StatusFilter() {
 - **Trigger:** The element that opens the popover. It takes one child element, usually a Button.
 - **Anchor:** Optional. Places the popover against a different element than the trigger.
 - **Content:** The panel, rendered in a portal. It is at least as wide as the trigger.
-- **Toolbar:** Optional. A row pinned to the top of the panel, with left, center and right sections. The content's top padding grows to its height.
+- **Toolbar:** Optional. A row pinned to the top of the panel, with left, center and right sections. It stays in place while the content scrolls.
 - **Toolbar.Title:** A title in the toolbar. It names the popover for screen readers.
 - **Close:** Closes the popover when its child is pressed. It takes one child element.
 
@@ -171,7 +171,7 @@ Trigger and Close take one child element and pass their behaviour to it. Anchor 
 | Escape | Closes the popover and returns focus to the trigger |
 | Tab | Moves focus through the panel, then out of it |
 
-- **Name:** `Popover.Toolbar.Title` names the panel with `aria-labelledby`. Without a toolbar, set `aria-label` on Content.
+- **Name:** `Popover.Toolbar.Title` names the panel with `aria-labelledby`. Without a toolbar, set `aria-label` or `aria-labelledby` on Content.
 - **State:** The trigger sets `aria-expanded` and `aria-controls`, so a screen reader announces whether the panel is open.
 - **Focus:** Focus moves into the panel when it opens and returns to the trigger when it closes. The page stays in reach, so Tab can leave the panel unless `modal` is set.
 - **Dismissal:** Escape and a press outside the panel both close it.

@@ -160,14 +160,10 @@
     "@radix-ui/react-accordion": "^1.2.20",
     "@shadcn/react": "0.3.1",
     "@tanstack/react-virtual": "^3.14.13",
-    "@zag-js/react": "^1.44.0",
-    "@zag-js/splitter": "^1.44.0",
     "classnames": "^2.5.1",
     "cmdk": "^1.1.1",
-    "geist": "^1.7.2",
     "radix-ui": "^1.6.7",
     "react-dropzone": "^20.1.2",
-    "react-remove-scroll-bar": "^2.3.8",
     "zod": "^4.6.5"
   },
   "peerDependencies": {

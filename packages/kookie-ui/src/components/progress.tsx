@@ -22,8 +22,10 @@ const Progress = React.forwardRef<ProgressElement, ProgressProps>((props, forwar
     progressPropDefs
   );
 
-  // `null` and `undefined` both mean indeterminate, as in Radix, so both keep a custom duration.
-  const isDeterminate = progressProps.value != null;
+  // Radix treats `null`, `undefined` and a value outside 0 to max as indeterminate, so all of
+  // them keep a custom duration.
+  const { value, max } = progressProps;
+  const isDeterminate = value != null && value >= 0 && value <= (max ?? 100);
 
   return (
     <ProgressPrimitive.Root
@@ -34,7 +36,7 @@ const Progress = React.forwardRef<ProgressElement, ProgressProps>((props, forwar
       style={mergeStyles(
         {
           '--progress-duration': isDeterminate ? undefined : duration,
-          '--progress-value': isDeterminate ? progressProps.value : undefined,
+          '--progress-value': isDeterminate ? value : undefined,
           '--progress-max': progressProps.max ?? undefined,
         },
         style

@@ -401,8 +401,8 @@
 }
 @media (--sm) {
   .sm\:kui-r-mx {
-    --margin-left: var(--ml-md);
-    --margin-right: var(--mr-md);
+    --margin-left: var(--ml-sm);
+    --margin-right: var(--mr-sm);
   }
 }
 @media (--md) {

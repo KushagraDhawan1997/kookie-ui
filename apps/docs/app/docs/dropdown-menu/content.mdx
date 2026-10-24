@@ -224,7 +224,7 @@ Trigger takes one child element and accepts `disabled`. The child receives the t
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | `ReactNode` | `'Back'` | On Sub, the text of the back row in drill-down |
-| `open`, `defaultOpen`, `onOpenChange` | | | On Sub, the open state of the submenu |
+| `open`, `defaultOpen`, `onOpenChange` | | | On Sub, the open state of the submenu. In drill-down, a controlled `open` decides which panel shows, and the trigger, the back row, Arrow Left and Escape only call `onOpenChange` |
 | `disabled`, `textValue` | | | On SubTrigger, as on Item |
 | `size`, `color` | | Parent menu's | On SubContent, as on Content |
 | `virtualized`, `container`, `loop` | | | On SubContent, as on Content. Cascade only |
@@ -246,5 +246,6 @@ Content, the items, Label, Group, Separator and SubContent also accept the attri
 
 - **Name:** The trigger announces its own label. An icon-only trigger needs `aria-label`, as on any icon-only button.
 - **Announcements:** The trigger sets `aria-haspopup` and `aria-expanded`. Items have the `menuitem` role, and checkbox and radio items announce whether they're on. A shortcut hint is hidden from screen readers, which read `aria-keyshortcuts` instead.
-- **Drill-down:** Each panel is a group named after its submenu. The back row of a submenu labelled "Move to" is named "Back from Move to".
+- **Groups:** A Group or RadioGroup that holds a Label is named by that Label, so a screen reader announces the section as focus enters it.
+- **Drill-down:** Each panel is a group named after its submenu. A trigger that opens a panel announces no popup, because the panel replaces the level in the same menu. The back row of a submenu labelled "Move to" is named "Back from Move to".
 - **Focus:** Focus stays inside the open menu and returns to the trigger when it closes. A drill-down menu always reopens at its first level.

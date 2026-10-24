@@ -2,6 +2,7 @@ import esbuild from 'esbuild';
 import fs from 'fs';
 import path from 'path';
 import pkg from '../package.json' with { type: 'json' };
+import { buildOptions } from './esbuild-shared.js';
 
 const dir = 'dist/esm';
 
@@ -12,8 +13,7 @@ const external = [
 ];
 
 /** @type {import('esbuild').BuildOptions} */
-const options = {
-  entryPoints: ['src/**/*.ts*'],
+const base = {
   outdir: dir,
   format: 'esm',
   target: 'es2020',
@@ -24,16 +24,21 @@ const options = {
   external,
 };
 
+// Two builds: components and hooks with "use client", and the server-safe modules without it.
+const builds = buildOptions(base);
+
 // Check if "watch=true" flag is passed
 if (process.argv[2]) {
   const [key, value] = process.argv[2].split('=');
   if (key === 'watch' && value === 'true') {
-    const ctx = await esbuild.context(options);
-    await ctx.watch();
+    for (const options of builds) {
+      const ctx = await esbuild.context(options);
+      await ctx.watch();
+    }
   }
 }
 
-esbuild.build(options).catch(() => process.exit(1));
+Promise.all(builds.map((options) => esbuild.build(options))).catch(() => process.exit(1));
 
 // Create a package.json file in the dist/esm directory with "type": "module" field
 if (!fs.existsSync(dir)) {

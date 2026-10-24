@@ -88,14 +88,14 @@ type ButtonProps<C extends React.ElementType = 'button'> = ButtonOwnProps & {
 type ButtonComponent = <C extends React.ElementType = 'button'>(props: ButtonProps<C> & { ref?: React.ForwardedRef<ButtonElement> }) => React.ReactElement | null;
 
 /**
- * An icon-only button must have an accessible name. Throws in development, logs otherwise.
+ * An icon-only button must have an accessible name. Logs an error, never throws: a name that is
+ * still loading (an empty `aria-label` while a translation loads) must not crash the tree.
  */
 function validateIconButtonName(props: Record<string, unknown>) {
   if (props['aria-label'] || props['aria-labelledby']) return;
   const errorMessage =
     'Button: an `iconOnly` button must have an accessible name. Pass `aria-label`, or ' +
     '`aria-labelledby` referencing a label element.';
-  if (process.env.NODE_ENV === 'development') throw new Error(errorMessage);
   console.error(errorMessage);
 }
 
@@ -151,16 +151,23 @@ const Button = React.forwardRef(
       (props as { fullWidth?: boolean }).fullWidth = false;
     }
 
-    if (emphasis !== undefined && variant !== undefined) {
-      throw new Error('Button: pass `emphasis` or `variant`, not both. They set the same thing.');
+    // Both set the same thing. The types forbid it; an untyped spread that sets both logs and
+    // `emphasis` wins, rather than crashing the tree.
+    if (emphasis !== undefined && variant !== undefined && process.env.NODE_ENV !== 'production') {
+      console.error('Button: pass `emphasis` or `variant`, not both. They set the same thing; `emphasis` wins.');
     }
     const resolvedVariant = emphasis !== undefined ? EMPHASIS_VARIANT[emphasis] : variant;
+
+    // The tooltip's description joins the caller's aria-describedby rather than replacing it.
+    const callerDescribedBy = (props as { 'aria-describedby'?: string })['aria-describedby'];
+    const tooltipDescribedBy = (tooltipAccessibilityProps as { 'aria-describedby'?: string })['aria-describedby'];
+    const ariaDescribedBy = [callerDescribedBy, tooltipDescribedBy].filter(Boolean).join(' ') || undefined;
 
     const button = (
       <BaseButton
         {...props}
         variant={resolvedVariant}
-        {...tooltipAccessibilityProps}
+        aria-describedby={ariaDescribedBy}
         ref={forwardedRef}
         data-icon-only={iconOnly || undefined}
         className={classNames('kui-Button', className)}

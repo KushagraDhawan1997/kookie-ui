@@ -61,4 +61,20 @@ describe('scroll fade in a browser', () => {
     const inner = document.querySelectorAll<HTMLElement>('.kui-ScrollAreaViewport')[1]!;
     expect(getComputedStyle(inner).getPropertyValue('--scroll-fade-start').trim()).toBe('');
   });
+
+  it('keeps the edge values on the viewport, so a scroll frame does not restyle every row', async () => {
+    render(
+      <Theme>
+        <ScrollArea fade style={{ height: 200 }}>{rows}</ScrollArea>
+      </Theme>,
+    );
+    const viewport = document.querySelector<HTMLElement>('.kui-ScrollAreaViewport')!;
+    viewport.scrollTop = 300;
+    viewport.dispatchEvent(new Event('scroll'));
+    await frames();
+    expect(getComputedStyle(viewport).getPropertyValue('--scroll-overflow-start').trim()).toBe('300px');
+    const row = viewport.querySelector<HTMLElement>('div div')!;
+    expect(getComputedStyle(row).getPropertyValue('--scroll-overflow-start').trim()).toBe('0px');
+    expect(getComputedStyle(row).getPropertyValue('--scroll-overflow-end').trim()).toBe('0px');
+  });
 });

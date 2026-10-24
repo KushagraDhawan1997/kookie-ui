@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
+import { cdp } from 'vitest/browser';
 import { render } from '@testing-library/react';
 import { Spinner, Theme } from '../../../src/components/index';
 
@@ -47,5 +48,25 @@ describe('Spinner with children', () => {
     expect(hidden.getAttribute('style')).toBeNull();
     expect(getComputedStyle(hidden).display).toBe('contents');
     expect(getComputedStyle(hidden).visibility).toBe('hidden');
+  });
+});
+
+describe('Spinner in forced colors', () => {
+  afterEach(async () => {
+    await cdp().send('Emulation.setEmulatedMedia', { features: [] });
+  });
+
+  it('paints its leaves in CanvasText, not the Canvas background', async () => {
+    await cdp().send('Emulation.setEmulatedMedia', { features: [{ name: 'forced-colors', value: 'active' }] });
+    const { container } = render(
+      <Theme>
+        <Spinner />
+      </Theme>,
+    );
+    const leaf = container.querySelector<HTMLElement>('.kui-SpinnerLeaf')!;
+    const page = getComputedStyle(document.body).backgroundColor;
+    const leafColor = getComputedStyle(leaf, '::before').backgroundColor;
+    expect(leafColor).not.toBe(page);
+    expect(leafColor).toBe(getComputedStyle(document.body).color);
   });
 });

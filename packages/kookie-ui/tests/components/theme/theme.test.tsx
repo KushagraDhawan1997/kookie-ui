@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { act, render, screen } from '@testing-library/react';
-import { describe, expect, test, vi } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { Direction } from 'radix-ui';
 
 import { Theme, useThemeContext } from '../../../src/components/theme';
@@ -50,108 +50,30 @@ describe('Theme attributes', () => {
 });
 
 /**
- * `data-os` cannot be resolved on the server, so it is written to the DOM in a
- * layout effect rather than rendered. That keeps it out of the server markup —
- * so hydration still matches — without costing the root an extra render pass,
- * but it also means React is no longer managing the attribute.
+ * Nothing in the library reads an OS attribute, so the root does not sniff the
+ * user agent to write one.
  */
 describe('Theme data-os', () => {
-  /**
-   * jsdom reports a user agent with no recognisable platform, so the OS has to
-   * be supplied for these to mean anything.
-   */
-  function withUserAgent(userAgent: string) {
+  test('is not stamped on the root, even when the platform is resolvable', () => {
     const original = Object.getOwnPropertyDescriptor(window.navigator, 'userAgent');
-    Object.defineProperty(window.navigator, 'userAgent', { value: userAgent, configurable: true });
-    return () => {
+    Object.defineProperty(window.navigator, 'userAgent', {
+      value: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+      configurable: true,
+    });
+    try {
+      const { container } = render(<Theme />);
+      const root = container.querySelector('.kui-theme') as HTMLElement;
+      expect(root.hasAttribute('data-os')).toBe(false);
+    } finally {
       if (original) Object.defineProperty(window.navigator, 'userAgent', original);
       else delete (window.navigator as unknown as Record<string, unknown>).userAgent;
-    };
-  }
-
-  test.each([
-    ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)', 'macos'],
-    ['Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'windows'],
-    ['Mozilla/5.0 (X11; Linux x86_64)', 'linux'],
-  ])('%s resolves to %s', (userAgent, expected) => {
-    const restore = withUserAgent(userAgent);
-    try {
-      const { container } = render(<Theme />);
-      const root = container.querySelector('.kui-theme') as HTMLElement;
-      expect(root.dataset.os).toBe(expected);
-    } finally {
-      restore();
     }
   });
 
-  test('an unrecognised platform leaves the attribute off entirely', () => {
-    const restore = withUserAgent('Mozilla/5.0 (something else)');
-    try {
-      const { container } = render(<Theme />);
-      const root = container.querySelector('.kui-theme') as HTMLElement;
-      expect(root.hasAttribute('data-os')).toBe(false);
-    } finally {
-      restore();
-    }
-  });
-
-  test('is not applied to a nested theme', () => {
-    const restore = withUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)');
-    try {
-      const { container } = render(
-        <Theme>
-          <Theme appearance="dark" />
-        </Theme>,
-      );
-      const themes = container.querySelectorAll('.kui-theme');
-
-      expect((themes[0] as HTMLElement).dataset.os).toBe('macos');
-      expect((themes[1] as HTMLElement).hasAttribute('data-os')).toBe(false);
-    } finally {
-      restore();
-    }
-  });
-
-  test('survives a re-render', () => {
-    // React does not own the attribute any more, so a reconcile must not drop it.
-    const restore = withUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)');
-    try {
-      const { container, rerender } = render(<Theme accentColor="blue" />);
-      const root = container.querySelector('.kui-theme') as HTMLElement;
-
-      rerender(<Theme accentColor="crimson" />);
-
-      expect(root.dataset.accentColor).toBe('crimson');
-      expect(root.dataset.os).toBe('macos');
-    } finally {
-      restore();
-    }
-  });
-
-  test('a caller-supplied data-os is left alone', () => {
-    const restore = withUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)');
-    try {
-      const { container } = render(<Theme data-os="windows" />);
-      const root = container.querySelector('.kui-theme') as HTMLElement;
-      expect(root.dataset.os).toBe('windows');
-    } finally {
-      restore();
-    }
-  });
-
-  test('is cleaned up on unmount', () => {
-    const restore = withUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)');
-    try {
-      const { container, unmount } = render(<Theme />);
-      const root = container.querySelector('.kui-theme') as HTMLElement;
-      expect(root.dataset.os).toBe('macos');
-
-      unmount();
-
-      expect(root.hasAttribute('data-os')).toBe(false);
-    } finally {
-      restore();
-    }
+  test('a caller-supplied data-os is passed through', () => {
+    const { container } = render(<Theme data-os="windows" />);
+    const root = container.querySelector('.kui-theme') as HTMLElement;
+    expect(root.dataset.os).toBe('windows');
   });
 });
 
@@ -208,6 +130,25 @@ describe('Theme values follow their props', () => {
     act(() => seen.at(-1)!.onAccentColorChange('jade'));
 
     expect(seen.at(-1)?.accentColor).toBe('jade');
+  });
+
+  test('a change made inside a nested Theme reaches the root', () => {
+    // Dialog, Popover and the menus wrap their content in a nested Theme, so a
+    // switcher inside one calls the nested context's setter.
+    const { seen, Probe } = readContext();
+    render(
+      <Theme accentColor="blue">
+        <Theme>
+          <Probe />
+        </Theme>
+      </Theme>,
+    );
+
+    act(() => seen.at(-1)!.onAccentColorChange('red'));
+    act(() => seen.at(-1)!.onAppearanceChange('dark'));
+
+    expect(seen.at(-1)?.accentColor).toBe('red');
+    expect(seen.at(-1)?.appearance).toBe('dark');
   });
 
   test('a runtime change is overridden by a later prop change', () => {

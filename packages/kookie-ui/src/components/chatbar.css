@@ -118,7 +118,7 @@
   box-sizing: border-box;
   max-width: 240px;
   padding: var(--chatbar-item-padding);
-  padding-right: calc(var(--chatbar-item-padding) + var(--space-2));
+  padding-inline-end: calc(var(--chatbar-item-padding) + var(--space-2));
   border: 1px solid var(--neutral-a5);
   border-radius: calc(var(--chatbar-item-lead-radius) + var(--chatbar-item-padding));
   background-color: var(--color-surface);
@@ -174,7 +174,7 @@
   /* A hosted control: as tall as the lead tile, so a pill with × is as tall as one without. */
   --base-button-height: var(--chatbar-item-lead);
   flex-shrink: 0;
-  margin-left: calc(var(--space-2) * -1);
+  margin-inline-start: calc(var(--space-2) * -1);
 }
 
 @breakpoints {
@@ -410,6 +410,23 @@
   }
 }
 
+/*
+ * Forced colors drop box-shadows, which draw the box's boundary in every variant and the raised
+ * focus ring, so the box gets a real border and the raised variant a real focus outline there.
+ */
+@media (forced-colors: active) {
+  .kui-ChatbarBox {
+    border: 1px solid CanvasText;
+  }
+  .kui-ChatbarBox:where(.kui-variant-raised):where(:focus-within) {
+    outline: 2px solid Highlight;
+    outline-offset: -1px;
+  }
+  .kui-ChatbarRoot:where([data-disabled]) .kui-ChatbarBox {
+    border-color: GrayText;
+  }
+}
+
 /***************************************************************************************************
  *                                                                                                 *
  * DISABLED / READ-ONLY STATES                                                                     *
@@ -510,7 +527,7 @@
   align-items: center;
   gap: var(--space-3);
   flex-shrink: 0;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 /* Size-based font sizing for chatbar */

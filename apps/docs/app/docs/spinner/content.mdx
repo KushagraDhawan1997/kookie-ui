@@ -85,7 +85,8 @@ Spinner also accepts every attribute of the HTML `span` element.
 ## Accessibility
 
 - **Silent by default:** The spinner is hidden from screen readers. Pair it with visible text, and put that text in an element with `role="status"` so a screen reader reads it when it appears.
-- **Named:** With an `aria-label`, such as "Loading comments", the spinner takes `role="status"` and a screen reader reads the name. Use it when there is no visible text.
+- **Named:** With an `aria-label`, such as "Loading comments", the spinner takes `role="status"` and holds the name as hidden text. Use it when there is no visible text. A status that appears with its text already in place is not always read out. To be sure it is heard, keep an empty `role="status"` element on the page and put the text in it when loading starts.
+- **Forced colours:** In Windows high contrast mode the spinner draws in the system text colour.
 - **Busy regions:** When a whole area is reloading, set `aria-busy` on that area while the spinner shows.
 - **Hidden children:** While loading, children are hidden from screen readers as well as from view, so their old value isn't read as current. Their wrapper has `aria-busy`.
 - **Motion:** With reduced motion turned on, the spinner keeps moving, three times more slowly, so it still shows that something is happening.

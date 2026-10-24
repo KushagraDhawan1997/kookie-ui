@@ -47,3 +47,83 @@
   /* - cursor, user-select */
   /* - transition */
 }
+
+/*
+ * On its own (in a Popover, a panel), the list is not inside a menu surface, so it sets the
+ * menu row tokens itself at its `size`. The class is only added outside a menu.
+ */
+.kui-VirtualMenuRoot:where(.kui-r-size-1, .kui-r-size-2, .kui-r-size-3, .kui-r-size-4) {
+  --base-menu-item-height: max(24px, calc(var(--base-menu-line-height) + 2 * var(--base-menu-item-padding-y)));
+  --base-menu-item-padding-x: calc(
+    var(--base-menu-item-px) + min(var(--radius-full, 0px), var(--base-menu-item-px-pill) - var(--base-menu-item-px))
+  );
+  --base-menu-item-padding-left: var(--base-menu-item-padding-x);
+  --base-menu-item-padding-right: var(--base-menu-item-padding-x);
+  --base-menu-content-padding: 0px;
+
+  & :where(.kui-BaseMenuItem[data-highlighted]) {
+    background-color: var(--accent-4);
+  }
+
+  @media (prefers-contrast: more) {
+    & :where(.kui-BaseMenuItem[data-highlighted]) {
+      background-color: var(--accent-solid);
+      color: var(--accent-solid-contrast);
+    }
+  }
+
+  @media (forced-colors: active) {
+    & :where(.kui-BaseMenuItem[data-highlighted]) {
+      background-color: Highlight;
+      color: HighlightText;
+    }
+  }
+}
+
+.kui-VirtualMenuRoot:where(.kui-r-size-1) {
+  --base-menu-item-padding-y: var(--row-inset-1);
+  --base-menu-item-px: var(--control-px-1);
+  --base-menu-item-px-pill: var(--control-px-pill-1);
+  --base-menu-item-gap: var(--control-gap-1);
+  --base-menu-item-radius: var(--radius-row-1);
+  --base-menu-icon-size: var(--icon-size-1);
+  --base-menu-font-size: var(--font-size-1);
+  --base-menu-line-height: var(--line-height-1);
+  --base-menu-letter-spacing: var(--letter-spacing-1);
+}
+
+.kui-VirtualMenuRoot:where(.kui-r-size-2) {
+  --base-menu-item-padding-y: var(--row-inset-2);
+  --base-menu-item-px: var(--control-px-2);
+  --base-menu-item-px-pill: var(--control-px-pill-2);
+  --base-menu-item-gap: var(--control-gap-2);
+  --base-menu-item-radius: var(--radius-row-2);
+  --base-menu-icon-size: var(--icon-size-2);
+  --base-menu-font-size: var(--font-size-2);
+  --base-menu-line-height: var(--line-height-2);
+  --base-menu-letter-spacing: var(--letter-spacing-2);
+}
+
+.kui-VirtualMenuRoot:where(.kui-r-size-3) {
+  --base-menu-item-padding-y: var(--row-inset-3);
+  --base-menu-item-px: var(--control-px-3);
+  --base-menu-item-px-pill: var(--control-px-pill-3);
+  --base-menu-item-gap: var(--control-gap-3);
+  --base-menu-item-radius: var(--radius-row-3);
+  --base-menu-icon-size: var(--icon-size-3);
+  --base-menu-font-size: var(--font-size-3);
+  --base-menu-line-height: var(--line-height-3);
+  --base-menu-letter-spacing: var(--letter-spacing-3);
+}
+
+.kui-VirtualMenuRoot:where(.kui-r-size-4) {
+  --base-menu-item-padding-y: var(--row-inset-4);
+  --base-menu-item-px: var(--control-px-4);
+  --base-menu-item-px-pill: var(--control-px-pill-4);
+  --base-menu-item-gap: var(--control-gap-4);
+  --base-menu-item-radius: var(--radius-row-4);
+  --base-menu-icon-size: var(--icon-size-4);
+  --base-menu-font-size: var(--font-size-4);
+  --base-menu-line-height: var(--line-height-4);
+  --base-menu-letter-spacing: var(--letter-spacing-4);
+}

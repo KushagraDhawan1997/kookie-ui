@@ -27,8 +27,11 @@ import { useComposedRefs } from 'radix-ui/internal';
 import { PaneResizeContext } from './_internal/shell-resize.js';
 import { PaneHandle, PanelHandle } from './_internal/shell-handles.js';
 import { Sidebar } from './_internal/shell-sidebar.js';
+import type { SidebarPublicProps } from './_internal/shell-sidebar.js';
 import { Bottom } from './_internal/shell-bottom.js';
+import type { BottomPublicProps } from './_internal/shell-bottom.js';
 import { Inspector } from './_internal/shell-inspector.js';
+import type { InspectorPublicProps } from './_internal/shell-inspector.js';
 import { usePane, paneAttributes, usePresentationTable } from './_internal/shell-pane.js';
 import { splitHandles, useResizablePane } from './_internal/shell-resizable.js';
 import {
@@ -50,7 +53,7 @@ import { useResponsivePresentation } from './shell.hooks.js';
 import { readBreakpoint } from '../hooks/use-breakpoint.js';
 import { useThemeSize } from '../helpers/theme-size.js';
 import { PaneChromeScope, PaneFooter, PaneHeader, Scroll, ShellContentContext, ShellSizeContext } from './_internal/pane-chrome.js';
-import type { PaneSize } from './_internal/pane-chrome.js';
+import type { PaneSize, PaneHeaderProps, PaneFooterProps, ScrollProps } from './_internal/pane-chrome.js';
 import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, PaneMode, PaneName, PaneTarget, ResponsivePresentation, SidebarMode } from './shell.types.js';
 
 /* ── Root ──────────────────────────────────────────────────────────────────── */
@@ -487,6 +490,7 @@ const Rail = React.forwardRef<HTMLDivElement, RailProps>((props, ref) => {
   return (
     <div
       {...domProps}
+      role={domProps.role ?? 'navigation'}
       id={pane.id}
       ref={composedRef}
       className={classNames('kui-ShellPane', 'kui-ShellRail', className)}
@@ -652,6 +656,7 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
   return (
     <div
       {...withoutRemovedPaneProps(domProps)}
+      role={domProps.role ?? 'navigation'}
       id={pane.id}
       ref={composedRef}
       className={classNames('kui-ShellPane', 'kui-ShellPanel', className)}
@@ -806,4 +811,16 @@ export {
   type ResponsivePresentation,
   type PaneTarget,
   type TriggerAction,
+  type ShellRootProps as RootProps,
+  type ShellHeaderProps as HeaderProps,
+  type RailProps,
+  type PanelPublicProps as PanelProps,
+  type SidebarPublicProps as SidebarProps,
+  type ShellContentProps as ContentProps,
+  type InspectorPublicProps as InspectorProps,
+  type BottomPublicProps as BottomProps,
+  type TriggerProps,
+  type PaneHeaderProps,
+  type PaneFooterProps,
+  type ScrollProps,
 };

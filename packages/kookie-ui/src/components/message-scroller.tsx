@@ -24,7 +24,8 @@
  * The viewport is its own scroller. Kookie's `ScrollArea` is Radix's, and Radix cannot hand its
  * viewport element to another library, so the transcript scrolls natively with a thin scrollbar.
  *
- * Requires React 19, which the primitive needs.
+ * Requires React 19, which the primitive needs: it reads `ref` as a prop. On React 18 refs and
+ * the scroll fade are lost, and a development build warns once.
  */
 
 import * as React from 'react';
@@ -60,9 +61,22 @@ interface RootProps extends React.ComponentPropsWithoutRef<'div'> {
   scrollMargin?: number;
 }
 
+let warnedReactVersion = false;
+
+/** The primitive reads `ref` as a prop, which React 18 strips. Development only, once per page. */
+function useReact19Check() {
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === 'production' || warnedReactVersion) return;
+    if (Number.parseInt(React.version, 10) >= 19) return;
+    warnedReactVersion = true;
+    console.warn(`[kookie-ui] MessageScroller needs React 19; this page runs React ${React.version}. Refs and the scroll fade will not work.`);
+  }, []);
+}
+
 /** Holds the scroll state. Everything else goes inside it. */
-const Root = React.forwardRef<HTMLDivElement, RootProps>(
-  ({ autoScroll = true, defaultScrollPosition = 'end', scrollEdgeThreshold, scrollMargin, className, children, ...props }, forwardedRef) => (
+const Root = React.forwardRef<HTMLDivElement, RootProps>(({ autoScroll = true, defaultScrollPosition = 'end', scrollEdgeThreshold, scrollMargin, className, children, ...props }, forwardedRef) => {
+  useReact19Check();
+  return (
     <Primitive.Provider
       autoScroll={autoScroll}
       defaultScrollPosition={defaultScrollPosition}
@@ -73,8 +87,8 @@ const Root = React.forwardRef<HTMLDivElement, RootProps>(
         {children}
       </Primitive.Root>
     </Primitive.Provider>
-  ),
-);
+  );
+});
 Root.displayName = 'MessageScroller.Root';
 
 interface ViewportProps extends React.ComponentPropsWithoutRef<'div'> {
@@ -97,13 +111,7 @@ const Viewport = React.forwardRef<HTMLDivElement, ViewportProps>(({ className, '
   return (
     // The primitive names an unnamed viewport "Messages", in English. An empty name is skipped by
     // accessible-name computation, so a transcript is only named when the app names it.
-    <Primitive.Viewport
-      aria-label={label ?? ''}
-      {...props}
-      ref={ref}
-      data-fade={fade ? '' : undefined}
-      className={classNames('kui-MessageScrollerViewport', className)}
-    />
+    <Primitive.Viewport aria-label={label ?? ''} {...props} ref={ref} data-fade={fade ? '' : undefined} className={classNames('kui-MessageScrollerViewport', className)} />
   );
 });
 Viewport.displayName = 'MessageScroller.Viewport';
@@ -131,23 +139,20 @@ Item.displayName = 'MessageScroller.Item';
 
 type ButtonProps = Omit<KuiButtonProps, 'aria-label' | 'aria-labelledby' | 'variant' | 'emphasis' | 'iconOnly' | 'fullWidth'> &
   ButtonRankProps & {
-  /** Accessible name, in your words. Default "Jump to the latest". */
-  'aria-label'?: string;
-  /** `end` jumps to the latest message (default); `start` to the first. */
-  direction?: 'start' | 'end';
-  /** Scroll behaviour of the jump. Default `smooth`. */
-  behavior?: ScrollBehavior;
-};
+    /** Accessible name, in your words. Default "Jump to the latest". */
+    'aria-label'?: string;
+    /** `end` jumps to the latest message (default); `start` to the first. */
+    direction?: 'start' | 'end';
+    /** Scroll behaviour of the jump. Default `auto`, an instant jump with no long animation. */
+    behavior?: ScrollBehavior;
+  };
 
 /**
  * Jumps back to the latest message. It renders only while the reader is away from the end.
  * Place it inside `Root`, after the viewport. It sits over the viewport's bottom edge.
  */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    { direction = 'end', behavior = 'smooth', className, children, size, variant = 'surface', emphasis, color = 'gray', radius = 'full', 'aria-label': label, onClick, ...props },
-    forwardedRef,
-  ) => {
+  ({ direction = 'end', behavior = 'auto', className, children, size, variant = 'surface', emphasis, color = 'gray', radius = 'full', 'aria-label': label, onClick, ...props }, forwardedRef) => {
     const { scrollToEnd, scrollToStart } = useMessageScroller();
 
     // The primitive blurs the button on click, which drops keyboard focus to the page. Kookie
@@ -156,9 +161,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       onClick?.(event);
       if (event.defaultPrevented) return;
       event.preventDefault();
-      const viewport = event.currentTarget
-        .closest('.kui-MessageScrollerRoot')
-        ?.querySelector<HTMLElement>('.kui-MessageScrollerViewport');
+      const viewport = event.currentTarget.closest('.kui-MessageScrollerRoot')?.querySelector<HTMLElement>('.kui-MessageScrollerViewport');
       viewport?.focus({ preventScroll: true });
       if (direction === 'start') scrollToStart({ behavior });
       else scrollToEnd({ behavior });

@@ -35,14 +35,25 @@
 
 /*
  * A CHOSEN card: a card that holds a checked Checkbox or Radio reads as picked, as in v2, so a
- * Card holding a choice replaces CheckboxCards and RadioCards. Only the card's own control
- * counts as a checkbox or radio; a Card holding a whole form of them is a form, not a choice.
+ * Card holding a choice replaces CheckboxCards and RadioCards. Only a Card that is the label
+ * of its control counts; a plain Card holding a form of them is a form, not a choice.
  */
-.kui-Card:where(:has(:is([role='checkbox'], [role='radio'])[data-state='checked'], input:is([type='checkbox'], [type='radio']):checked)) {
+.kui-Card:where(label:has(:is([role='checkbox'], [role='radio'])[data-state='checked'], input:is([type='checkbox'], [type='radio']):checked)) {
   &::before {
     background-image: linear-gradient(var(--accent-a2), var(--accent-a2));
   }
   &::after {
     box-shadow: inset 0 0 0 1px var(--accent-a8);
+  }
+}
+
+/* Forced colors: the edge is a box-shadow, which the browser drops, so draw a real border */
+@media (forced-colors: active) {
+  .kui-Card:where(:not(.kui-variant-ghost)) {
+    border: 1px solid CanvasText;
+  }
+
+  .kui-Card:where(label:has(:is([role='checkbox'], [role='radio'])[data-state='checked'], input:is([type='checkbox'], [type='radio']):checked)) {
+    border-color: Highlight;
   }
 }

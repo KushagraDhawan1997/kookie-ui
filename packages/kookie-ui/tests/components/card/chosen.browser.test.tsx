@@ -52,3 +52,38 @@ describe('a Card holding a checked choice reads as chosen', () => {
     expect(ring(a)).not.toBe(ring(b));
   });
 });
+
+describe('only a Card that is the label of its choice reads as chosen', () => {
+  it('a plain Card holding a checked checkbox stays plain', () => {
+    const { container } = render(
+      <Theme>
+        <Card>
+          <label>
+            <Checkbox defaultChecked /> Email me
+          </label>
+        </Card>
+      </Theme>,
+    );
+    const card = container.querySelector('.kui-Card')!;
+    expect(ring(card)).not.toContain('inset');
+    expect(tint(card)).not.toContain('gradient');
+  });
+
+  it('an outer Card around a chosen card stays plain', () => {
+    const { container } = render(
+      <Theme>
+        <Card data-outer>
+          <Card asChild>
+            <label>
+              <Checkbox defaultChecked />A
+            </label>
+          </Card>
+        </Card>
+      </Theme>,
+    );
+    const outer = container.querySelector('[data-outer]')!;
+    const inner = outer.querySelector('.kui-Card')!;
+    expect(ring(inner)).toContain('inset');
+    expect(ring(outer)).not.toContain('inset');
+  });
+});

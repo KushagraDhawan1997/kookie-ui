@@ -7,6 +7,7 @@ import { Select as SelectPrimitive, ScrollArea as ScrollAreaPrimitive } from 'ra
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSize } from '../helpers/theme-size.js';
 import { ChevronDownIcon, ThickCheckIcon } from './icons.js';
+import { Spinner } from './spinner.js';
 import {
   selectRootPropDefs,
   selectTriggerPropDefs,
@@ -152,21 +153,9 @@ const SelectTrigger = React.forwardRef<SelectTriggerElement, SelectTriggerProps>
           </span>
           <SelectPrimitive.Icon asChild>
             {loading ? (
-              <div className="kui-SelectIcon kui-SelectLoadingIcon" aria-hidden="true">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <circle
-                    cx="8"
-                    cy="8"
-                    r="7"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeDasharray="32"
-                    strokeDashoffset="32"
-                    className="kui-SelectLoadingIconCircle"
-                  />
-                </svg>
-              </div>
+              <span className="kui-SelectIcon kui-SelectLoadingIcon" aria-hidden="true">
+                <Spinner />
+              </span>
             ) : (
               <ChevronDownIcon className="kui-SelectIcon" />
             )}

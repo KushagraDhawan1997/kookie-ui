@@ -190,7 +190,7 @@ Root also accepts every attribute of the HTML `div` element. The types are on th
 | `submitOnEnter` | `boolean` | `false` | Enter sends and Shift+Enter starts a new line |
 | `asChild` | `boolean` | `false` | Renders the child element as the input |
 
-Textarea accepts every attribute of the HTML `textarea` element except `rows`, `value` and `defaultValue`, which Root sets. Your `onKeyDown` and `onPaste` run first. Call `preventDefault` in them to skip sending or attaching.
+Textarea accepts every attribute of the HTML `textarea` element except `rows`, `value` and `defaultValue`, which Root sets. `className` and `style` go on the textarea too. Your `onKeyDown` and `onPaste` run first. Call `preventDefault` in them to skip sending or attaching.
 
 ### Send
 
@@ -243,8 +243,9 @@ InlineStart, InlineEnd, Row, RowStart and RowEnd accept every attribute of the H
 | Shift+Enter | Starts a new line |
 | Tab | Moves between the text, the pills and the buttons |
 
-- **Name:** Textarea needs `aria-label` or `aria-labelledby`, and warns in development without one. Send is named "Send", "Stop" or "Retry" to match what it does. AttachTrigger is named "Add attachments" unless you pass a name.
+- **Name:** Textarea needs `aria-label`, `aria-labelledby` or a `<label htmlFor>`, and warns in development without one. Send is named "Send", "Stop" or "Retry" to match what it does. AttachTrigger is named "Add attachments" unless you pass a name.
 - **Announcements:** A polite live region reads "2 files attached.", "1 file could not be attached." and "Removed report.pdf.", and "Drop files here to attach." during a drag.
 - **Attachments:** The row is a list named "Attachments". Each pill reads its name, size and upload status. Its remove button is named "Remove" and the file name.
 - **Focus:** Removing a pill moves focus to the next pill's remove button, or to the text when none is left. After sending, focus returns to the text. A hidden Send button leaves the tab order.
+- **High contrast:** In forced colors mode the box draws a real border and shows a focus outline, since the browser drops its shadows.
 - **Typing in other scripts:** Enter that confirms an input method's suggestion doesn't send.

@@ -15,19 +15,16 @@
   box-sizing: border-box;
 
   transform-origin: var(--radix-popover-content-transform-origin);
-
-  /* Toolbar integration */
-  &:where([data-has-toolbar]) {
-    /* When toolbar is present, top padding equals toolbar height */
-    padding-top: var(--popover-toolbar-offset, var(--popover-content-padding));
-  }
 }
 
+/* The toolbar sits in flow and sticks to the top of the panel's scroll area, so it stays put
+   while the content scrolls. Negative margins pull it over the panel's padding to its edges;
+   the negative top matches, because sticky offsets count from inside the panel's padding. */
 .kui-PopoverToolbar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  position: sticky;
+  top: calc(-1 * var(--popover-content-padding));
+  margin-top: calc(-1 * var(--popover-content-padding));
+  margin-inline: calc(-1 * var(--popover-content-padding));
   z-index: 1;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -84,5 +81,12 @@
       --popover-toolbar-padding: var(--space-5);
       border-radius: var(--radius-surface-4);
     }
+  }
+}
+
+/* High contrast mode drops shadows, so give the panel a real edge. */
+@media (forced-colors: active) {
+  .kui-PopoverContent {
+    border: 1px solid CanvasText;
   }
 }

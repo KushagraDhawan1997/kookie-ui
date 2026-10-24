@@ -3,7 +3,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { Direction, Slot, Tooltip as TooltipPrimitive } from 'radix-ui';
-import { useComposedRefs, useLayoutEffect } from 'radix-ui/internal';
 
 import { getMatchingGrayColor } from '../helpers/get-matching-gray-color.js';
 import { ThemeSizeContext } from '../helpers/theme-size.js';
@@ -150,15 +149,6 @@ interface ThemeImplPublicProps extends ComponentPropsWithout<'div', RemovedProps
 interface ThemeImplPrivateProps extends Partial<ThemeChangeHandlers> {
   isRoot?: boolean;
 }
-function getClientOS(): 'windows' | 'macos' | 'linux' | undefined {
-  if (typeof navigator === 'undefined') return undefined;
-  const ua = navigator.userAgent;
-  if (ua.includes('Win')) return 'windows';
-  if (ua.includes('Mac')) return 'macos';
-  if (ua.includes('Linux')) return 'linux';
-  return undefined;
-}
-
 const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, forwardedRef) => {
   const context = React.useContext(ThemeContext);
   const {
@@ -173,14 +163,15 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
     fontFamily = props.fontFamily ?? context?.fontFamily ?? themePropDefs.fontFamily.default,
     headingFontFamily = props.headingFontFamily ?? context?.headingFontFamily,
     size = props.size ?? context?.size ?? themePropDefs.size.default,
-    //
-    onAppearanceChange = noop,
-    onAccentColorChange = noop,
-    onGrayColorChange = noop,
-    onRadiusChange = noop,
-    onFontFamilyChange = noop,
-    onHeadingFontFamilyChange = noop,
-    onSizeChange = noop,
+    // A nested Theme forwards changes to the one above it, so a switcher
+    // inside a portal (Dialog, Popover, menus) still reaches the root.
+    onAppearanceChange = context?.onAppearanceChange ?? noop,
+    onAccentColorChange = context?.onAccentColorChange ?? noop,
+    onGrayColorChange = context?.onGrayColorChange ?? noop,
+    onRadiusChange = context?.onRadiusChange ?? noop,
+    onFontFamilyChange = context?.onFontFamilyChange ?? noop,
+    onHeadingFontFamilyChange = context?.onHeadingFontFamilyChange ?? noop,
+    onSizeChange = context?.onSizeChange ?? noop,
     //
     ...themeProps
   } = props;
@@ -188,25 +179,6 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
   const resolvedGrayColor = grayColor === 'auto' ? getMatchingGrayColor(accentColor) : grayColor;
   const isExplicitAppearance = props.appearance === 'light' || props.appearance === 'dark';
   const hasBackground = hasBackgroundProp === undefined ? isRoot || isExplicitAppearance : hasBackgroundProp;
-
-  // `data-os` can only be resolved on the client. Writing it straight to the
-  // DOM keeps it out of the server markup — so hydration still matches — without
-  // spending a render pass, and a state update here would re-render the whole
-  // application on mount.
-  const rootRef = React.useRef<ThemeImplElement>(null);
-  const composedRef = useComposedRefs(forwardedRef, rootRef);
-  const hasExplicitOS = 'data-os' in themeProps;
-
-  useLayoutEffect(() => {
-    if (!isRoot || hasExplicitOS) return;
-    const node = rootRef.current;
-    if (!node) return;
-
-    const os = getClientOS();
-    if (!os) return;
-    node.setAttribute('data-os', os);
-    return () => node.removeAttribute('data-os');
-  }, [isRoot, hasExplicitOS]);
 
   return (
     <ThemeContext.Provider
@@ -261,7 +233,7 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
           data-radius={radius}
           data-font-family={fontFamily}
           data-heading-font-family={headingFontFamily}
-          ref={composedRef}
+          ref={forwardedRef}
           {...themeProps}
           className={classNames(
             'kui-theme',

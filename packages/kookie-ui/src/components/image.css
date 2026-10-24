@@ -12,6 +12,11 @@
   background-color: var(--neutral-a3);
 }
 
+/* Native width and height attributes give the ratio; the height follows the width when it shrinks */
+:where(.kui-Image[width][height]) {
+  height: auto;
+}
+
 .kui-Image:where([data-status='loaded']) {
   background-color: transparent;
 }

@@ -89,6 +89,7 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
   // stays native on form controls; on anything else (a link, an asChild child) the `disabled`
   // attribute does nothing, so aria-disabled carries the state and the click is stopped here.
   const loading = Boolean(props.loading);
+  const canLoad = props.loading !== undefined;
   const disabled = Boolean(nativeDisabled) || loading;
   const { onClick, 'aria-describedby': ariaDescribedByProp } = baseButtonProps as {
     onClick?: React.MouseEventHandler<HTMLElement>;
@@ -107,16 +108,19 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
 
   // Which edges start or end with an icon. A bare edge pads wider under a full radius; an edge
   // holding an icon keeps the plain padding (the icon already stands between text and curve).
-  // Only an svg is an icon. Rendering reads the children for an svg element at either end, so
-  // the server output is right for inline svgs; after mount the rendered DOM settles it, which
-  // also catches icon components (they render an svg) and rules out wrapped text (`<Text>`,
-  // `<Kbd>`, `<Trans>`), whose first node is not an svg.
+  // Rendering guesses from the children: an svg element, or a component at either end that is
+  // not a known text component (`<Text>`, `<Kbd>`, `<Trans>` and the like), counts as an icon,
+  // so the server output is right for icon components such as HugeIcons. After mount the
+  // rendered DOM settles it: only an svg is an icon, which corrects a wrong guess.
   const childEdges = React.useMemo(() => {
     const content =
       asChild && React.isValidElement(children) ? (children.props as { children?: React.ReactNode }).children : children;
     // Fragments are see-through: their own first and last children are the edges.
     const items = flattenFragments(content);
-    const isIcon = (node: React.ReactNode) => React.isValidElement(node) && node.type === 'svg';
+    const isIcon = (node: React.ReactNode) =>
+      React.isValidElement(node) &&
+      (node.type === 'svg' ||
+        (typeof node.type !== 'string' && node.type !== React.Fragment && !TEXT_COMPONENTS.has(componentName(node.type))));
     return { iconStart: isIcon(items[0]), iconEnd: isIcon(items[items.length - 1]) };
   }, [asChild, children]);
   const [domEdges, setDomEdges] = React.useState<{ iconStart: boolean; iconEnd: boolean } | null>(null);
@@ -124,11 +128,12 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
   const composedRef = useComposedRefs(forwardedRef, elementRef as React.Ref<BaseButtonElement>);
   useLayoutEffect(() => {
     const element = elementRef.current;
-    // While loading the label sits in a wrapper, and while done the tick stands at the start;
-    // keep the edges read before either.
+    // While loading the sr-only copy and spinner follow the content, and while done the tick
+    // stands at the start; keep the edges read before either.
     if (!element || loading || done) return;
-    const iconStart = edgeIsSvg(element, 'start');
-    const iconEnd = edgeIsSvg(element, 'end');
+    const contentRoot = element.querySelector(':scope > .kui-BaseButtonContent') ?? element;
+    const iconStart = edgeIsSvg(contentRoot, 'start');
+    const iconEnd = edgeIsSvg(contentRoot, 'end');
     setDomEdges((prev) => (prev && prev.iconStart === iconStart && prev.iconEnd === iconEnd ? prev : { iconStart, iconEnd }));
   });
   const { iconStart, iconEnd } = domEdges ?? childEdges;
@@ -159,8 +164,26 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
   const Comp = asChild ? Slot.Root : (as || 'button');
 
   // Only pass disabled for elements that support it
-  // This prevents invalid HTML attributes on unsupported elements
-  const shouldPassDisabled = asChild || !as || ['button', 'input', 'textarea', 'select'].includes(as);
+  // This prevents invalid HTML attributes on unsupported elements. With asChild, the child's own
+  // element type decides: a link child gets aria-disabled, not an invalid `disabled`.
+  const formElements = ['button', 'input', 'textarea', 'select'];
+  const renderedType = asChild ? (React.isValidElement(children) ? children.type : undefined) : (as || 'button');
+  const shouldPassDisabled = typeof renderedType === 'string' && formElements.includes(renderedType);
+
+  // With asChild, Radix Slot runs the child's own onClick before ours, so a disabled asChild
+  // button stops the click in the capture phase, before any bubble handler runs.
+  const { onClickCapture } = baseButtonProps as { onClickCapture?: React.MouseEventHandler<HTMLElement> };
+  const handleClickCapture = React.useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      if (asChild && disabled) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+      onClickCapture?.(event);
+    },
+    [asChild, disabled, onClickCapture],
+  );
 
   // Determine if we are rendering a real <button> element so we can set a safe
   // default type. Native <button> defaults to type="submit" which can cause
@@ -203,47 +226,69 @@ const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>((ownProp
       // Radix Toggle (asChild) passes `data-disabled={undefined}` that must not erase it.
       data-disabled={disabled || undefined}
       onClick={handleClick}
+      onClickCapture={handleClickCapture}
       ref={composedRef}
       className={classNames('kui-reset', 'kui-BaseButton', className)}
       {...(shouldPassDisabled && { disabled: nativeDisabled })}
       {...(isNativeButtonElement && !hasExplicitTypeAttribute ? { type: 'button' } : {})}
     >
-      {props.loading ? (
+      {asChild && !loading ? (
+        // asChild: Slot merges onto the single child, so the content can't take a wrapper or a sibling.
+        content
+      ) : (
         <>
           {/**
-           * We need a wrapper to set `visibility: hidden` to hide the button content whilst we show the `Spinner`.
-           * The button is a flex container with a `gap`, so we use `display: contents` to ensure the correct flex layout.
+           * A button that takes `loading` (true or false) keeps its content in this wrapper, so
+           * starting or stopping `loading` keeps the children in place (their state survives). A
+           * button that never loads skips it, which saves a node per button. `display: contents`
+           * keeps the button's flex
+           * gap; while loading the wrapper is `visibility: hidden` under the spinner.
            *
-           * However, `display: contents` removes the content from the accessibility tree in some browsers,
-           * so we force remove it with `aria-hidden` and re-add it in the tree with a `kui-sr-only` copy.
-           * Both are classes, not style attributes, so a loading button carries no inline style.
+           * `display: contents` removes the content from the accessibility tree in some browsers,
+           * so while loading the wrapper is `aria-hidden` and a `kui-sr-only` copy carries the name.
            */}
-          <span className="kui-BaseButtonContent" aria-hidden>
-            {content}
-          </span>
-
-          {/* The label stays the name; the hidden "Loading" only describes (aria-describedby reads hidden text). */}
-          <span className="kui-sr-only">
-            <span id={describedById} aria-hidden>
-              Loading
+          {canLoad ? (
+            <span className="kui-BaseButtonContent" aria-hidden={loading || undefined}>
+              {content}
             </span>
-            {children}
-          </span>
+          ) : (
+            content
+          )}
 
-          {/* Centered spinner overlay during loading state */}
-          <Flex asChild align="center" justify="center" position="absolute" inset="0">
-            <span>
-              <Spinner aria-hidden="true" />
-            </span>
-          </Flex>
+          {loading ? (
+            <>
+              {/* The label stays the name; the hidden "Loading" only describes (aria-describedby reads hidden text). */}
+              <span className="kui-sr-only">
+                <span id={describedById} aria-hidden>
+                  Loading
+                </span>
+                {children}
+              </span>
+
+              {/* Centered spinner overlay during loading state */}
+              <Flex asChild align="center" justify="center" position="absolute" inset="0">
+                <span>
+                  <Spinner aria-hidden="true" />
+                </span>
+              </Flex>
+            </>
+          ) : null}
         </>
-      ) : (
-        content
       )}
     </Comp>
   );
 });
 BaseButton.displayName = 'BaseButton';
+
+/** Components that render text, never an icon, so the render-time guess skips them. */
+const TEXT_COMPONENTS = new Set(['Text', 'Kbd', 'Code', 'Link', 'Em', 'Strong', 'Quote', 'Badge', 'Trans']);
+
+/** A component's display name, looking through forwardRef and memo. */
+function componentName(type: unknown): string {
+  if (!type || (typeof type !== 'function' && typeof type !== 'object')) return '';
+  const named = type as { displayName?: string; name?: string; render?: unknown; type?: unknown };
+  return named.displayName || named.name || componentName(named.render) || componentName(named.type);
+}
 
 /** The child list with fragments opened up: a fragment's own children are the edges. */
 function flattenFragments(nodes: React.ReactNode): React.ReactNode[] {

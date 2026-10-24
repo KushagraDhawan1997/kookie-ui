@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useLayoutEffect } from 'radix-ui/internal';
 
 import { useResolvedResponsiveValue } from './base-menu.utils.js';
 
@@ -26,6 +27,9 @@ interface MenuContextValue {
 }
 
 const MenuContext = React.createContext<MenuContextValue>({ isInsideMenu: false });
+
+/** The register function of the menu Group a Label sits in (see useMenuGroupLabelId). */
+const MenuGroupLabelContext = React.createContext<((id: string | null) => void) | null>(null);
 
 interface MenuProviderProps {
   children: React.ReactNode;
@@ -55,7 +59,12 @@ export function MenuProvider({ children, size }: MenuProviderProps) {
     () => ({ isInsideMenu: true, size: resolvedSize, itemHeight }),
     [resolvedSize, itemHeight],
   );
-  return <MenuContext.Provider value={value}>{children}</MenuContext.Provider>;
+  // A submenu is its own surface, so its labels never name a group of the parent menu.
+  return (
+    <MenuContext.Provider value={value}>
+      <MenuGroupLabelContext.Provider value={null}>{children}</MenuGroupLabelContext.Provider>
+    </MenuContext.Provider>
+  );
 }
 
 export function useMenuContext() {
@@ -71,4 +80,30 @@ export const MenuCloseProvider = MenuCloseContext.Provider;
 
 export function useMenuClose() {
   return React.useContext(MenuCloseContext);
+}
+
+/**
+ * Names a menu group by its label, the way v2's MenuGroup does. A Group holds the id of
+ * the Label inside it and points aria-labelledby at it, so a screen reader announces the
+ * section name when focus enters the group.
+ */
+export const MenuGroupLabelProvider = MenuGroupLabelContext.Provider;
+
+/** For a Group: the id its aria-labelledby points to, and the setter a nested Label calls. */
+export function useMenuGroupLabelledBy(ariaLabelledBy: string | undefined) {
+  const [labelId, setLabelId] = React.useState<string | null>(null);
+  return [ariaLabelledBy ?? labelId ?? undefined, setLabelId] as const;
+}
+
+/** For a Label: its id, registered with the Group it sits in while the label is rendered. */
+export function useMenuGroupLabelId(idProp: string | undefined, rendered = true) {
+  const register = React.useContext(MenuGroupLabelContext);
+  const generatedId = React.useId();
+  const id = idProp ?? generatedId;
+  useLayoutEffect(() => {
+    if (!register || !rendered) return;
+    register(id);
+    return () => register(null);
+  }, [register, id, rendered]);
+  return register ? id : idProp;
 }

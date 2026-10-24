@@ -151,6 +151,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
   return (
     <div
       {...withoutRemovedPaneProps(domProps)}
+      role={domProps.role ?? 'navigation'}
       id={pane.id}
       ref={composedRef}
       className={classNames('kui-ShellPane', 'kui-ShellSidebar', className)}
@@ -177,3 +178,5 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
 
 Sidebar.displayName = 'Shell.Sidebar';
 Sidebar.Handle = SidebarHandle;
+
+export type { SidebarPublicProps };

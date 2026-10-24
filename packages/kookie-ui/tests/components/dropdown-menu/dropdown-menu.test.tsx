@@ -253,4 +253,29 @@ describe('DropdownMenu', () => {
     );
     expect(propWarnings).toEqual([]);
   });
+
+  it('names a group by the label inside it', async () => {
+    renderMenu(
+      <>
+        <DropdownMenu.Group>
+          <DropdownMenu.Label>Recent</DropdownMenu.Label>
+          <DropdownMenu.Item>Report.pdf</DropdownMenu.Item>
+        </DropdownMenu.Group>
+        <DropdownMenu.RadioGroup value="list">
+          <DropdownMenu.Label id="view-label">View</DropdownMenu.Label>
+          <DropdownMenu.RadioItem value="list">List</DropdownMenu.RadioItem>
+        </DropdownMenu.RadioGroup>
+        <DropdownMenu.Group aria-labelledby="external">
+          <DropdownMenu.Label>Ignored</DropdownMenu.Label>
+        </DropdownMenu.Group>
+        <DropdownMenu.Group data-testid="unlabelled">
+          <DropdownMenu.Item>Plain</DropdownMenu.Item>
+        </DropdownMenu.Group>
+      </>,
+    );
+    expect(await screen.findByRole('group', { name: 'Recent' })).toBeInTheDocument();
+    expect(screen.getByRole('group', { name: 'View' })).toHaveAttribute('aria-labelledby', 'view-label');
+    expect(screen.getAllByRole('group')[2]).toHaveAttribute('aria-labelledby', 'external');
+    expect(screen.getByTestId('unlabelled')).not.toHaveAttribute('aria-labelledby');
+  });
 });

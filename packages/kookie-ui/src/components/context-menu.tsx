@@ -23,7 +23,13 @@ import { ThickCheckIcon, ThickChevronRightIcon, ThickDotIcon } from './icons.js'
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
-import { MenuCloseProvider, MenuProvider } from './_internal/menu-context.js';
+import {
+  MenuCloseProvider,
+  MenuGroupLabelProvider,
+  MenuProvider,
+  useMenuGroupLabelId,
+  useMenuGroupLabelledBy,
+} from './_internal/menu-context.js';
 import {
   MenuShortcut,
   getMenuAlignOffset,
@@ -165,14 +171,18 @@ type ContextMenuLabelElement = React.ElementRef<typeof ContextMenuPrimitive.Labe
 interface ContextMenuLabelProps
   extends ComponentPropsWithout<typeof ContextMenuPrimitive.Label, RemovedProps> {}
 const ContextMenuLabel = React.forwardRef<ContextMenuLabelElement, ContextMenuLabelProps>(
-  ({ className, ...props }, forwardedRef) => (
-    <ContextMenuPrimitive.Label
-      {...props}
-      asChild={false}
-      ref={forwardedRef}
-      className={classNames('kui-BaseMenuLabel', 'kui-ContextMenuLabel', className)}
-    />
-  ),
+  ({ className, id: idProp, ...props }, forwardedRef) => {
+    const id = useMenuGroupLabelId(idProp);
+    return (
+      <ContextMenuPrimitive.Label
+        {...props}
+        id={id}
+        asChild={false}
+        ref={forwardedRef}
+        className={classNames('kui-BaseMenuLabel', 'kui-ContextMenuLabel', className)}
+      />
+    );
+  },
 );
 ContextMenuLabel.displayName = 'ContextMenu.Label';
 
@@ -210,14 +220,20 @@ type ContextMenuGroupElement = React.ElementRef<typeof ContextMenuPrimitive.Grou
 interface ContextMenuGroupProps
   extends ComponentPropsWithout<typeof ContextMenuPrimitive.Group, RemovedProps> {}
 const ContextMenuGroup = React.forwardRef<ContextMenuGroupElement, ContextMenuGroupProps>(
-  ({ className, ...props }, forwardedRef) => (
-    <ContextMenuPrimitive.Group
-      {...props}
-      asChild={false}
-      ref={forwardedRef}
-      className={classNames('kui-BaseMenuGroup', 'kui-ContextMenuGroup', className)}
-    />
-  ),
+  ({ className, 'aria-labelledby': ariaLabelledBy, ...props }, forwardedRef) => {
+    const [labelledBy, setLabelId] = useMenuGroupLabelledBy(ariaLabelledBy);
+    return (
+      <MenuGroupLabelProvider value={setLabelId}>
+        <ContextMenuPrimitive.Group
+          aria-labelledby={labelledBy}
+          {...props}
+          asChild={false}
+          ref={forwardedRef}
+          className={classNames('kui-BaseMenuGroup', 'kui-ContextMenuGroup', className)}
+        />
+      </MenuGroupLabelProvider>
+    );
+  },
 );
 ContextMenuGroup.displayName = 'ContextMenu.Group';
 
@@ -227,14 +243,20 @@ interface ContextMenuRadioGroupProps
 const ContextMenuRadioGroup = React.forwardRef<
   ContextMenuRadioGroupElement,
   ContextMenuRadioGroupProps
->(({ className, ...props }, forwardedRef) => (
-  <ContextMenuPrimitive.RadioGroup
-    {...props}
-    asChild={false}
-    ref={forwardedRef}
-    className={classNames('kui-BaseMenuRadioGroup', 'kui-ContextMenuRadioGroup', className)}
-  />
-));
+>(({ className, 'aria-labelledby': ariaLabelledBy, ...props }, forwardedRef) => {
+  const [labelledBy, setLabelId] = useMenuGroupLabelledBy(ariaLabelledBy);
+  return (
+    <MenuGroupLabelProvider value={setLabelId}>
+      <ContextMenuPrimitive.RadioGroup
+        aria-labelledby={labelledBy}
+        {...props}
+        asChild={false}
+        ref={forwardedRef}
+        className={classNames('kui-BaseMenuRadioGroup', 'kui-ContextMenuRadioGroup', className)}
+      />
+    </MenuGroupLabelProvider>
+  );
+});
 ContextMenuRadioGroup.displayName = 'ContextMenu.RadioGroup';
 
 type ContextMenuRadioItemElement = React.ElementRef<typeof ContextMenuPrimitive.RadioItem>;

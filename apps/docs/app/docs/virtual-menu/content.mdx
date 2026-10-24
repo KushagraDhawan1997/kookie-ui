@@ -64,7 +64,7 @@ Inside a menu, `DropdownMenu.Virtual` and `ContextMenu.Virtual` are the same com
 
 ## Items
 
-Pass `itemLabel` for rows of plain text. It accepts the name of a property, such as `"name"`, or a function that returns the label. Pass `renderItem` for rows with icons, avatars or a second line of text. One of the two is required.
+Pass `itemLabel` for rows of plain text. It accepts the name of a property, such as `"name"`, or a function that returns the label. Pass `renderItem` for rows with icons, avatars or a second line of text. One of the two is required, and TypeScript reports a list that has neither.
 
 A `renderItem` component receives the item, its index and the props that position and wire up the row. Spread those props onto `VirtualMenu.Item`, and wrap the component in `React.memo` at module scope, so a scroll redraws only the rows that move.
 
@@ -83,7 +83,7 @@ const PersonRow = React.memo(function PersonRow({ item, isHighlighted, index, ..
 
 ## Size
 
-Row height follows the size of the parent menu, so a virtual list in a size 1 `DropdownMenu.Content` uses size 1 rows. Inside a menu, the list reads the row height the CSS draws, so rows stay in step with the theme's scale. Outside a menu, set `size` on the list. Set `estimatedItemSize` only for rows taller than a menu row.
+Row height follows the size of the parent menu, so a virtual list in a size 1 `DropdownMenu.Content` uses size 1 rows. Inside a menu, the list reads the row height the CSS draws, so rows stay in step with the theme's scale. Outside a menu, such as in a Popover, the list draws the same rows and highlight as a menu at its own `size`, which is `'2'` unless you set it. Set `estimatedItemSize` only for rows taller than a menu row.
 
 ## Examples
 
@@ -124,13 +124,14 @@ Pass a function to `estimatedItemSize` that returns the height of each row in pi
 | `estimatedItemSize` | `number \| (index: number) => number` | The row height for `size` | The height of each row in pixels |
 | `overscan` | `number` | `5` | Rows drawn above and below the visible area |
 | `aria-label` | `string` | | The name of the list |
+| `aria-labelledby`, `id`, `data-*` | | | Passed to the list element, with the other attributes of the HTML `div` element |
 | `className` | `string` | | A class for the list |
 | `style` | `CSSProperties` | | Styles for the list. Set `height` here or in the class |
 | `ref` | `Ref<HTMLDivElement>` | | The list element, for moving focus to it |
 
 ### VirtualMenu.Item
 
-VirtualMenu.Item accepts every attribute of the HTML `div` element. Pass it the props from `renderItem`.
+VirtualMenu.Item accepts every attribute of the HTML `div` element. Pass it the props from `renderItem`. It redraws when any of its props change, other than a new `style` object with the same height and position.
 
 ### Render item props
 
@@ -140,6 +141,7 @@ VirtualMenu.Item accepts every attribute of the HTML `div` element. Pass it the 
 | `index` | `number` | The position of the item in `items` |
 | `isHighlighted` | `boolean` | Whether the row is highlighted |
 | `id`, `style`, `tabIndex` | | The id, position and tab stop of the row. Pass them through |
+| `aria-setsize`, `aria-posinset` | `number` | The length of the whole list and the row's place in it, since only some rows are drawn. Pass them through |
 | `data-highlighted`, `data-index` | | Attributes for the highlight style and the event handlers. Pass them through |
 | `onClick`, `onKeyDown`, `onMouseEnter`, `onMouseLeave` | | The handlers that choose and highlight the row. Pass them through |
 
@@ -151,8 +153,11 @@ VirtualMenu.Item accepts every attribute of the HTML `div` element. Pass it the 
 | Home or End | Moves the highlight to the first or last row |
 | Enter or Space | Chooses the highlighted row |
 | Escape | Takes focus off the list. Inside a menu, it closes the menu and returns focus to the trigger |
+| Tab | On its own, moves focus to the next element on the page. Inside a menu, it does nothing, as in any menu |
 
 - **Roles:** Each row has the `menuitem` role. On its own, the list has the `menu` role. Inside a Dropdown Menu or a Context Menu, it has the `group` role, because the parent is the menu.
 - **Name:** Set `aria-label` so a screen reader can name the list.
-- **Highlight:** The list keeps focus and points `aria-activedescendant` at the highlighted row, so a screen reader announces each row as the highlight moves.
+- **Highlight:** The list keeps focus and points `aria-activedescendant` at the highlighted row, so a screen reader announces each row as the highlight moves. Moving the pointer off a row clears its highlight.
+- **Position:** Each row sets `aria-setsize` and `aria-posinset`, so a screen reader announces the length of the whole list, not only the rows drawn.
+- **Letters:** Inside a menu, typing a letter while the list has focus does not move focus to a menu item outside the list.
 - **Focus:** The list is one tab stop. Inside a menu, the list takes focus when the menu opens and highlights the first row, so the arrow keys reach the rows straight away. Choosing a row closes the menu and returns focus to its trigger.

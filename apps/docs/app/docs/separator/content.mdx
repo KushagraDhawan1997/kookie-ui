@@ -42,11 +42,11 @@ export function PlanSummary() {
 
 **Don't separate every item.** A line between each row of a list adds noise. Use one between groups, not between members of a group.
 
-**Mark it as a separator only when it carries meaning.** Most separators are decoration and stay hidden from screen readers. Set `decorative={false}` when the line divides content a reader should know about, such as two parts of a menu.
+**Hide a purely visual line.** A separator is announced to screen readers by default. Set `decorative` when the line only draws a border and divides nothing a reader should know about.
 
 ## Orientation
 
-`orientation` is `horizontal` by default, a line 1 pixel tall across the full width of its parent. `vertical` is 1 pixel wide and as tall as its parent, for dividing groups in a row. `orientation` accepts a responsive object, so a separator can turn with a layout that switches from row to column.
+`orientation` is `horizontal` by default, a line 1 pixel tall across the full width of its parent. `vertical` is 1 pixel wide and stretches to the height of its row, for dividing groups in a row. Outside a Flex it is as tall as a parent with a set height. `orientation` accepts a responsive object, so a separator can turn with a layout that switches from row to column.
 
 The separator has no margin props. Set the space around it with `gap` on the parent.
 
@@ -54,7 +54,7 @@ The separator has no margin props. Set the space around it with `gap` on the par
 
 ### Toolbar groups
 
-A vertical separator takes the height of its row. Leave the Flex at its default `align="stretch"`, so the line runs the full height of the buttons.
+A vertical separator takes the height of its row, whatever the Flex's `align`, so the line runs the full height of the buttons.
 
 ```tsx
 <Flex gap="2">
@@ -79,12 +79,12 @@ A vertical separator takes the height of its row. Leave the Flex at its default 
 | `orientation` | `'horizontal' \| 'vertical'`, responsive | `'horizontal'` | The direction of the line |
 | `color` | `AccentColor` | `'gray'` | The colour of the line |
 | `light` | `boolean` | `false` | Draws the line at a lower contrast |
-| `decorative` | `boolean` | `true` | Hides the separator from screen readers. Set `false` to give it the `separator` role |
+| `decorative` | `boolean` | `false` | Hides the separator from screen readers by removing its `separator` role |
 
 Separator renders a `span` and accepts every attribute of the HTML `span` element.
 
 ## Accessibility
 
-- **Decorative:** By default the separator has no role, so screen readers skip it.
-- **Semantic:** With `decorative={false}` it takes `role="separator"`. A vertical one also gets `aria-orientation="vertical"`. A responsive `orientation` announces its `initial` value.
+- **Role:** By default the separator has `role="separator"` and an `aria-orientation` that matches the line. A responsive `orientation` announces the one drawn at the current screen width.
+- **Decorative:** With `decorative` it has no role, so screen readers skip it.
 - **Focus:** The separator never takes focus.

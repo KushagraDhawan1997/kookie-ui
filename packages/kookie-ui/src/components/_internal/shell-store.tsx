@@ -19,6 +19,7 @@
  *   construction.
  */
 import * as React from 'react';
+import { useLayoutEffect } from 'radix-ui/internal';
 import { SHELL_BREAKPOINTS } from '../shell.types.js';
 import type { Breakpoint, PaneName, PresentationValue } from '../shell.types.js';
 
@@ -184,7 +185,7 @@ export function useInsetRegistration(id: InsetPaneId, inset: boolean | undefined
   const ctx = React.useContext(ShellInsetContext);
   if (!ctx) throw new Error('Shell panes must be used within <Shell.Root>');
   const { registerInset, unregisterInset } = ctx;
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (!inset) return;
     registerInset(id);
     return () => unregisterInset(id);

@@ -85,7 +85,7 @@ Render your router's link with `asChild`. The element stays an anchor, so it ope
 
 ### Choosing one option
 
-A card that holds a checked [Checkbox](/docs/checkbox) or [Radio](/docs/radio) shows an accent fill and border. Render it as a `label` so a press anywhere on the card toggles the control.
+A card rendered as a `label` that holds a checked [Checkbox](/docs/checkbox) or [Radio](/docs/radio) shows an accent fill and border, and a press anywhere on the card toggles the control. A plain card holding a form of checkboxes doesn't light up.
 
 ```tsx
 <Card asChild>
@@ -130,3 +130,4 @@ Card also accepts every attribute of the HTML `div` element.
 - **Structure:** A card is a `div` and adds no role. Start it with a heading when it is a section, so people who use a screen reader can find it by heading.
 - **Links:** A card rendered as a link announces all of its text as the link name. Keep the content short, and put the most important words first.
 - **Focus:** A plain card is not focusable. A card rendered as a link, a `button` or a `label` shows the focus ring for the keyboard only.
+- **High contrast:** In forced colors mode, such as Windows High Contrast, every variant except `ghost` draws a solid border, and a chosen card draws it in the highlight colour.

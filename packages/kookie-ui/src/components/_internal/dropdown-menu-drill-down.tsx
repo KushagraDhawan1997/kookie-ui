@@ -20,7 +20,6 @@ type SubmenuBehavior = (typeof submenuBehaviors)[number];
  * never land on a hidden item.
  */
 
-type AnimationDirection = 'forward' | 'backward' | null;
 type Modality = 'keyboard' | 'pointer';
 
 interface StackEntry {
@@ -38,11 +37,10 @@ type LastChange =
 
 interface DrillDownState {
   stack: StackEntry[];
-  direction: AnimationDirection;
   lastChange: LastChange | null;
 }
 
-const INITIAL_STATE: DrillDownState = { stack: [], direction: null, lastChange: null };
+const INITIAL_STATE: DrillDownState = { stack: [], lastChange: null };
 
 const PANEL_ITEM_SELECTOR = '[role^="menuitem"]:not([data-disabled])';
 const BACK_ITEM_CLASS = 'kui-DropdownMenuDrillDownBackItem';
@@ -55,6 +53,12 @@ class DrillDownStore {
   private state = INITIAL_STATE;
   private listeners = new Set<() => void>();
   private modality: Modality = 'keyboard';
+  /**
+   * Controlled submenus. A request to open or close one of them goes to its
+   * `onOpenChange` instead of the stack; its `open` prop then moves the stack.
+   */
+  private controllers = new Map<string, (open: boolean) => void>();
+  private pendingModality = new Map<string, Modality | null>();
   /** The drill-down root element, set by the provider */
   rootElement: HTMLElement | null = null;
 
@@ -87,6 +91,26 @@ class DrillDownStore {
 
   isOpen = (id: string) => this.state.stack.some((entry) => entry.id === id);
 
+  setController = (id: string, onOpenChange: ((open: boolean) => void) | null) => {
+    if (onOpenChange) this.controllers.set(id, onOpenChange);
+    else this.controllers.delete(id);
+  };
+
+  /** The modality of the last open or close request for a controlled submenu. */
+  takePendingModality = (id: string) => {
+    const modality = this.pendingModality.get(id) ?? null;
+    this.pendingModality.delete(id);
+    return modality;
+  };
+
+  private request(id: string, open: boolean, modality: Modality | null) {
+    const controller = this.controllers.get(id);
+    if (!controller) return false;
+    this.pendingModality.set(id, modality);
+    controller(open);
+    return true;
+  }
+
   private getScrollContainer() {
     const root = this.rootElement;
     if (!root) return null;
@@ -110,12 +134,19 @@ class DrillDownStore {
   push = (id: string, modality: Modality | null = this.modality) => {
     const { stack } = this.state;
     if (stack.some((entry) => entry.id === id)) return;
+    if (this.request(id, true, modality)) return;
+    this.open(id, modality);
+  };
+
+  /** Puts a submenu on the stack, bypassing its controller. */
+  open = (id: string, modality: Modality | null = null) => {
+    const { stack } = this.state;
+    if (stack.some((entry) => entry.id === id)) return;
     const trigger = this.getTrigger(id);
     const name = (trigger?.dataset.drillDownName ?? trigger?.textContent ?? '').trim();
     const scrollTop = this.getScrollContainer()?.scrollTop ?? 0;
     this.setState({
       stack: [...stack, { id, name, scrollTop }],
-      direction: 'forward',
       lastChange: { type: 'push', id, modality },
     });
   };
@@ -124,28 +155,30 @@ class DrillDownStore {
     const { stack } = this.state;
     const top = stack[stack.length - 1];
     if (!top) return;
+    if (this.request(top.id, false, modality)) return;
     this.setState({
       stack: stack.slice(0, -1),
-      direction: 'backward',
       lastChange: { type: 'pop', id: top.id, modality, scrollTop: top.scrollTop },
     });
   };
 
-  /** Closes a submenu and everything opened from it, without moving focus to its trigger. */
-  close = (id: string) => {
+  /**
+   * Closes a submenu and everything opened from it, bypassing its controller.
+   * Focus moves to its trigger only for a keyboard close.
+   */
+  close = (id: string, modality: Modality | null = null) => {
     const { stack } = this.state;
     const index = stack.findIndex((entry) => entry.id === id);
     if (index === -1) return;
     this.setState({
       stack: stack.slice(0, index),
-      direction: 'backward',
-      lastChange: { type: 'pop', id, modality: null, scrollTop: stack[index].scrollTop },
+      lastChange: { type: 'pop', id, modality, scrollTop: stack[index].scrollTop },
     });
   };
 
   reset = () => {
-    if (this.state.stack.length === 0 && this.state.direction === null) return;
-    this.setState({ stack: [], direction: null, lastChange: { type: 'reset' } });
+    if (this.state.stack.length === 0) return;
+    this.setState({ stack: [], lastChange: { type: 'reset' } });
   };
 
   /**
@@ -212,9 +245,7 @@ function useCreateDrillDownStore() {
 }
 
 const selectDepth = (state: DrillDownState) => state.stack.length;
-const selectDirection = (state: DrillDownState) => state.direction;
 const getServerDepth = () => 0;
-const getServerDirection = (): AnimationDirection => null;
 
 interface DrillDownRootProps {
   store: DrillDownStore;
@@ -235,11 +266,6 @@ function DrillDownRoot({ store, behavior, open, children }: DrillDownRootProps) 
     store.subscribe,
     () => selectDepth(store.getState()),
     getServerDepth,
-  );
-  const direction = React.useSyncExternalStore(
-    store.subscribe,
-    () => selectDirection(store.getState()),
-    getServerDirection,
   );
   const isRoot = !isDrillDown || depth === 0;
 
@@ -275,7 +301,6 @@ function DrillDownRoot({ store, behavior, open, children }: DrillDownRootProps) 
         className="kui-DropdownMenuDrillDownRoot"
         data-submenu-behavior={behavior}
         data-drill-down-active={isRoot ? undefined : true}
-        data-animation-direction={isDrillDown ? (direction ?? undefined) : undefined}
         onKeyDownCapture={isDrillDown ? handleKeyDownCapture : undefined}
         onPointerDownCapture={isDrillDown ? handlePointerDownCapture : undefined}
       >
@@ -306,11 +331,6 @@ function useStackEntry(store: DrillDownStore | null, id: string): StackEntry | u
   return React.useSyncExternalStore(store?.subscribe ?? noopSubscribe, getSnapshot, getUndefined);
 }
 
-function useDrillDownDirection(store: DrillDownStore | null): AnimationDirection {
-  const getSnapshot = React.useCallback(() => store?.getState().direction ?? null, [store]);
-  return React.useSyncExternalStore(store?.subscribe ?? noopSubscribe, getSnapshot, getServerDirection);
-}
-
 const noopSubscribe = () => () => {};
 const getClosed = (): PanelPosition => 'closed';
 const getUndefined = () => undefined;
@@ -338,10 +358,9 @@ export {
   SubContext,
   useCreateDrillDownStore,
   useDrillDownStore,
-  useDrillDownDirection,
   usePanelPosition,
   useStackEntry,
   useSubContext,
 };
 
-export type { SubmenuBehavior, DrillDownStore, PanelPosition, SubContextValue, AnimationDirection };
+export type { SubmenuBehavior, DrillDownStore, PanelPosition, SubContextValue };

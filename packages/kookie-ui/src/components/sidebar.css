@@ -198,18 +198,6 @@
   flex-shrink: 0;
 }
 
-/* Ensure submenu anchors also truncate */
-:where(.kui-ShellRailContent .kui-SidebarMenuSubContent .kui-SidebarMenuButton > *) {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
-  min-width: 0;
-}
-
 /* Ensure icons remain visible at their token sizes in thin mode */
 /* stylelint-disable-next-line selector-max-type */
 :where(.kui-ShellRailContent .kui-SidebarMenuButton) :where(svg) {
@@ -316,51 +304,10 @@
   display: none !important;
 }
 
-/* Hide submenu chevrons and flatten sublists in rail */
+/* Hide submenu chevrons in rail */
 :where(.kui-ShellRailContent .kui-SidebarMenuSubTriggerIcon),
 :where(.kui-ShellRailContent .kui-BaseMenuSubTriggerIcon) {
   display: none !important;
-}
-
-:where(.kui-ShellRailContent .kui-SidebarMenuSubList),
-:where(.kui-ShellRailContent .kui-BaseMenuSubList) {
-  padding-left: 0 !important;
-  margin-left: 0 !important;
-  border-left: 0 !important;
-  border-top: 0 !important;
-  border-bottom: 0 !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-/* Also remove any decorative rule on the submenu list in thin mode */
-:where(.kui-ShellRailContent .kui-SidebarMenuSubList::before),
-:where(.kui-ShellRailContent .kui-BaseMenuSubList::before) {
-  content: none !important;
-  display: none !important;
-}
-
-/* Ensure the Accordion content wrapper doesn't add indentation */
-:where(.kui-ShellRailContent .kui-SidebarMenuSubContent) {
-  padding-left: 0 !important;
-  margin-left: 0 !important;
-  border-left: 0 !important;
-  border-top: 1px solid var(--neutral-a6) !important;
-  border-bottom: 1px solid var(--neutral-a6) !important;
-  margin-top: var(--space-3) !important;
-  margin-bottom: var(--space-3) !important;
-  /* background-color: var(--accent-3); */
-}
-
-/* Remove vertical connector in thin mode */
-/* (intentionally no ::before) */
-
-/* Ensure submenu buttons also truncate */
-:where(.kui-ShellRailContent .kui-SidebarMenuSubContent .kui-SidebarMenuButton) {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
 }
 
 /* Panel Layout Styling (default) - inherits existing styles */
@@ -404,87 +351,6 @@
   & :where(.kui-SidebarMenuButton) {
     flex: 1;
   }
-}
-
-/* Flex utilities for header/footer layouts */
-.kui-SidebarHeader:where(.kui-flex-row) {
-  flex-direction: row;
-}
-.kui-SidebarHeader:where(.kui-flex-col) {
-  flex-direction: column;
-}
-.kui-SidebarHeader:where(.kui-items-center) {
-  align-items: center;
-}
-.kui-SidebarHeader:where(.kui-items-start) {
-  align-items: flex-start;
-}
-.kui-SidebarHeader:where(.kui-items-end) {
-  align-items: flex-end;
-}
-.kui-SidebarHeader:where(.kui-justify-between) {
-  justify-content: space-between;
-}
-.kui-SidebarHeader:where(.kui-justify-center) {
-  justify-content: center;
-}
-.kui-SidebarHeader:where(.kui-justify-start) {
-  justify-content: flex-start;
-}
-.kui-SidebarHeader:where(.kui-justify-end) {
-  justify-content: flex-end;
-}
-.kui-SidebarHeader:where(.kui-gap-1) {
-  gap: var(--space-2);
-}
-.kui-SidebarHeader:where(.kui-gap-2) {
-  gap: var(--space-3);
-}
-.kui-SidebarHeader:where(.kui-gap-3) {
-  gap: var(--space-4);
-}
-.kui-SidebarHeader:where(.kui-gap-4) {
-  gap: var(--space-5);
-}
-
-.kui-SidebarFooter:where(.kui-flex-row) {
-  flex-direction: row;
-}
-.kui-SidebarFooter:where(.kui-flex-col) {
-  flex-direction: column;
-}
-.kui-SidebarFooter:where(.kui-items-center) {
-  align-items: center;
-}
-.kui-SidebarFooter:where(.kui-items-start) {
-  align-items: flex-start;
-}
-.kui-SidebarFooter:where(.kui-items-end) {
-  align-items: flex-end;
-}
-.kui-SidebarFooter:where(.kui-justify-between) {
-  justify-content: space-between;
-}
-.kui-SidebarFooter:where(.kui-justify-center) {
-  justify-content: center;
-}
-.kui-SidebarFooter:where(.kui-justify-start) {
-  justify-content: flex-start;
-}
-.kui-SidebarFooter:where(.kui-justify-end) {
-  justify-content: flex-end;
-}
-.kui-SidebarFooter:where(.kui-gap-1) {
-  gap: var(--space-2);
-}
-.kui-SidebarFooter:where(.kui-gap-2) {
-  gap: var(--space-3);
-}
-.kui-SidebarFooter:where(.kui-gap-3) {
-  gap: var(--space-4);
-}
-.kui-SidebarFooter:where(.kui-gap-4) {
-  gap: var(--space-5);
 }
 
 /* Header/Footer Menu Button Support */

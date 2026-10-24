@@ -6,7 +6,7 @@ const sizes = ['1', '2', '3', '4'] as const;
 const orientations = ['horizontal', 'vertical'] as const;
 
 const segmentedControlRootPropDefs = {
-  disabled: { type: 'boolean', className: 'disabled', default: false },
+  disabled: { type: 'boolean', default: false },
   size: { type: 'enum', className: 'kui-r-size', values: sizes, default: '2', responsive: true },
   orientation: {
     type: 'enum',

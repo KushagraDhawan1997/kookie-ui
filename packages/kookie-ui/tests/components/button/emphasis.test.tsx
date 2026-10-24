@@ -32,10 +32,12 @@ describe('emphasis is a button rank, and the same thing as its variant', () => {
     expect(screen.getByRole('button', { name: 'A' })).toHaveClass('kui-variant-raised');
   });
 
-  it('passing both is an error', () => {
-    vi.spyOn(console, 'error').mockImplementation(() => {});
+  it('passing both logs an error and emphasis wins, without throwing', () => {
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
     // @ts-expect-error emphasis and variant are mutually exclusive
-    expect(() => renderWithProviders(<Button emphasis="loud" variant="solid">A</Button>)).toThrow(/emphasis.*variant.*not both/);
+    expect(() => renderWithProviders(<Button emphasis="loud" variant="soft">A</Button>)).not.toThrow();
+    expect(error.mock.calls.some(([message]) => /emphasis.*variant.*not both/.test(String(message)))).toBe(true);
+    expect(screen.getByRole('button', { name: 'A' })).toHaveClass('kui-variant-solid');
     vi.restoreAllMocks();
   });
 

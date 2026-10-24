@@ -178,6 +178,7 @@ Slot also accepts every attribute of the HTML `div` element.
 
 - **Label:** The field renders no label of its own. Connect a visible label with `htmlFor` and `id`, or pass `aria-label` when the purpose is clear from what is around it, as in a search bar.
 - **Errors:** `error` sets `aria-invalid`. The `errorMessage` element is linked with `aria-describedby` and has `role="alert"`, so a screen reader reads it when it appears.
-- **Slots:** Clicking a slot moves focus to the input, with the cursor at the start for a left slot and at the end for a right slot. A button inside a slot keeps its own focus.
+- **Slots:** Clicking a slot moves focus to the input, with the cursor at the start for a left slot and at the end for a right slot. A button, link, select, label or other focusable control inside a slot keeps its own focus. Slot content is linked to the input with `aria-describedby`, so a screen reader reads a unit like "USD" with the field.
 - **Scrubbing:** Dragging works with a pointer only. Keyboard users type the number in the input, so keep the input editable.
 - **Focus:** The focus ring wraps the whole box, slots included.
+- **High contrast:** In forced colors mode the field draws a real border, since the browser drops its shadows.

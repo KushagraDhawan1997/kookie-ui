@@ -106,7 +106,7 @@ Toolbar.Button rests as a gray `soft` button, and as a gray `ghost` inside a Gro
 
 ### Overflow
 
-Toolbar.Overflow takes the room the row leaves. When its controls don't fit, they move into a "More" menu, starting from the end. A Button shows as a menu item there, and an icon-only Button uses its `aria-label` as the item's text. A Group shows as a menu group.
+Toolbar.Overflow takes the room the row leaves. When its controls don't fit, they move into a "More" menu, starting from the end. A Button shows as a menu item there, and an icon-only Button uses its `aria-label` as the item's text. A toggle with `aria-pressed` shows as a checkbox item, checked while it is pressed. A Group shows as a menu group.
 
 ```tsx showLineNumbers
 <Toolbar aria-label="Formatting">
@@ -240,7 +240,7 @@ Overflow accepts the attributes of the HTML `div` element. `useToolbarOverflow()
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `name` | `string` | `'default'` | Pairs a Fill with its Slot. Use one name per slot |
+| `name` | `string` | `'default'` | Pairs a Fill with its Slot. Names are shared across the page, so mount one Slot per name. A development build warns when two are mounted |
 | `children` | `ReactNode` | | Fill only. The controls to render in the slot |
 
 Separator accepts the attributes of the HTML `div` element.

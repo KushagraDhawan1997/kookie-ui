@@ -78,21 +78,19 @@ Two numbers make a range with two handles. `minStepsBetweenThumbs` keeps the han
 
 ### Marked positions
 
-`ticks` draws a mark under the track for each value, with an optional label. Each mark is a button that moves the nearest handle to it. Add `snapToTicks` when only those values are allowed. The marks sit below the slider without taking up layout space, so leave room under it.
+`ticks` draws a mark under the track for each value, with an optional label. Each mark is a button that moves the nearest handle to it. Add `snapToTicks` when only those values are allowed. The slider keeps room for the marks, below a horizontal track and beside a vertical one. The marks follow the track when it runs right to left, is `inverted`, or is vertical.
 
 ```tsx
-<Box mb="8">
-  <Slider
-    defaultValue={[50]}
-    ticks={[
-      { value: 0, label: 'Low' },
-      { value: 50, label: 'Medium' },
-      { value: 100, label: 'High' },
-    ]}
-    snapToTicks
-    aria-label="Quality"
-  />
-</Box>
+<Slider
+  defaultValue={[50]}
+  ticks={[
+    { value: 0, label: 'Low' },
+    { value: 50, label: 'Medium' },
+    { value: 100, label: 'High' },
+  ]}
+  snapToTicks
+  aria-label="Quality"
+/>
 ```
 
 ### Saving when the drag ends
@@ -122,7 +120,7 @@ Update the shown value on every change, and save once with `onValueCommit`.
 | `minStepsBetweenThumbs` | `number` | `0` | The least number of steps between two handles |
 | `ticks` | `{ value: number; label?: string }[]` | | Marks under the track. Each one moves the nearest handle to its value |
 | `showTickLabels` | `boolean` | `true` | Shows the tick labels. Set `false` to show only the marks |
-| `snapToTicks` | `boolean` | `false` | Moves each value to the nearest tick |
+| `snapToTicks` | `boolean` | `false` | Moves each value to the nearest tick. Arrow keys move to the next tick |
 | `unit` | `string` | | The unit read out with the value, such as `%` |
 | `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | The track thickness and handle size |
 | `variant` | `'surface' \| 'soft' \| 'outline'` | `'surface'` | The look of the track |
@@ -144,9 +142,10 @@ Slider also accepts every attribute of the HTML `span` element. `tabIndex` goes 
 | Shift and an arrow key | Moves the handle by ten steps |
 | Page Up or Page Down | Moves the handle by ten steps |
 | Home or End | Moves the handle to the lowest or highest value |
+| Arrow keys with `snapToTicks` | Move the handle to the next or previous tick |
 | Tab | Moves focus to the next handle or control |
 
 - **Name:** Give the slider `aria-label` or `aria-labelledby`, and each handle takes that name. Both handles of a range share it. Without a name, the two handles of a range are called "Minimum" and "Maximum".
-- **Value:** Each handle has `role="slider"` and its own value. The screen reader reads the value with `unit`, and a live region announces the new value after each change, such as "50 % out of 100 %".
-- **Ticks:** Each tick is a button named "Set to" and its label or value, so keyboard users can reach the marked positions too.
+- **Value:** Each handle has `role="slider"` and its own value. The screen reader reads the value with `unit` as the handle moves.
+- **Ticks:** Each tick is a button named "Set to" and its label or value, so keyboard users can reach the marked positions too. Focus stays on the tick, so a live region announces the new value, such as "50 % out of 100 %". The ticks of a disabled slider are disabled too.
 - **Focus:** The focus ring shows on the handle for the keyboard only.

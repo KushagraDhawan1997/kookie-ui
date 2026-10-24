@@ -52,6 +52,15 @@ describe('icon-only buttons', () => {
     vi.restoreAllMocks();
   });
 
+  it('a missing name logs in development too, never throws', () => {
+    vi.stubEnv('NODE_ENV', 'development');
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    expect(() => renderWithProviders(<Button iconOnly aria-label="">+</Button>)).not.toThrow();
+    expect(error.mock.calls.some(([message]) => /accessible name/.test(String(message)))).toBe(true);
+    vi.unstubAllEnvs();
+    vi.restoreAllMocks();
+  });
+
   it('IconButton, ToggleButton and ToggleIconButton are gone', () => {
     for (const name of ['IconButton', 'ToggleButton', 'ToggleIconButton']) expect(name in Kookie).toBe(false);
   });

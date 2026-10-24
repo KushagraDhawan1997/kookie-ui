@@ -81,7 +81,7 @@
     inset: calc(var(--slider-thumb-inset-factor) * var(--slider-thumb-overshoot-base, var(--slider-track-size)) * -1);
     background-color: var(--accent-solid-thumb);
     border-radius: var(--slider-thumb-radius);
-    box-shadow: var(--shadow-2);
+    box-shadow: var(--slider-thumb-box-shadow, var(--shadow-2));
     cursor: pointer;
   }
 
@@ -173,10 +173,6 @@
   & :where(.kui-SliderRange) {
     background-color: var(--accent-solid);
   }
-
-  & :where(.kui-SliderThumb) {
-    --slider-thumb-box-shadow: var(--shadow-3);
-  }
 }
 
 /* outline */
@@ -190,32 +186,29 @@
   & :where(.kui-SliderRange) {
     background-color: var(--accent-solid);
   }
-
-  & :where(.kui-SliderThumb) {
-    --slider-thumb-box-shadow: var(--shadow-3);
-  }
 }
 
-/* all disabled Sliders: a colour remap, never opacity, and a default cursor */
+/* all disabled Sliders: a colour remap, never opacity, and a default cursor.
+ * These come after every variant at the same specificity, so they win by order. */
 
 [data-disabled] {
   .kui-SliderRoot:where(&) {
     cursor: default;
   }
   .kui-SliderTrack:where(&) {
-    background-color: var(--neutral-a3) !important;
-    box-shadow: none !important;
+    background-color: var(--neutral-a3);
+    box-shadow: none;
   }
   .kui-SliderRange:where(&) {
-    background-color: var(--accent-a3) !important;
+    background-color: var(--accent-a3);
   }
   .kui-SliderThumb:where(&) {
     cursor: default;
   }
   .kui-SliderThumb:where(&)::after {
     cursor: default;
-    background-color: var(--neutral-3) !important;
-    box-shadow: none !important;
+    background-color: var(--neutral-3);
+    box-shadow: none;
   }
 }
 
@@ -226,16 +219,41 @@
  ***************************************************************************************************/
 
 .kui-SliderContainer {
+  --slider-ticks-size: 44px;
   position: relative;
+
+  /* A vertical slider fills the caller's height, so the wrapper has to as well. */
+  &:where([data-orientation='vertical']) {
+    display: flex;
+    width: fit-content;
+    height: stretch;
+  }
+
+  /* The ticks sit outside the track, so the wrapper keeps room for them. */
+  &:where([data-has-ticks][data-orientation='horizontal']) {
+    padding-bottom: calc(var(--space-3) + var(--slider-ticks-size));
+  }
+  &:where([data-has-ticks][data-orientation='vertical']) {
+    padding-right: calc(var(--space-3) + var(--slider-ticks-size));
+  }
 }
 
 .kui-SliderTicks {
   position: absolute;
-  top: calc(100% + var(--space-3));
-  left: 0;
-  right: 0;
   pointer-events: auto;
-  height: 44px;
+
+  &:where([data-orientation='horizontal']) {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--slider-ticks-size);
+  }
+  &:where([data-orientation='vertical']) {
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: var(--slider-ticks-size);
+  }
 }
 
 .kui-SliderTick {
@@ -255,10 +273,21 @@
   border-radius: var(--radius-2);
   z-index: 1;
   pointer-events: auto;
+
+  /* A vertical tick points left at the track, with its label after the mark. */
+  :where(.kui-SliderTicks[data-orientation='vertical']) & {
+    left: 0;
+    transform: translateY(-50%);
+    flex-direction: row;
+  }
+
+  &:where(:disabled) {
+    cursor: default;
+  }
 }
 
 @media (hover: hover) {
-  .kui-SliderTick:where(:hover) {
+  .kui-SliderTick:where(:hover:not(:disabled)) {
     :where(.kui-SliderTickMark) {
       background-color: var(--neutral-12) !important;
     }
@@ -270,7 +299,7 @@
   }
 }
 
-.kui-SliderTick:where(:active) {
+.kui-SliderTick:where(:active:not(:disabled)) {
   :where(.kui-SliderTickMark) {
     background-color: var(--neutral-12) !important;
   }
@@ -291,6 +320,11 @@
   height: var(--space-3);
   background-color: var(--neutral-6);
   border-radius: 1px;
+
+  :where(.kui-SliderTicks[data-orientation='vertical']) & {
+    width: var(--space-3);
+    height: 1px;
+  }
 }
 
 .kui-SliderTickLabel {
@@ -303,4 +337,39 @@
   text-overflow: ellipsis;
   max-width: 60px;
   text-align: center;
+}
+
+/* Windows High Contrast drops box shadows and background colours, so the track, range and
+ * handle take system colours and a real border. */
+@media (forced-colors: active) {
+  .kui-SliderTrack {
+    box-sizing: border-box;
+    border: 1px solid CanvasText;
+  }
+  .kui-SliderRange {
+    background-color: Highlight;
+  }
+  .kui-SliderThumb::after {
+    border: 1px solid CanvasText;
+    background-color: Highlight;
+  }
+  .kui-SliderTickMark {
+    background-color: CanvasText;
+  }
+
+  [data-disabled] {
+    .kui-SliderTrack:where(&) {
+      border-color: GrayText;
+    }
+    .kui-SliderRange:where(&) {
+      background-color: GrayText;
+    }
+    .kui-SliderThumb:where(&)::after {
+      border-color: GrayText;
+      background-color: GrayText;
+    }
+  }
+  .kui-SliderTick:where(:disabled) :where(.kui-SliderTickMark) {
+    background-color: GrayText;
+  }
 }

@@ -154,4 +154,24 @@ describe('ContextMenu', () => {
     expect(menu).not.toHaveAttribute('submenubehavior');
     expect(propWarnings(error)).toEqual([]);
   });
+
+  it('names a group by the label inside it, but not by a submenu label', async () => {
+    renderContextMenu(
+      <ContextMenu.Group>
+        <ContextMenu.Label>Recent</ContextMenu.Label>
+        <ContextMenu.Item>Report.pdf</ContextMenu.Item>
+        <ContextMenu.Sub open>
+          <ContextMenu.SubTrigger>More</ContextMenu.SubTrigger>
+          <ContextMenu.SubContent>
+            <ContextMenu.Label>Inner</ContextMenu.Label>
+            <ContextMenu.Item>Archive</ContextMenu.Item>
+          </ContextMenu.SubContent>
+        </ContextMenu.Sub>
+      </ContextMenu.Group>,
+    );
+    fireEvent.contextMenu(screen.getByTestId('area'), { clientX: 100, clientY: 100 });
+    expect(await screen.findByRole('menuitem', { name: 'Archive' })).toBeInTheDocument();
+    const group = screen.getByRole('group', { name: 'Recent' });
+    expect(group.getAttribute('aria-labelledby')).toBe(screen.getByText('Recent').id);
+  });
 });

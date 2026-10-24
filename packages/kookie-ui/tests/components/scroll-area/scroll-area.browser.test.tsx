@@ -86,3 +86,23 @@ describe('ScrollArea', () => {
     expect(plain).not.toHaveAttribute('role');
   });
 });
+
+describe('ScrollArea overscroll', () => {
+  it('contains horizontal overscroll when it has a horizontal scrollbar', async () => {
+    render(
+      <Theme>
+        <ScrollArea type="always" scrollbars="horizontal" style={{ width: 200, height: 60 }}>
+          {wide}
+        </ScrollArea>
+        <ScrollArea type="always" scrollbars="vertical" style={{ width: 200, height: 60 }}>
+          {rows}
+        </ScrollArea>
+      </Theme>,
+    );
+    await frames();
+    const [h, v] = viewports();
+    expect(document.querySelector('.kui-ScrollAreaScrollbar[data-orientation="horizontal"]')).not.toBeNull();
+    expect(getComputedStyle(h).overscrollBehaviorX).toBe('contain');
+    expect(getComputedStyle(v).overscrollBehaviorX).toBe('auto');
+  });
+});

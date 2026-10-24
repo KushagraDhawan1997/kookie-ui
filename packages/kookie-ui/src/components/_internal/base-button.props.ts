@@ -6,7 +6,7 @@ import type { PropDef } from '../../props/prop-def.js';
 
 /**
  * Available button sizes for responsive design
- * Size 1: 24px - Compact for toolbars and dense interfaces
+ * Size 1: 28px - Compact for toolbars and dense interfaces
  * Size 2: 32px - Standard for most interface contexts
  * Size 3: 40px - Large for important actions and mobile touch targets
  * Size 4: 48px - Extra large for hero sections and maximum impact

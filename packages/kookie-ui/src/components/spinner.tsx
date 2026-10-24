@@ -41,6 +41,10 @@ const Spinner = React.forwardRef<SpinnerElement, SpinnerProps>((props, forwarded
         <span className="kui-SpinnerLeaf" />
         <span className="kui-SpinnerLeaf" />
       </span>
+      {/* A live region reads its text, not its aria-label, so the name is also its content. */}
+      {typeof spinnerProps['aria-label'] === 'string' ? (
+        <span className="kui-sr-only">{spinnerProps['aria-label']}</span>
+      ) : null}
     </span>
   );
 
@@ -53,7 +57,7 @@ const Spinner = React.forwardRef<SpinnerElement, SpinnerProps>((props, forwarded
          * `display: contents` removes the content from the accessibility tree in some browsers,
          * so we force remove it with `aria-hidden`
          */}
-        <span aria-hidden className="kui-SpinnerHiddenChildren" inert={undefined}>
+        <span aria-hidden className="kui-SpinnerHiddenChildren">
           {children}
         </span>
 

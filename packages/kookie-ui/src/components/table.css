@@ -3,7 +3,7 @@
   --table-row-box-shadow: inset 0 -1px var(--neutral-a5);
 
   width: 100%;
-  text-align: left;
+  text-align: start;
   vertical-align: top;
   border-collapse: collapse;
   border-radius: calc(var(--table-border-radius) - 1px);
@@ -34,6 +34,10 @@
   vertical-align: inherit;
   /* A cell hugs its line: the inset above and below, the wider inset at the sides. */
   padding: var(--table-cell-py) var(--table-cell-px);
+}
+/* Header cells follow the table's start alignment, not the browser's centred default */
+:where(.kui-TableCell) {
+  text-align: inherit;
 }
 .kui-TableColumnHeaderCell {
   font-weight: 600;

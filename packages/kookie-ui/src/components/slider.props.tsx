@@ -9,8 +9,8 @@ const variants = ['surface', 'soft', 'outline'] as const;
 const sliderPropDefs = {
   size: { type: 'enum', className: 'kui-r-size', values: sizes, default: '2', responsive: true },
   variant: { type: 'enum', className: 'kui-variant', values: variants, default: 'surface' },
-  showTickLabels: { type: 'boolean', className: 'kui-show-tick-labels' },
-  snapToTicks: { type: 'boolean', className: 'kui-snap-to-ticks' },
+  showTickLabels: { type: 'boolean' },
+  snapToTicks: { type: 'boolean' },
   ...colorPropDef,
   ...radiusPropDef,
 } satisfies {

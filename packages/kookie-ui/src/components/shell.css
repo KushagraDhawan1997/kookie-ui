@@ -119,6 +119,7 @@
   --kui-shell-col: initial;
   --kui-shell-surface: initial;
   --kui-shell-shadow: initial;
+  --kui-shell-edge: 0px;
   --kui-shell-cap: initial;
   --kui-shell-offset: initial;
   --kui-shell-handle: initial;
@@ -263,8 +264,17 @@
   bottom: 0;
 }
 
+/*
+ * The pane content holding a floating row is the subject of these rules, named by class so the
+ * browser tries them only on those elements (a bare `:has()` is tried on every element).
+ */
 /* The row's containing block is the pane content around it. */
-:where(:has(> .kui-ShellPaneHeader[data-float], > .kui-ShellPaneFooter[data-float])) {
+:where(.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float], > .kui-ShellPaneFooter[data-float])),
+:where(.kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float], > .kui-ShellPaneFooter[data-float])),
+:where(.kui-ShellSidebarContent:has(> .kui-ShellPaneHeader[data-float], > .kui-ShellPaneFooter[data-float])),
+:where(.kui-ShellInspectorContent:has(> .kui-ShellPaneHeader[data-float], > .kui-ShellPaneFooter[data-float])),
+:where(.kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float], > .kui-ShellPaneFooter[data-float])),
+:where(.kui-ShellContent:has(> .kui-ShellPaneHeader[data-float], > .kui-ShellPaneFooter[data-float])) {
   position: relative;
 }
 
@@ -274,62 +284,130 @@
  * Shell's index, the same the row itself pads by. A Toolbar in the row publishes its own control
  * height as the band (one step above the Shell's when it states no size).
  */
-:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-1)) {
+.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-1)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-1)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-1)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-1)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-1)),
+.kui-ShellContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-1)) {
   --kui-pane-row-start: var(--control-height-1);
   --kui-pane-pad-start: var(--surface-p-1);
 }
-:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-2)) {
+.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-2)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-2)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-2)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-2)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-2)),
+.kui-ShellContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-2)) {
   --kui-pane-row-start: var(--control-height-2);
   --kui-pane-pad-start: var(--surface-p-2);
 }
-:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-3)) {
+.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-3)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-3)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-3)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-3)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-3)),
+.kui-ShellContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-3)) {
   --kui-pane-row-start: var(--control-height-3);
   --kui-pane-pad-start: var(--surface-p-3);
 }
-:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-1)) {
+.kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-1)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-1)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-1)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-1)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-1)),
+.kui-ShellContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-1)) {
   --kui-pane-row-end: var(--control-height-1);
   --kui-pane-pad-end: var(--surface-p-1);
 }
-:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-2)) {
+.kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-2)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-2)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-2)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-2)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-2)),
+.kui-ShellContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-2)) {
   --kui-pane-row-end: var(--control-height-2);
   --kui-pane-pad-end: var(--surface-p-2);
 }
-:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-3)) {
+.kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-3)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-3)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-3)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-3)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-3)),
+.kui-ShellContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-3)) {
   --kui-pane-row-end: var(--control-height-3);
   --kui-pane-pad-end: var(--surface-p-3);
 }
-:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-1)) {
+.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-1)) {
   --kui-pane-band-start: var(--control-height-1);
 }
-:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-2)) {
+.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-2)) {
   --kui-pane-band-start: var(--control-height-2);
 }
-:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-3)) {
+.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-3)) {
   --kui-pane-band-start: var(--control-height-3);
 }
-:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-4)) {
+.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-4)) {
   --kui-pane-band-start: var(--control-height-4);
 }
-:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-1)) {
+.kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-1)) {
   --kui-pane-band-end: var(--control-height-1);
 }
-:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-2)) {
+.kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-2)) {
   --kui-pane-band-end: var(--control-height-2);
 }
-:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-3)) {
+.kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-3)) {
   --kui-pane-band-end: var(--control-height-3);
 }
-:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-4)) {
+.kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-4)) {
   --kui-pane-band-end: var(--control-height-4);
 }
 
 /* A Rail's rows are tiles, and its chrome keeps their tight padding (sidebar.css). */
-.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float]),
-.kui-ShellRailContent :has(> .kui-ShellPaneHeader[data-float]) {
+.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float]) {
   --kui-pane-pad-start: var(--space-3);
 }
-.kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float]),
-.kui-ShellRailContent :has(> .kui-ShellPaneFooter[data-float]) {
+.kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float]) {
   --kui-pane-pad-end: var(--space-3);
 }
 
@@ -337,13 +415,23 @@
  * The scroller spends that height three ways: the list starts and ends clear of the rows, the
  * scrollbar stays between them, and the fade (with `fade`) runs across them.
  */
-:has(> .kui-ShellPaneHeader[data-float]) > .kui-ShellScroll {
+.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float]) > .kui-ShellScroll,
+.kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float]) > .kui-ShellScroll,
+.kui-ShellSidebarContent:has(> .kui-ShellPaneHeader[data-float]) > .kui-ShellScroll,
+.kui-ShellInspectorContent:has(> .kui-ShellPaneHeader[data-float]) > .kui-ShellScroll,
+.kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float]) > .kui-ShellScroll,
+.kui-ShellContent:has(> .kui-ShellPaneHeader[data-float]) > .kui-ShellScroll {
   /* The taller of the pane's control row and a Toolbar's own: the row never shrinks below the first. */
   --kui-pane-inset-start: calc(max(var(--kui-pane-row-start), var(--kui-pane-band-start, 0px)) + 2 * var(--kui-pane-pad-start));
   --scroll-fade-start: var(--kui-pane-inset-start);
   --scrollarea-scrollbar-vertical-margin-top: calc(var(--space-2) + var(--kui-pane-inset-start));
 }
-:has(> .kui-ShellPaneFooter[data-float]) > .kui-ShellScroll {
+.kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float]) > .kui-ShellScroll,
+.kui-ShellPanelContent:has(> .kui-ShellPaneFooter[data-float]) > .kui-ShellScroll,
+.kui-ShellSidebarContent:has(> .kui-ShellPaneFooter[data-float]) > .kui-ShellScroll,
+.kui-ShellInspectorContent:has(> .kui-ShellPaneFooter[data-float]) > .kui-ShellScroll,
+.kui-ShellBottomContent:has(> .kui-ShellPaneFooter[data-float]) > .kui-ShellScroll,
+.kui-ShellContent:has(> .kui-ShellPaneFooter[data-float]) > .kui-ShellScroll {
   --kui-pane-inset-end: calc(max(var(--kui-pane-row-end), var(--kui-pane-band-end, 0px)) + 2 * var(--kui-pane-pad-end));
   --scroll-fade-end: var(--kui-pane-inset-end);
   --scrollarea-scrollbar-vertical-margin-bottom: calc(var(--space-2) + var(--kui-pane-inset-end));
@@ -373,6 +461,7 @@
   --kui-shell-col: 1 / -1;
   --kui-shell-surface: var(--color-surface);
   --kui-shell-shadow: var(--shadow-5);
+  --kui-shell-edge: 1px;
   --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
   --kui-shell-offset: var(--shell-rail-offset, 0px);
   --kui-shell-handle: none;
@@ -386,6 +475,7 @@
   --kui-shell-col: 1 / -1;
   --kui-shell-surface: var(--color-surface);
   --kui-shell-shadow: var(--shadow-4);
+  --kui-shell-edge: 1px;
   --kui-shell-cap: initial;
   --kui-shell-offset: var(--shell-rail-offset, 0px);
   --kui-shell-handle: initial;
@@ -404,6 +494,7 @@
   --kui-shell-col: initial;
   --kui-shell-surface: initial;
   --kui-shell-shadow: initial;
+  --kui-shell-edge: 0px;
   --kui-shell-cap: initial;
   --kui-shell-offset: initial;
   --kui-shell-handle: initial;
@@ -417,6 +508,7 @@
   --kui-shell-col: 1 / -1;
   --kui-shell-surface: var(--color-surface);
   --kui-shell-shadow: var(--shadow-5);
+  --kui-shell-edge: 1px;
   --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
   --kui-shell-offset: var(--shell-rail-offset, 0px);
   --kui-shell-handle: none;
@@ -430,6 +522,7 @@
   --kui-shell-col: 1 / -1;
   --kui-shell-surface: var(--color-surface);
   --kui-shell-shadow: var(--shadow-4);
+  --kui-shell-edge: 1px;
   --kui-shell-cap: initial;
   --kui-shell-offset: var(--shell-rail-offset, 0px);
   --kui-shell-handle: initial;
@@ -456,6 +549,7 @@
     --kui-shell-col: initial;
     --kui-shell-surface: initial;
     --kui-shell-shadow: initial;
+    --kui-shell-edge: 0px;
     --kui-shell-cap: initial;
     --kui-shell-offset: initial;
     --kui-shell-handle: initial;
@@ -469,6 +563,7 @@
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
     --kui-shell-shadow: var(--shadow-5);
+    --kui-shell-edge: 1px;
     --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
     --kui-shell-offset: var(--shell-rail-offset, 0px);
     --kui-shell-handle: none;
@@ -482,6 +577,7 @@
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
     --kui-shell-shadow: var(--shadow-4);
+    --kui-shell-edge: 1px;
     --kui-shell-cap: initial;
     --kui-shell-offset: var(--shell-rail-offset, 0px);
     --kui-shell-handle: initial;
@@ -509,6 +605,7 @@
     --kui-shell-col: initial;
     --kui-shell-surface: initial;
     --kui-shell-shadow: initial;
+    --kui-shell-edge: 0px;
     --kui-shell-cap: initial;
     --kui-shell-offset: initial;
     --kui-shell-handle: initial;
@@ -522,6 +619,7 @@
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
     --kui-shell-shadow: var(--shadow-5);
+    --kui-shell-edge: 1px;
     --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
     --kui-shell-offset: var(--shell-rail-offset, 0px);
     --kui-shell-handle: none;
@@ -535,6 +633,7 @@
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
     --kui-shell-shadow: var(--shadow-4);
+    --kui-shell-edge: 1px;
     --kui-shell-cap: initial;
     --kui-shell-offset: var(--shell-rail-offset, 0px);
     --kui-shell-handle: initial;
@@ -562,6 +661,7 @@
     --kui-shell-col: initial;
     --kui-shell-surface: initial;
     --kui-shell-shadow: initial;
+    --kui-shell-edge: 0px;
     --kui-shell-cap: initial;
     --kui-shell-offset: initial;
     --kui-shell-handle: initial;
@@ -575,6 +675,7 @@
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
     --kui-shell-shadow: var(--shadow-5);
+    --kui-shell-edge: 1px;
     --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
     --kui-shell-offset: var(--shell-rail-offset, 0px);
     --kui-shell-handle: none;
@@ -588,6 +689,7 @@
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
     --kui-shell-shadow: var(--shadow-4);
+    --kui-shell-edge: 1px;
     --kui-shell-cap: initial;
     --kui-shell-offset: var(--shell-rail-offset, 0px);
     --kui-shell-handle: initial;
@@ -615,6 +717,7 @@
     --kui-shell-col: initial;
     --kui-shell-surface: initial;
     --kui-shell-shadow: initial;
+    --kui-shell-edge: 0px;
     --kui-shell-cap: initial;
     --kui-shell-offset: initial;
     --kui-shell-handle: initial;
@@ -628,6 +731,7 @@
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
     --kui-shell-shadow: var(--shadow-5);
+    --kui-shell-edge: 1px;
     --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
     --kui-shell-offset: var(--shell-rail-offset, 0px);
     --kui-shell-handle: none;
@@ -641,6 +745,7 @@
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
     --kui-shell-shadow: var(--shadow-4);
+    --kui-shell-edge: 1px;
     --kui-shell-cap: initial;
     --kui-shell-offset: var(--shell-rail-offset, 0px);
     --kui-shell-handle: initial;
@@ -668,6 +773,7 @@
     --kui-shell-col: initial;
     --kui-shell-surface: initial;
     --kui-shell-shadow: initial;
+    --kui-shell-edge: 0px;
     --kui-shell-cap: initial;
     --kui-shell-offset: initial;
     --kui-shell-handle: initial;
@@ -681,6 +787,7 @@
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
     --kui-shell-shadow: var(--shadow-5);
+    --kui-shell-edge: 1px;
     --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
     --kui-shell-offset: var(--shell-rail-offset, 0px);
     --kui-shell-handle: none;
@@ -694,6 +801,7 @@
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
     --kui-shell-shadow: var(--shadow-4);
+    --kui-shell-edge: 1px;
     --kui-shell-cap: initial;
     --kui-shell-offset: var(--shell-rail-offset, 0px);
     --kui-shell-handle: initial;
@@ -727,6 +835,7 @@
   --kui-shell-col: 1 / -1;
   --kui-shell-surface: var(--color-surface);
   --kui-shell-shadow: var(--shadow-4);
+  --kui-shell-edge: 1px;
   --kui-shell-offset: var(--shell-rail-offset, 0px);
   --kui-shell-handle: none;
 
@@ -921,5 +1030,23 @@
 
 .kui-ShellResizer:focus-visible::before {
   background-color: var(--focus-8);
+}
+
+/*
+ * Forced colors drop backgrounds and shadows. The focused handle keeps its line in the
+ * system highlight, and a pane floating over the page (overlay or stacked) gets an edge
+ * in place of its shadow.
+ */
+@media (forced-colors: active) {
+  .kui-ShellResizer:focus-visible::before {
+    background-color: Highlight;
+    forced-color-adjust: none;
+  }
+
+  .kui-ShellPane,
+  .kui-ShellPane:focus {
+    outline: var(--kui-shell-edge, 0px) solid CanvasText;
+    outline-offset: calc(-1 * var(--kui-shell-edge, 0px));
+  }
 }
 

@@ -74,13 +74,13 @@
     width: var(--text-field-native-icon-size);
     height: var(--text-field-native-icon-size);
     padding: var(--space-2);
-    margin-left: 0;
-    margin-right: calc(var(--space-2) * -1);
+    margin-inline-start: 0;
+    margin-inline-end: calc(var(--space-2) * -1);
     border-radius: calc(var(--text-field-border-radius) - 2px);
   }
   /* Chrome's calendar icon */
   &:where(:not([type='time']))::-webkit-calendar-picker-indicator {
-    margin-left: var(--space-2);
+    margin-inline-start: var(--space-2);
   }
   @media (hover: hover) {
     &::-webkit-calendar-picker-indicator:where(:hover) {
@@ -133,37 +133,37 @@
   }
 
   /*
-   * A slot that is not a right-side slot goes on the left.
+   * A slot that is not a right-side slot goes on the left (the inline start, so the right in RTL).
    * The outer edge keeps the plain padding (the slot stands between the text and a pill's curve);
    * the inner edge is the gap to the text.
    */
   &:where(:not([data-side='right'])) {
     order: -1;
-    margin-left: calc(var(--text-field-border-width) * -1);
-    margin-right: 0;
-    padding-left: var(--text-field-px);
-    padding-right: var(--text-field-gap);
+    margin-inline-start: calc(var(--text-field-border-width) * -1);
+    margin-inline-end: 0;
+    padding-inline-start: var(--text-field-px);
+    padding-inline-end: var(--text-field-gap);
 
     /* A hosted control sits the slot inset from the edge, the same distance as above and below. */
     &:where(:has(> .kui-BaseButton)) {
-      padding-left: var(--text-field-slot-inset);
+      padding-inline-start: var(--text-field-slot-inset);
     }
   }
 
   &:where([data-side='right']),
   /*
-   * A slot followed by a left-side slot that is not a left-side slot itself goes on the right.
+   * A slot followed by a left-side slot that is not a left-side slot itself goes on the right (the inline end).
    * In simple terms, this makes it so that two slots without an explicit side work automatically.
    */
   :where(&:not([data-side='right'])) ~ &:where(:not([data-side='left'])) {
     order: 0;
-    margin-left: 0;
-    margin-right: calc(var(--text-field-border-width) * -1);
-    padding-left: var(--text-field-gap);
-    padding-right: var(--text-field-px);
+    margin-inline-start: 0;
+    margin-inline-end: calc(var(--text-field-border-width) * -1);
+    padding-inline-start: var(--text-field-gap);
+    padding-inline-end: var(--text-field-px);
 
     &:where(:has(> .kui-BaseButton)) {
-      padding-right: var(--text-field-slot-inset);
+      padding-inline-end: var(--text-field-slot-inset);
     }
   }
 }
@@ -211,33 +211,33 @@
   /* Clip text to the border radius of the Root */
   border-radius: calc(var(--text-field-border-radius) - var(--text-field-border-width));
 
-  /* Equivalent to padding-left, but doesn't cut off long values when cursor is at the end. */
+  /* Equivalent to padding-inline-start, but doesn't cut off long values when cursor is at the end. */
   text-indent: calc(var(--text-field-px-bare) - var(--text-field-border-width));
-  padding-right: calc(var(--text-field-px-bare) - var(--text-field-border-width));
+  padding-inline-end: calc(var(--text-field-px-bare) - var(--text-field-border-width));
 
   &:where([type='date'], [type='datetime-local'], [type='time'], [type='week'], [type='month']) {
     /* Safari is buggy with text-indent for these input types */
     text-indent: 0;
-    padding-left: calc(var(--text-field-px-bare) - var(--text-field-border-width));
+    padding-inline-start: calc(var(--text-field-px-bare) - var(--text-field-border-width));
   }
 
-  /* Remove border-radius and text-indent/padding on the left if there's a left-side slot */
+  /* Remove border-radius and text-indent/padding at the inline start if there's a left-side slot */
   &:where(:has(~ .kui-TextFieldSlot:not([data-side='right']))) {
     text-indent: 0;
-    padding-left: 0;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+    padding-inline-start: 0;
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
   }
 
-  /* Remove border-radius and padding on the right if there's a right-side slot */
+  /* Remove border-radius and padding at the inline end if there's a right-side slot */
   /* prettier-ignore */
   &:where(:has(
     ~ .kui-TextFieldSlot[data-side='right'],
     ~ .kui-TextFieldSlot:not([data-side='right']) ~ .kui-TextFieldSlot:not([data-side='left'])
   )) {
-    padding-right: 0;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    padding-inline-end: 0;
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
   }
 }
 
@@ -261,8 +261,8 @@
 
         /* Safari credentials autofill icon */
         &::-webkit-textfield-decoration-container {
-          padding-right: 0px;
-          margin-right: -2px;
+          padding-inline-end: 0px;
+          margin-inline-end: -2px;
         }
       }
     }
@@ -286,8 +286,8 @@
 
         /* Safari credentials autofill icon */
         &::-webkit-textfield-decoration-container {
-          padding-right: 2px;
-          margin-right: 0px;
+          padding-inline-end: 2px;
+          margin-inline-end: 0px;
         }
       }
     }
@@ -310,8 +310,8 @@
 
         /* Safari credentials autofill icon */
         &::-webkit-textfield-decoration-container {
-          padding-right: 5px;
-          margin-right: 0px;
+          padding-inline-end: 5px;
+          margin-inline-end: 0px;
         }
       }
     }
@@ -333,8 +333,8 @@
 
         /* Safari credentials autofill icon */
         &::-webkit-textfield-decoration-container {
-          padding-right: 5px;
-          margin-right: 0px;
+          padding-inline-end: 5px;
+          margin-inline-end: 0px;
         }
       }
     }
@@ -662,11 +662,13 @@
 
 /* Error message styling */
 .kui-TextFieldErrorMessage {
+  /* A sibling of the root, below the field: it takes the field's type itself. */
+  font-family: var(--default-font-family);
+  font-weight: var(--font-weight-regular);
   color: var(--red-11);
   font-size: var(--font-size-1);
   line-height: var(--line-height-1);
-  /* The field is a row, so a gap on the root would sit beside the message, not above it. The
-     drop is inside the message's own box, never a margin on it. */
+  /* The drop is inside the message's own box, never a margin on it. */
   padding-top: var(--space-2);
   display: flex;
   align-items: center;
@@ -678,6 +680,19 @@
   color: var(--red-9);
   font-size: var(--font-size-1);
   line-height: 1;
+}
+
+/*
+ * Forced colors drop box-shadows, which draw every variant's boundary, so the field gets a real
+ * border there, as BaseButton does.
+ */
+@media (forced-colors: active) {
+  .kui-TextFieldRoot {
+    border: 1px solid CanvasText;
+  }
+  .kui-TextFieldRoot:where(:has(.kui-TextFieldInput:disabled)) {
+    border-color: GrayText;
+  }
 }
 
 /***************************************************************************************************

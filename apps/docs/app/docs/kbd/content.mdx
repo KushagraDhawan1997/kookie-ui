@@ -40,7 +40,7 @@ export function SearchHint() {
 
 ## Size
 
-`size` takes a step from 1 to 9 that matches the font sizes of [Text](/docs/text), so `size="2"` fits next to `<Text size="2">`. Without `size`, Kbd uses size 1. The padding and the corner scale with it. `size` accepts a responsive object, such as `{ initial: '1', md: '2' }`.
+`size` takes a step from 1 to 9 that matches the font sizes of [Text](/docs/text), so `size="2"` fits next to `<Text size="2">`. Without `size`, Kbd follows the text around it, a little smaller. Next to 14px text that is the same as size 1. The padding and the corner scale with it. `size` accepts a responsive object, such as `{ initial: '1', md: '2' }`.
 
 ## Variant
 
@@ -76,7 +76,7 @@ When a key on screen does something, such as a list of shortcuts people can try,
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `size` | `'1'` to `'9'`, responsive | | The font size step. Without it, size 1 |
+| `size` | `'1'` to `'9'`, responsive | | The font size step. Without it, Kbd follows the text around it |
 | `variant` | `'raised' \| 'soft'` | `'raised'` | The look |
 | `asChild` | `boolean` | `false` | Renders the child element, such as a button, with the key's look |
 

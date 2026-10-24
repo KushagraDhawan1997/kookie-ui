@@ -47,14 +47,15 @@
   align-items: stretch;
   user-select: none;
 
-  /* Horizontal orientation (default) */
+  /* Horizontal orientation (default). Logical corners, so a right to left bar rounds its own
+     ends. */
   &:where(:first-child) {
-    border-top-left-radius: inherit;
-    border-bottom-left-radius: inherit;
+    border-start-start-radius: inherit;
+    border-end-start-radius: inherit;
   }
   &:where(:nth-last-child(2)) {
-    border-top-right-radius: inherit;
-    border-bottom-right-radius: inherit;
+    border-start-end-radius: inherit;
+    border-end-end-radius: inherit;
   }
 
   /* Drawn inside the track, which clips anything outside its own box. */
@@ -63,24 +64,6 @@
     outline: var(--focus-ring-width, 2px) solid var(--focus-8);
     outline-offset: var(--focus-outline-offset-inset);
   }
-}
-
-/* Vertical orientation - item layout */
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem {
-  flex-direction: column;
-}
-
-/* Vertical orientation - item border radius */
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem:first-child {
-  border-top-left-radius: inherit;
-  border-top-right-radius: inherit;
-  border-bottom-left-radius: 0;
-}
-
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem:nth-last-child(2) {
-  border-bottom-left-radius: inherit;
-  border-bottom-right-radius: inherit;
-  border-top-right-radius: 0;
 }
 
 .kui-SegmentedControlItemLabel {
@@ -146,8 +129,7 @@
   /* Horizontal orientation (default). The 3px inset is padding inside the separator's own box and
      only the line paints; the -0.5px pull centres the line on the item boundary (optical). */
   padding-block: calc(var(--space-2) * 0.75); /* 3px - slightly smaller than space-1 */
-  margin-left: calc(-1 * var(--border-width-standard) * 0.5); /* -0.5px */
-  margin-right: calc(-1 * var(--border-width-standard) * 0.5); /* -0.5px */
+  margin-inline: calc(-1 * var(--border-width-standard) * 0.5); /* -0.5px */
   width: var(--border-width-standard); /* 1px */
   background-color: var(--neutral-a4);
   background-clip: content-box;
@@ -162,18 +144,6 @@
   /* Don't transition when the separator is hidden because of the focus outline */
 }
 
-/* Vertical orientation - separator */
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlItemSeparator {
-  padding-block: 0;
-  padding-inline: calc(var(--space-2) * 0.75); /* 3px */
-  margin-left: 0;
-  margin-right: 0;
-  margin-top: calc(-1 * var(--border-width-standard) * 0.5); /* -0.5px */
-  margin-bottom: calc(-1 * var(--border-width-standard) * 0.5); /* -0.5px */
-  width: auto;
-  height: var(--border-width-standard); /* 1px */
-}
-
 :where(.kui-theme) {
   --segmented-control-indicator-background-color: var(--color-page);
 }
@@ -183,12 +153,18 @@
   position: absolute;
   z-index: -1;
   top: 0;
-  left: 0;
+  inset-inline-start: 0;
   height: 100%;
   pointer-events: none;
-  /* Width and position come from the item count and selected index, set by the root. */
+  /* Width and position come from the item count and selected index, set by the root. Right to
+     left, the items run from the right, so the indicator moves the other way. */
+  --segmented-control-direction: 1;
   width: calc(100% / var(--segmented-control-count, 1));
-  transform: translateX(calc(var(--segmented-control-index, 0) * 100%));
+  transform: translateX(calc(var(--segmented-control-index, 0) * 100% * var(--segmented-control-direction)));
+
+  &:where(:dir(rtl)) {
+    --segmented-control-direction: -1;
+  }
 
   &::before {
     inset: var(--border-width-standard); /* 1px */
@@ -214,13 +190,6 @@
   }
 }
 
-/* Vertical orientation */
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator {
-  width: 100%;
-  height: calc(100% / var(--segmented-control-count, 1));
-  transform: translateY(calc(var(--segmented-control-index, 0) * 100%));
-}
-
 /* * * * * * * * * * * * * * * * * * * */
 /*                                     */
 /*                Sizes                */
@@ -238,39 +207,16 @@
 }
 .kui-SegmentedControlRoot {
   border-radius: var(--segmented-control-border-radius);
+  /* A vertical bar sizes to its items, so orientation can unset the height. */
+  height: var(--segmented-control-root-height, var(--segmented-control-height));
 }
 
 @breakpoints {
   .kui-SegmentedControlRoot {
-    /* Vertical orientation - grid layout (must be inside @breakpoints for correct CSS ordering) */
-    &:where(.kui-r-orientation-vertical) {
-      grid-auto-flow: row;
-      grid-auto-columns: unset;
-      grid-auto-rows: 1fr;
-      min-width: unset;
-      min-height: max-content;
-    }
-
-    &:where(.kui-r-orientation-vertical):has([data-icon-only]) {
-      grid-auto-columns: unset;
-      grid-auto-rows: minmax(var(--segmented-control-height), 1fr);
-    }
-
     &:where(.kui-r-size-1) {
       --segmented-control-border-radius: var(--radius-control-1);
       --segmented-control-height: var(--control-height-1);
-      height: var(--segmented-control-height);
-
-      /* Vertical: height auto, width determined by content or icon-only */
-      &:where(.kui-r-orientation-vertical) {
-        height: auto;
-        width: auto;
-
-        /* Icon-only gets fixed square width */
-        &:where(:has([data-icon-only])) {
-          width: var(--segmented-control-height);
-        }
-      }
+      --segmented-control-vertical-py: var(--space-2);
 
       & :where(.kui-SegmentedControlItemLabel) {
         font-size: var(--font-size-1);
@@ -289,18 +235,7 @@
     &:where(.kui-r-size-2) {
       --segmented-control-border-radius: var(--radius-control-2);
       --segmented-control-height: var(--control-height-2);
-      height: var(--segmented-control-height);
-
-      /* Vertical: height auto, width determined by content or icon-only */
-      &:where(.kui-r-orientation-vertical) {
-        height: auto;
-        width: auto;
-
-        /* Icon-only gets fixed square width */
-        &:where(:has([data-icon-only])) {
-          width: var(--segmented-control-height);
-        }
-      }
+      --segmented-control-vertical-py: var(--space-3);
 
       & :where(.kui-SegmentedControlItemLabel) {
         font-size: var(--font-size-2);
@@ -319,18 +254,7 @@
     &:where(.kui-r-size-3) {
       --segmented-control-border-radius: var(--radius-control-3);
       --segmented-control-height: var(--control-height-3);
-      height: var(--segmented-control-height);
-
-      /* Vertical: height auto, width determined by content or icon-only */
-      &:where(.kui-r-orientation-vertical) {
-        height: auto;
-        width: auto;
-
-        /* Icon-only gets fixed square width */
-        &:where(:has([data-icon-only])) {
-          width: var(--segmented-control-height);
-        }
-      }
+      --segmented-control-vertical-py: var(--space-3);
 
       & :where(.kui-SegmentedControlItemLabel) {
         font-size: var(--font-size-3);
@@ -349,18 +273,7 @@
     &:where(.kui-r-size-4) {
       --segmented-control-border-radius: var(--radius-control-4);
       --segmented-control-height: var(--control-height-4);
-      height: var(--segmented-control-height);
-
-      /* Vertical: height auto, width determined by content or icon-only */
-      &:where(.kui-r-orientation-vertical) {
-        height: auto;
-        width: auto;
-
-        /* Icon-only gets fixed square width */
-        &:where(:has([data-icon-only])) {
-          width: var(--segmented-control-height);
-        }
-      }
+      --segmented-control-vertical-py: var(--space-4);
 
       & :where(.kui-SegmentedControlItemLabel) {
         font-size: var(--font-size-4);
@@ -410,47 +323,164 @@
   }
 }
 
-/* Vertical icon-only - minimum square height */
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-icon-only] {
-  min-width: unset;
-  min-height: var(--segmented-control-height);
+/* * * * * * * * * * * * * * * * * * * */
+/*                                     */
+/*             Orientation             */
+/*                                     */
+/* * * * * * * * * * * * * * * * * * * */
+
+/*
+ * Everything that differs between the two orientations lives here, inside @breakpoints, and each
+ * orientation states its own values. So a responsive orientation can switch either way at any
+ * breakpoint. Orientation does not combine with a size class here: the per-size values are custom
+ * properties the size rules set.
+ */
+@breakpoints {
+  .kui-SegmentedControlRoot:where(.kui-r-orientation-horizontal) {
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    grid-auto-rows: auto;
+    min-width: max-content;
+    min-height: auto;
+    --segmented-control-root-height: var(--segmented-control-height);
+  }
+
+  .kui-SegmentedControlRoot:where(.kui-r-orientation-horizontal):has([data-icon-only]) {
+    grid-auto-columns: minmax(var(--segmented-control-height), 1fr);
+    grid-auto-rows: auto;
+    --segmented-control-root-width: auto;
+  }
+
+  .kui-SegmentedControlRoot:where(.kui-r-orientation-vertical) {
+    grid-auto-flow: row;
+    grid-auto-columns: auto;
+    grid-auto-rows: 1fr;
+    min-width: auto;
+    min-height: max-content;
+    --segmented-control-root-height: auto;
+  }
+
+  .kui-SegmentedControlRoot:where(.kui-r-orientation-vertical):has([data-icon-only]) {
+    grid-auto-columns: auto;
+    grid-auto-rows: minmax(var(--segmented-control-height), 1fr);
+    /* Icon-only gets a fixed square width. Through a custom property, so a horizontal
+       breakpoint can undo it without setting a width of its own. */
+    --segmented-control-root-width: var(--segmented-control-height);
+    width: var(--segmented-control-root-width);
+  }
+
+  /* Item layout */
+  :where(.kui-r-orientation-horizontal) .kui-SegmentedControlItem {
+    flex-direction: row;
+  }
+  :where(.kui-r-orientation-vertical) .kui-SegmentedControlItem {
+    flex-direction: column;
+  }
+
+  /* Item corners */
+  :where(.kui-r-orientation-horizontal) .kui-SegmentedControlItem:where(:first-child) {
+    border-start-start-radius: inherit;
+    border-end-start-radius: inherit;
+  }
+  :where(.kui-r-orientation-horizontal) .kui-SegmentedControlItem:where(:first-child:not(:nth-last-child(2))) {
+    border-start-end-radius: 0;
+  }
+  :where(.kui-r-orientation-horizontal) .kui-SegmentedControlItem:where(:nth-last-child(2)) {
+    border-start-end-radius: inherit;
+    border-end-end-radius: inherit;
+  }
+  :where(.kui-r-orientation-horizontal) .kui-SegmentedControlItem:where(:nth-last-child(2):not(:first-child)) {
+    border-end-start-radius: 0;
+  }
+
+  :where(.kui-r-orientation-vertical) .kui-SegmentedControlItem:where(:first-child) {
+    border-start-start-radius: inherit;
+    border-start-end-radius: inherit;
+  }
+  :where(.kui-r-orientation-vertical) .kui-SegmentedControlItem:where(:first-child:not(:nth-last-child(2))) {
+    border-end-start-radius: 0;
+  }
+  :where(.kui-r-orientation-vertical) .kui-SegmentedControlItem:where(:nth-last-child(2)) {
+    border-end-start-radius: inherit;
+    border-end-end-radius: inherit;
+  }
+  :where(.kui-r-orientation-vertical) .kui-SegmentedControlItem:where(:nth-last-child(2):not(:first-child)) {
+    border-start-end-radius: 0;
+  }
+
+  /* Separator */
+  :where(.kui-r-orientation-horizontal) .kui-SegmentedControlItemSeparator {
+    padding-block: calc(var(--space-2) * 0.75); /* 3px */
+    padding-inline: 0;
+    margin-block: 0;
+    margin-inline: calc(-1 * var(--border-width-standard) * 0.5); /* -0.5px */
+    width: var(--border-width-standard); /* 1px */
+    height: auto;
+  }
+  :where(.kui-r-orientation-vertical) .kui-SegmentedControlItemSeparator {
+    padding-block: 0;
+    padding-inline: calc(var(--space-2) * 0.75); /* 3px */
+    margin-block: calc(-1 * var(--border-width-standard) * 0.5); /* -0.5px */
+    margin-inline: 0;
+    width: auto;
+    height: var(--border-width-standard); /* 1px */
+  }
+
+  /* Indicator */
+  :where(.kui-r-orientation-horizontal) .kui-SegmentedControlIndicator {
+    width: calc(100% / var(--segmented-control-count, 1));
+    height: 100%;
+    transform: translateX(calc(var(--segmented-control-index, 0) * 100% * var(--segmented-control-direction)));
+  }
+  :where(.kui-r-orientation-vertical) .kui-SegmentedControlIndicator {
+    width: 100%;
+    height: calc(100% / var(--segmented-control-count, 1));
+    transform: translateY(calc(var(--segmented-control-index, 0) * 100%));
+  }
+
+  /* Icon-only items: square minimum along the bar */
+  :where(.kui-r-orientation-horizontal) .kui-SegmentedControlItem[data-icon-only] {
+    min-width: var(--segmented-control-height);
+    min-height: auto;
+  }
+  :where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-icon-only] {
+    min-width: auto;
+    min-height: var(--segmented-control-height);
+  }
+
+  /* Vertical text items need vertical padding; icon-only items take none */
+  :where(.kui-r-orientation-horizontal) .kui-SegmentedControlItemLabel {
+    padding-block: 0;
+  }
+  :where(.kui-r-orientation-vertical) .kui-SegmentedControlItemLabel {
+    padding-block: var(--segmented-control-vertical-py);
+  }
+  :where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-icon-only] .kui-SegmentedControlItemLabel {
+    padding-block: 0;
+  }
 }
 
-/* Vertical icon-only - remove top/bottom padding */
-:where(.kui-r-orientation-vertical) .kui-SegmentedControlItem[data-icon-only] .kui-SegmentedControlItemLabel {
-  padding-top: 0;
-  padding-bottom: 0;
+/* Windows High Contrast drops box shadows and background colours, so the bar takes a border and
+ * the selected segment a system highlight. */
+@media (forced-colors: active) {
+  .kui-SegmentedControlRoot {
+    border: 1px solid CanvasText;
+  }
+  .kui-SegmentedControlItemSeparator {
+    background-color: CanvasText;
+  }
+  .kui-SegmentedControlIndicator::before {
+    background-color: Highlight;
+  }
+  .kui-SegmentedControlItem:where([data-state='on']) {
+    color: HighlightText;
+  }
+  .kui-SegmentedControlRoot:where([data-disabled]),
+  .kui-SegmentedControlItem:where([disabled]) {
+    border-color: GrayText;
+    color: GrayText;
+  }
+  :where(.kui-SegmentedControlItem[data-state='on'][disabled]) ~ .kui-SegmentedControlIndicator::before {
+    background-color: GrayText;
+  }
 }
-
-/* Vertical icon-only root width (explicit since nested :has() in @breakpoints may not work) */
-.kui-SegmentedControlRoot:where(.kui-r-orientation-vertical):where(.kui-r-size-1):has([data-icon-only]) {
-  width: var(--control-height-1);
-}
-.kui-SegmentedControlRoot:where(.kui-r-orientation-vertical):where(.kui-r-size-2):has([data-icon-only]) {
-  width: var(--control-height-2);
-}
-.kui-SegmentedControlRoot:where(.kui-r-orientation-vertical):where(.kui-r-size-3):has([data-icon-only]) {
-  width: var(--control-height-3);
-}
-.kui-SegmentedControlRoot:where(.kui-r-orientation-vertical):where(.kui-r-size-4):has([data-icon-only]) {
-  width: var(--control-height-4);
-}
-
-/* Vertical text items need vertical padding */
-:where(.kui-r-orientation-vertical):where(.kui-r-size-1) .kui-SegmentedControlItemLabel {
-  padding-top: var(--space-2);
-  padding-bottom: var(--space-2);
-}
-:where(.kui-r-orientation-vertical):where(.kui-r-size-2) .kui-SegmentedControlItemLabel {
-  padding-top: var(--space-3);
-  padding-bottom: var(--space-3);
-}
-:where(.kui-r-orientation-vertical):where(.kui-r-size-3) .kui-SegmentedControlItemLabel {
-  padding-top: var(--space-3);
-  padding-bottom: var(--space-3);
-}
-:where(.kui-r-orientation-vertical):where(.kui-r-size-4) .kui-SegmentedControlItemLabel {
-  padding-top: var(--space-4);
-  padding-bottom: var(--space-4);
-}
-

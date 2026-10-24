@@ -221,5 +221,6 @@ Content, the items, Label, Group, Separator and SubContent also accept the attri
 
 - **Opening:** The menu opens on the `contextmenu` event. Most browsers also fire it for the Menu key and Shift F10 on a focused element, so make the trigger focusable when keyboard users need the menu.
 - **Announcements:** Items have the `menuitem` role, and checkbox and radio items announce whether they're on. A shortcut hint is hidden from screen readers, which read `aria-keyshortcuts` instead.
+- **Groups:** A Group or RadioGroup that holds a Label is named by that Label, so a screen reader announces the section as focus enters it.
 - **Touch:** A long press opens the menu on touch and pen input.
 - **Focus:** Focus moves into the menu when it opens and stays there until it closes.

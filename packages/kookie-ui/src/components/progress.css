@@ -28,7 +28,15 @@
    * `.kui-ProgressRoot` clips the overhang. `max()` keeps a sliver of the bar
    * visible at very low values, as the width form did.
    */
-  transform: translateX(calc(-100% + max(calc(var(--progress-value) / var(--progress-max) * 100%), var(--progress-height))));
+  /* In RTL the bar fills from the right: --progress-direction flips the slide. */
+  --progress-direction: 1;
+  transform: translateX(
+    calc(var(--progress-direction) * (-100% + max(calc(var(--progress-value) / var(--progress-max) * 100%), var(--progress-height))))
+  );
+
+  &:where(:dir(rtl)) {
+    --progress-direction: -1;
+  }
 
   &:where([data-state='indeterminate']) {
     animation-name: kui-progress-indicator-indeterminate-grow;
@@ -41,20 +49,27 @@
 
 @keyframes kui-progress-indicator-indeterminate-grow {
   0% {
-    transform: translateX(calc(-100% + var(--progress-scale-initial) * 100%));
+    transform: translateX(calc(var(--progress-direction) * (-100% + var(--progress-scale-initial) * 100%)));
   }
   20% {
-    transform: translateX(calc(-100% + var(--progress-scale-step-1) * 100%));
+    transform: translateX(calc(var(--progress-direction) * (-100% + var(--progress-scale-step-1) * 100%)));
   }
   30% {
-    transform: translateX(calc(-100% + var(--progress-scale-step-2) * 100%));
+    transform: translateX(calc(var(--progress-direction) * (-100% + var(--progress-scale-step-2) * 100%)));
   }
   40%,
   50% {
-    transform: translateX(calc(-100% + var(--progress-scale-step-3) * 100%));
+    transform: translateX(calc(var(--progress-direction) * (-100% + var(--progress-scale-step-3) * 100%)));
   }
   100% {
-    transform: translateX(calc(-100% + var(--progress-scale-final) * 100%));
+    transform: translateX(calc(var(--progress-direction) * (-100% + var(--progress-scale-final) * 100%)));
+  }
+}
+
+/* A busy indicator keeps moving when motion is reduced, more slowly. */
+@media (prefers-reduced-motion: reduce) {
+  .kui-ProgressIndicator:where([data-state='indeterminate']) {
+    animation-duration: calc(var(--progress-duration) * 3);
   }
 }
 
@@ -93,5 +108,17 @@
 
   & :where(.kui-ProgressIndicator) {
     background-color: var(--accent-solid);
+  }
+}
+
+/* Forced colors drop the track's shadow and paint both backgrounds as Canvas: outline the track
+   and fill the bar with Highlight so the progress shows. Last, so it wins over the variants. */
+@media (forced-colors: active) {
+  .kui-ProgressRoot {
+    border: 1px solid CanvasText;
+  }
+
+  .kui-ProgressIndicator {
+    background-color: Highlight;
   }
 }

@@ -35,7 +35,8 @@ const TableRoot = React.forwardRef<TableRootElement, TableRootProps>((ownProps, 
   });
   return (
     <div ref={forwardedRef} className={classNames('kui-TableRoot', className)} {...rootProps}>
-      <ScrollArea>
+      {/* An overflowing scroller is a tab stop, so it carries the table's name and reads as a region. */}
+      <ScrollArea aria-label={ariaLabel} aria-labelledby={ariaLabelledBy}>
         <table
           className={classNames('kui-TableRootTable', tableLayoutClassNames)}
           aria-label={ariaLabel}

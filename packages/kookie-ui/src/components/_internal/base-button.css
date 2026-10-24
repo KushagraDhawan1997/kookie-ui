@@ -63,11 +63,6 @@
   font-style: normal;
   text-align: center;
 
-  /* RTL support for right-to-left languages */
-  :where([dir='rtl']) & {
-    flex-direction: row-reverse;
-  }
-
   /* Own stacking context so inner layers (spinner) stay contained */
   isolation: isolate;
 
@@ -101,9 +96,15 @@
     cursor: progress;
   }
 
-  /* The label, hidden in place while the spinner shows. `contents` keeps the button's flex gap. */
+  /* The loading spinner rides the icon ladder */
+  --spinner-size: var(--base-button-icon-size);
+
+  /* The label's wrapper. `contents` keeps the button's flex gap; hidden in place while the spinner shows. */
   & :where(.kui-BaseButtonContent) {
     display: contents;
+  }
+
+  &:where(.kui-loading) :where(.kui-BaseButtonContent) {
     visibility: hidden;
   }
 
@@ -461,5 +462,22 @@
   /* Raised needs special handling for top position */
   &:where(.kui-variant-raised) {
     top: 0;
+  }
+}
+
+/***************************************************************************************************
+ *                                                                                                 *
+ * FORCED COLORS: PRESSED                                                                          *
+ *                                                                                                 *
+ * Forced colors erase the pressed background, so a pressed toggle takes the Highlight pair.       *
+ * Last in the file, so it wins over every variant's pressed rule.                                 *
+ *                                                                                                 *
+ ***************************************************************************************************/
+
+@media (forced-colors: active) {
+  .kui-BaseButton:where([data-state='on'], [aria-pressed='true']):where(:not([data-disabled], [aria-disabled='true'])) {
+    border-color: Highlight;
+    background-color: Highlight;
+    color: HighlightText;
   }
 }

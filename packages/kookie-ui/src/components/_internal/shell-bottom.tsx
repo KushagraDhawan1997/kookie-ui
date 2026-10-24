@@ -153,3 +153,5 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((props
 
 Bottom.displayName = 'Shell.Bottom';
 Bottom.Handle = BottomHandle;
+
+export type { BottomPublicProps };

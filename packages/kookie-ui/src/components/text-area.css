@@ -19,8 +19,6 @@
 .kui-TextAreaRoot {
   display: flex;
   flex-direction: column;
-  /* The root spaces its parts: the gap sits between the text and an error message under it. */
-  gap: var(--space-2);
   box-sizing: border-box;
 
   font-family: var(--default-font-family);
@@ -481,7 +479,11 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
+/* A sibling of the root, below the box: it takes the field's type itself. */
 .kui-TextAreaErrorMessage {
+  font-family: var(--default-font-family);
+  font-weight: var(--font-weight-regular);
+  padding-top: var(--space-2);
   color: var(--red-11);
   font-size: var(--font-size-1);
   line-height: var(--line-height-1);
@@ -495,4 +497,17 @@
   color: var(--red-9);
   font-size: var(--font-size-1);
   line-height: 1;
+}
+
+/*
+ * Forced colors drop box-shadows, which draw every variant's boundary, so the box gets a real
+ * border there, as BaseButton does.
+ */
+@media (forced-colors: active) {
+  .kui-TextAreaRoot {
+    border: 1px solid CanvasText;
+  }
+  .kui-TextAreaRoot:where(:has(.kui-TextAreaInput:disabled)) {
+    border-color: GrayText;
+  }
 }

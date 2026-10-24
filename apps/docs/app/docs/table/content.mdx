@@ -145,7 +145,7 @@ Row also accepts every attribute of the HTML `tr` element.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `justify` | `'start' \| 'center' \| 'end'`, responsive | | The horizontal alignment of the content |
+| `justify` | `'start' \| 'center' \| 'end'`, responsive | | The horizontal alignment of the content. `start` and `end` follow the text direction |
 | `width`, `minWidth`, `maxWidth` | `string`, responsive | | The width of the cell |
 | `p`, `px`, `py`, `pt`, `pr`, `pb`, `pl` | `'0'` to `'12'` or a CSS length, responsive | | The padding of the cell |
 
@@ -159,5 +159,5 @@ Header and Body take no props of their own. They accept every attribute of the H
 
 - **Structure:** The parts render native `table`, `thead`, `tbody`, `tr`, `th` and `td` elements, so a screen reader announces the number of rows and columns and lets people move cell by cell.
 - **Headers:** Column header cells have `scope="col"` and row header cells have `scope="row"`. A screen reader reads the matching headers as people move through the cells.
-- **Name:** `aria-label` or `aria-labelledby` on Root names the table. A `caption` element as the first child of Root also names it, and shows the name on the page.
+- **Name:** `aria-label` or `aria-labelledby` on Root names the table, and also names the scroll area around it, which keyboard users reach with Tab when the table is too wide. A `caption` element as the first child of Root also names it, and shows the name on the page.
 - **Scrolling:** A wide table scrolls inside its root. The scrollbar shows when the pointer is over the table, so keep the most important columns first.

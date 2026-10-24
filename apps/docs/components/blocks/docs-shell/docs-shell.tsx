@@ -53,6 +53,7 @@ export function DocsShell({
   return (
     <Shell.Root height={height}>
       <Shell.Sidebar
+        aria-label="Documentation"
         resizable={sidebarResizable}
         defaultState={{ initial: 'collapsed', sm: 'expanded' }}
         presentation={{ initial: 'overlay', sm: 'fixed' }}

@@ -56,6 +56,11 @@ interface TabsTriggerProps
 const TabsTrigger = React.forwardRef<TabsTriggerElement, TabsTriggerProps>(
   (props, forwardedRef) => {
     const { className, children, ...triggerProps } = props;
+    // A hidden bold copy reserves the active width. Only plain text is copied: copying elements
+    // would duplicate their ids and mount them twice.
+    const isText = React.Children.toArray(children).every(
+      (child) => typeof child === 'string' || typeof child === 'number',
+    );
     return (
       <TabsPrimitive.Trigger
         {...triggerProps}
@@ -64,9 +69,11 @@ const TabsTrigger = React.forwardRef<TabsTriggerElement, TabsTriggerProps>(
         className={classNames('kui-reset', 'kui-BaseTabListTrigger', 'kui-TabsTrigger', className)}
       >
         <span className="kui-BaseTabListTriggerInner kui-TabsTriggerInner">{children}</span>
-        <span className="kui-BaseTabListTriggerInnerHidden kui-TabsTriggerInnerHidden">
-          {children}
-        </span>
+        {isText ? (
+          <span className="kui-BaseTabListTriggerInnerHidden kui-TabsTriggerInnerHidden" aria-hidden>
+            {children}
+          </span>
+        ) : null}
       </TabsPrimitive.Trigger>
     );
   },

@@ -77,4 +77,72 @@ describe('appearance', () => {
     expect(screen.getByTestId('probe').textContent).toBe('system:light');
     expect(localStorage.getItem(APPEARANCE_STORAGE_KEY)).toBeNull();
   });
+
+  test('with storage blocked, an explicit choice holds when the system changes', () => {
+    const system = liveSystem(false);
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('blocked');
+    });
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('blocked');
+    });
+    runScript();
+    render(<Probe />);
+
+    act(() => setAppearance('dark'));
+    expect(screen.getByTestId('probe').textContent).toBe('dark:dark');
+
+    act(() => system.set(false));
+    expect(screen.getByTestId('probe').textContent).toBe('dark:dark');
+    expect(document.documentElement.className).toBe('dark');
+
+    vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => {
+      throw new Error('blocked');
+    });
+    act(() => setAppearance('system'));
+    expect(screen.getByTestId('probe').textContent).toBe('system:light');
+  });
+
+  test('many consumers share one system listener and one stamp per change', () => {
+    const system = liveSystem(false);
+    runScript();
+    render(
+      <>
+        <Probe />
+        <Probe />
+        <Probe />
+        <Probe />
+      </>,
+    );
+    expect(system.listenerCount()).toBe(1);
+
+    const add = vi.spyOn(document.documentElement.classList, 'add');
+    act(() => system.set(true));
+    expect(add).toHaveBeenCalledTimes(1);
+    expect(screen.getAllByTestId('probe').map((el) => el.textContent)).toEqual(Array(4).fill('system:dark'));
+  });
 });
+
+/** A prefers-color-scheme query whose value can change, with its listeners counted. */
+function liveSystem(initial: boolean) {
+  let dark = initial;
+  const handlers = new Set<() => void>();
+  vi.stubGlobal(
+    'matchMedia',
+    vi.fn().mockImplementation((query: string) => ({
+      get matches() {
+        return dark && query === '(prefers-color-scheme: dark)';
+      },
+      media: query,
+      addEventListener: (_: string, handler: () => void) => handlers.add(handler),
+      removeEventListener: (_: string, handler: () => void) => handlers.delete(handler),
+    })),
+  );
+  return {
+    set(next: boolean) {
+      dark = next;
+      handlers.forEach((handler) => handler());
+    },
+    listenerCount: () => handlers.size,
+  };
+}
