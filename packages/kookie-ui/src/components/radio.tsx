@@ -6,7 +6,7 @@ import { composeEventHandlers } from 'radix-ui/internal';
 
 import { radioPropDefs } from './radio.props.js';
 import { extractProps } from '../helpers/extract-props.js';
-import { useThemeSizeProps } from '../helpers/theme-size.js';
+import { useThemeSizeProps } from '../hooks/theme-size.js';
 
 import type { ComponentPropsWithout } from '../helpers/component-props.js';
 import type { NotInputRadioAttributes } from '../helpers/input-attributes.js';

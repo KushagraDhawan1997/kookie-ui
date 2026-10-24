@@ -4,7 +4,7 @@ import { Tabs as TabsPrimitive } from 'radix-ui';
 
 import { tabsListPropDefs } from './tabs.props.js';
 import { extractProps } from '../helpers/extract-props.js';
-import { useThemeSizeProps } from '../helpers/theme-size.js';
+import { useThemeSizeProps } from '../hooks/theme-size.js';
 
 import type { tabsContentPropDefs, tabsRootPropDefs } from './tabs.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';

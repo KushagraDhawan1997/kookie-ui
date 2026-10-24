@@ -42,7 +42,7 @@ import { Theme } from './theme.js';
 import { Heading } from './heading.js';
 import { Text } from './text.js';
 import { extractProps } from '../helpers/extract-props.js';
-import { useThemeSizeProps } from '../helpers/theme-size.js';
+import { useThemeSizeProps } from '../hooks/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
 import { useBodyPointerEventsCleanup } from '../hooks/use-body-pointer-events-cleanup.js';
 

@@ -6,7 +6,7 @@ import { useComposedRefs } from 'radix-ui/internal';
 import { PaneResizeContext } from './shell-resize.js';
 import { PaneHandle, SidebarHandle } from './shell-handles.js';
 import { usePane, paneAttributes, usePresentationTable } from './shell-pane.js';
-import { splitHandles, useResizablePane, type SizeChangeMeta } from './shell-resizable.js';
+import { splitHandles, useInitialPaneSize, useResizablePane, type SizeChangeMeta } from './shell-resizable.js';
 import { useInsetRegistration, warnOnce, type PaneValue } from './shell-store.js';
 import { navigationRest, startAnchoredGrowth, withoutRemovedPaneProps } from './shell-rest.js';
 import { readBreakpoint } from '../../hooks/use-breakpoint.js';
@@ -148,6 +148,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
   // A peek previews the width the next toggle opens to.
   const peekWidth = pane.peeking ? `var(--sidebar-size, ${expandedSize}px)` : undefined;
 
+  const initialSize = useInitialPaneSize(size, defaultSize, minSize, maxSize);
   return (
     <div
       {...withoutRemovedPaneProps(domProps)}
@@ -162,6 +163,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
         {
           ...style,
           '--sidebar-expanded-size': `${expandedSize}px`,
+          ...(initialSize ? { '--sidebar-size': initialSize } : {}),
           '--sidebar-min-size': `${minSize}px`,
           '--sidebar-max-size': `${maxSize}px`,
           ...(peekWidth ? { '--peek-sidebar-width': peekWidth } : {}),

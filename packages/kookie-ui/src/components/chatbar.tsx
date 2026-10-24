@@ -9,7 +9,7 @@ import { Flex } from './flex.js';
 import { ScrollArea } from './scroll-area.js';
 import { Slot } from './slot.js';
 import { NoticeSizeContext } from './notice.js';
-import { useThemeSize } from '../helpers/theme-size.js';
+import { useThemeSize } from '../hooks/theme-size.js';
 import { Spinner } from './spinner.js';
 import { Text } from './text.js';
 import { VisuallyHidden } from './visually-hidden.js';

@@ -51,7 +51,7 @@ import { navigationRest, detailRest, toPaneValue, startAnchoredGrowth, withoutRe
 import { useShell, useSidebarMode } from './shell.context.js';
 import { useResponsivePresentation } from './shell.hooks.js';
 import { readBreakpoint } from '../hooks/use-breakpoint.js';
-import { useThemeSize } from '../helpers/theme-size.js';
+import { useThemeSize } from '../hooks/theme-size.js';
 import { PaneChromeScope, PaneFooter, PaneHeader, Scroll, ShellContentContext, ShellSizeContext } from './_internal/pane-chrome.js';
 import type { PaneSize, PaneHeaderProps, PaneFooterProps, ScrollProps } from './_internal/pane-chrome.js';
 import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, PaneMode, PaneName, PaneTarget, ResponsivePresentation, SidebarMode } from './shell.types.js';

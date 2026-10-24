@@ -8,6 +8,8 @@
   --color-page: white;
   --color-overlay: var(--black-a6);
   --color-surface: white;
+  /* The ground a raised surface sits on: one step below it, so a white card reads as lifted. */
+  --color-ground: var(--neutral-1, var(--gray-1));
 
   /*
    * The neutral scale, named as in v2. It defaults to the plain gray palette; a Theme grayColor
@@ -49,6 +51,7 @@
   --color-page: var(--neutral-1, var(--gray-1));
   --color-overlay: var(--black-a8);
   --color-surface: var(--neutral-2, var(--gray-2));
+  --color-ground: var(--neutral-1, var(--gray-1));
 }
 
 /*                                     */

@@ -1,3 +1,19 @@
+## [0.25.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.25.0...v0.25.1) (2026-10-24)
+
+### Fixes
+
+* **helpers:** the theme-size context lives in a client module, so `/helpers` imports in a Server Component and there is one context.
+* **sheet:** the 90vw default width applies again on side sheets.
+* **popover:** a toolbar's Left and Right sections stay in their columns.
+* **button:** `asChild` with `loading` keeps the child's class, state, ref and click guard.
+* **sidebar:** arrow keys in the rail search no longer skip results; a bare `MenuButton` in a sub-menu is wrapped in a list item.
+* **toolbar:** a control moved into the More menu keeps its handlers and ARIA, so a menu trigger still opens.
+* **shell:** a numeric `defaultSize` is in the server HTML, so panes paint at the right width before hydration.
+
+### Features
+
+* **color:** `--color-ground`, the ground a raised surface sits on (neutral 1).
+
 ## [0.25.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.24.0...v0.25.0) (2026-10-24)
 
 The fixes from a full audit of every component, each with a test, and four breaking changes that match v2. See MIGRATION.md.

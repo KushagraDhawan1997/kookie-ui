@@ -168,7 +168,7 @@ h6 {
 .kd-hero-window {
   box-sizing: border-box;
   width: calc(30 * var(--space-7));
-  background-color: var(--color-page);
+  background-color: var(--color-ground);
   border: 1px solid var(--neutral-a5);
   border-radius: var(--radius-surface-4);
   overflow: clip;

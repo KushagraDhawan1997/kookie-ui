@@ -35,16 +35,18 @@
 }
 
 .kui-PopoverToolbarSection {
+  /* Each section owns a column on the one row, whichever sections are present and in any order. */
+  grid-row: 1;
   display: flex;
   align-items: center;
   gap: var(--space-3);
 }
 
-.kui-PopoverToolbarLeft { justify-self: start; }
+.kui-PopoverToolbarLeft { grid-column: 1; justify-self: start; }
 
 .kui-PopoverToolbarCenter { grid-column: 2; justify-self: center; min-width: 0; text-align: center; }
 
-.kui-PopoverToolbarRight { justify-self: end; }
+.kui-PopoverToolbarRight { grid-column: 3; justify-self: end; }
 
 .kui-PopoverToolbarTitle {
   display: inline-block;

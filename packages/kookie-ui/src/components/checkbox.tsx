@@ -8,7 +8,7 @@ import { useControllableState } from 'radix-ui/internal';
 import { checkboxPropDefs } from './checkbox.props.js';
 import { ThickCheckIcon, ThickDividerHorizontalIcon } from './icons.js';
 import { extractProps } from '../helpers/extract-props.js';
-import { useThemeSizeProps } from '../helpers/theme-size.js';
+import { useThemeSizeProps } from '../hooks/theme-size.js';
 
 import type { ComponentPropsWithout } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';

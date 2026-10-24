@@ -74,12 +74,14 @@ export function DocsSidebar({ navigation, logo, headerActions, footer, pathname 
           </Sidebar.MenuSubTrigger>
           <Sidebar.MenuSubContent>
             {item.items.map((subItem) => (
-              <Sidebar.MenuButton asChild key={subItem.href} isActive={pathname === subItem.href}>
-                <LinkComponent href={subItem.href}>
-                  {renderIcon(subItem.icon)}
-                  <span className="kui-SidebarMenuLabel">{subItem.title}</span>
-                </LinkComponent>
-              </Sidebar.MenuButton>
+              <Sidebar.MenuItem key={subItem.href}>
+                <Sidebar.MenuButton asChild isActive={pathname === subItem.href}>
+                  <LinkComponent href={subItem.href}>
+                    {renderIcon(subItem.icon)}
+                    <span className="kui-SidebarMenuLabel">{subItem.title}</span>
+                  </LinkComponent>
+                </Sidebar.MenuButton>
+              </Sidebar.MenuItem>
             ))}
           </Sidebar.MenuSubContent>
         </Sidebar.MenuSub>
