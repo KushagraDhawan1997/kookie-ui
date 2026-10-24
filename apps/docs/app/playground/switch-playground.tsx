@@ -32,7 +32,6 @@ const accentColors = [
   'mint',
   'sky',
 ] as const;
-const variants = ['surface', 'soft', 'outline'] as const;
 const sizes = ['1', '2', '3', '4'] as const;
 
 type SwitchPlaygroundProps = {
@@ -42,22 +41,12 @@ type SwitchPlaygroundProps = {
 };
 
 export default function SwitchPlayground({ showControls = false, showToolbar = true, height }: SwitchPlaygroundProps = {}) {
-  const [variant, setVariant] = React.useState<string>('surface');
   const [size, setSize] = React.useState<string>('2');
   const [color, setColor] = React.useState<string>('theme');
   const [disabled, setDisabled] = React.useState(false);
   const [on, setOn] = React.useState(true);
 
   const items = [
-    {
-      id: 'variant',
-      label: 'Variant',
-      type: 'select' as const,
-      value: variant,
-      onChange: setVariant,
-      options: variants.map((v) => ({ label: v, value: v })),
-      placeholder: 'Select variant',
-    },
     {
       id: 'size',
       label: 'Size',
@@ -87,7 +76,7 @@ export default function SwitchPlayground({ showControls = false, showToolbar = t
   ];
 
   const generateCode = () => {
-    const props = ['checked={on}', 'onCheckedChange={setOn}', `variant="${variant}"`, `size="${size}"`];
+    const props = ['checked={on}', 'onCheckedChange={setOn}', `size="${size}"`];
     if (color !== 'theme') props.push(`color="${color}"`);
     if (disabled) props.push('disabled');
 
@@ -117,7 +106,7 @@ export default function SwitchPlayground({ showControls = false, showToolbar = t
                   <Text weight="medium">Auto-save</Text>
                   <Text emphasis="medium">Save changes as you type</Text>
                 </Flex>
-                <Switch checked={on} onCheckedChange={setOn} variant={variant as any} size={size as any} color={color === 'theme' ? undefined : (color as any)} disabled={disabled} />
+                <Switch checked={on} onCheckedChange={setOn} size={size as any} color={color === 'theme' ? undefined : (color as any)} disabled={disabled} />
               </Flex>
             </Text>
           </Card>

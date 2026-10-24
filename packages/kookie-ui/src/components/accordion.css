@@ -30,7 +30,7 @@
 
 :where(.kui-AccordionRoot:where(.kui-variant-raised)) {
   background-color: var(--color-surface);
-  box-shadow: var(--shadow-2);
+  box-shadow: var(--surface-chrome);
 }
 
 :where(.kui-AccordionRoot:where(.kui-variant-soft)) {
@@ -158,7 +158,7 @@
 @media (hover: hover) {
   :where(.kui-AccordionRoot:where(.kui-variant-raised):hover) {
     background-color: var(--accent-2);
-    box-shadow: var(--shadow-2);
+    box-shadow: var(--surface-chrome);
   }
 }
 

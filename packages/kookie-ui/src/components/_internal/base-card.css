@@ -327,7 +327,7 @@
   --card-background-color: var(--color-surface);
   position: relative;
   top: var(--raised-elevation-offset);
-  box-shadow: var(--shadow-2);
+  box-shadow: var(--surface-chrome);
 
   &::before {
     background-color: var(--card-background-color);
@@ -345,7 +345,7 @@
   &:where(:any-link, button, label) {
     @media (hover: hover) {
       &:where(:hover) {
-        box-shadow: var(--shadow-2);
+        box-shadow: var(--surface-chrome);
 
         &::before {
           background-color: var(--neutral-2);

@@ -1,130 +1,58 @@
+/*
+ * Shadows follow v2's two layers.
+ *
+ * The palette, --shadow-1 to --shadow-6, is a set of values. Components never read it.
+ * 1 is an inset well, 2 a small drop, 3 a floating drop, 4 a surface drop, 5 a wide drop,
+ * 6 the deepest drop. No step draws a ring: an edge is a border's job.
+ *
+ * Components read roles:
+ * --surface-chrome: a raised card or a pane.
+ * --control-chrome: a raised control or field, such as a button, a text field or a select.
+ * --control-chrome-active: the same control while pressed. The drop tightens toward the surface.
+ * --grip-chrome: the thumb of a switch or slider.
+ * --control-light: an optional light across a raised control's top half (a background image); none by default.
+ * --floating-chrome: a popover, menu, select list, hover card or tooltip.
+ * --dialog-chrome: a dialog. Like v2, a dialog is a surface that covers the page.
+ *
+ * Fields (text field, text area, select trigger) cast nothing. They are a flat soft fill.
+ */
+
 /* prettier-ignore */
 :where(.kui-theme) {
-  --shadow-1:
-    0 0 0 0.25px var(--neutral-a6),
-    inset 0 1px 1px 0 var(--black-a2);
+  --shadow-1: inset 0 1px 1px rgb(0 0 0 / 0.12), inset 0 2px 4px rgb(0 0 0 / 0.06);
+  --shadow-2: 0 1px 2px rgb(0 0 0 / 0.1), 0 5px 14px -4px rgb(0 0 0 / 0.1), 0 12px 30px -8px rgb(0 0 0 / 0.09);
+  --shadow-3: 0 1px 2px rgb(0 0 0 / 0.1), 0 8px 22px -6px rgb(0 0 0 / 0.1), 0 18px 48px -14px rgb(0 0 0 / 0.09);
+  --shadow-4: 0 1px 2px rgb(0 0 0 / 0.1), 0 24px 64px -12px rgb(0 0 0 / 0.11);
+  --shadow-5: 0 1px 2px rgb(0 0 0 / 0.1), 0 12px 32px -8px rgb(0 0 0 / 0.11), 0 32px 80px -16px rgb(0 0 0 / 0.1);
+  --shadow-6: 0 1px 2px rgb(0 0 0 / 0.1), 0 16px 40px -10px rgb(0 0 0 / 0.12), 0 40px 100px -20px rgb(0 0 0 / 0.12);
 
-  --shadow-2:
-    0 0 0 0.25px var(--neutral-a3),
-    0 1px 3px 0 var(--black-a2),
-    0 1px 2px -1px var(--black-a2);
-
-  --shadow-3:
-    0 0 0 0.25px var(--neutral-a6),
-    0 4px 6px -1px var(--black-a2),
-    0 2px 4px -2px var(--black-a2);
-
-  --shadow-4:
-    0 0 0 0.5px var(--neutral-a6),
-    0 10px 15px -3px var(--black-a3),
-    0 4px 6px -4px var(--black-a3);
-
-  --shadow-5:
-    0 0 0 0.5px var(--neutral-a6),
-    0 20px 25px -5px var(--black-a3),
-    0 8px 10px -6px var(--black-a3);
-
-  --shadow-6:
-    0 0 0 0.5px var(--neutral-a6),
-    0 25px 50px -12px var(--black-a5);
-}
-
-/* prettier-ignore */
-@supports (color: color-mix(in oklab, white, black)) {
-  :where(.kui-theme) {
-    --shadow-1:
-      0 0 0 0.25px var(--neutral-a6),
-      inset 0 1px 1px 0 var(--black-a2);
-
-    --shadow-2:
-      0 0 0 0.25px var(--neutral-a3),
-      0 1px 3px 0 var(--black-a2),
-      0 1px 2px -1px var(--black-a2);
-
-    --shadow-3:
-      0 0 0 0.25px var(--neutral-a6),
-      0 4px 6px -1px var(--black-a2),
-      0 2px 4px -2px var(--black-a2);
-
-    --shadow-4:
-      0 0 0 0.5px var(--neutral-a6),
-      0 10px 15px -3px var(--black-a3),
-      0 4px 6px -4px var(--black-a3);
-
-    --shadow-5:
-      0 0 0 0.5px var(--neutral-a6),
-      0 20px 25px -5px var(--black-a3),
-      0 8px 10px -6px var(--black-a3);
-
-    --shadow-6:
-      0 0 0 0.5px var(--neutral-a6),
-      0 25px 50px -12px var(--black-a5);
-  }
+  --surface-chrome: var(--shadow-4);
+  --control-chrome: inset 0 0 0 1px rgb(0 0 0 / 0.08), 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 14px -4px rgb(0 0 0 / 0.08);
+  --control-chrome-active: inset 0 0 0 1px rgb(0 0 0 / 0.1), 0 1px 1px rgb(0 0 0 / 0.04);
+  --control-light: none;
+  /* A grip: the thumb of a switch or slider. A small round object, so a tighter, darker cast. */
+  --grip-chrome: 0 1px 2px rgb(0 0 0 / 0.16), 0 2px 6px -1px rgb(0 0 0 / 0.18);
+  --floating-chrome: var(--shadow-3);
+  --dialog-chrome: var(--surface-chrome);
 }
 
 /* prettier-ignore */
 :is(.dark, .dark-theme),
 :is(.dark, .dark-theme) :where(.kui-theme:not(.light, .light-theme)) {
-  
-  --shadow-1:
-    inset 0 0 0 0.5px var(--neutral-a6),
-    inset 0 1px 1px 0 var(--black-a3);
+  --shadow-1: inset 0 1px 1px rgb(0 0 0 / 0.5), inset 0 2px 4px rgb(0 0 0 / 0.25);
+  --shadow-2: 0 1px 2px rgb(0 0 0 / 0.4), 0 5px 14px -4px rgb(0 0 0 / 0.36), 0 12px 30px -8px rgb(0 0 0 / 0.3);
+  --shadow-3: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 22px -6px rgb(0 0 0 / 0.36), 0 18px 48px -14px rgb(0 0 0 / 0.3);
+  --shadow-4: 0 1px 2px rgb(0 0 0 / 0.4), 0 24px 64px -12px rgb(0 0 0 / 0.45);
+  --shadow-5: 0 1px 2px rgb(0 0 0 / 0.4), 0 12px 32px -8px rgb(0 0 0 / 0.4), 0 32px 80px -16px rgb(0 0 0 / 0.34);
+  --shadow-6: 0 1px 2px rgb(0 0 0 / 0.4), 0 16px 40px -10px rgb(0 0 0 / 0.45), 0 40px 100px -20px rgb(0 0 0 / 0.4);
 
-  --shadow-2:
-    0 0 0 0.5px var(--neutral-a6),
-    0 1px 3px 0 var(--black-a3),
-    0 1px 2px -1px var(--black-a3);
-
-  --shadow-3:
-    0 0 0 0.5px var(--neutral-a6),
-    0 4px 6px -1px var(--black-a3),
-    0 2px 4px -2px var(--black-a3);
-
-  --shadow-4:
-    0 0 0 0.5px var(--neutral-a6),
-    0 10px 15px -3px var(--black-a3),
-    0 4px 6px -4px var(--black-a3);
-
-  --shadow-5:
-    0 0 0 0.5px var(--neutral-a6),
-    0 20px 25px -5px var(--black-a3),
-    0 8px 10px -6px var(--black-a3);
-
-  --shadow-6:
-    0 0 0 0.5px var(--neutral-a6),
-    0 25px 50px -12px var(--black-a5);
-}
-
-/* prettier-ignore */
-@supports (color: color-mix(in oklab, white, black)) {
-  :is(.dark, .dark-theme),
-  :is(.dark, .dark-theme) :where(.kui-theme:not(.light, .light-theme)) {
-    --shadow-1:
-      inset 0 0 0 0.5px var(--neutral-a6),
-      inset 0 1px 1px 0 var(--black-a3);
-
-    --shadow-2:
-      0 0 0 0.5px var(--neutral-a6),
-      0 1px 3px 0 var(--black-a3),
-      0 1px 2px -1px var(--black-a3);
-
-    --shadow-3:
-      0 0 0 0.5px var(--neutral-a6),
-      0 4px 6px -1px var(--black-a3),
-      0 2px 4px -2px var(--black-a3);
-
-    --shadow-4:
-      0 0 0 0.5px var(--neutral-a6),
-      0 10px 15px -3px var(--black-a3),
-      0 4px 6px -4px var(--black-a3);
-
-    --shadow-5:
-      0 0 0 0.5px var(--neutral-a6),
-      0 20px 25px -5px var(--black-a3),
-      0 8px 10px -6px var(--black-a3);
-
-    --shadow-6:
-      0 0 0 0.5px var(--neutral-a6),
-      0 25px 50px -12px var(--black-a5);
-  }
+  --surface-chrome: var(--shadow-4);
+  /* On a dark page a raised control's drop is barely visible, so the control also draws a faint
+     inner edge. v1 drew this edge with a ring in every shadow; now only the control role has it. */
+  --control-chrome: inset 0 0 0 1px rgb(255 255 255 / 0.08), 0 1px 2px rgb(0 0 0 / 0.35), 0 4px 14px -4px rgb(0 0 0 / 0.45);
+  --control-chrome-active: inset 0 0 0 1px rgb(255 255 255 / 0.1), 0 1px 1px rgb(0 0 0 / 0.4);
+  --control-light: none;
+  --grip-chrome: 0 1px 2px rgb(0 0 0 / 0.5), 0 2px 6px -1px rgb(0 0 0 / 0.4);
+  --floating-chrome: inset 0 1px 0 rgb(255 255 255 / 0.05), var(--shadow-3);
+  --dialog-chrome: var(--surface-chrome);
 }

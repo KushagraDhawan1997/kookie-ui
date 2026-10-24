@@ -32,7 +32,6 @@ const accentColors = [
   'mint',
   'sky',
 ] as const;
-const variants = ['raised', 'solid', 'soft', 'outline', 'surface'] as const;
 const sizes = ['1', '2', '3', '4'] as const;
 
 const options = [
@@ -48,22 +47,12 @@ type CheckboxPlaygroundProps = {
 };
 
 export default function CheckboxPlayground({ showControls = false, showToolbar = true, height }: CheckboxPlaygroundProps = {}) {
-  const [variant, setVariant] = React.useState<string>('raised');
   const [size, setSize] = React.useState<string>('2');
   const [color, setColor] = React.useState<string>('theme');
   const [disabled, setDisabled] = React.useState(false);
   const [value, setValue] = React.useState<string[]>(['mentions']);
 
   const items = [
-    {
-      id: 'variant',
-      label: 'Variant',
-      type: 'select' as const,
-      value: variant,
-      onChange: setVariant,
-      options: variants.map((v) => ({ label: v, value: v })),
-      placeholder: 'Select variant',
-    },
     {
       id: 'size',
       label: 'Size',
@@ -93,7 +82,7 @@ export default function CheckboxPlayground({ showControls = false, showToolbar =
   ];
 
   const generateCode = () => {
-    const props = ['name="notify"', `defaultValue={['mentions']}`, 'aria-labelledby="notify-label"', `variant="${variant}"`, `size="${size}"`];
+    const props = ['name="notify"', `defaultValue={['mentions']}`, 'aria-labelledby="notify-label"', `size="${size}"`];
     if (color !== 'theme') props.push(`color="${color}"`);
     if (disabled) props.push('disabled');
 
@@ -121,7 +110,6 @@ ${options.map((o) => `    <CheckboxGroup.Item value="${o.value}">${o.label}</Che
             value={value}
             onValueChange={setValue}
             aria-labelledby="playground-notify-label"
-            variant={variant as any}
             size={size as any}
             color={color === 'theme' ? undefined : (color as any)}
             disabled={disabled}

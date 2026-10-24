@@ -1,6 +1,6 @@
 .kui-PopoverContent {
   background-color: var(--color-surface);
-  box-shadow: var(--shadow-5);
+  box-shadow: var(--floating-chrome);
   min-width: var(--radix-popover-trigger-width);
   outline: 0;
   overflow: auto;

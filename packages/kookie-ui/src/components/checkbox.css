@@ -1,6 +1,6 @@
 @import './_internal/base-checkbox.css';
 
-/* The disabled cursor and colours live in the base mark, per variant. */
+/* The disabled cursor and colours live in the base mark. */
 .kui-CheckboxRoot {
   &:where(:focus-visible)::before {
     outline: var(--focus-ring-width, 2px) solid var(--focus-8);

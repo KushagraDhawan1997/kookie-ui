@@ -81,7 +81,7 @@
     inset: calc(var(--slider-thumb-inset-factor) * var(--slider-thumb-overshoot-base, var(--slider-track-size)) * -1);
     background-color: var(--accent-solid-thumb);
     border-radius: var(--slider-thumb-radius);
-    box-shadow: var(--slider-thumb-box-shadow, var(--shadow-2));
+    box-shadow: var(--slider-thumb-box-shadow, var(--grip-chrome));
     cursor: pointer;
   }
 
@@ -142,54 +142,23 @@
 
 /***************************************************************************************************
  *                                                                                                 *
- * VARIANTS                                                                                        *
+ * THE LOOK                                                                                        *
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* surface */
+/* One look, as in v2. The track is the switch's well, a soft fill with no edge; the range is the
+ * accent solid; the thumb is the switch's grip. */
 
-.kui-SliderRoot:where(.kui-variant-surface) {
-  & :where(.kui-SliderTrack) {
-    background-color: var(--neutral-2);
-    box-shadow: inset 0 0 0 1px var(--neutral-6);
-
-    &:where([data-disabled]) {
-      box-shadow: inset 0 0 0 1px var(--neutral-5);
-    }
-  }
-
-  & :where(.kui-SliderRange) {
-    background-color: var(--accent-solid);
-  }
+.kui-SliderTrack {
+  background-color: var(--color-track);
 }
 
-/* soft */
-
-.kui-SliderRoot:where(.kui-variant-soft) {
-  & :where(.kui-SliderTrack) {
-    background-color: var(--neutral-3);
-  }
-
-  & :where(.kui-SliderRange) {
-    background-color: var(--accent-solid);
-  }
-}
-
-/* outline */
-
-.kui-SliderRoot:where(.kui-variant-outline) {
-  & :where(.kui-SliderTrack) {
-    /* Base state: no background, just border */
-    box-shadow: inset 0 0 0 1px var(--neutral-6);
-  }
-
-  & :where(.kui-SliderRange) {
-    background-color: var(--accent-solid);
-  }
+.kui-SliderRange {
+  background-color: var(--accent-solid);
 }
 
 /* all disabled Sliders: a colour remap, never opacity, and a default cursor.
- * These come after every variant at the same specificity, so they win by order. */
+ * These come after the look at the same specificity, so they win by order. */
 
 [data-disabled] {
   .kui-SliderRoot:where(&) {

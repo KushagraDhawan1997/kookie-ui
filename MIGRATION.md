@@ -435,3 +435,13 @@ Most of 0.24.0 fixes bugs and needs nothing from an app. These changes can need 
 | `Link` | `underline="always"` keeps the underline under keyboard focus, with the focus outline | Remove a focus style that put the underline back |
 | `Card` | A Card reads as chosen only when it is the `label` of a checked checkbox or radio. A plain Card that holds one stays plain | Make the chosen card `<Card asChild><label>...</label></Card>` |
 | `Button` | It logs an error in place of throwing, for `emphasis` with `variant` and for an icon-only button with no name | Fix the errors the console now shows |
+
+## 0.26.0: shadows by role, one look for marks
+
+| Component or token | What changed | What to do |
+| --- | --- | --- |
+| `Switch`, `Slider`, `Checkbox`, `CheckboxGroup`, `Radio`, `RadioGroup` | No `variant` prop | Remove `variant` from these |
+| `--shadow-2-active` | Removed | Use `--control-chrome-active` |
+| `--shadow-1..6` in your CSS | v2's values, no hairline ring | Use a role token (`--surface-chrome`, `--control-chrome`, `--floating-chrome`, `--dialog-chrome`, `--grip-chrome`) where you meant a card, a control, a popup, a dialog or a thumb |
+| `TextField`, `TextArea`, `Select` | White with a hairline edge and a small shadow | Nothing |
+

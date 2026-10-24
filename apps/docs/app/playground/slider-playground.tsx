@@ -32,7 +32,6 @@ const accentColors = [
   'mint',
   'sky',
 ] as const;
-const variants = ['surface', 'soft', 'outline'] as const;
 const sizes = ['1', '2', '3', '4'] as const;
 
 const ticks = [
@@ -50,7 +49,6 @@ type SliderPlaygroundProps = {
 };
 
 export default function SliderPlayground({ showControls = false, showToolbar = true, height }: SliderPlaygroundProps = {}) {
-  const [variant, setVariant] = React.useState<string>('surface');
   const [size, setSize] = React.useState<string>('2');
   const [color, setColor] = React.useState<string>('theme');
   const [showTicks, setShowTicks] = React.useState(false);
@@ -58,15 +56,6 @@ export default function SliderPlayground({ showControls = false, showToolbar = t
   const [volume, setVolume] = React.useState(60);
 
   const items = [
-    {
-      id: 'variant',
-      label: 'Variant',
-      type: 'select' as const,
-      value: variant,
-      onChange: setVariant,
-      options: variants.map((v) => ({ label: v, value: v })),
-      placeholder: 'Select variant',
-    },
     {
       id: 'size',
       label: 'Size',
@@ -103,7 +92,7 @@ export default function SliderPlayground({ showControls = false, showToolbar = t
   ];
 
   const generateCode = () => {
-    const props = ['value={[volume]}', 'onValueChange={([v]) => setVolume(v)}', 'unit="%"', 'aria-labelledby="volume-label"', `variant="${variant}"`, `size="${size}"`];
+    const props = ['value={[volume]}', 'onValueChange={([v]) => setVolume(v)}', 'unit="%"', 'aria-labelledby="volume-label"', `size="${size}"`];
     if (color !== 'theme') props.push(`color="${color}"`);
     if (showTicks) {
       props.push(`ticks={[\n${ticks.map((t) => `  { value: ${t.value}, label: '${t.label}' },`).join('\n')}\n]}`);
@@ -134,7 +123,6 @@ export default function SliderPlayground({ showControls = false, showToolbar = t
       onValueChange={([v]) => setVolume(v)}
       unit="%"
       aria-labelledby="playground-volume-label"
-      variant={variant as any}
       size={size as any}
       color={color === 'theme' ? undefined : (color as any)}
       ticks={showTicks ? ticks : undefined}

@@ -11,7 +11,7 @@
   z-index: 200; /* Above dialogs (100) so menus inside dialogs/sheets work */
 
   background-color: var(--color-surface);
-  box-shadow: var(--shadow-5);
+  box-shadow: var(--floating-chrome);
 
   /* Limit paint scope to the menu */
   contain: paint;

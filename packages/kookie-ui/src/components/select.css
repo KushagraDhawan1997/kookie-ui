@@ -53,7 +53,7 @@
   overflow: hidden;
   z-index: 200; /* Above dialogs (100) so select inside dialogs/sheets work */
   background-color: var(--color-surface);
-  box-shadow: var(--shadow-5);
+  box-shadow: var(--floating-chrome);
 
   &:where([data-side]) {
     min-width: var(--radix-select-trigger-width);
@@ -194,14 +194,13 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* raised */
+/* raised: the default. A field, as in v2: a flat soft fill with a faint edge, no shadow. */
 
 .kui-SelectTrigger:where(.kui-variant-raised) {
   position: relative;
-  top: var(--raised-elevation-offset);
   color: var(--accent-ink);
-  background-color: var(--color-surface);
-  box-shadow: var(--shadow-2);
+  background-color: var(--field-fill);
+  box-shadow: var(--control-chrome);
 
   &:where(:focus-visible) {
     outline: 2px solid var(--focus-8);
@@ -210,26 +209,21 @@
 
   @media (hover: hover) {
     &:where(:hover:not(:disabled)) {
-      background-color: var(--accent-2);
-      box-shadow: var(--shadow-2);
+      background-color: var(--field-fill-hover);
     }
   }
 
-  &:where([data-state='open']) {
-    background-color: var(--accent-3);
-  }
-
+  &:where([data-state='open']),
   &:where(:active:not([data-state='open'], [data-disabled])) {
-    background-color: var(--accent-3);
+    background-color: var(--neutral-5);
   }
 
   &:where(:disabled) {
     color: var(--neutral-a8);
-    background-color: var(--neutral-a3);
-    box-shadow: none;
+    background-color: var(--field-fill-disabled);
+    box-shadow: inset 0 0 0 1px var(--field-edge-disabled);
     outline: none;
     cursor: default;
-    top: 0;
   }
 
   &:where([data-placeholder]) {
@@ -423,27 +417,16 @@
  * Only the border and the focus ring move; the fill stays the variant's.
  */
 .kui-SelectTrigger:where([aria-invalid='true']) {
-  &:where(:not(.kui-variant-raised)) {
-    box-shadow: inset 0 0 0 1px var(--red-6);
+  box-shadow: inset 0 0 0 1px var(--red-6);
 
-    @media (hover: hover) {
-      &:where(:hover:not(:disabled)) {
-        box-shadow: inset 0 0 0 1px var(--red-7);
-      }
-    }
-    &:where([data-state='open'], :active) {
+  @media (hover: hover) {
+    &:where(:hover:not(:disabled)) {
       box-shadow: inset 0 0 0 1px var(--red-7);
     }
   }
 
-  &:where(.kui-variant-raised) {
-    box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-6);
-
-    @media (hover: hover) {
-      &:where(:hover:not(:disabled)) {
-        box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-7);
-      }
-    }
+  &:where([data-state='open'], :active) {
+    box-shadow: inset 0 0 0 1px var(--red-7);
   }
 
   &:where(:focus-visible) {

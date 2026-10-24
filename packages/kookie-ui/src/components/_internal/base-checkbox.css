@@ -88,226 +88,66 @@
 
 /***************************************************************************************************
  *                                                                                                 *
- * VARIANTS                                                                                        *
+ * THE LOOK                                                                                        *
  *                                                                                                 *
- ***************************************************************************************************/
-
-/* solid */
-
-.kui-BaseCheckboxRoot:where(.kui-variant-solid) {
-  &:where([data-state='unchecked']) {
-    &::before {
-      background-color: transparent;
-      box-shadow: inset 0 0 0 1px var(--accent-9);
-    }
-  }
-
-  &:where([data-state='checked'], [data-state='indeterminate']) {
-    &::before {
-      background-color: var(--accent-solid);
-      box-shadow: inset 0 0 0 1px var(--accent-solid);
-    }
-    & :where(.kui-BaseCheckboxIndicator) {
-      color: var(--accent-solid-contrast);
-    }
-  }
-
-  &:where(:disabled) {
-    &::before {
-      box-shadow: inset 0 0 0 1px var(--neutral-a6);
-      background-color: var(--neutral-a3);
-    }
-    & :where(.kui-BaseCheckboxIndicator) {
-      color: var(--neutral-a8);
-    }
-  }
-}
-
-/* raised */
-
-.kui-BaseCheckboxRoot:where(.kui-variant-raised) {
-  position: relative;
-  top: var(--raised-elevation-offset);
-
-  &:where([data-state='unchecked']) {
-    &::before {
-      color: var(--accent-ink);
-      background-color: var(--color-surface);
-      box-shadow: var(--shadow-2);
-    }
-  }
-
-  &:where([data-state='checked'], [data-state='indeterminate']) {
-    &::before {
-      background-color: var(--accent-3);
-    }
-    & :where(.kui-BaseCheckboxIndicator) {
-      color: var(--accent-ink);
-    }
-  }
-
-  &:where(:active:not(:disabled)) {
-    top: calc(var(--raised-elevation-offset) + var(--raised-active-padding-offset-1));
-
-    &::before {
-      background-color: var(--accent-3);
-    }
-  }
-
-  &:where(:disabled) {
-    &::before {
-      background-color: var(--neutral-a3);
-      box-shadow: none;
-      background-image: none;
-    }
-    & :where(.kui-BaseCheckboxIndicator) {
-      color: var(--neutral-a8);
-    }
-    top: 0;
-  }
-}
-
-/* soft */
-
-.kui-BaseCheckboxRoot:where(.kui-variant-soft) {
-  &::before {
-    background-color: var(--accent-3);
-  }
-
-  &:where([data-state='checked'], [data-state='indeterminate']) {
-    & :where(.kui-BaseCheckboxIndicator) {
-      color: var(--accent-ink);
-    }
-  }
-
-  &:where(:disabled) {
-    &::before {
-      background-color: var(--neutral-a3);
-    }
-    & :where(.kui-BaseCheckboxIndicator) {
-      color: var(--neutral-a8);
-    }
-  }
-}
-
-/* outline */
-
-.kui-BaseCheckboxRoot:where(.kui-variant-outline) {
-  &:where([data-state='unchecked']) {
-    &::before {
-      box-shadow: inset 0 0 0 1px var(--accent-6);
-      color: var(--accent-ink);
-    }
-  }
-
-  &:where([data-state='checked'], [data-state='indeterminate']) {
-    &::before {
-      background-color: var(--accent-2);
-      box-shadow: inset 0 0 0 1px var(--accent-7);
-    }
-    & :where(.kui-BaseCheckboxIndicator) {
-      color: var(--accent-ink);
-    }
-  }
-
-  &:where(:disabled) {
-    &::before {
-      box-shadow: inset 0 0 0 1px var(--neutral-a7);
-      background-color: transparent;
-    }
-    & :where(.kui-BaseCheckboxIndicator) {
-      color: var(--neutral-a8);
-    }
-  }
-}
-
-/* surface */
-
-.kui-BaseCheckboxRoot:where(.kui-variant-surface) {
-  &:where([data-state='unchecked']) {
-    &::before {
-      background-color: var(--accent-2);
-      box-shadow: inset 0 0 0 1px var(--accent-6);
-    }
-  }
-
-  &:where([data-state='checked'], [data-state='indeterminate']) {
-    &::before {
-      background-color: var(--accent-3);
-      box-shadow: inset 0 0 0 1px var(--accent-8);
-    }
-    & :where(.kui-BaseCheckboxIndicator) {
-      color: var(--accent-ink);
-    }
-  }
-
-  &:where(:disabled) {
-    &::before {
-      box-shadow: inset 0 0 0 1px var(--neutral-a6);
-      background-color: var(--neutral-a2);
-    }
-    & :where(.kui-BaseCheckboxIndicator) {
-      color: var(--neutral-a8);
-    }
-  }
-}
-
-/***************************************************************************************************
- *                                                                                                 *
- * INTERACTION                                                                                     *
- *                                                                                                 *
- * Hover is one step up the variant's own ramp, press two. Disabled marks take neither.           *
+ * One look, as in v2. Unchecked, the box is a soft fill with a hairline edge. Checked, it is the  *
+ * accent solid, the edge melts into the fill, and the glyph takes the solid's contrast colour.    *
+ * Hover is one step darker, press two. Disabled marks take neither.                               *
  *                                                                                                 *
  ***************************************************************************************************/
 
 .kui-BaseCheckboxRoot {
-  --checkbox-unchecked-hover: var(--accent-a2);
-  --checkbox-unchecked-active: var(--accent-a3);
-  --checkbox-checked-hover: var(--accent-4);
-  --checkbox-checked-active: var(--accent-5);
+  --checkbox-fill: var(--color-mark);
+  --checkbox-fill-hover: var(--color-mark-hover);
+  --checkbox-fill-active: var(--color-mark-active);
+  --checkbox-edge: var(--color-mark-edge);
+  --checkbox-glyph: var(--accent-solid-contrast);
 
-  &:where(.kui-variant-solid) {
-    --checkbox-checked-hover: var(--accent-solid-hover);
-    --checkbox-checked-active: var(--accent-solid-active);
+  &:where([data-state='checked'], [data-state='indeterminate']) {
+    --checkbox-fill: var(--accent-solid);
+    --checkbox-fill-hover: var(--accent-solid-hover);
+    --checkbox-fill-active: var(--accent-solid-active);
+    --checkbox-edge: transparent;
   }
-  &:where(.kui-variant-raised) {
-    --checkbox-unchecked-hover: var(--color-surface);
-    --checkbox-unchecked-active: var(--accent-3);
+
+  /* Invalid, keyed on aria-invalid: unchecked, only the edge turns red; checked, the box takes
+   * the red wash and the glyph the red ink, rather than a red solid. */
+  &:where([aria-invalid='true']) {
+    --checkbox-edge: var(--red-8);
   }
-  &:where(.kui-variant-soft) {
-    --checkbox-unchecked-hover: var(--accent-4);
-    --checkbox-unchecked-active: var(--accent-5);
+  &:where([aria-invalid='true']):where([data-state='checked'], [data-state='indeterminate']) {
+    --checkbox-fill: var(--red-3);
+    --checkbox-fill-hover: var(--red-4);
+    --checkbox-fill-active: var(--red-5);
+    --checkbox-edge: var(--red-8);
+    --checkbox-glyph: var(--red-11);
   }
-  &:where(.kui-variant-outline) {
-    --checkbox-checked-hover: var(--accent-3);
-    --checkbox-checked-active: var(--accent-4);
+
+  /* Disabled is a colour remap, never opacity. Dead outranks wrong, so this comes last. */
+  &:where(:disabled, [data-disabled]) {
+    --checkbox-fill: var(--neutral-a3);
+    --checkbox-fill-hover: var(--neutral-a3);
+    --checkbox-fill-active: var(--neutral-a3);
+    --checkbox-edge: var(--neutral-a6);
+    --checkbox-glyph: var(--neutral-a8);
   }
-  &:where(.kui-variant-surface) {
-    --checkbox-unchecked-hover: var(--accent-3);
-    --checkbox-unchecked-active: var(--accent-4);
+
+  &::before {
+    background-color: var(--checkbox-fill);
+    box-shadow: inset 0 0 0 1px var(--checkbox-edge);
+  }
+
+  & :where(.kui-BaseCheckboxIndicator) {
+    color: var(--checkbox-glyph);
   }
 
   @media (hover: hover) {
     &:where(:hover:not(:disabled, [data-disabled]))::before {
-      background-color: var(--checkbox-unchecked-hover);
-    }
-    &:where(:hover:not(:disabled, [data-disabled])):where([data-state='checked'], [data-state='indeterminate'])::before {
-      background-color: var(--checkbox-checked-hover);
+      background-color: var(--checkbox-fill-hover);
     }
   }
   &:where(:active:not(:disabled, [data-disabled]))::before {
-    background-color: var(--checkbox-unchecked-active);
-  }
-  &:where(:active:not(:disabled, [data-disabled])):where([data-state='checked'], [data-state='indeterminate'])::before {
-    background-color: var(--checkbox-checked-active);
-  }
-  &:where(.kui-variant-solid:active:not(:disabled, [data-disabled])):where([data-state='checked'], [data-state='indeterminate'])::before {
-    box-shadow: inset 0 0 0 1px var(--checkbox-checked-active);
-  }
-  @media (hover: hover) {
-    &:where(.kui-variant-solid:hover:not(:disabled, [data-disabled])):where([data-state='checked'], [data-state='indeterminate'])::before {
-      box-shadow: inset 0 0 0 1px var(--checkbox-checked-hover);
-    }
+    background-color: var(--checkbox-fill-active);
   }
 }
 
@@ -319,7 +159,7 @@
 
 /* The focus ring lives on Checkbox and CheckboxGroup. */
 .kui-BaseCheckboxRoot {
-  /* Disabled is a colour remap (per variant above), never opacity; the cursor stays default. */
+  /* Disabled is a colour remap (above), never opacity; the cursor stays default. */
   &:where(:disabled, [data-disabled]) {
     cursor: default;
   }

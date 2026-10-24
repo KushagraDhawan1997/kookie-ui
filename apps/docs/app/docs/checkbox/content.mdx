@@ -47,7 +47,7 @@ A single `Checkbox` stands on its own. A group is a compound component:
 </CheckboxGroup.Root>
 ```
 
-- **CheckboxGroup.Root:** Holds the list of checked values and sets `size`, `variant` and `color` for every item.
+- **CheckboxGroup.Root:** Holds the list of checked values and sets `size` and `color` for every item.
 - **CheckboxGroup.Item:** One checkbox. With children it renders a label around the box and the text. Without children it renders the box alone, for your own layout.
 
 ## Best practices
@@ -119,7 +119,6 @@ const someChecked = selected.length > 0 && !allChecked;
 | `defaultChecked` | `boolean \| 'indeterminate'` | `false` | The checked state at first render |
 | `onCheckedChange` | `(checked: boolean \| 'indeterminate') => void` | | Fires with the new state |
 | `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | The box size |
-| `variant` | `'raised' \| 'solid' \| 'soft' \| 'outline' \| 'surface'` | `'raised'` | The look |
 | `color` | `AccentColor` | Theme accent | The colour when checked |
 | `disabled` | `boolean` | `false` | Blocks changes |
 | `required` | `boolean` | `false` | Must be checked before the form submits |
@@ -136,7 +135,6 @@ Checkbox also accepts every attribute of the HTML `button` element.
 | `defaultValue` | `string[]` | `[]` | The checked values at first render |
 | `onValueChange` | `(value: string[]) => void` | | Fires with the new list |
 | `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | The box and label size |
-| `variant` | `'raised' \| 'solid' \| 'soft' \| 'outline' \| 'surface'` | `'raised'` | The look of every item |
 | `color` | `AccentColor` | Theme accent | The colour of every item |
 | `name` | `string` | | The field name each item submits under |
 | `disabled` | `boolean` | `false` | Disables every item |

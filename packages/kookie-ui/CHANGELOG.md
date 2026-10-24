@@ -1,3 +1,18 @@
+## [0.26.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.25.2...v0.26.0) (2026-10-25)
+
+Shadows by role, as in v2, and one look for each mark. See MIGRATION.md.
+
+### Breaking changes
+
+* **switch, slider, checkbox, checkbox-group, radio, radio-group:** no `variant` prop. Each has one soft look: a well for the track or box, the accent when on, and a thumb that casts `--grip-chrome`.
+* **shadow:** components read role tokens (`--surface-chrome`, `--control-chrome`, `--control-chrome-active`, `--grip-chrome`, `--floating-chrome`, `--dialog-chrome`). `--shadow-1..6` stay as a palette for app code, with v2's values and no hairline ring. `--shadow-2-active` is gone.
+* **text-field, text-area, select:** the default field is white with a hairline edge and a small soft shadow, the same as a raised button.
+
+### Features
+
+* **color:** `--color-track`, `--color-thumb`, `--color-mark` and the `--field-*` tokens.
+* **checkbox, radio:** an invalid look under `aria-invalid`.
+
 ## [0.25.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.25.1...v0.25.2) (2026-10-24)
 
 ### Fixes

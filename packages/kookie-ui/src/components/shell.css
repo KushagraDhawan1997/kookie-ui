@@ -465,7 +465,7 @@
   --kui-shell-row: 1 / -1;
   --kui-shell-col: 1 / -1;
   --kui-shell-surface: var(--color-surface);
-  --kui-shell-shadow: var(--shadow-5);
+  --kui-shell-shadow: var(--dialog-chrome);
   --kui-shell-edge: 1px;
   --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
   --kui-shell-offset: var(--shell-rail-offset, 0px);
@@ -479,7 +479,7 @@
   --kui-shell-row: 2 / 3;
   --kui-shell-col: 1 / -1;
   --kui-shell-surface: var(--color-surface);
-  --kui-shell-shadow: var(--shadow-4);
+  --kui-shell-shadow: var(--surface-chrome);
   --kui-shell-edge: 1px;
   --kui-shell-cap: initial;
   --kui-shell-offset: var(--shell-rail-offset, 0px);
@@ -512,7 +512,7 @@
   --kui-shell-row: 1 / -1;
   --kui-shell-col: 1 / -1;
   --kui-shell-surface: var(--color-surface);
-  --kui-shell-shadow: var(--shadow-5);
+  --kui-shell-shadow: var(--dialog-chrome);
   --kui-shell-edge: 1px;
   --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
   --kui-shell-offset: var(--shell-rail-offset, 0px);
@@ -526,7 +526,7 @@
   --kui-shell-row: 2 / 3;
   --kui-shell-col: 1 / -1;
   --kui-shell-surface: var(--color-surface);
-  --kui-shell-shadow: var(--shadow-4);
+  --kui-shell-shadow: var(--surface-chrome);
   --kui-shell-edge: 1px;
   --kui-shell-cap: initial;
   --kui-shell-offset: var(--shell-rail-offset, 0px);
@@ -567,7 +567,7 @@
     --kui-shell-row: 1 / -1;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
-    --kui-shell-shadow: var(--shadow-5);
+    --kui-shell-shadow: var(--dialog-chrome);
     --kui-shell-edge: 1px;
     --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
     --kui-shell-offset: var(--shell-rail-offset, 0px);
@@ -581,7 +581,7 @@
     --kui-shell-row: 2 / 3;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
-    --kui-shell-shadow: var(--shadow-4);
+    --kui-shell-shadow: var(--surface-chrome);
     --kui-shell-edge: 1px;
     --kui-shell-cap: initial;
     --kui-shell-offset: var(--shell-rail-offset, 0px);
@@ -623,7 +623,7 @@
     --kui-shell-row: 1 / -1;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
-    --kui-shell-shadow: var(--shadow-5);
+    --kui-shell-shadow: var(--dialog-chrome);
     --kui-shell-edge: 1px;
     --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
     --kui-shell-offset: var(--shell-rail-offset, 0px);
@@ -637,7 +637,7 @@
     --kui-shell-row: 2 / 3;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
-    --kui-shell-shadow: var(--shadow-4);
+    --kui-shell-shadow: var(--surface-chrome);
     --kui-shell-edge: 1px;
     --kui-shell-cap: initial;
     --kui-shell-offset: var(--shell-rail-offset, 0px);
@@ -679,7 +679,7 @@
     --kui-shell-row: 1 / -1;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
-    --kui-shell-shadow: var(--shadow-5);
+    --kui-shell-shadow: var(--dialog-chrome);
     --kui-shell-edge: 1px;
     --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
     --kui-shell-offset: var(--shell-rail-offset, 0px);
@@ -693,7 +693,7 @@
     --kui-shell-row: 2 / 3;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
-    --kui-shell-shadow: var(--shadow-4);
+    --kui-shell-shadow: var(--surface-chrome);
     --kui-shell-edge: 1px;
     --kui-shell-cap: initial;
     --kui-shell-offset: var(--shell-rail-offset, 0px);
@@ -735,7 +735,7 @@
     --kui-shell-row: 1 / -1;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
-    --kui-shell-shadow: var(--shadow-5);
+    --kui-shell-shadow: var(--dialog-chrome);
     --kui-shell-edge: 1px;
     --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
     --kui-shell-offset: var(--shell-rail-offset, 0px);
@@ -749,7 +749,7 @@
     --kui-shell-row: 2 / 3;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
-    --kui-shell-shadow: var(--shadow-4);
+    --kui-shell-shadow: var(--surface-chrome);
     --kui-shell-edge: 1px;
     --kui-shell-cap: initial;
     --kui-shell-offset: var(--shell-rail-offset, 0px);
@@ -791,7 +791,7 @@
     --kui-shell-row: 1 / -1;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
-    --kui-shell-shadow: var(--shadow-5);
+    --kui-shell-shadow: var(--dialog-chrome);
     --kui-shell-edge: 1px;
     --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
     --kui-shell-offset: var(--shell-rail-offset, 0px);
@@ -805,7 +805,7 @@
     --kui-shell-row: 2 / 3;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
-    --kui-shell-shadow: var(--shadow-4);
+    --kui-shell-shadow: var(--surface-chrome);
     --kui-shell-edge: 1px;
     --kui-shell-cap: initial;
     --kui-shell-offset: var(--shell-rail-offset, 0px);
@@ -839,7 +839,7 @@
   --kui-shell-row: 2 / 3;
   --kui-shell-col: 1 / -1;
   --kui-shell-surface: var(--color-surface);
-  --kui-shell-shadow: var(--shadow-4);
+  --kui-shell-shadow: var(--surface-chrome);
   --kui-shell-edge: 1px;
   --kui-shell-offset: var(--shell-rail-offset, 0px);
   --kui-shell-handle: none;
@@ -897,7 +897,7 @@
   margin: var(--shell-inset-gap);
   border-radius: var(--radius-surface-1);
   background: var(--color-page);
-  box-shadow: var(--shadow-2);
+  box-shadow: var(--surface-chrome);
 }
 
 /*

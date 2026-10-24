@@ -50,15 +50,9 @@ export function AutoSaveSetting({ on, setOn }: { on: boolean; setOn: (on: boolea
 
 `size` sets the track: 34 by 20, 40 by 24, 44 by 26 and 48 by 28 pixels for sizes 1 to 4. Size 2 is the default. Match the size of the text beside it, so a list of settings lines up. `size` accepts a responsive object, such as `{ initial: '3', md: '2' }`.
 
-## Variant
+## Look
 
-`variant` sets how the track looks while off. Every variant fills the track with the accent colour while on.
-
-| Variant | Off look |
-| --- | --- |
-| `surface` | A light fill with a border. This is the default |
-| `soft` | A gray fill with no border |
-| `outline` | A border with no fill |
+A switch has one look. Off, the track is a soft gray fill. On, it fills with the accent colour. The thumb is white and casts a small shadow.
 
 ## Examples
 
@@ -107,7 +101,6 @@ Inside a `form`, a switch submits its `name` and `value` while it is on, like a 
 | `defaultChecked` | `boolean` | `false` | Whether the switch starts on |
 | `onCheckedChange` | `(checked: boolean) => void` | | Fires with the new state |
 | `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | The track size |
-| `variant` | `'surface' \| 'soft' \| 'outline'` | `'surface'` | The look of the track while off |
 | `color` | `AccentColor` | Theme accent | The track colour while on |
 | `disabled` | `boolean` | `false` | Blocks changes |
 | `required` | `boolean` | `false` | Must be on before the form submits |

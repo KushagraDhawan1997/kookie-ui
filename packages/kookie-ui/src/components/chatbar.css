@@ -387,26 +387,25 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* Raised variant - uses --color-surface and shadow */
+/* Raised variant: a surface, as v2's composer is. It casts the surface role. */
 .kui-ChatbarBox:where(.kui-variant-raised) {
   --text-area-border-width: 0px;
   --v-selection-color: var(--focus-a5);
   --v-focus-color: var(--focus-8);
 
   background-color: var(--color-surface);
-  box-shadow: var(--shadow-2);
+  box-shadow: var(--surface-chrome);
 
   /* Hover effects */
   @media (hover: hover) {
     &:where(:hover:not(:focus-within)):where(:not(.kui-ChatbarRoot:is([data-disabled], [data-readonly]) *)) {
       background-color: var(--accent-2);
-      box-shadow: var(--shadow-3);
     }
   }
 
   /* Focus state - accent ring */
   &:where(:focus-within) {
-    box-shadow: var(--shadow-2), 0 0 0 2px var(--v-focus-color, var(--focus-8));
+    box-shadow: var(--surface-chrome), 0 0 0 2px var(--v-focus-color, var(--focus-8));
   }
 }
 

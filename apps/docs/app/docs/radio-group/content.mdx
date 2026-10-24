@@ -45,7 +45,7 @@ export function DeliveryOptions() {
 </RadioGroup.Root>
 ```
 
-- **RadioGroup.Root:** Holds the selected value and sets `size`, `variant` and `color` for every item.
+- **RadioGroup.Root:** Holds the selected value and sets `size` and `color` for every item.
 - **RadioGroup.Item:** One option. With children it renders a label around the circle and the text. Without children it renders the circle alone, for your own layout.
 
 `Radio` is a separate component: a native `input type="radio"` with the same look, for forms that manage their own radio inputs.
@@ -123,7 +123,6 @@ Leave out `defaultValue` and set `required` when people must make a choice. The 
 | `defaultValue` | `string` | | The selected value at first render |
 | `onValueChange` | `(value: string) => void` | | Fires with the new value |
 | `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | The circle and label size |
-| `variant` | `'raised' \| 'solid' \| 'soft' \| 'outline' \| 'surface'` | `'raised'` | The look of every item |
 | `color` | `AccentColor` | Theme accent | The colour of every item |
 | `name` | `string` | | The field name in a form |
 | `disabled` | `boolean` | `false` | Disables every item |
@@ -151,7 +150,6 @@ RadioGroup.Item also accepts every attribute of the HTML `button` element.
 | `value` | `string` | | Required. The value the input submits |
 | `onValueChange` | `(value: string) => void` | | Fires with `value` when the input is selected |
 | `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | The circle size |
-| `variant` | `'raised' \| 'solid' \| 'soft' \| 'outline' \| 'surface'` | `'raised'` | The look |
 | `color` | `AccentColor` | Theme accent | The colour when selected |
 
 Radio also accepts every attribute of the HTML `input` element that applies to radio inputs, such as `name`, `checked`, `defaultChecked`, `disabled` and `required`.
