@@ -37,6 +37,9 @@ const JOBS: { job: string; question: string; slugs: string[] }[] = [
   },
 ];
 
+/** Components that own the decisions their job needs, as v2 tags them. A leaf leaves them to you. */
+const PATTERNS = new Set(['chatbar', 'message-scroller', 'shell', 'toolbar']);
+
 export function ComponentsIndex({ description }: { description: string }) {
   return (
     <SiteDocsPage meta={{ title: 'Components', description }}>
@@ -61,9 +64,16 @@ export function ComponentsIndex({ description }: { description: string }) {
               </Flex>
               <Flex direction="column" gap="3" align="start">
                 {members.map((item) => (
-                  <Link key={item.href} asChild size="3">
-                    <NextLink href={item.href}>{item.title}</NextLink>
-                  </Link>
+                  <Flex key={item.href} gap="2" align="baseline">
+                    <Link asChild size="3">
+                      <NextLink href={item.href}>{item.title}</NextLink>
+                    </Link>
+                    {PATTERNS.has(item.href.replace('/docs/', '')) ? (
+                      <Text size="2" emphasis="quiet">
+                        Pattern
+                      </Text>
+                    ) : null}
+                  </Flex>
                 ))}
               </Flex>
             </Flex>
