@@ -14,3 +14,6 @@ export * from './merge-styles.js';
 export * from './normalize-to-px.js';
 export * from './require-react-element.js';
 export * from './theme-size.js';
+// The context and its hooks are client code. The server-safe build keeps this import external, so
+// `/helpers` shares the one context the components read and stays loadable from a server component.
+export { ThemeSizeContext, useThemeSize, useThemeSizeProps } from '../hooks/theme-size.js';

@@ -25,7 +25,7 @@ import { useCallbackRef, useComposedRefs, useControllableState, useLayoutEffect 
 import { Command as CommandPrimitive, useCommandState } from 'cmdk';
 
 import { extractProps } from '../helpers/extract-props.js';
-import { useThemeSize } from '../helpers/theme-size.js';
+import { useThemeSize } from '../hooks/theme-size.js';
 import { comboboxRootPropDefs, comboboxTriggerPropDefs, comboboxContentPropDefs } from './combobox.props.js';
 import { ChevronDownIcon, ThickCheckIcon } from './icons.js';
 import { Spinner } from './spinner.js';

@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { Direction, Slot } from 'radix-ui';
 
 import { getMatchingGrayColor } from '../helpers/get-matching-gray-color.js';
-import { ThemeSizeContext } from '../helpers/theme-size.js';
+import { ThemeSizeContext } from '../hooks/theme-size.js';
 import { usePropSyncedState } from '../hooks/use-prop-synced-state.js';
 import { themePropDefs } from './theme.props.js';
 

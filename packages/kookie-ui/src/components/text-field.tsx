@@ -7,7 +7,7 @@ import { composeEventHandlers, composeRefs } from 'radix-ui/internal';
 
 import { textFieldRootPropDefs, textFieldSlotPropDefs, type TextFieldSlotScrubProps } from './text-field.props.js';
 import { extractProps } from '../helpers/extract-props.js';
-import { useThemeSizeProps } from '../helpers/theme-size.js';
+import { useThemeSizeProps } from '../hooks/theme-size.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { NotInputTextualAttributes } from '../helpers/input-attributes.js';

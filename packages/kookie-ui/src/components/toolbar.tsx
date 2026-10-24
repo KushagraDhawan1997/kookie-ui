@@ -10,7 +10,7 @@ import { Button } from './button.js';
 import * as DropdownMenu from './dropdown-menu.js';
 import { Text } from './text.js';
 import { extractProps } from '../helpers/extract-props.js';
-import { useThemeSize } from '../helpers/theme-size.js';
+import { useThemeSize } from '../hooks/theme-size.js';
 import { layoutPropDefs } from '../props/layout.props.js';
 import { usePaneBandSize } from './_internal/pane-chrome.js';
 
@@ -197,6 +197,9 @@ type ToolbarIconButtonProps = Omit<ToolbarButtonBaseProps, 'aria-label' | 'aria-
 
 type ToolbarButtonProps = ToolbarTextButtonProps | ToolbarIconButtonProps;
 
+/** The plain DOM props, besides handlers, ARIA and data attributes, a menu row takes from a ToolbarButton. */
+const OVERFLOW_ITEM_KEYS = new Set(['id', 'className', 'style', 'title']);
+
 function isPressed(value: React.AriaAttributes['aria-pressed']) {
   return value === true || value === 'true';
 }
@@ -231,15 +234,21 @@ const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>((p
   const off = disabled || group?.disabled || undefined;
 
   if (overflow) {
+    // Only what a menu row means comes across: handlers, ARIA, data attributes, id, class and
+    // style. Button's box props (size, loading, tooltip, fullWidth and the rest) would land on the
+    // DOM as unknown attributes. A wrapping menu trigger hands its open handlers (onPointerDown,
+    // onKeyDown), aria-expanded/haspopup/controls and data-state in through these, so it still
+    // opens from the row.
+    const passed: Record<string, unknown> = {};
+    for (const key of Object.keys(rest)) {
+      if (/^on[A-Z]/.test(key) || key.startsWith('aria-') || key.startsWith('data-') || OVERFLOW_ITEM_KEYS.has(key)) {
+        passed[key] = (rest as Record<string, unknown>)[key];
+      }
+    }
+    if (onKeyDown) passed.onKeyDown = onKeyDown;
     return (
       <ToolbarOverflowItem
-        // Only what a menu row means comes across; Button's box props (size, loading,
-        // tooltip, fullWidth and the rest) would land on the DOM as unknown attributes.
-        id={rest.id}
-        className={rest.className}
-        style={rest.style}
-        onClick={rest.onClick as React.MouseEventHandler<HTMLDivElement> | undefined}
-        aria-label={rest['aria-label']}
+        {...(passed as React.ComponentPropsWithoutRef<'div'>)}
         ref={forwardedRef as unknown as React.Ref<HTMLDivElement>}
         asChild={asChild}
         iconOnly={iconOnly}

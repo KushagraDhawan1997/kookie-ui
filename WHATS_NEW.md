@@ -2,6 +2,12 @@
 
 Each release groups its changes as Major, Minor or Quiet. Major is a new product or a change to what it is. Minor is a change you notice when you use it. Quiet is a small touch, a fix, a rename or a removal, or how the work is made. Breaking lists the changes that need an edit in your app.
 
+## 0.25.1 (October 24)
+
+1. `Quiet` **Fixes from Womp's review.** Server imports, Sheet width, Popover toolbar columns, loading links, rail search and the More menu work again.
+2. `Quiet` **Panes paint at the right width.** A Shell's starting pane sizes are in the first paint, so nothing jumps on load.
+3. `Minor` **A ground for raised surfaces.** `--color-ground` sits one step below the surface, so a white card reads as lifted.
+
 ## 0.25.0 (October 24)
 
 ### Minor
