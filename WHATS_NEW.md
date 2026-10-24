@@ -2,6 +2,11 @@
 
 Each release groups its changes as Major, Minor or Quiet. Major is a new product or a change to what it is. Minor is a change you notice when you use it. Quiet is a small touch, a fix, a rename or a removal, or how the work is made. Breaking lists the changes that need an edit in your app.
 
+## 0.26.0 (October 25)
+
+1. `Minor` **Shadows by role.** Cards float on a wide soft shadow, buttons and fields sit on a hairline and a small lift, and thumbs cast their own small shadow.
+2. `Minor` **One look for marks (breaking).** Switch, Slider, Checkbox and Radio have no `variant`; each has one soft look.
+
 ## 0.25.2 (October 24)
 
 1. `Quiet` **Pane toolbars reach both ends.** A Toolbar in a pane header or footer fills it, so its groups sit at the two ends.

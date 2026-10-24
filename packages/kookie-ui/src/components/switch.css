@@ -30,13 +30,14 @@
 }
 
 .kui-SwitchThumb {
-  background-color: white;
+  /* The grip: the surface colour, near-white in dark. */
+  background-color: var(--color-thumb);
   position: absolute;
   inset-inline-start: var(--switch-thumb-inset);
   width: var(--switch-thumb-size);
   height: var(--switch-thumb-size);
   border-radius: 9999px;
-  box-shadow: var(--shadow-2);
+  box-shadow: var(--grip-chrome);
 
   &:where([data-state='checked']) {
     background-color: var(--accent-solid-thumb);
@@ -82,75 +83,33 @@
 
 /***************************************************************************************************
  *                                                                                                 *
- * VARIANTS                                                                                        *
+ * THE LOOK                                                                                        *
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* surface */
-
-.kui-SwitchRoot:where(.kui-variant-surface) {
-  &::before {
-    background-color: var(--neutral-2);
-    box-shadow: inset 0 0 0 1px var(--neutral-6);
-  }
-
-  &:where([data-state='checked'])::before {
-    background-color: var(--accent-solid);
-    box-shadow: none;
-  }
-}
-
-/* soft */
-
-.kui-SwitchRoot:where(.kui-variant-soft) {
-  &::before {
-    background-color: var(--neutral-3);
-  }
-
-  &:where([data-state='checked'])::before {
-    background-color: var(--accent-solid);
-  }
-}
-
-/* outline */
-
-.kui-SwitchRoot:where(.kui-variant-outline) {
-  &::before {
-    /* Base state: no background, just border */
-    box-shadow: inset 0 0 0 1px var(--neutral-6);
-  }
-
-  &:where([data-state='checked'])::before {
-    background-color: var(--accent-solid);
-    box-shadow: none;
-  }
-}
-
-/* Hover is one step up the variant's own ramp, press two. Disabled switches take neither. */
+/* One look, as in v2. Off, the track is a well: a soft fill with no edge. On, it is the accent
+ * solid. Hover is one step darker, press two. Disabled switches take neither. */
 
 .kui-SwitchRoot {
-  --switch-off-hover: var(--neutral-a2);
-  --switch-off-active: var(--neutral-a3);
-
-  &:where(.kui-variant-surface) {
-    --switch-off-hover: var(--neutral-3);
-    --switch-off-active: var(--neutral-4);
+  &::before {
+    background-color: var(--color-track);
+    box-shadow: none;
   }
-  &:where(.kui-variant-soft) {
-    --switch-off-hover: var(--neutral-4);
-    --switch-off-active: var(--neutral-5);
+
+  &:where([data-state='checked'])::before {
+    background-color: var(--accent-solid);
   }
 
   @media (hover: hover) {
     &:where(:hover:not([data-disabled]))::before {
-      background-color: var(--switch-off-hover);
+      background-color: var(--color-track-hover);
     }
     &:where(:hover:not([data-disabled]):is([data-state='checked']))::before {
       background-color: var(--accent-solid-hover);
     }
   }
   &:where(:active:not([data-disabled]))::before {
-    background-color: var(--switch-off-active);
+    background-color: var(--color-track-active);
   }
   &:where(:active:not([data-disabled]):is([data-state='checked']))::before {
     background-color: var(--accent-solid-active);
@@ -158,7 +117,7 @@
 }
 
 /* all disabled Switches: a colour remap, never opacity, and a default cursor.
- * These come after every variant at the same specificity, so they win by order. */
+ * These come after the look at the same specificity, so they win by order. */
 
 [data-disabled] {
   .kui-SwitchRoot:where(&) {

@@ -32,7 +32,6 @@ const accentColors = [
   'mint',
   'sky',
 ] as const;
-const variants = ['raised', 'solid', 'soft', 'outline', 'surface'] as const;
 const sizes = ['1', '2', '3', '4'] as const;
 
 const options = [
@@ -48,22 +47,12 @@ type RadioGroupPlaygroundProps = {
 };
 
 export default function RadioGroupPlayground({ showControls = false, showToolbar = true, height }: RadioGroupPlaygroundProps = {}) {
-  const [variant, setVariant] = React.useState<string>('raised');
   const [size, setSize] = React.useState<string>('2');
   const [color, setColor] = React.useState<string>('theme');
   const [disabled, setDisabled] = React.useState(false);
   const [value, setValue] = React.useState('standard');
 
   const items = [
-    {
-      id: 'variant',
-      label: 'Variant',
-      type: 'select' as const,
-      value: variant,
-      onChange: setVariant,
-      options: variants.map((v) => ({ label: v, value: v })),
-      placeholder: 'Select variant',
-    },
     {
       id: 'size',
       label: 'Size',
@@ -93,7 +82,7 @@ export default function RadioGroupPlayground({ showControls = false, showToolbar
   ];
 
   const generateCode = () => {
-    const props = ['name="delivery"', 'defaultValue="standard"', 'aria-labelledby="delivery-label"', `variant="${variant}"`, `size="${size}"`];
+    const props = ['name="delivery"', 'defaultValue="standard"', 'aria-labelledby="delivery-label"', `size="${size}"`];
     if (color !== 'theme') props.push(`color="${color}"`);
     if (disabled) props.push('disabled');
 
@@ -121,7 +110,6 @@ ${options.map((o) => `    <RadioGroup.Item value="${o.value}">${o.label}</RadioG
             value={value}
             onValueChange={setValue}
             aria-labelledby="playground-delivery-label"
-            variant={variant as any}
             size={size as any}
             color={color === 'theme' ? undefined : (color as any)}
             disabled={disabled}

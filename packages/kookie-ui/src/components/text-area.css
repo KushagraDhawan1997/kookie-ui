@@ -354,14 +354,14 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* Raised variant - uses --color-surface and shadow */
+/* Raised variant: the default. A flat soft fill with a faint edge, as in v2. A field casts no shadow. */
 .kui-TextAreaRoot:where(.kui-variant-raised) {
-  --text-area-border-width: 0px;
+  --text-area-border-width: 1px;
   --v-selection-color: var(--focus-a5);
   --v-focus-color: var(--focus-8);
 
-  background-color: var(--color-surface);
-  box-shadow: var(--shadow-2);
+  background-color: var(--field-fill);
+  box-shadow: var(--control-chrome);
 
   & :where(.kui-TextAreaInput) {
     &::placeholder {
@@ -371,25 +371,25 @@
 
   /* Hover effects */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.kui-TextAreaInput:where(:focus, :disabled)))) {
-      background-color: var(--accent-2);
-      box-shadow: var(--shadow-2);
+    &:where(:hover:not(:has(.kui-TextAreaInput:where(:focus, :disabled, :read-only)))) {
+      background-color: var(--field-fill-hover);
     }
-  }
-
-  /* Focus state - accent ring with minimal inset */
-  &:where(:has(.kui-TextAreaInput:focus)) {
-    box-shadow: var(--shadow-2), 0 0 0 2px var(--focus-8);
   }
 
   /* prettier-ignore */
   &:where(:has(.kui-TextAreaInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
     background-image: linear-gradient(var(--focus-a2), var(--focus-a2));
-    box-shadow: var(--shadow-2);
+    box-shadow: inset 0 0 0 1px var(--focus-a5);
   }
 
-  &:where(:has(.kui-TextAreaInput:where(:disabled, :read-only))) {
-    background-image: linear-gradient(var(--neutral-a2), var(--neutral-a2));
+  /* Read-only keeps the value and drops the fill: nothing here takes input. */
+  &:where(:has(.kui-TextAreaInput:read-only:not(:disabled))) {
+    background-color: transparent;
+  }
+
+  &:where(:has(.kui-TextAreaInput:disabled)) {
+    background-color: var(--field-fill-disabled);
+    box-shadow: inset 0 0 0 1px var(--field-edge-disabled);
   }
 }
 
@@ -447,28 +447,13 @@
 .kui-TextAreaRoot:where(:has(> .kui-TextAreaInput[aria-invalid='true'])) {
   --v-focus-color: var(--red-8);
 
-  &:where(.kui-variant-outline, .kui-variant-surface, .kui-variant-soft, .kui-variant-ghost) {
+  &:where(.kui-variant-raised, .kui-variant-outline, .kui-variant-surface, .kui-variant-soft, .kui-variant-ghost) {
     box-shadow: inset 0 0 0 1px var(--red-6);
 
     @media (hover: hover) {
       &:where(:hover:not(:has(.kui-TextAreaInput:where(:focus, :disabled)))) {
         box-shadow: inset 0 0 0 1px var(--red-7);
       }
-    }
-  }
-
-  &:where(.kui-variant-raised) {
-    box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-6);
-
-    @media (hover: hover) {
-      &:where(:hover:not(:has(.kui-TextAreaInput:where(:focus, :disabled)))) {
-        box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-7);
-      }
-    }
-
-    /* The raised focus ring is a box-shadow, not the outline */
-    &:where(:has(.kui-TextAreaInput:focus)) {
-      box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-6), 0 0 0 2px var(--red-8);
     }
   }
 }

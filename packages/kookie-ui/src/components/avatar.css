@@ -389,7 +389,7 @@
     top: 0;
     color: var(--accent-ink);
     background-color: var(--color-surface);
-    box-shadow: var(--shadow-2);
+    box-shadow: var(--control-chrome);
   }
 
   &:where([data-disabled]) :where(.kui-AvatarFallback) {
@@ -405,7 +405,7 @@
   @media (hover: hover) {
     &:where(:hover:not(:disabled, [data-disabled])) {
       background-color: var(--neutral-2);
-      box-shadow: var(--shadow-2);
+      box-shadow: var(--control-chrome);
 
       & :where(.kui-AvatarFallback) {
         background-color: inherit;

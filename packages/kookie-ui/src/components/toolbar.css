@@ -80,7 +80,7 @@
 /* Over content, the well is a raised surface of its own, like a raised button beside it. */
 :where(.kui-Toolbar[data-backdrop]) .kui-ToolbarGroup {
   background-color: var(--color-surface);
-  box-shadow: var(--shadow-2);
+  box-shadow: var(--control-chrome);
 }
 
 /* A button in the group is hosted: the group's height minus the inset on both sides, and a

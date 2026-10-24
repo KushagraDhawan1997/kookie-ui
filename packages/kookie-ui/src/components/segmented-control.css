@@ -171,7 +171,7 @@
     position: absolute;
     border-radius: max(calc(var(--border-width-standard) * 0.5), calc(var(--segmented-control-border-radius) - var(--border-width-standard)));
     background-color: var(--segmented-control-indicator-background-color);
-    box-shadow: var(--shadow-2);
+    box-shadow: var(--control-chrome);
     content: '';
   }
 

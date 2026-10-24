@@ -12,6 +12,30 @@
   --color-ground: var(--neutral-1, var(--gray-1));
 
   /*
+   * A field (text field, text area, select trigger) is a flat soft fill with a faint edge, as in v2.
+   * It casts no shadow. Hover moves the fill one step; disabled drops it one step and fades the edge.
+   */
+  --field-fill: var(--color-surface);
+  --field-fill-hover: var(--neutral-2);
+  --field-fill-disabled: var(--neutral-2);
+  --field-edge: var(--neutral-a3);
+  --field-edge-disabled: var(--neutral-a2);
+
+  /*
+   * The marks, as in v2. A switch track or slider rail is a well: a soft fill with no edge.
+   * A grip (switch thumb, slider thumb) is the surface colour, near-white in dark.
+   * An unchecked checkbox or radio is a soft fill with a hairline edge.
+   */
+  --color-track: var(--neutral-4);
+  --color-track-hover: var(--neutral-5);
+  --color-track-active: var(--neutral-6);
+  --color-thumb: var(--color-surface);
+  --color-mark: var(--neutral-4);
+  --color-mark-hover: var(--neutral-5);
+  --color-mark-active: var(--neutral-6);
+  --color-mark-edge: var(--neutral-a7);
+
+  /*
    * The neutral scale, named as in v2. It defaults to the plain gray palette; a Theme grayColor
    * (mauve, olive, sage, sand, slate) points it at another palette below.
    */
@@ -52,6 +76,11 @@
   --color-overlay: var(--black-a8);
   --color-surface: var(--neutral-2, var(--gray-2));
   --color-ground: var(--neutral-1, var(--gray-1));
+  --field-edge: var(--neutral-a4);
+  --color-thumb: var(--neutral-12, var(--gray-12));
+  --color-mark: var(--neutral-5, var(--gray-5));
+  --color-mark-hover: var(--neutral-6, var(--gray-6));
+  --color-mark-active: var(--neutral-7, var(--gray-7));
 }
 
 /*                                     */
@@ -1046,8 +1075,8 @@
   --accent-solid-selection-contrast: var(--accent-12);
   /* Thin marks (Tabs indicator): light yellow uses step 10 here */
   --accent-solid-indicator: var(--accent-indicator);
-  /* Thumb that sits on a solid fill (Switch, Slider) */
-  --accent-solid-thumb: white;
+  /* Thumb that sits on a solid fill (Switch, Slider): the grip colour */
+  --accent-solid-thumb: var(--color-thumb);
   /* Badge chip on a solid-highlighted row (Sidebar) */
   --accent-solid-badge: var(--accent-12);
   --accent-solid-badge-contrast: var(--accent-1);

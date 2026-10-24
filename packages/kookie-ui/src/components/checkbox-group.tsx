@@ -41,7 +41,6 @@ const CheckboxGroupRoot = React.forwardRef<CheckboxGroupRootElement, CheckboxGro
     {
       color = checkboxGroupRootPropDefs.color.default,
       size: sizeProp,
-      variant = checkboxGroupRootPropDefs.variant.default,
       ...props
     }: ScopedProps<CheckboxGroupRootProps>,
     forwardedRef,
@@ -54,7 +53,6 @@ const CheckboxGroupRoot = React.forwardRef<CheckboxGroupRootElement, CheckboxGro
         scope={__scopeCheckboxGroup}
         color={color}
         size={size}
-        variant={variant}
       >
         <CheckboxGroupPrimitive.Root
           {...checkboxGroupScope}

@@ -50,7 +50,7 @@
   box-sizing: border-box;
 
   background-color: var(--color-surface);
-  box-shadow: var(--shadow-6);
+  box-shadow: var(--dialog-chrome);
   outline: none;
 }
 

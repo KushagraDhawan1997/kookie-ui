@@ -217,7 +217,7 @@
   --v-bg-active-a: var(--accent-a5);
   --v-bg-pressed: var(--accent-5);
   --v-bg-pressed-a: var(--accent-a5);
-  --v-shadow-hover: var(--shadow-2);
+  --v-shadow-hover: var(--control-chrome);
 }
 
 /* Ghost variant palette */
@@ -369,12 +369,13 @@
   position: relative;
   color: var(--accent-ink);
   background-color: var(--color-surface);
-  box-shadow: var(--shadow-2);
+  background-image: var(--control-light);
+  box-shadow: var(--control-chrome);
 
   @media (hover: hover) {
     &:where(:hover:not([data-disabled], [aria-disabled='true'])) {
       background-color: var(--neutral-2);
-      box-shadow: var(--shadow-2);
+      box-shadow: var(--control-chrome);
     }
   }
 
@@ -382,7 +383,7 @@
   &:where(:active:not([data-state='open'], [data-disabled], [aria-disabled='true'])),
   &:where([data-state='on']:not([data-disabled], [aria-disabled='true'])) {
     background-color: var(--neutral-3);
-    box-shadow: var(--shadow-1);
+    box-shadow: var(--control-chrome-active);
   }
 
   @media (pointer: coarse) {
@@ -395,6 +396,7 @@
   &:where([data-disabled], [aria-disabled='true']) {
     color: var(--neutral-a8);
     background-color: var(--neutral-a3);
+    background-image: none;
     box-shadow: none;
     top: 0;
   }
@@ -404,13 +406,15 @@
    (gray resolves the three to step 12 and the filters carry the change) */
 .kui-BaseButton:where(.kui-variant-solid) {
   background-color: var(--accent-solid);
+  background-image: var(--control-light);
   color: var(--accent-solid-contrast);
+  box-shadow: var(--control-chrome);
 
   @media (hover: hover) {
     &:where(:hover:not([data-disabled], [aria-disabled='true'])) {
       background-color: var(--accent-solid-hover);
       filter: var(--accent-solid-hover-filter);
-      box-shadow: var(--shadow-2);
+      box-shadow: var(--control-chrome);
     }
   }
 
@@ -422,6 +426,7 @@
   &:where(:active:not([data-state='open'], [data-disabled], [aria-disabled='true'])) {
     background-color: var(--accent-solid-active);
     filter: var(--accent-solid-active-filter);
+    box-shadow: var(--control-chrome-active);
   }
 
   &:where([data-state='on']) {
@@ -439,6 +444,7 @@
   &:where([data-disabled], [aria-disabled='true']) {
     color: var(--neutral-a8);
     background-color: var(--neutral-a3);
+    background-image: none;
     box-shadow: none;
     filter: none;
     opacity: 1;

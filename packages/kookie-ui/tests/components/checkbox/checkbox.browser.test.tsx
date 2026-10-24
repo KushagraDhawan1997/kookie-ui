@@ -13,21 +13,21 @@ afterEach(async () => {
 const fill = (el: Element) => getComputedStyle(el, '::before').backgroundColor;
 
 describe('Checkbox disabled colours', () => {
-  it('keep each variant’s own disabled fill', () => {
+  it('remap to the neutral disabled fill, unchecked or checked, alone or in a group', () => {
     const { container } = render(
       <Theme>
-        <Checkbox disabled variant="outline" aria-label="Outline" />
-        <Checkbox disabled variant="surface" aria-label="Surface" />
-        <Checkbox disabled variant="soft" aria-label="Soft" />
-        <CheckboxGroup.Root disabled variant="outline" aria-label="Group">
+        <Checkbox aria-label="Live" />
+        <Checkbox disabled aria-label="Off" />
+        <Checkbox disabled defaultChecked aria-label="On" />
+        <CheckboxGroup.Root disabled aria-label="Group">
           <CheckboxGroup.Item value="a">A</CheckboxGroup.Item>
         </CheckboxGroup.Root>
       </Theme>,
     );
-    const [outline, surface, soft] = container.querySelectorAll('.kui-CheckboxRoot');
-    expect(fill(outline)).toBe('rgba(0, 0, 0, 0)');
-    expect(fill(surface)).not.toBe(fill(soft));
-    expect(fill(container.querySelector('.kui-CheckboxGroupItemCheckbox')!)).toBe('rgba(0, 0, 0, 0)');
+    const [live, off, on] = container.querySelectorAll('.kui-CheckboxRoot');
+    expect(fill(off)).not.toBe(fill(live));
+    expect(fill(on)).toBe(fill(off));
+    expect(fill(container.querySelector('.kui-CheckboxGroupItemCheckbox')!)).toBe(fill(off));
   });
 });
 

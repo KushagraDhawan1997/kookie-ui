@@ -150,7 +150,7 @@
   position: relative;
   top: var(--raised-elevation-offset);
   color: var(--accent-ink);
-  box-shadow: var(--shadow-2);
+  box-shadow: var(--control-chrome);
 
   --raised-surface: var(--color-surface);
   background-color: var(--raised-surface);

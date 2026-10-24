@@ -12,7 +12,7 @@
 
   isolation: isolate;
 
-  /* Disabled is a colour remap (per variant below), never opacity; the cursor stays default. */
+  /* Disabled is a colour remap (below), never opacity; the cursor stays default. */
   &:where(:disabled, [data-disabled]) {
     cursor: default;
   }
@@ -73,201 +73,66 @@
 
 /***************************************************************************************************
  *                                                                                                 *
- * VARIANTS                                                                                        *
+ * THE LOOK                                                                                        *
  *                                                                                                 *
- ***************************************************************************************************/
-
-/* solid */
-
-.kui-BaseRadioRoot:where(.kui-variant-solid) {
-  &:where(:not(:checked), [data-state='unchecked'])::before {
-    background-color: transparent;
-    box-shadow: inset 0 0 0 1px var(--accent-9);
-  }
-  &:where(:checked, [data-state='checked'])::before {
-    background-color: var(--accent-solid);
-    box-shadow: inset 0 0 0 1px var(--accent-solid);
-  }
-  &::after {
-    background-color: var(--accent-solid-contrast);
-  }
-
-  &:where(:disabled, [data-disabled])::before {
-    box-shadow: inset 0 0 0 1px var(--neutral-a6);
-    background-color: var(--neutral-a3);
-  }
-  &:where(:disabled, [data-disabled])::after {
-    background-color: var(--neutral-a8);
-  }
-}
-
-/* raised */
-
-.kui-BaseRadioRoot:where(.kui-variant-raised) {
-  position: relative;
-  top: var(--raised-elevation-offset);
-
-  &:where(:not(:checked), [data-state='unchecked'])::before {
-    color: var(--accent-ink);
-    background-color: var(--color-surface);
-    box-shadow: var(--shadow-2);
-  }
-
-  &:where(:checked, [data-state='checked'])::before {
-    background-color: var(--accent-3);
-  }
-  &::after {
-    background-color: var(--accent-ink);
-  }
-
-  &:where(:active:not(:disabled, [data-disabled])) {
-    top: calc(var(--raised-elevation-offset) + var(--raised-active-padding-offset-1));
-
-    &::before {
-      background-color: var(--accent-3);
-    }
-  }
-
-  &:where(:disabled, [data-disabled])::before {
-    background-color: var(--neutral-a3);
-    box-shadow: none;
-    background-image: none;
-  }
-  &:where(:disabled, [data-disabled])::after {
-    background-color: var(--neutral-a8);
-  }
-  &:where(:disabled, [data-disabled]) {
-    top: 0;
-  }
-}
-
-/* soft */
-
-.kui-BaseRadioRoot:where(.kui-variant-soft) {
-  &::before {
-    background-color: var(--accent-3);
-  }
-  &::after {
-    background-color: var(--accent-ink);
-  }
-
-  &:where(:focus-visible)::before {
-    /* Use gray outline when component color is gray */
-    outline-color: var(--accent-a8);
-  }
-
-  &:where(:disabled, [data-disabled])::before {
-    background-color: var(--neutral-a3);
-  }
-  &:where(:disabled, [data-disabled])::after {
-    background-color: var(--neutral-a8);
-  }
-}
-
-/* outline */
-
-.kui-BaseRadioRoot:where(.kui-variant-outline) {
-  &:where(:not(:checked), [data-state='unchecked'])::before {
-    box-shadow: inset 0 0 0 1px var(--accent-6);
-    color: var(--accent-ink);
-  }
-
-  &:where(:checked, [data-state='checked'])::before {
-    background-color: var(--accent-2);
-    box-shadow: inset 0 0 0 1px var(--accent-7);
-  }
-  &::after {
-    background-color: var(--accent-ink);
-  }
-
-  &:where(:disabled, [data-disabled])::before {
-    box-shadow: inset 0 0 0 1px var(--neutral-a7);
-    background-color: transparent;
-  }
-  &:where(:disabled, [data-disabled])::after {
-    background-color: var(--neutral-a8);
-  }
-}
-
-/* surface */
-
-.kui-BaseRadioRoot:where(.kui-variant-surface) {
-  &:where(:not(:checked), [data-state='unchecked'])::before {
-    background-color: var(--accent-2);
-    box-shadow: inset 0 0 0 1px var(--accent-6);
-  }
-
-  &:where(:checked, [data-state='checked'])::before {
-    background-color: var(--accent-3);
-    box-shadow: inset 0 0 0 1px var(--accent-8);
-  }
-  &::after {
-    background-color: var(--accent-ink);
-  }
-
-  &:where(:disabled, [data-disabled])::before {
-    box-shadow: inset 0 0 0 1px var(--neutral-a6);
-    background-color: var(--neutral-a2);
-  }
-  &:where(:disabled, [data-disabled])::after {
-    background-color: var(--neutral-a8);
-  }
-}
-
-/***************************************************************************************************
- *                                                                                                 *
- * INTERACTION                                                                                     *
- *                                                                                                 *
- * Hover is one step up the variant's own ramp, press two. Disabled marks take neither.           *
+ * One look, as in v2, and the same as Checkbox. Unchecked, the circle is a soft fill with a       *
+ * hairline edge. Checked, it is the accent solid, the edge melts into the fill, and the dot takes *
+ * the solid's contrast colour. Hover is one step darker, press two. Disabled marks take neither.  *
  *                                                                                                 *
  ***************************************************************************************************/
 
 .kui-BaseRadioRoot {
-  --radio-unchecked-hover: var(--accent-a2);
-  --radio-unchecked-active: var(--accent-a3);
-  --radio-checked-hover: var(--accent-4);
-  --radio-checked-active: var(--accent-5);
+  --radio-fill: var(--color-mark);
+  --radio-fill-hover: var(--color-mark-hover);
+  --radio-fill-active: var(--color-mark-active);
+  --radio-edge: var(--color-mark-edge);
+  --radio-dot: var(--accent-solid-contrast);
 
-  &:where(.kui-variant-solid) {
-    --radio-checked-hover: var(--accent-solid-hover);
-    --radio-checked-active: var(--accent-solid-active);
+  &:where(:checked, [data-state='checked']) {
+    --radio-fill: var(--accent-solid);
+    --radio-fill-hover: var(--accent-solid-hover);
+    --radio-fill-active: var(--accent-solid-active);
+    --radio-edge: transparent;
   }
-  &:where(.kui-variant-raised) {
-    --radio-unchecked-hover: var(--color-surface);
-    --radio-unchecked-active: var(--accent-3);
+
+  /* Invalid, keyed on aria-invalid: unchecked, only the edge turns red; checked, the circle takes
+   * the red wash and the dot the red ink, rather than a red solid. */
+  &:where([aria-invalid='true']) {
+    --radio-edge: var(--red-8);
   }
-  &:where(.kui-variant-soft) {
-    --radio-unchecked-hover: var(--accent-4);
-    --radio-unchecked-active: var(--accent-5);
+  &:where([aria-invalid='true']):where(:checked, [data-state='checked']) {
+    --radio-fill: var(--red-3);
+    --radio-fill-hover: var(--red-4);
+    --radio-fill-active: var(--red-5);
+    --radio-edge: var(--red-8);
+    --radio-dot: var(--red-11);
   }
-  &:where(.kui-variant-outline) {
-    --radio-checked-hover: var(--accent-3);
-    --radio-checked-active: var(--accent-4);
+
+  /* Disabled is a colour remap, never opacity. Dead outranks wrong, so this comes last. */
+  &:where(:disabled, [data-disabled]) {
+    --radio-fill: var(--neutral-a3);
+    --radio-fill-hover: var(--neutral-a3);
+    --radio-fill-active: var(--neutral-a3);
+    --radio-edge: var(--neutral-a6);
+    --radio-dot: var(--neutral-a8);
   }
-  &:where(.kui-variant-surface) {
-    --radio-unchecked-hover: var(--accent-3);
-    --radio-unchecked-active: var(--accent-4);
+
+  &::before {
+    background-color: var(--radio-fill);
+    box-shadow: inset 0 0 0 1px var(--radio-edge);
+  }
+
+  &::after {
+    background-color: var(--radio-dot);
   }
 
   @media (hover: hover) {
     &:where(:hover:not(:disabled, [data-disabled]))::before {
-      background-color: var(--radio-unchecked-hover);
-    }
-    &:where(:hover:not(:disabled, [data-disabled])):where(:checked, [data-state='checked'])::before {
-      background-color: var(--radio-checked-hover);
-    }
-    &:where(.kui-variant-solid:hover:not(:disabled, [data-disabled])):where(:checked, [data-state='checked'])::before {
-      box-shadow: inset 0 0 0 1px var(--radio-checked-hover);
+      background-color: var(--radio-fill-hover);
     }
   }
   &:where(:active:not(:disabled, [data-disabled]))::before {
-    background-color: var(--radio-unchecked-active);
-  }
-  &:where(:active:not(:disabled, [data-disabled])):where(:checked, [data-state='checked'])::before {
-    background-color: var(--radio-checked-active);
-  }
-  &:where(.kui-variant-solid:active:not(:disabled, [data-disabled])):where(:checked, [data-state='checked'])::before {
-    box-shadow: inset 0 0 0 1px var(--radio-checked-active);
+    background-color: var(--radio-fill-active);
   }
 }
 

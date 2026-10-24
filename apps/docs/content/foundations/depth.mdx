@@ -1,6 +1,4 @@
-Custom shadow system with 6-step scale for elevation and hierarchy. The shadow infrastructure (6-step scale, token structure) is from [Radix Themes](https://www.radix-ui.com/themes), but **Kookie UI uses custom shadow values** that differ from Radix Themes.
-
-For complete shadow documentation and advanced usage, visit the [Radix Themes Shadows documentation](https://www.radix-ui.com/themes/docs/theme/shadows). Note that Kookie UI's shadow values are customized and may not match Radix Themes exactly.
+Depth has two layers, as in Kookie UI v2. A palette of six shadows holds the values. Components never read the palette. Each component reads a role instead, so every card, button and menu of the same kind casts the same shadow.
 
 ## Installation
 
@@ -8,116 +6,56 @@ For complete shadow documentation and advanced usage, visit the [Radix Themes Sh
 npm install @kushagradhawan/kookie-ui
 ```
 
-## Usage
-
-Use shadow tokens to create elevation and hierarchy. Each shadow level provides meaningful depth for different interface elements.
+## Roles
 
 ```css
-/* Card with subtle elevation */
-.my-card {
-  box-shadow: var(--shadow-2);
+var(--surface-chrome)         /* A raised card, a chatbar, a shell pane */
+var(--control-chrome)         /* A raised button, chip, switch thumb, slider thumb */
+var(--control-chrome-active)  /* The same control while pressed */
+var(--control-light)          /* The catch of light on a raised control */
+var(--floating-chrome)        /* A popover, menu or select list */
+var(--dialog-chrome)          /* A dialog or an overlay pane */
+```
+
+`--control-light` is a gradient, not a shadow. Use it as a `background-image` on a raised control.
+
+A dialog is a surface that covers the page, so `--dialog-chrome` is the surface shadow.
+
+```css
+.my-panel {
+  box-shadow: var(--surface-chrome);
 }
 ```
 
-```css
-/* Elevated button */
-.my-button {
-  box-shadow: var(--shadow-3);
-}
-```
+## Fields
 
-Components can also use the `shadow` prop for direct shadow application:
-
-```tsx
-<Card shadow="3">Content</Card>
-```
-
-## Tokens
-
-Shadow tokens with their usage guidelines:
+A text field, text area or select trigger casts no shadow. It is a flat soft fill with a faint edge. Hover moves the fill one step darker. Focus draws the focus ring. Disabled lightens the fill and fades the edge.
 
 ```css
-var(--shadow-1)  /* Subtle ring + inset; pressed states */
-var(--shadow-2)  /* Light elevation; raised cards */
-var(--shadow-3)  /* Medium elevation; raised cards, buttons */
-var(--shadow-4)  /* Small overlays, hover cards */
-var(--shadow-5)  /* Popovers, dropdowns */
-var(--shadow-6)  /* Large overlays, dialogs */
+var(--field-fill)
+var(--field-fill-hover)
+var(--field-fill-disabled)
+var(--field-edge)
+var(--field-edge-disabled)
 ```
 
-## Shadow Scale
+## Palette
 
-### Shadow 1
-
-Inset shadow for subtle depth and pressed states. Use for form inputs, pressed buttons, or elements that need to appear recessed.
+The palette is for your own blocks. No step draws a ring, so add a border when an element needs an edge.
 
 ```css
-box-shadow: var(--shadow-1);
-```
-
-### Shadow 2
-
-Raised panel and card shadows for subtle elevation. Perfect for cards, panels, and surfaces that need minimal depth.
-
-```css
-box-shadow: var(--shadow-2);
-```
-
-### Shadow 3
-
-Elevated cards and buttons with more prominent depth. Use for raised cards, elevated buttons, or elements that need to stand out from the background.
-
-```css
-box-shadow: var(--shadow-3);
-```
-
-### Shadow 4
-
-Small overlays and hover cards with medium elevation. Ideal for hover states, small popovers, or temporary overlays.
-
-```css
-box-shadow: var(--shadow-4);
-```
-
-### Shadow 5
-
-Popovers and dropdowns with strong elevation. Use for dropdown menus, popovers, and floating panels that need clear separation.
-
-```css
-box-shadow: var(--shadow-5);
-```
-
-### Shadow 6
-
-Large overlays and dialogs with maximum elevation. Reserved for modals, dialogs, and major overlays that need the highest visual priority.
-
-```css
-box-shadow: var(--shadow-6);
+var(--shadow-1)  /* An inset well */
+var(--shadow-2)  /* A small drop */
+var(--shadow-3)  /* A floating drop */
+var(--shadow-4)  /* A surface drop */
+var(--shadow-5)  /* A wide drop */
+var(--shadow-6)  /* The deepest drop */
 ```
 
 ## Dark Mode
 
-All shadows automatically adapt to dark mode when using the Theme component's `appearance` prop. Shadow values are carefully tuned to maintain proper depth perception in both light and dark themes.
+Every role and palette step has a dark value. In dark mode a raised control also draws a faint inner edge, because a drop shadow is hard to see on a dark page.
 
 ```tsx
 <Theme appearance="dark"><YourApp /></Theme>
 ```
-
-## Component Usage
-
-Many components support the `shadow` prop for direct shadow application:
-
-```tsx
-<Card shadow="2">Subtle elevation</Card>
-<Card shadow="4">Medium elevation</Card>
-```
-
-The `shadow` prop also supports responsive values:
-
-```tsx
-<Card shadow={{ initial: '2', md: '4' }}>Responsive shadow</Card>
-```
-
-## Credits
-
-The shadow infrastructure (6-step scale system and token structure) is from [Radix Themes](https://www.radix-ui.com/themes) by [WorkOS](https://workos.com/). However, Kookie UI uses custom shadow values that have been modified from the original Radix Themes values. The shadow system structure and approach credit goes to Radix Themes, while the specific shadow values are custom to Kookie UI.
