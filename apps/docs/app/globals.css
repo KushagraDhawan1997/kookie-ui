@@ -133,8 +133,8 @@ h6 {
   overflow: clip;
   background-color: var(--neutral-1);
   background-image:
-    linear-gradient(var(--neutral-a4) 1px, transparent 1px),
-    linear-gradient(90deg, var(--neutral-a4) 1px, transparent 1px);
+    linear-gradient(var(--neutral-a3) 1px, transparent 1px),
+    linear-gradient(90deg, var(--neutral-a3) 1px, transparent 1px);
   background-size: var(--space-4) var(--space-4);
   background-position: calc(50% + var(--space-4) / 2) 0;
 }
