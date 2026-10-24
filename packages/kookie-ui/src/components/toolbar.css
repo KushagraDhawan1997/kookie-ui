@@ -168,3 +168,16 @@
 :where(.kui-Toolbar) .kui-ToolbarTitle:where(:not(:last-child)) {
   margin-inline-end: calc(var(--toolbar-title-gap) - var(--toolbar-gap));
 }
+
+/* High contrast drops the group's fill, so the group takes the outline and its buttons give theirs
+   up, the way a segmented control's segments sit inside one border. A border colour is forced in
+   this mode, so the buttons drop the style, not the colour. */
+@media (forced-colors: active) {
+  .kui-ToolbarGroup {
+    border: 1px solid CanvasText;
+  }
+
+  .kui-ToolbarGroup > :where(.kui-BaseButton) {
+    border-style: none;
+  }
+}
