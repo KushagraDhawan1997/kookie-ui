@@ -2,153 +2,258 @@
 title: What's new in Womp's Design System
 ---
 
-Each item is marked Major, Minor or Quiet. Major is a new product or a change to what it is. Minor is a change you notice when you use it. Quiet is a small touch, a fix, a rename or a removal, or how the work is made.
+Each release groups its changes as Major, Minor or Quiet. Major is a new product or a change to what it is. Minor is a change you notice when you use it. Quiet is a small touch, a fix, a rename or a removal, or how the work is made. Breaking lists the changes that need an edit in your app.
 
 ## 0.25.1 (October 24)
 
-1. `Quiet` **Fixes from Womp's review.** Server imports, Sheet width, Popover toolbar columns, loading links, rail search and the More menu work again.
-2. `Quiet` **Panes paint at the right width.** A Shell's starting pane sizes are in the first paint, so nothing jumps on load.
-3. `Minor` **A ground for raised surfaces.** `--color-ground` sits one step below the surface, so a white card reads as lifted.
+### Minor
+
+- **A ground for raised surfaces.** `--color-ground` sits one step below the surface, so a white card reads as lifted.
+
+### Quiet
+
+- **Fixes from Womp's review.** Server imports, Sheet width, Popover toolbar columns, loading links, rail search and the More menu work again.
+- **Panes paint at the right width.** A Shell's starting pane sizes are in the first paint, so nothing jumps on load.
 
 ## 0.25.0 (October 24)
 
-1. `Minor` **A full audit, fixed.** Every component was checked for bugs, accessibility and speed, and about 140 problems are fixed.
-2. `Minor` **High contrast and right-to-left.** Every control keeps its outline in high-contrast mode, and layouts mirror correctly.
-3. `Quiet` **Smaller bundles (breaking).** Menus no longer carry the virtual list, and Theme no longer carries Tooltip.
-4. `Quiet` **Headings default to h2 (breaking).** Add `as="h1"` to page titles.
+### Minor
+
+- **A full audit, fixed.** Every component was checked for bugs, accessibility and speed, and about 140 problems are fixed.
+- **High contrast and right-to-left.** Every control keeps its outline in high-contrast mode, and layouts mirror correctly.
+
+### Breaking
+
+- **Smaller bundles.** Menus no longer carry the virtual list, and Theme no longer carries Tooltip.
+- **Headings default to h2.** Add `as="h1"` to page titles.
 
 ## 0.24.0 (October 24)
 
-1. `Major` **A docs page for every component.** Each one has a playground, examples and an accessibility section.
-2. `Minor` **About 50 fixes.** Dialogs return focus, forms validate, and screen readers stop repeating themselves.
-3. `Minor` **Toolbar parts from v2.** Links, an overflow menu, slots, and a pinned page toolbar.
-4. `Quiet` **Avatar's ref moves to its root (breaking).** It is now the outer span.
+### Minor
+
+- **A docs page for every component.** Each one has a playground, examples and an accessibility section.
+- **About 50 fixes.** Dialogs return focus, forms validate, and screen readers stop repeating themselves.
+- **Toolbar parts from v2.** Links, an overflow menu, slots, and a pinned page toolbar.
+
+### Breaking
+
+- **Avatar's ref moves to its root.** It is now the outer span.
 
 ## 0.23.0 (October 23)
 
-1. `Minor` **Lighter in Chrome.** Spinners, accordions and scrollers build far fewer layers, components write less inline CSS, and a closed select uses less memory.
-2. `Minor` **Image is back.** A slim `Image` with `fit`, `radius` and lazy loading.
-3. `Quiet` **Unused focus aliases removed (breaking).** 21 `--focus-*` variables nothing read are gone.
-4. `Quiet` **Performance budget.** CI measures five heavy screens in Chromium on every change: a 500-row table, a long form, a 300-item menu, overlays opened and closed 100 times, and a Shell app frame. A count that grows fails the build. The budget now also counts layers and inline styles.
+### Minor
+
+- **Lighter in Chrome.** Spinners, accordions and scrollers build far fewer layers, components write less inline CSS, and a closed select uses less memory.
+- **Image is back.** A slim `Image` with `fit`, `radius` and lazy loading.
+
+### Quiet
+
+- **Performance budget.** CI measures five heavy screens in Chromium on every change: a 500-row table, a long form, a 300-item menu, overlays opened and closed 100 times, and a Shell app frame. A count that grows fails the build. The budget now also counts layers and inline styles.
+
+### Breaking
+
+- **Unused focus aliases removed.** 21 `--focus-*` variables nothing read are gone.
 
 ## 0.22.1 (October 23)
 
-1. `Minor` **Flatter surfaces.** Cards, popovers, menus and panes are less rounded; buttons and fields stay pills.
+### Minor
+
+- **Flatter surfaces.** Cards, popovers, menus and panes are less rounded; buttons and fields stay pills.
 
 ## 0.22.0 (October 23)
 
-1. `Quiet` **v2's names (breaking).** Classes start with `kui-`, the neutral scale is `--neutral-N`, and surfaces read `--color-surface`. Nothing moves on screen; a codemod renames an app.
+### Breaking
+
+- **v2's names.** Classes start with `kui-`, the neutral scale is `--neutral-N`, and surfaces read `--color-surface`. Nothing moves on screen; a codemod renames an app.
 
 ## 0.21.0 (October 23)
 
-1. `Quiet` **v2's component list (breaking).** IconButton is `Button iconOnly`, the two toggles are one `Toggle`, and Badge is Chip. Fourteen components with no v2 match are gone.
-2. `Quiet` **Parents own spacing (breaking).** Only Box, Flex and Grid take margins.
+### Breaking
+
+- **v2's component list.** IconButton is `Button iconOnly`, the two toggles are one `Toggle`, and Badge is Chip. Fourteen components with no v2 match are gone.
+- **Parents own spacing.** Only Box, Flex and Grid take margins.
 
 ## 0.20.0 (October 23)
 
-1. `Minor` **v2's type (breaking).** Nine sizes and three weights. Headings rest at medium. A codemod in the package rewrites an app.
-2. `Minor` **Rows that hug their text.** Menu, select and combobox rows are 30px at the default size, with v2's padding.
-3. `Minor` **Notices like cards.** A notice pads and rounds like a card of the same size.
+### Minor
+
+- **Rows that hug their text.** Menu, select and combobox rows are 30px at the default size, with v2's padding.
+- **Notices like cards.** A notice pads and rounds like a card of the same size.
+
+### Breaking
+
+- **v2's type.** Nine sizes and three weights. Headings rest at medium. A codemod in the package rewrites an app.
 
 ## 0.19.0 (October 23)
 
-1. `Minor` **Surfaces breathe (breaking).** Cards and popovers pad 24px and dialogs 32px at the default size, and dialogs take v2's widths.
-2. `Minor` **Corners by role.** Controls, surfaces and overlays each have their own corner steps, and a card inside a card nests its corner.
-3. `Quiet` **Bleed replaces Inset (breaking).** `m="bleed"` pulls a child to the edge of its card or dialog.
+### Minor
+
+- **Corners by role.** Controls, surfaces and overlays each have their own corner steps, and a card inside a card nests its corner.
+
+### Breaking
+
+- **Surfaces breathe.** Cards and popovers pad 24px and dialogs 32px at the default size, and dialogs take v2's widths.
+- **Bleed replaces Inset.** `m="bleed"` pulls a child to the edge of its card or dialog.
 
 ## 0.18.0 (October 23)
 
-1. `Minor` **One control ladder (breaking).** Buttons, fields, selects, tabs and segmented controls share v2's heights, padding, gaps and icon sizes. Icon-only buttons are square.
-2. `Minor` **Theme size.** One prop sizes every control in the app.
-3. `Minor` **Plainer states (breaking).** Disabled is colour only, loading buttons stay focusable, and every button has the same focus ring.
+### Minor
+
+- **Theme size.** One prop sizes every control in the app.
+
+### Breaking
+
+- **One control ladder.** Buttons, fields, selects, tabs and segmented controls share v2's heights, padding, gaps and icon sizes. Icon-only buttons are square.
+- **Plainer states.** Disabled is colour only, loading buttons stay focusable, and every button has the same focus ring.
 
 ## 0.17.0 (October 23)
 
-1. `Quiet` **v2's scale (breaking).** Spacing has v2's twelve steps, so every layout number moves up by one. A codemod in the package rewrites an app; MIGRATION.md has the details.
-2. `Quiet` **Solid only (breaking).** `material` and `Theme scaling` are gone.
-3. `Minor` **Roomier Shell panes.** Sidebars and panels pad 24px at the default size.
+### Minor
+
+- **Roomier Shell panes.** Sidebars and panels pad 24px at the default size.
+
+### Breaking
+
+- **v2's scale.** Spacing has v2's twelve steps, so every layout number moves up by one. A codemod in the package rewrites an app; MIGRATION.md has the details.
+- **Solid only.** `material` and `Theme scaling` are gone.
 
 ## 0.16.0 (October 22)
 
-1. `Minor` **Floating sidebar rows.** A pane's header and footer can float over its list, so the list scrolls behind them and fades out underneath. The docs sidebar uses it, with search behind a button.
+### Minor
+
+- **Floating sidebar rows.** A pane's header and footer can float over its list, so the list scrolls behind them and fades out underneath. The docs sidebar uses it, with search behind a button.
 
 ## 0.15.1 (October 22)
 
-1. `Quiet` **Scrollbars keep up.** Scrollbar thumbs follow the scroll in production builds instead of jumping.
+### Quiet
+
+- **Scrollbars keep up.** Scrollbar thumbs follow the scroll in production builds instead of jumping.
 
 ## 0.15.0 (October 18)
 
-1. `Quiet` **The cleanup (breaking).** Everything 0.14 warned about is gone: `classic`, `panelBackground`, `isInvalid`, the menu variants, Callout, AppBar, the UserCard export, `Sidebar.Root` and thin mode.
-2. `Minor` **No motion.** State changes are instant. Only spinners, skeletons and loading bars still move.
-3. `Quiet` **Sizes match.** Every size a component offers is styled, and Code, Kbd, Link and Blockquote share Text's scale.
+### Minor
+
+- **No motion.** State changes are instant. Only spinners, skeletons and loading bars still move.
+
+### Quiet
+
+- **Sizes match.** Every size a component offers is styled, and Code, Kbd, Link and Blockquote share Text's scale.
+
+### Breaking
+
+- **The cleanup.** Everything 0.14 warned about is gone: `classic`, `panelBackground`, `isInvalid`, the menu variants, Callout, AppBar, the UserCard export, `Sidebar.Root` and thin mode.
 
 ## 0.14.4 (October 19)
 
-1. `Quiet` **Two fixes for 0.14.** Buttons reject `emphasis` and `variant` together at compile time instead of crashing, and Rail icons stay visible when the system asks for more contrast.
+### Quiet
+
+- **Two fixes for 0.14.** Buttons reject `emphasis` and `variant` together at compile time instead of crashing, and Rail icons stay visible when the system asks for more contrast.
 
 ## 0.14.3 (October 18)
 
-1. `Quiet` **Button emphasis.** `emphasis="loud"`, `"medium"` or `"quiet"` sets a button's rank: solid, raised or ghost. Use it or `variant`, not both.
+### Quiet
+
+- **Button emphasis.** `emphasis="loud"`, `"medium"` or `"quiet"` sets a button's rank: solid, raised or ghost. Use it or `variant`, not both.
 
 ## 0.14.2 (October 18)
 
-1. `Quiet` **Notice looks like Callout.** Even padding, the icon on the first line, and a lighter fill.
+### Quiet
+
+- **Notice looks like Callout.** Even padding, the icon on the first line, and a lighter fill.
 
 ## 0.14.1 (October 18)
 
-1. `Minor` **Sidebar lives in the Shell.** Sidebar rows go straight into `Shell.Sidebar`, between `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter`. In `Shell.Rail` the same rows are tiles, which replaces thin mode. `Sidebar.Root` and thin mode still work, warn in development, and go in 0.15.0.
+### Minor
+
+- **Sidebar lives in the Shell.** Sidebar rows go straight into `Shell.Sidebar`, between `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter`. In `Shell.Rail` the same rows are tiles, which replaces thin mode. `Sidebar.Root` and thin mode still work, warn in development, and go in 0.15.0.
 
 ## 0.14.0 (October 18)
 
-1. `Minor` **New defaults.** Controls rest raised, badges and avatars rest gray, and the theme is gray and solid unless you set it. Menus use a soft highlight, and a solid one when the system asks for more contrast.
-2. `Quiet` **One button.** `Button iconOnly` is the icon button. Fields, Select, Tabs and Navbar gain size 4.
-3. `Quiet` **Notice replaces Callout.** Callout, AppBar, the UserCard export, `classic`, `panelBackground` and `isInvalid` still work, warn in development, and go in 0.15.0.
+### Minor
+
+- **New defaults.** Controls rest raised, badges and avatars rest gray, and the theme is gray and solid unless you set it. Menus use a soft highlight, and a solid one when the system asks for more contrast.
+
+### Quiet
+
+- **One button.** `Button iconOnly` is the icon button. Fields, Select, Tabs and Navbar gain size 4.
+- **Notice replaces Callout.** Callout, AppBar, the UserCard export, `classic`, `panelBackground` and `isInvalid` still work, warn in development, and go in 0.15.0.
 
 ## 0.13.1 (October 17)
 
-1. `Minor` **One height for every control.** A control of a given size is now the same height everywhere. Sidebar rows and Tabs are a step shorter, and Select items at size 3 are a step taller.
+### Minor
+
+- **One height for every control.** A control of a given size is now the same height everywhere. Sidebar rows and Tabs are a step shorter, and Select items at size 3 are a step taller.
 
 ## 0.13.0 (October 16)
 
-1. `Minor` **No flash of the wrong theme.** Light or dark is set before the page first paints. A new `useAppearance` hook reads and changes it.
+### Minor
+
+- **No flash of the wrong theme.** Light or dark is set before the page first paints. A new `useAppearance` hook reads and changes it.
 
 ## 0.12.0 (October 16)
 
-1. `Minor` **Toolbar becomes AppBar (breaking).** The old Toolbar is now AppBar. Toolbar is a new row of controls, with its own page.
-2. `Minor` **Chatbar.Item.** A removable pill for what a message refers to, like a picked mode or a scene object. Attachments use the same pill.
+### Minor
+
+- **Chatbar.Item.** A removable pill for what a message refers to, like a picked mode or a scene object. Attachments use the same pill.
+
+### Breaking
+
+- **Toolbar becomes AppBar.** The old Toolbar is now AppBar. Toolbar is a new row of controls, with its own page.
 
 ## 0.10.0 (October 15)
 
-1. `Minor` **Scroll fade.** ScrollArea and MessageScroller fade their edges when there is more to scroll.
+### Minor
+
+- **Scroll fade.** ScrollArea and MessageScroller fade their edges when there is more to scroll.
 
 ## 0.9.1 (October 15)
 
-1. `Minor` **MessageScroller and Notice.** Two new components, and Chatbar can show notices.
-2. `Quiet` **New docs address.** The docs live at womp-ui.kookie.design.
+### Minor
+
+- **MessageScroller and Notice.** Two new components, and Chatbar can show notices.
+
+### Quiet
+
+- **New docs address.** The docs live at womp-ui.kookie.design.
 
 ## 0.8.1 (October 15)
 
-1. `Quiet` **Sidebar accessibility.** The Sidebar works better with keyboards and screen readers.
+### Quiet
+
+- **Sidebar accessibility.** The Sidebar works better with keyboards and screen readers.
 
 ## 0.8.0 (October 14)
 
-1. `Minor` **New Shell.** The Shell is rebuilt with no motion, and its docs are rewritten.
+### Minor
+
+- **New Shell.** The Shell is rebuilt with no motion, and its docs are rewritten.
 
 ## 0.7.0 (September 20)
 
-1. `Quiet` **highContrast is gone (breaking).** Use the new `emphasis` prop and the ink and solid color tokens instead.
+### Breaking
+
+- **highContrast is gone.** Use the new `emphasis` prop and the ink and solid color tokens instead.
 
 ## 0.6.0 (September 19)
 
-1. `Minor` **Blocks in the docs.** Kookie Blocks are now copy-paste blocks inside the docs.
-2. `Minor` **New docs structure.** The docs are organised into chapters, starting with Principles and Vocabulary.
-3. `Quiet` **Lighter scrollbars.** The scroll thumb is lighter and the track is gone.
+### Minor
+
+- **Blocks in the docs.** Kookie Blocks are now copy-paste blocks inside the docs.
+- **New docs structure.** The docs are organised into chapters, starting with Principles and Vocabulary.
+
+### Quiet
+
+- **Lighter scrollbars.** The scroll thumb is lighter and the track is gone.
 
 ## 0.5.0 sync (September 18)
 
-1. `Quiet` **Parity with Womp.** The repo catches up with wompxyz/kookie-ui 0.5.0.
+### Quiet
+
+- **Parity with Womp.** The repo catches up with wompxyz/kookie-ui 0.5.0.
 
 ## 0.3.23 (September 10)
 
-1. `Minor` **Faster rendering.** Components do less work per render, and blur is skipped inside surfaces that already blur.
-2. `Minor` **Steadier Shell.** Shell panes and the progress bar stop animating layout, and the sidebar width steps instead of sliding.
+### Minor
+
+- **Faster rendering.** Components do less work per render, and blur is skipped inside surfaces that already blur.
+- **Steadier Shell.** Shell panes and the progress bar stop animating layout, and the sidebar width steps instead of sliding.
