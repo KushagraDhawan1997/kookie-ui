@@ -22,11 +22,12 @@
   word-spacing: var(--raised-word-spacing);
   border-radius: var(--radius-control-2);
   
-  /* No size prop: the size-1 box */
-  font-size: var(--font-size-1);
-  line-height: var(--line-height-1);
-  letter-spacing: var(--letter-spacing-1);
-  padding: var(--space-2) var(--space-3);
+  /* No size prop: the key follows the text around it, a step smaller, in the size-1 box's
+     proportions. In 14px text that is the size-1 box (12px type, 4px by 8px padding). */
+  font-size: 0.85em;
+  line-height: calc(16 / 12);
+  letter-spacing: 0;
+  padding: calc(4em / 12) calc(8em / 12);
 
   /* Make sure that the height is not stretched in a Flex/Grid layout */
   height: fit-content;

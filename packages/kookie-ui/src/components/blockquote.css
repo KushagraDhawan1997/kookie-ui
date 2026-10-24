@@ -1,5 +1,5 @@
 .kui-Blockquote {
   box-sizing: border-box;
-  border-left: max(var(--space-2), 0.25em) solid var(--accent-a6);
-  padding-left: min(var(--space-6), max(var(--space-4), 0.5em));
+  border-inline-start: max(var(--space-2), 0.25em) solid var(--accent-a6);
+  padding-inline-start: min(var(--space-6), max(var(--space-4), 0.5em));
 }

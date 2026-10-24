@@ -55,4 +55,19 @@ describe('Image in the browser', () => {
     const img = document.querySelector<HTMLImageElement>('.kui-Image')!;
     expect(parseFloat(getComputedStyle(img).borderTopLeftRadius)).toBe(0);
   });
+
+  it('numeric width and height reserve the box before the picture loads', () => {
+    render(
+      <Theme>
+        <div style={{ width: 200 }}>
+          <Image src="/never-loads.jpg" alt="slow" width={400} height={300} />
+        </div>
+      </Theme>,
+    );
+    const img = document.querySelector<HTMLImageElement>('.kui-Image')!;
+    expect(img).toHaveAttribute('width', '400');
+    const box = img.getBoundingClientRect();
+    expect(box.width).toBe(200);
+    expect(box.height).toBe(150);
+  });
 });

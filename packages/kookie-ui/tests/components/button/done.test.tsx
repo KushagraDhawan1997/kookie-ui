@@ -5,6 +5,9 @@ import { Button, Toggle } from '../../../src/components/index';
 
 const Icon = () => <svg data-testid="icon" />;
 
+/** The button's content sits in a `display: contents` wrapper. */
+const content = (button: HTMLElement) => button.querySelector<HTMLElement>(':scope > .kui-BaseButtonContent') ?? button;
+
 describe('Button done', () => {
   it('shows a tick in place of the leading icon, and the icon comes back', () => {
     const { rerender } = renderWithProviders(
@@ -27,7 +30,7 @@ describe('Button done', () => {
     const tick = button.querySelector('.kui-BaseButtonTick');
     expect(tick).not.toBeNull();
     expect(tick).toHaveAttribute('aria-hidden', 'true');
-    expect(button.firstElementChild).toBe(tick);
+    expect(content(button).firstElementChild).toBe(tick);
     expect(button).toHaveAccessibleName('Copied');
     // Same box: the start edge still reads as an icon, so the padding does not change.
     expect(button).toHaveAttribute('data-icon-start', 'true');
@@ -51,8 +54,8 @@ describe('Button done', () => {
     );
     const button = screen.getByRole('button', { name: 'Copied' });
     expect(screen.queryByTestId('icon')).toBeNull();
-    expect(button.children).toHaveLength(1);
-    expect(button.firstElementChild).toHaveClass('kui-BaseButtonTick');
+    expect(content(button).children).toHaveLength(1);
+    expect(content(button).firstElementChild).toHaveClass('kui-BaseButtonTick');
   });
 
   it('puts the tick before a label with no icon, and does not block the press', async () => {
@@ -63,7 +66,7 @@ describe('Button done', () => {
       </Button>,
     );
     const button = screen.getByRole('button', { name: 'Copied' });
-    expect(button.firstElementChild).toHaveClass('kui-BaseButtonTick');
+    expect(content(button).firstElementChild).toHaveClass('kui-BaseButtonTick');
     expect(button).toHaveTextContent('Copied');
     expect(button).not.toHaveAttribute('aria-disabled');
     button.click();

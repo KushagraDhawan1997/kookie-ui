@@ -11,7 +11,7 @@ export default function SpinnerTest() {
       <Flex direction="column" gap="9">
         {/* Header */}
         <Flex direction="column" gap="4">
-          <Heading size="9" weight="medium">Spinner</Heading>
+          <Heading as="h1" size="9" weight="medium">Spinner</Heading>
           <Text size="2" emphasis="medium">
             Testing spinner performance with single GPU-composited rotation animation
           </Text>

@@ -13,7 +13,7 @@ const separatorPropDefs = {
     responsive: true,
   },
   color: { ...colorPropDef.color, default: 'gray' },
-  decorative: { type: 'boolean', default: true },
+  decorative: { type: 'boolean', default: false },
   light: { type: 'boolean', className: 'kui-light', default: false },
 } satisfies {
   orientation: PropDef<(typeof orientationValues)[number]>;

@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useLayoutEffect } from 'radix-ui/internal';
 import { readBreakpoint, useBreakpoint } from '../../hooks/use-breakpoint.js';
 import type { Breakpoint, PaneName, PresentationValue } from '../shell.types.js';
 import {
@@ -121,7 +122,7 @@ export function usePane(options: UsePaneOptions) {
   // when a fact it carries changes.
   const defaultValue = options.defaultValue;
   const latest = React.useRef({ state, value, autoTable, defaultValue, controlled, onChange: options.onChange, toggleNext: options.toggleNext });
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     latest.current = { state, value, autoTable, defaultValue, controlled, onChange: options.onChange, toggleNext: options.toggleNext };
   });
 
@@ -170,7 +171,7 @@ export function usePane(options: UsePaneOptions) {
 
   // Registration. A layout effect so a Trigger's aria attributes and the
   // Root's containment are right before the browser paints.
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     const entry: PaneEntry = {
       name,
       id,
@@ -197,7 +198,7 @@ export function usePane(options: UsePaneOptions) {
   // whether it is shown: a user's toggle, or a controlled prop. Never on
   // mount, and never because the window crossed a breakpoint.
   const callbacks = React.useRef({ onExpand: options.onExpand, onCollapse: options.onCollapse });
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     callbacks.current = { onExpand: options.onExpand, onCollapse: options.onCollapse };
   });
   const previous = React.useRef({ state, shown });
@@ -211,7 +212,7 @@ export function usePane(options: UsePaneOptions) {
   }, [state, shown]);
 
   // Development guards. Once per mount, not once per render.
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (process.env.NODE_ENV === 'production') return;
     if (options.controlled !== undefined && options.defaultValue !== undefined) {
       console.error(`Shell.${label}: Do not pass both \`${propNames.controlled}\` and \`${propNames.default}\`. Choose one.`);

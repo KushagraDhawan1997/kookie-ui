@@ -197,7 +197,7 @@ export default function ShellControlledTest() {
       <Shell.Content>
         <Box p="6" height="100%" style={{ overflow: 'auto' }}>
           <Box mb="5">
-            <Heading size="5">Controlled Shell Test</Heading>
+            <Heading as="h1" size="5">Controlled Shell Test</Heading>
           </Box>
 
           <Box mb="6">

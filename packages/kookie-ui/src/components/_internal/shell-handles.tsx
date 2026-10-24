@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useLayoutEffect } from 'radix-ui/internal';
 import classNames from 'classnames';
 import { usePaneResize } from './shell-resize.js';
 
@@ -91,7 +92,7 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
   };
 
   // The announced value is seeded from the real size once the pane has a box.
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     handleRef.current?.setAttribute('aria-valuenow', String(Math.round(readSize())));
   }, [readSize]);
 
@@ -293,6 +294,14 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
         props.onKeyDown?.(e);
         const container = containerRef.current;
         if (!container || e.defaultPrevented) return;
+        // Enter collapses and restores the pane, as a double-click does (WAI-ARIA window splitter).
+        if (e.key === 'Enter') {
+          if (collapsible && requestToggle) {
+            e.preventDefault();
+            requestToggle();
+          }
+          return;
+        }
         const current = readSize();
         // The keys reach as far as a drag does: the frame caps both.
         const cap = ceiling();

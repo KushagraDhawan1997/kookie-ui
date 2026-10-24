@@ -143,11 +143,11 @@ SegmentedControl.Item also accepts every attribute of the HTML `button` element.
 | Key | Action |
 | --- | --- |
 | Tab | Moves focus into the bar, onto the selected item, and out again |
-| Arrow keys | Move focus to the next or previous item |
-| Home or End | Moves focus to the first or last item |
+| Arrow keys | Move to the next or previous item and select it |
+| Home or End | Moves to the first or last item and selects it |
 | Space or Enter | Selects the focused item |
 
 - **Name:** Give the root an `aria-label`, such as "View". Each item takes its name from its text, or from its `aria-label` when it is icon only.
 - **State:** The root has `role="radiogroup"` and each item has `role="radio"`. A screen reader announces the item, whether it is selected, and its position in the group.
-- **Focus:** The bar is one tab stop. Arrow keys move focus without changing the selection, so people choose with Space or Enter.
+- **Focus:** The bar is one tab stop. Arrow keys select as they move, as in a radio group.
 - **Disabled:** A disabled bar sets `disabled` on every item, which removes them from the tab order. Arrow keys skip a disabled item.

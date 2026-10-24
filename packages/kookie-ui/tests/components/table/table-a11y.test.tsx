@@ -39,3 +39,33 @@ describe('Table.Root naming', () => {
     expect(screen.getByRole('table', { name: 'Team' })).toBeInTheDocument();
   });
 });
+
+describe('Table.Root scroller', () => {
+  const body = (
+    <Table.Body>
+      <Table.Row>
+        <Table.Cell>Mira</Table.Cell>
+      </Table.Row>
+    </Table.Body>
+  );
+
+  it('names the scroll region with the table name', () => {
+    renderWithProviders(<Table.Root aria-label="Members">{body}</Table.Root>);
+    expect(screen.getByRole('region', { name: 'Members' })).toHaveClass('kui-ScrollAreaViewport');
+  });
+
+  it('names the scroll region by aria-labelledby', () => {
+    renderWithProviders(
+      <>
+        <h2 id="heading">Team</h2>
+        <Table.Root aria-labelledby="heading">{body}</Table.Root>
+      </>,
+    );
+    expect(screen.getByRole('region', { name: 'Team' })).toHaveClass('kui-ScrollAreaViewport');
+  });
+
+  it('adds no region when the table has no name', () => {
+    renderWithProviders(<Table.Root>{body}</Table.Root>);
+    expect(screen.queryByRole('region')).toBeNull();
+  });
+});

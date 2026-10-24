@@ -28,6 +28,7 @@ import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSize } from '../helpers/theme-size.js';
 import { comboboxRootPropDefs, comboboxTriggerPropDefs, comboboxContentPropDefs } from './combobox.props.js';
 import { ChevronDownIcon, ThickCheckIcon } from './icons.js';
+import { Spinner } from './spinner.js';
 import { Theme, useThemeContext } from './theme.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
 import * as Popover from './popover.js';
@@ -365,36 +366,25 @@ const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTrigger
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     onKeyDown?.(event);
     if (event.defaultPrevented || isBlocked || isDisabled) return;
-    if (event.key === 'ArrowDown') {
+    // Both arrows open the list, as on Select (APG select-only combobox).
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
       ctx.setOpen(true);
     }
   };
+
+  const loadingIcon = (
+    <span className="kui-SelectIcon kui-SelectLoadingIcon" aria-hidden="true">
+      <Spinner />
+    </span>
+  );
 
   const defaultContent = (
     <>
       <span className="kui-SelectTriggerInner">
         <span className="kui-ComboboxValue">{ctx.displayValue ?? ctx.value ?? placeholder ?? ctx.placeholder}</span>
       </span>
-      {loading ? (
-        <div className="kui-SelectIcon kui-SelectLoadingIcon" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <circle
-              cx="8"
-              cy="8"
-              r="7"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeDasharray="32"
-              strokeDashoffset="32"
-              className="kui-SelectLoadingIconCircle"
-            />
-          </svg>
-        </div>
-      ) : (
-        <ChevronDownIcon className="kui-SelectIcon" />
-      )}
+      {loading ? loadingIcon : <ChevronDownIcon className="kui-SelectIcon" />}
     </>
   );
 
@@ -413,10 +403,11 @@ const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTrigger
         {...triggerProps}
         // eslint-disable-next-line jsx-a11y/role-has-required-aria-props -- Popover.Trigger (Slot) adds aria-expanded and aria-controls
         role="combobox"
-        aria-disabled={isDisabled || undefined}
-        aria-readonly={readOnly || undefined}
-        aria-invalid={error || undefined}
-        aria-busy={loading || undefined}
+        // The props win when set; otherwise a caller's own aria-* (a form library's aria-invalid) stays, as on Select.
+        aria-disabled={isDisabled || triggerProps['aria-disabled']}
+        aria-readonly={readOnly || triggerProps['aria-readonly']}
+        aria-invalid={error || triggerProps['aria-invalid']}
+        aria-busy={loading || triggerProps['aria-busy']}
         type={buttonType ?? 'button'}
         disabled={isDisabled}
         onClick={handleClick}
@@ -424,7 +415,15 @@ const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTrigger
         ref={composedRef}
         className={classNames('kui-reset', 'kui-SelectTrigger', 'kui-ComboboxTrigger', className)}
       >
-        {children ? requireReactElement(children) : defaultContent}
+        {/* Custom children replace the value and chevron; the spinner still shows while loading. */}
+        {children ? (
+          <>
+            {requireReactElement(children)}
+            {loading ? loadingIcon : null}
+          </>
+        ) : (
+          defaultContent
+        )}
       </button>
     </Popover.Trigger>
   );
@@ -774,7 +773,7 @@ const ComboboxItem = React.forwardRef<ComboboxItemElement, ComboboxItemProps>(
     const searchKeywords = text ? (keywords ? [text, ...keywords] : [text]) : keywords;
     // cmdk stores keywords only when `value` changes. Remount the cmdk item when
     // they change so a new label or keyword list is picked up.
-    const keywordsKey = searchKeywords ? searchKeywords.join(' ') : '';
+    const keywordsKey = searchKeywords ? searchKeywords.join('\u0000') : '';
 
     const isDisabled = disabled ?? rootDisabled ?? false;
 

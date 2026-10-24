@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { useComposedRefs } from 'radix-ui/internal';
+import { useComposedRefs, useLayoutEffect } from 'radix-ui/internal';
 import { useDropzone } from 'react-dropzone';
 
 import { Button } from './button.js';
@@ -17,9 +17,6 @@ import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-p
 import type { accentColors } from '../props/color.prop.js';
 import type { radii } from '../props/radius.prop.js';
 import type { ButtonProps, ButtonRankProps } from './button.js';
-
-// Avoid SSR warnings by using an isomorphic layout effect
-const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
 
 /**
  * Runs `measure` with the placeholder taken out of layout, so a height read
@@ -814,7 +811,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>((props, fo
 
   const sizingRef = React.useRef({ open, minLines, maxLines });
   // Declared before the sizing effect so it runs first in the same commit
-  useIsomorphicLayoutEffect(() => {
+  useLayoutEffect(() => {
     sizingRef.current = { open, minLines, maxLines };
   }, [open, minLines, maxLines]);
 
@@ -841,12 +838,12 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>((props, fo
   }, []);
 
   // Typography depends on size
-  useIsomorphicLayoutEffect(() => {
+  useLayoutEffect(() => {
     recomputeMetrics();
   }, [recomputeMetrics, size]);
 
   // Single place for sizing and overflow auto-open: one height reset, one scrollHeight read
-  useIsomorphicLayoutEffect(() => {
+  useLayoutEffect(() => {
     const el = textareaRef.current;
     if (!el) return;
     if (lineHeightRef.current === 0) recomputeMetrics();
@@ -888,9 +885,14 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>((props, fo
   // Dev-only warning if no accessible name is provided
   React.useEffect(() => {
     if (process.env.NODE_ENV === 'production') return;
-    const hasLabel = textareaProps['aria-label'] != null || textareaProps['aria-labelledby'] != null;
+    // Read the DOM, not the props: a `<label htmlFor>` or an asChild child's own label counts too.
+    const el = textareaRef.current;
+    const hasLabel =
+      textareaProps['aria-label'] != null ||
+      textareaProps['aria-labelledby'] != null ||
+      Boolean(el?.getAttribute('aria-label') || el?.getAttribute('aria-labelledby') || el?.labels?.length);
     if (!hasLabel) {
-      console.warn('[Chatbar.Textarea] Provide aria-label or aria-labelledby to ensure the control has an accessible name.');
+      console.warn('[Chatbar.Textarea] Provide aria-label, aria-labelledby or a <label htmlFor> to ensure the control has an accessible name.');
     }
     // warn only on mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -960,11 +962,12 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>((props, fo
 
   const Comp = asChild ? Slot : 'textarea';
   return (
-    <div className={classNames('kui-ChatbarField', 'kui-ChatbarTextarea', className)}>
+    // className and style both reach the textarea, like every other textarea attribute.
+    <div className="kui-ChatbarField kui-ChatbarTextarea">
       <Comp
         {...textareaProps}
         ref={composedRef}
-        className="kui-ChatbarInput"
+        className={classNames('kui-ChatbarInput', className)}
         value={value}
         onChange={handleChange}
         onFocus={handleFocus}

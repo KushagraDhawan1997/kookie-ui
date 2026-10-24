@@ -93,7 +93,7 @@ export default function DropdownMenuTest() {
   return (
     <Box p="7" style={{ minHeight: '100vh' }}>
       <Box mb="5">
-        <Heading size="6">Dropdown Menu - Nested SubMenus Test</Heading>
+        <Heading as="h1" size="6">Dropdown Menu - Nested SubMenus Test</Heading>
       </Box>
 
       <Box mb="7">

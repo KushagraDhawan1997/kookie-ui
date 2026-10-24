@@ -34,6 +34,11 @@
 .kui-BaseTabListTriggerInner {
   position: absolute;
 
+  /* Without a width sizer beside it (non-text children), it sizes the trigger itself */
+  &:where(:only-child) {
+    position: static;
+  }
+
   :where(.kui-BaseTabListTrigger[data-state='inactive']) & {
     letter-spacing: var(--tab-inactive-letter-spacing);
     word-spacing: var(--tab-inactive-word-spacing);

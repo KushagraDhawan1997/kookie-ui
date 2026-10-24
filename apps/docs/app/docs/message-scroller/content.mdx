@@ -37,7 +37,7 @@ export function Conversation({ messages }: { messages: Message[] }) {
 }
 ```
 
-The Root needs a height, from its parent or its own style, so the viewport has something to scroll. Message Scroller needs React 19.
+The Root needs a height, from its parent or its own style, so the viewport has something to scroll.
 
 ## Anatomy
 
@@ -135,7 +135,7 @@ Button takes the [Button](/docs/button) props except `iconOnly` and `fullWidth`.
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `direction` | `'end' \| 'start'` | `'end'` | Jumps to the latest message, or to the first |
-| `behavior` | `ScrollBehavior` | `'smooth'` | How the jump scrolls |
+| `behavior` | `ScrollBehavior` | `'auto'` | How the jump scrolls. `'auto'` jumps at once, with no long animation |
 | `aria-label` | `string` | `'Jump to the latest'` | The name. `'Jump to the first'` for `direction="start"` |
 | `variant` | Button variant | `'surface'` | The look. Or set `emphasis` |
 | `color` | `AccentColor` | `'gray'` | The colour |

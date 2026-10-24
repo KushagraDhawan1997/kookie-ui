@@ -127,7 +127,7 @@ describe('getMarginStyles', () => {
   test('arbitrary margins emit the matching custom properties', () => {
     const [classNames, style] = getMarginStyles({ mx: '13px' });
     expect(classNames).toBe('kui-r-mx');
-    expect(style).toEqual({ '--margin-left': '13px', '--margin-right': '13px' });
+    expect(style).toEqual({ '--ml': '13px', '--mr': '13px' });
   });
 
   test('responsive margins are supported', () => {

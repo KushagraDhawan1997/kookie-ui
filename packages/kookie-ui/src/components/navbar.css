@@ -61,7 +61,15 @@
   min-width: 0;
 }
 
-/* Ensure Actions always stays in the right column */
+/* Each slot keeps its column, so Navigation stays centred with no Logo beside it */
+.kui-NavbarLogo {
+  grid-column: 1;
+}
+
+.kui-NavbarNavigation {
+  grid-column: 2;
+}
+
 .kui-NavbarActions {
   grid-column: 3;
 }

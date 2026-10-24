@@ -15,6 +15,11 @@ describe('Spinner semantics', () => {
     expect(status).not.toHaveAttribute('aria-hidden');
   });
 
+  it('a named spinner carries its name as text, which a live region reads', () => {
+    renderWithProviders(<Spinner aria-label="Loading comments" />);
+    expect(screen.getByRole('status')).toHaveTextContent('Loading comments');
+  });
+
   it('marks the wrapped content busy while it loads', () => {
     const { container, rerender } = renderWithProviders(
       <Spinner loading>

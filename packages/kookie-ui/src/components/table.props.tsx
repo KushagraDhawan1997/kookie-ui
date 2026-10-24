@@ -63,7 +63,6 @@ const tableCellPropDefs = {
     type: 'enum',
     className: 'kui-r-ta',
     values: justifyValues,
-    parseValue: parseJustifyValue,
     responsive: true,
   },
   ...widthPropDefs,
@@ -71,13 +70,5 @@ const tableCellPropDefs = {
 } satisfies {
   justify: PropDef<(typeof justifyValues)[number]>;
 };
-
-function parseJustifyValue(value: string) {
-  return {
-    start: 'left',
-    center: 'center',
-    end: 'right',
-  }[value];
-}
 
 export { tableRootPropDefs, tableRowPropDefs, tableCellPropDefs };

@@ -22,8 +22,8 @@ import Link from 'next/link';
 
 export function MainNav({ pathname }: { pathname: string }) {
   return (
-    <Shell.Sidebar>
-      <Shell.Scroll role="navigation" aria-label="Main">
+    <Shell.Sidebar aria-label="Main">
+      <Shell.Scroll>
         <Sidebar.Menu>
           <Sidebar.MenuItem>
             <Sidebar.MenuButton asChild isActive={pathname === '/'}>
@@ -164,7 +164,9 @@ The rows take their size from `Shell.Root size`: `'1'`, `'2'` or `'3'`. Without 
 | `shortcut` | `ReactNode` | | Keys shown at the end of the row |
 | `asChild` | `boolean` | `false` | Renders the child element, such as a link, with the row's look |
 
-`BadgeConfig` is `{ content, variant?, size?, color?, radius? }`, with the [Chip](/docs/chip) values. MenuButton accepts the attributes of the HTML `button` element.
+`BadgeConfig` is `{ content, variant?, size?, color?, radius? }`, with the [Chip](/docs/chip) values. MenuButton accepts the attributes of the HTML `button` element, and renders `type="button"` unless you pass a `type`.
+
+In a Rail, the row's icon sits in a tile that shows the hover and active states. The icon is an `svg`, a `HugeiconsIcon`, or the first element before the label, so icons from any set work, and so does a link with `asChild`.
 
 ### MenuSub
 
@@ -195,12 +197,12 @@ Menu accepts the attributes of `ul`, MenuItem those of `li`, Separator the [Sepa
 
 | Key | Action |
 | --- | --- |
-| Arrow Down or Arrow Up | From a row's button or a sub-menu's trigger, moves to the next or previous visible row in the same `Shell.Scroll` |
+| Arrow Down or Arrow Up | From a row's button or a sub-menu's trigger, moves to the next or previous visible row in the same `Shell.Scroll`. Your `onKeyDown` runs first, and `preventDefault()` keeps the key for you |
 | Enter or Space | Opens a row, or opens and closes a sub-menu |
 | Escape | In Search, clears the text |
 
-- **Landmark:** The rows aren't a landmark on their own. Give `Shell.Scroll` `role="navigation"` and an `aria-label`, such as "Main".
+- **Landmark:** A Rail, Panel or Sidebar pane is a navigation landmark. Give the pane an `aria-label`, such as "Main".
 - **Current page:** `isActive` sets `aria-current="page"`, which a screen reader reads with the row's name.
 - **Roles:** The rows are a list of links, not a `menu`, so a screen reader announces them as a list.
-- **Group label:** It's plain text with no role, so it isn't announced as an empty group.
+- **Group label:** A Group with a GroupLabel is a `role="group"` named by its label. A Group without one has no role, so it isn't announced as an empty group.
 - **Search:** The field has `role="search"` around it and takes its name from `placeholder`. The clear button is named "Clear search". In a Rail, the popover's arrow keys move between the field and the results.

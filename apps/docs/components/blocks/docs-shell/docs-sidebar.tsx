@@ -146,7 +146,7 @@ export function DocsSidebar({ navigation, logo, headerActions, footer, pathname 
         </Toolbar>
       </Shell.PaneHeader>
 
-      <Shell.Scroll fade role="navigation" aria-label="Documentation">
+      <Shell.Scroll fade>
         {isSearching ? (
           <Sidebar.Menu>{flatResults.map((item) => renderItem(item, true))}</Sidebar.Menu>
         ) : (

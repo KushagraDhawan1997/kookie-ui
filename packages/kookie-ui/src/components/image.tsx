@@ -16,21 +16,45 @@ type ImageElement = React.ElementRef<'img'>;
 type ImageOwnProps = GetPropDefTypes<typeof imagePropDefs>;
 type ImageStatus = 'loading' | 'loaded' | 'error';
 
-interface ImageProps extends ComponentPropsWithout<'img', RemovedProps | 'width' | 'height' | 'src' | 'alt'>, WidthProps, HeightProps, ImageOwnProps {
+interface ImageProps
+  extends ComponentPropsWithout<'img', RemovedProps | 'width' | 'height' | 'src' | 'alt'>,
+    Omit<WidthProps, 'width'>,
+    Omit<HeightProps, 'height'>,
+    ImageOwnProps {
   src: string;
   /** Required. Pass `""` for a decorative picture. */
   alt: string;
+  /**
+   * A number is the picture's intrinsic width in pixels, written as the `width` attribute, so the
+   * browser reserves its box before it loads. A string or responsive object sets the CSS width.
+   */
+  width?: WidthProps['width'] | number;
+  /** A number is the intrinsic height attribute; a string or responsive object sets the CSS height. */
+  height?: HeightProps['height'] | number;
 }
 
 /**
  * A plain `<img>` that loads lazily, fills its box by `fit` and takes the theme's corner.
  * One element and no wrapper: `width`, `height`, `className` and `style` all land on the
- * `<img>` itself.
+ * `<img>` itself. Numeric `width` and `height` are the native attributes, which reserve the box.
  *
  * Until it loads it rests on a quiet neutral fill, which is also what stays if it fails.
  */
 const Image = React.forwardRef<ImageElement, ImageProps>((props, forwardedRef) => {
-  const { className, alt, radius, loading = 'lazy', decoding = 'async', onLoad, onError, ...imageProps } = extractProps(props, imagePropDefs, widthPropDefs, heightPropDefs);
+  // Numbers are the native attributes, which give the browser an aspect ratio before load.
+  const { width, height, ...layoutProps } = props;
+  const widthAttribute = typeof width === 'number' ? width : undefined;
+  const heightAttribute = typeof height === 'number' ? height : undefined;
+  const { className, alt, radius, loading = 'lazy', decoding = 'async', onLoad, onError, ...imageProps } = extractProps(
+    {
+      ...layoutProps,
+      width: typeof width === 'number' ? undefined : width,
+      height: typeof height === 'number' ? undefined : height,
+    },
+    imagePropDefs,
+    widthPropDefs,
+    heightPropDefs,
+  );
 
   const [status, setStatus] = React.useState<ImageStatus>('loading');
   const ref = React.useRef<HTMLImageElement>(null);
@@ -47,6 +71,8 @@ const Image = React.forwardRef<ImageElement, ImageProps>((props, forwardedRef) =
   return (
     <img
       {...imageProps}
+      width={widthAttribute}
+      height={heightAttribute}
       ref={setRefs}
       alt={alt}
       loading={loading}

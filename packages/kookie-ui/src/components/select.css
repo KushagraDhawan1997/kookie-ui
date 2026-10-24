@@ -34,7 +34,7 @@
 
 .kui-SelectIcon {
   flex-shrink: 0;
-  margin-left: auto;
+  margin-inline-start: auto;
   width: var(--trigger-icon-size-default);
   height: var(--trigger-icon-size-default);
 }
@@ -66,7 +66,7 @@
   box-sizing: border-box;
 
   :where(.kui-SelectContent:has(.kui-ScrollAreaScrollbar[data-orientation='vertical'])) & {
-    padding-right: var(--space-4);
+    padding-inline-end: var(--space-4);
   }
 }
 
@@ -117,10 +117,10 @@
    * text). `--radius-full` is 0px below `full` and 9999px at `full`. The chevron's edge keeps
    * the plain padding.
    */
-  padding-left: calc(
+  padding-inline-start: calc(
     var(--select-trigger-px) + min(var(--radius-full, 0px), var(--select-trigger-px-pill) - var(--select-trigger-px))
   );
-  padding-right: var(--select-trigger-px);
+  padding-inline-end: var(--select-trigger-px);
 }
 
 @breakpoints {
@@ -451,39 +451,26 @@
   }
 }
 
-/* Loading state styling */
+/* Loading: the library Spinner fills the icon box, so it follows the trigger size and reduced motion. */
 .kui-SelectLoadingIcon {
-  animation: kui-spin 1s linear infinite;
+  display: block;
 }
 
-.kui-SelectLoadingIconCircle {
-  animation: kui-dash 1.5s ease-in-out infinite;
-}
-
-@keyframes kui-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes kui-dash {
-  0% {
-    stroke-dasharray: 1, 150;
-    stroke-dashoffset: 0;
-  }
-  50% {
-    stroke-dasharray: 90, 150;
-    stroke-dashoffset: -35;
-  }
-  100% {
-    stroke-dasharray: 90, 150;
-    stroke-dashoffset: -124;
-  }
+/* Two classes: spinner.css loads after this file and sets its own fixed size. */
+/* stylelint-disable-next-line selector-max-specificity */
+.kui-SelectLoadingIcon > .kui-Spinner {
+  width: 100%;
+  height: 100%;
 }
 
 /* Forced colors support */
+/* Box-shadows, which draw every variant's boundary, are dropped there, so the trigger gets a real border. */
 @media (forced-colors: active) {
-  .kui-SelectTrigger:where([aria-invalid='true']) {
+  .kui-SelectTrigger {
     border: 1px solid CanvasText;
+  }
+  .kui-SelectTrigger:where(:disabled, [data-disabled]) {
+    border-color: GrayText;
   }
 }
 

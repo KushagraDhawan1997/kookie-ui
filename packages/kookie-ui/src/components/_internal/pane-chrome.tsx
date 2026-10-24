@@ -153,9 +153,11 @@ interface ScrollProps extends React.ComponentPropsWithoutRef<'div'> {
 /**
  * The one region of a pane that scrolls; it takes the room the header and footer leave.
  * In `Shell.Content` it is the page's scroller, and a `Shell.PaneHeader float` beside it pins
- * the page's toolbar over it. It is not a landmark: for navigation, pass `role="navigation"` and an `aria-label`.
+ * the page's toolbar over it. The ref, events and ARIA props land on the element that scrolls;
+ * `className`, `style` and `dir` apply to the content inside it. In a Rail, Panel or Sidebar the pane is
+ * already a navigation landmark, so it needs no role of its own.
  */
-const Scroll = React.forwardRef<HTMLDivElement, ScrollProps>(({ className, children, fade = false, ...props }, forwardedRef) => {
+const Scroll = React.forwardRef<HTMLDivElement, ScrollProps>(({ className, style, dir, children, fade = false, ...props }, forwardedRef) => {
   const chrome = useChromeClasses();
   // A Sidebar.Root inside the content still gets a menu.
   const contentPane = React.useContext(ShellContentContext);
@@ -163,16 +165,16 @@ const Scroll = React.forwardRef<HTMLDivElement, ScrollProps>(({ className, child
   const inContent = contentPane && visual === null;
   if (inContent) {
     return (
-      <ScrollArea type="hover" fade={fade} className="kui-ShellScroll">
-        <div {...props} ref={forwardedRef} className={classNames('kui-ShellScrollContent', className)}>
+      <ScrollArea {...props} ref={forwardedRef} type="hover" fade={fade} className="kui-ShellScroll">
+        <div style={style} dir={dir} className={classNames('kui-ShellScrollContent', className)}>
           {children}
         </div>
       </ScrollArea>
     );
   }
   return (
-    <ScrollArea type="hover" fade={fade} className="kui-ShellScroll">
-      <div {...props} ref={forwardedRef} className={classNames('kui-BaseMenuContent', 'kui-SidebarContent', ...chrome, className)}>
+    <ScrollArea {...props} ref={forwardedRef} type="hover" fade={fade} className="kui-ShellScroll">
+      <div style={style} dir={dir} className={classNames('kui-BaseMenuContent', 'kui-SidebarContent', ...chrome, className)}>
         {/* A header's band does not reach a Toolbar in the scrolling list. */}
         <PaneBandSizeContext.Provider value={null}>
           <div className="kui-BaseMenuViewport">{children}</div>

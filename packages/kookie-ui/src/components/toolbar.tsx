@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useLayoutEffect } from 'radix-ui/internal';
 import classNames from 'classnames';
 import { Toolbar as ToolbarPrimitive } from 'radix-ui';
 
@@ -61,8 +62,6 @@ const InOverflowContext = React.createContext(false);
 function useToolbarOverflow(): boolean {
   return React.useContext(InOverflowContext);
 }
-
-const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
 
 // ============================================================================
 // Toolbar (root)
@@ -246,6 +245,7 @@ const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>((p
         iconOnly={iconOnly}
         disabled={off}
         color={color}
+        pressed={props['aria-pressed'] === undefined ? undefined : isPressed(props['aria-pressed'])}
       >
         {rest.children}
       </ToolbarOverflowItem>
@@ -315,6 +315,8 @@ interface ToolbarOverflowItemProps extends Omit<React.ComponentPropsWithoutRef<'
   iconOnly?: boolean;
   disabled?: boolean;
   color?: ButtonProps['color'];
+  /** A toggle's pressed state. A toggle becomes a checkbox item, so the menu still says whether it is on. */
+  pressed?: boolean;
 }
 
 /**
@@ -323,7 +325,7 @@ interface ToolbarOverflowItemProps extends Omit<React.ComponentPropsWithoutRef<'
  * words. What prices a box (size, variant, emphasis, iconOnly) does not come across.
  */
 const ToolbarOverflowItem = React.forwardRef<HTMLDivElement, ToolbarOverflowItemProps>(
-  ({ asChild, iconOnly, disabled, color, children, 'aria-label': label, ...props }, forwardedRef) => {
+  ({ asChild, iconOnly, disabled, color, pressed, children, 'aria-label': label, ...props }, forwardedRef) => {
     const words = iconOnly ? label : undefined;
     const itemProps = {
       ...props,
@@ -339,6 +341,14 @@ const ToolbarOverflowItem = React.forwardRef<HTMLDivElement, ToolbarOverflowItem
         <DropdownMenu.Item {...itemProps} ref={forwardedRef} asChild>
           {child}
         </DropdownMenu.Item>
+      );
+    }
+    if (pressed !== undefined) {
+      return (
+        <DropdownMenu.CheckboxItem {...itemProps} ref={forwardedRef} checked={pressed}>
+          {children}
+          {words}
+        </DropdownMenu.CheckboxItem>
       );
     }
     return (
@@ -401,11 +411,11 @@ const ToolbarOverflow = React.forwardRef<HTMLDivElement, ToolbarOverflowProps>(
       setMeasuredCount(count);
       setShown(count);
     }
-    useIsomorphicLayoutEffect(() => {
+    useLayoutEffect(() => {
       widths.current = [];
     }, [count]);
 
-    useIsomorphicLayoutEffect(() => {
+    useLayoutEffect(() => {
       const root = rootRef.current;
       if (!root) return;
 
@@ -511,6 +521,8 @@ type SlotEntry = { id: string; node: React.ReactNode };
 const EMPTY_ENTRIES: readonly SlotEntry[] = [];
 const slotEntries = new Map<string, readonly SlotEntry[]>();
 const slotListeners = new Set<() => void>();
+/** How many ToolbarSlots of each name are mounted, to warn when one Fill would render twice. */
+const mountedSlots = new Map<string, number>();
 
 function subscribeSlots(listener: () => void) {
   slotListeners.add(listener);
@@ -537,7 +549,10 @@ function removeSlotEntry(name: string, id: string) {
 }
 
 interface ToolbarSlotProps {
-  /** Which `ToolbarFill` renders here. Use one name per slot. Defaults to `default`. */
+  /**
+   * Which `ToolbarFill` renders here. Defaults to `default`. Names are global to the page: mount one
+   * slot per name, or the fill renders in each of them (development builds warn).
+   */
   name?: string;
 }
 
@@ -549,6 +564,18 @@ interface ToolbarSlotProps {
  * the controls take the toolbar's size and join its arrow-key row. It adds no element.
  */
 function ToolbarSlot({ name = 'default' }: ToolbarSlotProps) {
+  useLayoutEffect(() => {
+    const count = (mountedSlots.get(name) ?? 0) + 1;
+    mountedSlots.set(name, count);
+    if (count > 1 && process.env.NODE_ENV !== 'production') {
+      console.warn(`[kookie-ui] ToolbarSlot: ${count} slots named "${name}" are mounted. Each renders the ToolbarFill's controls, so they appear more than once. Give each slot its own name.`);
+    }
+    return () => {
+      const left = (mountedSlots.get(name) ?? 1) - 1;
+      if (left > 0) mountedSlots.set(name, left);
+      else mountedSlots.delete(name);
+    };
+  }, [name]);
   const entries = React.useSyncExternalStore(
     subscribeSlots,
     () => slotEntries.get(name) ?? EMPTY_ENTRIES,
@@ -581,10 +608,10 @@ interface ToolbarFillProps {
  */
 function ToolbarFill({ name = 'default', children }: ToolbarFillProps) {
   const id = React.useId();
-  useIsomorphicLayoutEffect(() => {
+  useLayoutEffect(() => {
     setSlotEntry(name, id, children);
   }, [name, id, children]);
-  useIsomorphicLayoutEffect(() => () => removeSlotEntry(name, id), [name, id]);
+  useLayoutEffect(() => () => removeSlotEntry(name, id), [name, id]);
   return null;
 }
 ToolbarFill.displayName = 'Toolbar.Fill';

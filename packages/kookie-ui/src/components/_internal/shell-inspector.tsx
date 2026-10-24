@@ -132,6 +132,7 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
   return (
     <div
       {...withoutRemovedPaneProps(domProps)}
+      role={domProps.role ?? 'complementary'}
       id={pane.id}
       ref={composedRef}
       className={classNames('kui-ShellPane', 'kui-ShellInspector', className)}
@@ -155,3 +156,5 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
 
 Inspector.displayName = 'Shell.Inspector';
 Inspector.Handle = InspectorHandle;
+
+export type { InspectorPublicProps };

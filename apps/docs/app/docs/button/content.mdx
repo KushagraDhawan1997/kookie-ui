@@ -53,7 +53,7 @@ export function SaveBar({ saving, onCancel, onSave }: { saving: boolean; onCance
 | `medium` | `raised` | Most buttons. This is the default |
 | `quiet` | `ghost` | Cancel, close and actions in a toolbar |
 
-`variant` sets the look directly, when you need `soft`, `surface` or `outline`, which have no rank of their own. Pass `emphasis` or `variant`, not both. The types reject the pair.
+`variant` sets the look directly, when you need `soft`, `surface` or `outline`, which have no rank of their own. Pass `emphasis` or `variant`, not both. The types reject the pair. If both arrive anyway, the button logs an error and `emphasis` wins.
 
 ## Size
 
@@ -84,7 +84,7 @@ Put the icon before the label, inside the button. The button sizes the icon and 
 
 ### Waiting for a result
 
-`loading` replaces the content with a spinner and blocks presses until it clears, so a slow request can't be sent twice. The button keeps its width and its focus, so the layout doesn't jump and keyboard users stay in place.
+`loading` replaces the content with a spinner and blocks presses until it clears, so a slow request can't be sent twice. The button keeps its width and its focus, so the layout doesn't jump and keyboard users stay in place. Pass a boolean every time, such as `loading={saving}`, so the content stays mounted when loading starts and stops.
 
 ### Confirming a copy
 
@@ -149,5 +149,6 @@ Button also accepts every attribute of the HTML `button` element.
 - **Name:** A screen reader announces the label. An icon-only button announces its `aria-label`, which the types require.
 - **Loading:** The button sets `aria-busy` and announces that it is loading. It stays in the tab order, so focus doesn't jump to the top of the page.
 - **Done:** The tick is hidden from screen readers. Change the label or `aria-label`, such as "Copy" to "Copied", so the change is heard.
-- **Disabled:** A disabled `button` element leaves the tab order. A disabled link or `asChild` element sets `aria-disabled` and ignores presses.
+- **Disabled:** A disabled `button` element leaves the tab order. A disabled link or `asChild` element sets `aria-disabled` and ignores presses, including the child's own `onClick`.
+- **Tooltip:** The tooltip adds to `aria-describedby`. A description you pass yourself is kept.
 - **Focus:** The focus ring shows for the keyboard only, and it uses the button's colour.

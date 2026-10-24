@@ -125,11 +125,11 @@ const [width, setWidth] = React.useState(320);
 `Shell.PaneHeader` and `Shell.PaneFooter` stay put while `Shell.Scroll` scrolls between them. With `float`, the rows sit over the list and it scrolls behind them. Add `fade` to the Scroll and `backdrop` to a Toolbar in the row so its buttons stay readable.
 
 ```tsx showLineNumbers
-<Shell.Sidebar>
+<Shell.Sidebar aria-label="Main">
   <Shell.PaneHeader float>
     <Toolbar backdrop aria-label="Workspace">{/* Logo, search */}</Toolbar>
   </Shell.PaneHeader>
-  <Shell.Scroll fade role="navigation" aria-label="Main">
+  <Shell.Scroll fade>
     {/* Sidebar rows */}
   </Shell.Scroll>
   <Shell.PaneFooter>{/* Profile */}</Shell.PaneFooter>
@@ -211,7 +211,7 @@ Sidebar, Panel, Inspector and Bottom take these.
 | `sizeUpdateMs` | `number` | `50` | The interval for `sizeUpdate` |
 | `minSize` | `number` | Per pane | The smallest size in pixels |
 | `maxSize` | `number` | Per pane | The largest size in pixels |
-| `collapsible` | `boolean` | `true` | A double-click on the handle closes the pane |
+| `collapsible` | `boolean` | `true` | A double-click on the handle, or Enter on it, closes and reopens the pane |
 | `onResizeStart`, `onResize`, `onResizeEnd` | `(size) => void` | | Run as a drag starts, moves (once per frame at most) and ends |
 
 ### Content
@@ -235,7 +235,11 @@ Trigger renders a `button` with `type="button"`. With `asChild`, it puts its pre
 | `float` | `boolean` | `false` | PaneHeader and PaneFooter only. The row sits over the list |
 | `fade` | `boolean` | `false` | Scroll only. Fades the list toward an edge with more past it |
 
+A ref on Scroll is the element that scrolls, so `ref.current.scrollTo()` works, and `onScroll` and ARIA props land there too. `className` and `style` style the content inside it.
+
 Header accepts the attributes of the HTML `header` element, Content those of `main`, Trigger those of `button`, and every other part those of `div`.
+
+Each part's props are exported as a type: `Shell.RootProps`, `Shell.HeaderProps`, `Shell.RailProps`, `Shell.PanelProps`, `Shell.SidebarProps`, `Shell.ContentProps`, `Shell.InspectorProps`, `Shell.BottomProps`, `Shell.TriggerProps`, `Shell.PaneHeaderProps`, `Shell.PaneFooterProps` and `Shell.ScrollProps`.
 
 ## Accessibility
 
@@ -244,8 +248,10 @@ Header accepts the attributes of the HTML `header` element, Content those of `ma
 | Escape | Closes open overlays and returns focus |
 | Arrow keys | On a resize handle, move it by 8px, or 32px with Shift |
 | Home or End | On a resize handle, go to the smallest or largest size |
+| Enter | On a resize handle of a collapsible pane, close or reopen the pane |
 
-- **Landmarks:** Header is a `header` and Content is a `main`. `Shell.Scroll` is not a landmark, so give it `role="navigation"` and an `aria-label` when it holds navigation.
+- **Landmarks:** Header is a `header` and Content is a `main`. Rail, Panel and Sidebar are navigation landmarks, and Inspector is a complementary one. Give each an `aria-label` when there is more than one, and pass your own `role` to change it. `Shell.Scroll` is not a landmark.
+- **Forced colors:** A focused resize handle shows its line in the system highlight colour, and an overlay or stacked pane gets an outline in place of its shadow.
 - **Trigger:** It sets `aria-controls` to the pane's id and `aria-expanded` to its state. On an untouched pane, `aria-expanded` is left off until the state is known.
 - **Overlay:** Opening one moves focus into the pane and makes the rest of the frame `inert`. Closing it returns focus to where it was, or to the pane's trigger.
 - **Escape:** A menu or dialog opened from a pane closes first. A handler in the pane that calls `preventDefault()` keeps the pane open.

@@ -297,9 +297,15 @@
   & :where(.kui-BaseMenuItem[data-highlighted]) {
     background-color: var(--accent-4);
 
-    /* In soft variant, lift muted text a step while keeping the hierarchy */
-    & :where(.kui-Text.kui-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
-      color: var(--neutral-11) !important;
+    /*
+     * In soft variant, lift muted text a step while keeping the hierarchy. This sets the ink
+     * token Text reads, not its color, so a caller's own color on the Text still wins.
+     */
+    & :where(.kui-Text.kui-emphasis-medium:not([data-accent-color])) {
+      --neutral-ink-muted: var(--neutral-11);
+    }
+    & :where(.kui-Text.kui-emphasis-medium[data-accent-color='gray']) {
+      --accent-ink-muted: var(--neutral-11);
     }
   }
 

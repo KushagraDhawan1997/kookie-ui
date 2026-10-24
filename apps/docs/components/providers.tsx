@@ -1,11 +1,11 @@
 'use client';
 
-import { Theme } from '@kushagradhawan/kookie-ui';
+import { Theme, TooltipProvider } from '@kushagradhawan/kookie-ui';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <Theme accentColor="gray" grayColor="auto">
-      {children}
+      <TooltipProvider>{children}</TooltipProvider>
     </Theme>
   );
 }

@@ -14,9 +14,6 @@
   /* Fix Chrome background bleeding on rounded corners */
   background-clip: padding-box;
 
-  /* Force Chrome to recalculate styles when radius changes */
-  will-change: border-radius;
-
   isolation: isolate;
 
   /* An icon is one line tall, so it never changes the chip's height. */

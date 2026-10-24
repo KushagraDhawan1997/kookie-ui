@@ -61,17 +61,18 @@ describe('Sidebar parts inside Shell.Sidebar', () => {
     expect(container.querySelector('.kui-SidebarContent')).toHaveClass('kui-r-size-2');
   });
 
-  it('Shell.Scroll is not a landmark unless asked', () => {
-    renderWithProviders(
+  it('Shell.Scroll is not a landmark: the pane is', () => {
+    const { container } = renderWithProviders(
       <Shell.Root>
-        <Shell.Sidebar>
+        <Shell.Sidebar aria-label="Main">
           <Shell.Scroll>
             <Nav />
           </Shell.Scroll>
         </Shell.Sidebar>
       </Shell.Root>,
     );
-    expect(screen.queryByRole('navigation')).toBeNull();
+    expect(screen.getAllByRole('navigation')).toEqual([container.querySelector('.kui-ShellSidebar')]);
+    expect(screen.getByRole('navigation', { name: 'Main' })).toBeInTheDocument();
   });
 
   it('in a Rail, rows and the footer are thin tiles', () => {

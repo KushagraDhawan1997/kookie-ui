@@ -20,3 +20,30 @@ describe('Tabs.Content', () => {
     expect(panel).not.toHaveAttribute('aria-atomic');
   });
 });
+
+describe('Tabs.Trigger children', () => {
+  it('renders element children once, so ids are not duplicated', () => {
+    const { container } = renderWithProviders(
+      <Tabs.Root defaultValue="a">
+        <Tabs.List>
+          <Tabs.Trigger value="a">
+            <span id="dup">A</span>
+          </Tabs.Trigger>
+        </Tabs.List>
+      </Tabs.Root>,
+    );
+    expect(container.querySelectorAll('#dup')).toHaveLength(1);
+  });
+
+  it('keeps a hidden width copy for plain text, out of the accessibility tree', () => {
+    const { container } = renderWithProviders(
+      <Tabs.Root defaultValue="a">
+        <Tabs.List>
+          <Tabs.Trigger value="a">Account {2}</Tabs.Trigger>
+        </Tabs.List>
+      </Tabs.Root>,
+    );
+    expect(container.querySelector('.kui-TabsTriggerInnerHidden')).toHaveAttribute('aria-hidden', 'true');
+    expect(screen.getByRole('tab', { name: 'Account 2' })).toBeInTheDocument();
+  });
+});

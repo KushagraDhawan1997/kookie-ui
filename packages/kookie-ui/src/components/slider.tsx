@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { Slider as SliderPrimitive } from 'radix-ui';
+import { Direction, Slider as SliderPrimitive } from 'radix-ui';
 
 import { sliderPropDefs } from './slider.props.js';
 import { extractProps } from '../helpers/extract-props.js';
@@ -11,24 +11,18 @@ import type { GetPropDefTypes } from '../props/prop-def.js';
 
 type SliderElement = React.ElementRef<typeof SliderPrimitive.Root>;
 type SliderOwnProps = GetPropDefTypes<typeof sliderPropDefs>;
-interface SliderProps
-  extends ComponentPropsWithout<
-      typeof SliderPrimitive.Root,
-      'asChild' | 'color' | 'children' | 'defaultChecked'
-    >,
-    SliderOwnProps {
+interface SliderProps extends ComponentPropsWithout<typeof SliderPrimitive.Root, 'asChild' | 'color' | 'children' | 'defaultChecked'>, SliderOwnProps {
   ticks?: Array<{ value: number; label?: string }>;
   unit?: string;
 }
 const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwardedRef) => {
   const props = useThemeSizeProps(ownProps, sliderPropDefs.size);
-  const { className, color, radius, tabIndex, ...sliderProps } = extractProps(
-    props,
-    sliderPropDefs,
-  );
+  const { className, color, radius, tabIndex, ...sliderProps } = extractProps(props, sliderPropDefs);
   const {
     ticks,
     unit,
+    showTickLabels,
+    snapToTicks,
     value: valueProp,
     defaultValue,
     onValueChange,
@@ -37,16 +31,12 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
     'aria-labelledby': ariaLabelledBy,
     ...rootProps
   } = sliderProps;
-  const { showTickLabels, snapToTicks } = props;
-
   const min = rootProps.min ?? 0;
   const max = rootProps.max ?? 100;
 
   // The slider keeps its own copy of the value when uncontrolled, so the handles, their
   // labels and a tick press all read the current value rather than the first one.
-  const [uncontrolledValue, setUncontrolledValue] = React.useState<number[]>(
-    () => defaultValue ?? [min],
-  );
+  const [uncontrolledValue, setUncontrolledValue] = React.useState<number[]>(() => defaultValue ?? [min]);
   const isControlled = valueProp !== undefined;
   const currentValue = isControlled ? valueProp : uncontrolledValue;
   const tickIdPrefix = React.useId();
@@ -56,42 +46,38 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
   const step = rootProps.step;
 
   // Optimized snap-to-ticks with memoized sorted ticks
-  const sortedTicks = React.useMemo(
-    () => (ticks ? [...ticks].sort((a, b) => a.value - b.value) : []),
-    [ticks],
-  );
+  const sortedTicks = React.useMemo(() => (ticks ? [...ticks].sort((a, b) => a.value - b.value) : []), [ticks]);
 
-  // Function to snap value to nearest tick (optimized)
+  // The nearest tick to a value.
   const snapToNearestTick = React.useCallback(
     (value: number): number => {
-      if (!snapToTicks || !sortedTicks.length) return value;
-
-      // Binary search for closest tick
-      let left = 0;
-      let right = sortedTicks.length - 1;
-
-      if (value <= sortedTicks[left].value) return sortedTicks[left].value;
-      if (value >= sortedTicks[right].value) return sortedTicks[right].value;
-
-      while (left <= right) {
-        const mid = Math.floor((left + right) / 2);
-        if (sortedTicks[mid].value === value) return value;
-
-        if (sortedTicks[mid].value < value) {
-          left = mid + 1;
-        } else {
-          right = mid - 1;
-        }
+      let nearest = sortedTicks[0].value;
+      for (const tick of sortedTicks) {
+        if (Math.abs(tick.value - value) < Math.abs(nearest - value)) nearest = tick.value;
       }
-
-      // Find closest between left and right
-      const leftDistance = Math.abs(value - sortedTicks[right].value);
-      const rightDistance = Math.abs(value - sortedTicks[left].value);
-
-      return leftDistance <= rightDistance ? sortedTicks[right].value : sortedTicks[left].value;
+      return nearest;
     },
-    [snapToTicks, sortedTicks],
+    [sortedTicks],
   );
+
+  // A key press moves the handle one step, which the nearest tick would undo. So a key press
+  // that does not reach another tick goes on to the next tick the way it moved.
+  const snapKeyStep = React.useCallback(
+    (value: number, previous: number): number => {
+      const nearest = snapToNearestTick(value);
+      if (value > previous && nearest <= previous) {
+        return sortedTicks.find((tick) => tick.value > previous)?.value ?? previous;
+      }
+      if (value < previous && nearest >= previous) {
+        return [...sortedTicks].reverse().find((tick) => tick.value < previous)?.value ?? previous;
+      }
+      return nearest;
+    },
+    [snapToNearestTick, sortedTicks],
+  );
+
+  // Whether the change under way came from the keyboard, so snapping knows how to read it.
+  const keyboardChangeRef = React.useRef(false);
 
   // Format value text for accessibility
   const formatValueText = React.useCallback(
@@ -109,47 +95,49 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
     [unit, max],
   );
 
-  // Memoize tick elements for performance
+  // Ticks sit where the handle sits for their value. Radix flips the handle for a right to
+  // left slider and for `inverted`, and runs a vertical slider from the bottom.
+  const direction = Direction.useDirection(rootProps.dir);
+  const orientation = rootProps.orientation ?? 'horizontal';
+  const flipped = orientation === 'vertical' ? !rootProps.inverted : (direction === 'rtl') !== Boolean(rootProps.inverted);
+
   const tickElements = React.useMemo(() => {
     if (!ticks) return null;
 
-    return ticks.map((tick, index) => ({
-      ...tick,
-      percentage: ((tick.value - min) / (max - min)) * 100,
-      index,
-    }));
-  }, [ticks, min, max]);
+    return ticks.map((tick, index) => {
+      const percentage = ((tick.value - min) / (max - min)) * 100;
+      return { ...tick, percentage: flipped ? 100 - percentage : percentage, index };
+    });
+  }, [ticks, min, max, flipped]);
 
   // Live region ref for accessibility announcements (no state = no re-renders)
   const announceRef = React.useRef<HTMLDivElement>(null);
   const announceTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Says the new value after a tick press. Focus stays on the tick, so nothing else reports
+  // it. The handle reports its own value on key presses and drags.
+  const announce = React.useCallback(
+    (values: number[]) => {
+      if (!announceRef.current) return;
+      announceRef.current.textContent = formatValueText(values);
+      if (announceTimeoutRef.current) clearTimeout(announceTimeoutRef.current);
+      announceTimeoutRef.current = setTimeout(() => {
+        if (announceRef.current) announceRef.current.textContent = '';
+      }, 1000);
+    },
+    [formatValueText],
+  );
+
   // Handle value changes with snapping
   const handleValueChange = React.useCallback(
     (newValue: number[]) => {
-      const finalValue =
-        snapToTicks && ticks ? newValue.map((v) => snapToNearestTick(v)) : newValue;
-
-      // Update live region for screen readers (direct DOM update, no React state)
-      if (announceRef.current) {
-        const valueText = formatValueText(finalValue);
-        announceRef.current.textContent = valueText;
-
-        // Clear after delay to prevent spam
-        if (announceTimeoutRef.current) {
-          clearTimeout(announceTimeoutRef.current);
-        }
-        announceTimeoutRef.current = setTimeout(() => {
-          if (announceRef.current) {
-            announceRef.current.textContent = '';
-          }
-        }, 1000);
-      }
+      const snapping = snapToTicks && sortedTicks.length > 0;
+      const finalValue = !snapping ? newValue : newValue.map((v, i) => (keyboardChangeRef.current && currentValue[i] !== undefined ? snapKeyStep(v, currentValue[i]) : snapToNearestTick(v)));
 
       if (!isControlled) setUncontrolledValue(finalValue);
       onValueChange?.(finalValue);
     },
-    [snapToTicks, ticks, snapToNearestTick, formatValueText, onValueChange, isControlled],
+    [snapToTicks, sortedTicks, snapKeyStep, snapToNearestTick, currentValue, onValueChange, isControlled],
   );
 
   // Cleanup timeout on unmount
@@ -162,14 +150,9 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
   }, []);
 
   return (
-    <div className="kui-SliderContainer">
+    <div className="kui-SliderContainer" data-orientation={orientation} data-has-ticks={tickElements ? '' : undefined}>
       {/* Live region for screen reader announcements */}
-      <div
-        ref={announceRef}
-        aria-live="polite"
-        aria-atomic="true"
-        className="kui-sr-only"
-      />
+      <div ref={announceRef} aria-live="polite" aria-atomic="true" className="kui-sr-only" />
 
       <SliderPrimitive.Root
         data-accent-color={color}
@@ -178,16 +161,21 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
         {...rootProps}
         value={currentValue}
         step={step}
+        onKeyDown={(event) => {
+          keyboardChangeRef.current = true;
+          rootProps.onKeyDown?.(event);
+        }}
+        onPointerDown={(event) => {
+          keyboardChangeRef.current = false;
+          rootProps.onPointerDown?.(event);
+        }}
         onValueChange={handleValueChange}
         onValueCommit={onValueCommit}
         asChild={false}
         className={classNames('kui-SliderRoot', className)}
       >
         <SliderPrimitive.Track className="kui-SliderTrack">
-          <SliderPrimitive.Range
-            className="kui-SliderRange"
-            data-inverted={rootProps.inverted ? '' : undefined}
-          />
+          <SliderPrimitive.Range className="kui-SliderRange" data-inverted={rootProps.inverted ? '' : undefined} />
         </SliderPrimitive.Track>
         {currentValue.map((value, index) => (
           <SliderPrimitive.Thumb
@@ -203,14 +191,15 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
         ))}
       </SliderPrimitive.Root>
       {tickElements && (
-        <div className="kui-SliderTicks" role="group" aria-label="Slider tick marks">
+        <div className="kui-SliderTicks" data-orientation={orientation} role="group" aria-label="Slider tick marks">
           {tickElements.map((tick) => {
             return (
               <button
                 key={tick.index}
                 className="kui-SliderTick"
-                // Only `left` varies per tick; the centring transform lives in `.kui-SliderTick`.
-                style={{ left: `${tick.percentage}%` }}
+                // Only the offset varies per tick; the centring transform lives in `.kui-SliderTick`.
+                style={orientation === 'vertical' ? { top: `${tick.percentage}%` } : { left: `${tick.percentage}%` }}
+                disabled={rootProps.disabled}
                 onClick={() => {
                   // Move only the handle nearest the tick. When handles share a value, a
                   // tick above it moves the last of them and a tick below moves the first.
@@ -220,21 +209,19 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
                     const best = Math.abs(currentValue[nearest] - tick.value);
                     if (distance < best || (distance === best && tick.value > v)) nearest = i;
                   });
-                  const newValue = currentValue
-                    .map((v, i) => (i === nearest ? tick.value : v))
-                    .sort((x, y) => x - y);
+                  const newValue = currentValue.map((v, i) => (i === nearest ? tick.value : v)).sort((x, y) => x - y);
 
+                  keyboardChangeRef.current = false;
                   handleValueChange(newValue);
                   onValueCommit?.(newValue);
+                  announce(newValue);
                 }}
                 aria-label={`Set to ${tick.label || (unit ? `${tick.value} ${unit}` : tick.value)}`}
                 aria-describedby={tick.label ? undefined : `${tickIdPrefix}-tick-${tick.index}`}
                 type="button"
               >
                 <div className="kui-SliderTickMark" />
-                {tick.label && showTickLabels !== false && (
-                  <div className="kui-SliderTickLabel">{tick.label}</div>
-                )}
+                {tick.label && showTickLabels !== false && <div className="kui-SliderTickLabel">{tick.label}</div>}
                 {!tick.label && (
                   <span id={`${tickIdPrefix}-tick-${tick.index}`} className="kui-sr-only">
                     {unit ? `${tick.value} ${unit}` : tick.value}

@@ -50,7 +50,7 @@ export function UploadProgress({ fileName, percent }: { fileName: string; percen
 
 `value` is a number from 0 to `max`, which is 100 unless you set it. With `max={12}`, a `value` of 3 fills a quarter of the bar. A value outside that range is ignored and the bar treats it as unknown.
 
-Without `value`, the bar is indeterminate: it fills from the start to the end over `duration`, then starts again. `duration` is 5 seconds unless you set it, such as `duration="2s"` or `duration="800ms"`. Set it close to how long the task usually takes, so the bar feels like it matches the work. `duration` applies only while `value` is `undefined` or `null`.
+Without `value`, the bar is indeterminate: it fills from the start to the end over `duration`, then starts again. `duration` is 5 seconds unless you set it, such as `duration="2s"` or `duration="800ms"`. Set it close to how long the task usually takes, so the bar feels like it matches the work. `duration` applies only while the bar is indeterminate: `value` is `undefined`, `null`, or outside 0 to `max`.
 
 ## Variant
 
@@ -103,4 +103,7 @@ Progress also accepts every attribute of the HTML `div` element.
 - **Name:** Progress has `role="progressbar"` and no name of its own. Pass `aria-labelledby` pointing at the visible label, or `aria-label`.
 - **Value:** It sets `aria-valuenow`, `aria-valuemin` of 0 and `aria-valuemax`. A screen reader reads the value as a percentage, such as "25%", or as the text from `getValueLabel`.
 - **Indeterminate:** Without a value, it sets no `aria-valuenow` or `aria-valuetext`, so a screen reader reads the name with no amount.
+- **Right to left:** In a right-to-left layout the bar fills from the right.
+- **Motion:** With reduced motion turned on, the indeterminate bar keeps moving, three times more slowly.
+- **Forced colours:** In Windows high contrast mode the track has a border and the filled part uses the system highlight colour.
 - **Focus:** It doesn't take focus or respond to the pointer. To announce progress as it changes, update a nearby `role="status"` element at milestones rather than on every tick.

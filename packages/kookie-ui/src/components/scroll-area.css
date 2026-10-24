@@ -1,3 +1,32 @@
+/*
+ * The scroll-edges hook writes these on the viewport every scroll frame. Registered as
+ * non-inherited so a write restyles the viewport only, not every row inside it. Only the
+ * viewport's own mask reads them.
+ */
+@property --scroll-overflow-start {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --scroll-overflow-end {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --scroll-overflow-x-start {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --scroll-overflow-x-end {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
 .kui-theme {
   --scrollarea-scrollbar-horizontal-margin-top: var(--space-2);
   --scrollarea-scrollbar-horizontal-margin-bottom: var(--space-2);
@@ -34,11 +63,12 @@
     outline: 2px solid var(--focus-8);
     outline-offset: -2px;
   }
+}
 
-  /* Stop Chrome back/forward two-finger swipe when there is a horizontal scrollbar */
-  &:where(:has(.kui-ScrollAreaScrollbar[data-orientation='horizontal'])) {
-    overscroll-behavior-x: contain;
-  }
+/* Stop Chrome back/forward two-finger swipe when there is a horizontal scrollbar. The scrollbar is
+   the viewport's sibling, and the child combinator keeps a nested area's scrollbar out of it. */
+:where(.kui-ScrollAreaRoot:has(> .kui-ScrollAreaScrollbar[data-orientation='horizontal'])) > .kui-ScrollAreaViewport {
+  overscroll-behavior-x: contain;
 }
 
 .kui-ScrollAreaViewport > * {

@@ -35,7 +35,7 @@ export default function TextFieldScrubTest() {
         {/* Header */}
         <Flex direction="column" gap="4">
         <Flex justify="between" align="center">
-          <Heading size="9" weight="medium">TextField Scrubbing</Heading>
+          <Heading as="h1" size="9" weight="medium">TextField Scrubbing</Heading>
           {isScrubbing && (
             <Chip variant="solid" size="2">Scrubbing</Chip>
           )}

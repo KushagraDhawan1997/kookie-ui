@@ -67,7 +67,6 @@ export function FileCard({ name, onRename, onDuplicate, onDelete }: { name: stri
 - **Label:** A heading for the items after it. It can't be chosen.
 - **Group and Separator:** A set of related items, and a line between sets.
 - **Sub, SubTrigger and SubContent:** A nested menu and the item that opens it.
-- **Virtual:** A [Virtual Menu](/docs/virtual-menu) for lists of hundreds of items.
 
 ## Best practices
 
@@ -166,7 +165,7 @@ Trigger takes one child element and accepts `disabled`, which lets the browser m
 | `alignOffset` | `number` | Minus the content padding | Lines the first item up with the pointer |
 | `collisionPadding` | `number` | `10` | The space kept from the edge of the screen |
 | `loop` | `boolean` | `false` | Wraps the arrow keys from the last item to the first |
-| `virtualized` | `boolean` | `false` | Leaves out the scroll area, for a `Virtual` list that scrolls itself |
+| `virtualized` | `boolean` | `false` | Leaves out the scroll area, for a [Virtual Menu](/docs/virtual-menu) that scrolls itself |
 | `container` | `HTMLElement` | `document.body` | The element the portal renders into |
 
 ### Item
@@ -221,5 +220,6 @@ Content, the items, Label, Group, Separator and SubContent also accept the attri
 
 - **Opening:** The menu opens on the `contextmenu` event. Most browsers also fire it for the Menu key and Shift F10 on a focused element, so make the trigger focusable when keyboard users need the menu.
 - **Announcements:** Items have the `menuitem` role, and checkbox and radio items announce whether they're on. A shortcut hint is hidden from screen readers, which read `aria-keyshortcuts` instead.
+- **Groups:** A Group or RadioGroup that holds a Label is named by that Label, so a screen reader announces the section as focus enters it.
 - **Touch:** A long press opens the menu on touch and pen input.
 - **Focus:** Focus moves into the menu when it opens and stays there until it closes.

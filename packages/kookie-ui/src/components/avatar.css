@@ -455,10 +455,14 @@
 .kui-AvatarBadge {
   position: absolute;
   bottom: 0;
-  right: 0;
+  inset-inline-end: 0;
   z-index: 1;
-  /* Indicator partially leaks out of avatar corner */
+  /* Indicator partially leaks out of avatar corner, on the inline end */
   transform: translate(25%, 25%);
+
+  &:where(:dir(rtl)) {
+    transform: translate(-25%, 25%);
+  }
 }
 
 /* Status indicator - colored dot */

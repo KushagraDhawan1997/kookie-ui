@@ -10,6 +10,30 @@ import { tooltipPropDefs } from './tooltip.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
+/** The rest before a tooltip opens, in milliseconds. */
+const TOOLTIP_DELAY = 200;
+
+/** True inside a `TooltipProvider`, so a Tooltip knows it need not bring its own. */
+const TooltipProviderContext = React.createContext(false);
+
+interface TooltipProviderProps extends React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Provider> {}
+
+/**
+ * Groups the tooltips inside it: the first one waits `delayDuration` (200ms), and the next ones
+ * open at once while the pointer moves between them. Put it once near the root of the app.
+ * A Tooltip outside one still works, with the same delay, but each one waits on its own.
+ */
+function TooltipProvider({ delayDuration = TOOLTIP_DELAY, children, ...props }: TooltipProviderProps) {
+  return (
+    <TooltipProviderContext.Provider value={true}>
+      <TooltipPrimitive.Provider delayDuration={delayDuration} {...props}>
+        {children}
+      </TooltipPrimitive.Provider>
+    </TooltipProviderContext.Provider>
+  );
+}
+TooltipProvider.displayName = 'TooltipProvider';
+
 type TooltipElement = React.ElementRef<typeof TooltipPrimitive.Content>;
 type TooltipOwnProps = GetPropDefTypes<typeof tooltipPropDefs>;
 interface TooltipProps
@@ -34,7 +58,8 @@ const Tooltip = React.forwardRef<TooltipElement, TooltipProps>((props, forwarded
     ...tooltipContentProps
   } = extractProps(props, tooltipPropDefs);
   const rootProps = { open, defaultOpen, onOpenChange, delayDuration, disableHoverableContent };
-  return (
+  const hasProvider = React.useContext(TooltipProviderContext);
+  const tooltip = (
     <TooltipPrimitive.Root {...rootProps}>
       <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
       <TooltipPrimitive.Portal container={container} forceMount={forceMount}>
@@ -56,8 +81,10 @@ const Tooltip = React.forwardRef<TooltipElement, TooltipProps>((props, forwarded
       </TooltipPrimitive.Portal>
     </TooltipPrimitive.Root>
   );
+  // Radix needs a provider above every tooltip. Outside a TooltipProvider, bring one.
+  return hasProvider ? tooltip : <TooltipPrimitive.Provider delayDuration={TOOLTIP_DELAY}>{tooltip}</TooltipPrimitive.Provider>;
 });
 Tooltip.displayName = 'Tooltip';
 
-export { Tooltip };
-export type { TooltipProps };
+export { Tooltip, TooltipProvider };
+export type { TooltipProps, TooltipProviderProps };

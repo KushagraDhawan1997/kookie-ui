@@ -63,7 +63,7 @@ export function Author({ name, email, photo }: { name: string; email: string; ph
 
 ### Presence
 
-`status` adds a dot in the bottom-right corner in the colour you pass. It grows with the avatar. `statusLabel` names the dot for screen readers.
+`status` adds a dot in the colour you pass, in the bottom corner on the end side: bottom-right in left-to-right text, bottom-left in right-to-left. It grows with the avatar. `statusLabel` names the dot for screen readers.
 
 ```tsx
 <Avatar fallback="MK" status="green" statusLabel="Online" />
@@ -114,11 +114,11 @@ Render a link or a button with `asChild`. The avatar adds a hover filter to the 
 | `asChild` | `boolean` | `false` | Renders the child element, such as a link or a button, with the avatar inside |
 | `ref` | `Ref<HTMLSpanElement>` | | The outer `span` |
 
-Avatar also accepts every attribute of the HTML `img` element, and those go on the `img`. `ref`, `className` and `style` go on the outer `span`.
+The image attributes `src`, `alt`, `srcSet`, `sizes`, `crossOrigin`, `referrerPolicy`, `loading`, `decoding`, `onLoad` and `onError` go on the `img`. Everything else, such as `id`, `aria-*`, `data-*`, `title` and event handlers, goes on the outer `span`, with `ref`, `className` and `style`.
 
 ## Accessibility
 
 - **Image:** Give `alt` the person's name when the avatar stands alone. Use `alt=""` when the name is already in text beside it.
-- **Fallback:** A screen reader reads the fallback text, such as the initials. An icon fallback has no text, so give the avatar a name in the text beside it.
+- **Fallback:** With `alt` set, the fallback is an image named by `alt`, so a screen reader says the name, not the initials. With an empty or missing `alt`, the fallback is hidden from screen readers.
 - **Status:** With `statusLabel` the dot is an image with that name. Without it the dot is hidden from screen readers.
 - **Focus:** A plain avatar is not focusable. An avatar rendered as a link or a button shows the focus ring for the keyboard only. A disabled child sets the avatar's disabled look.

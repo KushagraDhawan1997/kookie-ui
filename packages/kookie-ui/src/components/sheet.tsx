@@ -93,7 +93,9 @@ const sheetPropDefs = dialogPropDefsForSheet;
 const SheetTitleCountContext = React.createContext<React.MutableRefObject<number> | null>(null);
 
 type SheetContentElement = React.ElementRef<typeof DialogPrimitive.Content>;
-interface SheetContentProps extends ComponentPropsWithout<typeof DialogPrimitive.Content, RemovedProps>, DialogContentOwnProps {
+interface SheetContentProps
+  extends ComponentPropsWithout<typeof DialogPrimitive.Content, RemovedProps>,
+    Omit<DialogContentOwnProps, 'align'> {
   /** Side where the Sheet should appear. `left`/`right` alias to `start`/`end`. */
   side?: SheetSide;
   /** Optional DOM container to portal into. Defaults to `document.body`. */

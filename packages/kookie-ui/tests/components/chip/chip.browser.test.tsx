@@ -49,4 +49,13 @@ describe('Chip in a browser', () => {
     expect(document.activeElement).toBe(screen.getByText('Saved'));
     expect(await screen.findByRole('tooltip')).toHaveTextContent('Saved 2 minutes ago');
   });
+
+  it('carries no will-change hint', () => {
+    render(
+      <Theme>
+        <Chip data-testid="chip">Label</Chip>
+      </Theme>,
+    );
+    expect(getComputedStyle(screen.getByTestId('chip')).willChange).toBe('auto');
+  });
 });

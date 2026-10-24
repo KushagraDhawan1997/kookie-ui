@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { VirtualMenu } from './virtual-menu.js';
 import classNames from 'classnames';
 import { DropdownMenu as DropdownMenuPrimitive, Slot } from 'radix-ui';
 import { useCallbackRef } from 'radix-ui/internal';
@@ -23,13 +22,18 @@ import {
   DrillDownRoot,
   SubContext,
   useCreateDrillDownStore,
-  useDrillDownDirection,
   useDrillDownStore,
   usePanelPosition,
   useStackEntry,
   useSubContext,
 } from './_internal/dropdown-menu-drill-down.js';
-import { MenuCloseProvider, MenuProvider } from './_internal/menu-context.js';
+import {
+  MenuCloseProvider,
+  MenuGroupLabelProvider,
+  MenuProvider,
+  useMenuGroupLabelId,
+  useMenuGroupLabelledBy,
+} from './_internal/menu-context.js';
 import {
   MenuShortcut,
   getMenuAlignOffset,
@@ -234,11 +238,14 @@ type DropdownMenuLabelElement = React.ElementRef<typeof DropdownMenuPrimitive.La
 interface DropdownMenuLabelProps
   extends ComponentPropsWithout<typeof DropdownMenuPrimitive.Label, RemovedProps> {}
 const DropdownMenuLabel = React.forwardRef<DropdownMenuLabelElement, DropdownMenuLabelProps>(
-  ({ className, ...props }, forwardedRef) => {
-    if (!React.useContext(DrillDownLevelContext)) return null;
+  ({ className, id: idProp, ...props }, forwardedRef) => {
+    const isLevelVisible = React.useContext(DrillDownLevelContext);
+    const id = useMenuGroupLabelId(idProp, isLevelVisible);
+    if (!isLevelVisible) return null;
     return (
       <DropdownMenuPrimitive.Label
         {...props}
+        id={id}
         asChild={false}
         ref={forwardedRef}
         className={classNames('kui-BaseMenuLabel', 'kui-DropdownMenuLabel', className)}
@@ -284,14 +291,22 @@ type DropdownMenuGroupElement = React.ElementRef<typeof DropdownMenuPrimitive.Gr
 interface DropdownMenuGroupProps
   extends ComponentPropsWithout<typeof DropdownMenuPrimitive.Group, RemovedProps> {}
 const DropdownMenuGroup = React.forwardRef<DropdownMenuGroupElement, DropdownMenuGroupProps>(
-  ({ className, ...props }, forwardedRef) => (
-    <DropdownMenuPrimitive.Group
-      {...props}
-      asChild={false}
-      ref={forwardedRef}
-      className={classNames('kui-BaseMenuGroup', 'kui-DropdownMenuGroup', className)}
-    />
-  ),
+  ({ className, 'aria-labelledby': ariaLabelledBy, ...props }, forwardedRef) => {
+    const [labelledBy, setLabelId] = useMenuGroupLabelledBy(ariaLabelledBy);
+    // A drill-down level that is not on screen keeps its groups only to hold the open path.
+    const isLevelVisible = React.useContext(DrillDownLevelContext);
+    return (
+      <MenuGroupLabelProvider value={setLabelId}>
+        <DropdownMenuPrimitive.Group
+          {...(isLevelVisible ? { 'aria-labelledby': labelledBy } : { role: 'none' })}
+          {...props}
+          asChild={false}
+          ref={forwardedRef}
+          className={classNames('kui-BaseMenuGroup', 'kui-DropdownMenuGroup', className)}
+        />
+      </MenuGroupLabelProvider>
+    );
+  },
 );
 DropdownMenuGroup.displayName = 'DropdownMenu.Group';
 
@@ -301,14 +316,21 @@ interface DropdownMenuRadioGroupProps
 const DropdownMenuRadioGroup = React.forwardRef<
   DropdownMenuRadioGroupElement,
   DropdownMenuRadioGroupProps
->(({ className, ...props }, forwardedRef) => (
-  <DropdownMenuPrimitive.RadioGroup
-    {...props}
-    asChild={false}
-    ref={forwardedRef}
-    className={classNames('kui-BaseMenuRadioGroup', 'kui-DropdownMenuRadioGroup', className)}
-  />
-));
+>(({ className, 'aria-labelledby': ariaLabelledBy, ...props }, forwardedRef) => {
+  const [labelledBy, setLabelId] = useMenuGroupLabelledBy(ariaLabelledBy);
+  const isLevelVisible = React.useContext(DrillDownLevelContext);
+  return (
+    <MenuGroupLabelProvider value={setLabelId}>
+      <DropdownMenuPrimitive.RadioGroup
+        {...(isLevelVisible ? { 'aria-labelledby': labelledBy } : { role: 'none' })}
+        {...props}
+        asChild={false}
+        ref={forwardedRef}
+        className={classNames('kui-BaseMenuRadioGroup', 'kui-DropdownMenuRadioGroup', className)}
+      />
+    </MenuGroupLabelProvider>
+  );
+});
 DropdownMenuRadioGroup.displayName = 'DropdownMenu.RadioGroup';
 
 type DropdownMenuRadioItemElement = React.ElementRef<typeof DropdownMenuPrimitive.RadioItem>;
@@ -412,28 +434,44 @@ const DropdownMenuSub: React.FC<DropdownMenuSubProps> = ({
   const subContextValue = React.useMemo(() => ({ id, label }), [id, label]);
   const isOpenInDrillDown = usePanelPosition(drillDownStore, id) !== 'closed';
 
-  // Drill-down: `open` and `defaultOpen` drive the stack; the stack drives
-  // `onOpenChange`. A controlled `open` is applied when it changes.
+  const handleOpenChange = useCallbackRef(onOpenChange);
+  const isControlled = open !== undefined;
+
+  // Drill-down, controlled: navigating asks `onOpenChange` and leaves the stack to `open`.
+  React.useLayoutEffect(() => {
+    if (!drillDownStore || !isControlled) return;
+    drillDownStore.setController(id, handleOpenChange);
+    return () => drillDownStore.setController(id, null);
+  }, [drillDownStore, isControlled, id, handleOpenChange]);
+
   React.useLayoutEffect(() => {
     if (!drillDownStore || open === undefined) return;
-    if (open && !drillDownStore.isOpen(id)) drillDownStore.push(id, null);
-    else if (!open && drillDownStore.isOpen(id)) drillDownStore.close(id);
+    if (open && !drillDownStore.isOpen(id)) drillDownStore.open(id, drillDownStore.takePendingModality(id));
+    else if (!open && drillDownStore.isOpen(id)) drillDownStore.close(id, drillDownStore.takePendingModality(id));
   }, [drillDownStore, open, id]);
 
-  const defaultOpenRef = React.useRef(defaultOpen);
+  // A `defaultOpen` push on mount is the starting state, not a change to report.
+  const defaultOpenRef = React.useRef(open === undefined && Boolean(defaultOpen));
   React.useLayoutEffect(() => {
-    if (drillDownStore && defaultOpenRef.current && open === undefined) drillDownStore.push(id, null);
+    if (drillDownStore && defaultOpenRef.current) drillDownStore.open(id);
+    else defaultOpenRef.current = false;
     // Only on mount, like an uncontrolled default.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleOpenChange = useCallbackRef(onOpenChange);
+  // Uncontrolled, the stack drives `onOpenChange`. Controlled, it reports only a close
+  // the `open` prop did not ask for, such as a parent level closing.
   const wasOpenRef = React.useRef(isOpenInDrillDown);
   React.useEffect(() => {
     if (!drillDownStore || wasOpenRef.current === isOpenInDrillDown) return;
     wasOpenRef.current = isOpenInDrillDown;
+    if (isOpenInDrillDown && defaultOpenRef.current) {
+      defaultOpenRef.current = false;
+      return;
+    }
+    if (open !== undefined && open === isOpenInDrillDown) return;
     handleOpenChange(isOpenInDrillDown);
-  }, [drillDownStore, isOpenInDrillDown, handleOpenChange]);
+  }, [drillDownStore, isOpenInDrillDown, handleOpenChange, open]);
 
   // Radix Sub stays mounted in both behaviors so switching behavior does not
   // remount the subtree. It only renders context; in drill-down its trigger
@@ -483,8 +521,8 @@ const DropdownMenuSubTrigger = React.forwardRef<
     };
 
     return (
+      // The row navigates within the same menu, so it announces no popup.
       <DropdownMenuPrimitive.Item
-        aria-haspopup="menu"
         {...subTriggerProps}
         data-drill-down-trigger={subContext.id}
         data-drill-down-name={subTriggerProps.textValue}
@@ -737,7 +775,6 @@ const DrillDownPanel = React.forwardRef<DropdownMenuSubContentElement, DrillDown
   ({ store, sub, ...props }, forwardedRef) => {
     const position = usePanelPosition(store, sub.id);
     const entry = useStackEntry(store, sub.id);
-    const direction = useDrillDownDirection(position === 'top' ? store : null);
 
     if (position === 'closed') return null;
 
@@ -763,7 +800,6 @@ const DrillDownPanel = React.forwardRef<DropdownMenuSubContentElement, DrillDown
         ref={forwardedRef}
         data-drill-down-panel={sub.id}
         data-drill-down-active={isTop ? true : undefined}
-        data-animation-direction={isTop ? (direction ?? undefined) : undefined}
         className={classNames('kui-DropdownMenuDrillDownPanel', className)}
       >
         {isTop && (
@@ -772,7 +808,9 @@ const DrillDownPanel = React.forwardRef<DropdownMenuSubContentElement, DrillDown
             <DropdownMenuPrimitive.Separator className="kui-BaseMenuSeparator kui-DropdownMenuSeparator" />
           </>
         )}
-        <DrillDownLevelContext.Provider value={isTop}>{children}</DrillDownLevelContext.Provider>
+        <MenuGroupLabelProvider value={null}>
+          <DrillDownLevelContext.Provider value={isTop}>{children}</DrillDownLevelContext.Provider>
+        </MenuGroupLabelProvider>
       </div>
     );
   },
@@ -808,7 +846,6 @@ export {
   DropdownMenuSubTrigger as SubTrigger,
   DropdownMenuSubContent as SubContent,
   DropdownMenuSeparator as Separator,
-  VirtualMenu as Virtual,
 };
 
 export type {

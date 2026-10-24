@@ -80,4 +80,52 @@ describe('Slider', () => {
     expect(low).toHaveAttribute('aria-valuenow', '20');
     expect(high).toHaveAttribute('aria-valuenow', '90');
   });
+
+  it('moves a snapping handle to the next tick with the arrow keys', () => {
+    const onValueChange = vi.fn();
+    renderWithProviders(
+      <Slider defaultValue={[25]} snapToTicks ticks={[{ value: 0 }, { value: 25 }, { value: 50 }, { value: 75 }, { value: 100 }]} onValueChange={onValueChange} aria-label="Volume" />,
+    );
+    const thumb = screen.getByRole('slider', { name: 'Volume' });
+    fireEvent.keyDown(thumb, { key: 'ArrowRight' });
+    expect(thumb).toHaveAttribute('aria-valuenow', '50');
+    fireEvent.keyDown(thumb, { key: 'ArrowRight' });
+    expect(thumb).toHaveAttribute('aria-valuenow', '75');
+    fireEvent.keyDown(thumb, { key: 'ArrowLeft' });
+    expect(thumb).toHaveAttribute('aria-valuenow', '50');
+    fireEvent.keyDown(thumb, { key: 'PageUp' });
+    expect(thumb).toHaveAttribute('aria-valuenow', '75');
+    fireEvent.keyDown(thumb, { key: 'Home' });
+    expect(thumb).toHaveAttribute('aria-valuenow', '0');
+    fireEvent.keyDown(thumb, { key: 'ArrowLeft' });
+    expect(thumb).toHaveAttribute('aria-valuenow', '0');
+    expect(onValueChange.mock.calls.map(([value]) => value[0])).toEqual([50, 75, 50, 75, 0]);
+  });
+
+  it('disables the tick buttons of a disabled slider', () => {
+    const onValueChange = vi.fn();
+    renderWithProviders(<Slider disabled defaultValue={[10]} ticks={[{ value: 50, label: 'Half' }]} onValueChange={onValueChange} aria-label="Volume" />);
+    const tick = screen.getByRole('button', { name: 'Set to Half' });
+    expect(tick).toBeDisabled();
+    fireEvent.click(tick);
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(screen.getByRole('slider', { name: 'Volume' })).toHaveAttribute('aria-valuenow', '10');
+  });
+
+  it('announces a tick press but leaves key presses to the handle', () => {
+    const { container } = renderWithProviders(<Slider defaultValue={[10]} min={10} max={20} ticks={[{ value: 15, label: 'Mid' }]} aria-label="Volume" />);
+    const live = container.querySelector('[aria-live="polite"]')!;
+    fireEvent.keyDown(screen.getByRole('slider', { name: 'Volume' }), { key: 'ArrowRight' });
+    expect(live).toHaveTextContent('');
+    fireEvent.click(screen.getByRole('button', { name: 'Set to Mid' }));
+    expect(live).toHaveTextContent('15 out of 20');
+  });
+
+  it('puts no class on the root for showTickLabels or snapToTicks', () => {
+    const { container } = renderWithProviders(<Slider defaultValue={[0]} snapToTicks showTickLabels ticks={[{ value: 50 }]} aria-label="Volume" />);
+    const root = container.querySelector('.kui-SliderRoot')!;
+    expect(root.className).not.toMatch(/tick|snap/);
+    expect(root).not.toHaveAttribute('showTickLabels');
+    expect(root).not.toHaveAttribute('snapToTicks');
+  });
 });

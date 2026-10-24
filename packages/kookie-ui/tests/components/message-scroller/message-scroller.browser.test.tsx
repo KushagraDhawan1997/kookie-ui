@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, act } from '@testing-library/react';
 import { userEvent } from 'vitest/browser';
 import { MessageScroller, Theme } from '../../../src/components/index';
@@ -111,5 +111,27 @@ describe('MessageScroller in a browser', () => {
     const b = button().getBoundingClientRect();
     expect(Math.abs(b.left + b.width / 2 - (root.left + root.width / 2))).toBeLessThan(1);
     expect(b.width).toBeCloseTo(b.height, 0);
+  });
+});
+
+describe('MessageScroller.Button default jump', () => {
+  it('is instant, so it does not animate a long scroll', async () => {
+    render(<Transcript count={60} />);
+    await until(() => viewport().scrollTop > 0);
+    const el = viewport();
+    await act(async () => {
+      el.dispatchEvent(new WheelEvent('wheel', { deltaY: -400, bubbles: true }));
+      el.scrollTop = 0;
+      el.dispatchEvent(new Event('scroll'));
+    });
+    await until(() => button().getAttribute('data-active') === 'true');
+    const scrollTo = vi.spyOn(el, 'scrollTo');
+    await act(async () => {
+      button().click();
+    });
+    await until(() => distanceFromEnd(el) < 2, 4000);
+    const behaviors = scrollTo.mock.calls.map((call) => (call[0] as ScrollToOptions | undefined)?.behavior);
+    expect(behaviors).not.toContain('smooth');
+    expect(distanceFromEnd(el)).toBeLessThan(2);
   });
 });

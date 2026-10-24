@@ -17,13 +17,20 @@
 
 @breakpoints {
   .kui-Separator {
+    /* The min sizes keep a squeezed flex parent from thinning the line toward zero. */
     &:where(.kui-r-orientation-horizontal) {
       width: var(--separator-size);
       height: 1px;
+      min-height: 1px;
     }
+    /* Stretches to the row it sits in. A percentage height would resolve to 0 in an
+     * auto-height row and stop the stretch, so the parent's height is a minimum instead. */
     &:where(.kui-r-orientation-vertical) {
       width: 1px;
-      height: var(--separator-size);
+      min-width: 1px;
+      height: auto;
+      min-height: var(--separator-size);
+      align-self: stretch;
     }
   }
 }

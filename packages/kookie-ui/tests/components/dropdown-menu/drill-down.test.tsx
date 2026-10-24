@@ -86,10 +86,11 @@ describe('DropdownMenu drill-down', () => {
       await user.click(screen.getByRole('menuitem', { name: 'Share' }));
 
       expect(getRoot()).toHaveAttribute('data-drill-down-active');
-      expect(getRoot()).toHaveAttribute('data-animation-direction', 'forward');
+      // No stylesheet animates the levels, so no direction is written to the DOM.
+      expect(getRoot()).not.toHaveAttribute('data-animation-direction');
       const panel = getActivePanel();
       expect(panel).not.toBeNull();
-      expect(panel).toHaveAttribute('data-animation-direction', 'forward');
+      expect(panel).not.toHaveAttribute('data-animation-direction');
       expect(panel).toHaveAttribute('role', 'group');
       expect(panel).toHaveAttribute('aria-label', 'Share');
       // Only the active level's items are in the menu.
@@ -107,7 +108,7 @@ describe('DropdownMenu drill-down', () => {
 
       expect(getActivePanel()).toBeNull();
       expect(getRoot()).not.toHaveAttribute('data-drill-down-active');
-      expect(getRoot()).toHaveAttribute('data-animation-direction', 'backward');
+      expect(getRoot()).not.toHaveAttribute('data-animation-direction');
       expect(screen.getByRole('menuitem', { name: 'Edit' })).toBeInTheDocument();
       expect(screen.queryByText('Email')).toBeNull();
     });
@@ -192,7 +193,8 @@ describe('DropdownMenu drill-down', () => {
       await user.keyboard('{ArrowDown}');
       const trigger = screen.getByRole('menuitem', { name: 'Share' });
       expect(trigger).toHaveFocus();
-      expect(trigger).toHaveAttribute('aria-haspopup', 'menu');
+      // The row replaces the level in the same menu; it opens no popup.
+      expect(trigger).not.toHaveAttribute('aria-haspopup');
 
       await user.keyboard('{Enter}');
 
@@ -343,7 +345,8 @@ describe('DropdownMenu drill-down', () => {
         screen.getByText('external').click();
       });
       await waitFor(() => expect(getActivePanel()).toHaveAttribute('aria-label', 'Share'));
-      expect(onOpenChange).toHaveBeenLastCalledWith(true);
+      // The parent opened it, so nothing is reported back.
+      expect(onOpenChange).not.toHaveBeenCalled();
 
       const user = userEvent.setup();
       await user.click(screen.getByRole('menuitem', { name: 'Back from Share' }));
@@ -479,6 +482,103 @@ describe('DropdownMenu drill-down', () => {
       expect(screen.getByRole('menuitem', { name: 'Edit' })).toBeInTheDocument();
       resize(400);
       expect(getActivePanel()).toBeNull();
+    });
+  });
+
+  describe('controlled Sub', () => {
+    it('does not report an open the parent already set on mount', async () => {
+      const onOpenChange = vi.fn();
+      await openMenu(<NestedMenu subProps={{ open: true, onOpenChange }} />);
+
+      expect(getActivePanel()).toHaveAttribute('aria-label', 'Share');
+      expect(onOpenChange).not.toHaveBeenCalled();
+    });
+
+    it('asks onOpenChange on Back and leaves the panel to the open prop', async () => {
+      const onOpenChange = vi.fn();
+      const user = await openMenu(<NestedMenu subProps={{ open: true, onOpenChange }} />);
+
+      await user.click(screen.getByRole('menuitem', { name: 'Back from Share' }));
+
+      expect(onOpenChange).toHaveBeenCalledTimes(1);
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+      // open is still true, so the panel stays.
+      expect(getActivePanel()).toHaveAttribute('aria-label', 'Share');
+    });
+
+    it('asks onOpenChange from the sub trigger and opens once the prop follows', async () => {
+      const onOpenChange = vi.fn();
+      function Controlled() {
+        const [open, setOpen] = React.useState(false);
+        return (
+          <NestedMenu
+            subProps={{
+              open,
+              onOpenChange: (next) => {
+                onOpenChange(next);
+                setOpen(next);
+              },
+            }}
+          />
+        );
+      }
+      const user = await openMenu(<Controlled />);
+
+      await user.click(screen.getByRole('menuitem', { name: 'Share' }));
+      expect(getActivePanel()).toHaveAttribute('aria-label', 'Share');
+      await user.keyboard('{ArrowLeft}');
+      expect(getActivePanel()).toBeNull();
+      expect(onOpenChange.mock.calls).toEqual([[true], [false]]);
+      // A keyboard close still returns focus to the trigger.
+      expect(screen.getByRole('menuitem', { name: 'Share' })).toHaveFocus();
+    });
+
+    it('does not report a defaultOpen on mount', async () => {
+      const onOpenChange = vi.fn();
+      await openMenu(<NestedMenu subProps={{ defaultOpen: true, onOpenChange }} />);
+      expect(getActivePanel()).toHaveAttribute('aria-label', 'Share');
+      expect(onOpenChange).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('groups', () => {
+    function GroupedMenu() {
+      return (
+        <DropdownMenu.Root defaultOpen>
+          <DropdownMenu.Trigger>
+            <Button>Open</Button>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content submenuBehavior="drill-down">
+            <DropdownMenu.Group data-testid="root-group">
+              <DropdownMenu.Label>Actions</DropdownMenu.Label>
+              <DropdownMenu.Item>Edit</DropdownMenu.Item>
+              <DropdownMenu.Sub label="Share">
+                <DropdownMenu.SubTrigger>Share</DropdownMenu.SubTrigger>
+                <DropdownMenu.SubContent>
+                  <DropdownMenu.Item>Email</DropdownMenu.Item>
+                </DropdownMenu.SubContent>
+              </DropdownMenu.Sub>
+            </DropdownMenu.Group>
+            <DropdownMenu.RadioGroup value="a" data-testid="root-radio-group">
+              <DropdownMenu.RadioItem value="a">A</DropdownMenu.RadioItem>
+            </DropdownMenu.RadioGroup>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
+      );
+    }
+
+    it('leaves no empty group in the accessibility tree once a level is hidden', async () => {
+      const user = await openMenu(<GroupedMenu />);
+      expect(screen.getByTestId('root-group')).toHaveAttribute('role', 'group');
+
+      await user.click(screen.getByRole('menuitem', { name: 'Share' }));
+
+      expect(screen.getByTestId('root-group')).toHaveAttribute('role', 'none');
+      expect(screen.getByTestId('root-radio-group')).toHaveAttribute('role', 'none');
+      expect(screen.getAllByRole('group').map((group) => group.getAttribute('aria-label'))).toEqual(['Share']);
+
+      await user.click(screen.getByRole('menuitem', { name: 'Back from Share' }));
+      expect(screen.getByRole('group', { name: 'Actions' })).toBe(screen.getByTestId('root-group'));
     });
   });
 });

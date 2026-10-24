@@ -32,7 +32,7 @@
 .kui-SwitchThumb {
   background-color: white;
   position: absolute;
-  left: var(--switch-thumb-inset);
+  inset-inline-start: var(--switch-thumb-inset);
   width: var(--switch-thumb-size);
   height: var(--switch-thumb-size);
   border-radius: 9999px;
@@ -41,6 +41,11 @@
   &:where([data-state='checked']) {
     background-color: var(--accent-solid-thumb);
     transform: translateX(var(--switch-thumb-translate-x));
+  }
+
+  /* Right to left, "on" is the left end. */
+  &:where(:dir(rtl)) {
+    --switch-thumb-translate-x: calc((var(--switch-width) - var(--switch-height)) * -1);
   }
 }
 
@@ -152,7 +157,8 @@
   }
 }
 
-/* all disabled Switches: a colour remap, never opacity, and a default cursor */
+/* all disabled Switches: a colour remap, never opacity, and a default cursor.
+ * These come after every variant at the same specificity, so they win by order. */
 
 [data-disabled] {
   .kui-SwitchRoot:where(&) {
@@ -160,18 +166,44 @@
   }
   .kui-SwitchRoot:where(&)::before {
     cursor: default;
-    background-color: var(--neutral-a3) !important;
-    box-shadow: none !important;
-    outline: none !important;
+    background-color: var(--neutral-a3);
+    box-shadow: none;
+    outline: none;
   }
   .kui-SwitchThumb:where(&) {
     cursor: default;
-    box-shadow: none !important;
-    outline: none !important;
+    box-shadow: none;
+    outline: none;
   }
 }
 
 /* Disabled checked state - lighter accent color */
 .kui-SwitchRoot:where([data-disabled][data-state='checked'])::before {
-  background-color: var(--accent-a3) !important;
+  background-color: var(--accent-a3);
+}
+
+/* Windows High Contrast drops box shadows and background colours, so the track and thumb take
+ * system colours and a real border. */
+@media (forced-colors: active) {
+  .kui-SwitchRoot::before {
+    box-sizing: border-box;
+    border: 1px solid CanvasText;
+  }
+  .kui-SwitchThumb {
+    background-color: CanvasText;
+  }
+  .kui-SwitchRoot:where([data-state='checked'])::before {
+    border-color: Highlight;
+    background-color: Highlight;
+  }
+  .kui-SwitchThumb:where([data-state='checked']) {
+    background-color: HighlightText;
+  }
+  .kui-SwitchRoot:where([data-disabled])::before {
+    border-color: GrayText;
+    background-color: Canvas;
+  }
+  .kui-SwitchThumb:where([data-disabled]) {
+    background-color: GrayText;
+  }
 }

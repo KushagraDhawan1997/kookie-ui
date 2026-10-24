@@ -81,11 +81,7 @@
   }
 }
 
-/* all focused states underline */
-
-.kui-Link:where(:focus-visible) {
-  text-decoration-line: none;
-}
+/* Focus keeps the link's own underline setting; the focus outline marks focus. */
 
 /* Enhancement – hide underline for when Link's only child is a Code where underline is hard to see */
 .kui-Link:where(:has(.kui-Code:not(.kui-variant-ghost):only-child)) {

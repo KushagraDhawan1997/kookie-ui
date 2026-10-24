@@ -21,7 +21,7 @@ export function BillingCard() {
   return (
     <Card size="2">
       <Flex direction="column" gap="2" align="start">
-        <Heading as="h2" size="4">
+        <Heading size="4">
           Billing
         </Heading>
         <Text as="p" size="2" emphasis="medium">
@@ -36,7 +36,7 @@ export function BillingCard() {
 
 ## Best practices
 
-**Set `as` on every heading but the page title.** Heading renders an `h1` by default. A page has one `h1`, so a section heading needs `as="h2"` and a heading inside that section needs `as="h3"`.
+**Set `as="h1"` on the page title.** Heading renders an `h2` by default, which fits a section. A page has one `h1`, and a heading inside a section needs `as="h3"`.
 
 **Choose the level for the outline and the size for the look.** `as` and `size` are separate. A card title can be an `h3` at size 4 in one place and an `h2` at size 6 in another. Don't skip levels to get a smaller heading.
 
@@ -113,7 +113,7 @@ Give the page one `h1` and its sections `h2`. Sizes can step down further than t
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `as` | `'h1' \| 'h2' \| 'h3' \| 'h4' \| 'h5' \| 'h6'` | `'h1'` | The heading level |
+| `as` | `'h1' \| 'h2' \| 'h3' \| 'h4' \| 'h5' \| 'h6'` | `'h2'` | The heading level |
 | `size` | `'1'` to `'9'`, responsive | `'6'` | The type step |
 | `weight` | `'regular' \| 'medium' \| 'semibold'`, responsive | Theme heading weight | The font weight |
 | `font` | `'sans' \| 'mono' \| 'serif'` | Theme heading font | The font family |
@@ -130,6 +130,6 @@ Heading also accepts every attribute of the HTML heading element set by `as`.
 ## Accessibility
 
 - **Level:** A screen reader announces the level, such as "heading level 2". People use the levels to jump between sections, so keep them in order without gaps.
-- **One page title:** Use one `h1` for each page. Set `as` on every other Heading, because the default is `h1`.
+- **One page title:** Use one `h1` for each page, set with `as="h1"`. Other headings default to `h2`.
 - **Name:** A Heading's text names a section. To name a region, point `aria-labelledby` on the `section` at the heading's `id`.
 - **Truncation:** A screen reader reads a truncated heading in full. A pointer user can't see the rest, so add a `title` when the hidden part matters.

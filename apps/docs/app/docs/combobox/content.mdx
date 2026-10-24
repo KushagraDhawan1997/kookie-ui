@@ -193,7 +193,7 @@ Set `error` on `Trigger` when a form check fails. The trigger shows a red border
 | `readOnly` | `boolean` | `false` | Sets `aria-readonly` and doesn't open |
 | `disabled` | `boolean` | Root's `disabled` | Disables the trigger |
 
-Trigger also accepts every attribute of the HTML `button` element. A single child element replaces the default layout of the value and the chevron.
+Trigger also accepts every attribute of the HTML `button` element. A single child element replaces the default layout of the value and the chevron. While `loading`, the spinner still shows after it.
 
 ### Value
 
@@ -241,7 +241,7 @@ Input also accepts the attributes of the HTML `input` element.
 
 | Key | Action |
 | --- | --- |
-| Enter, Space or Arrow Down | Opens the panel from the trigger |
+| Enter, Space, Arrow Down or Arrow Up | Opens the panel from the trigger |
 | A letter key | Types into the search box and filters the list |
 | Arrow Down or Arrow Up | Moves the highlight through the items |
 | Home or End | Moves the highlight to the first or last item |

@@ -7,11 +7,11 @@ import { extractProps } from '../helpers/extract-props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
-type HeadingElement = React.ElementRef<'h1'>;
+type HeadingElement = React.ElementRef<'h2'>;
 type HeadingOwnProps = GetPropDefTypes<typeof headingPropDefs>;
 interface CommonHeadingProps extends HeadingOwnProps {}
-type HeadingH1Props = { as?: 'h1' } & ComponentPropsWithout<'h1', RemovedProps>;
-type HeadingH2Props = { as: 'h2' } & ComponentPropsWithout<'h2', RemovedProps>;
+type HeadingH1Props = { as: 'h1' } & ComponentPropsWithout<'h1', RemovedProps>;
+type HeadingH2Props = { as?: 'h2' } & ComponentPropsWithout<'h2', RemovedProps>;
 type HeadingH3Props = { as: 'h3' } & ComponentPropsWithout<'h3', RemovedProps>;
 type HeadingH4Props = { as: 'h4' } & ComponentPropsWithout<'h4', RemovedProps>;
 type HeadingH5Props = { as: 'h5' } & ComponentPropsWithout<'h5', RemovedProps>;
@@ -27,7 +27,7 @@ const Heading = React.memo(
       children,
       className,
       asChild,
-      as: Tag = 'h1',
+      as: Tag = 'h2',
       color,
       ...headingProps
     } = extractProps(props, headingPropDefs);

@@ -70,7 +70,7 @@ export default function ShellRailPanelTest() {
       <Shell.Content>
         <Box p="7">
           <Box mb="5">
-            <Heading size="6">Shell Rail + Panel Test</Heading>
+            <Heading as="h1" size="6">Shell Rail + Panel Test</Heading>
           </Box>
           
           <Flex gap="4" mb="7" wrap="wrap">

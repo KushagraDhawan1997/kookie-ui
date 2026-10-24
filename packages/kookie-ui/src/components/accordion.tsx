@@ -43,35 +43,10 @@ const AccordionRoot = React.forwardRef<AccordionRootElement, AccordionRootProps>
       typeof AccordionPrimitive.Root
     >;
 
-
     // Ensure single accordions can collapse by default unless explicitly set
     if (radixProps.type === 'single' && radixProps.collapsible === undefined) {
       radixProps.collapsible = true;
     }
-
-    // Handle Home/End key navigation for multi-item accordions
-    const handleKeyDown = React.useCallback(
-      (event: React.KeyboardEvent) => {
-        if (radixProps.type === 'multiple') {
-          const items = event.currentTarget.querySelectorAll('[data-radix-accordion-item]');
-
-          if (event.key === 'Home') {
-            event.preventDefault();
-            const firstTrigger = items[0]?.querySelector(
-              '[data-radix-accordion-trigger]',
-            ) as HTMLElement;
-            firstTrigger?.focus();
-          } else if (event.key === 'End') {
-            event.preventDefault();
-            const lastTrigger = items[items.length - 1]?.querySelector(
-              '[data-radix-accordion-trigger]',
-            ) as HTMLElement;
-            lastTrigger?.focus();
-          }
-        }
-      },
-      [radixProps.type],
-    );
 
     return (
       <AccordionPrimitive.Root
@@ -80,7 +55,6 @@ const AccordionRoot = React.forwardRef<AccordionRootElement, AccordionRootProps>
         className={classNames('kui-AccordionRoot', className)}
         data-accent-color={color}
         data-radius={radius}
-        onKeyDown={handleKeyDown}
       />
     );
   },

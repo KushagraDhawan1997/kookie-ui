@@ -6,8 +6,9 @@
 .kui-Spinner {
   display: block;
   position: relative;
-  width: var(--space-5);
-  height: var(--space-5);
+  /* A host (a loading Button) can set --spinner-size to fit its icon box. */
+  width: var(--spinner-size, var(--space-5));
+  height: var(--spinner-size, var(--space-5));
   /* The rotation runs on the inner wheel, clipped here. Unclipped, a running transform animation
      makes Chrome give its own layer to everything painted after it that it might overlap. The
      leaves stay inside this box at every step; the margin keeps their anti-aliased edges on the
@@ -87,6 +88,13 @@
 @media (prefers-reduced-motion: reduce) {
   .kui-SpinnerWheel {
     animation-duration: calc(var(--spinner-animation-duration) * 3);
+  }
+}
+
+/* Forced colors repaint backgrounds as Canvas, which would erase the leaves. */
+@media (forced-colors: active) {
+  .kui-SpinnerLeaf::before {
+    background-color: CanvasText;
   }
 }
 

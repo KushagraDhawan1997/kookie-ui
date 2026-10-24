@@ -58,28 +58,32 @@ const TextArea = React.forwardRef<TextAreaElement, TextAreaProps>((ownProps, for
     ...nativeTextAreaProps
   } = textAreaProps;
 
+  // The message is a sibling of the painted root, so it sits below the box rather than inside it.
   return (
-    <div
-      data-accent-color={color}
-      data-radius={radius}
-      className={classNames('kui-TextAreaRoot', className, {
-        'kui-error': isInvalid,
-      })}
-      style={style}
-    >
-      <textarea
-        className="kui-reset kui-TextAreaInput"
-        ref={forwardedRef}
-        {...nativeTextAreaProps}
-        required={required || undefined}
-        {...ariaProps}
-      />
+    <>
+      <div
+        data-accent-color={color}
+        data-radius={radius}
+        className={classNames('kui-TextAreaRoot', className, {
+          // Not used by the library's CSS (invalid styling keys on aria-invalid); kept as a hook for app styles.
+          'kui-error': isInvalid,
+        })}
+        style={style}
+      >
+        <textarea
+          className="kui-reset kui-TextAreaInput"
+          ref={forwardedRef}
+          {...nativeTextAreaProps}
+          required={required || undefined}
+          {...ariaProps}
+        />
+      </div>
       {textAreaProps.errorMessage && (
         <div id={errorId} className="kui-TextAreaErrorMessage" role="alert">
           {textAreaProps.errorMessage}
         </div>
       )}
-    </div>
+    </>
   );
 });
 

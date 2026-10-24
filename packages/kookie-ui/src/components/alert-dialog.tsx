@@ -9,6 +9,7 @@ import { Theme } from './theme.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../helpers/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
+import { useBodyPointerEventsCleanup } from '../hooks/use-body-pointer-events-cleanup.js';
 
 import type { AlertDialogContentOwnProps } from './alert-dialog.props.js';
 import type { ComponentPropsWithout, RemovedProps, ComponentPropsAs } from '../helpers/component-props.js';
@@ -41,6 +42,9 @@ const AlertDialogContent = React.forwardRef<AlertDialogContentElement, AlertDial
   const { className: alignClassName } = extractProps({ align }, alignPropDefs);
 
   const { className, forceMount, container, onCloseAutoFocus, ...contentProps } = extractProps(props, contentPropDefs);
+
+  // Same stuck pointer-events fallback as Dialog and Sheet.
+  useBodyPointerEventsCleanup();
 
   return (
     <AlertDialogPrimitive.Portal container={container} forceMount={forceMount}>

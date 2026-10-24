@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { renderWithProviders } from '../../test-utils';
 import { Progress } from '../../../src/components/index';
 
@@ -22,5 +22,13 @@ describe('Progress', () => {
     expect(root(container).style.getPropertyValue('--progress-duration')).toBe('');
     expect(root(container).style.getPropertyValue('--progress-value')).toBe('40');
     expect(root(container).style.getPropertyValue('--progress-max')).toBe('80');
+  });
+
+  it('treats a value outside 0 to max as indeterminate, as Radix does', () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    const { container } = renderWithProviders(<Progress value={150} duration="2s" />);
+    expect(root(container)).toHaveAttribute('data-state', 'indeterminate');
+    expect(root(container).style.getPropertyValue('--progress-duration')).toBe('2s');
+    expect(root(container).style.getPropertyValue('--progress-value')).toBe('');
   });
 });

@@ -16,7 +16,33 @@ interface AvatarProps extends AvatarImplProps {}
 const Avatar = React.forwardRef<AvatarElement, AvatarProps>((ownProps, forwardedRef) => {
   // An unset size follows the Theme, like a control. Sizes above 4 are only explicit.
   const props = useThemeSizeProps(ownProps, avatarPropDefs.size);
-  const { asChild, children, className, style, color, radius, status, statusLabel, badge, ...imageProps } = extractProps(props, avatarPropDefs);
+  const {
+    asChild,
+    children,
+    className,
+    style,
+    color,
+    radius,
+    status,
+    statusLabel,
+    badge,
+    // Only these reach the <img>, which Radix renders once the picture has loaded.
+    fallback,
+    onLoadingStatusChange,
+    src,
+    alt,
+    srcSet,
+    sizes,
+    crossOrigin,
+    referrerPolicy,
+    loading,
+    decoding,
+    onLoad,
+    onError,
+    // Everything else (id, aria-*, data-*, handlers) goes on the root, so it is always rendered.
+    ...rootProps
+  } = extractProps(props, avatarPropDefs);
+  const imageProps = { fallback, onLoadingStatusChange, src, alt, srcSet, sizes, crossOrigin, referrerPolicy, loading, decoding, onLoad, onError };
 
   if (process.env.NODE_ENV !== 'production') {
     if (status !== undefined && badge !== undefined) {
@@ -44,6 +70,7 @@ const Avatar = React.forwardRef<AvatarElement, AvatarProps>((ownProps, forwarded
 
   return (
     <AvatarPrimitive.Root
+      {...(rootProps as React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>)}
       ref={forwardedRef}
       data-accent-color={color}
       data-radius={radius}
@@ -74,7 +101,12 @@ interface AvatarImplProps extends ComponentPropsWithout<typeof AvatarPrimitive.I
   fallback: NonNullable<AvatarOwnProps['fallback']>;
 }
 
-const AvatarImpl = React.memo(({ fallback, onLoadingStatusChange, ...imageProps }: AvatarImplProps) => {
+type AvatarImageProps = Pick<
+  AvatarImplProps,
+  'fallback' | 'onLoadingStatusChange' | 'src' | 'alt' | 'srcSet' | 'sizes' | 'crossOrigin' | 'referrerPolicy' | 'loading' | 'decoding' | 'onLoad' | 'onError'
+>;
+
+const AvatarImpl = React.memo(({ fallback, onLoadingStatusChange, ...imageProps }: AvatarImageProps) => {
   const [status, setStatus] = React.useState<'idle' | 'loading' | 'loaded' | 'error'>('idle');
 
   const handleLoadingStatusChange = React.useCallback(
@@ -95,7 +127,8 @@ const AvatarImpl = React.memo(({ fallback, onLoadingStatusChange, ...imageProps 
             'kui-one-letter': typeof fallback === 'string' && fallback.length === 1,
             'kui-two-letters': typeof fallback === 'string' && fallback.length === 2,
           })}
-          delayMs={0}
+          // Named from alt, like the picture it stands in for. Unnamed, it is decorative.
+          {...(imageProps.alt ? { role: 'img', 'aria-label': imageProps.alt } : { 'aria-hidden': true })}
         >
           {fallback}
         </AvatarPrimitive.Fallback>
