@@ -44,7 +44,7 @@ export default function ScrubTestPage() {
           <Chip size="2" variant="soft" color="blue" style={{ alignSelf: 'flex-start' }}>
             New Feature
           </Chip>
-          <Heading size="7" weight="semibold">
+          <Heading as="h1" size="7" weight="semibold">
             TextField Scrubbing
           </Heading>
           <Text size="3" emphasis="medium">

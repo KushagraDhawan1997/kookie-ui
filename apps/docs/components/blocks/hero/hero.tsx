@@ -37,7 +37,7 @@ HeroMeta.displayName = 'Hero.Meta';
 
 const HeroTitle = React.forwardRef<HTMLHeadingElement, HeadingProps>(
   ({ size = '9', weight = 'medium', align = 'center', ...props }, ref) => (
-    <Heading ref={ref} size={size} weight={weight} align={align} {...props} />
+    <Heading as="h1" ref={ref} size={size} weight={weight} align={align} {...props} />
   ),
 );
 HeroTitle.displayName = 'Hero.Title';

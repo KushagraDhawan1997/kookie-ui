@@ -70,7 +70,6 @@ export function ProjectActions({ onRename, onDuplicate, onDelete }: { onRename: 
 - **Label:** A heading for the items after it. It can't be chosen.
 - **Group and Separator:** A set of related items, and a line between sets.
 - **Sub, SubTrigger and SubContent:** A nested menu and the item that opens it.
-- **Virtual:** A [Virtual Menu](/docs/virtual-menu) for lists of hundreds of items.
 
 ## Best practices
 
@@ -189,7 +188,7 @@ Trigger takes one child element and accepts `disabled`. The child receives the t
 | `sideOffset` | `number` | `4` | The gap to the trigger in pixels |
 | `collisionPadding` | `number` | `10` | The space kept from the edge of the screen |
 | `loop` | `boolean` | `false` | Wraps the arrow keys from the last item to the first |
-| `virtualized` | `boolean` | `false` | Leaves out the scroll area, for a `Virtual` list that scrolls itself |
+| `virtualized` | `boolean` | `false` | Leaves out the scroll area, for a [Virtual Menu](/docs/virtual-menu) that scrolls itself |
 | `container` | `HTMLElement` | `document.body` | The element the portal renders into |
 
 ### Item

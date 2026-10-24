@@ -1,3 +1,22 @@
+## [0.25.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.24.0...v0.25.0) (2026-10-24)
+
+The fixes from a full audit of every component, each with a test, and four breaking changes that match v2. See MIGRATION.md.
+
+### Breaking changes
+
+* **heading:** defaults to `h2`, like v2. Dialog, AlertDialog and Sheet titles are `h2`.
+* **dropdown-menu, context-menu:** `DropdownMenu.Virtual` and `ContextMenu.Virtual` are gone; import `VirtualMenu`. Each menu bundle is about 40KB smaller.
+* **theme:** no longer bundles Radix Tooltip; a new `TooltipProvider` shares the open delay. Theme alone is 18KB instead of 74KB minified.
+* **package:** React 19 only. **sheet:** `align` is gone.
+* **separator:** announced to screen readers unless `decorative`.
+
+### Fixes
+
+* Slider snapping and disabled ticks, TextField and TextArea error layout, the Rail sub-menu crash, Popover.Anchor, vertical Separator, Avatar props, Accordion keys, VirtualMenu keyboard and styling, and about 130 more.
+* High-contrast (forced colors) outlines on every control, and right-to-left fixes across the library.
+* **performance:** the scroll fade no longer restyles every row on every frame (about 850ms down to 115ms per 60 frames on 1,500 rows).
+* **package:** every built client file starts with `"use client"`, so components import from React Server Components.
+
 ## [0.24.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.23.0...v0.24.0) (2026-10-24)
 
 About 50 component fixes, the toolbar parts v2's docs use, and a docs page for every component. See MIGRATION.md.

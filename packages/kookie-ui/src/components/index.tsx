@@ -68,7 +68,7 @@ export {
   type ToolbarSlotProps,
   type ToolbarFillProps,
 } from './toolbar.js';
-export { Tooltip, type TooltipProps } from './tooltip.js';
+export { Tooltip, TooltipProvider, type TooltipProps, type TooltipProviderProps } from './tooltip.js';
 export { VirtualMenu, type VirtualMenuProps, type VirtualMenuItemProps, type VirtualMenuRenderItemProps } from './virtual-menu.js';
 export { VisuallyHidden, type VisuallyHiddenProps } from './visually-hidden.js';
 export * as Sidebar from './sidebar.js';

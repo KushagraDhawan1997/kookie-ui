@@ -57,7 +57,17 @@ Button also takes a `tooltip` prop that does the same in one line: `<Button icon
 
 ## Delay
 
-A tooltip opens after the pointer rests for 200ms. `Theme` sets this delay for every tooltip in the app. Once one tooltip is open, moving to the next control shows its tooltip at once, so people can scan a toolbar. Set `delayDuration` on one tooltip to override the delay for it.
+A tooltip opens after the pointer rests for 200ms. Set `delayDuration` on one tooltip to change it.
+
+Wrap the app in `TooltipProvider` once, inside `Theme`. Then, once one tooltip is open, moving to the next control shows its tooltip at once, so people can scan a toolbar. Without it, each tooltip waits on its own.
+
+```tsx
+import { Theme, TooltipProvider } from '@kushagradhawan/kookie-ui';
+
+<Theme>
+  <TooltipProvider>{children}</TooltipProvider>
+</Theme>
+```
 
 ## Examples
 
@@ -91,6 +101,8 @@ In a narrow sidebar of icon buttons, set `side="right"` so the tooltip opens int
 
 ## Props
 
+### Tooltip
+
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `content` | `ReactNode` | | Required. The text shown in the tooltip |
@@ -99,7 +111,7 @@ In a narrow sidebar of icon buttons, set `side="right"` so the tooltip opens int
 | `align` | `'start' \| 'center' \| 'end'` | `'center'` | How it lines up with the control |
 | `sideOffset` | `number` | `4` | The gap to the control, in pixels |
 | `collisionPadding` | `number` | `10` | The space kept from the window's edges |
-| `delayDuration` | `number` | `200` | Milliseconds before it opens. Theme sets the default |
+| `delayDuration` | `number` | `200` | Milliseconds before it opens |
 | `disableHoverableContent` | `boolean` | `false` | Closes the tooltip when the pointer moves onto it |
 | `open` | `boolean` | | The open state. Controlled |
 | `defaultOpen` | `boolean` | `false` | The open state on first render |
@@ -111,6 +123,14 @@ In a narrow sidebar of icon buttons, set `side="right"` so the tooltip opens int
 | `forceMount` | `boolean` | | Keeps the tooltip in the DOM while closed |
 
 Tooltip also accepts the attributes of the HTML `div` element that holds the text, and its `ref` points to that element.
+
+### TooltipProvider
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `delayDuration` | `number` | `200` | Milliseconds before the first tooltip opens |
+| `skipDelayDuration` | `number` | `300` | How long after one closes the next still opens at once |
+| `disableHoverableContent` | `boolean` | `false` | Closes tooltips when the pointer moves onto them |
 
 ## Accessibility
 

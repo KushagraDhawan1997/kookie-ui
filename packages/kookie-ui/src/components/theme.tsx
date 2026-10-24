@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import classNames from 'classnames';
-import { Direction, Slot, Tooltip as TooltipPrimitive } from 'radix-ui';
+import { Direction, Slot } from 'radix-ui';
 
 import { getMatchingGrayColor } from '../helpers/get-matching-gray-color.js';
 import { ThemeSizeContext } from '../helpers/theme-size.js';
@@ -80,11 +80,9 @@ const Theme = React.forwardRef<ThemeImplElement, ThemeProps>((props, forwardedRe
   const isRoot = context === undefined;
   if (isRoot) {
     return (
-      <TooltipPrimitive.Provider delayDuration={200}>
-        <Direction.Provider dir={dir}>
-          <ThemeRoot {...props} ref={forwardedRef} />
-        </Direction.Provider>
-      </TooltipPrimitive.Provider>
+      <Direction.Provider dir={dir}>
+        <ThemeRoot {...props} ref={forwardedRef} />
+      </Direction.Provider>
     );
   }
   return <ThemeImpl {...props} ref={forwardedRef} />;

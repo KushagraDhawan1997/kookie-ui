@@ -5,7 +5,6 @@
 'use client';
 
 import * as React from 'react';
-import { VirtualMenu } from './virtual-menu.js';
 import classNames from 'classnames';
 import { ContextMenu as ContextMenuPrimitive, Slot } from 'radix-ui';
 import { useCallbackRef } from 'radix-ui/internal';
@@ -486,7 +485,6 @@ export {
   ContextMenuSubTrigger as SubTrigger,
   ContextMenuSubContent as SubContent,
   ContextMenuSeparator as Separator,
-  VirtualMenu as Virtual,
 };
 
 export type {

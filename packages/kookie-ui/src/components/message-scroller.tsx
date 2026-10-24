@@ -24,8 +24,7 @@
  * The viewport is its own scroller. Kookie's `ScrollArea` is Radix's, and Radix cannot hand its
  * viewport element to another library, so the transcript scrolls natively with a thin scrollbar.
  *
- * Requires React 19, which the primitive needs: it reads `ref` as a prop. On React 18 refs and
- * the scroll fade are lost, and a development build warns once.
+ * Requires React 19, which the primitive needs: it reads `ref` as a prop.
  */
 
 import * as React from 'react';
@@ -61,21 +60,8 @@ interface RootProps extends React.ComponentPropsWithoutRef<'div'> {
   scrollMargin?: number;
 }
 
-let warnedReactVersion = false;
-
-/** The primitive reads `ref` as a prop, which React 18 strips. Development only, once per page. */
-function useReact19Check() {
-  React.useEffect(() => {
-    if (process.env.NODE_ENV === 'production' || warnedReactVersion) return;
-    if (Number.parseInt(React.version, 10) >= 19) return;
-    warnedReactVersion = true;
-    console.warn(`[kookie-ui] MessageScroller needs React 19; this page runs React ${React.version}. Refs and the scroll fade will not work.`);
-  }, []);
-}
-
 /** Holds the scroll state. Everything else goes inside it. */
 const Root = React.forwardRef<HTMLDivElement, RootProps>(({ autoScroll = true, defaultScrollPosition = 'end', scrollEdgeThreshold, scrollMargin, className, children, ...props }, forwardedRef) => {
-  useReact19Check();
   return (
     <Primitive.Provider
       autoScroll={autoScroll}

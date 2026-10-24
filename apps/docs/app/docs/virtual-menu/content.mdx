@@ -50,7 +50,7 @@ const Row = React.memo(({ item, ...props }) => (
 - **VirtualMenu:** The scrolling list. It measures the visible area and draws the rows inside it.
 - **VirtualMenu.Item:** One row, for a custom layout through `renderItem`.
 
-Inside a menu, `DropdownMenu.Virtual` and `ContextMenu.Virtual` are the same component.
+Inside a menu, import `VirtualMenu` and place it in the menu's `Content`. Menus have no `Virtual` part.
 
 ## Best practices
 

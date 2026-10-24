@@ -96,8 +96,6 @@ type SheetContentElement = React.ElementRef<typeof DialogPrimitive.Content>;
 interface SheetContentProps
   extends ComponentPropsWithout<typeof DialogPrimitive.Content, RemovedProps>,
     Omit<DialogContentOwnProps, 'align'> {
-  /** @deprecated Has no effect on a Sheet, which is placed by `side`. Kept so existing code still compiles. */
-  align?: DialogContentOwnProps['align'];
   /** Side where the Sheet should appear. `left`/`right` alias to `start`/`end`. */
   side?: SheetSide;
   /** Optional DOM container to portal into. Defaults to `document.body`. */
@@ -110,8 +108,7 @@ interface SheetContentProps
  * or `aria-label`.
  */
 const Content = React.forwardRef<SheetContentElement, SheetContentProps>((allProps, forwardedRef) => {
-  // `align` is a Dialog prop with no meaning here; drop it so it never reaches the DOM.
-  const { side = 'start', forceMount, container, className, align: _align, ...ownProps } = allProps;
+  const { side = 'start', forceMount, container, className, ...ownProps } = allProps;
   const restProps = useThemeSizeProps(ownProps, sheetPropDefs.size);
   const normalizedSideMap: Record<SheetSide, 'start' | 'end' | 'top' | 'bottom'> = {
     left: 'start',

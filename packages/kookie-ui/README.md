@@ -203,15 +203,15 @@ import '@kushagradhawan/kookie-ui/layout.css'; // Layout utilities
 
 ## Requirements
 
-- React 18 or 19 (`MessageScroller` needs React 19)
+- React 19
 - Node.js 16+ (for development)
 - TypeScript support built-in
 
 ```json
 {
   "peerDependencies": {
-    "react": "^18.0 || ^19.0",
-    "react-dom": "^18.0 || ^19.0"
+    "react": "^19.0",
+    "react-dom": "^19.0"
   }
 }
 ```

@@ -413,3 +413,25 @@ Most of 0.24.0 fixes bugs and needs nothing from an app. These changes can need 
 - `Shell.PaneHeader float` and `Shell.Scroll` work in `Shell.Content`, for a page with a pinned toolbar.
 - `Avatar statusLabel`, `SegmentedControl.Item disabled`, and `width` and `height` on `ScrollArea`.
 
+
+## 0.25.0: v2's defaults
+
+### Breaking changes for swan-frontend
+
+| Component | What changed | What to do |
+| --- | --- | --- |
+| `Heading` | It renders an `h2` by default (was `h1`), as in v2. `Dialog.Title`, `AlertDialog.Title` and `Sheet.Title` are now `h2` too | Add `as="h1"` to each page title. Leave section headings as they are |
+| `DropdownMenu`, `ContextMenu` | `DropdownMenu.Virtual` and `ContextMenu.Virtual` are gone. Importing a menu no longer ships the virtualizer | Import `VirtualMenu` and put it inside the menu's `Content`, which keeps `virtualized` |
+| `Theme` | It no longer holds a tooltip provider. A `Tooltip`, and a Button or Chip `tooltip`, brings its own, still with the 200ms delay | Wrap the app once in `TooltipProvider`, inside `Theme`, so moving along a toolbar opens the next tooltip at once |
+| React | The package needs React 19. The peer range is `^19.0` | Upgrade React and React DOM to 19. MessageScroller no longer warns on React 18 |
+| `Sheet` | `Sheet.Content` takes no `align`. It had no effect | Remove `align` from each `Sheet.Content` |
+| `TextField`, `TextArea` | The `errorMessage` renders after the field, outside its root, so the field keeps its height | Move styles that targeted the message inside the root |
+| `Separator` | Screen readers announce it by default | Set `decorative` on a line that only draws a border |
+| `Kbd` | A Kbd with no `size` follows the text around it, a little smaller, in place of one fixed size | Set `size` to keep a fixed size |
+| `VirtualMenu` | Outside a menu, such as in a Popover, it draws menu rows and a highlight at its own `size` | Remove styles you added to make it look like a menu |
+| `SegmentedControl` | Arrow keys select the segment they move to, as in a radio group. Tab only moves focus | Nothing, unless your code expected arrows to move focus without selecting |
+| `Avatar` | `id`, `aria-*`, `title`, `data-*` and event handlers go on the root `span`, as `ref`, `className` and `style` already do | Update code or tests that looked for them on the `img` |
+| `Button` | A button that ever loads keeps its content mounted only when it always gets a boolean | Pass `loading={saving}`, never `loading={saving \|\| undefined}` |
+| `Link` | `underline="always"` keeps the underline under keyboard focus, with the focus outline | Remove a focus style that put the underline back |
+| `Card` | A Card reads as chosen only when it is the `label` of a checked checkbox or radio. A plain Card that holds one stays plain | Make the chosen card `<Card asChild><label>...</label></Card>` |
+| `Button` | It logs an error in place of throwing, for `emphasis` with `variant` and for an icon-only button with no name | Fix the errors the console now shows |

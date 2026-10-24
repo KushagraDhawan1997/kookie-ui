@@ -57,7 +57,7 @@ export default function ShellInsetTest() {
       <Shell.Content inset={insetConfig.content}>
         <Box p="7" style={{ height: '100%' }}>
           <Box mb="5">
-            <Heading size="6">Shell Inset Test</Heading>
+            <Heading as="h1" size="6">Shell Inset Test</Heading>
           </Box>
           
           <Box mb="7">

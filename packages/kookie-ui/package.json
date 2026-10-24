@@ -1,6 +1,6 @@
 {
   "name": "@kushagradhawan/kookie-ui",
-  "version": "0.24.0",
+  "version": "0.25.0",
   "description": "A modern React component library with beautiful design tokens, flexible theming, and comprehensive documentation",
   "keywords": [
     "react",
@@ -169,8 +169,8 @@
   "peerDependencies": {
     "@types/react": "*",
     "@types/react-dom": "*",
-    "react": "^18.0 || ^19.0",
-    "react-dom": "^18.0 || ^19.0"
+    "react": "^19.0",
+    "react-dom": "^19.0"
   },
   "peerDependenciesMeta": {
     "@types/react": {

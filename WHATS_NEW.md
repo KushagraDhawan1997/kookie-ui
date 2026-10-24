@@ -1,5 +1,12 @@
 # What's new in Womp's Design System
 
+## 0.25.0 (October 24)
+
+1. **A full audit, fixed.** Every component was checked for bugs, accessibility and speed, and about 140 problems are fixed.
+2. **High contrast and right-to-left.** Every control keeps its outline in high-contrast mode, and layouts mirror correctly.
+3. **Smaller bundles (breaking).** Menus no longer carry the virtual list, and Theme no longer carries Tooltip.
+4. **Headings default to h2 (breaking).** Add `as="h1"` to page titles.
+
 ## 0.24.0 (October 24)
 
 1. **A docs page for every component.** Each one has a playground, examples and an accessibility section.
