@@ -181,23 +181,7 @@ export function Editor() {
           <Shell.PaneFooter float style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
             <Toolbar aria-label="Create" backdrop size="3" style={{ justifyContent: 'center' }}>
               <ToolbarGroup>
-                {/* A few commands, so a menu: it floats over the canvas and closes on a pick. */}
-                <DropdownMenu.Root modal={false}>
-                  <DropdownMenu.Trigger>
-                    {/* "+" is a settled symbol, so it goes icon-only; the name stays for screen readers. */}
-                    <ToolbarButton iconOnly aria-label="Add">
-                      <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.75} />
-                    </ToolbarButton>
-                  </DropdownMenu.Trigger>
-                  <DropdownMenu.Content side="top" align="start" sideOffset={8}>
-                    {PRIMITIVES.map((p) => (
-                      <DropdownMenu.Item key={p.kind} onSelect={() => add(p.kind)}>
-                        <HugeiconsIcon icon={p.icon} strokeWidth={1.75} />
-                        {p.label}
-                      </DropdownMenu.Item>
-                    ))}
-                  </DropdownMenu.Content>
-                </DropdownMenu.Root>
+                <AddMenu onAdd={add} />
                 <MakeWithAi onMake={add} />
               </ToolbarGroup>
             </Toolbar>
@@ -220,6 +204,46 @@ function RedrawOnResize() {
     invalidate();
   }, [width, height, invalidate]);
   return null;
+}
+
+/**
+ * Add, as a menu: a few commands float over the canvas and close on a pick, so nothing resizes.
+ *
+ * Radix opens a menu on pointerdown. On a phone the tap's own focus lands on the button after the
+ * menu has opened, which a non-modal menu reads as focus leaving it, and it closes at once. A touch
+ * opens it on click instead, once the tap is over; a mouse and the keyboard keep Radix's behaviour.
+ */
+function AddMenu({ onAdd }: { onAdd: (kind: Kind) => void }) {
+  const [open, setOpen] = React.useState(false);
+  const touch = React.useRef(false);
+
+  return (
+    <DropdownMenu.Root open={open} onOpenChange={setOpen} modal={false}>
+      <DropdownMenu.Trigger
+        onPointerDown={(e) => {
+          touch.current = e.pointerType !== 'mouse';
+          if (touch.current) e.preventDefault();
+        }}
+        onClick={() => {
+          if (touch.current) setOpen((o) => !o);
+          touch.current = false;
+        }}
+      >
+        {/* "+" is a settled symbol, so it goes icon-only; the name stays for screen readers. */}
+        <ToolbarButton iconOnly aria-label="Add">
+          <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.75} />
+        </ToolbarButton>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content side="top" align="start" sideOffset={8}>
+        {PRIMITIVES.map((p) => (
+          <DropdownMenu.Item key={p.kind} onSelect={() => onAdd(p.kind)}>
+            <HugeiconsIcon icon={p.icon} strokeWidth={1.75} />
+            {p.label}
+          </DropdownMenu.Item>
+        ))}
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
 }
 
 /** Make with AI, mocked: describe a shape, and a matching primitive appears after a moment. */
