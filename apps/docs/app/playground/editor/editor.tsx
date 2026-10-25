@@ -2,12 +2,11 @@
 
 import * as React from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
-import { Edges, Grid, OrbitControls } from '@react-three/drei';
-import { Box, Button, Theme, Flex, Grid as LayoutGrid, Popover, Shell, Text, TextField, Toolbar, ToolbarButton, ToolbarGroup } from '@kushagradhawan/kookie-ui';
+import { Edges, Grid, OrbitControls, Text as SceneText } from '@react-three/drei';
+import { Box, Button, DropdownMenu, Flex, Popover, Shell, TextField, Theme, Toolbar, ToolbarButton, ToolbarGroup } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
   AiMagicIcon,
-  Cancel01Icon,
   CenterFocusIcon,
   CircleIcon,
   Cone01Icon,
@@ -18,6 +17,7 @@ import {
   PlusSignIcon,
   PyramidIcon,
   Redo02Icon,
+  TextIcon,
   Undo02Icon,
 } from '@hugeicons/core-free-icons';
 
@@ -25,7 +25,7 @@ const ZOOM_STEP = 1.25;
 const MIN_DISTANCE = 1.5;
 const MAX_DISTANCE = 60;
 
-type Kind = 'cube' | 'sphere' | 'cylinder' | 'cone' | 'pyramid' | 'torus';
+type Kind = 'cube' | 'sphere' | 'cylinder' | 'cone' | 'pyramid' | 'torus' | 'text';
 type SceneObject = { id: number; kind: Kind; position: [number, number, number] };
 
 const PRIMITIVES: { kind: Kind; label: string; icon: typeof CubeIcon }[] = [
@@ -35,9 +35,10 @@ const PRIMITIVES: { kind: Kind; label: string; icon: typeof CubeIcon }[] = [
   { kind: 'cone', label: 'Cone', icon: Cone01Icon },
   { kind: 'pyramid', label: 'Pyramid', icon: PyramidIcon },
   { kind: 'torus', label: 'Torus', icon: DonutIcon },
+  { kind: 'text', label: 'Text', icon: TextIcon },
 ];
 
-function Geometry({ kind }: { kind: Kind }) {
+function Geometry({ kind }: { kind: Exclude<Kind, 'text'> }) {
   switch (kind) {
     case 'cube':
       return <boxGeometry args={[1, 1, 1]} />;
@@ -74,14 +75,14 @@ function useHistory() {
  *
  * The bottom bar is for making things (Add, Make with AI); the camera moved to a small cluster on
  * the canvas edge, like map zoom buttons, so two bars never stack at the bottom. Undo and redo sit
- * in the header. Add opens a non-modal pane at a low height; tapping a shape drops it at the
- * centre of the view, selected. Gestures stay shortcuts: every camera move has a button.
+ * in the header. Add is a menu that opens upward from the bar and never resizes the canvas; picking
+ * a shape drops it at the centre of the view, selected. Gestures stay shortcuts: every camera move
+ * has a button.
  */
 export function Editor() {
   const controls = React.useRef<React.ComponentRef<typeof OrbitControls> | null>(null);
   const history = useHistory();
   const [selected, setSelected] = React.useState<number | null>(null);
-  const [addOpen, setAddOpen] = React.useState(false);
   const nextId = React.useRef(1);
   // Draw every frame while the scene loads (shaders compile, the canvas settles its size), then
   // only on demand, so an idle editor costs no frames.
@@ -123,20 +124,24 @@ export function Editor() {
               <ambientLight intensity={0.7} />
               <directionalLight position={[5, 10, 5]} intensity={0.9} />
               <Grid infiniteGrid cellSize={0.5} sectionSize={2.5} cellThickness={0.6} sectionThickness={1} cellColor="#a8a8a8" sectionColor="#8a8a8a" fadeDistance={40} fadeStrength={1.5} />
-              {history.objects.map((o) => (
-                <mesh
-                  key={o.id}
-                  position={o.position}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelected(o.id);
-                  }}
-                >
-                  <Geometry kind={o.kind} />
-                  <meshStandardMaterial color={o.id === selected ? '#9aa7ff' : '#d4d4d4'} roughness={0.6} />
-                  {o.id === selected ? <Edges color="#3d5afe" /> : null}
-                </mesh>
-              ))}
+              {history.objects.map((o) => {
+                const isSelected = o.id === selected;
+                const select = (e: { stopPropagation: () => void }) => {
+                  e.stopPropagation();
+                  setSelected(o.id);
+                };
+                return o.kind === 'text' ? (
+                  <SceneText key={o.id} position={o.position} fontSize={0.8} anchorX="center" anchorY="middle" color={isSelected ? '#3d5afe' : '#3a3a3a'} onClick={select}>
+                    Text
+                  </SceneText>
+                ) : (
+                  <mesh key={o.id} position={o.position} onClick={select}>
+                    <Geometry kind={o.kind} />
+                    <meshStandardMaterial color={isSelected ? '#9aa7ff' : '#d4d4d4'} roughness={0.6} />
+                    {isSelected ? <Edges color="#3d5afe" /> : null}
+                  </mesh>
+                );
+              })}
               <OrbitControls ref={controls} makeDefault enableDamping={false} minDistance={MIN_DISTANCE} maxDistance={MAX_DISTANCE} />
             </Canvas>
           </Box>
@@ -172,43 +177,32 @@ export function Editor() {
             </Toolbar>
           </Box>
 
-          {/* Footer: making things. Hidden while the Add pane is open, so two bars never stack. */}
-          {!addOpen && (
-            <Shell.PaneFooter float style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
-              <Toolbar aria-label="Create" backdrop size="3" style={{ justifyContent: 'center' }}>
-                <ToolbarGroup>
-                  {/* "+" is a settled symbol, so it goes icon-only; the name stays for screen readers. */}
-                  <ToolbarButton iconOnly aria-label="Add" onClick={() => setAddOpen(true)}>
-                    <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.75} />
-                  </ToolbarButton>
-                  <MakeWithAi onMake={add} />
-                </ToolbarGroup>
-              </Toolbar>
-            </Shell.PaneFooter>
-          )}
+          {/* Footer: making things. */}
+          <Shell.PaneFooter float style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
+            <Toolbar aria-label="Create" backdrop size="3" style={{ justifyContent: 'center' }}>
+              <ToolbarGroup>
+                {/* A few commands, so a menu: it floats over the canvas and closes on a pick. */}
+                <DropdownMenu.Root modal={false}>
+                  <DropdownMenu.Trigger>
+                    {/* "+" is a settled symbol, so it goes icon-only; the name stays for screen readers. */}
+                    <ToolbarButton iconOnly aria-label="Add">
+                      <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.75} />
+                    </ToolbarButton>
+                  </DropdownMenu.Trigger>
+                  <DropdownMenu.Content side="top" align="start" sideOffset={8}>
+                    {PRIMITIVES.map((p) => (
+                      <DropdownMenu.Item key={p.kind} onSelect={() => add(p.kind)}>
+                        <HugeiconsIcon icon={p.icon} strokeWidth={1.75} />
+                        {p.label}
+                      </DropdownMenu.Item>
+                    ))}
+                  </DropdownMenu.Content>
+                </DropdownMenu.Root>
+                <MakeWithAi onMake={add} />
+              </ToolbarGroup>
+            </Toolbar>
+          </Shell.PaneFooter>
         </Shell.Content>
-
-        {/* Add: a non-modal pane at a low resting height. The canvas above stays usable. */}
-        <Shell.Bottom open={addOpen} onOpenChange={setAddOpen} presentation="fixed" expandedSize={196}>
-          <Flex direction="column" gap="3" p="4" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 16px)' }}>
-            <Flex align="center" justify="between">
-              <Text size="3" weight="medium">
-                Add a shape
-              </Text>
-              <Button iconOnly emphasis="quiet" color="gray" aria-label="Close" onClick={() => setAddOpen(false)}>
-                <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
-              </Button>
-            </Flex>
-            <LayoutGrid columns="3" gap="2">
-              {PRIMITIVES.map((p) => (
-                <Button key={p.kind} size="3" variant="soft" color="gray" onClick={() => add(p.kind)}>
-                  <HugeiconsIcon icon={p.icon} strokeWidth={1.75} />
-                  {p.label}
-                </Button>
-              ))}
-            </LayoutGrid>
-          </Flex>
-        </Shell.Bottom>
       </Shell.Root>
     </Theme>
   );

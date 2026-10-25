@@ -44,6 +44,10 @@ export default defineConfig({
           include: ['tests/**/*.browser.test.{ts,tsx}'],
           setupFiles: ['tests/browser-setup.ts'],
           testTimeout: 15000,
+          // Some tests emulate a touch screen, forced colours or a viewport through CDP, which
+          // applies to the whole page. Files run one at a time so one file's emulation can't
+          // change another's media queries (a hover test failed under a touch emulation).
+          fileParallelism: false,
           browser: {
             enabled: true,
             provider: playwright(),
