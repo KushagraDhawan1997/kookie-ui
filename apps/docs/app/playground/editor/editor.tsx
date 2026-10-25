@@ -113,8 +113,8 @@ export function Editor() {
   };
 
   return (
-    // Size 3 on a phone until v2's responsive sizing reaches v1.
-    <Theme size="3" asChild>
+    // Size 4 on a phone until v2's responsive sizing reaches v1.
+    <Theme size="4" asChild>
       <Shell.Root height="100dvh">
         <Shell.Content>
           {/* The canvas owns every touch on it: no page scroll, no page pinch, no double-tap zoom. */}
@@ -148,7 +148,7 @@ export function Editor() {
 
           {/* Header: history. */}
           <Shell.PaneHeader float>
-            <Toolbar aria-label="History" backdrop size="3">
+            <Toolbar aria-label="History" backdrop>
               <ToolbarGroup>
                 <ToolbarButton iconOnly aria-label="Undo" disabled={!history.canUndo} onClick={history.undo}>
                   <HugeiconsIcon icon={Undo02Icon} strokeWidth={1.75} />
@@ -162,7 +162,7 @@ export function Editor() {
 
           {/* Camera: a small cluster on the canvas edge, like map zoom buttons. */}
           <Box position="absolute" right="0" top="50%" style={{ transform: 'translateY(-50%)', paddingRight: 'calc(env(safe-area-inset-right) + 12px)' }}>
-            <Toolbar aria-label="View" orientation="vertical" backdrop size="3">
+            <Toolbar aria-label="View" orientation="vertical" backdrop>
               <ToolbarGroup>
                 <ToolbarButton iconOnly aria-label="Zoom in" onClick={() => zoom(1 / ZOOM_STEP)}>
                   <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.75} />
@@ -179,7 +179,7 @@ export function Editor() {
 
           {/* Footer: making things. */}
           <Shell.PaneFooter float style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
-            <Toolbar aria-label="Create" backdrop size="3" style={{ justifyContent: 'center' }}>
+            <Toolbar aria-label="Create" backdrop style={{ justifyContent: 'center' }}>
               <ToolbarGroup>
                 <AddMenu onAdd={add} />
                 <MakeWithAi onMake={add} />
