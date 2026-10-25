@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Line } from '@react-three/drei';
-import { Group, Object3D, PerspectiveCamera, Quaternion, Vector3 } from 'three';
+import { Box3, Group, Mesh, Object3D, PerspectiveCamera, Quaternion, Vector3 } from 'three';
 import { AXES, AXIS_COLOR, layoutFor, ringTurn, type Axis, type Mode } from './transform';
 
 const X = new Vector3(1, 0, 0);
@@ -75,6 +75,63 @@ export function Handles({ target, mode }: { target: React.RefObject<Object3D | n
           </React.Fragment>
         ),
       )}
+    </group>
+  );
+}
+
+const SELECTION = '#3d5afe';
+/** Corner ticks run this share of each edge. */
+const TICK = 0.22;
+
+/** The 12 edges of a box, and three ticks out of each of its 8 corners, as line segment pairs. */
+function boxLines(box: Box3) {
+  const { min, max } = box;
+  const corners = [0, 1, 2, 3, 4, 5, 6, 7].map((i) => new Vector3(i & 1 ? max.x : min.x, i & 2 ? max.y : min.y, i & 4 ? max.z : min.z));
+  const edges: Vector3[] = [];
+  const ticks: Vector3[] = [];
+  for (let i = 0; i < 8; i++) {
+    for (const bit of [1, 2, 4]) {
+      const j = i ^ bit;
+      if (j > i) edges.push(corners[i], corners[j]);
+      ticks.push(corners[i], corners[i].clone().lerp(corners[j], TICK));
+    }
+  }
+  return { edges, ticks };
+}
+
+/**
+ * The selection mark: the object's own box, a faint outline with firm corner ticks. It reads the
+ * same on every shape, where outlined edges are noise on a sphere and missing on text, and it
+ * shows the extent being scaled. It follows the object's transform every frame, so it rides along
+ * with a drag.
+ */
+export function SelectionBox({ target }: { target: React.RefObject<Object3D | null> }) {
+  const group = React.useRef<Group>(null);
+  const [box, setBox] = React.useState<Box3 | null>(null);
+
+  useFrame(() => {
+    const object = target.current;
+    const g = group.current;
+    if (!(object instanceof Mesh) || !g) return;
+    object.updateMatrixWorld();
+    g.matrix.copy(object.matrixWorld);
+    // Text lays out its geometry after the first frame, so keep reading until a box appears.
+    const geometry = object.geometry;
+    if (!geometry.boundingBox) geometry.computeBoundingBox();
+    const next = geometry.boundingBox;
+    if (next && !next.isEmpty() && !(box && box.equals(next))) setBox(next.clone());
+  });
+
+  const lines = React.useMemo(() => (box ? boxLines(box) : null), [box]);
+
+  return (
+    <group ref={group} matrixAutoUpdate={false}>
+      {lines ? (
+        <>
+          <Line points={lines.edges} segments color={SELECTION} lineWidth={1} transparent opacity={0.45} depthTest={false} renderOrder={9} />
+          <Line points={lines.ticks} segments color={SELECTION} lineWidth={2.5} depthTest={false} transparent renderOrder={9} />
+        </>
+      ) : null}
     </group>
   );
 }

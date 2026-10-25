@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Canvas, useThree, type RootState } from '@react-three/fiber';
-import { Edges, Grid, OrbitControls, Text as SceneText } from '@react-three/drei';
+import { Grid, OrbitControls, Text as SceneText } from '@react-three/drei';
 import { MathUtils, type Object3D } from 'three';
 import { Box, Button, DropdownMenu, Flex, Popover, SegmentedControl, Shell, Text, TextField, Theme, Toolbar, ToolbarButton, ToolbarGroup } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
@@ -16,18 +16,18 @@ import {
   Cylinder01Icon,
   Delete02Icon,
   DonutIcon,
-  MagnetIcon,
+  GridIcon,
   MinusSignIcon,
   PlusSignIcon,
   PyramidIcon,
   Redo02Icon,
-  MoveDiagonalIcon,
-  Rotate01Icon,
+  ArrowExpand01Icon,
+  Rotate360Icon,
   TextIcon,
   Tick02Icon,
   Undo02Icon,
 } from '@hugeicons/core-free-icons';
-import { Handles } from './handles';
+import { Handles, SelectionBox } from './handles';
 import { AXES, MM_PER_UNIT, type Axis, type Mode } from './transform';
 import { useTransformGestures, type DragResult } from './use-transform-gestures';
 
@@ -52,8 +52,8 @@ const PRIMITIVES: { kind: Kind; label: string; icon: typeof CubeIcon }[] = [
 
 const MODES: { mode: Mode; label: string; icon: typeof CubeIcon }[] = [
   { mode: 'move', label: 'Move', icon: MoveIcon },
-  { mode: 'rotate', label: 'Rotate', icon: Rotate01Icon },
-  { mode: 'scale', label: 'Scale', icon: MoveDiagonalIcon },
+  { mode: 'rotate', label: 'Rotate', icon: Rotate360Icon },
+  { mode: 'scale', label: 'Scale', icon: ArrowExpand01Icon },
 ];
 
 /** How each mode reads in the stepper: its unit, its step, and the conversion from the scene. */
@@ -278,7 +278,7 @@ export function Editor() {
         </SegmentedControl.Root>
         <ToolbarGroup>
           <ToolbarButton iconOnly aria-label="Snap" aria-pressed={snap} onClick={() => setSnap((s) => !s)}>
-            <HugeiconsIcon icon={MagnetIcon} strokeWidth={1.75} />
+            <HugeiconsIcon icon={GridIcon} strokeWidth={1.75} />
           </ToolbarButton>
           <ToolbarButton iconOnly aria-label="Delete" onClick={remove}>
             <HugeiconsIcon icon={Delete02Icon} strokeWidth={1.75} />
@@ -329,27 +329,22 @@ export function Editor() {
                 };
                 const transform = { position: o.position, rotation: o.rotation, scale: o.scale };
                 return o.kind === 'text' ? (
-                  <SceneText
-                    key={o.id}
-                    ref={isSelected ? selectedObject : undefined}
-                    {...transform}
-                    fontSize={0.8}
-                    anchorX="center"
-                    anchorY="middle"
-                    color={isSelected ? '#3d5afe' : '#3a3a3a'}
-                    onClick={pick}
-                  >
+                  <SceneText key={o.id} ref={isSelected ? selectedObject : undefined} {...transform} fontSize={0.8} anchorX="center" anchorY="middle" color="#3a3a3a" onClick={pick}>
                     Text
                   </SceneText>
                 ) : (
                   <mesh key={o.id} ref={isSelected ? selectedObject : undefined} {...transform} onClick={pick}>
                     <Geometry kind={o.kind} />
-                    <meshStandardMaterial color={isSelected ? '#9aa7ff' : '#d4d4d4'} roughness={0.6} />
-                    {isSelected ? <Edges color="#3d5afe" /> : null}
+                    <meshStandardMaterial color="#d4d4d4" roughness={0.6} />
                   </mesh>
                 );
               })}
-              {current ? <Handles key={current.id} target={selectedObject} mode={mode} /> : null}
+              {current ? (
+                <>
+                  <SelectionBox key={`box-${current.id}`} target={selectedObject} />
+                  <Handles key={current.id} target={selectedObject} mode={mode} />
+                </>
+              ) : null}
               <OrbitControls ref={controls} makeDefault enableDamping={false} minDistance={MIN_DISTANCE} maxDistance={MAX_DISTANCE} />
             </Canvas>
 
