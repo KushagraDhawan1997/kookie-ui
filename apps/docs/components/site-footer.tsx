@@ -3,7 +3,7 @@
 import NextLink from 'next/link';
 import { Link, Text } from '@kushagradhawan/kookie-ui';
 import { Footer } from '@/components/blocks/footer/footer';
-import { Logo } from '@/components/logo';
+import { LogoGroup } from '@/components/logo';
 import { SECTIONS, chaptersIn } from '@/lib/chapters';
 
 /**
@@ -24,7 +24,7 @@ export function SiteFooter() {
       <Footer.Main>
         <Footer.Brand>
           <NextLink href="/" aria-label="Womp's Design System" style={{ color: 'inherit' }}>
-            <Logo height="var(--line-height-7)" />
+            <LogoGroup height="var(--line-height-7)" />
           </NextLink>
         </Footer.Brand>
         <Footer.Links>

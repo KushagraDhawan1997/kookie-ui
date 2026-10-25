@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Avatar, Flex, Shell, Sidebar, TextField, Toolbar, ToolbarButton } from '@kushagradhawan/kookie-ui';
-import { Logo } from '@/components/logo';
+import { LogoGroup } from '@/components/logo';
 import { HugeiconsIcon, type IconSvgElement } from '@hugeicons/react';
 import { Cancel01Icon, Search01Icon } from '@hugeicons/core-free-icons';
 import type { DocsLinkComponent, DocsLinkProps, DocsLogoConfig, DocsNavigationConfig, DocsNavigationItem } from './types';
@@ -132,7 +132,7 @@ export function DocsSidebar({ navigation, logo, headerActions, footer, pathname 
                     {logo.label ? (
                       /* THE MARK ALONE (2026-09-27, Kushagra): the word said the name a second time
                        in a row that is only ever glanced at. `label` stays the accessible name. */
-                      <Logo height="var(--line-height-7)" />
+                      <LogoGroup height="var(--line-height-7)" />
                     ) : (
                       <Avatar fallback={logo.alt?.[0] ?? 'K'} size={logo.size ?? '3'} src={logo.src} />
                     )}
