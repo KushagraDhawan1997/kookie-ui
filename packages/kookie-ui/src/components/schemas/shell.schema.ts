@@ -122,7 +122,10 @@ export const ShellRootSchema = z
     height: z
       .union([z.literal('full'), z.literal('auto'), z.string(), z.number()])
       .default('full')
-      .describe('Height of the frame. `full` is 100dvh, with 100vh where dvh is not supported.'),
+      .describe(
+        'Height of the frame. `full` is the window: 100dvh, with 100vh where dvh is not supported, and on a narrow touch screen the page scrolls. Any value other than `full` or `auto` makes the Shell contained.',
+      ),
+    contained: z.boolean().default(false).describe('Fills the parent instead of the window and always scrolls inside itself. An explicit `height` implies it.'),
     size: z.enum(['1', '2', '3']).default('2').describe('Index of the pane chrome and the Sidebar rows in it'),
     className: z.string().optional().describe('Additional CSS class name'),
     style: StyleSchema,

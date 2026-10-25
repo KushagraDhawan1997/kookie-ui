@@ -30,6 +30,8 @@
   --shell-inset-gap: var(--space-3);
   /* Written inline by the Root while a Rail shows; stated here so a nested Shell never inherits its parent's. */
   --shell-rail-offset: 0px;
+  /* How far the stuck header reaches down the screen while the page scrolls. Stated here so a nested Shell never inherits its parent's. */
+  --kui-shell-page-top: 0px;
 
   display: grid;
   grid-template-areas:
@@ -56,6 +58,14 @@
   .kui-ShellRoot {
     height: 100dvh;
   }
+}
+
+/*
+ * A contained Shell fills its parent instead of the window. An explicit `height` is written
+ * inline and wins over this.
+ */
+.kui-ShellRoot[data-contained] {
+  height: 100%;
 }
 
 /* While an overlay is live the page holds still. Counted across Shells by the Root. */
@@ -115,6 +125,8 @@
   --kui-pane-band-end: initial;
   --kui-shell-position: initial;
   --kui-shell-z: initial;
+  --kui-shell-pin: initial;
+  --kui-shell-pin-top: initial;
   --kui-shell-row: initial;
   --kui-shell-col: initial;
   --kui-shell-surface: initial;
@@ -470,6 +482,8 @@
 .kui-ShellRail[data-presentation='overlay'] ~ .kui-ShellPanel[data-presentation-follows] {
   --kui-shell-position: absolute;
   --kui-shell-z: 6;
+  --kui-shell-pin: fixed;
+  --kui-shell-pin-top: 0px;
   --kui-shell-row: 1 / -1;
   --kui-shell-col: 1 / -1;
   --kui-shell-surface: var(--color-surface);
@@ -484,6 +498,8 @@
 .kui-ShellRail[data-presentation='stacked'] ~ .kui-ShellPanel[data-presentation-follows] {
   --kui-shell-position: absolute;
   --kui-shell-z: 3;
+  --kui-shell-pin: fixed;
+  --kui-shell-pin-top: initial;
   --kui-shell-row: 2 / 3;
   --kui-shell-col: 1 / -1;
   --kui-shell-surface: var(--color-surface);
@@ -503,6 +519,8 @@
 .kui-ShellRail[data-presentation-initial='fixed'] ~ .kui-ShellPanel[data-presentation-follows] {
   --kui-shell-position: initial;
   --kui-shell-z: initial;
+  --kui-shell-pin: initial;
+  --kui-shell-pin-top: initial;
   --kui-shell-row: initial;
   --kui-shell-col: initial;
   --kui-shell-surface: initial;
@@ -517,6 +535,8 @@
 .kui-ShellRail[data-presentation-initial='overlay'] ~ .kui-ShellPanel[data-presentation-follows] {
   --kui-shell-position: absolute;
   --kui-shell-z: 6;
+  --kui-shell-pin: fixed;
+  --kui-shell-pin-top: 0px;
   --kui-shell-row: 1 / -1;
   --kui-shell-col: 1 / -1;
   --kui-shell-surface: var(--color-surface);
@@ -531,6 +551,8 @@
 .kui-ShellRail[data-presentation-initial='stacked'] ~ .kui-ShellPanel[data-presentation-follows] {
   --kui-shell-position: absolute;
   --kui-shell-z: 3;
+  --kui-shell-pin: fixed;
+  --kui-shell-pin-top: initial;
   --kui-shell-row: 2 / 3;
   --kui-shell-col: 1 / -1;
   --kui-shell-surface: var(--color-surface);
@@ -558,6 +580,8 @@
   .kui-ShellRail[data-presentation-xs='fixed'] ~ .kui-ShellPanel[data-presentation-follows] {
     --kui-shell-position: initial;
     --kui-shell-z: initial;
+    --kui-shell-pin: initial;
+    --kui-shell-pin-top: initial;
     --kui-shell-row: initial;
     --kui-shell-col: initial;
     --kui-shell-surface: initial;
@@ -572,6 +596,8 @@
   .kui-ShellRail[data-presentation-xs='overlay'] ~ .kui-ShellPanel[data-presentation-follows] {
     --kui-shell-position: absolute;
     --kui-shell-z: 6;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: 0px;
     --kui-shell-row: 1 / -1;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
@@ -586,6 +612,8 @@
   .kui-ShellRail[data-presentation-xs='stacked'] ~ .kui-ShellPanel[data-presentation-follows] {
     --kui-shell-position: absolute;
     --kui-shell-z: 3;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: initial;
     --kui-shell-row: 2 / 3;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
@@ -614,6 +642,8 @@
   .kui-ShellRail[data-presentation-sm='fixed'] ~ .kui-ShellPanel[data-presentation-follows] {
     --kui-shell-position: initial;
     --kui-shell-z: initial;
+    --kui-shell-pin: initial;
+    --kui-shell-pin-top: initial;
     --kui-shell-row: initial;
     --kui-shell-col: initial;
     --kui-shell-surface: initial;
@@ -628,6 +658,8 @@
   .kui-ShellRail[data-presentation-sm='overlay'] ~ .kui-ShellPanel[data-presentation-follows] {
     --kui-shell-position: absolute;
     --kui-shell-z: 6;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: 0px;
     --kui-shell-row: 1 / -1;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
@@ -642,6 +674,8 @@
   .kui-ShellRail[data-presentation-sm='stacked'] ~ .kui-ShellPanel[data-presentation-follows] {
     --kui-shell-position: absolute;
     --kui-shell-z: 3;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: initial;
     --kui-shell-row: 2 / 3;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
@@ -670,6 +704,8 @@
   .kui-ShellRail[data-presentation-md='fixed'] ~ .kui-ShellPanel[data-presentation-follows] {
     --kui-shell-position: initial;
     --kui-shell-z: initial;
+    --kui-shell-pin: initial;
+    --kui-shell-pin-top: initial;
     --kui-shell-row: initial;
     --kui-shell-col: initial;
     --kui-shell-surface: initial;
@@ -684,6 +720,8 @@
   .kui-ShellRail[data-presentation-md='overlay'] ~ .kui-ShellPanel[data-presentation-follows] {
     --kui-shell-position: absolute;
     --kui-shell-z: 6;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: 0px;
     --kui-shell-row: 1 / -1;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
@@ -698,6 +736,8 @@
   .kui-ShellRail[data-presentation-md='stacked'] ~ .kui-ShellPanel[data-presentation-follows] {
     --kui-shell-position: absolute;
     --kui-shell-z: 3;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: initial;
     --kui-shell-row: 2 / 3;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
@@ -726,6 +766,8 @@
   .kui-ShellRail[data-presentation-lg='fixed'] ~ .kui-ShellPanel[data-presentation-follows] {
     --kui-shell-position: initial;
     --kui-shell-z: initial;
+    --kui-shell-pin: initial;
+    --kui-shell-pin-top: initial;
     --kui-shell-row: initial;
     --kui-shell-col: initial;
     --kui-shell-surface: initial;
@@ -740,6 +782,8 @@
   .kui-ShellRail[data-presentation-lg='overlay'] ~ .kui-ShellPanel[data-presentation-follows] {
     --kui-shell-position: absolute;
     --kui-shell-z: 6;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: 0px;
     --kui-shell-row: 1 / -1;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
@@ -754,6 +798,8 @@
   .kui-ShellRail[data-presentation-lg='stacked'] ~ .kui-ShellPanel[data-presentation-follows] {
     --kui-shell-position: absolute;
     --kui-shell-z: 3;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: initial;
     --kui-shell-row: 2 / 3;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
@@ -782,6 +828,8 @@
   .kui-ShellRail[data-presentation-xl='fixed'] ~ .kui-ShellPanel[data-presentation-follows] {
     --kui-shell-position: initial;
     --kui-shell-z: initial;
+    --kui-shell-pin: initial;
+    --kui-shell-pin-top: initial;
     --kui-shell-row: initial;
     --kui-shell-col: initial;
     --kui-shell-surface: initial;
@@ -796,6 +844,8 @@
   .kui-ShellRail[data-presentation-xl='overlay'] ~ .kui-ShellPanel[data-presentation-follows] {
     --kui-shell-position: absolute;
     --kui-shell-z: 6;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: 0px;
     --kui-shell-row: 1 / -1;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
@@ -810,6 +860,8 @@
   .kui-ShellRail[data-presentation-xl='stacked'] ~ .kui-ShellPanel[data-presentation-follows] {
     --kui-shell-position: absolute;
     --kui-shell-z: 3;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: initial;
     --kui-shell-row: 2 / 3;
     --kui-shell-col: 1 / -1;
     --kui-shell-surface: var(--color-surface);
@@ -844,6 +896,8 @@
 .kui-ShellRail ~ .kui-ShellPanel[data-presentation-follows][data-peek][data-state] {
   --kui-shell-position: absolute;
   --kui-shell-z: 4;
+  --kui-shell-pin: fixed;
+  --kui-shell-pin-top: initial;
   --kui-shell-row: 2 / 3;
   --kui-shell-col: 1 / -1;
   --kui-shell-surface: var(--color-surface);
@@ -944,6 +998,153 @@
   )
   > .kui-ShellBottom[data-inset] {
   margin-block-start: 0;
+}
+
+/* ── On a phone, the page scrolls (0.27.0) ────────────────────────────────── */
+
+/*
+ * Ported from kookie-ui-v2's Shell. A mobile browser hides its toolbars only when the document
+ * scrolls; no scroller inside the page reaches them. So on a narrow window with a coarse pointer
+ * a window Shell (`data-window`: no `contained`, no `height`) grows with its content and the
+ * document scrolls instead of the content pane. Everything that stayed put while the pane
+ * scrolled stays put while the page scrolls: the header and the content's pinned rows stick, and
+ * the drawers and the scrim attach to the screen.
+ *
+ * Narrow is below the `sm` breakpoint, where v1's panes leave the overlay posture by default.
+ * `_internal/shell-page-scroll.ts` holds the same query for the few things only script can do,
+ * and a test holds the two equal.
+ *
+ * Content that cannot wrap is clipped at the screen's edge rather than widening the page: it
+ * needs its own horizontal scroller, as a code block has.
+ */
+@media (max-width: 767.98px) and (pointer: coarse) {
+  /* `clip`, not `hidden`: a hidden box is a scroll container, and it would catch every sticky row. */
+  .kui-ShellRoot[data-window] {
+    height: auto;
+    min-height: 100vh;
+    overflow: clip;
+  }
+
+  @supports (height: 100dvh) {
+    .kui-ShellRoot[data-window] {
+      min-height: 100dvh;
+    }
+  }
+
+  /* The header's height, for the rows that stick beneath it. The Root writes `--kui-shell-header-h`
+     when a Shell.Header is not the default 64px. */
+  .kui-ShellRoot[data-window]:has(> .kui-ShellHeader) {
+    --kui-shell-page-top: var(--kui-shell-header-h, 64px);
+  }
+
+  .kui-ShellRoot[data-window] > .kui-ShellHeader {
+    position: sticky;
+    top: 0;
+  }
+
+  /*
+   * The content stops scrolling. Isolated, so nothing the app layers inside it climbs over a
+   * sticky row and takes its taps. A focused control or a linked heading scrolls into view
+   * beneath the stuck rows rather than under them.
+   */
+  .kui-ShellRoot[data-window] > .kui-ShellContent {
+    overflow: clip;
+    isolation: isolate;
+  }
+
+  .kui-ShellRoot[data-window] > .kui-ShellContent :where(*) {
+    scroll-margin-block: calc(var(--kui-shell-page-top) + var(--kui-content-float-start, 0px)) var(--kui-content-float-end, 0px);
+  }
+
+  /* The floating rows' reach, as the content's Shell.Scroll works it out above. */
+  .kui-ShellRoot[data-window] > .kui-ShellContent:has(> .kui-ShellPaneHeader[data-float]) {
+    --kui-content-float-start: calc(max(var(--kui-pane-row-start), var(--kui-pane-band-start, 0px)) + 2 * var(--kui-pane-pad-start));
+  }
+
+  .kui-ShellRoot[data-window] > .kui-ShellContent:has(> .kui-ShellPaneFooter[data-float]) {
+    --kui-content-float-end: calc(max(var(--kui-pane-row-end), var(--kui-pane-band-end, 0px)) + 2 * var(--kui-pane-pad-end));
+  }
+
+  /*
+   * Shell.Scroll in the content stops scrolling too and grows with what it holds. The viewport's
+   * overflow is written inline by Radix, hence `!important`. Its scrollbar and fade go: the
+   * document's own scrollbar is the one a phone shows, and a mask with nothing to scroll could
+   * only cut the page's edge.
+   */
+  .kui-ShellRoot[data-window] > .kui-ShellContent > .kui-ShellScroll {
+    flex: none;
+    height: auto;
+    overflow: clip;
+  }
+
+  .kui-ShellRoot[data-window] > .kui-ShellContent > .kui-ShellScroll > .kui-ScrollAreaViewport {
+    height: auto;
+    overflow: visible !important;
+    mask-image: none;
+  }
+
+  .kui-ShellRoot[data-window] > .kui-ShellContent > .kui-ShellScroll > .kui-ScrollAreaScrollbar {
+    display: none;
+  }
+
+  /*
+   * The floating rows stick, and still float. Sticky is in flow, so a negative margin gives back
+   * the room the row takes and the page starts where it starts in the frame. `order` because a
+   * row sticks where it sits, and a footer must sit after the page.
+   */
+  .kui-ShellRoot[data-window] > .kui-ShellContent:has(> .kui-ShellScroll) > .kui-ShellPaneHeader[data-float] {
+    position: sticky;
+    top: var(--kui-shell-page-top);
+    order: -1;
+    margin-bottom: calc(-1 * var(--kui-content-float-start, 0px));
+  }
+
+  .kui-ShellRoot[data-window] > .kui-ShellContent:has(> .kui-ShellScroll) > .kui-ShellPaneFooter[data-float] {
+    position: sticky;
+    bottom: 0;
+    order: 1;
+    margin-top: calc(-1 * var(--kui-content-float-end, 0px));
+  }
+
+  /* A pinned sibling of the Scroll pins to the screen: one before it to the top, beneath the
+     header, one after it to the bottom. */
+  .kui-ShellRoot[data-window] > .kui-ShellContent > :not(.kui-ShellScroll, [data-float]):has(~ .kui-ShellScroll) {
+    position: sticky;
+    top: var(--kui-shell-page-top);
+    z-index: 1;
+  }
+
+  .kui-ShellRoot[data-window] > .kui-ShellContent > .kui-ShellScroll ~ :not([data-float]) {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+  }
+
+  /*
+   * The panes. A pane over the page (overlay, stacked, peek) attaches to the screen: its posture
+   * writes `--kui-shell-pin: fixed`. A pane in flow sticks beneath the header, a screen tall, and
+   * the bottom pane sticks to the screen's bottom. An overlay covers the header
+   * (`--kui-shell-pin-top: 0px`); the rest start beneath it.
+   */
+  .kui-ShellRoot[data-window] > :is(.kui-ShellRail, .kui-ShellPanel, .kui-ShellSidebar, .kui-ShellInspector) {
+    position: var(--kui-shell-pin, sticky);
+    top: var(--kui-shell-pin-top, var(--kui-shell-page-top));
+    block-size: calc(100vh - var(--kui-shell-pin-top, var(--kui-shell-page-top)));
+  }
+
+  @supports (height: 100dvh) {
+    .kui-ShellRoot[data-window] > :is(.kui-ShellRail, .kui-ShellPanel, .kui-ShellSidebar, .kui-ShellInspector) {
+      block-size: calc(100dvh - var(--kui-shell-pin-top, var(--kui-shell-page-top)));
+    }
+  }
+
+  .kui-ShellRoot[data-window] > .kui-ShellBottom {
+    position: var(--kui-shell-pin, sticky);
+  }
+
+  .kui-ShellRoot[data-window] > .kui-ShellScrim {
+    position: fixed;
+  }
 }
 
 /* ── Resize handle ─────────────────────────────────────────────────────────── */

@@ -459,3 +459,12 @@ Most of 0.24.0 fixes bugs and needs nothing from an app. These changes can need 
 | --- | --- | --- |
 | `--field-edge` | Removed. No component read it. A field's edge and shadow come from `--control-chrome` | Read `--control-chrome` if your CSS used `--field-edge` |
 | `TextField`, `TextArea`, `Select` | In dark mode the raised hover fill is neutral 3, one step above the surface | Nothing |
+
+## 0.27.0: the page scrolls on a phone
+
+| Component or token | What changed | What to do |
+| --- | --- | --- |
+| `Shell.Root` | With no `height`, on a window narrower than 768px with a coarse pointer, the document scrolls instead of the content. The header and pinned rows stick, drawers are fixed to the screen, and the page holds still under an open drawer | Nothing for most apps. Code that read or set the content's (or its `Shell.Scroll`'s) `scrollTop` on a phone uses `window.scrollY` and `window.scrollTo` there. Give wide content that cannot wrap its own horizontal scroller, since the page clips it |
+| `Shell.Root` | New `contained` prop: fills the parent and always scrolls inside itself. An explicit `height` such as `600px` or `100%` already behaved this way and still does | Pass `contained` to a Shell inside a card, demo or canvas. A Shell that is the app's whole window and passes `height="100vh"` or `"100dvh"` can drop `height` to get the phone behaviour |
+| `Shell.Header` | Rows that stick beneath it read its `height` | Nothing |
+

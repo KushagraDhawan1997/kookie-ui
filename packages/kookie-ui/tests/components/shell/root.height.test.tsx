@@ -36,6 +36,67 @@ describe('Shell.Root height', () => {
   });
 });
 
+describe('Shell.Root contained', () => {
+  const rootOf = (ui: React.ReactElement) => renderWithProviders(ui).container.querySelector('.kui-ShellRoot') as HTMLElement;
+  const shell = (props: Partial<React.ComponentProps<typeof Shell.Root>>) => (
+    <Shell.Root {...props}>
+      <Shell.Content>content</Shell.Content>
+    </Shell.Root>
+  );
+
+  it('a Shell with no height is a window Shell', () => {
+    const root = rootOf(shell({}));
+    expect(root.hasAttribute('data-window')).toBe(true);
+    expect(root.hasAttribute('data-contained')).toBe(false);
+  });
+
+  it('`contained` fills the parent: no inline height, and the stylesheet says 100%', () => {
+    const root = rootOf(shell({ contained: true }));
+    expect(root.hasAttribute('data-contained')).toBe(true);
+    expect(root.hasAttribute('data-window')).toBe(false);
+    expect(root.style.height).toBe('');
+    expect(css).toMatch(/\.kui-ShellRoot\[data-contained\]\s*\{\s*height: 100%;/);
+  });
+
+  it('an explicit height implies contained, and is written inline', () => {
+    for (const height of [480, '100vh', '100%']) {
+      const root = rootOf(shell({ height }));
+      expect(root.hasAttribute('data-contained'), String(height)).toBe(true);
+      expect(root.hasAttribute('data-window'), String(height)).toBe(false);
+    }
+  });
+
+  it('`auto` grows with its content and is neither a window Shell nor contained', () => {
+    const root = rootOf(shell({ height: 'auto' }));
+    expect(root.getAttribute('data-height')).toBe('auto');
+    expect(root.hasAttribute('data-window')).toBe(false);
+    expect(root.hasAttribute('data-contained')).toBe(false);
+  });
+
+  it('`contained` with `auto` keeps its overlays in its own box', () => {
+    const root = rootOf(shell({ height: 'auto', contained: true }));
+    expect(root.hasAttribute('data-height')).toBe(false);
+    expect(root.hasAttribute('data-contained')).toBe(true);
+  });
+
+  it('a Shell.Header that is not 64px tells the Root its height', () => {
+    const root = rootOf(
+      <Shell.Root>
+        <Shell.Header height={48}>header</Shell.Header>
+        <Shell.Content>content</Shell.Content>
+      </Shell.Root>,
+    );
+    expect(root.style.getPropertyValue('--kui-shell-header-h')).toBe('48px');
+    const plain = rootOf(
+      <Shell.Root>
+        <Shell.Header>header</Shell.Header>
+        <Shell.Content>content</Shell.Content>
+      </Shell.Root>,
+    );
+    expect(plain.style.getPropertyValue('--kui-shell-header-h')).toBe('');
+  });
+});
+
 describe('pane height prop', () => {
   // PaneBaseProps declares `height`, no pane reads it, and it used to reach
   // the DOM as an invalid attribute on the pane's div.
