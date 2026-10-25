@@ -61,17 +61,13 @@ The spinner is 16 pixels square and takes the current text colour. To change its
 
 Wrap the value with `loading` while it refreshes. The column keeps its width, so the table doesn't shift as each row finishes.
 
-```tsx
-<Table.Cell>
-  <Spinner loading={row.pending}>
-    <Text size="2">{row.total}</Text>
-  </Spinner>
-</Table.Cell>
-```
+<Example src="./examples/loading-a-table-cell" />
 
 ### Waiting for a reply
 
 In a chat, show a spinner with a label where the next message will appear, then replace both with the message. The [Chatbar](/docs/chatbar) send button shows its own spinner while a reply is submitted.
+
+<Example src="./examples/waiting-for-a-reply" />
 
 ## Props
 

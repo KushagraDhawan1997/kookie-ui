@@ -96,31 +96,19 @@ The panel opens below the trigger with an 8px gap and lines up with the trigger'
 
 Use the toolbar for a title and a close button that stay pinned while the content scrolls.
 
-```tsx showLineNumbers
-<Popover.Content width="320px">
-  <Popover.Toolbar>
-    <Popover.Toolbar.Left>
-      <Popover.Toolbar.Title>Share</Popover.Toolbar.Title>
-    </Popover.Toolbar.Left>
-    <Popover.Toolbar.Right>
-      <Popover.Close>
-        <Button iconOnly emphasis="quiet" size="1" aria-label="Close">
-          <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
-        </Button>
-      </Popover.Close>
-    </Popover.Toolbar.Right>
-  </Popover.Toolbar>
-  {/* share link and people */}
-</Popover.Content>
-```
+<Example src="./examples/share-panel-with-a-toolbar" />
 
 ### Anchored to a field
 
 `Popover.Anchor` places the panel against a wider element, such as a search field, while a small button inside it opens the popover.
 
+<Example src="./examples/anchored-to-a-field" />
+
 ### Content that bleeds to the edge
 
 The panel publishes its padding, so a child with `m="bleed"` reaches the panel's edges, such as a full-width list.
+
+<Example src="./examples/content-that-bleeds-to-the-edge" />
 
 ## Props
 

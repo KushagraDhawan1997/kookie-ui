@@ -85,37 +85,25 @@ export function TimeZoneField({ value, onChange }: { value: string; onChange: (v
 
 Group items under a `Label` when the list has natural sections. People scan the headings first and then the items under one heading.
 
-```tsx
-<Select.Content>
-  <Select.Group>
-    <Select.Label>Americas</Select.Label>
-    <Select.Item value="america-new-york">New York</Select.Item>
-    <Select.Item value="america-chicago">Chicago</Select.Item>
-  </Select.Group>
-  <Select.Separator />
-  <Select.Group>
-    <Select.Label>Europe</Select.Label>
-    <Select.Item value="europe-london">London</Select.Item>
-    <Select.Item value="europe-berlin">Berlin</Select.Item>
-  </Select.Group>
-</Select.Content>
-```
+<Example src="./examples/grouped-options" />
 
 ### Invalid value
 
 Set `error` when a form check fails. The trigger shows a red border and sets `aria-invalid`. Put the message in text next to the field, because the colour alone doesn't say what is wrong.
 
-```tsx
-<Select.Trigger id="plan" error={!plan} placeholder="Choose a plan" />
-```
+<Example src="./examples/invalid-value" />
 
 ### List below the trigger
 
 By default the list opens over the trigger, with the chosen item lined up on the field. Set `position="popper"` on `Content` to open it below the trigger, like a menu, at least as wide as the trigger.
 
+<Example src="./examples/list-below-the-trigger" />
+
 ### Form submission
 
 Set `name` on `Root` to send the value with a form. Inside a form, the select renders a hidden native `select` for the form to read, and `required` blocks submission until a value is chosen.
+
+<Example src="./examples/form-submission" />
 
 ## Props
 

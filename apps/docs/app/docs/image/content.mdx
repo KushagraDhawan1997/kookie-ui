@@ -73,51 +73,25 @@ export function ListingCard() {
 
 Give every Image the same height and leave `fit` at `cover`, so photos of different shapes line up.
 
-```tsx
-<Grid columns="3" gap="2">
-  {photos.map((photo) => (
-    <Image
-      key={photo.id}
-      src={photo.url}
-      alt={photo.description}
-      width="100%"
-      height="160px"
-    />
-  ))}
-</Grid>
-```
+<Example src="./examples/grid-of-photos" />
 
 ### Logo on a card
 
 `fit="contain"` shows the whole logo without cropping it.
 
-```tsx
-<Image
-  src="/logos/northwind.svg"
-  alt="Northwind"
-  width="120px"
-  height="40px"
-  fit="contain"
-/>
-```
+<Example src="./examples/logo-on-a-card" />
 
 ### Picture that fails to load
 
 If the address is broken, the neutral fill stays in the box, so the layout doesn't change. Pass `onError` to replace the picture or report the failure. Image calls your `onLoad` and `onError` as usual.
 
+<Example src="./examples/picture-that-fails-to-load" />
+
 ### Hero picture
 
 The picture at the top of a page is visible straight away, so skip lazy loading.
 
-```tsx
-<Image
-  src="/hero.jpg"
-  alt="The dashboard on a laptop"
-  width="100%"
-  height={{ initial: '240px', md: '420px' }}
-  loading="eager"
-/>
-```
+<Example src="./examples/hero-picture" />
 
 ## Props
 

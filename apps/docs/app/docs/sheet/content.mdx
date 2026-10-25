@@ -100,60 +100,25 @@ A start or end sheet fills the window's height and takes 90% of its width up to 
 
 Open the app's navigation from a menu button on small screens.
 
-```tsx showLineNumbers
-<Sheet.Root>
-  <Sheet.Trigger>
-    <Button iconOnly emphasis="quiet" aria-label="Menu">
-      <HugeiconsIcon icon={Menu01Icon} strokeWidth={1.75} />
-    </Button>
-  </Sheet.Trigger>
-  <Sheet.Content side="start" width="280px" aria-label="Navigation">
-    <Flex direction="column" gap="1">
-      <Button emphasis="quiet" fullWidth asChild>
-        <Link href="/projects">Projects</Link>
-      </Button>
-      <Button emphasis="quiet" fullWidth asChild>
-        <Link href="/settings">Settings</Link>
-      </Button>
-    </Flex>
-  </Sheet.Content>
-</Sheet.Root>
-```
+<Example src="./examples/navigation-drawer" />
 
 ### Responsive width
 
 `width` accepts a responsive object, so a details panel can fill a phone and stay narrow on a desktop.
 
-```tsx
-<Sheet.Content side="end" width={{ initial: '100%', md: '400px' }}>
-```
+<Example src="./examples/responsive-width" />
 
 ### Bottom action sheet
 
 Set `height="auto"` so a bottom sheet is only as tall as its actions.
 
-```tsx
-<Sheet.Content side="bottom" height="auto" aria-label="Share">
-  <Flex direction="column" gap="2">
-    <Button fullWidth>Copy link</Button>
-    <Sheet.Close>
-      <Button emphasis="quiet" color="gray" fullWidth>Cancel</Button>
-    </Sheet.Close>
-  </Flex>
-</Sheet.Content>
-```
+<Example src="./examples/bottom-action-sheet" />
 
 ### Close after saving
 
 Hold the open state to close the sheet once a request succeeds.
 
-```tsx
-const [open, setOpen] = React.useState(false);
-
-<Sheet.Root open={open} onOpenChange={setOpen}>
-  {/* trigger and content */}
-</Sheet.Root>
-```
+<Example src="./examples/close-after-saving" />
 
 ## Props
 

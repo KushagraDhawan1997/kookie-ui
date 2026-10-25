@@ -1,4 +1,5 @@
 import nextMDX from '@next/mdx'
+import path from 'node:path'
 import packageJson from '../../packages/kookie-ui/package.json' with { type: 'json' }
 
 /** @type {import('rehype-pretty-code').Options} */
@@ -22,6 +23,8 @@ const withMDX = nextMDX({
     remarkPlugins: [
       'remark-gfm',
       'remark-frontmatter',
+      // Absolute: @next/mdx resolves plugin names from each .mdx file's own folder.
+      path.join(process.cwd(), 'mdx-plugins/remark-examples.mjs'),
     ],
     rehypePlugins: [
       'rehype-slug', // Generates IDs for headings

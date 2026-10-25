@@ -69,45 +69,25 @@ export function BillingCard() {
 
 Give the page one `h1` and its sections `h2`. Sizes can step down further than the levels.
 
-```tsx
-<Flex direction="column" gap="5">
-  <Heading as="h1" size="7">
-    Settings
-  </Heading>
-  <Heading as="h2" size="5">
-    Profile
-  </Heading>
-</Flex>
-```
+<Example src="./examples/page-and-section-titles" />
 
 ### Centred title over a few lines
 
 `wrap="balance"` evens out the line lengths, so a centred title doesn't leave one word on the last line.
 
-```tsx
-<Heading
-  as="h1"
-  size="8"
-  align="center"
-  wrap="balance"
->
-  Plan, build and ship your next release
-</Heading>
-```
+<Example src="./examples/centred-title-over-a-few-lines" />
 
 ### Title on one line
 
 `truncate` keeps a long title, such as a file name in a panel header, on one line and ends it with an ellipsis.
 
-```tsx
-<Heading as="h2" size="3" truncate>
-  Quarterly report, final version, approved by finance
-</Heading>
-```
+<Example src="./examples/title-on-one-line" />
 
 ### Title flush with a card edge
 
 `trim="start"` removes the space above the first line, so the title lines up with the top of the card's padding.
+
+<Example src="./examples/title-flush-with-a-card-edge" />
 
 ## Props
 

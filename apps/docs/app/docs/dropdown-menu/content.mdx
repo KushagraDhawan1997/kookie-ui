@@ -104,61 +104,43 @@ A responsive object such as `{ initial: 'drill-down', md: 'cascade' }` gives pho
 
 A trigger button with a text label shows a chevron, so people can tell it opens a menu. Put `TriggerIcon` after the label. The button sizes the icon.
 
-```tsx
-<DropdownMenu.Trigger>
-  <Button>
-    Export
-    <DropdownMenu.TriggerIcon />
-  </Button>
-</DropdownMenu.Trigger>
-```
+<Example src="./examples/button-with-a-label" />
 
 ### View options
 
 Use `CheckboxItem` for options that turn on or off, and a `RadioGroup` for options where one is on. These items stay as menu items, so the menu closes after each choice unless you call `event.preventDefault()` in `onSelect`.
 
-```tsx
-<DropdownMenu.Content>
-  <DropdownMenu.Label>Show</DropdownMenu.Label>
-  <DropdownMenu.CheckboxItem checked={showDone} onCheckedChange={setShowDone}>
-    Completed tasks
-  </DropdownMenu.CheckboxItem>
-  <DropdownMenu.Separator />
-  <DropdownMenu.Label>Sort by</DropdownMenu.Label>
-  <DropdownMenu.RadioGroup value={sort} onValueChange={setSort}>
-    <DropdownMenu.RadioItem value="due">Due date</DropdownMenu.RadioItem>
-    <DropdownMenu.RadioItem value="priority">Priority</DropdownMenu.RadioItem>
-  </DropdownMenu.RadioGroup>
-</DropdownMenu.Content>
-```
+<Example src="./examples/view-options" />
 
 ### Nested actions
 
 Group a set of related targets, such as folders, under a `Sub`.
 
-```tsx
-<DropdownMenu.Sub label="Move to">
-  <DropdownMenu.SubTrigger>Move to</DropdownMenu.SubTrigger>
-  <DropdownMenu.SubContent>
-    <DropdownMenu.Item>Drafts</DropdownMenu.Item>
-    <DropdownMenu.Item>Archive</DropdownMenu.Item>
-  </DropdownMenu.SubContent>
-</DropdownMenu.Sub>
-```
+<Example src="./examples/nested-actions" />
 
 ### Links in a menu
 
 When an item goes to another page, render your router's link with `asChild`. The item stays an anchor, so it opens in a new tab and shows its address like any link.
 
-```tsx
-<DropdownMenu.Item asChild>
-  <Link href="/settings">Settings</Link>
-</DropdownMenu.Item>
-```
+<Example src="./examples/links-in-a-menu" />
 
 ### Shortcut hints
 
 `shortcut` shows a key hint at the end of the item and sets `aria-keyshortcuts`. It doesn't bind the key, so register the shortcut in your app as well.
+
+<Example src="./examples/shortcut-hints" />
+
+### Account menu
+
+Open the signed-in account from its name and avatar. A `Label` inside the `Group` shows who is signed in and names the group, and sign out sits apart after a separator.
+
+<Example src="./examples/account-menu" />
+
+### Submenus on a phone
+
+Pass a responsive `submenuBehavior` so a phone drills down into a submenu and a wide screen cascades it. Set `label` on each `Sub` to name the back row.
+
+<Example src="./examples/submenus-on-a-phone" />
 
 ## Props
 

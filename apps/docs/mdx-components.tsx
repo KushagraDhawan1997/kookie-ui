@@ -2,6 +2,7 @@ import type { MDXComponents } from 'mdx/types';
 import NextLink from 'next/link';
 import { CodeBlock } from '@/components/blocks/code-block/code-block';
 import { MarkdownContent, createMarkdownComponents } from '@/components/blocks/markdown/markdown';
+import { Example } from '@/components/example/example';
 import { SpecsBlock } from './components/specs-block';
 
 // Built once: renderers created during render would remount the whole page on every update.
@@ -12,6 +13,7 @@ const siteComponents: MDXComponents = {
   // Every MDX page renders inside this, so the markdown rhythm applies to all of them.
   wrapper: ({ children }) => <MarkdownContent>{children}</MarkdownContent>,
   CodeBlock,
+  Example,
   SpecsBlock,
 };
 

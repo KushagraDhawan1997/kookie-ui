@@ -56,21 +56,13 @@ The separator has no margin props. Set the space around it with `gap` on the par
 
 A vertical separator takes the height of its row, whatever the Flex's `align`, so the line runs the full height of the buttons.
 
-```tsx
-<Flex gap="2">
-  <Button iconOnly emphasis="quiet" aria-label="Bold">
-    <HugeiconsIcon icon={TextBoldIcon} strokeWidth={1.75} />
-  </Button>
-  <Separator orientation="vertical" />
-  <Button iconOnly emphasis="quiet" aria-label="Insert link">
-    <HugeiconsIcon icon={Link01Icon} strokeWidth={1.75} />
-  </Button>
-</Flex>
-```
+<Example src="./examples/toolbar-groups" />
 
 ### A softer line
 
 `light` draws the line at a lower contrast, for separators inside dense content where the default line is too strong.
+
+<Example src="./examples/a-softer-line" />
 
 ## Props
 

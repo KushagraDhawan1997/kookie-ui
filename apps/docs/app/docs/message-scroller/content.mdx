@@ -88,19 +88,19 @@ The Root needs a height, from its parent or its own style, so the viewport has s
 
 When you add messages above the first one, the reader's place stays where it was. Set `preserveScrollOnPrepend={false}` on the Viewport to turn this off.
 
+<Example src="./examples/loading-older-messages" />
+
 ### Jumping to a message
 
 `useMessageScroller` returns `scrollToEnd`, `scrollToStart` and `scrollToMessage`. Call it from a component inside the Root, such as a search result that opens the message it matched.
 
-```tsx
-const { scrollToMessage } = useMessageScroller();
-
-scrollToMessage(result.messageId, { align: 'center', behavior: 'smooth' });
-```
+<Example src="./examples/jumping-to-a-message" />
 
 ### Fading under a floating bar
 
 The Viewport fades messages toward an edge while there is more past it. When a bar floats over an edge, set `--scroll-fade-start` or `--scroll-fade-end` on the Viewport to its height, so messages fade as they pass under it. Set `fade={false}` to turn the fade off.
+
+<Example src="./examples/fading-under-a-floating-bar" />
 
 ## Props
 

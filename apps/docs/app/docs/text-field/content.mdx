@@ -81,54 +81,32 @@ export function EmailField({ error }: { error?: string }) {
 
 Put the icon in a left slot. Clicking a slot focuses the input, so the whole box acts as one target.
 
-```tsx
-<TextField.Root type="search" placeholder="Search projects" aria-label="Search projects">
-  <TextField.Slot>
-    <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
-  </TextField.Slot>
-</TextField.Root>
-```
+<Example src="./examples/search" />
 
 ### Units
 
 A right slot holds the unit, so people type only the number.
 
-```tsx
-<TextField.Root type="number" defaultValue="16" aria-label="Font size">
-  <TextField.Slot side="right">
-    <Text size="2" emphasis="medium">px</Text>
-  </TextField.Slot>
-</TextField.Root>
-```
+<Example src="./examples/units" />
 
 ### Dragging to change a number
 
 `scrub` on a slot changes a number when someone drags across the slot, like the property fields in a design tool. `onScrub` receives the change, and `scrubMin` and `scrubMax` keep the result in range when you pass the current value as `scrubValue`. Hold Shift for steps 10 times larger and Alt for steps 10 times smaller.
 
-```tsx showLineNumbers
-const [width, setWidth] = React.useState(320);
-
-<TextField.Root
-  type="number"
-  value={width}
-  onChange={(event) => setWidth(Number(event.target.value) || 0)}
-  aria-label="Width"
->
-  <TextField.Slot
-    scrub
-    scrubValue={width}
-    scrubMin={0}
-    scrubMax={2000}
-    onScrub={(delta) => setWidth((value) => value + delta)}
-  >
-    <Text size="2" emphasis="medium">W</Text>
-  </TextField.Slot>
-</TextField.Root>
-```
+<Example src="./examples/dragging-to-change-a-number" />
 
 ### Validation
 
 `error` marks the field as invalid and turns it red. `errorMessage` shows below the field and is read with it. Show the error after someone leaves the field or submits the form, not while they are still typing.
+
+<Example src="./examples/validation" />
+
+### Showing a password
+
+Put an icon-only [Button](/docs/button) in a right slot and switch `type` between `password` and `text`. The button keeps its own focus, and its label says what the next press does.
+
+<Example src="./examples/showing-a-password" />
+
 
 ## Props
 

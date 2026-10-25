@@ -70,36 +70,19 @@ Without `columns`, a grid has one column that fills its width. The equal tracks 
 
 `areas` takes a CSS `grid-template-areas` string. Children place themselves with `gridArea`, which Box, Flex and Grid all take.
 
-```tsx
-<Grid
-  areas='"header header" "nav main"'
-  columns="200px 1fr"
-  rows="auto 1fr"
-  height="100vh"
->
-  <Box gridArea="header">…</Box>
-  <Box gridArea="nav">…</Box>
-  <Box gridArea="main">…</Box>
-</Grid>
-```
+<Example src="./examples/named-areas" />
 
 ### A wide item
 
 `gridColumn` lets one child span several columns, such as a field that takes the full width of a two-column form.
 
-```tsx
-<Grid columns="2" gap="4">
-  <TextField.Root aria-label="First name" />
-  <TextField.Root aria-label="Last name" />
-  <Box gridColumn="1 / -1">
-    <TextArea aria-label="Bio" />
-  </Box>
-</Grid>
-```
+<Example src="./examples/a-wide-item" />
 
 ### Filling gaps
 
 `flow="dense"` lets later items fill holes left by wide ones. Use it for galleries where the order doesn't carry meaning.
+
+<Example src="./examples/filling-gaps" />
 
 ## Props
 

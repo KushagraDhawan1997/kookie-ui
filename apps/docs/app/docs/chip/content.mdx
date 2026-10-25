@@ -68,22 +68,25 @@ An icon in a chip is sized to one line of its text: 16 pixels at sizes 1 and 2, 
 
 `tooltip` shows more detail on hover and on keyboard focus. A chip with a tooltip joins the tab order, so keyboard users can reach it. Touch users can't open it, so don't put anything there that people need.
 
-```tsx
-<Chip color="amber" variant="soft" tooltip="Waiting for a reviewer">
-  In review
-</Chip>
-```
+<Example src="./examples/explaining-a-status" />
 
 ### Count on a tab
 
 A size 1 solid chip suits a count beside a label, such as unread messages on a [Tabs](/docs/tabs) trigger.
 
-```tsx
-<Tabs.Trigger value="inbox">
-  Inbox
-  <Chip size="1" variant="solid">12</Chip>
-</Tabs.Trigger>
-```
+<Example src="./examples/count-on-a-tab" />
+
+### Tags on a profile
+
+Use `outline` for tags that sort or describe, such as skills. They stay quiet next to the name, and gray keeps them from reading as statuses.
+
+<Example src="./examples/tags-on-a-profile" />
+
+### New item in a feed
+
+A size 1 solid chip marks the one item people haven't seen yet. Remove it once they open the item, so it keeps its meaning.
+
+<Example src="./examples/new-item-in-a-feed" />
 
 ## Props
 

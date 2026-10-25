@@ -65,58 +65,43 @@ export function SaveBar({ saving, onCancel, onSave }: { saving: boolean; onCance
 
 Put the icon before the label, inside the button. The button sizes the icon and sets the gap, so don't size it yourself.
 
-```tsx
-<Button>
-  <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
-  New project
-</Button>
-```
+<Example src="./examples/icon-and-label" />
 
 ### Icon only
 
 `iconOnly` makes the button square. It has no visible text, so the types require `aria-label` or `aria-labelledby`. Add `tooltip` so people who use a pointer can see the name too.
 
-```tsx
-<Button iconOnly emphasis="quiet" aria-label="Search" tooltip="Search">
-  <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
-</Button>
-```
+<Example src="./examples/icon-only" />
 
 ### Waiting for a result
 
 `loading` replaces the content with a spinner and blocks presses until it clears, so a slow request can't be sent twice. The button keeps its width and its focus, so the layout doesn't jump and keyboard users stay in place. Pass a boolean every time, such as `loading={saving}`, so the content stays mounted when loading starts and stops.
 
+<Example src="./examples/waiting-for-a-result" />
+
 ### Confirming a copy
 
 `done` shows a tick in place of the leading icon. A button with no icon adds the tick before the label, so it grows by the tick's width. The icon comes back when `done` is false. It doesn't block presses. Screen readers don't announce the tick, so change the label too.
 
-```tsx
-const [copied, setCopied] = React.useState(false);
-
-function copy() {
-  navigator.clipboard.writeText(url);
-  setCopied(true);
-  setTimeout(() => setCopied(false), 1500);
-}
-
-<Button iconOnly emphasis="quiet" done={copied} aria-label={copied ? 'Copied' : 'Copy link'} onClick={copy}>
-  <HugeiconsIcon icon={Copy01Icon} strokeWidth={1.75} />
-</Button>
-```
+<Example src="./examples/confirming-a-copy" />
 
 ### Navigation
 
 When a button-shaped control goes to another page, render your router's link with `asChild`. The element stays an anchor, so it opens in a new tab and shows its address like any link.
 
-```tsx
-<Button asChild>
-  <Link href="/settings">Open settings</Link>
-</Button>
-```
+<Example src="./examples/navigation" />
 
 ### Full width
 
 `fullWidth` stretches the button across its container. Use it for the single action at the end of a narrow form or a mobile sheet. It isn't available with `iconOnly`.
+
+<Example src="./examples/full-width" />
+
+### Destructive confirmation
+
+Give a destructive action `color="red"` at the default emphasis, and make the safe choice quiet. The red says what the button does without making it the easy press.
+
+<Example src="./examples/destructive-confirmation" />
 
 ## Props
 

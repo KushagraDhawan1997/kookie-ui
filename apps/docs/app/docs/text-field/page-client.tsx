@@ -1,42 +1,18 @@
 'use client';
 
-import { useState } from 'react';
 import { TableOfContents } from '@/components/blocks/table-of-contents/table-of-contents';
-import { Tabs } from '@kushagradhawan/kookie-ui';
-import { HugeiconsIcon } from '@hugeicons/react';
-import { BookOpen01Icon, EyeIcon } from '@hugeicons/core-free-icons';
 import { SiteDocsPage } from '@/components/site-docs-page';
 import ContentMDX from './content.mdx';
-import { TextFieldExamples } from './examples';
 import type { DocMetadata } from '@/lib/frontmatter';
 
-interface TextFieldPageClientProps {
+interface PageClientProps {
   metadata?: DocMetadata;
 }
 
-export default function TextFieldPageClient({ metadata }: TextFieldPageClientProps) {
-  const [activeTab, setActiveTab] = useState<'docs' | 'examples'>('docs');
-
+export default function PageClient({ metadata }: PageClientProps) {
   return (
-    <SiteDocsPage
-      meta={metadata}
-      headerTabs={
-        <Tabs.Root value={activeTab} onValueChange={(value) => setActiveTab(value as 'docs' | 'examples')}>
-          <Tabs.List>
-            <Tabs.Trigger value="docs">
-              <HugeiconsIcon icon={BookOpen01Icon} strokeWidth={1.75} />
-              Documentation
-            </Tabs.Trigger>
-            <Tabs.Trigger value="examples">
-              <HugeiconsIcon icon={EyeIcon} strokeWidth={1.75} />
-              Examples
-            </Tabs.Trigger>
-          </Tabs.List>
-        </Tabs.Root>
-      }
-      tableOfContents={<TableOfContents renderContainer={(content) => content || null} />}
-    >
-      {activeTab === 'docs' ? <ContentMDX /> : <TextFieldExamples />}
+    <SiteDocsPage meta={metadata} tableOfContents={<TableOfContents renderContainer={(content) => content || null} />}>
+      <ContentMDX />
     </SiteDocsPage>
   );
 }

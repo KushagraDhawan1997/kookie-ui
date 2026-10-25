@@ -91,24 +91,13 @@ Row height follows the size of the parent menu, so a virtual list in a size 1 `D
 
 Use `renderItem` to show an avatar beside each name, so people can tell two people with similar names apart.
 
-```tsx
-<DropdownMenu.Content virtualized>
-  <VirtualMenu items={members} renderItem={PersonRow} aria-label="Team members" onSelect={assign} style={{ height: 360 }} />
-</DropdownMenu.Content>
-```
+<Example src="./examples/assigning-from-a-large-team" />
 
 ### Rows of different heights
 
 Pass a function to `estimatedItemSize` that returns the height of each row in pixels. The list gives each row that height through the `style` it passes to the row.
 
-```tsx
-<VirtualMenu
-  items={rows}
-  renderItem={SectionRow}
-  estimatedItemSize={(index) => (rows[index].type === 'heading' ? 40 : 30)}
-  style={{ height: 320 }}
-/>
-```
+<Example src="./examples/rows-of-different-heights" />
 
 ## Props
 

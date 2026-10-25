@@ -88,28 +88,13 @@ export function DeleteProject({ name, onDelete }: { name: string; onDelete: () =
 
 The usage above is the common case: a red trigger, a question, a quiet Cancel and a red Action that repeats the verb.
 
+<Example src="./examples/destructive-confirmation" />
+
 ### Wait for the result
 
 Hold the open state when the action is a request. Keep the alert open with a loading button until the request finishes, so a failure can be shown in place.
 
-```tsx
-const [open, setOpen] = React.useState(false);
-const [deleting, setDeleting] = React.useState(false);
-
-async function remove() {
-  setDeleting(true);
-  await deleteProject();
-  setDeleting(false);
-  setOpen(false);
-}
-
-<AlertDialog.Root open={open} onOpenChange={setOpen}>
-  {/* trigger, title, description, cancel */}
-  <Button color="red" loading={deleting} onClick={remove}>
-    Delete project
-  </Button>
-</AlertDialog.Root>
-```
+<Example src="./examples/wait-for-the-result" />
 
 The loading button sits outside `AlertDialog.Action`, because Action closes the alert as soon as it is pressed.
 
