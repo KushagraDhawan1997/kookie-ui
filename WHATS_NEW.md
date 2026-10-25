@@ -2,7 +2,7 @@
 
 Each release groups its changes as Major, Minor or Quiet. Major is a new product or a change to what it is. Minor is a change you notice when you use it. Quiet is a small touch, a fix, a rename or a removal, or how the work is made. Breaking lists the changes that need an edit in your app.
 
-## 0.27.0 (unreleased)
+## 0.27.0 (October 25)
 
 1. `Minor` **The page scrolls on a phone (breaking).** On a narrow touch screen a Shell lets the page scroll, so the browser can hide its toolbars. A Shell inside a card takes `contained` and scrolls inside itself.
 

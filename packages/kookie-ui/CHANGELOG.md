@@ -1,4 +1,4 @@
-## 0.27.0 (unreleased)
+## [0.27.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.26.2...v0.27.0) (2026-10-25)
 
 On a phone the page scrolls, as in v2. See MIGRATION.md.
 
