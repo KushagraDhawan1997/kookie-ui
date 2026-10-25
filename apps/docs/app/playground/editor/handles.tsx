@@ -3,8 +3,8 @@
 import * as React from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Line } from '@react-three/drei';
-import { Box3, Group, Mesh, Object3D, PerspectiveCamera, Quaternion, Vector3 } from 'three';
-import { AXES, AXIS_COLOR, layoutFor, ringTurn, type Axis, type Mode } from './transform';
+import { Box3, Group, Mesh, Object3D, PerspectiveCamera, Vector3 } from 'three';
+import { AXES, AXIS_COLOR, frameOf, layoutFor, ringTurn, type Axis, type Mode } from './transform';
 
 const X = new Vector3(1, 0, 0);
 const SEGMENT: [number, number, number][] = [
@@ -21,16 +21,16 @@ const CIRCLE: [number, number, number][] = Array.from({ length: 65 }, (_, i) => 
  * and the camera, so they keep one size on screen at any zoom and follow the object while it drags.
  * They draw over everything, so an object never hides its own handles.
  */
-export function Handles({ target, mode }: { target: React.RefObject<Object3D | null>; mode: Mode }) {
+export function Handles({ targets, mode }: { targets: () => Object3D[]; mode: Mode }) {
   const arms = React.useRef<Record<Axis, Group | null>>({ x: null, y: null, z: null });
   const knobs = React.useRef<Record<Axis, Group | null>>({ x: null, y: null, z: null });
   const rings = React.useRef<Record<Axis, Group | null>>({ x: null, y: null, z: null });
   const turns = React.useMemo(() => ({ x: ringTurn('x'), y: ringTurn('y'), z: ringTurn('z') }), []);
 
   useFrame(({ camera, size }) => {
-    const object = target.current;
-    if (!object) return;
-    const layout = layoutFor(object, camera as PerspectiveCamera, size.height, mode);
+    const frame = frameOf(targets(), mode);
+    if (!frame) return;
+    const layout = layoutFor(frame, camera as PerspectiveCamera, size.height);
     for (const axis of AXES) {
       const dir = layout.dirs[axis];
       const arm = arms.current[axis];
@@ -42,7 +42,7 @@ export function Handles({ target, mode }: { target: React.RefObject<Object3D | n
       const knob = knobs.current[axis];
       if (knob) {
         knob.position.copy(layout.center).addScaledVector(dir, layout.knobDistance);
-        knob.quaternion.copy(mode === 'scale' ? object.quaternion : new Quaternion());
+        knob.quaternion.copy(frame.quaternion);
         knob.scale.setScalar(layout.knobRadius);
       }
       const ring = rings.current[axis];
@@ -105,12 +105,12 @@ function boxLines(box: Box3) {
  * shows the extent being scaled. It follows the object's transform every frame, so it rides along
  * with a drag.
  */
-export function SelectionBox({ target }: { target: React.RefObject<Object3D | null> }) {
+export function SelectionBox({ target }: { target: () => Object3D | undefined }) {
   const group = React.useRef<Group>(null);
   const [box, setBox] = React.useState<Box3 | null>(null);
 
   useFrame(() => {
-    const object = target.current;
+    const object = target();
     const g = group.current;
     if (!(object instanceof Mesh) || !g) return;
     object.updateMatrixWorld();

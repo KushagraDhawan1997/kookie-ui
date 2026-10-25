@@ -33,13 +33,32 @@ export type Layout = {
   ringRadius: number;
 };
 
-/** Where the handles sit for an object seen through this camera. */
-export function layoutFor(object: Object3D, camera: PerspectiveCamera, heightPx: number, mode: Mode): Layout {
-  const center = object.getWorldPosition(new Vector3());
-  const sphere = new Box3().setFromObject(object).getBoundingSphere(new Sphere());
-  const radius = sphere.isEmpty() ? 0.5 : sphere.center.distanceTo(center) + sphere.radius;
+/**
+ * What the handles wrap: one object around its own origin, or several around the centre of their
+ * shared box. One object scales along its own axes; anything else works along the world's.
+ */
+export type Frame = { center: Vector3; radius: number; quaternion: Quaternion };
+
+export function frameOf(objects: Object3D[], mode: Mode): Frame | null {
+  if (objects.length === 0) return null;
+  const box = new Box3();
+  for (const object of objects) box.expandByObject(object);
+  const sphere = box.getBoundingSphere(new Sphere());
+  if (objects.length === 1) {
+    const center = objects[0].getWorldPosition(new Vector3());
+    return {
+      center,
+      radius: box.isEmpty() ? 0.5 : sphere.center.distanceTo(center) + sphere.radius,
+      quaternion: mode === 'scale' ? objects[0].quaternion.clone() : new Quaternion(),
+    };
+  }
+  return { center: box.getCenter(new Vector3()), radius: sphere.radius, quaternion: new Quaternion() };
+}
+
+/** Where the handles sit around a frame seen through this camera. */
+export function layoutFor(frame: Frame, camera: PerspectiveCamera, heightPx: number): Layout {
+  const { center, radius, quaternion: turn } = frame;
   const unitsPerPx = (2 * camera.position.distanceTo(center) * Math.tan(MathUtils.degToRad(camera.fov / 2))) / heightPx;
-  const turn = mode === 'scale' ? object.quaternion : new Quaternion();
   return {
     center,
     dirs: { x: UNIT.x.clone().applyQuaternion(turn), y: UNIT.y.clone().applyQuaternion(turn), z: UNIT.z.clone().applyQuaternion(turn) },
@@ -56,7 +75,7 @@ export function ringTurn(axis: Axis) {
   return new Quaternion().setFromRotationMatrix(new Matrix4().makeBasis(UNIT[u], UNIT[v], UNIT[axis]));
 }
 
-export type Target = { kind: 'object' } | { kind: 'handle'; axis: Axis };
+export type Target = { kind: 'object'; index: number } | { kind: 'handle'; axis: Axis };
 type Size = { width: number; height: number };
 
 function toScreen(point: Vector3, camera: PerspectiveCamera, size: Size) {
@@ -70,9 +89,28 @@ function rayAt(x: number, y: number, camera: PerspectiveCamera, size: Size) {
   return raycaster;
 }
 
-/** What a touch at (x, y) lands on, handles first, then the selected object. Null is the background. */
-export function hitTest(x: number, y: number, object: Object3D, camera: PerspectiveCamera, size: Size, mode: Mode): Target | null {
-  const layout = layoutFor(object, camera, size.height, mode);
+/** Which of these objects is under (x, y), nearest first; -1 for none. */
+export function pick(x: number, y: number, objects: Object3D[], camera: PerspectiveCamera, size: Size) {
+  const hit = rayAt(x, y, camera, size).intersectObjects(objects, true)[0];
+  if (!hit) return -1;
+  return objects.findIndex((object) => {
+    let o: Object3D | null = hit.object;
+    while (o && o !== object) o = o.parent;
+    return o === object;
+  });
+}
+
+/** Whether a point in the scene lands inside a rectangle on screen. */
+export function onScreenIn(point: Vector3, rect: { left: number; top: number; right: number; bottom: number }, camera: PerspectiveCamera, size: Size) {
+  const p = toScreen(point, camera, size);
+  return p.x >= rect.left && p.x <= rect.right && p.y >= rect.top && p.y <= rect.bottom;
+}
+
+/** What a touch at (x, y) lands on: a handle first, then a selected object. Null is anywhere else. */
+export function hitTest(x: number, y: number, objects: Object3D[], camera: PerspectiveCamera, size: Size, mode: Mode): Target | null {
+  const frame = frameOf(objects, mode);
+  if (!frame) return null;
+  const layout = layoutFor(frame, camera, size.height);
   const finger = new Vector2(x, y);
   let best: { axis: Axis; distance: number } | null = null;
   for (const axis of AXES) {
@@ -98,7 +136,8 @@ export function hitTest(x: number, y: number, object: Object3D, camera: Perspect
     if (distance <= reach && (!best || distance < best.distance)) best = { axis, distance };
   }
   if (best) return { kind: 'handle', axis: best.axis };
-  return rayAt(x, y, camera, size).intersectObject(object, true).length > 0 ? { kind: 'object' } : null;
+  const index = pick(x, y, objects, camera, size);
+  return index >= 0 ? { kind: 'object', index } : null;
 }
 
 /** Along the line through `origin` in `dir`, the point nearest the ray under the finger. */
@@ -125,11 +164,32 @@ export type Start = { position: Vector3; quaternion: Quaternion; scale: Vector3 
 
 /**
  * One drag, from the point it crossed the tap slop. Every move is measured from that point, so the
- * object keeps its distance from the finger and never jumps to it. Returns the readout text.
+ * objects keep their distance from the finger and never jump to it.
+ *
+ * The drag moves a stand-in at the frame's centre, then carries every object by the stand-in's
+ * change, so several objects turn and scale as one unit around their shared centre. For a single
+ * object the stand-in is the object's own transform, so nothing is approximated.
+ *
+ * `constrain` locks proportions when scaling and holds rotation to 15° steps, snapping or not.
  */
-export function createDrag(object: Object3D, target: Target, mode: Mode, x0: number, y0: number, camera: PerspectiveCamera, size: Size) {
+export function createDrag(objects: Object3D[], target: Target, mode: Mode, x0: number, y0: number, camera: PerspectiveCamera, size: Size, constrain: boolean) {
+  const frame = frameOf(objects, mode)!;
+  const object = new Object3D();
+  if (objects.length === 1) {
+    object.position.copy(objects[0].position);
+    object.quaternion.copy(objects[0].quaternion);
+    object.scale.copy(objects[0].scale);
+  } else {
+    object.position.copy(frame.center);
+  }
+  object.updateMatrix();
+  const standInStart = object.matrix.clone().invert();
+  const objectStarts = objects.map((o) => {
+    o.updateMatrix();
+    return o.matrix.clone();
+  });
   const start: Start = { position: object.position.clone(), quaternion: object.quaternion.clone(), scale: object.scale.clone() };
-  const layout = layoutFor(object, camera, size.height, mode);
+  const layout = layoutFor(frame, camera, size.height);
   const axis = target.kind === 'handle' ? target.axis : null;
   const dir = axis ? layout.dirs[axis] : null;
   const t0 = dir ? alongLine(start.position, dir, x0, y0, camera, size) : null;
@@ -138,7 +198,19 @@ export function createDrag(object: Object3D, target: Target, mode: Mode, x0: num
   let angle = 0;
   let previous = Math.atan2(y0 - center.y, x0 - center.x);
 
-  function update(x: number, y: number, snap: boolean): string | null {
+  function carry() {
+    object.updateMatrix();
+    const change = object.matrix.clone().multiply(standInStart);
+    objects.forEach((o, i) => new Matrix4().multiplyMatrices(change, objectStarts[i]).decompose(o.position, o.quaternion, o.scale));
+  }
+
+  function update(x: number, y: number, snap: boolean) {
+    const text = place(x, y, snap);
+    carry();
+    return text;
+  }
+
+  function place(x: number, y: number, snap: boolean): string | null {
     object.position.copy(start.position);
     object.quaternion.copy(start.quaternion);
     object.scale.copy(start.scale);
@@ -179,7 +251,7 @@ export function createDrag(object: Object3D, target: Target, mode: Mode, x0: num
         around = UNIT.y;
         turn = MathUtils.degToRad((x - x0) * 0.5);
       }
-      turn = snapTo(turn, SNAP.rotate, snap);
+      turn = snapTo(turn, SNAP.rotate, snap || constrain);
       object.quaternion.premultiply(new Quaternion().setFromAxisAngle(around, turn));
       return `${deg(turn)} ${(axis ?? 'y').toUpperCase()}`;
     }
@@ -188,6 +260,10 @@ export function createDrag(object: Object3D, target: Target, mode: Mode, x0: num
       const t = alongLine(start.position, dir, x, y, camera, size);
       if (t === null) return null;
       const factor = Math.max(SNAP.scale, snapTo(t / t0, SNAP.scale, snap));
+      if (constrain) {
+        object.scale.multiplyScalar(factor);
+        return `×${factor.toFixed(2)}`;
+      }
       object.scale[axis] = start.scale[axis] * factor;
       return `×${factor.toFixed(2)} ${axis.toUpperCase()}`;
     }
@@ -201,6 +277,7 @@ export function createDrag(object: Object3D, target: Target, mode: Mode, x0: num
     object.position.copy(start.position);
     object.quaternion.copy(start.quaternion);
     object.scale.copy(start.scale);
+    carry();
   }
 
   return { update, revert, axis };

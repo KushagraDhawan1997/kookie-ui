@@ -8,6 +8,11 @@ import { Box, Button, DropdownMenu, Flex, Popover, SegmentedControl, Shell, Text
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
   AiMagicIcon,
+  ArrowUpBigIcon,
+  Copy01Icon,
+  GroupLayersIcon,
+  MoreHorizontalIcon,
+  UngroupLayersIcon,
   MoveIcon,
   CenterFocusIcon,
   CircleIcon,
@@ -29,7 +34,7 @@ import {
 } from '@hugeicons/core-free-icons';
 import { Handles, SelectionBox } from './handles';
 import { AXES, MM_PER_UNIT, type Axis, type Mode } from './transform';
-import { useTransformGestures, type DragResult } from './use-transform-gestures';
+import { useTransformGestures, type DragKind, type DragResult } from './use-transform-gestures';
 
 const ZOOM_STEP = 1.25;
 const MIN_DISTANCE = 1.5;
@@ -38,7 +43,8 @@ const READOUT_EDGE = 96;
 
 type Kind = 'cube' | 'sphere' | 'cylinder' | 'cone' | 'pyramid' | 'torus' | 'text';
 type Vec3 = [number, number, number];
-type SceneObject = { id: number; kind: Kind; position: Vec3; rotation: Vec3; scale: Vec3 };
+/** `group` ties objects together: a tap on one selects them all. */
+type SceneObject = { id: number; kind: Kind; position: Vec3; rotation: Vec3; scale: Vec3; group?: number };
 
 const PRIMITIVES: { kind: Kind; label: string; icon: typeof CubeIcon }[] = [
   { kind: 'cube', label: 'Cube', icon: CubeIcon },
@@ -117,29 +123,33 @@ function useHistory() {
 }
 
 /**
- * Step 3 of the phone-first editor: transforming one object.
+ * Step 4 of the phone-first editor: selecting several objects.
  *
- * Selecting an object turns the bottom bar into a selection strip: Move, Rotate or Scale, snapping,
- * Delete and Done. Dragging the object itself does the common thing for the mode (slide on the
- * ground, turn around the vertical, scale evenly); its handles constrain to one axis. A readout
- * rides above the finger, and tapping it after the drag opens steppers for exact values. Two
- * fingers are always the camera. Each drag is one undo step.
+ * A tap selects an object, or its whole group. Shift, in the selection strip, latches on: taps add
+ * and remove, a one-finger drag on empty space draws a selection box, and on a handle it
+ * constrains (proportions locked, rotation in 15° steps). A long press opens a menu for the object
+ * under the finger. Several objects move, turn and scale as one unit around their shared centre,
+ * and each drag is one undo step. Two fingers are always the camera.
  */
 export function Editor() {
   const controls = React.useRef<React.ComponentRef<typeof OrbitControls> | null>(null);
   const surface = React.useRef<HTMLDivElement>(null);
   const three = React.useRef<(() => RootState) | null>(null);
-  const selectedObject = React.useRef<Object3D | null>(null);
+  const registry = React.useRef(new Map<number, Object3D>());
   const readout = React.useRef<HTMLDivElement>(null);
   const readoutText = React.useRef<HTMLSpanElement>(null);
+  const boxOverlay = React.useRef<HTMLDivElement>(null);
   const history = useHistory();
-  const [selected, setSelected] = React.useState<number | null>(null);
+  const [selected, setSelected] = React.useState<number[]>([]);
   const [mode, setMode] = React.useState<Mode>('move');
   const [snap, setSnap] = React.useState(true);
-  const [dragging, setDragging] = React.useState(false);
+  const [shift, setShift] = React.useState(false);
+  const [dragging, setDragging] = React.useState<DragKind | null>(null);
   const [result, setResult] = React.useState<DragResult | null>(null);
   const [editing, setEditing] = React.useState<{ mode: Mode; axis: Axis } | null>(null);
+  const [menu, setMenu] = React.useState<{ id: number | null; x: number; y: number } | null>(null);
   const nextId = React.useRef(1);
+  const nextGroup = React.useRef(1);
   // Draw every frame while the scene loads (shaders compile, the canvas settles its size), then
   // only on demand, so an idle editor costs no frames.
   const [frameloop, setFrameloop] = React.useState<'always' | 'demand'>('always');
@@ -151,26 +161,45 @@ export function Editor() {
   // The readout centres on the finger, but never past the screen's edge.
   const keepOnScreen = (x: number) => Math.min(Math.max(x, READOUT_EDGE), (surface.current?.clientWidth ?? 0) - READOUT_EDGE);
 
-  const current = history.objects.find((o) => o.id === selected) ?? null;
+  // Undo can take objects away, so the selection is whatever of it still exists.
+  const chosen = history.objects.filter((o) => selected.includes(o.id));
+  const single = chosen.length === 1 ? chosen[0] : null;
 
-  const select = (id: number | null) => {
-    setSelected(id);
-    setResult(null);
-    setEditing(null);
+  /** An object's whole group, or the object alone. */
+  const withGroup = (ids: number[]) => {
+    const groups = new Set(history.objects.filter((o) => ids.includes(o.id) && o.group).map((o) => o.group));
+    return history.objects.filter((o) => ids.includes(o.id) || (o.group && groups.has(o.group))).map((o) => o.id);
   };
 
-  const change = (id: number, next: Partial<SceneObject>) => history.commit(history.objects.map((o) => (o.id === id ? { ...o, ...next } : o)));
+  const select = (ids: number[]) => {
+    setSelected(ids);
+    setResult(null);
+    setEditing(null);
+    // Shift ends with the selection.
+    if (ids.length === 0) setShift(false);
+  };
+
+  const toggle = (id: number) => {
+    const ids = withGroup([id]);
+    select(selected.includes(id) ? selected.filter((s) => !ids.includes(s)) : [...new Set([...selected, ...ids])]);
+  };
+
+  const commitChanges = (changes: Map<number, Partial<SceneObject>>) => history.commit(history.objects.map((o) => (changes.has(o.id) ? { ...o, ...changes.get(o.id) } : o)));
+  const change = (id: number, next: Partial<SceneObject>) => commitChanges(new Map([[id, next]]));
 
   useTransformGestures({
     surface,
     three,
-    object: selectedObject,
+    box: boxOverlay,
+    selection: () => chosen.flatMap((o) => (registry.current.has(o.id) ? [{ id: o.id, object: registry.current.get(o.id)! }] : [])),
+    scene: () => history.objects.flatMap((o) => (registry.current.has(o.id) ? [{ id: o.id, object: registry.current.get(o.id)! }] : [])),
     mode,
     snap,
-    onStart: () => {
+    shift,
+    onStart: (kind) => {
       setResult(null);
       setEditing(null);
-      setDragging(true);
+      setDragging(kind);
     },
     onMove: (text, x, y) => {
       if (readoutText.current) readoutText.current.textContent = text;
@@ -180,18 +209,29 @@ export function Editor() {
       }
     },
     onCommit: (drag) => {
-      const object = selectedObject.current;
-      if (object && current) {
-        change(current.id, {
+      const changes = new Map<number, Partial<SceneObject>>();
+      for (const o of chosen) {
+        const object = registry.current.get(o.id);
+        if (!object) continue;
+        changes.set(o.id, {
           position: object.position.toArray() as Vec3,
           rotation: [object.rotation.x, object.rotation.y, object.rotation.z],
           scale: object.scale.toArray() as Vec3,
         });
       }
-      setDragging(false);
+      commitChanges(changes);
+      setDragging(null);
       setResult({ ...drag, x: keepOnScreen(drag.x) });
     },
-    onCancel: () => setDragging(false),
+    onCancel: () => setDragging(null),
+    onToggle: (id) => {
+      if (id !== null) toggle(id);
+    },
+    onBox: (ids) => {
+      setDragging(null);
+      select([...new Set([...selected, ...withGroup(ids)])]);
+    },
+    onLongPress: (id, x, y) => setMenu({ id, x, y }),
   });
 
   const zoom = React.useCallback((factor: number) => {
@@ -211,87 +251,155 @@ export function Editor() {
     // Drop it where the view is looking, resting on the ground.
     const position: Vec3 = [target?.x ?? 0, 0.5, target?.z ?? 0];
     history.commit([...history.objects, { id, kind, position, rotation: [0, 0, 0], scale: [1, 1, 1] }]);
-    select(id);
+    select([id]);
   };
 
-  const remove = () => {
-    if (!current) return;
-    history.commit(history.objects.filter((o) => o.id !== current.id));
-    select(null);
+  const remove = (ids: number[]) => {
+    history.commit(history.objects.filter((o) => !ids.includes(o.id)));
+    select(selected.filter((s) => !ids.includes(s)));
+  };
+
+  /** Copies sit a little off the originals and become the selection; a copied group stays a group. */
+  const duplicate = (ids: number[]) => {
+    const groups = new Map<number, number>();
+    const copies = history.objects
+      .filter((o) => ids.includes(o.id))
+      .map((o) => {
+        if (o.group && !groups.has(o.group)) groups.set(o.group, nextGroup.current++);
+        const position: Vec3 = [o.position[0] + 0.3, o.position[1], o.position[2] + 0.3];
+        return { ...o, id: nextId.current++, position, group: o.group ? groups.get(o.group) : undefined };
+      });
+    history.commit([...history.objects, ...copies]);
+    select(copies.map((c) => c.id));
+  };
+
+  // One group exactly: the action ungroups it. Anything else: the action groups it.
+  const groupIds = new Set(chosen.map((o) => o.group));
+  const isOneGroup = chosen.length > 1 && groupIds.size === 1 && !groupIds.has(undefined);
+  const toggleGroup = () => {
+    const group = isOneGroup ? undefined : nextGroup.current++;
+    commitChanges(new Map(chosen.map((o) => [o.id, { group }])));
+  };
+
+  const selectAll = () => select(history.objects.map((o) => o.id));
+  const selectSimilar = () => {
+    const kinds = new Set(chosen.map((o) => o.kind));
+    select(history.objects.filter((o) => kinds.has(o.kind)).map((o) => o.id));
   };
 
   const step = (direction: number) => {
-    if (!current || !editing) return;
+    if (!single || !editing) return;
     const field = FIELDS[editing.mode];
     const i = AXES.indexOf(editing.axis);
-    const value = Math.round((field.read(current, i) + direction * field.step) * 100) / 100;
-    change(current.id, field.write(current, i, value));
+    const value = Math.round((field.read(single, i) + direction * field.step) * 100) / 100;
+    change(single.id, field.write(single, i, value));
   };
 
   let footer: React.ReactNode;
-  if (current && editing) {
-    const field = FIELDS[editing.mode];
-    const i = AXES.indexOf(editing.axis);
-    const value = field.read(current, i);
+  if (chosen.length > 0) {
+    let actions: React.ReactNode;
+    if (single && editing) {
+      const field = FIELDS[editing.mode];
+      const i = AXES.indexOf(editing.axis);
+      const value = field.read(single, i);
+      actions = (
+        <Toolbar aria-label="Exact value" backdrop>
+          <ToolbarGroup>
+            {/* Tap cycles the axis being edited. */}
+            <ToolbarButton aria-label={`Axis ${editing.axis.toUpperCase()}, change axis`} onClick={() => setEditing({ ...editing, axis: AXES[(i + 1) % 3] })}>
+              {editing.axis.toUpperCase()}
+            </ToolbarButton>
+            <ToolbarButton iconOnly aria-label={`Less, by ${field.step} ${field.unit}`} onClick={() => step(-1)}>
+              <HugeiconsIcon icon={MinusSignIcon} strokeWidth={1.75} />
+            </ToolbarButton>
+            <ExactValue
+              key={`${editing.mode}-${editing.axis}-${value}`}
+              value={value}
+              unit={field.unit}
+              label={`${MODES.find((m) => m.mode === editing.mode)?.label} ${editing.axis.toUpperCase()}`}
+              onCommit={(v) => change(single.id, field.write(single, i, v))}
+            />
+            <ToolbarButton iconOnly aria-label={`More, by ${field.step} ${field.unit}`} onClick={() => step(1)}>
+              <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.75} />
+            </ToolbarButton>
+            <ToolbarButton iconOnly aria-label="Done editing" onClick={() => setEditing(null)}>
+              <HugeiconsIcon icon={Tick02Icon} strokeWidth={1.75} />
+            </ToolbarButton>
+          </ToolbarGroup>
+        </Toolbar>
+      );
+    } else {
+      actions = (
+        <Toolbar aria-label="Selection actions" backdrop>
+          <SegmentedControl.Root
+            aria-label="Transform"
+            value={mode}
+            onValueChange={(value) => {
+              setMode(value as Mode);
+              setResult(null);
+            }}
+          >
+            {MODES.map((m) => (
+              <SegmentedControl.Item key={m.mode} value={m.mode} aria-label={m.label}>
+                <HugeiconsIcon icon={m.icon} strokeWidth={1.75} />
+              </SegmentedControl.Item>
+            ))}
+          </SegmentedControl.Root>
+          <ToolbarGroup>
+            <ToolbarButton iconOnly aria-label="Duplicate" onClick={() => duplicate(selected)}>
+              <HugeiconsIcon icon={Copy01Icon} strokeWidth={1.75} />
+            </ToolbarButton>
+            <ToolbarButton iconOnly aria-label={isOneGroup ? 'Ungroup' : 'Group'} disabled={chosen.length < 2} onClick={toggleGroup}>
+              <HugeiconsIcon icon={isOneGroup ? UngroupLayersIcon : GroupLayersIcon} strokeWidth={1.75} />
+            </ToolbarButton>
+            <ToolbarButton iconOnly aria-label="Delete" onClick={() => remove(selected)}>
+              <HugeiconsIcon icon={Delete02Icon} strokeWidth={1.75} />
+            </ToolbarButton>
+          </ToolbarGroup>
+        </Toolbar>
+      );
+    }
     footer = (
-      <Toolbar aria-label="Exact value" backdrop style={{ justifyContent: 'center' }}>
-        <ToolbarGroup>
-          {/* Tap cycles the axis being edited. */}
-          <ToolbarButton aria-label={`Axis ${editing.axis.toUpperCase()}, change axis`} onClick={() => setEditing({ ...editing, axis: AXES[(i + 1) % 3] })}>
-            {editing.axis.toUpperCase()}
-          </ToolbarButton>
-          <ToolbarButton iconOnly aria-label={`Less, by ${field.step} ${field.unit}`} onClick={() => step(-1)}>
-            <HugeiconsIcon icon={MinusSignIcon} strokeWidth={1.75} />
-          </ToolbarButton>
-          <ExactValue
-            key={`${editing.mode}-${editing.axis}-${value}`}
-            value={value}
-            unit={field.unit}
-            label={`${MODES.find((m) => m.mode === editing.mode)?.label} ${editing.axis.toUpperCase()}`}
-            onCommit={(v) => change(current.id, field.write(current, i, v))}
-          />
-          <ToolbarButton iconOnly aria-label={`More, by ${field.step} ${field.unit}`} onClick={() => step(1)}>
-            <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.75} />
-          </ToolbarButton>
-          <ToolbarButton iconOnly aria-label="Done editing" onClick={() => setEditing(null)}>
-            <HugeiconsIcon icon={Tick02Icon} strokeWidth={1.75} />
-          </ToolbarButton>
-        </ToolbarGroup>
-      </Toolbar>
-    );
-  } else if (current) {
-    footer = (
-      <Toolbar aria-label="Selection" backdrop style={{ justifyContent: 'center' }}>
-        <SegmentedControl.Root
-          aria-label="Transform"
-          value={mode}
-          onValueChange={(value) => {
-            setMode(value as Mode);
-            setResult(null);
-          }}
-        >
-          {MODES.map((m) => (
-            <SegmentedControl.Item key={m.mode} value={m.mode} aria-label={m.label}>
-              <HugeiconsIcon icon={m.icon} strokeWidth={1.75} />
-            </SegmentedControl.Item>
-          ))}
-        </SegmentedControl.Root>
-        <ToolbarGroup>
-          <ToolbarButton iconOnly aria-label="Snap" aria-pressed={snap} onClick={() => setSnap((s) => !s)}>
-            <HugeiconsIcon icon={GridIcon} strokeWidth={1.75} />
-          </ToolbarButton>
-          <ToolbarButton iconOnly aria-label="Delete" onClick={remove}>
-            <HugeiconsIcon icon={Delete02Icon} strokeWidth={1.75} />
-          </ToolbarButton>
-          <ToolbarButton iconOnly aria-label="Done" onClick={() => select(null)}>
-            <HugeiconsIcon icon={Tick02Icon} strokeWidth={1.75} />
-          </ToolbarButton>
-        </ToolbarGroup>
-      </Toolbar>
+      <Flex direction="column" align="center" gap="2">
+        <Toolbar aria-label="Selection" backdrop>
+          <ToolbarGroup>
+            {/* Shift latches: on until tapped again. Its name says what it does right now. */}
+            <ToolbarButton
+              aria-pressed={shift}
+              // On, it fills solid: a mode that changes what every touch does has to be unmissable.
+              variant={shift ? 'solid' : undefined}
+              onClick={() => setShift((s) => !s)}
+            >
+              <HugeiconsIcon icon={ArrowUpBigIcon} strokeWidth={1.75} />
+              {dragging === 'handle' && shift ? 'Constrain' : 'Add'}
+            </ToolbarButton>
+          </ToolbarGroup>
+          <ToolbarGroup>
+            <ToolbarButton iconOnly aria-label="Snap" aria-pressed={snap} onClick={() => setSnap((s) => !s)}>
+              <HugeiconsIcon icon={GridIcon} strokeWidth={1.75} />
+            </ToolbarButton>
+            <DropdownMenu.Root modal={false}>
+              <DropdownMenu.Trigger>
+                <ToolbarButton iconOnly aria-label="More">
+                  <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
+                </ToolbarButton>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Content side="top" align="end" sideOffset={8}>
+                <DropdownMenu.Item onSelect={selectAll}>Select all</DropdownMenu.Item>
+                <DropdownMenu.Item onSelect={selectSimilar}>Select similar</DropdownMenu.Item>
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
+            <ToolbarButton iconOnly aria-label="Done" onClick={() => select([])}>
+              <HugeiconsIcon icon={Tick02Icon} strokeWidth={1.75} />
+            </ToolbarButton>
+          </ToolbarGroup>
+        </Toolbar>
+        {actions}
+      </Flex>
     );
   } else {
     footer = (
-      <Toolbar aria-label="Create" backdrop style={{ justifyContent: 'center' }}>
+      <Toolbar aria-label="Create" backdrop>
         <ToolbarGroup>
           <AddMenu onAdd={add} />
           <MakeWithAi onMake={add} />
@@ -300,13 +408,16 @@ export function Editor() {
     );
   }
 
+  const menuTarget = menu?.id ?? null;
+  const menuSelected = menuTarget !== null && selected.includes(menuTarget);
+
   return (
     // Size 4 on a phone until v2's responsive sizing reaches v1.
     <Theme size="4" asChild>
       <Shell.Root height="100dvh">
         <Shell.Content>
           {/* The canvas owns every touch on it: no page scroll, no page pinch, no double-tap zoom. */}
-          <Box ref={surface} position="absolute" inset="0" style={{ touchAction: 'none', background: 'var(--color-ground)' }}>
+          <Box ref={surface} position="absolute" inset="0" style={{ touchAction: 'none', background: 'var(--color-ground)', WebkitUserSelect: 'none', userSelect: 'none', WebkitTouchCallout: 'none' }}>
             <Canvas
               frameloop={frameloop}
               dpr={[1, 2]}
@@ -315,41 +426,50 @@ export function Editor() {
               onCreated={(state) => {
                 three.current = state.get;
               }}
-              onPointerMissed={() => select(null)}
+              onPointerMissed={() => select([])}
             >
               <RedrawOnResize />
               <ambientLight intensity={0.7} />
               <directionalLight position={[5, 10, 5]} intensity={0.9} />
               <Grid infiniteGrid cellSize={0.5} sectionSize={2.5} cellThickness={0.6} sectionThickness={1} cellColor="#a8a8a8" sectionColor="#8a8a8a" fadeDistance={40} fadeStrength={1.5} />
               {history.objects.map((o) => {
-                const isSelected = o.id === selected;
-                const pick = (e: { stopPropagation: () => void }) => {
+                const register = (object: Object3D | null) => {
+                  if (object) registry.current.set(o.id, object);
+                  else registry.current.delete(o.id);
+                };
+                // A plain tap selects the object, or its whole group, in place of the selection.
+                const pickThis = (e: { stopPropagation: () => void }) => {
                   e.stopPropagation();
-                  if (!isSelected) select(o.id);
+                  if (!selected.includes(o.id)) select(withGroup([o.id]));
                 };
                 const transform = { position: o.position, rotation: o.rotation, scale: o.scale };
                 return o.kind === 'text' ? (
-                  <SceneText key={o.id} ref={isSelected ? selectedObject : undefined} {...transform} fontSize={0.8} anchorX="center" anchorY="middle" color="#3a3a3a" onClick={pick}>
+                  <SceneText key={o.id} ref={register} {...transform} fontSize={0.8} anchorX="center" anchorY="middle" color="#3a3a3a" onClick={pickThis}>
                     Text
                   </SceneText>
                 ) : (
-                  <mesh key={o.id} ref={isSelected ? selectedObject : undefined} {...transform} onClick={pick}>
+                  <mesh key={o.id} ref={register} {...transform} onClick={pickThis}>
                     <Geometry kind={o.kind} />
                     <meshStandardMaterial color="#d4d4d4" roughness={0.6} />
                   </mesh>
                 );
               })}
-              {current ? (
-                <>
-                  <SelectionBox key={`box-${current.id}`} target={selectedObject} />
-                  <Handles key={current.id} target={selectedObject} mode={mode} />
-                </>
-              ) : null}
+              {chosen.map((o) => (
+                <SelectionBox key={`box-${o.id}`} target={() => registry.current.get(o.id)} />
+              ))}
+              {chosen.length > 0 ? <Handles key={selected.join(',')} targets={() => chosen.flatMap((o) => registry.current.get(o.id) ?? [])} mode={mode} /> : null}
               <OrbitControls ref={controls} makeDefault enableDamping={false} minDistance={MIN_DISTANCE} maxDistance={MAX_DISTANCE} />
             </Canvas>
 
+            {/* The selection box while Shift drags on empty space. Drawn without a React render. */}
+            <Box
+              ref={boxOverlay}
+              position="absolute"
+              style={{ display: 'none', pointerEvents: 'none', border: '1.5px solid #3d5afe', background: 'color-mix(in srgb, #3d5afe 12%, transparent)', borderRadius: 4 }}
+            />
+
             {/* The readout rides above the finger while it drags; after, a tap on it opens the steppers. */}
-            {dragging ? (
+            {dragging === 'object' || dragging === 'handle' ? (
               <Box ref={readout} position="absolute" style={{ transform: 'translate(-50%, calc(-100% - 48px))', pointerEvents: 'none' }}>
                 <Box px="3" py="2" style={{ background: 'var(--color-panel-solid)', borderRadius: 'var(--radius-full)', boxShadow: 'var(--floating-chrome)', whiteSpace: 'nowrap' }}>
                   <Text size="2" weight="medium">
@@ -357,49 +477,93 @@ export function Editor() {
                   </Text>
                 </Box>
               </Box>
-            ) : result && current && !editing ? (
+            ) : result && chosen.length > 0 && !editing ? (
               <Box position="absolute" left={`${result.x}px`} top={`${result.y}px`} style={{ transform: 'translate(-50%, calc(-100% - 48px))' }}>
                 <Button
                   size="2"
                   variant="soft"
                   color="gray"
                   style={{ whiteSpace: 'nowrap' }}
+                  // Exact values are per object, so the readout opens them only for one.
+                  disabled={!single}
                   onClick={() => setEditing({ mode: result.mode, axis: result.axis ?? (result.mode === 'rotate' ? 'y' : 'x') })}
                 >
                   {result.text}
                 </Button>
               </Box>
             ) : null}
+
+            {/* The long-press menu, anchored where the finger pressed. */}
+            <DropdownMenu.Root open={menu !== null} onOpenChange={(open) => !open && setMenu(null)} modal={false}>
+              <DropdownMenu.Trigger>
+                <Box position="absolute" left={`${menu?.x ?? 0}px`} top={`${menu?.y ?? 0}px`} width="0" height="0" style={{ pointerEvents: 'none' }} aria-hidden />
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Content side="bottom" align="start" sideOffset={12}>
+                {menuTarget !== null ? (
+                  <>
+                    {menuSelected ? (
+                      <DropdownMenu.Item onSelect={() => toggle(menuTarget)}>Remove from selection</DropdownMenu.Item>
+                    ) : (
+                      <>
+                        <DropdownMenu.Item onSelect={() => select(withGroup([menuTarget]))}>Select</DropdownMenu.Item>
+                        <DropdownMenu.Item onSelect={() => toggle(menuTarget)}>Add to selection</DropdownMenu.Item>
+                      </>
+                    )}
+                    <DropdownMenu.Separator />
+                    <DropdownMenu.Item onSelect={() => duplicate(withGroup([menuTarget]))}>Duplicate</DropdownMenu.Item>
+                    <DropdownMenu.Item color="red" onSelect={() => remove(withGroup([menuTarget]))}>
+                      Delete
+                    </DropdownMenu.Item>
+                  </>
+                ) : (
+                  <>
+                    <DropdownMenu.Item onSelect={selectAll} disabled={history.objects.length === 0}>
+                      Select all
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item onSelect={() => select([])} disabled={chosen.length === 0}>
+                      Clear selection
+                    </DropdownMenu.Item>
+                  </>
+                )}
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
           </Box>
 
-          {/* Header: history. */}
+          {/* Header: history, and how many are selected when it is more than one. */}
           <Shell.PaneHeader float>
-            <Toolbar aria-label="History" backdrop>
-              <ToolbarGroup>
-                <ToolbarButton
-                  iconOnly
-                  aria-label="Undo"
-                  disabled={!history.canUndo}
-                  onClick={() => {
-                    history.undo();
-                    setResult(null);
-                  }}
-                >
-                  <HugeiconsIcon icon={Undo02Icon} strokeWidth={1.75} />
-                </ToolbarButton>
-                <ToolbarButton
-                  iconOnly
-                  aria-label="Redo"
-                  disabled={!history.canRedo}
-                  onClick={() => {
-                    history.redo();
-                    setResult(null);
-                  }}
-                >
-                  <HugeiconsIcon icon={Redo02Icon} strokeWidth={1.75} />
-                </ToolbarButton>
-              </ToolbarGroup>
-            </Toolbar>
+            <Flex align="center" gap="3">
+              <Toolbar aria-label="History" backdrop>
+                <ToolbarGroup>
+                  <ToolbarButton
+                    iconOnly
+                    aria-label="Undo"
+                    disabled={!history.canUndo}
+                    onClick={() => {
+                      history.undo();
+                      setResult(null);
+                    }}
+                  >
+                    <HugeiconsIcon icon={Undo02Icon} strokeWidth={1.75} />
+                  </ToolbarButton>
+                  <ToolbarButton
+                    iconOnly
+                    aria-label="Redo"
+                    disabled={!history.canRedo}
+                    onClick={() => {
+                      history.redo();
+                      setResult(null);
+                    }}
+                  >
+                    <HugeiconsIcon icon={Redo02Icon} strokeWidth={1.75} />
+                  </ToolbarButton>
+                </ToolbarGroup>
+              </Toolbar>
+              {chosen.length > 1 ? (
+                <Text size="2" weight="medium" role="status">
+                  {chosen.length} selected
+                </Text>
+              ) : null}
+            </Flex>
           </Shell.PaneHeader>
 
           {/* Camera: a small cluster on the canvas edge, like map zoom buttons. */}
@@ -419,9 +583,11 @@ export function Editor() {
             </Toolbar>
           </Box>
 
-          {/* Footer: making things, or the selection strip while an object is selected. */}
+          {/* Footer: making things, or the selection strip while anything is selected. */}
           <Shell.PaneFooter float style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
-            {footer}
+            <Flex justify="center" width="100%">
+              {footer}
+            </Flex>
           </Shell.PaneFooter>
         </Shell.Content>
       </Shell.Root>
