@@ -3,19 +3,7 @@
 import * as React from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import { Edges, Grid, OrbitControls } from '@react-three/drei';
-import {
-  Box,
-  Button,
-  Flex,
-  Grid as LayoutGrid,
-  Popover,
-  Shell,
-  Text,
-  TextField,
-  Toolbar,
-  ToolbarButton,
-  ToolbarGroup,
-} from '@kushagradhawan/kookie-ui';
+import { Box, Button, Theme, Flex, Grid as LayoutGrid, Popover, Shell, Text, TextField, Toolbar, ToolbarButton, ToolbarGroup } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
   AiMagicIcon,
@@ -70,8 +58,7 @@ function Geometry({ kind }: { kind: Kind }) {
 function useHistory() {
   const [state, setState] = React.useState({ stack: [[]] as SceneObject[][], index: 0 });
   const objects = state.stack[state.index];
-  const commit = (next: SceneObject[]) =>
-    setState((s) => ({ stack: [...s.stack.slice(0, s.index + 1), next], index: s.index + 1 }));
+  const commit = (next: SceneObject[]) => setState((s) => ({ stack: [...s.stack.slice(0, s.index + 1), next], index: s.index + 1 }));
   return {
     objects,
     commit,
@@ -125,118 +112,105 @@ export function Editor() {
   };
 
   return (
-    <Shell.Root height="100dvh">
-      <Shell.Content>
-        {/* The canvas owns every touch on it: no page scroll, no page pinch, no double-tap zoom. */}
-        <Box position="absolute" inset="0" style={{ touchAction: 'none', background: 'var(--color-ground)' }}>
-          <Canvas
-            frameloop={frameloop}
-            dpr={[1, 2]}
-            camera={{ position: [6, 5, 8], fov: 45, near: 0.1, far: 200 }}
-            gl={{ antialias: true, alpha: true }}
-            onPointerMissed={() => setSelected(null)}
-          >
-            <RedrawOnResize />
-            <ambientLight intensity={0.7} />
-            <directionalLight position={[5, 10, 5]} intensity={0.9} />
-            <Grid
-              infiniteGrid
-              cellSize={0.5}
-              sectionSize={2.5}
-              cellThickness={0.6}
-              sectionThickness={1}
-              cellColor="#a8a8a8"
-              sectionColor="#8a8a8a"
-              fadeDistance={40}
-              fadeStrength={1.5}
-            />
-            {history.objects.map((o) => (
-              <mesh
-                key={o.id}
-                position={o.position}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSelected(o.id);
-                }}
-              >
-                <Geometry kind={o.kind} />
-                <meshStandardMaterial color={o.id === selected ? '#9aa7ff' : '#d4d4d4'} roughness={0.6} />
-                {o.id === selected ? <Edges color="#3d5afe" /> : null}
-              </mesh>
-            ))}
-            <OrbitControls ref={controls} makeDefault enableDamping={false} minDistance={MIN_DISTANCE} maxDistance={MAX_DISTANCE} />
-          </Canvas>
-        </Box>
+    // Size 3 on a phone until v2's responsive sizing reaches v1.
+    <Theme size="3" asChild>
+      <Shell.Root height="100dvh">
+        <Shell.Content>
+          {/* The canvas owns every touch on it: no page scroll, no page pinch, no double-tap zoom. */}
+          <Box position="absolute" inset="0" style={{ touchAction: 'none', background: 'var(--color-ground)' }}>
+            <Canvas frameloop={frameloop} dpr={[1, 2]} camera={{ position: [6, 5, 8], fov: 45, near: 0.1, far: 200 }} gl={{ antialias: true, alpha: true }} onPointerMissed={() => setSelected(null)}>
+              <RedrawOnResize />
+              <ambientLight intensity={0.7} />
+              <directionalLight position={[5, 10, 5]} intensity={0.9} />
+              <Grid infiniteGrid cellSize={0.5} sectionSize={2.5} cellThickness={0.6} sectionThickness={1} cellColor="#a8a8a8" sectionColor="#8a8a8a" fadeDistance={40} fadeStrength={1.5} />
+              {history.objects.map((o) => (
+                <mesh
+                  key={o.id}
+                  position={o.position}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelected(o.id);
+                  }}
+                >
+                  <Geometry kind={o.kind} />
+                  <meshStandardMaterial color={o.id === selected ? '#9aa7ff' : '#d4d4d4'} roughness={0.6} />
+                  {o.id === selected ? <Edges color="#3d5afe" /> : null}
+                </mesh>
+              ))}
+              <OrbitControls ref={controls} makeDefault enableDamping={false} minDistance={MIN_DISTANCE} maxDistance={MAX_DISTANCE} />
+            </Canvas>
+          </Box>
 
-        {/* Header: history. */}
-        <Shell.PaneHeader float>
-          <Toolbar aria-label="History" backdrop size="3">
-            <ToolbarGroup>
-              <ToolbarButton iconOnly aria-label="Undo" disabled={!history.canUndo} onClick={history.undo}>
-                <HugeiconsIcon icon={Undo02Icon} strokeWidth={1.75} />
-              </ToolbarButton>
-              <ToolbarButton iconOnly aria-label="Redo" disabled={!history.canRedo} onClick={history.redo}>
-                <HugeiconsIcon icon={Redo02Icon} strokeWidth={1.75} />
-              </ToolbarButton>
-            </ToolbarGroup>
-          </Toolbar>
-        </Shell.PaneHeader>
-
-        {/* Camera: a small cluster on the canvas edge, like map zoom buttons. */}
-        <Box position="absolute" right="0" top="50%" style={{ transform: 'translateY(-50%)', paddingRight: 'calc(env(safe-area-inset-right) + 12px)' }}>
-          <Toolbar aria-label="View" orientation="vertical" backdrop size="3">
-            <ToolbarGroup>
-              <ToolbarButton iconOnly aria-label="Zoom in" onClick={() => zoom(1 / ZOOM_STEP)}>
-                <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.75} />
-              </ToolbarButton>
-              <ToolbarButton iconOnly aria-label="Zoom out" onClick={() => zoom(ZOOM_STEP)}>
-                <HugeiconsIcon icon={MinusSignIcon} strokeWidth={1.75} />
-              </ToolbarButton>
-              <ToolbarButton iconOnly aria-label="Fit view" onClick={fit}>
-                <HugeiconsIcon icon={CenterFocusIcon} strokeWidth={1.75} />
-              </ToolbarButton>
-            </ToolbarGroup>
-          </Toolbar>
-        </Box>
-
-        {/* Footer: making things. Hidden while the Add pane is open, so two bars never stack. */}
-        {!addOpen && (
-          <Shell.PaneFooter float style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
-            <Toolbar aria-label="Create" backdrop size="3" style={{ justifyContent: 'center' }}>
+          {/* Header: history. */}
+          <Shell.PaneHeader float>
+            <Toolbar aria-label="History" backdrop size="3">
               <ToolbarGroup>
-                <ToolbarButton onClick={() => setAddOpen(true)}>
-                  <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.75} />
-                  Add
+                <ToolbarButton iconOnly aria-label="Undo" disabled={!history.canUndo} onClick={history.undo}>
+                  <HugeiconsIcon icon={Undo02Icon} strokeWidth={1.75} />
                 </ToolbarButton>
-                <MakeWithAi onMake={add} />
+                <ToolbarButton iconOnly aria-label="Redo" disabled={!history.canRedo} onClick={history.redo}>
+                  <HugeiconsIcon icon={Redo02Icon} strokeWidth={1.75} />
+                </ToolbarButton>
               </ToolbarGroup>
             </Toolbar>
-          </Shell.PaneFooter>
-        )}
-      </Shell.Content>
+          </Shell.PaneHeader>
 
-      {/* Add: a non-modal pane at a low resting height. The canvas above stays usable. */}
-      <Shell.Bottom open={addOpen} onOpenChange={setAddOpen} presentation="fixed" expandedSize={196}>
-        <Flex direction="column" gap="3" p="4" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 16px)' }}>
-          <Flex align="center" justify="between">
-            <Text size="3" weight="medium">
-              Add a shape
-            </Text>
-            <Button iconOnly emphasis="quiet" color="gray" aria-label="Close" onClick={() => setAddOpen(false)}>
-              <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
-            </Button>
-          </Flex>
-          <LayoutGrid columns="3" gap="2">
-            {PRIMITIVES.map((p) => (
-              <Button key={p.kind} size="3" variant="soft" color="gray" onClick={() => add(p.kind)}>
-                <HugeiconsIcon icon={p.icon} strokeWidth={1.75} />
-                {p.label}
+          {/* Camera: a small cluster on the canvas edge, like map zoom buttons. */}
+          <Box position="absolute" right="0" top="50%" style={{ transform: 'translateY(-50%)', paddingRight: 'calc(env(safe-area-inset-right) + 12px)' }}>
+            <Toolbar aria-label="View" orientation="vertical" backdrop size="3">
+              <ToolbarGroup>
+                <ToolbarButton iconOnly aria-label="Zoom in" onClick={() => zoom(1 / ZOOM_STEP)}>
+                  <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.75} />
+                </ToolbarButton>
+                <ToolbarButton iconOnly aria-label="Zoom out" onClick={() => zoom(ZOOM_STEP)}>
+                  <HugeiconsIcon icon={MinusSignIcon} strokeWidth={1.75} />
+                </ToolbarButton>
+                <ToolbarButton iconOnly aria-label="Fit view" onClick={fit}>
+                  <HugeiconsIcon icon={CenterFocusIcon} strokeWidth={1.75} />
+                </ToolbarButton>
+              </ToolbarGroup>
+            </Toolbar>
+          </Box>
+
+          {/* Footer: making things. Hidden while the Add pane is open, so two bars never stack. */}
+          {!addOpen && (
+            <Shell.PaneFooter float style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
+              <Toolbar aria-label="Create" backdrop size="3" style={{ justifyContent: 'center' }}>
+                <ToolbarGroup>
+                  {/* "+" is a settled symbol, so it goes icon-only; the name stays for screen readers. */}
+                  <ToolbarButton iconOnly aria-label="Add" onClick={() => setAddOpen(true)}>
+                    <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.75} />
+                  </ToolbarButton>
+                  <MakeWithAi onMake={add} />
+                </ToolbarGroup>
+              </Toolbar>
+            </Shell.PaneFooter>
+          )}
+        </Shell.Content>
+
+        {/* Add: a non-modal pane at a low resting height. The canvas above stays usable. */}
+        <Shell.Bottom open={addOpen} onOpenChange={setAddOpen} presentation="fixed" expandedSize={196}>
+          <Flex direction="column" gap="3" p="4" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 16px)' }}>
+            <Flex align="center" justify="between">
+              <Text size="3" weight="medium">
+                Add a shape
+              </Text>
+              <Button iconOnly emphasis="quiet" color="gray" aria-label="Close" onClick={() => setAddOpen(false)}>
+                <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
               </Button>
-            ))}
-          </LayoutGrid>
-        </Flex>
-      </Shell.Bottom>
-    </Shell.Root>
+            </Flex>
+            <LayoutGrid columns="3" gap="2">
+              {PRIMITIVES.map((p) => (
+                <Button key={p.kind} size="3" variant="soft" color="gray" onClick={() => add(p.kind)}>
+                  <HugeiconsIcon icon={p.icon} strokeWidth={1.75} />
+                  {p.label}
+                </Button>
+              ))}
+            </LayoutGrid>
+          </Flex>
+        </Shell.Bottom>
+      </Shell.Root>
+    </Theme>
   );
 }
 
@@ -276,8 +250,9 @@ function MakeWithAi({ onMake }: { onMake: (kind: Kind) => void }) {
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger>
         <ToolbarButton>
+          {/* The sparkle's meaning isn't settled, so it keeps a short label. */}
           <HugeiconsIcon icon={AiMagicIcon} strokeWidth={1.75} />
-          Make with AI
+          Ask AI
         </ToolbarButton>
       </Popover.Trigger>
       <Popover.Content side="top" width="300px">
@@ -288,13 +263,7 @@ function MakeWithAi({ onMake }: { onMake: (kind: Kind) => void }) {
           }}
         >
           <Flex direction="column" gap="3">
-            <TextField.Root
-              aria-label="Describe a shape"
-              placeholder="A tall cylinder…"
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              disabled={busy}
-            />
+            <TextField.Root aria-label="Describe a shape" placeholder="A tall cylinder…" value={prompt} onChange={(e) => setPrompt(e.target.value)} disabled={busy} />
             <Button type="submit" emphasis="loud" loading={busy} disabled={!prompt.trim()}>
               Make it
             </Button>
