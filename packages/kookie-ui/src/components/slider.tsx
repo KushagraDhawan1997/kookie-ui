@@ -140,6 +140,24 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
     [snapToTicks, sortedTicks, snapKeyStep, snapToNearestTick, currentValue, onValueChange, isControlled],
   );
 
+  // Radix commits its own step value on a key press, before the snapped value comes back. So
+  // the commit snaps the same way the change did, and a key press that snaps back to where the
+  // handle was commits nothing.
+  const handleValueCommit = React.useCallback(
+    (newValue: number[]) => {
+      if (!onValueCommit) return;
+      if (!snapToTicks || sortedTicks.length === 0) {
+        onValueCommit(newValue);
+        return;
+      }
+      const keyboard = keyboardChangeRef.current;
+      const finalValue = newValue.map((v, i) => (keyboard && currentValue[i] !== undefined ? snapKeyStep(v, currentValue[i]) : snapToNearestTick(v)));
+      if (keyboard && finalValue.every((v, i) => v === currentValue[i])) return;
+      onValueCommit(finalValue);
+    },
+    [onValueCommit, snapToTicks, sortedTicks, snapKeyStep, snapToNearestTick, currentValue],
+  );
+
   // Cleanup timeout on unmount
   React.useEffect(() => {
     return () => {
@@ -170,7 +188,7 @@ const Slider = React.forwardRef<SliderElement, SliderProps>((ownProps, forwarded
           rootProps.onPointerDown?.(event);
         }}
         onValueChange={handleValueChange}
-        onValueCommit={onValueCommit}
+        onValueCommit={handleValueCommit}
         asChild={false}
         className={classNames('kui-SliderRoot', className)}
       >

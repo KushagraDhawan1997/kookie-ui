@@ -47,7 +47,7 @@ export default function ShellPlayground({ showControls = false, showToolbar = tr
     const rootProps = ['height="100%"'];
     if (size !== '2') rootProps.push(`size="${size}"`);
 
-    const sidebarProps = [`presentation="${presentation}"`, 'state={state}', 'onStateChange={setState}'];
+    const sidebarProps = ['aria-label="Main"', `presentation="${presentation}"`, 'state={state}', 'onStateChange={setState}'];
     if (inset) sidebarProps.push('inset');
     if (resizable) sidebarProps.push('resizable');
 
@@ -74,7 +74,7 @@ export function AppFrame() {
       <Shell.Sidebar
         ${sidebarProps.join('\n        ')}
       >
-        <Shell.Scroll role="navigation" aria-label="Main">
+        <Shell.Scroll>
           <Sidebar.Menu>
             <Sidebar.MenuItem>
               <Sidebar.MenuButton>
@@ -123,13 +123,14 @@ export function AppFrame() {
         </Shell.Header>
         <Shell.Sidebar
           key={presentation}
+          aria-label="Main"
           presentation={presentation}
           state={state}
           onStateChange={setState}
           inset={inset}
           resizable={resizable}
         >
-          <Shell.Scroll role="navigation" aria-label="Main">
+          <Shell.Scroll>
             <Sidebar.Menu>
               {pages.map((p) => (
                 <Sidebar.MenuItem key={p.id}>

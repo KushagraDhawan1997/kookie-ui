@@ -30,6 +30,22 @@ describe('TextField error message', () => {
   });
 });
 
+describe('TextField error message in a form grid', () => {
+  it('takes one cell, so later labels stay in their column', () => {
+    const { getByText } = render(
+      <Theme>
+        <div style={{ display: 'grid', gridTemplateColumns: '120px 200px', width: 320 }}>
+          <span>Email</span>
+          <TextField.Root aria-label="Email" error errorMessage="Email is required" />
+          <span>Name</span>
+          <TextField.Root aria-label="Name" />
+        </div>
+      </Theme>,
+    );
+    expect(rect(getByText('Name')).left).toBe(rect(getByText('Email')).left);
+  });
+});
+
 describe('TextField in RTL', () => {
   it('mirrors slot and input padding', () => {
     const { container } = render(

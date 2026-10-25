@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 import { renderWithProviders } from '../../test-utils';
-import { Shell, Toolbar, ToolbarButton } from '../../../src/components/index';
+import { Dialog, Popover, Shell, Theme, Toolbar, ToolbarButton } from '../../../src/components/index';
 
 function Band({ size }: { size?: '1' | '2' | '3' | '4' }) {
   return (
@@ -46,6 +46,54 @@ describe('Toolbar size in a Shell', () => {
     const toolbars = container.querySelectorAll('.kui-Toolbar');
     expect(toolbars[0]).toHaveClass('kui-r-size-1');
     expect(toolbars[1]).toHaveClass('kui-r-size-2');
+  });
+});
+
+describe('Toolbar size in a portalled surface', () => {
+  it('a Toolbar in a Popover or Dialog opened from the Shell takes the Theme size, not the Shell step', () => {
+    renderWithProviders(
+      <Shell.Root size="2">
+        <Shell.Content>
+          <Band />
+          <Popover.Root open>
+            <Popover.Trigger>
+              <button type="button">Open</button>
+            </Popover.Trigger>
+            <Popover.Content aria-label="Pop">
+              <Toolbar aria-label="In popover">
+                <ToolbarButton>Go</ToolbarButton>
+              </Toolbar>
+            </Popover.Content>
+          </Popover.Root>
+          <Dialog.Root open>
+            <Dialog.Content aria-describedby={undefined}>
+              <Dialog.Title>Edit</Dialog.Title>
+              <Toolbar aria-label="In dialog">
+                <ToolbarButton>Go</ToolbarButton>
+              </Toolbar>
+            </Dialog.Content>
+          </Dialog.Root>
+        </Shell.Content>
+      </Shell.Root>,
+    );
+    expect(document.querySelector('[aria-label="Row"]')).toHaveClass('kui-r-size-3');
+    expect(document.querySelector('[aria-label="In popover"]')).toHaveClass('kui-r-size-2');
+    expect(document.querySelector('[aria-label="In dialog"]')).toHaveClass('kui-r-size-2');
+  });
+
+  it('a Shell inside a Theme asChild still steps its toolbars', () => {
+    const { container } = renderWithProviders(
+      <Theme asChild>
+        <div>
+          <Shell.Root size="2">
+            <Shell.Content>
+              <Band />
+            </Shell.Content>
+          </Shell.Root>
+        </div>
+      </Theme>,
+    );
+    expect(container.querySelector('.kui-ShellContent .kui-Toolbar')).toHaveClass('kui-r-size-3');
   });
 });
 

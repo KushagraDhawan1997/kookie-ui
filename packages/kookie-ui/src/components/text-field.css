@@ -392,7 +392,7 @@
   }
 }
 
-/* raised: the default. A flat soft fill with a faint edge, as in v2. A field casts no shadow. */
+/* raised: the default. The surface colour with --control-chrome, like a raised button. */
 
 .kui-TextFieldRoot:where(.kui-variant-raised) {
   --text-field-selection-color: var(--focus-a5);
@@ -645,8 +645,15 @@
 }
 
 /* Error message styling */
+/* With an error message, one box holds the field and the message below it. */
+.kui-TextFieldWrapper {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
 .kui-TextFieldErrorMessage {
-  /* A sibling of the root, below the field: it takes the field's type itself. */
+  /* Below the field, outside its paint: it takes the field's type itself. */
   font-family: var(--default-font-family);
   font-weight: var(--font-weight-regular);
   color: var(--red-11);

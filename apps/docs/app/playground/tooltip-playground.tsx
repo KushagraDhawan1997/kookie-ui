@@ -8,7 +8,7 @@ import Playground from '@/components/playground';
 
 const sides = ['top', 'right', 'bottom', 'left'] as const;
 const aligns = ['center', 'start', 'end'] as const;
-const delays = ['700', '300', '0'] as const;
+const delays = ['200', '700', '0'] as const;
 
 const tools = [
   { label: 'Bold', shortcut: '⌘B', icon: TextBoldIcon, iconName: 'TextBoldIcon' },
@@ -29,14 +29,14 @@ export default function TooltipPlayground({
 }: TooltipPlaygroundProps = {}) {
   const [side, setSide] = React.useState<(typeof sides)[number]>('top');
   const [align, setAlign] = React.useState<(typeof aligns)[number]>('center');
-  const [delay, setDelay] = React.useState<(typeof delays)[number]>('700');
+  const [delay, setDelay] = React.useState<(typeof delays)[number]>('200');
   const [keepOpen, setKeepOpen] = React.useState(false);
 
   const generateCode = () => {
     const props = ['content={`${tool.label} ${tool.shortcut}`}'];
     if (side !== 'top') props.push(`side="${side}"`);
     if (align !== 'center') props.push(`align="${align}"`);
-    if (delay !== '700') props.push(`delayDuration={${delay}}`);
+    if (delay !== '200') props.push(`delayDuration={${delay}}`);
 
     return `import { Button, Flex, Tooltip } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';

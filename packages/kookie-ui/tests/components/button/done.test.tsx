@@ -73,6 +73,18 @@ describe('Button done', () => {
     expect(presses).toBe(1);
   });
 
+  it('keeps a component label when the button mounts done', () => {
+    const Label = ({ children }: { children: React.ReactNode }) => <>{children}</>;
+    renderWithProviders(
+      <Button done>
+        <Label>Copied</Label>
+      </Button>,
+    );
+    const button = screen.getByRole('button', { name: 'Copied' });
+    expect(button).toHaveTextContent('Copied');
+    expect(content(button).firstElementChild).toHaveClass('kui-BaseButtonTick');
+  });
+
   it('Toggle drops done', () => {
     const props = { done: true } as unknown as Record<string, never>;
     renderWithProviders(

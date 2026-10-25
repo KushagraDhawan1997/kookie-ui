@@ -194,7 +194,7 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* raised: the default. A field, as in v2: a flat soft fill with a faint edge, no shadow. */
+/* raised: the default. A field: the surface colour with --control-chrome, like a raised button. */
 
 .kui-SelectTrigger:where(.kui-variant-raised) {
   position: relative;

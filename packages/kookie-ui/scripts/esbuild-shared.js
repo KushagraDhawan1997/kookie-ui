@@ -14,7 +14,9 @@ import path from 'path';
  */
 export const USE_CLIENT_BANNER = '"use client";';
 
-const SERVER_SAFE = [/^src\/hooks\/appearance-script\.ts$/, /^src\/helpers\//, /^src\/props\//];
+// Component prop files (`components/*.props.tsx` and `components/_internal/*.props.ts`) are part of
+// `/props`, so they are server-safe too. They import only other prop definitions.
+const SERVER_SAFE = [/^src\/hooks\/appearance-script\.ts$/, /^src\/helpers\//, /^src\/props\//, /^src\/components\/(_internal\/)?[^/]+\.props\.tsx?$/];
 
 export const isServerSafe = (file) => SERVER_SAFE.some((pattern) => pattern.test(file));
 

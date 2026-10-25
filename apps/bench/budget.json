@@ -1,7 +1,7 @@
 {
   "comment": "Performance budget for the bench screens (apps/bench). Counts (bytes, DOM nodes, what 100 open-close cycles leave behind) fail CI on any increase. Times, long frames and heap sizes are machine-dependent: they are copied in from a CI run and fail only past 1.5x, plus 16ms (one frame) for times in ms. From a baseline of 0 long frames, one long frame fails. Re-record on purpose, in the same commit as the change, with `pnpm --filter bench bench:update`.",
   "size": {
-    "cssGzipBytes": 110138,
+    "cssGzipBytes": 110284,
     "jsGzipBytes": 173100
   },
   "table": {

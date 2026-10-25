@@ -6,7 +6,7 @@ import { useComposedRefs } from 'radix-ui/internal';
 import { PaneResizeContext } from './shell-resize.js';
 import { BottomHandle, PaneHandle } from './shell-handles.js';
 import { usePane, paneAttributes, usePresentationTable } from './shell-pane.js';
-import { splitHandles, useResizablePane, type SizeChangeMeta } from './shell-resizable.js';
+import { splitHandles, useInitialPaneSize, useResizablePane, type SizeChangeMeta } from './shell-resizable.js';
 import { useInsetRegistration, warnOnce } from './shell-store.js';
 import { bottomAnchoredGrowth, detailRest, toPaneValue, withoutRemovedPaneProps } from './shell-rest.js';
 import { readBreakpoint } from '../../hooks/use-breakpoint.js';
@@ -124,6 +124,8 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((props
     requestToggle: () => pane.toggle('toggle'),
   });
 
+  // The starting size is in the server HTML, so the pane does not jump on hydration.
+  const initialSize = useInitialPaneSize(size, defaultSize, minSize, maxSize);
   const { handles, content } = splitHandles(children, BottomHandle);
   const handle = resizable && pane.shown !== false && !pane.overlaying ? <PaneResizeContext.Provider value={resize}>{handles.length > 0 ? handles : <PaneHandle />}</PaneResizeContext.Provider> : null;
 
@@ -140,6 +142,7 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((props
         {
           ...style,
           '--bottom-expanded-size': `${expandedSize}px`,
+          ...(initialSize ? { '--bottom-size': initialSize } : {}),
           '--bottom-min-size': `${minSize}px`,
           '--bottom-max-size': `${maxSize}px`,
         } as CSSPropertiesWithVars

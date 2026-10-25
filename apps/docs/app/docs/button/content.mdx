@@ -88,7 +88,7 @@ Put the icon before the label, inside the button. The button sizes the icon and 
 
 ### Confirming a copy
 
-`done` shows a tick in place of the icon, in the same box, so nothing moves. The icon comes back when `done` is false. It doesn't block presses. Screen readers don't announce the tick, so change the label too.
+`done` shows a tick in place of the leading icon. A button with no icon adds the tick before the label, so it grows by the tick's width. The icon comes back when `done` is false. It doesn't block presses. Screen readers don't announce the tick, so change the label too.
 
 ```tsx
 const [copied, setCopied] = React.useState(false);

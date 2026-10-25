@@ -33,7 +33,7 @@ import type { BottomPublicProps } from './_internal/shell-bottom.js';
 import { Inspector } from './_internal/shell-inspector.js';
 import type { InspectorPublicProps } from './_internal/shell-inspector.js';
 import { usePane, paneAttributes, usePresentationTable } from './_internal/shell-pane.js';
-import { splitHandles, useResizablePane } from './_internal/shell-resizable.js';
+import { splitHandles, useInitialPaneSize, useResizablePane } from './_internal/shell-resizable.js';
 import {
   FIXED_TABLE,
   ShellInsetContext,
@@ -54,6 +54,7 @@ import { readBreakpoint } from '../hooks/use-breakpoint.js';
 import { useThemeSize } from '../hooks/theme-size.js';
 import { PaneChromeScope, PaneFooter, PaneHeader, Scroll, ShellContentContext, ShellSizeContext } from './_internal/pane-chrome.js';
 import type { PaneSize, PaneHeaderProps, PaneFooterProps, ScrollProps } from './_internal/pane-chrome.js';
+import { PaneBandSizeContext } from './_internal/pane-band-context.js';
 import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, PaneMode, PaneName, PaneTarget, ResponsivePresentation, SidebarMode } from './shell.types.js';
 
 /* ── Root ──────────────────────────────────────────────────────────────────── */
@@ -371,6 +372,8 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
       <ShellSizeContext.Provider value={size}>
       <ShellContentContext.Provider value={false}>
       <ShellInsetContext.Provider value={insetContext}>
+      {/* A Shell inside a portalled surface's Theme starts with no band, like any other. */}
+      <PaneBandSizeContext.Provider value={undefined}>
         {/* The Root is not a widget: it hears Escape bubbling up from the panes,
             after their own handlers, to close the overlays. */}
         {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
@@ -391,6 +394,7 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
               the accessibility tree, so the scrim itself is hidden from it. */}
           <div className="kui-ShellScrim" aria-hidden onClick={closeOverlays} />
         </div>
+      </PaneBandSizeContext.Provider>
       </ShellInsetContext.Provider>
       </ShellContentContext.Provider>
       </ShellSizeContext.Provider>
@@ -650,6 +654,8 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
     requestToggle: () => pane.toggle('toggle'),
   });
 
+  // The starting size is in the server HTML, so the pane does not jump on hydration.
+  const initialSize = useInitialPaneSize(size, defaultSize, minSize, maxSize);
   const { handles, content } = splitHandles(children, PanelHandle);
   const handle = resizable && pane.shown !== false && !pane.overlaying ? <PaneResizeContext.Provider value={resize}>{handles.length > 0 ? handles : <PaneHandle />}</PaneResizeContext.Provider> : null;
 
@@ -667,6 +673,7 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
         {
           ...style,
           '--panel-expanded-size': `${expandedSize}px`,
+          ...(initialSize ? { '--panel-size': initialSize } : {}),
         } as CSSPropertiesWithVars
       }
     >

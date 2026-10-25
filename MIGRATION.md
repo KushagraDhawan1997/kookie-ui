@@ -85,7 +85,7 @@ Checkbox, Radio, Switch and Slider moved to v2's sizes. At size 2 a Checkbox or 
 
 ### Sizes removed
 
-`size` is gone from Spinner, ScrollArea, Separator and Progress. Delete it. Each keeps its old default: Spinner 16px, ScrollArea scrollbar 4px, Progress 6px tall. Separator now fills its container along its own axis, as in v2, so `size="4"` (full width) is the only look; a short separator needs a width. A spinner inside a button is 16px at every button size. `mapButtonSizeToSpinnerSize` is removed from `@kushagradhawan/kookie-ui/helpers`.
+`size` is gone from Spinner, ScrollArea, Separator and Progress. Delete it. Each keeps its old default: Spinner 16px, ScrollArea scrollbar 4px, Progress 6px tall. Separator now fills its container along its own axis, as in v2, so `size="4"` (full width) is the only look; a short separator needs a width. A spinner inside a button is 16px at every button size. (From 0.25.0 it follows the button's icon size: 16, 16, 20 and 24px for sizes 1 to 4.) `mapButtonSizeToSpinnerSize` is removed from `@kushagradhawan/kookie-ui/helpers`.
 
 ### Badge and Avatar
 
@@ -393,7 +393,7 @@ Most of 0.24.0 fixes bugs and needs nothing from an app. These changes can need 
 | `Blockquote` | Text-only props (`align`, `trim`, `font`) no longer style it | Wrap it in a `Text` if you need them |
 | `Code` | A ghost Code with no `color` takes the surrounding text colour | Set `color="gray"` to keep gray |
 | `Toolbar` | In `Shell.Content` it is one size above the Shell's, like the pane headers | Set `size` to keep the old size |
-| `Sheet` | The corners that face the page are rounded | Set `radius="none"` for square corners |
+| `Sheet` | The corners that face the page are rounded | For square corners, set `radius="none"` on the app's `Theme` or on a `Theme` around the sheet. `Sheet.Content` takes no `radius` |
 
 ### Behaviour you may notice
 
@@ -422,10 +422,11 @@ Most of 0.24.0 fixes bugs and needs nothing from an app. These changes can need 
 | --- | --- | --- |
 | `Heading` | It renders an `h2` by default (was `h1`), as in v2. `Dialog.Title`, `AlertDialog.Title` and `Sheet.Title` are now `h2` too | Add `as="h1"` to each page title. Leave section headings as they are |
 | `DropdownMenu`, `ContextMenu` | `DropdownMenu.Virtual` and `ContextMenu.Virtual` are gone. Importing a menu no longer ships the virtualizer | Import `VirtualMenu` and put it inside the menu's `Content`, which keeps `virtualized` |
-| `Theme` | It no longer holds a tooltip provider. A `Tooltip`, and a Button or Chip `tooltip`, brings its own, still with the 200ms delay | Wrap the app once in `TooltipProvider`, inside `Theme`, so moving along a toolbar opens the next tooltip at once |
+| `Theme` | It no longer holds a tooltip provider. A `Tooltip`, and a Button or Chip `tooltip`, brings its own, still with the 200ms delay | Wrap the app once in `TooltipProvider`, inside `Theme`, so moving along a toolbar opens the next tooltip at once. A Radix `Tooltip.Root` used directly now throws without a provider: put `TooltipProvider`, or its own `Tooltip.Provider`, above it |
+| `Theme` | The root Theme no longer sets `data-os` | Set your own attribute if your CSS keyed on `[data-os]` |
 | React | The package needs React 19. The peer range is `^19.0` | Upgrade React and React DOM to 19. MessageScroller no longer warns on React 18 |
 | `Sheet` | `Sheet.Content` takes no `align`. It had no effect | Remove `align` from each `Sheet.Content` |
-| `TextField`, `TextArea` | The `errorMessage` renders after the field, outside its root, so the field keeps its height | Move styles that targeted the message inside the root |
+| `TextField`, `TextArea` | The `errorMessage` renders after the field, outside its root, so the field keeps its height. Since 0.26.2 the field and message sit in one wrapper (`kui-TextFieldWrapper`, `kui-TextAreaWrapper`) that takes `className` and `style`, so the pair is one box in a grid or flex row | Move styles that targeted the message inside the root |
 | `Separator` | Screen readers announce it by default | Set `decorative` on a line that only draws a border |
 | `Kbd` | A Kbd with no `size` follows the text around it, a little smaller, in place of one fixed size | Set `size` to keep a fixed size |
 | `VirtualMenu` | Outside a menu, such as in a Popover, it draws menu rows and a highlight at its own `size` | Remove styles you added to make it look like a menu |
@@ -435,13 +436,26 @@ Most of 0.24.0 fixes bugs and needs nothing from an app. These changes can need 
 | `Link` | `underline="always"` keeps the underline under keyboard focus, with the focus outline | Remove a focus style that put the underline back |
 | `Card` | A Card reads as chosen only when it is the `label` of a checked checkbox or radio. A plain Card that holds one stays plain | Make the chosen card `<Card asChild><label>...</label></Card>` |
 | `Button` | It logs an error in place of throwing, for `emphasis` with `variant` and for an icon-only button with no name | Fix the errors the console now shows |
+| `Button` | A loading spinner follows the button's icon size: 16, 16, 20 and 24px for sizes 1 to 4. It was 16px at every size | Nothing, unless a layout counted on 16px |
+| `Chatbar.Textarea` | `className` goes on the textarea, as `style` already did. It was on the wrapper | Target `.kui-ChatbarField` to style the wrapper |
+| `Shell.Rail`, `Shell.Panel`, `Shell.Sidebar` | Each is a navigation landmark | Remove `role="navigation"` from a `Shell.Scroll` inside one, and put its `aria-label` on the pane |
+| `Shell.Scroll` | `ref`, events and ARIA go on the scrolling element, not the inner content `div`. `className` and `style` stay on the content | Update code that measured or labelled the inner `div` |
+| `MessageScroller.Button` | It jumps at once. `behavior` defaults to `auto` (was `smooth`) | Pass `behavior="smooth"` for the old scroll |
 
 ## 0.26.0: shadows by role, one look for marks
 
 | Component or token | What changed | What to do |
 | --- | --- | --- |
 | `Switch`, `Slider`, `Checkbox`, `CheckboxGroup`, `Radio`, `RadioGroup` | No `variant` prop | Remove `variant` from these |
-| Raised and solid `Button` | Moved from `--shadow-2` and `--shadow-1` to `--control-chrome` and `--control-chrome-active` | Nothing, unless your CSS overrode their shadow |
+| Raised and solid `Button` | Raised moved from `--shadow-2` to `--control-chrome`. Solid had no shadow at rest and now casts `--control-chrome`. Both press to `--control-chrome-active` | Nothing, unless your CSS overrode their shadow |
+| Soft `Button` hover, `Avatar`, `Chip`, `SegmentedControl` indicator, `Toolbar` group | Moved from `--shadow-2` to `--control-chrome` | Nothing, unless your CSS overrode their shadow |
+| Cards, panes, menus, popovers, the select list, dialogs, `Accordion`, `Chatbar` | No hairline ring at the edge. Cards, panes, accordion and chatbar cast `--surface-chrome` (was `--shadow-2`), dialogs `--dialog-chrome` (was `--shadow-6`), menus, popovers and the select list `--floating-chrome` (was `--shadow-5`) | Add a border where you need an edge |
 | `--shadow-1..6` in your CSS | v2's values, no hairline ring | Use a role token (`--surface-chrome`, `--control-chrome`, `--floating-chrome`, `--dialog-chrome`, `--grip-chrome`) where you meant a card, a control, a popup, a dialog or a thumb |
 | `TextField`, `TextArea`, `Select` | White with a hairline edge and a small shadow | Nothing |
 
+## 0.26.2: field hover and notes
+
+| Component or token | What changed | What to do |
+| --- | --- | --- |
+| `--field-edge` | Removed. No component read it. A field's edge and shadow come from `--control-chrome` | Read `--control-chrome` if your CSS used `--field-edge` |
+| `TextField`, `TextArea`, `Select` | In dark mode the raised hover fill is neutral 3, one step above the surface | Nothing |

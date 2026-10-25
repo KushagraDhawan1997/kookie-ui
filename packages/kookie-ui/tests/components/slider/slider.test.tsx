@@ -81,6 +81,29 @@ describe('Slider', () => {
     expect(high).toHaveAttribute('aria-valuenow', '90');
   });
 
+  it('commits the snapped value on a key press', () => {
+    const onValueChange = vi.fn();
+    const onValueCommit = vi.fn();
+    renderWithProviders(
+      <Slider
+        defaultValue={[0]}
+        snapToTicks
+        ticks={[{ value: 0 }, { value: 50 }, { value: 100 }]}
+        onValueChange={onValueChange}
+        onValueCommit={onValueCommit}
+        aria-label="Volume"
+      />,
+    );
+    const thumb = screen.getByRole('slider', { name: 'Volume' });
+    fireEvent.keyDown(thumb, { key: 'ArrowRight' });
+    expect(thumb).toHaveAttribute('aria-valuenow', '50');
+    expect(onValueChange).toHaveBeenLastCalledWith([50]);
+    expect(onValueCommit).toHaveBeenCalledTimes(1);
+    expect(onValueCommit).toHaveBeenLastCalledWith([50]);
+    fireEvent.keyDown(thumb, { key: 'End' });
+    expect(onValueCommit).toHaveBeenLastCalledWith([100]);
+  });
+
   it('moves a snapping handle to the next tick with the arrow keys', () => {
     const onValueChange = vi.fn();
     renderWithProviders(

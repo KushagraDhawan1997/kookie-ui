@@ -184,6 +184,20 @@ describe('TextField.Slot description', () => {
     expect(screen.getByRole('textbox').getAttribute('aria-describedby')).toBe(`hint ${lead.id} unit`);
   });
 
+  it('leaves a slot that holds a control out of aria-describedby', () => {
+    renderWithProviders(
+      <TextField.Root aria-label="Password" type="password">
+        <TextField.Slot side="right">
+          <button type="button" aria-label="Show password" />
+        </TextField.Slot>
+        <TextField.Slot side="right" id="unit">
+          kg
+        </TextField.Slot>
+      </TextField.Root>,
+    );
+    expect(screen.getByLabelText('Password')).toHaveAttribute('aria-describedby', 'unit');
+  });
+
   it('drops a slot from aria-describedby when it unmounts', () => {
     const { rerender } = renderWithProviders(
       <TextField.Root aria-label="Price">
@@ -204,5 +218,31 @@ describe('TextField error message', () => {
     expect(root.contains(message)).toBe(false);
     expect(root.nextElementSibling).toBe(message);
     expect(screen.getByRole('textbox').getAttribute('aria-describedby')).toBe(message.id);
+  });
+
+  it('puts the field and message in one box that takes className and style', () => {
+    const { container } = renderWithProviders(
+      <div data-testid="parent">
+        <TextField.Root aria-label="Name" size="3" className="app" style={{ width: 240 }} errorMessage="Name is required" />
+      </div>,
+    );
+    const parent = screen.getByTestId('parent');
+    expect(parent.children).toHaveLength(1);
+    const wrapper = parent.firstElementChild as HTMLElement;
+    expect(wrapper).toHaveClass('kui-TextFieldWrapper', 'app');
+    expect(wrapper.style.width).toBe('240px');
+    const root = container.querySelector<HTMLElement>('.kui-TextFieldRoot')!;
+    expect(root.parentElement).toBe(wrapper);
+    expect(root).toHaveClass('kui-r-size-3');
+    expect(root).not.toHaveClass('app');
+    expect(root.style.width).toBe('');
+  });
+
+  it('keeps className and style on the field without a message', () => {
+    const { container } = renderWithProviders(<TextField.Root aria-label="Name" className="app" style={{ width: 240 }} />);
+    const root = container.querySelector<HTMLElement>('.kui-TextFieldRoot')!;
+    expect(container.querySelector('.kui-TextFieldWrapper')).toBeNull();
+    expect(root).toHaveClass('app');
+    expect(root.style.width).toBe('240px');
   });
 });

@@ -32,6 +32,24 @@ describe('scroll fade in a browser', () => {
     expect(vars(faded!).start).toBe('300px');
   });
 
+  it('a vertical ScrollArea ignores wide content on the hidden axis', async () => {
+    render(
+      <Theme>
+        <div style={{ width: 200 }}>
+          <ScrollArea fade scrollbars="vertical" style={{ height: 300 }}>
+            <div style={{ whiteSpace: 'nowrap' }}>{'A long line that runs well past the edge of the box '.repeat(3)}</div>
+          </ScrollArea>
+        </div>
+      </Theme>,
+    );
+    const viewport = document.querySelector<HTMLElement>('.kui-ScrollAreaViewport')!;
+    await frames();
+    expect(getComputedStyle(viewport).overflowX).toBe('hidden');
+    expect(viewport.scrollWidth).toBeGreaterThan(viewport.clientWidth);
+    expect(viewport.style.getPropertyValue('--scroll-overflow-x-end')).toBe('0px');
+    expect(viewport.hasAttribute('tabindex')).toBe(false);
+  });
+
   it('MessageScroller fades by default, and a band can set its reach', async () => {
     render(
       <Theme>

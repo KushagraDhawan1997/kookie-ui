@@ -8,17 +8,17 @@
   --color-page: white;
   --color-overlay: var(--black-a6);
   --color-surface: white;
-  /* The ground a raised surface sits on: one step below it, so a white card reads as lifted. */
+  /* A background for an app page that holds raised surfaces. No component reads it. */
   --color-ground: var(--neutral-1, var(--gray-1));
 
   /*
-   * A field (text field, text area, select trigger) is a flat soft fill with a faint edge, as in v2.
-   * It casts no shadow. Hover moves the fill one step; disabled drops it one step and fades the edge.
+   * A field (text field, text area, select trigger) is the surface colour with --control-chrome,
+   * the same hairline and small shadow as a raised button. Hover moves the fill one step.
+   * Disabled drops the shadow for a faint edge.
    */
   --field-fill: var(--color-surface);
   --field-fill-hover: var(--neutral-2);
   --field-fill-disabled: var(--neutral-2);
-  --field-edge: var(--neutral-a3);
   --field-edge-disabled: var(--neutral-a2);
 
   /*
@@ -76,7 +76,8 @@
   --color-overlay: var(--black-a8);
   --color-surface: var(--neutral-2, var(--gray-2));
   --color-ground: var(--neutral-1, var(--gray-1));
-  --field-edge: var(--neutral-a4);
+  /* The surface is neutral 2 in dark, so hover takes the next step. */
+  --field-fill-hover: var(--neutral-3, var(--gray-3));
   --color-thumb: var(--neutral-12, var(--gray-12));
   --color-mark: var(--neutral-5, var(--gray-5));
   --color-mark-hover: var(--neutral-6, var(--gray-6));

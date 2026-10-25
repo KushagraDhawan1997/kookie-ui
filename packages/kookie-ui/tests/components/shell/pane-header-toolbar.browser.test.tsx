@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
-import { Shell, Theme, Toolbar, ToolbarButton, ToolbarGroup } from '../../../src/components/index';
+import { Checkbox, Chip, Shell, Switch, Theme, Toolbar, ToolbarButton, ToolbarGroup } from '../../../src/components/index';
 
 const frames = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(resolve, 100))));
 
@@ -57,5 +57,44 @@ describe('a Toolbar in Shell.PaneHeader', () => {
     expect(hit?.closest('.kui-ShellSidebar')).not.toBeNull();
     const onTrail = document.elementFromPoint(trail.left + trail.width / 2, y);
     expect(getByTestId('trail').contains(onTrail)).toBe(true);
+  });
+
+  it('gives a click to any control placed straight in a floating bar', async () => {
+    const { getByTestId } = render(
+      <Theme>
+        <Shell.Root height="400px">
+          <Shell.Sidebar defaultState="expanded" defaultSize={400} presentation="fixed">
+            <Shell.PaneHeader float>
+              <Toolbar aria-label="Pane">
+                <button type="button" data-testid="raw">
+                  Raw
+                </button>
+                <Switch aria-label="Live" data-testid="switch" />
+                <Checkbox aria-label="All" data-testid="checkbox" />
+                <Chip asChild data-testid="chip">
+                  <button type="button">Tag</button>
+                </Chip>
+                <div style={{ display: 'flex' }}>
+                  <button type="button" data-testid="nested">
+                    Nested
+                  </button>
+                </div>
+              </Toolbar>
+            </Shell.PaneHeader>
+            <Shell.Scroll>
+              <div style={{ height: 200 }}>Under</div>
+            </Shell.Scroll>
+          </Shell.Sidebar>
+          <Shell.Content>Canvas</Shell.Content>
+        </Shell.Root>
+      </Theme>,
+    );
+    await frames();
+    for (const id of ['raw', 'switch', 'checkbox', 'chip', 'nested']) {
+      const el = getByTestId(id);
+      const r = el.getBoundingClientRect();
+      const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      expect(el.contains(hit), id).toBe(true);
+    }
   });
 });

@@ -30,6 +30,24 @@ describe('TextArea', () => {
     expect(screen.getByRole('textbox').getAttribute('aria-describedby')).toContain(message.id);
   });
 
+  it('puts the box and message in one wrapper that takes className and style', () => {
+    const { container } = renderWithProviders(
+      <div data-testid="parent">
+        <TextArea aria-label="Notes" className="app" style={{ width: 240 }} errorMessage="Required" />
+      </div>,
+    );
+    const parent = screen.getByTestId('parent');
+    expect(parent.children).toHaveLength(1);
+    const wrapper = parent.firstElementChild as HTMLElement;
+    expect(wrapper).toHaveClass('kui-TextAreaWrapper', 'app');
+    expect(wrapper.style.width).toBe('240px');
+    const root = container.querySelector<HTMLElement>('.kui-TextAreaRoot')!;
+    expect(root.parentElement).toBe(wrapper);
+    expect(root).toHaveClass('kui-r-size-2');
+    expect(root).not.toHaveClass('app');
+    expect(root.nextElementSibling).toBe(screen.getByRole('alert'));
+  });
+
   it('passes required to the textarea', () => {
     renderWithProviders(<TextArea required />);
     expect(screen.getByRole('textbox')).toBeRequired();

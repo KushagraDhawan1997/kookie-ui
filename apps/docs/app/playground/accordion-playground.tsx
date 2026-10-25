@@ -2,8 +2,6 @@
 
 import React from 'react';
 import { Accordion, Box } from '@kushagradhawan/kookie-ui';
-import { HugeiconsIcon } from '@hugeicons/react';
-import { ArrowDown01Icon } from '@hugeicons/core-free-icons';
 import Playground from '@/components/playground';
 
 const sizes = ['1', '2', '3', '4'] as const;
@@ -43,8 +41,6 @@ export default function AccordionPlayground({
     if (radius !== 'theme') props.push(`radius="${radius}"`);
 
     return `import { Accordion } from '@kushagradhawan/kookie-ui';
-import { HugeiconsIcon } from '@hugeicons/react';
-import { ArrowDown01Icon } from '@hugeicons/core-free-icons';
 
 const questions = [
 ${questions.map((q) => `  { id: '${q.id}', question: '${q.question}', answer: '${q.answer}' },`).join('\n')}
@@ -58,10 +54,7 @@ export function BillingFaq() {
       {questions.map((item) => (
         <Accordion.Item key={item.id} value={item.id}>
           <Accordion.Header>
-            <Accordion.Trigger>
-              {item.question}
-              <HugeiconsIcon icon={ArrowDown01Icon} strokeWidth={1.75} />
-            </Accordion.Trigger>
+            <Accordion.Trigger>{item.question}</Accordion.Trigger>
           </Accordion.Header>
           <Accordion.Content>{item.answer}</Accordion.Content>
         </Accordion.Item>
@@ -74,10 +67,7 @@ export function BillingFaq() {
   const items = questions.map((item) => (
     <Accordion.Item key={item.id} value={item.id}>
       <Accordion.Header>
-        <Accordion.Trigger>
-          {item.question}
-          <HugeiconsIcon icon={ArrowDown01Icon} strokeWidth={1.75} />
-        </Accordion.Trigger>
+        <Accordion.Trigger>{item.question}</Accordion.Trigger>
       </Accordion.Header>
       <Accordion.Content>{item.answer}</Accordion.Content>
     </Accordion.Item>
@@ -90,8 +80,6 @@ export function BillingFaq() {
     radius: radius === 'theme' ? undefined : radius,
   };
 
-  // Radix's single/multiple union is flattened in AccordionRootProps, which drops `defaultValue` and `collapsible`
-  // from the type; spreading keeps the runtime props.
   const singleOpen = { defaultValue: 'refunds', collapsible: true };
   const multipleOpen = { defaultValue: ['refunds'] };
 

@@ -4,7 +4,7 @@ import { ScrollArea as ScrollAreaPrimitive } from 'radix-ui';
 import { useComposedRefs } from 'radix-ui/internal';
 
 import { scrollAreaPropDefs } from './scroll-area.props.js';
-import { useScrollEdges } from '../hooks/use-scroll-edges.js';
+import { scrollableOverflow, useScrollEdges } from '../hooks/use-scroll-edges.js';
 import { useThumbSync } from '../hooks/use-thumb-sync.js';
 import { getSubtree } from '../helpers/get-subtree.js';
 import { extractProps } from '../helpers/extract-props.js';
@@ -38,7 +38,8 @@ function useFocusableWhileScrollable(element: HTMLDivElement | null, enabled: bo
     let frame = 0;
     const update = () => {
       frame = 0;
-      const scrollable = element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+      const overflow = scrollableOverflow(element);
+      const scrollable = overflow.x > 0 || overflow.y > 0;
       if (scrollable) element.setAttribute('tabindex', '0');
       else element.removeAttribute('tabindex');
     };

@@ -3,10 +3,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import classNames from 'classnames';
-import { composeEventHandlers, composeRefs } from 'radix-ui/internal';
+import { composeEventHandlers, composeRefs, useLayoutEffect } from 'radix-ui/internal';
 
 import { textFieldRootPropDefs, textFieldSlotPropDefs, type TextFieldSlotScrubProps } from './text-field.props.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { mergeStyles } from '../helpers/merge-styles.js';
 import { useThemeSizeProps } from '../hooks/theme-size.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
@@ -31,9 +32,12 @@ const TextFieldContext = React.createContext<TextFieldContextValue | null>(null)
 const FOCUSABLE_IN_SLOT = 'button, a, input, select, textarea, label, [tabindex], [contenteditable]';
 
 const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>((ownProps, forwardedRef) => {
-  const props = useThemeSizeProps(ownProps, textFieldRootPropDefs.size);
+  // The caller's className and style are kept apart from the size and variant classes: with an
+  // error message they go on the wrapper, which is then the one box the parent lays out.
+  const { className: ownClassName, style: ownStyle, ...themedProps } = useThemeSizeProps(ownProps, textFieldRootPropDefs.size);
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const { children, className, color, radius, style, ...inputProps } = extractProps(props, textFieldRootPropDefs);
+  const { children, className, color, radius, style, ...inputProps } = extractProps(themedProps, textFieldRootPropDefs);
+  const wrapped = Boolean(inputProps.errorMessage);
 
   // Generate unique IDs for accessibility
   const errorId = React.useId();
@@ -99,30 +103,34 @@ const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>
     } catch {}
   }, []);
 
-  // The message is a sibling of the painted root, so it sits below the field rather than inside it.
+  // A pointer-only hit-target redirect to the input; keyboard users reach the input directly.
+  const field = (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+    <div
+      data-accent-color={color}
+      data-radius={radius}
+      style={wrapped ? style : mergeStyles(style, ownStyle)}
+      className={classNames('kui-TextFieldRoot', className, !wrapped && ownClassName, {
+        // Not used by the library's CSS (invalid styling keys on aria-invalid); kept as a hook for app styles.
+        'kui-error': isInvalid,
+      })}
+      onMouseDown={handleMouseDown}
+    >
+      <input {...nativeInputProps} required={required || undefined} {...ariaProps} ref={composeRefs(inputRef, forwardedRef)} className="kui-reset kui-TextFieldInput" />
+      <TextFieldContext.Provider value={contextValue}>{children}</TextFieldContext.Provider>
+    </div>
+  );
+  if (!wrapped) return field;
+
+  // With a message, one wrapper holds the field and the message below it, so the parent still
+  // lays out a single box and the caller's className and style size the pair.
   return (
-    <>
-      {/* A pointer-only hit-target redirect to the input; keyboard users reach the input directly. */}
-      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-      <div
-        data-accent-color={color}
-        data-radius={radius}
-        style={style}
-        className={classNames('kui-TextFieldRoot', className, {
-          // Not used by the library's CSS (invalid styling keys on aria-invalid); kept as a hook for app styles.
-          'kui-error': isInvalid,
-        })}
-        onMouseDown={handleMouseDown}
-      >
-        <input {...nativeInputProps} required={required || undefined} {...ariaProps} ref={composeRefs(inputRef, forwardedRef)} className="kui-reset kui-TextFieldInput" />
-        <TextFieldContext.Provider value={contextValue}>{children}</TextFieldContext.Provider>
+    <div className={classNames('kui-TextFieldWrapper', ownClassName)} style={ownStyle}>
+      {field}
+      <div id={errorId} className="kui-TextFieldErrorMessage" role="alert">
+        {inputProps.errorMessage}
       </div>
-      {inputProps.errorMessage && (
-        <div id={errorId} className="kui-TextFieldErrorMessage" role="alert">
-          {inputProps.errorMessage}
-        </div>
-      )}
-    </>
+    </div>
   );
 });
 TextFieldRoot.displayName = 'TextField.Root';
@@ -151,13 +159,21 @@ const TextFieldSlot = React.forwardRef<TextFieldSlotElement, TextFieldSlotProps>
     textFieldSlotPropDefs,
   );
 
-  // The slot describes the input (see TextFieldRoot); a caller's own id is kept.
+  // A slot of text describes the input (see TextFieldRoot); a caller's own id is kept. A slot
+  // holding a control, such as a show-password button, does not: the input would be described
+  // by the button's name.
   const generatedId = React.useId();
   const slotId = slotProps.id ?? generatedId;
   const registerSlot = React.useContext(TextFieldContext)?.registerSlot;
-  React.useEffect(() => registerSlot?.(slotId), [registerSlot, slotId]);
-
   const slotRef = React.useRef<HTMLDivElement>(null);
+  // Unknown until the slot has rendered; it registers once it is known to hold only text.
+  const [holdsControl, setHoldsControl] = React.useState<boolean | null>(null);
+  useLayoutEffect(() => {
+    const next = Boolean(slotRef.current?.querySelector(FOCUSABLE_IN_SLOT));
+    setHoldsControl((prev) => (prev === next ? prev : next));
+  });
+  React.useEffect(() => (holdsControl === false ? registerSlot?.(slotId) : undefined), [registerSlot, slotId, holdsControl]);
+
   const [isScrubbing, setIsScrubbing] = React.useState(false);
   // Where the virtual cursor starts. Movement is written straight to the cursor element, so a
   // scrub does not re-render the slot on every mouse move.
