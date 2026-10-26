@@ -1,4 +1,4 @@
-## [0.27.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.26.2...v0.27.0) (2026-10-25)
+## [0.27.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.26.3...v0.27.0) (2026-10-26)
 
 On a phone the page scrolls, as in v2. See MIGRATION.md.
 
@@ -11,6 +11,14 @@ On a phone the page scrolls, as in v2. See MIGRATION.md.
 * **shell:** `Shell.Root contained` fills its parent instead of the window and always scrolls inside itself. An explicit `height` implies it, as before.
 * **shell:** when the window crosses the boundary (a phone rotating, an iPad entering Split View), the reading position moves to the new scroller.
 * **shell:** while the page scrolls, the content's `Shell.Scroll` is out of the tab order. A `tabIndex` you pass still wins.
+
+## [0.26.3](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.26.2...v0.26.3) (2026-10-26)
+
+### Fixes
+
+* **text-field, text-area:** an `errorMessage` that comes or goes no longer remounts the input, so focus, the caret, an uncontrolled value and the ref survive. The wrapper is always rendered and is `display: contents` without a message. A regression in 0.26.2.
+* **spinner:** a Spinner with children no longer remounts them when `loading` starts or stops. The host is `display: contents` at rest.
+* **toolbar:** a Toolbar inside a nested `Theme asChild` in a pane header or footer keeps the band size. Only the Theme at the root of a portalled surface (Popover, Dialog, Sheet, menus, Select, Combobox, Tooltip) resets it.
 
 ## [0.26.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.26.1...v0.26.2) (2026-10-25)
 

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { Tooltip as TooltipPrimitive } from 'radix-ui';
 
 import { Text } from './text.js';
-import { Theme } from './theme.js';
+import { PortalTheme } from './_internal/portal-theme.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { tooltipPropDefs } from './tooltip.props.js';
 
@@ -63,7 +63,7 @@ const Tooltip = React.forwardRef<TooltipElement, TooltipProps>((props, forwarded
     <TooltipPrimitive.Root {...rootProps}>
       <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
       <TooltipPrimitive.Portal container={container} forceMount={forceMount}>
-        <Theme asChild>
+        <PortalTheme asChild>
           <TooltipPrimitive.Content
             sideOffset={4}
             collisionPadding={10}
@@ -77,7 +77,7 @@ const Tooltip = React.forwardRef<TooltipElement, TooltipProps>((props, forwarded
             </Text>
             <TooltipPrimitive.Arrow className="kui-TooltipArrow" />
           </TooltipPrimitive.Content>
-        </Theme>
+        </PortalTheme>
       </TooltipPrimitive.Portal>
     </TooltipPrimitive.Root>
   );

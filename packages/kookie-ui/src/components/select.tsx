@@ -13,7 +13,8 @@ import {
   selectTriggerPropDefs,
   selectContentPropDefs,
 } from './select.props.js';
-import { useThemeContext, Theme } from './theme.js';
+import { useThemeContext } from './theme.js';
+import { PortalTheme } from './_internal/portal-theme.js';
 import { useThumbSync } from '../hooks/use-thumb-sync.js';
 
 import type { GetPropDefTypes } from '../props/prop-def.js';
@@ -203,7 +204,7 @@ const SelectContent = React.forwardRef<SelectContentElement, SelectContentProps>
     const resolvedColor = color || themeContext.accentColor;
     return (
       <SelectPrimitive.Portal container={container}>
-        <Theme asChild>
+        <PortalTheme asChild>
           <SelectPrimitive.Content
             data-accent-color={resolvedColor}
             sideOffset={4}
@@ -220,7 +221,7 @@ const SelectContent = React.forwardRef<SelectContentElement, SelectContentProps>
           >
             <SelectScrollArea>{children}</SelectScrollArea>
           </SelectPrimitive.Content>
-        </Theme>
+        </PortalTheme>
       </SelectPrimitive.Portal>
     );
   },

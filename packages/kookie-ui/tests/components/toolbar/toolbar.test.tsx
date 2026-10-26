@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 import { renderWithProviders } from '../../test-utils';
-import { Dialog, Popover, Shell, Theme, Toolbar, ToolbarButton } from '../../../src/components/index';
+import { Dialog, DropdownMenu, Popover, Sheet, Shell, Theme, Toolbar, ToolbarButton } from '../../../src/components/index';
 
 function Band({ size }: { size?: '1' | '2' | '3' | '4' }) {
   return (
@@ -79,6 +79,53 @@ describe('Toolbar size in a portalled surface', () => {
     expect(document.querySelector('[aria-label="Row"]')).toHaveClass('kui-r-size-3');
     expect(document.querySelector('[aria-label="In popover"]')).toHaveClass('kui-r-size-2');
     expect(document.querySelector('[aria-label="In dialog"]')).toHaveClass('kui-r-size-2');
+  });
+
+  it('a Toolbar in a menu or a Sheet opened from the Shell takes the Theme size too', () => {
+    renderWithProviders(
+      <Shell.Root size="2">
+        <Shell.Content>
+          <DropdownMenu.Root open>
+            <DropdownMenu.Trigger>
+              <button type="button">Menu</button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content>
+              <Toolbar aria-label="In menu">
+                <ToolbarButton>Go</ToolbarButton>
+              </Toolbar>
+            </DropdownMenu.Content>
+          </DropdownMenu.Root>
+          <Sheet.Root open>
+            <Sheet.Content aria-describedby={undefined}>
+              <Sheet.Title>Edit</Sheet.Title>
+              <Toolbar aria-label="In sheet">
+                <ToolbarButton>Go</ToolbarButton>
+              </Toolbar>
+            </Sheet.Content>
+          </Sheet.Root>
+        </Shell.Content>
+      </Shell.Root>,
+    );
+    expect(document.querySelector('[aria-label="In menu"]')).toHaveClass('kui-r-size-2');
+    expect(document.querySelector('[aria-label="In sheet"]')).toHaveClass('kui-r-size-2');
+  });
+
+  // A Theme an app nests in a pane, to darken a toolbar, is not a portal: the band holds.
+  it('a Toolbar in a nested Theme asChild in a pane header keeps the band size', () => {
+    const { container } = renderWithProviders(
+      <Shell.Root size="2">
+        <Shell.Content>
+          <Shell.PaneHeader>
+            <Theme asChild appearance="dark">
+              <div>
+                <Band />
+              </div>
+            </Theme>
+          </Shell.PaneHeader>
+        </Shell.Content>
+      </Shell.Root>,
+    );
+    expect(container.querySelector('.kui-ShellPaneHeader .kui-Toolbar')).toHaveClass('kui-r-size-3');
   });
 
   it('a Shell inside a Theme asChild still steps its toolbars', () => {

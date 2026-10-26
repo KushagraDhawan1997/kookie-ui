@@ -6,7 +6,6 @@ import { Direction, Slot } from 'radix-ui';
 
 import { getMatchingGrayColor } from '../helpers/get-matching-gray-color.js';
 import { ThemeSizeContext } from '../hooks/theme-size.js';
-import { PaneBandSizeContext } from './_internal/pane-band-context.js';
 import { usePropSyncedState } from '../hooks/use-prop-synced-state.js';
 import { themePropDefs } from './theme.props.js';
 
@@ -150,7 +149,6 @@ interface ThemeImplPrivateProps extends Partial<ThemeChangeHandlers> {
 }
 const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, forwardedRef) => {
   const context = React.useContext(ThemeContext);
-  const outerBand = React.useContext(PaneBandSizeContext);
   const {
     asChild,
     isRoot,
@@ -221,34 +219,30 @@ const ThemeImpl = React.forwardRef<ThemeImplElement, ThemeImplProps>((props, for
         ],
       )}
     >
-      {/* A nested `Theme asChild` is the root of a portalled surface (Popover, Dialog, Sheet,
-          menus), which sits outside any Shell pane even though context flows into it. */}
-      <PaneBandSizeContext.Provider value={asChild && !isRoot ? null : outerBand}>
-        {/* Size travels on its own context as a bare string, so the components
-            that read it do not re-render when another theme value changes. */}
-        <ThemeSizeContext.Provider value={size}>
-          <Comp
-            data-is-root-theme={isRoot ? 'true' : 'false'}
-            data-accent-color={accentColor}
-            data-gray-color={resolvedGrayColor}
-            // for nested `Theme` background
-            data-has-background={hasBackground ? 'true' : 'false'}
-            data-radius={radius}
-            data-font-family={fontFamily}
-            data-heading-font-family={headingFontFamily}
-            ref={forwardedRef}
-            {...themeProps}
-            className={classNames(
-              'kui-theme',
-              {
-                light: appearance === 'light',
-                dark: appearance === 'dark',
-              },
-              themeProps.className,
-            )}
-          />
-        </ThemeSizeContext.Provider>
-      </PaneBandSizeContext.Provider>
+      {/* Size travels on its own context as a bare string, so the components
+          that read it do not re-render when another theme value changes. */}
+      <ThemeSizeContext.Provider value={size}>
+        <Comp
+          data-is-root-theme={isRoot ? 'true' : 'false'}
+          data-accent-color={accentColor}
+          data-gray-color={resolvedGrayColor}
+          // for nested `Theme` background
+          data-has-background={hasBackground ? 'true' : 'false'}
+          data-radius={radius}
+          data-font-family={fontFamily}
+          data-heading-font-family={headingFontFamily}
+          ref={forwardedRef}
+          {...themeProps}
+          className={classNames(
+            'kui-theme',
+            {
+              light: appearance === 'light',
+              dark: appearance === 'dark',
+            },
+            themeProps.className,
+          )}
+        />
+      </ThemeSizeContext.Provider>
     </ThemeContext.Provider>
   );
 });

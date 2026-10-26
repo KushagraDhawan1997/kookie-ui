@@ -38,7 +38,7 @@ import { Dialog as DialogPrimitive } from 'radix-ui';
 
 import { dialogContentPropDefs } from './dialog.props.js';
 import type { DialogContentOwnProps } from './dialog.props.js';
-import { Theme } from './theme.js';
+import { PortalTheme } from './_internal/portal-theme.js';
 import { Heading } from './heading.js';
 import { Text } from './text.js';
 import { extractProps } from '../helpers/extract-props.js';
@@ -147,7 +147,7 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>((allPro
   return (
     <DialogPrimitive.Portal container={container} forceMount={forceMount}>
       <SheetTitleCountContext.Provider value={titleCountRef}>
-        <Theme asChild>
+        <PortalTheme asChild>
           <DialogPrimitive.Overlay className="kui-BaseDialogOverlay kui-DialogOverlay kui-SheetOverlay">
             <DialogPrimitive.Content
               {...contentProps}
@@ -157,7 +157,7 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>((allPro
               aria-modal="true"
             />
           </DialogPrimitive.Overlay>
-        </Theme>
+        </PortalTheme>
       </SheetTitleCountContext.Provider>
     </DialogPrimitive.Portal>
   );

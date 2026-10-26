@@ -36,3 +36,31 @@ describe('Spinner semantics', () => {
     expect(container.querySelector('[aria-busy]')).toBeNull();
   });
 });
+
+// Starting or stopping `loading` must not remount the children: a remount drops their state,
+// focus and refs, as a field inside a loading region would show.
+describe('Spinner with children', () => {
+  it('keeps the same children, and their focus, as loading starts and stops', () => {
+    const view = (loading: boolean) => (
+      <Spinner loading={loading}>
+        <input aria-label="Name" defaultValue="" />
+      </Spinner>
+    );
+    const { rerender, container } = renderWithProviders(view(false));
+    const input = screen.getByRole('textbox') as HTMLInputElement;
+    input.focus();
+    input.value = 'Ada';
+
+    rerender(view(true));
+    expect(screen.getByRole('textbox', { hidden: true })).toBe(input);
+    expect(input.value).toBe('Ada');
+    expect(container.querySelector('.kui-SpinnerHost')).toHaveAttribute('aria-busy', 'true');
+    expect(container.querySelector('.kui-Spinner')).not.toBeNull();
+
+    rerender(view(false));
+    expect(screen.getByRole('textbox')).toBe(input);
+    expect(document.activeElement).toBe(input);
+    expect(container.querySelector('.kui-Spinner')).toBeNull();
+    expect(container.querySelector('.kui-SpinnerHost')).not.toHaveAttribute('aria-busy');
+  });
+});

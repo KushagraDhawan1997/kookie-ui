@@ -464,8 +464,13 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* With an error message, one box holds the field and the message below it. */
-.kui-TextAreaWrapper {
+/* With an error message, one box holds the field and the message below it. Without one the
+   wrapper steps out of layout, and the field is the box. */
+.kui-TextAreaWrapper:where(:not([data-message])) {
+  display: contents;
+}
+
+.kui-TextAreaWrapper:where([data-message]) {
   display: flex;
   flex-direction: column;
   min-width: 0;

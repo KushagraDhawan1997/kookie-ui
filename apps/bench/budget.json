@@ -16,7 +16,7 @@
     "inlineStyleBytes": 3248
   },
   "form": {
-    "domNodes": 3302,
+    "domNodes": 3382,
     "mountMs": 403.9,
     "rerenderMs": 69.3,
     "interactionMs": 24,
