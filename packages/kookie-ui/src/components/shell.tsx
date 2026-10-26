@@ -23,7 +23,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { Slot } from 'radix-ui';
-import { useComposedRefs } from 'radix-ui/internal';
+import { useComposedRefs, useLayoutEffect } from 'radix-ui/internal';
 import { PaneResizeContext } from './_internal/shell-resize.js';
 import { PaneHandle, PanelHandle } from './_internal/shell-handles.js';
 import { Sidebar } from './_internal/shell-sidebar.js';
@@ -52,7 +52,8 @@ import { useShell, useSidebarMode } from './shell.context.js';
 import { useResponsivePresentation } from './shell.hooks.js';
 import { readBreakpoint } from '../hooks/use-breakpoint.js';
 import { useThemeSize } from '../hooks/theme-size.js';
-import { PaneChromeScope, PaneFooter, PaneHeader, Scroll, ShellContentContext, ShellSizeContext } from './_internal/pane-chrome.js';
+import { PaneChromeScope, PaneFooter, PaneHeader, Scroll, ShellContentContext, ShellSizeContext, ShellWindowContext } from './_internal/pane-chrome.js';
+import { onPageScrollMediaChange, pageScrollMatches } from './_internal/shell-page-scroll.js';
 import type { PaneSize, PaneHeaderProps, PaneFooterProps, ScrollProps } from './_internal/pane-chrome.js';
 import { PaneBandSizeContext } from './_internal/pane-band-context.js';
 import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, PaneMode, PaneName, PaneTarget, ResponsivePresentation, SidebarMode } from './shell.types.js';
@@ -61,7 +62,18 @@ import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, PaneMode, PaneNa
 
 export interface ShellRootProps extends React.ComponentPropsWithoutRef<'div'> {
   children: React.ReactNode;
+  /**
+   * The Shell's height. `full` (the default) is the window's height; on a narrow touch screen the
+   * page scrolls instead of the content, so the browser can hide its toolbars. `auto` grows with
+   * the content. Any other value is the Shell's own height, and makes it contained.
+   */
   height?: 'full' | 'auto' | string | number;
+  /**
+   * Makes the Shell fill its parent instead of the window, and always scroll inside itself. Its
+   * overlays cover only its own box and leave the page free to scroll. Use it for a Shell in a
+   * card, a demo or a canvas. An explicit `height` implies it.
+   */
+  contained?: boolean;
   /** The index the panes' chrome takes: `Shell.PaneHeader`, `Shell.Scroll`, `Shell.PaneFooter` and the Sidebar rows in them. Defaults to the nearest Theme's size (3 when the Theme is 4), else `2`. */
   size?: PaneSize;
 }
@@ -105,7 +117,18 @@ type LivePane = { name: PaneName; id: string; el: HTMLElement };
 /** Shell.Root's own range; a Theme size above it maps to 3. */
 const shellSizePropDef = { values: ['1', '2', '3'] as const };
 
-const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, children, height = 'full', size: sizeProp, style, onKeyDown, onFocus, ...props }, ref) => {
+/** Lets a Shell.Header tell the Root its height, for the rows that stick beneath it while the page scrolls. */
+const ShellHeaderHeightContext = React.createContext<((height: number | undefined) => void) | null>(null);
+
+/** The Shell.Header's default height, which the stylesheet assumes until a Header says otherwise. */
+const DEFAULT_HEADER_HEIGHT = 64;
+
+/** The content's scroller while the frame scrolls: the Shell.Scroll's viewport, or the content itself. */
+function frameScroller(rootEl: HTMLElement): HTMLElement | null {
+  return rootEl.querySelector<HTMLElement>(':scope > .kui-ShellContent > .kui-ShellScroll > .kui-ScrollAreaViewport') ?? rootEl.querySelector<HTMLElement>(':scope > .kui-ShellContent');
+}
+
+const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, children, height = 'full', contained: containedProp, size: sizeProp, style, onKeyDown, onFocus, ...props }, ref) => {
   // No size of its own: the nearest Theme's, mapped into 1-3.
   const size = useThemeSize(sizeProp, shellSizePropDef);
   const [store] = React.useState(createShellStore);
@@ -148,10 +171,72 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
   );
   const liveCount = [...store.entries.values()].filter((entry) => entry.overlayLive && entry.el).length;
 
-  // A Shell given a height of its own sits inside a page, and its overlays
-  // cover only its box: it holds no page lock. `full` is the page, and
-  // `auto` grows with its content, so its overlays are placed on the window.
-  const contained = height !== 'full' && height !== 'auto';
+  // A contained Shell sits inside a page, and its overlays cover only its box:
+  // it holds no page lock. A height of its own implies it. `full` is the
+  // window, and `auto` grows with its content, so its overlays are placed on
+  // the window. Only a `full` Shell lets the page scroll on a phone.
+  const contained = containedProp === true || (height !== 'full' && height !== 'auto');
+  const windowShell = !contained && height === 'full';
+
+  const [headerHeight, setHeaderHeight] = React.useState<number | undefined>(undefined);
+
+  /*
+   * The reading position crosses with the scroller. When a touch window
+   * crosses the narrow boundary (a phone rotating, an iPad entering Split
+   * View), the scroller changes between the content and the page, and the new
+   * one starts at the top. The offset is remembered on `scroll` from whichever
+   * scroller is live, because by the time the change is reported the old one
+   * has already been laid out again and clamped. Only the live scroller is
+   * heard. The clamp itself is reported as a scroll in the same frame as the
+   * resize and before the media change, so scrolls are not heard from a resize
+   * until that frame's animation callbacks.
+   */
+  React.useEffect(() => {
+    if (!windowShell) return;
+    const rootEl = rootRef.current;
+    const win = rootEl?.ownerDocument.defaultView;
+    if (!rootEl || !win || typeof win.matchMedia !== 'function') return;
+    let pageScrolls = pageScrollMatches();
+    let offset = pageScrolls ? win.scrollY : (frameScroller(rootEl)?.scrollTop ?? 0);
+    let frame = 0;
+    let resizing = 0;
+    const onResize = () => {
+      if (resizing) cancelAnimationFrame(resizing);
+      resizing = requestAnimationFrame(() => {
+        resizing = 0;
+      });
+    };
+    const fromPage = () => {
+      if (pageScrolls && !resizing) offset = win.scrollY;
+    };
+    const fromFrame = (event: Event) => {
+      if (!pageScrolls && !resizing && event.target instanceof HTMLElement && event.target === frameScroller(rootEl)) offset = event.target.scrollTop;
+    };
+    win.addEventListener('resize', onResize);
+    win.addEventListener('scroll', fromPage, { passive: true });
+    rootEl.addEventListener('scroll', fromFrame, { passive: true, capture: true });
+    const stop = onPageScrollMediaChange((matches) => {
+      pageScrolls = matches;
+      const carried = offset;
+      if (frame) cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        if (matches) win.scrollTo(0, carried);
+        else {
+          const el = frameScroller(rootEl);
+          if (el) el.scrollTop = carried;
+        }
+      });
+    });
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      if (resizing) cancelAnimationFrame(resizing);
+      win.removeEventListener('resize', onResize);
+      win.removeEventListener('scroll', fromPage);
+      rootEl.removeEventListener('scroll', fromFrame, { capture: true });
+      stop();
+    };
+  }, [windowShell]);
 
   /*
    * Containment is the Root's, not the pane's. Only the Root can see every live
@@ -371,6 +456,8 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
     <ShellStoreContext.Provider value={store}>
       <ShellSizeContext.Provider value={size}>
       <ShellContentContext.Provider value={false}>
+      <ShellWindowContext.Provider value={windowShell}>
+      <ShellHeaderHeightContext.Provider value={setHeaderHeight}>
       <ShellInsetContext.Provider value={insetContext}>
       {/* A Shell inside a portalled surface's Theme starts with no band, like any other. */}
       <PaneBandSizeContext.Provider value={undefined}>
@@ -381,12 +468,19 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
           {...props}
           ref={composedRef}
           className={classNames('kui-ShellRoot', className)}
-          data-height={height === 'auto' ? 'auto' : undefined}
+          data-height={height === 'auto' && !contained ? 'auto' : undefined}
+          data-contained={contained || undefined}
+          data-window={windowShell || undefined}
           data-has-inset={insetPanes.size > 0 || undefined}
           data-overlay-live={liveCount > 0 || undefined}
           onKeyDown={handleKeyDown}
           onFocus={handleFocus}
-          style={{ ...heightStyle, ...(railOffset ? ({ '--shell-rail-offset': railOffset } as CSSPropertiesWithVars) : {}), ...style }}
+          style={{
+            ...heightStyle,
+            ...(railOffset ? ({ '--shell-rail-offset': railOffset } as CSSPropertiesWithVars) : {}),
+            ...(headerHeight !== undefined ? ({ '--kui-shell-header-h': `${headerHeight}px` } as CSSPropertiesWithVars) : {}),
+            ...style,
+          }}
         >
           {children}
           {/* Root-owned and always mounted. The stylesheet shows it while an
@@ -396,6 +490,8 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
         </div>
       </PaneBandSizeContext.Provider>
       </ShellInsetContext.Provider>
+      </ShellHeaderHeightContext.Provider>
+      </ShellWindowContext.Provider>
       </ShellContentContext.Provider>
       </ShellSizeContext.Provider>
     </ShellStoreContext.Provider>
@@ -409,19 +505,29 @@ interface ShellHeaderProps extends React.ComponentPropsWithoutRef<'header'> {
   height?: number;
 }
 
-const Header = React.forwardRef<HTMLElement, ShellHeaderProps>(({ className, height = 64, style, ...props }, ref) => (
-  <header
-    {...props}
-    ref={ref}
-    className={classNames('kui-ShellHeader', className)}
-    style={
-      {
-        ...style,
-        '--shell-header-height': `${height}px`,
-      } as CSSPropertiesWithVars
-    }
-  />
-));
+const Header = React.forwardRef<HTMLElement, ShellHeaderProps>(({ className, height = DEFAULT_HEADER_HEIGHT, style, ...props }, ref) => {
+  // Rows that stick beneath the header while the page scrolls need its height. The stylesheet
+  // assumes the default, so only another height is told to the Root.
+  const setHeaderHeight = React.useContext(ShellHeaderHeightContext);
+  useLayoutEffect(() => {
+    if (!setHeaderHeight) return;
+    setHeaderHeight(height === DEFAULT_HEADER_HEIGHT ? undefined : height);
+    return () => setHeaderHeight(undefined);
+  }, [setHeaderHeight, height]);
+  return (
+    <header
+      {...props}
+      ref={ref}
+      className={classNames('kui-ShellHeader', className)}
+      style={
+        {
+          ...style,
+          '--shell-header-height': `${height}px`,
+        } as CSSPropertiesWithVars
+      }
+    />
+  );
+});
 Header.displayName = 'Shell.Header';
 
 /* ── Left (deprecated) ─────────────────────────────────────────────────────── */

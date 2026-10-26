@@ -1,3 +1,17 @@
+## [0.27.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.26.3...v0.27.0) (2026-10-26)
+
+On a phone the page scrolls, as in v2. See MIGRATION.md.
+
+### Breaking changes
+
+* **shell:** on a window narrower than 768px with a coarse pointer, a `Shell.Root` with no `height` and no `contained` lets the document scroll instead of the content pane, so a mobile browser can hide its toolbars. The frame grows with its content. `Shell.Header`, a floating `Shell.PaneHeader` or `PaneFooter` in the content, and the content's pinned rows stick; overlay drawers and the scrim are fixed to the screen. Content that cannot wrap is clipped at the screen's edge. Code that read or set the content's `scrollTop` there reads `window.scrollY` instead.
+
+### Features
+
+* **shell:** `Shell.Root contained` fills its parent instead of the window and always scrolls inside itself. An explicit `height` implies it, as before.
+* **shell:** when the window crosses the boundary (a phone rotating, an iPad entering Split View), the reading position moves to the new scroller.
+* **shell:** while the page scrolls, the content's `Shell.Scroll` is out of the tab order. A `tabIndex` you pass still wins.
+
 ## [0.26.3](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.26.2...v0.26.3) (2026-10-26)
 
 ### Fixes

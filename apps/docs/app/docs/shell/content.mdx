@@ -86,9 +86,23 @@ From 768px up the sidebar sits in the frame, open. Below that it's an overlay, c
 - `overlay` covers the frame with a scrim. Escape or a press on the scrim closes it. Use it on narrow windows.
 - `stacked` sits over the content with no scrim and takes no space from it.
 
-When the Root has a number or a length as its `height`, the Shell sits inside a page and an overlay covers only the Shell. Otherwise it covers the window.
+In a contained Shell an overlay covers only the Shell. Otherwise it covers the window.
 
 The breakpoints are `xs` 520px, `sm` 768px, `md` 1024px, `lg` 1280px and `xl` 1640px.
+
+## Scrolling
+
+By default a Shell is the window: it takes the window's height, and the content scrolls inside it. On a phone or any touch screen narrower than 768px, the page scrolls instead, so the browser can hide its toolbars. The header and the content's pinned rows stay put, and drawers stay on screen. While a drawer is open the page holds still.
+
+A Shell that lives inside something else, such as a card or a demo, takes `contained`. It fills its parent and always scrolls inside itself. A `height` of its own, such as `height="600px"`, makes it contained too.
+
+```tsx
+<Box height="480px">
+  <Shell.Root contained>{/* Panes */}</Shell.Root>
+</Box>
+```
+
+When the page scrolls, content that can't wrap is cut off at the screen's edge. Give a wide table or a code block its own horizontal scroller.
 
 ## State
 
@@ -157,7 +171,8 @@ The floating row's height is published as `--kui-pane-inset-start` inside the Sc
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `height` | `'full' \| 'auto' \| string \| number` | `'full'` | The frame's height. `'full'` is `100dvh` |
+| `height` | `'full' \| 'auto' \| string \| number` | `'full'` | The frame's height. `'full'` is the window's. `'auto'` grows with the content. Any other value makes the Shell contained |
+| `contained` | `boolean` | `false` | Fills the parent instead of the window and always scrolls inside itself |
 | `size` | `'1' \| '2' \| '3'` | Theme size, else `'2'` | The size of the pane rows and the Sidebar rows in them. A Theme size of 4 maps to 3 |
 
 ### Header
@@ -216,7 +231,7 @@ Sidebar, Panel, Inspector and Bottom take these.
 
 ### Content
 
-Content takes `inset`, like the panes. With a `Shell.Scroll` child, the Scroll scrolls the page instead of the content.
+Content takes `inset`, like the panes. With a `Shell.Scroll` child, the Scroll scrolls the page instead of the content. Where the page scrolls (see [Scrolling](#scrolling)), the Scroll is out of the tab order.
 
 ### Trigger
 

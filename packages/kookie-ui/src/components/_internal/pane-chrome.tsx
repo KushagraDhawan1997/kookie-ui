@@ -15,6 +15,7 @@ import classNames from 'classnames';
 import { ScrollArea } from '../scroll-area.js';
 import { ShellStoreContext } from './shell-store.js';
 import { PaneBandSizeContext, type BandSize } from './pane-band-context.js';
+import { usePageScrollMedia } from './shell-page-scroll.js';
 
 type PaneSize = '1' | '2' | '3';
 
@@ -41,6 +42,13 @@ const ShellSizeContext = React.createContext<PaneSize>('2');
  * page, not a menu, so it takes none of the menu's padding, gap or layering.
  */
 const ShellContentContext = React.createContext(false);
+
+/**
+ * True inside a window Shell: one with no `contained` and no `height`, which lets the page scroll
+ * on a narrow touch screen. Each `Shell.Root` sets its own, so a Shell nested in another answers
+ * for itself.
+ */
+const ShellWindowContext = React.createContext(false);
 
 /**
  * Gives a Shell pane's children the Shell's index, so Sidebar parts size themselves. In a Rail
@@ -156,9 +164,14 @@ const Scroll = React.forwardRef<HTMLDivElement, ScrollProps>(({ className, style
   const contentPane = React.useContext(ShellContentContext);
   const visual = useSidebarVisual();
   const inContent = contentPane && visual === null;
+  // While the page scrolls, the content's viewport scrolls nothing: as a tab stop it would take a
+  // Tab, ring the whole page and move nothing. Resolved after mount; a `tabIndex` of the caller's wins.
+  const windowShell = React.useContext(ShellWindowContext);
+  const pageScrolls = usePageScrollMedia();
   if (inContent) {
+    const tabIndex = props.tabIndex ?? (windowShell && pageScrolls ? -1 : undefined);
     return (
-      <ScrollArea {...props} ref={forwardedRef} type="hover" fade={fade} className="kui-ShellScroll">
+      <ScrollArea {...props} tabIndex={tabIndex} ref={forwardedRef} type="hover" fade={fade} className="kui-ShellScroll">
         <div style={style} dir={dir} className={classNames('kui-ShellScrollContent', className)}>
           {children}
         </div>
@@ -178,5 +191,5 @@ const Scroll = React.forwardRef<HTMLDivElement, ScrollProps>(({ className, style
 });
 Scroll.displayName = 'Shell.Scroll';
 
-export { SidebarVisualContext, useSidebarVisual, ShellSizeContext, ShellContentContext, PaneChromeScope, PaneHeader, PaneFooter, Scroll, BAND_STEP, usePaneBandSize };
+export { SidebarVisualContext, useSidebarVisual, ShellSizeContext, ShellContentContext, ShellWindowContext, PaneChromeScope, PaneHeader, PaneFooter, Scroll, BAND_STEP, usePaneBandSize };
 export type { SidebarVisualContextValue, PaneSize, BandSize, PaneHeaderProps, PaneFooterProps, ScrollProps };

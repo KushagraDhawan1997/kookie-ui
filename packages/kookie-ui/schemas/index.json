@@ -898,7 +898,7 @@
           "properties": {
             "height": {
               "default": "full",
-              "description": "Height of the frame. `full` is 100dvh, with 100vh where dvh is not supported.",
+              "description": "Height of the frame. `full` is the window: 100dvh, with 100vh where dvh is not supported, and on a narrow touch screen the page scrolls. Any value other than `full` or `auto` makes the Shell contained.",
               "anyOf": [
                 {
                   "type": "string",
@@ -915,6 +915,11 @@
                   "type": "number"
                 }
               ]
+            },
+            "contained": {
+              "default": false,
+              "description": "Fills the parent instead of the window and always scrolls inside itself. An explicit `height` implies it.",
+              "type": "boolean"
             },
             "size": {
               "default": "2",

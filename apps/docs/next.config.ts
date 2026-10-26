@@ -32,6 +32,8 @@ const withMDX = nextMDX({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // A phone on the same Wi-Fi opens the dev server by the Mac's address while testing touch pages.
+  allowedDevOrigins: ['192.168.*.*', '10.*.*.*', '*.local'],
   // Configure `pageExtensions` to include markdown and MDX files
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   // Transpile the local kookie-ui package

@@ -11,6 +11,9 @@ import { PageToolbar } from './page-toolbar/page-toolbar';
 export function DocsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
+  // Full-screen tools draw their own Shell, so the docs chrome steps aside.
+  if (pathname?.startsWith('/playground/')) return <>{children}</>;
+
   return (
     <DocsShell
       navigation={docsNavigation}

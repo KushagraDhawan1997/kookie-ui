@@ -466,3 +466,11 @@ Most of 0.24.0 fixes bugs and needs nothing from an app. These changes can need 
 | --- | --- | --- |
 | `TextField`, `TextArea` | The wrapper (`kui-TextFieldWrapper`, `kui-TextAreaWrapper`) is always rendered. Without `errorMessage` it is `display: contents` and the field root keeps `className` and `style`, as before | Change CSS that selects the field root as a direct child of its parent (`.row > .kui-TextFieldRoot`) to a descendant selector |
 | `Spinner` with children | The children always sit in a `kui-SpinnerHost` and `kui-SpinnerChildren` pair, `display: contents` while not loading | Change CSS that selects a Spinner's children as direct children of their parent |
+
+## 0.27.0: the page scrolls on a phone
+
+| Component or token | What changed | What to do |
+| --- | --- | --- |
+| `Shell.Root` | With no `height`, on a window narrower than 768px with a coarse pointer, the document scrolls instead of the content. The header and pinned rows stick, drawers are fixed to the screen, and the page holds still under an open drawer | Nothing for most apps. Code that read or set the content's (or its `Shell.Scroll`'s) `scrollTop` on a phone uses `window.scrollY` and `window.scrollTo` there. Give wide content that cannot wrap its own horizontal scroller, since the page clips it |
+| `Shell.Root` | New `contained` prop: fills the parent and always scrolls inside itself. An explicit `height` such as `600px` or `100%` already behaved this way and still does | Pass `contained` to a Shell inside a card, demo or canvas. A Shell that is the app's whole window and passes `height="100vh"` or `"100dvh"` can drop `height` to get the phone behaviour |
+| `Shell.Header` | Rows that stick beneath it read its `height` | Nothing |
