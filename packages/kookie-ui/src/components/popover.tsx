@@ -6,7 +6,7 @@ import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../hooks/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
 import { popoverContentPropDefs } from './popover.props.js';
-import { Theme } from './theme.js';
+import { PortalTheme } from './_internal/portal-theme.js';
 
 import type { PopoverContentOwnProps } from './popover.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
@@ -69,7 +69,7 @@ const PopoverContent = React.forwardRef<PopoverContentElement, PopoverContentPro
 
     return (
       <PopoverPrimitive.Portal container={container} forceMount={forceMount}>
-        <Theme asChild>
+        <PortalTheme asChild>
           <PopoverPrimitive.Content
             align="start"
             sideOffset={8}
@@ -84,7 +84,7 @@ const PopoverContent = React.forwardRef<PopoverContentElement, PopoverContentPro
               {props.children}
             </PopoverContentContext.Provider>
           </PopoverPrimitive.Content>
-        </Theme>
+        </PortalTheme>
       </PopoverPrimitive.Portal>
     );
   },

@@ -120,16 +120,18 @@ const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>
       <TextFieldContext.Provider value={contextValue}>{children}</TextFieldContext.Provider>
     </div>
   );
-  if (!wrapped) return field;
-
-  // With a message, one wrapper holds the field and the message below it, so the parent still
-  // lays out a single box and the caller's className and style size the pair.
+  // The wrapper is always there, so a message coming or going never moves the field in the tree:
+  // moving it would remount the input, dropping focus, the caret and an uncontrolled value. With
+  // no message it is `display: contents` and the field is the box the parent lays out; with one
+  // it holds the field and the message below it, and the caller's className and style size the pair.
   return (
-    <div className={classNames('kui-TextFieldWrapper', ownClassName)} style={ownStyle}>
+    <div className={classNames('kui-TextFieldWrapper', wrapped && ownClassName)} style={wrapped ? ownStyle : undefined} data-message={wrapped || undefined}>
       {field}
-      <div id={errorId} className="kui-TextFieldErrorMessage" role="alert">
-        {inputProps.errorMessage}
-      </div>
+      {wrapped ? (
+        <div id={errorId} className="kui-TextFieldErrorMessage" role="alert">
+          {inputProps.errorMessage}
+        </div>
+      ) : null}
     </div>
   );
 });

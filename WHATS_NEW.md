@@ -2,6 +2,11 @@
 
 Each release groups its changes as Major, Minor or Quiet. Major is a new product or a change to what it is. Minor is a change you notice when you use it. Quiet is a small touch, a fix, a rename or a removal, or how the work is made. Breaking lists the changes that need an edit in your app.
 
+## 0.26.3 (October 26)
+
+1. `Quiet` **Fields keep focus when an error appears.** Typing into a text field or text area that shows or clears an error no longer drops focus or the value. A loading Spinner keeps its children the same way.
+2. `Quiet` **Toolbars in a nested Theme keep their size.** A toolbar in a darkened area of a pane header keeps the header's size.
+
 ## 0.26.2 (October 25)
 
 1. `Quiet` **Fields hover in dark mode.** A text field, text area or select trigger changes its fill on hover in dark mode too.

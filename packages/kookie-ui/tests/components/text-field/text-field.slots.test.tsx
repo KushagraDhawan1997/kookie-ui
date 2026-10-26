@@ -241,7 +241,10 @@ describe('TextField error message', () => {
   it('keeps className and style on the field without a message', () => {
     const { container } = renderWithProviders(<TextField.Root aria-label="Name" className="app" style={{ width: 240 }} />);
     const root = container.querySelector<HTMLElement>('.kui-TextFieldRoot')!;
-    expect(container.querySelector('.kui-TextFieldWrapper')).toBeNull();
+    // The wrapper stays (laid out as `display: contents`) so a message never moves the field.
+    const wrapper = container.querySelector<HTMLElement>('.kui-TextFieldWrapper')!;
+    expect(wrapper.hasAttribute('data-message')).toBe(false);
+    expect(wrapper).not.toHaveClass('app');
     expect(root).toHaveClass('app');
     expect(root.style.width).toBe('240px');
   });

@@ -19,7 +19,8 @@ const Spinner = React.forwardRef<SpinnerElement, SpinnerProps>((props, forwarded
     spinnerPropDefs
   );
 
-  if (!loading) return children;
+  // Without children a Spinner is only the wheel, shown while loading.
+  if (children === undefined && !loading) return null;
 
   // Decorative unless named: a named spinner is a status message, an unnamed one is hidden.
   const named =
@@ -50,22 +51,22 @@ const Spinner = React.forwardRef<SpinnerElement, SpinnerProps>((props, forwarded
 
   if (children === undefined) return spinner;
 
+  // With children, one tree whether loading or not, so starting or stopping never remounts them
+  // (their state, focus and refs survive). At rest the host is `display: contents`; while loading
+  // it centres the wheel over the children, which keep their space but are hidden.
   return (
-    <Flex asChild position="relative" align="center" justify="center">
-      <span aria-busy="true">
-        {/**
-         * `display: contents` removes the content from the accessibility tree in some browsers,
-         * so we force remove it with `aria-hidden`
-         */}
-        <span aria-hidden className="kui-SpinnerHiddenChildren">
-          {children}
-        </span>
-
+    <span className="kui-SpinnerHost" data-loading={loading || undefined} aria-busy={loading || undefined}>
+      {/* `display: contents` removes the content from the accessibility tree in some browsers, so
+          while loading it is removed with `aria-hidden` too. */}
+      <span aria-hidden={loading || undefined} className={classNames('kui-SpinnerChildren', loading && 'kui-SpinnerHiddenChildren')}>
+        {children}
+      </span>
+      {loading ? (
         <Flex asChild align="center" justify="center" position="absolute" inset="0">
           <span>{spinner}</span>
         </Flex>
-      </span>
-    </Flex>
+      ) : null}
+    </span>
   );
 });
 Spinner.displayName = 'Spinner';
