@@ -5,7 +5,7 @@ import { AlertDialog as AlertDialogPrimitive } from 'radix-ui';
 import { alertDialogContentPropDefs } from './alert-dialog.props.js';
 import { Heading } from './heading.js';
 import { Text } from './text.js';
-import { Theme } from './theme.js';
+import { PortalTheme } from './_internal/portal-theme.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../hooks/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
@@ -48,7 +48,7 @@ const AlertDialogContent = React.forwardRef<AlertDialogContentElement, AlertDial
 
   return (
     <AlertDialogPrimitive.Portal container={container} forceMount={forceMount}>
-      <Theme asChild>
+      <PortalTheme asChild>
         <AlertDialogPrimitive.Overlay className="kui-BaseDialogOverlay kui-AlertDialogOverlay">
           <div className="kui-BaseDialogScroll kui-AlertDialogScroll">
             <div className={`kui-BaseDialogScrollPadding kui-AlertDialogScrollPadding ${alignClassName}`}>
@@ -67,7 +67,7 @@ const AlertDialogContent = React.forwardRef<AlertDialogContentElement, AlertDial
             </div>
           </div>
         </AlertDialogPrimitive.Overlay>
-      </Theme>
+      </PortalTheme>
     </AlertDialogPrimitive.Portal>
   );
 });

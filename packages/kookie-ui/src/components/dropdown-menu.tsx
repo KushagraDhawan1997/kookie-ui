@@ -13,7 +13,8 @@ import {
   dropdownMenuCheckboxItemPropDefs,
   dropdownMenuRadioItemPropDefs,
 } from './dropdown-menu.props.js';
-import { Theme, useThemeContext } from './theme.js';
+import { useThemeContext } from './theme.js';
+import { PortalTheme } from './_internal/portal-theme.js';
 import { ChevronDownIcon, ThickCheckIcon, ThickChevronLeftIcon, ThickChevronRightIcon, ThickDotIcon } from './icons.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../hooks/theme-size.js';
@@ -196,7 +197,7 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
 
     return (
       <DropdownMenuPrimitive.Portal container={container} forceMount={forceMount}>
-        <Theme asChild>
+        <PortalTheme asChild>
           <DropdownMenuPrimitive.Content
             data-accent-color={resolvedColor}
             align="start"
@@ -227,7 +228,7 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
               </ScrollArea>
             )}
           </DropdownMenuPrimitive.Content>
-        </Theme>
+        </PortalTheme>
       </DropdownMenuPrimitive.Portal>
     );
   },
@@ -724,7 +725,7 @@ const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, Dropdo
 
     return (
       <DropdownMenuPrimitive.Portal container={container} forceMount={forceMount}>
-        <Theme asChild>
+        <PortalTheme asChild>
           <DropdownMenuPrimitive.SubContent
             data-accent-color={color}
             alignOffset={getMenuAlignOffset(scalarSize)}
@@ -754,7 +755,7 @@ const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, Dropdo
               </ScrollArea>
             )}
           </DropdownMenuPrimitive.SubContent>
-        </Theme>
+        </PortalTheme>
       </DropdownMenuPrimitive.Portal>
     );
   },

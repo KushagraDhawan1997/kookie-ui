@@ -5,7 +5,7 @@ import { Dialog as DialogPrimitive } from 'radix-ui';
 import { dialogContentPropDefs } from './dialog.props.js';
 import { Heading } from './heading.js';
 import { Text } from './text.js';
-import { Theme } from './theme.js';
+import { PortalTheme } from './_internal/portal-theme.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../hooks/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
@@ -48,7 +48,7 @@ const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>
 
   return (
     <DialogPrimitive.Portal container={container} forceMount={forceMount}>
-      <Theme asChild>
+      <PortalTheme asChild>
         <DialogPrimitive.Overlay className="kui-BaseDialogOverlay kui-DialogOverlay">
           <div className="kui-BaseDialogScroll kui-DialogScroll">
             <div className={`kui-BaseDialogScrollPadding kui-DialogScrollPadding ${alignClassName}`}>
@@ -67,7 +67,7 @@ const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>
             </div>
           </div>
         </DialogPrimitive.Overlay>
-      </Theme>
+      </PortalTheme>
     </DialogPrimitive.Portal>
   );
 });

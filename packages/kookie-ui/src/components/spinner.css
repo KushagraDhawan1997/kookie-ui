@@ -98,8 +98,23 @@
   }
 }
 
+/* A Spinner with children is one tree, loading or not. At rest it steps out of layout. */
+.kui-SpinnerHost:where(:not([data-loading])) {
+  display: contents;
+}
+
+.kui-SpinnerHost:where([data-loading]) {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kui-SpinnerChildren {
+  display: contents;
+}
+
 /* Children of a Spinner keep their space but are not shown while it spins. A class, not an inline style. */
 .kui-SpinnerHiddenChildren {
-  display: contents;
   visibility: hidden;
 }

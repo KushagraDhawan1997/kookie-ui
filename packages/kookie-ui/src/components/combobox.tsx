@@ -29,7 +29,8 @@ import { useThemeSize } from '../hooks/theme-size.js';
 import { comboboxRootPropDefs, comboboxTriggerPropDefs, comboboxContentPropDefs } from './combobox.props.js';
 import { ChevronDownIcon, ThickCheckIcon } from './icons.js';
 import { Spinner } from './spinner.js';
-import { Theme, useThemeContext } from './theme.js';
+import { useThemeContext } from './theme.js';
+import { PortalTheme } from './_internal/portal-theme.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
 import * as Popover from './popover.js';
 import { Slottable } from './slot.js';
@@ -543,7 +544,7 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
 
   return (
     <PopoverPrimitive.Portal container={container} forceMount={forceMount ? true : undefined}>
-      <Theme asChild>
+      <PortalTheme asChild>
         <PopoverPrimitive.Content
           data-accent-color={resolvedColor}
           align="start"
@@ -573,7 +574,7 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
             </CommandPrimitive>
           </ComboboxContentContext.Provider>
         </PopoverPrimitive.Content>
-      </Theme>
+      </PortalTheme>
     </PopoverPrimitive.Portal>
   );
 });

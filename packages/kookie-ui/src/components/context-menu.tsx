@@ -17,7 +17,8 @@ import {
   contextMenuCheckboxItemPropDefs,
   contextMenuRadioItemPropDefs,
 } from './context-menu.props.js';
-import { Theme, useThemeContext } from './theme.js';
+import { useThemeContext } from './theme.js';
+import { PortalTheme } from './_internal/portal-theme.js';
 import { ThickCheckIcon, ThickChevronRightIcon, ThickDotIcon } from './icons.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../hooks/theme-size.js';
@@ -133,7 +134,7 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
 
     return (
       <ContextMenuPrimitive.Portal container={container} forceMount={forceMount}>
-        <Theme asChild>
+        <PortalTheme asChild>
           <ContextMenuPrimitive.Content
             data-accent-color={resolvedColor}
             alignOffset={getMenuAlignOffset(scalarSize)}
@@ -159,7 +160,7 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
               </ScrollArea>
             )}
           </ContextMenuPrimitive.Content>
-        </Theme>
+        </PortalTheme>
       </ContextMenuPrimitive.Portal>
     );
   },
@@ -419,7 +420,7 @@ const ContextMenuSubContent = React.forwardRef<
 
   return (
     <ContextMenuPrimitive.Portal container={container} forceMount={forceMount}>
-      <Theme asChild>
+      <PortalTheme asChild>
         <ContextMenuPrimitive.SubContent
           data-accent-color={color}
           alignOffset={getMenuAlignOffset(scalarSize)}
@@ -449,7 +450,7 @@ const ContextMenuSubContent = React.forwardRef<
             </ScrollArea>
           )}
         </ContextMenuPrimitive.SubContent>
-      </Theme>
+      </PortalTheme>
     </ContextMenuPrimitive.Portal>
   );
 });

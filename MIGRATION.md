@@ -459,3 +459,10 @@ Most of 0.24.0 fixes bugs and needs nothing from an app. These changes can need 
 | --- | --- | --- |
 | `--field-edge` | Removed. No component read it. A field's edge and shadow come from `--control-chrome` | Read `--control-chrome` if your CSS used `--field-edge` |
 | `TextField`, `TextArea`, `Select` | In dark mode the raised hover fill is neutral 3, one step above the surface | Nothing |
+
+## 0.26.3: stable field and spinner trees
+
+| Component | What changed | What to do |
+| --- | --- | --- |
+| `TextField`, `TextArea` | The wrapper (`kui-TextFieldWrapper`, `kui-TextAreaWrapper`) is always rendered. Without `errorMessage` it is `display: contents` and the field root keeps `className` and `style`, as before | Change CSS that selects the field root as a direct child of its parent (`.row > .kui-TextFieldRoot`) to a descendant selector |
+| `Spinner` with children | The children always sit in a `kui-SpinnerHost` and `kui-SpinnerChildren` pair, `display: contents` while not loading | Change CSS that selects a Spinner's children as direct children of their parent |
