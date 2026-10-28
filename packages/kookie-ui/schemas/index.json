@@ -86,7 +86,7 @@
               ]
             },
             "variant": {
-              "default": "raised",
+              "default": "solid",
               "description": "Visual variant that determines the button's appearance and context",
               "type": "string",
               "enum": [
@@ -343,7 +343,7 @@
               ]
             },
             "variant": {
-              "default": "raised",
+              "default": "solid",
               "description": "Visual variant that determines the button's appearance and context",
               "type": "string",
               "enum": [
@@ -653,7 +653,7 @@
               ]
             },
             "variant": {
-              "default": "raised",
+              "default": "solid",
               "description": "Visual variant that determines the button's appearance and context",
               "type": "string",
               "enum": [

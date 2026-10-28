@@ -27,9 +27,16 @@ describe('emphasis is a button rank, and the same thing as its variant', () => {
     });
   }
 
-  it('a button with neither rests at medium', () => {
-    renderWithProviders(<Button>A</Button>);
-    expect(screen.getByRole('button', { name: 'A' })).toHaveClass('kui-variant-raised');
+  it('a button or toggle with neither is solid, as before 0.14', () => {
+    renderWithProviders(
+      <>
+        <Button>A</Button>
+        <Button iconOnly aria-label="B">+</Button>
+        <Toggle>C</Toggle>
+        <Toggle iconOnly aria-label="D">+</Toggle>
+      </>,
+    );
+    for (const name of ['A', 'B', 'C', 'D']) expect(screen.getByRole('button', { name })).toHaveClass('kui-variant-solid');
   });
 
   it('passing both logs an error and emphasis wins, without throwing', () => {

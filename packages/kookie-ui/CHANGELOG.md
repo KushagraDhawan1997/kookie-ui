@@ -2,6 +2,10 @@
 
 Ships 0.27.1 and 0.28.0 too, which were never released on their own here.
 
+### Breaking changes
+
+* **button, icon-button, toggles:** `solid` is the default variant again (`emphasis="loud"`), as in Womp's copy since 0.14.5. `raised` stays available by name or as `emphasis="medium"`.
+
 ### Look
 
 * **shell:** a pane's header, footer and list pad by the panel padding, `--panel-p-N` (8/12/16px at Shell sizes 1 to 3), not the surface padding (16/24/32). Floating rows and the list's inset under them follow. Rows still start on the header's inset.

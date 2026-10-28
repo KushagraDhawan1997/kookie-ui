@@ -498,3 +498,4 @@ Surfaces are rounder again and a surface inside a surface keeps a corner. `mediu
 | Component | What changed | What to do |
 | --- | --- | --- |
 | `Shell.PaneHeader`, `Shell.PaneFooter`, `Shell.Scroll` in a pane | Pad by `--panel-p-N` (12px at size 2), not `--surface-p-N` (24px) | Nothing, unless your own inset inside a pane was compensating for the old 24px |
+| `Button`, `IconButton`, `ToggleButton`, `ToggleIconButton` | The default variant is `solid` again, `emphasis="loud"` | Pass `emphasis="medium"` (or `variant="raised"`) where a button should stay raised |
