@@ -558,8 +558,8 @@ export function Editor() {
             </Flex>
           </Shell.PaneHeader>
 
-          {/* Right edge: the camera, then the modifiers. Lock view and Shift are both latched toggles
-              that change what a finger does, so they sit together. */}
+          {/* Right edge: the camera, then Lock view, then Shift, each its own pill. Lock view and Shift
+              are latched toggles that change what a finger does. */}
           <Box position="absolute" right="0" top="50%" style={{ transform: 'translateY(-50%)', paddingRight: 'calc(env(safe-area-inset-right) + 12px)' }}>
             <Flex align="end" gap="2">
               {/* On, Shift says what it does right now beside it; off, it is only its icon. */}
@@ -584,11 +584,15 @@ export function Editor() {
                     </ToolbarButton>
                   </ToolbarGroup>
                 </Toolbar>
-                <Toolbar aria-label="Modifiers" orientation="vertical" backdrop>
+                <Toolbar aria-label="Lock" orientation="vertical" backdrop>
                   <ToolbarGroup>
                     <ToolbarButton iconOnly aria-label="Lock view" aria-pressed={viewLocked} variant={viewLocked ? 'solid' : undefined} onClick={() => setViewLocked((v) => !v)}>
                       <HugeiconsIcon icon={viewLocked ? SquareLock02Icon : SquareUnlock01Icon} strokeWidth={1.75} />
                     </ToolbarButton>
+                  </ToolbarGroup>
+                </Toolbar>
+                <Toolbar aria-label="Shift" orientation="vertical" backdrop>
+                  <ToolbarGroup>
                     <ToolbarButton
                       iconOnly
                       aria-label={constrains ? 'Shift: constrain' : 'Shift: select more'}
