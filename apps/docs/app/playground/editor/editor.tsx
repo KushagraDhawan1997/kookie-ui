@@ -125,7 +125,7 @@ function useHistory() {
 /**
  * Step 4 of the phone-first editor: selecting several objects, in persistent regions.
  *
- * Undo and redo sit top left and + and Shift bottom left, always. A selection adds its count and
+ * Undo and redo sit top left and + and Shift bottom left, always. A selection adds its
  * actions top right and Move, Rotate, Scale bottom right, and takes nothing away. The camera
  * cluster on the edge holds zoom, fit and Lock view, which stops one-finger orbit.
  *
@@ -303,7 +303,7 @@ export function Editor() {
 
   // Regions. Persistent commands keep their place; context adds a layer and never takes one away.
   //   Top left, persistent: undo and redo.
-  //   Top right, only with a selection: the count and what to do with the selection.
+  //   Top right, only with a selection: what to do with it.
   //   Bottom, one row: + and Shift on the left, always; Move, Rotate, Scale on the right with a
   //   selection. The exact-value steppers float above it while they are open.
   //   Right edge: the camera cluster and Lock view.
@@ -343,9 +343,6 @@ export function Editor() {
   const selectionActions =
     chosen.length > 0 ? (
       <Toolbar aria-label="Selection" backdrop>
-        <Text size="2" weight="medium" role="status" style={{ whiteSpace: 'nowrap', paddingInline: 'var(--space-3)' }}>
-          {chosen.length} selected
-        </Text>
         <ToolbarGroup>
           <ToolbarButton iconOnly aria-label="Duplicate" onClick={() => duplicate(selected)}>
             <HugeiconsIcon icon={Copy01Icon} strokeWidth={1.75} />
@@ -540,7 +537,7 @@ export function Editor() {
             </DropdownMenu.Root>
           </Box>
 
-          {/* Header: history on the left, always; the selection's count and actions on the right. */}
+          {/* Header: history on the left, always; the selection's actions on the right. */}
           <Shell.PaneHeader float>
             <Flex align="center" justify="between" gap="2" width="100%">
               <Toolbar aria-label="History" backdrop>
