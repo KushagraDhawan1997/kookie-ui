@@ -49,8 +49,8 @@ export function SaveBar({ saving, onCancel, onSave }: { saving: boolean; onCance
 
 | Emphasis | Look | Use it for |
 | --- | --- | --- |
-| `loud` | `solid` | The main action on the screen |
-| `medium` | `raised` | Most buttons. This is the default |
+| `loud` | `solid` | The main action on the screen. This is the default |
+| `medium` | `raised` | Most other buttons |
 | `quiet` | `ghost` | Cancel, close and actions in a toolbar |
 
 `variant` sets the look directly, when you need `soft`, `surface` or `outline`, which have no rank of their own. Pass `emphasis` or `variant`, not both. The types reject the pair. If both arrive anyway, the button logs an error and `emphasis` wins.
@@ -122,8 +122,8 @@ When a button-shaped control goes to another page, render your router's link wit
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `emphasis` | `'loud' \| 'medium' \| 'quiet'` | `'medium'` | How much attention the button asks for |
-| `variant` | `'raised' \| 'solid' \| 'soft' \| 'surface' \| 'outline' \| 'ghost'` | `'raised'` | The look, set directly. Not with `emphasis` |
+| `emphasis` | `'loud' \| 'medium' \| 'quiet'` | `'loud'` | How much attention the button asks for |
+| `variant` | `'raised' \| 'solid' \| 'soft' \| 'surface' \| 'outline' \| 'ghost'` | `'solid'` | The look, set directly. Not with `emphasis` |
 | `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | The height step |
 | `color` | `AccentColor` | Theme accent | The colour. Gray fills with step 12 |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Theme radius | The corner |

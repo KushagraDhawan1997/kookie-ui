@@ -2,6 +2,25 @@
 
 Decisions about Kookie UI v1 and why they were made. Newest first. The docs site is the source of truth for what the system says. This file records how it got there.
 
+## 2026-10-27: pane chrome pads like a panel
+
+Since 0.17 a Shell pane counted as a surface: its header, footer and list padded by `--surface-p-N`, 24px at size 2, Card's padding. In Womp's app that read as too much (Kushagra): a header row of 32px controls sat in 24px on every side, and the app's own label inset stacked on top. A pane is chrome that holds rows, like a menu, not a card that holds content, so it now pads by `--panel-p-N` (8/12/16 at sizes 1 to 3), the padding menus already use. The rule that rows start on the header's inset is kept; only the inset is smaller.
+
+## 2026-10-27: rounder surfaces, and nested surfaces keep a corner
+
+0.22.1 made surfaces less rounded while controls stayed pills (cards 8/12/16/20px at `full`), on the idea that v1's look is flat surfaces and round controls. In Womp's app that look did not work, and Kushagra dropped it.
+
+**What broke.** The concentric rule came from v2: a surface inside a surface draws the outer corner less the outer padding, never below 0. v1 took v2's padding (16/24/32/40px) and v2's rule, but kept corners smaller than that padding at every size, so the rule always came out at 0. Every Card in a Card rendered square: a choice card holding an outlined box, with pill fields and round radios inside it. The rule was right; v1's numbers gave it nothing to work with. At a 24px inset from a 12px corner the eye does not read two shapes as one family, it reads an independent box, and in this system an independent box is rounded. So the square read as a missing corner, not as concentric geometry.
+
+**What was tried.** v2's own bands (24/32/40/48px at `full`) give nested surfaces a real concentric corner, but read too round. 4px under them (28px at size 2, 4px nested) is the lowest a band can go and stay concentric, and was still a little round. Kushagra picked 20px at size 2 with a floor on nesting.
+
+**What v1 does now.**
+
+- At `large` and `full`, surfaces are 16/20/24/28px and overlays 20/24/28/32px. `medium` (12/18/24/30), `small` (5/6/8/10) and `none` take v2's sets. Each level sets its corners directly, as in v2, so `--radius-surface-factor` is gone.
+- Nesting keeps v2's rule with a floor: the inner corner is the outer corner less the outer padding, at least 8px, never more than its own corner. v1's corners sit at or under their padding, where the rule alone gives 0. This is where v1 and v2 differ. v2 notes that a tighter inner corner reads fine; here a square one read as a missing corner. At `small` and `none` the inner corner's own size caps it.
+- v1 draws plain arcs. v2 draws squircles where the engine supports them, which is part of why its rule has room to work.
+- A panel that hugs rows (menus, Select, Combobox) takes v2's corner: its row's corner plus its padding (`--radius-panel-N`, 27px at size 2). At the old 12px the panel was squarer than the 15px pill rows inside it, which v2 calls inside-out.
+
 ## 2026-10-16: removable items in the composer
 
 Womp's chat needed a pill in the composer for what a message is about (a picked mode, a scene object) next to the files it carries, and Kushagra wanted attachments to look the same. v2 has no such part: its `Chip` refuses dismissal because a removable chip is a control, not an inert atom. So `Chatbar.Item` is a control in the chatbar, not a Chip: a list item in the attachments row with a lead tile, a truncating label and a × named after the label. The app owns the list, so the item only reports removal. Attachments take the same pill so a file and a reference read as one kind of thing. v2 should gain the same contract in its Composer so the two do not disagree.

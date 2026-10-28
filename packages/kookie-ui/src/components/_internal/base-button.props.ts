@@ -15,8 +15,8 @@ const sizes = ['1', '2', '3', '4'] as const;
 
 /**
  * Available button variants for different visual contexts
- * - raised: lifted off its ground, with an edge and a shadow (the default)
- * - solid: Primary actions that should be noticed first
+ * - raised: lifted off its ground, with an edge and a shadow
+ * - solid: Primary actions that should be noticed first (the default)
  * - soft: Content-heavy interfaces, natural integration
  * - surface: Elevated appearance with subtle depth
  * - outline: Secondary actions that support primary actions
@@ -59,7 +59,7 @@ const baseButtonPropDefs = {
   /**
    * Visual variant that determines the button's appearance and context
    */
-  variant: { type: 'enum', className: 'kui-variant', values: variants, default: 'raised' },
+  variant: { type: 'enum', className: 'kui-variant', values: variants, default: 'solid' },
   ...accentColorPropDef,
   ...radiusPropDef,
   /**

@@ -344,6 +344,12 @@
   }
 }
 
+/* A header or footer beside the pane's list shares one inset with it: the list already pads
+   by the same amount, so the row drops its padding on that side instead of doubling it. */
+.kui-SidebarHeader:where(.kui-SidebarHeader--container:not([data-float]):has(+ .kui-ShellScroll)) {
+  padding-bottom: 0;
+}
+
 .kui-SidebarFooter:where(.kui-SidebarFooter--container) {
   display: flex;
   flex-direction: row;
@@ -361,6 +367,11 @@
   & > :where(.kui-Toolbar) {
     flex: 1;
   }
+}
+
+/* Second half of the shared inset above; after the footer's own padding, at its specificity. */
+:where(.kui-ShellScroll) + .kui-SidebarFooter:where(.kui-SidebarFooter--container:not([data-float])) {
+  padding-top: 0;
 }
 
 /* Header/Footer Menu Button Support */
@@ -416,18 +427,20 @@
      TextField of size N, with the row family's pill padding, gap and icon box. Content is a
      BaseMenuContent, so it takes every other size value from base-menu.css. Header and
      Footer are not, so they restate base-menu's values here; keep the two in step. */
-  /* A Shell pane is a surface: its header, footer, search and scrolling list all pad by the
-     surface padding at the Shell's index, so every row and every control in the pane starts on
-     one line. The Rail is left out: its tiles keep their own tight padding (above). */
+  /* A Shell pane's header, footer, search and scrolling list all pad by the panel padding at
+     the Shell's index, so every row and every control in the pane starts on one line. Panel,
+     not surface: a pane is chrome that holds rows, like a menu, and a card's 24px around a
+     32px control row read as padded twice (docs/LOG.md, 2026-10-27). The Rail is left out:
+     its tiles keep their own tight padding (above). */
   .kui-ShellPaneChrome {
     &:where(.kui-r-size-1) {
-      --sidebar-base-padding: var(--surface-p-1);
+      --sidebar-base-padding: var(--panel-p-1);
     }
     &:where(.kui-r-size-2) {
-      --sidebar-base-padding: var(--surface-p-2);
+      --sidebar-base-padding: var(--panel-p-2);
     }
     &:where(.kui-r-size-3) {
-      --sidebar-base-padding: var(--surface-p-3);
+      --sidebar-base-padding: var(--panel-p-3);
     }
   }
 
@@ -435,13 +448,13 @@
   /* stylelint-disable selector-max-specificity */
   .kui-SidebarContent.kui-ShellPaneChrome:not(.kui-ShellRailContent *) {
     &:where(.kui-r-size-1) {
-      --base-menu-content-padding: var(--surface-p-1);
+      --base-menu-content-padding: var(--panel-p-1);
     }
     &:where(.kui-r-size-2) {
-      --base-menu-content-padding: var(--surface-p-2);
+      --base-menu-content-padding: var(--panel-p-2);
     }
     &:where(.kui-r-size-3) {
-      --base-menu-content-padding: var(--surface-p-3);
+      --base-menu-content-padding: var(--panel-p-3);
     }
   }
   /* stylelint-enable selector-max-specificity */

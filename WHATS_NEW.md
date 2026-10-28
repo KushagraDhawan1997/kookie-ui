@@ -2,6 +2,16 @@
 
 Each release groups its changes as Major, Minor or Quiet. Major is a new product or a change to what it is. Minor is a change you notice when you use it. Quiet is a small touch, a fix, a rename or a removal, or how the work is made. Breaking lists the changes that need an edit in your app.
 
+## 0.28.1 (October 28)
+
+This release also brings 0.27.1 and 0.28.0.
+
+1. `Minor` **Solid buttons by default (breaking).** A button with no `variant` or `emphasis` is solid again. Pass `emphasis="medium"` for the raised look.
+2. `Minor` **Rounder cards (breaking for custom CSS).** Cards, popovers and panes are 20px at the default size, dialogs 24px. A card inside a card keeps an 8px corner instead of going square. Menus round to fit their pill rows.
+3. `Minor` **Tighter panes.** A pane's header, footer and list pad by 12px at the default size, not 24px, and the gap between a header and its list is one inset, not two.
+4. `Quiet` **A pane's list keeps its look when portalled.** A `Shell.Scroll pane` rendered elsewhere and portalled into a panel keeps its menu rows.
+5. `Quiet` **One-control jump button.** The chat transcript's jump-to-bottom button is one button wide again.
+
 ## 0.27.0 (October 26)
 
 1. `Minor` **The page scrolls on a phone (breaking).** On a narrow touch screen a Shell lets the page scroll, so the browser can hide its toolbars. A Shell inside a card takes `contained` and scrolls inside itself.

@@ -3,9 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { render } from '@testing-library/react';
 import { Box, Card, Theme } from '../../../src/components/index';
 
-// Theme defaults: radius `full` (surface factor 1), scale 1, size 2.
+// Theme defaults: radius `full` (v2's surface band), scale 1, size 2.
 const PADDING = { '1': 16, '2': 24, '3': 32, '4': 40 } as const;
-const CORNER = { '1': 8, '2': 12, '3': 16, '4': 20 } as const;
+const CORNER = { '1': 16, '2': 20, '3': 24, '4': 28 } as const;
 const SIZES = ['1', '2', '3', '4'] as const;
 
 const px = (value: string) => parseFloat(value);
@@ -28,7 +28,7 @@ describe('Card geometry', () => {
     );
     const { pads, corner } = box(container.querySelector('.kui-Card')!);
     expect(pads).toEqual([24, 24, 24, 24]);
-    expect(corner).toBe(12);
+    expect(corner).toBe(20);
   });
 
   for (const size of SIZES) {
@@ -52,10 +52,10 @@ describe('Card geometry', () => {
     );
     const { pads, corner } = box(container.querySelector('.kui-Card')!);
     expect(pads[0]).toBe(40);
-    expect(corner).toBe(20);
+    expect(corner).toBe(28);
   });
 
-  it('a Card in a Card is concentric: outer corner minus outer padding, never below 0', () => {
+  it('a Card in a Card: outer corner minus outer padding, at least 8px, at most its own', () => {
     for (const outer of SIZES) {
       for (const inner of SIZES) {
         const { container, unmount } = render(
@@ -66,7 +66,7 @@ describe('Card geometry', () => {
           </Theme>,
         );
         const [, nested] = container.querySelectorAll('.kui-Card');
-        const expected = Math.min(Math.max(0, CORNER[outer] - PADDING[outer]), CORNER[inner]);
+        const expected = Math.min(Math.max(8, CORNER[outer] - PADDING[outer]), CORNER[inner]);
         const { pads, corner } = box(nested);
         expect(corner, `${outer} > ${inner}`).toBe(expected);
         expect(pads[0], `${outer} > ${inner}`).toBe(PADDING[inner]);
@@ -86,7 +86,7 @@ describe('Card geometry', () => {
       </Theme>,
     );
     const [, nested] = container.querySelectorAll('.kui-Card');
-    expect(box(nested).corner).toBe(0);
+    expect(box(nested).corner).toBe(8);
   });
 });
 

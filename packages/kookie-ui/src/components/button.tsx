@@ -44,7 +44,7 @@ type ButtonRankProps =
       emphasis?: never;
     }
   | {
-      /** The button's rank: `loud` (solid), `medium` (raised, the default) or `quiet` (ghost). */
+      /** The button's rank: `loud` (solid, the default), `medium` (raised) or `quiet` (ghost). */
       emphasis?: ButtonEmphasis;
       variant?: never;
     };

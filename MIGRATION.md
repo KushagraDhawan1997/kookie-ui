@@ -1,6 +1,6 @@
 # Migrating to v1's new core
 
-v1's core is becoming the same as v2's: the spacing scale, sizes, corners, type steps, token names, states and composition rules. Colours, fonts, roundness, shadows and variants stay v1's own. This guide lists every change an app has to make, release by release. Each release ships its section here.
+v1's core is becoming the same as v2's: the spacing scale, sizes, corners, type steps, token names, states and composition rules. Colours, fonts, shadows and variants stay v1's own. Since 0.28.0 corners are v2's too. This guide lists every change an app has to make, release by release. Each release ships its section here.
 
 ### Codemods
 
@@ -474,3 +474,28 @@ Most of 0.24.0 fixes bugs and needs nothing from an app. These changes can need 
 | `Shell.Root` | With no `height`, on a window narrower than 768px with a coarse pointer, the document scrolls instead of the content. The header and pinned rows stick, drawers are fixed to the screen, and the page holds still under an open drawer | Nothing for most apps. Code that read or set the content's (or its `Shell.Scroll`'s) `scrollTop` on a phone uses `window.scrollY` and `window.scrollTo` there. Give wide content that cannot wrap its own horizontal scroller, since the page clips it |
 | `Shell.Root` | New `contained` prop: fills the parent and always scrolls inside itself. An explicit `height` such as `600px` or `100%` already behaved this way and still does | Pass `contained` to a Shell inside a card, demo or canvas. A Shell that is the app's whole window and passes `height="100vh"` or `"100dvh"` can drop `height` to get the phone behaviour |
 | `Shell.Header` | Rows that stick beneath it read its `height` | Nothing |
+
+## 0.28.0: rounder surfaces, nested corners
+
+Surfaces are rounder again and a surface inside a surface keeps a corner. `medium` and below take v2's corners. At the default `full` radius:
+
+| Role | Sizes 1–4 before | After |
+| --- | --- | --- |
+| `--radius-surface-N` (cards, popovers, tables, panes, notices, accordion, tooltip, chatbar) | 8 / 12 / 16 / 20px | 16 / 20 / 24 / 28px |
+| `--radius-overlay-N` (dialogs, sheets) | 12 / 16 / 20 / 24px | 20 / 24 / 28 / 32px |
+| Menu, Select and Combobox panels | `--radius-surface-N` | New `--radius-panel-N`: the row's corner plus the panel padding (20 / 27 / 33 / 43px) |
+| A surface inside a surface | 0px at every size | 8px at every size (its own corner if smaller) |
+
+`medium` is 12 / 18 / 24 / 30px for surfaces and 18 / 24 / 30 / 36px for overlays, `small` 5 / 6 / 8 / 10 and 6 / 8 / 10 / 12, and `none` stays square. `large` matches `full`.
+
+| Token | What changed | What to do |
+| --- | --- | --- |
+| `--radius-surface-factor` | Removed. Each Theme radius sets its corners directly | Read `--radius-surface-N` instead |
+| `--radius-surface-N` in your own CSS | 8px larger at every size | Check thumbnails and tiles that borrowed a surface corner. A picture inside a card usually wants the nested corner, not the card's |
+
+## 0.28.1: tighter pane chrome
+
+| Component | What changed | What to do |
+| --- | --- | --- |
+| `Shell.PaneHeader`, `Shell.PaneFooter`, `Shell.Scroll` in a pane | Pad by `--panel-p-N` (12px at size 2), not `--surface-p-N` (24px) | Nothing, unless your own inset inside a pane was compensating for the old 24px |
+| `Button`, `IconButton`, `ToggleButton`, `ToggleIconButton` | The default variant is `solid` again, `emphasis="loud"` | Pass `emphasis="medium"` (or `variant="raised"`) where a button should stay raised |

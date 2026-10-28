@@ -1,6 +1,6 @@
-Kookie UI rounds corners from one palette and three roles. A component reads a role, never a palette step. Controls (buttons, inputs, chips) climb with the theme and become capsules at `full`. Surfaces and overlays (cards, popovers, dialogs) damp as the theme grows and never go pill.
+Kookie UI rounds corners from one palette and three roles. A component reads a role, never a palette step. Controls (buttons, inputs, chips) climb with the theme and become capsules at `full`. Surfaces and overlays (cards, popovers, dialogs) have their own corners per theme and never go pill.
 
-The factor system is from [Radix Themes](https://www.radix-ui.com/themes). Kookie UI's values, roles and nesting rule are custom.
+The factor system is from [Radix Themes](https://www.radix-ui.com/themes). The roles and nesting rule follow Kookie UI v2.
 
 ## Installation
 
@@ -43,29 +43,31 @@ Each role has four steps, one per size.
 
 ```css
 var(--radius-control-1..4) /* palette 1 to 4; half the control height at full */
-var(--radius-surface-1..4) /* 8, 12, 16, 20px: cards, popovers, menus, tables, panes */
-var(--radius-overlay-1..4) /* 12, 16, 20, 24px: dialogs and sheets */
+var(--radius-row-1..4)     /* a row in a menu; half the row's height at full */
+var(--radius-panel-1..4)   /* a menu, Select or Combobox panel: its row's corner plus its padding */
+var(--radius-surface-1..4) /* 16, 20, 24, 28px: cards, popovers, tables, panes */
+var(--radius-overlay-1..4) /* 20, 24, 28, 32px: dialogs and sheets */
 ```
 
-Surface and overlay steps are times `--radius-surface-factor`, so the px above are what they draw at `full`.
+The px are what `large` and `full` draw. A menu panel is its row's corner plus its padding, so the rows sit concentric inside it.
 
 ## Nesting
 
-A surface inside a surface is concentric. Its corner is the outer corner minus the outer padding, never below 0. Card does this for you. At the default sizes the padding is larger than the corner, so a nested Card comes out square.
+A surface inside a surface is concentric. Its corner is the outer corner minus the outer padding, at least 8px and never more than its own corner. Card does this for you. The floor matters because the padding is about as large as the corner, so the plain rule would square every nested Card.
 
-## Factors
+## Per Theme
 
-Each theme sets both factors. Controls read `--radius-factor`, surfaces and overlays read `--radius-surface-factor`. The surface factor is capped at `1`, which is what keeps panels calm at the top of the scale.
+Controls scale by `--radius-factor`. Surfaces and overlays are set directly for each Theme radius.
 
-```css
-[data-radius='none']   { --radius-factor: 0;    --radius-surface-factor: 0;    }
-[data-radius='small']  { --radius-factor: 0.75; --radius-surface-factor: 0.5;  }
-[data-radius='medium'] { --radius-factor: 1;    --radius-surface-factor: 0.75; }
-[data-radius='large']  { --radius-factor: 1.5;  --radius-surface-factor: 0.9;  }
-[data-radius='full']   { --radius-factor: 2;    --radius-surface-factor: 1;    }
-```
+| Radius | Control factor | Surfaces 1–4 | Overlays 1–4 |
+| --- | --- | --- | --- |
+| `none` | 0 | 0 | 0 |
+| `small` | 0.75 | 5, 6, 8, 10px | 6, 8, 10, 12px |
+| `medium` | 1 | 12, 18, 24, 30px | 18, 24, 30, 36px |
+| `large` | 1.5 | 16, 20, 24, 28px | 20, 24, 28, 32px |
+| `full` | 2, plus pill | 16, 20, 24, 28px | 20, 24, 28, 32px |
 
-A surface at `full` is exactly as round as a surface at `medium`. Controls keep climbing past it.
+`large` and `full` share one surface band, so turning the dial up never squares a card. Controls keep climbing past it.
 
 ## Mark Ceiling
 
@@ -83,7 +85,7 @@ Sharp corners everywhere. Geometric, technical interfaces.
 
 ### Small
 
-Tight rounding. Controls at 0.75x, surfaces at 0.5x.
+Tight rounding. Controls at 0.75x, surfaces 5 to 10px.
 
 ```tsx
 <Theme radius="small"><YourApp /></Theme>
@@ -91,7 +93,7 @@ Tight rounding. Controls at 0.75x, surfaces at 0.5x.
 
 ### Medium
 
-Standard rounding. Controls at 1x, surfaces at 0.75x.
+Standard rounding. Controls at 1x, surfaces 12 to 30px.
 
 ```tsx
 <Theme radius="medium"><YourApp /></Theme>
@@ -99,7 +101,7 @@ Standard rounding. Controls at 1x, surfaces at 0.75x.
 
 ### Large
 
-Prominent controls against steady surfaces. Controls at 1.5x, surfaces at 0.9x.
+Prominent controls against steady surfaces. Controls at 1.5x, surfaces 16 to 28px.
 
 ```tsx
 <Theme radius="large"><YourApp /></Theme>
@@ -107,7 +109,7 @@ Prominent controls against steady surfaces. Controls at 1.5x, surfaces at 0.9x.
 
 ### Full
 
-Pill-shaped controls inside near-square panels — the widest contrast the system offers, and the default. Controls at 2x plus pill, surfaces capped at 1x.
+Pill-shaped controls on rounded surfaces, and the default. Controls at 2x plus pill, surfaces 16 to 28px.
 
 ```tsx
 <Theme radius="full"><YourApp /></Theme>
@@ -115,7 +117,7 @@ Pill-shaped controls inside near-square panels — the widest contrast the syste
 
 ## Overrides
 
-Components that accept a `radius` prop re-declare both factors for their subtree.
+Components that accept a `radius` prop re-declare the radius for their subtree.
 
 ```tsx
 <Theme radius="medium">
@@ -138,4 +140,4 @@ In custom CSS, read the role that matches what you are drawing:
 
 ## Credits
 
-The radius infrastructure (5-step scale system and factor-based multiplier approach) is from [Radix Themes](https://www.radix-ui.com/themes) by [WorkOS](https://workos.com/). Kookie UI's values, roles and nesting rule are custom.
+The factor-based palette is from [Radix Themes](https://www.radix-ui.com/themes) by [WorkOS](https://workos.com/). The roles, surface corners and nesting rule follow Kookie UI v2.
