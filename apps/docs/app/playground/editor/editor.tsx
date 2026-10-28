@@ -2,12 +2,14 @@
 
 import * as React from 'react';
 import { Canvas, useThree, type RootState } from '@react-three/fiber';
-import { Grid, OrbitControls, Text as SceneText } from '@react-three/drei';
+import { Grid, Line, OrbitControls, Text as SceneText } from '@react-three/drei';
 import { MathUtils, type Object3D } from 'three';
 import { Box, Button, DropdownMenu, Flex, SegmentedControl, Shell, Text, TextField, Theme, Toolbar, ToolbarButton, ToolbarGroup } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
   ArrowUpBigIcon,
+  PaintBrush04Icon,
+  PaletteIcon,
   Copy01Icon,
   GroupLayersIcon,
   SquareLock02Icon,
@@ -41,10 +43,10 @@ const MIN_DISTANCE = 1.5;
 const MAX_DISTANCE = 60;
 const READOUT_EDGE = 96;
 
-type Kind = 'cube' | 'sphere' | 'cylinder' | 'cone' | 'pyramid' | 'torus' | 'text';
+type Kind = 'cube' | 'sphere' | 'cylinder' | 'cone' | 'pyramid' | 'torus' | 'text' | 'stroke';
 type Vec3 = [number, number, number];
 /** `group` ties objects together: a tap on one selects them all. */
-type SceneObject = { id: number; kind: Kind; position: Vec3; rotation: Vec3; scale: Vec3; group?: number };
+type SceneObject = { id: number; kind: Kind; position: Vec3; rotation: Vec3; scale: Vec3; group?: number; points?: Vec3[] };
 
 const PRIMITIVES: { kind: Kind; label: string; icon: typeof CubeIcon }[] = [
   { kind: 'cube', label: 'Cube', icon: CubeIcon },
@@ -90,7 +92,7 @@ function withAxis(v: Vec3, i: number, value: number): Vec3 {
   return next;
 }
 
-function Geometry({ kind }: { kind: Exclude<Kind, 'text'> }) {
+function Geometry({ kind }: { kind: Exclude<Kind, 'text' | 'stroke'> }) {
   switch (kind) {
     case 'cube':
       return <boxGeometry args={[1, 1, 1]} />;
@@ -150,6 +152,9 @@ export function Editor() {
   const [shift, setShift] = React.useState(false);
   // Lock view stops one-finger orbit, so a finger on the canvas can only select or transform.
   const [viewLocked, setViewLocked] = React.useState(false);
+  // Draw, latched: one finger draws in 3D. A stub for now: strokes lie on the ground.
+  const [drawing, setDrawing] = React.useState(false);
+  const [liveStroke, setLiveStroke] = React.useState<Vec3[] | null>(null);
   const [dragging, setDragging] = React.useState<DragKind | null>(null);
   const [result, setResult] = React.useState<DragResult | null>(null);
   const [editing, setEditing] = React.useState<{ mode: Mode; axis: Axis } | null>(null);
@@ -238,6 +243,13 @@ export function Editor() {
       select([...new Set([...selected, ...withGroup(ids)])]);
     },
     onLongPress: (id, x, y) => setMenu({ id, x, y }),
+    drawing,
+    onStrokeMove: (points) => setLiveStroke(points),
+    onStroke: (points) => {
+      setLiveStroke(null);
+      if (points.length < 2) return;
+      history.commit([...history.objects, { id: nextId.current++, kind: 'stroke', position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1], points }]);
+    },
   });
 
   const zoom = React.useCallback((factor: number) => {
@@ -304,7 +316,8 @@ export function Editor() {
   // Regions. Persistent commands keep their place; context adds a layer and never takes one away.
   //   Top left, persistent: undo and redo.
   //   Top right, only with a selection: what to do with it.
-  //   Bottom, one row: + on the left, always; Move, Rotate, Scale on the right with a selection. The exact-value steppers float above it while they are open.
+  //   Bottom, one row: +, Draw and Materials on the left, always; Move, Rotate, Scale on the right
+  //   with a selection. The exact-value steppers float above it while they are open.
   //   Right edge: the camera cluster, then Lock view and Shift.
   let stepper: React.ReactNode = null;
   if (single && editing) {
@@ -381,6 +394,24 @@ export function Editor() {
       <Toolbar aria-label="Create" backdrop>
         <ToolbarGroup>
           <AddMenu onAdd={add} />
+          {/* Draw latches, like Shift: on until tapped again, and solid while on, since it has no label
+              to say so. Turning it on puts the selection down. */}
+          <ToolbarButton
+            iconOnly
+            aria-label="Draw"
+            aria-pressed={drawing}
+            variant={drawing ? 'solid' : undefined}
+            onClick={() => {
+              if (!drawing) select([]);
+              setDrawing((d) => !d);
+            }}
+          >
+            <HugeiconsIcon icon={PaintBrush04Icon} strokeWidth={1.75} />
+          </ToolbarButton>
+          {/* No panel yet: the pattern for panels is still open. */}
+          <ToolbarButton iconOnly aria-label="Materials">
+            <HugeiconsIcon icon={PaletteIcon} strokeWidth={1.75} />
+          </ToolbarButton>
         </ToolbarGroup>
       </Toolbar>
       {chosen.length > 0 ? (
@@ -439,6 +470,9 @@ export function Editor() {
                   if (!selected.includes(o.id)) select(withGroup([o.id]));
                 };
                 const transform = { position: o.position, rotation: o.rotation, scale: o.scale };
+                if (o.kind === 'stroke') {
+                  return <Line key={o.id} ref={register} {...transform} points={o.points ?? []} color="#d4d4d4" lineWidth={3} />;
+                }
                 return o.kind === 'text' ? (
                   <SceneText key={o.id} ref={register} {...transform} fontSize={0.8} anchorX="center" anchorY="middle" color="#3a3a3a" onClick={pickThis}>
                     Text
@@ -454,6 +488,7 @@ export function Editor() {
                 <SelectionBox key={`box-${o.id}`} target={() => registry.current.get(o.id)} />
               ))}
               {chosen.length > 0 ? <Handles key={selected.join(',')} targets={() => chosen.flatMap((o) => registry.current.get(o.id) ?? [])} mode={mode} /> : null}
+              {liveStroke && liveStroke.length > 1 ? <Line points={liveStroke} color="#3d5afe" lineWidth={3} /> : null}
               <OrbitControls ref={controls} makeDefault enableRotate={!viewLocked} enableDamping={false} minDistance={MIN_DISTANCE} maxDistance={MAX_DISTANCE} />
             </Canvas>
 

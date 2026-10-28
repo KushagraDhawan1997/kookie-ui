@@ -151,7 +151,7 @@ function alongLine(origin: Vector3, dir: Vector3, x: number, y: number, camera: 
   return (b * ray.direction.dot(w) - dir.dot(w)) / denom;
 }
 
-function onGround(height: number, x: number, y: number, camera: PerspectiveCamera, size: Size) {
+export function onGround(height: number, x: number, y: number, camera: PerspectiveCamera, size: Size) {
   return rayAt(x, y, camera, size).ray.intersectPlane(new Plane(new Vector3(0, 1, 0), -height), new Vector3());
 }
 

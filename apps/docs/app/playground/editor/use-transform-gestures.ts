@@ -1,7 +1,7 @@
 import * as React from 'react';
 import type { RootState } from '@react-three/fiber';
 import type { Object3D, PerspectiveCamera } from 'three';
-import { createDrag, hitTest, onScreenIn, pick, TAP_SLOP, type Axis, type Mode } from './transform';
+import { createDrag, hitTest, onGround, onScreenIn, pick, TAP_SLOP, type Axis, type Mode } from './transform';
 
 export type DragResult = { mode: Mode; axis: Axis | null; text: string; x: number; y: number };
 export type DragKind = 'object' | 'handle' | 'box';
@@ -35,6 +35,11 @@ type Options = {
   /** A finished selection box: the objects whose centres it holds. */
   onBox(ids: number[]): void;
   onLongPress(id: number | null, x: number, y: number): void;
+  /** Draw, latched: one finger draws a stroke on the ground; two fingers stay the camera. */
+  drawing: boolean;
+  /** The stroke so far while it is drawn, and the finished stroke. */
+  onStrokeMove(points: [number, number, number][]): void;
+  onStroke(points: [number, number, number][]): void;
 };
 
 /**
@@ -61,11 +66,12 @@ export function useTransformGestures(options: Options) {
       x0: number;
       y0: number;
       last: { clientX: number; clientY: number };
-      kind: 'transform' | 'box' | 'pending';
+      kind: 'transform' | 'box' | 'pending' | 'draw';
       target: ReturnType<typeof hitTest>;
       drag: ReturnType<typeof createDrag> | null;
       moved: boolean;
       text: string | null;
+      stroke?: [number, number, number][];
     } | null = null;
     let press: { id: number; x: number; y: number; timer: number } | null = null;
     let swallowClick = false;
@@ -104,6 +110,8 @@ export function useTransformGestures(options: Options) {
     };
 
     const cancel = () => {
+      // A second finger mid-stroke drops the stroke: two fingers are the camera.
+      if (gesture?.kind === 'draw') latest.current.onStroke([]);
       if (gesture?.drag) {
         gesture.drag.revert();
         latest.current.onCancel();
@@ -169,6 +177,14 @@ export function useTransformGestures(options: Options) {
       if (e.pointerType === 'pen') penSeen = true;
       // With a pen about, a finger never edits: it only moves the view or taps to select.
       const edits = !(penSeen && e.pointerType === 'touch');
+      if (latest.current.drawing && edits) {
+        e.stopPropagation();
+        surface.setPointerCapture(e.pointerId);
+        clearPress();
+        gesture = { id: e.pointerId, x0: x, y0: y, last: e, kind: 'draw', target: null, drag: null, moved: false, text: null, stroke: [] };
+        swallowClick = true;
+        return;
+      }
       const selection = edits ? latest.current.selection() : [];
       const target = selection.length
         ? hitTest(
@@ -201,6 +217,17 @@ export function useTransformGestures(options: Options) {
       const cam = camera();
       if (!cam) return;
       const { x, y, size } = local(e);
+      if (gesture.kind === 'draw' && gesture.stroke) {
+        // A stub stroke: points on the ground under the finger, a few pixels apart.
+        const point = onGround(0.02, x, y, cam, size);
+        const last = gesture.stroke[gesture.stroke.length - 1];
+        if (point && (!last || Math.hypot(point.x - last[0], point.z - last[2]) > 0.02)) {
+          gesture.stroke.push([point.x, point.y, point.z]);
+          latest.current.onStrokeMove([...gesture.stroke]);
+          invalidate();
+        }
+        return;
+      }
       if (!gesture.moved) {
         if (Math.hypot(x - gesture.x0, y - gesture.y0) < TAP_SLOP) return;
         gesture.moved = true;
@@ -244,7 +271,10 @@ export function useTransformGestures(options: Options) {
       const { x, y, size } = local(e);
       const cam = camera();
 
-      if (g.kind === 'box' && g.moved) {
+      if (g.kind === 'draw') {
+        end();
+        latest.current.onStroke(g.stroke && g.stroke.length > 1 ? g.stroke : []);
+      } else if (g.kind === 'box' && g.moved) {
         const rect = drawBox(x, y);
         end();
         if (rect && cam) {
