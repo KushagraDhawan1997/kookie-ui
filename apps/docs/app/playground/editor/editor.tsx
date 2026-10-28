@@ -34,7 +34,7 @@ import {
   Undo02Icon,
 } from '@hugeicons/core-free-icons';
 import { Handles, SelectionBox } from './handles';
-import { MaterialsPane, PaneInset, RoomLight, materialById, materialProps, type PaneRest } from './materials';
+import { MaterialsGrid, RoomLight, materialById, materialProps } from './materials';
 import { AXES, MM_PER_UNIT, pick, type Axis, type Mode } from './transform';
 import { useTransformGestures, type DragKind, type DragResult } from './use-transform-gestures';
 
@@ -42,6 +42,11 @@ const ZOOM_STEP = 1.25;
 const MIN_DISTANCE = 1.5;
 const MAX_DISTANCE = 60;
 const READOUT_EDGE = 96;
+/** The Materials pane's rest heights, and how far its handle may drag it before it closes. */
+const PEEK_PX = 128;
+const MIN_DRAG_PX = 40;
+/** The bottom row and its padding, which ride on top of an open pane. */
+const BOTTOM_ROW_PX = 72;
 
 type Kind = 'cube' | 'sphere' | 'cylinder' | 'cone' | 'pyramid' | 'torus' | 'text' | 'stroke';
 type Vec3 = [number, number, number];
@@ -154,29 +159,13 @@ export function Editor() {
   const [viewLocked, setViewLocked] = React.useState(false);
   // Draw, latched: one finger draws in 3D. A stub for now: strokes lie on the ground.
   const [drawing, setDrawing] = React.useState(false);
-  // The one pane open at a time, Materials for now, and the space it covers over the canvas.
-  const [materialsRest, setMaterialsRest] = React.useState<PaneRest>('closed');
-  const [covered, setCovered] = React.useState({ bottom: 0, right: 0 });
-  const bottomRowRef = React.useRef<HTMLDivElement>(null);
-  const [bottomOffset, setBottomOffset] = React.useState(0);
-  const [docked, setDocked] = React.useState(false);
-  React.useEffect(() => {
-    const wide = window.matchMedia('(min-width: 768px)');
-    const read = () => {
-      setDocked(wide.matches);
-      const row = bottomRowRef.current?.getBoundingClientRect();
-      const area = surface.current?.getBoundingClientRect();
-      // The pane sits above the bottom row, which stays usable while it is open.
-      if (row && area) setBottomOffset(Math.round(area.bottom - row.top + 8));
-    };
-    read();
-    wide.addEventListener('change', read);
-    window.addEventListener('resize', read);
-    return () => {
-      wide.removeEventListener('change', read);
-      window.removeEventListener('resize', read);
-    };
-  }, [materialsRest]);
+  // The one pane open at a time, Materials for now: a Shell.Bottom stacked over the canvas, with
+  // no scrim. The canvas never moves; the bottom row rides on top of the pane, and the camera
+  // buttons stay above it. It rests at peek (a row of spheres) or half; its handle resizes it.
+  const [materialsOpen, setMaterialsOpen] = React.useState(false);
+  const [paneSize, setPaneSize] = React.useState(PEEK_PX);
+  const halfPx = typeof window === 'undefined' ? 360 : Math.round(window.innerHeight / 2);
+  const covered = materialsOpen ? paneSize + BOTTOM_ROW_PX : 0;
   const [liveStroke, setLiveStroke] = React.useState<Vec3[] | null>(null);
   const [dragging, setDragging] = React.useState<DragKind | null>(null);
   const [result, setResult] = React.useState<DragResult | null>(null);
@@ -436,7 +425,7 @@ export function Editor() {
 
   const constrains = dragging === 'handle' && shift;
   const bottomRow = (
-    <Flex ref={bottomRowRef} align="center" justify="between" gap="2" width="100%">
+    <Flex align="center" justify="between" gap="2" width="100%">
       <Toolbar aria-label="Create" backdrop>
         <ToolbarGroup>
           <AddMenu onAdd={add} />
@@ -457,9 +446,12 @@ export function Editor() {
           <ToolbarButton
             iconOnly
             aria-label="Materials"
-            aria-pressed={materialsRest !== 'closed'}
-            variant={materialsRest !== 'closed' ? 'solid' : undefined}
-            onClick={() => setMaterialsRest((r) => (r === 'closed' ? 'peek' : 'closed'))}
+            aria-pressed={materialsOpen}
+            variant={materialsOpen ? 'solid' : undefined}
+            onClick={() => {
+              setPaneSize(PEEK_PX);
+              setMaterialsOpen((o) => !o);
+            }}
           >
             <HugeiconsIcon icon={PaletteIcon} strokeWidth={1.75} />
           </ToolbarButton>
@@ -507,7 +499,6 @@ export function Editor() {
               onPointerMissed={() => select([])}
             >
               <RedrawOnResize />
-              <PaneInset bottom={covered.bottom} right={covered.right} />
               <RoomLight />
               <ambientLight intensity={0.7} />
               <directionalLight position={[5, 10, 5]} intensity={0.9} />
@@ -648,13 +639,13 @@ export function Editor() {
 
           {/* Right edge: the camera, then Lock view, then Shift, each its own pill. Lock view and Shift
               are latched toggles that change what a finger does. */}
-          {/* It centres in what an open pane leaves visible, and moves beside a docked one. */}
+          {/* Centred in the space the pane and the bottom row leave, or the whole height. */}
           <Box
             position="absolute"
-            right={`${covered.right}px`}
+            right="0"
             // Centred in the space between the header and a bottom pane, or the whole height.
-            top={covered.bottom > 0 ? '72px' : '0'}
-            bottom={`${covered.bottom}px`}
+            top={covered > 0 ? '72px' : '0'}
+            bottom={`${covered}px`}
             style={{ display: 'flex', alignItems: 'center', pointerEvents: 'none', paddingRight: 'calc(env(safe-area-inset-right) + 12px)' }}
           >
             <Flex align="end" gap="2" style={{ pointerEvents: 'auto' }}>
@@ -705,16 +696,35 @@ export function Editor() {
             </Flex>
           </Box>
 
-          <MaterialsPane rest={materialsRest} onRestChange={setMaterialsRest} docked={docked} bottomOffset={bottomOffset} onCovered={setCovered} onPick={applyMaterial} onDrop={dropMaterial} />
-
           {/* Bottom: one row, with the exact-value steppers above it while they are open. */}
-          <Shell.PaneFooter float style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
+          <Shell.PaneFooter float style={materialsOpen ? { bottom: paneSize, paddingBottom: 12 } : { paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
             <Flex direction="column" align="center" gap="2" width="100%">
               {stepper}
               {bottomRow}
             </Flex>
           </Shell.PaneFooter>
         </Shell.Content>
+
+        <Shell.Bottom
+          presentation="stacked"
+          open={materialsOpen}
+          onOpenChange={setMaterialsOpen}
+          resizable
+          minSize={MIN_DRAG_PX}
+          maxSize={halfPx}
+          size={paneSize}
+          onSizeChange={(size) => setPaneSize(size)}
+          onResizeEnd={(size) => {
+            // Settle on the nearest rest; well below peek, it closes.
+            if (size < PEEK_PX * 0.6) {
+              setMaterialsOpen(false);
+              setPaneSize(PEEK_PX);
+            } else setPaneSize(size < (PEEK_PX + halfPx) / 2 ? PEEK_PX : halfPx);
+          }}
+          aria-label="Materials"
+        >
+          <MaterialsGrid onPick={applyMaterial} onDrop={dropMaterial} />
+        </Shell.Bottom>
       </Shell.Root>
     </Theme>
   );
