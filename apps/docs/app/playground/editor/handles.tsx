@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Line } from '@react-three/drei';
 import { Box3, Group, Mesh, Object3D, PerspectiveCamera, Vector3 } from 'three';
-import { AXES, AXIS_COLOR, frameOf, layoutFor, ringTurn, type Axis, type Mode } from './transform';
+import { AXES, AXIS_COLOR, CORNER_PX, KNOB_PX, frameOf, grabbableCorners, layoutFor, ringTurn, type Axis, type Mode } from './transform';
 
 const X = new Vector3(1, 0, 0);
 const SEGMENT: [number, number, number][] = [
@@ -25,12 +25,25 @@ export function Handles({ targets, mode }: { targets: () => Object3D[]; mode: Mo
   const arms = React.useRef<Record<Axis, Group | null>>({ x: null, y: null, z: null });
   const knobs = React.useRef<Record<Axis, Group | null>>({ x: null, y: null, z: null });
   const rings = React.useRef<Record<Axis, Group | null>>({ x: null, y: null, z: null });
+  const corners = React.useRef<(Group | null)[]>([]);
   const turns = React.useMemo(() => ({ x: ringTurn('x'), y: ringTurn('y'), z: ringTurn('z') }), []);
 
   useFrame(({ camera, size }) => {
     const frame = frameOf(targets(), mode);
     if (!frame) return;
     const layout = layoutFor(frame, camera as PerspectiveCamera, size.height);
+    // Corner cubes: only those on the camera's side, and none when they would crowd the arrows.
+    const grabbable = mode === 'move' ? grabbableCorners(frame, layout, camera as PerspectiveCamera, size) : [];
+    const cornerSize = (CORNER_PX * 2 * layout.knobRadius) / KNOB_PX;
+    corners.current.forEach((cube, i) => {
+      if (!cube) return;
+      const at = grabbable[i];
+      cube.visible = Boolean(at);
+      if (!at) return;
+      cube.position.copy(at);
+      cube.quaternion.copy(frame.quaternion);
+      cube.scale.setScalar(cornerSize);
+    });
     for (const axis of AXES) {
       const dir = layout.dirs[axis];
       const arm = arms.current[axis];
@@ -56,6 +69,21 @@ export function Handles({ targets, mode }: { targets: () => Object3D[]; mode: Mo
 
   return (
     <group renderOrder={10}>
+      {mode === 'move'
+        ? [0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+            <group key={`corner-${i}`} ref={(g) => void (corners.current[i] = g)} visible={false}>
+              {/* A white cube on a slightly larger blue one: the blue reads as its outline. */}
+              <mesh renderOrder={11} scale={1.35}>
+                <boxGeometry args={[1, 1, 1]} />
+                <meshBasicMaterial color={SELECTION} depthTest={false} transparent />
+              </mesh>
+              <mesh renderOrder={12}>
+                <boxGeometry args={[1, 1, 1]} />
+                <meshBasicMaterial color="#ffffff" depthTest={false} transparent />
+              </mesh>
+            </group>
+          ))
+        : null}
       {AXES.map((axis) =>
         mode === 'rotate' ? (
           <group key={axis} ref={(g) => void (rings.current[axis] = g)}>

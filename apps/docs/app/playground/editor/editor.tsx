@@ -28,7 +28,6 @@ import {
   PlusSignIcon,
   PyramidIcon,
   Redo02Icon,
-  ArrowExpand01Icon,
   Rotate360Icon,
   TextIcon,
   Tick02Icon,
@@ -59,9 +58,9 @@ const PRIMITIVES: { kind: Kind; label: string; icon: typeof CubeIcon }[] = [
 ];
 
 const MODES: { mode: Mode; label: string; icon: typeof CubeIcon }[] = [
-  { mode: 'move', label: 'Move', icon: MoveIcon },
+  // Two modes: arrows move and corner cubes scale in one, rings rotate in the other.
+  { mode: 'move', label: 'Move and scale', icon: MoveIcon },
   { mode: 'rotate', label: 'Rotate', icon: Rotate360Icon },
-  { mode: 'scale', label: 'Scale', icon: ArrowExpand01Icon },
 ];
 
 /** How each mode reads in the stepper: its unit, its step, and the conversion from the scene. */
@@ -128,7 +127,7 @@ function useHistory() {
  * Step 4 of the phone-first editor: selecting several objects, in persistent regions.
  *
  * Undo and redo sit top left and + bottom left, always. A selection adds its
- * actions top right and Move, Rotate, Scale bottom right, and takes nothing away. The camera
+ * actions top right and the two transform modes bottom right, and takes nothing away. The camera
  * cluster on the edge holds zoom and fit, then Lock view, which stops one-finger orbit, and Shift.
  *
  * A tap selects an object, or its whole group. Shift, on the edge under Lock view, latches on: taps add
@@ -316,7 +315,7 @@ export function Editor() {
   // Regions. Persistent commands keep their place; context adds a layer and never takes one away.
   //   Top left, persistent: undo and redo.
   //   Top right, only with a selection: what to do with it.
-  //   Bottom, one row: +, Draw and Materials on the left, always; Move, Rotate, Scale on the right
+  //   Bottom, one row: +, Draw and Materials on the left, always; Move and scale, Rotate on the right
   //   with a selection. The exact-value steppers float above it while they are open.
   //   Right edge: the camera cluster, then Lock view and Shift.
   let stepper: React.ReactNode = null;

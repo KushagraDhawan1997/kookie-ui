@@ -1,4 +1,4 @@
-import { Box3, MathUtils, Matrix4, Object3D, PerspectiveCamera, Plane, Quaternion, Raycaster, Sphere, Vector2, Vector3 } from 'three';
+import { Box3, MathUtils, Matrix4, Mesh, Object3D, PerspectiveCamera, Plane, Quaternion, Raycaster, Sphere, Vector2, Vector3 } from 'three';
 
 export type Mode = 'move' | 'rotate' | 'scale';
 export type Axis = 'x' | 'y' | 'z';
@@ -14,10 +14,14 @@ export const SNAP = { move: 0.1, rotate: MathUtils.degToRad(15), scale: 0.1 };
 // Handle sizes in screen pixels, so they read the same at any zoom.
 const ARM_GAP_PX = 6;
 const ARM_PX = 44;
-const KNOB_PX = 9;
+export const KNOB_PX = 9;
 const RING_GAP_PX = 30;
 // Reach past the visible shape on every side, so the touch target is at least 44 px wide.
 const HIT_PX = 22;
+/** Two handles closer than this on screen could take each other's touches. */
+const MIN_APART_PX = 44;
+/** Half a corner cube, on screen. */
+export const CORNER_PX = 7;
 
 const UNIT: Record<Axis, Vector3> = { x: new Vector3(1, 0, 0), y: new Vector3(0, 1, 0), z: new Vector3(0, 0, 1) };
 // For the ring around each axis, two directions in its plane, in the order that keeps it right-handed.
@@ -37,7 +41,16 @@ export type Layout = {
  * What the handles wrap: one object around its own origin, or several around the centre of their
  * shared box. One object scales along its own axes; anything else works along the world's.
  */
-export type Frame = { center: Vector3; radius: number; quaternion: Quaternion };
+export type Frame = { center: Vector3; radius: number; quaternion: Quaternion; corners: Vector3[] };
+
+/** The eight corners of a box, through a matrix when the box is an object's own. */
+function boxCorners(box: Box3, matrix?: Matrix4) {
+  const { min, max } = box;
+  return [0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
+    const corner = new Vector3(i & 1 ? max.x : min.x, i & 2 ? max.y : min.y, i & 4 ? max.z : min.z);
+    return matrix ? corner.applyMatrix4(matrix) : corner;
+  });
+}
 
 export function frameOf(objects: Object3D[], mode: Mode): Frame | null {
   if (objects.length === 0) return null;
@@ -45,14 +58,21 @@ export function frameOf(objects: Object3D[], mode: Mode): Frame | null {
   for (const object of objects) box.expandByObject(object);
   const sphere = box.getBoundingSphere(new Sphere());
   if (objects.length === 1) {
-    const center = objects[0].getWorldPosition(new Vector3());
+    const object = objects[0];
+    const center = object.getWorldPosition(new Vector3());
+    // One object's corners turn with it: its own box, not the world-aligned one around it.
+    const geometry = object instanceof Mesh ? object.geometry : null;
+    if (geometry && !geometry.boundingBox) geometry.computeBoundingBox();
+    object.updateMatrixWorld();
+    const corners = geometry?.boundingBox && !geometry.boundingBox.isEmpty() ? boxCorners(geometry.boundingBox, object.matrixWorld) : boxCorners(box);
     return {
       center,
       radius: box.isEmpty() ? 0.5 : sphere.center.distanceTo(center) + sphere.radius,
-      quaternion: mode === 'scale' ? objects[0].quaternion.clone() : new Quaternion(),
+      quaternion: mode === 'scale' ? object.quaternion.clone() : new Quaternion(),
+      corners,
     };
   }
-  return { center: box.getCenter(new Vector3()), radius: sphere.radius, quaternion: new Quaternion() };
+  return { center: box.getCenter(new Vector3()), radius: sphere.radius, quaternion: new Quaternion(), corners: boxCorners(box) };
 }
 
 /** Where the handles sit around a frame seen through this camera. */
@@ -75,7 +95,7 @@ export function ringTurn(axis: Axis) {
   return new Quaternion().setFromRotationMatrix(new Matrix4().makeBasis(UNIT[u], UNIT[v], UNIT[axis]));
 }
 
-export type Target = { kind: 'object'; index: number } | { kind: 'handle'; axis: Axis };
+export type Target = { kind: 'object'; index: number } | { kind: 'handle'; axis: Axis } | { kind: 'corner' };
 type Size = { width: number; height: number };
 
 function toScreen(point: Vector3, camera: PerspectiveCamera, size: Size) {
@@ -87,6 +107,23 @@ function rayAt(x: number, y: number, camera: PerspectiveCamera, size: Size) {
   const raycaster = new Raycaster();
   raycaster.setFromCamera(new Vector2((x / size.width) * 2 - 1, -(y / size.height) * 2 + 1), camera);
   return raycaster;
+}
+
+/**
+ * The corner cubes that can be grabbed: the corners on the camera's side of the frame. When any
+ * two of them, or one and an axis knob, would sit under 44px apart (a small or far object), none
+ * show, so a touch there is never ambiguous. Zooming in brings them back.
+ */
+export function grabbableCorners(frame: Frame, layout: Layout, camera: PerspectiveCamera, size: Size) {
+  const eye = camera.position.clone().sub(frame.center);
+  const front = frame.corners.filter((corner) => corner.clone().sub(frame.center).dot(eye) > 0);
+  const onScreen = front.map((corner) => toScreen(corner, camera, size));
+  const knobs = AXES.map((axis) => toScreen(layout.center.clone().addScaledVector(layout.dirs[axis], layout.knobDistance), camera, size));
+  for (let i = 0; i < onScreen.length; i++) {
+    for (let j = i + 1; j < onScreen.length; j++) if (onScreen[i].distanceTo(onScreen[j]) < MIN_APART_PX) return [];
+    for (const knob of knobs) if (onScreen[i].distanceTo(knob) < MIN_APART_PX) return [];
+  }
+  return front;
 }
 
 /** Which of these objects is under (x, y), nearest first; -1 for none. */
@@ -112,6 +149,11 @@ export function hitTest(x: number, y: number, objects: Object3D[], camera: Persp
   if (!frame) return null;
   const layout = layoutFor(frame, camera, size.height);
   const finger = new Vector2(x, y);
+  // In Move/Scale, a corner cube scales evenly; it wins over an arrow when both are in reach.
+  if (mode === 'move') {
+    const corner = grabbableCorners(frame, layout, camera, size).find((c) => toScreen(c, camera, size).distanceTo(finger) <= CORNER_PX + HIT_PX);
+    if (corner) return { kind: 'corner' };
+  }
   let best: { axis: Axis; distance: number } | null = null;
   for (const axis of AXES) {
     let distance: number;
@@ -191,6 +233,8 @@ export function createDrag(objects: Object3D[], target: Target, mode: Mode, x0: 
   const start: Start = { position: object.position.clone(), quaternion: object.quaternion.clone(), scale: object.scale.clone() };
   const layout = layoutFor(frame, camera, size.height);
   const axis = target.kind === 'handle' ? target.axis : null;
+  // What this drag does: a corner scales evenly whatever the mode.
+  const kind: Mode = target.kind === 'corner' ? 'scale' : mode;
   const dir = axis ? layout.dirs[axis] : null;
   const t0 = dir ? alongLine(start.position, dir, x0, y0, camera, size) : null;
   const ground0 = onGround(start.position.y, x0, y0, camera, size);
@@ -214,6 +258,14 @@ export function createDrag(objects: Object3D[], target: Target, mode: Mode, x0: 
     object.position.copy(start.position);
     object.quaternion.copy(start.quaternion);
     object.scale.copy(start.scale);
+
+    if (target.kind === 'corner') {
+      // Even scale by how far the finger is from the centre on screen, against where it started.
+      const from = Math.max(1, Math.hypot(x0 - center.x, y0 - center.y));
+      const factor = Math.max(SNAP.scale, snapTo(Math.hypot(x - center.x, y - center.y) / from, SNAP.scale, snap));
+      object.scale.multiplyScalar(factor);
+      return `×${factor.toFixed(2)}`;
+    }
 
     if (mode === 'move') {
       if (axis && dir && t0 !== null) {
@@ -280,5 +332,5 @@ export function createDrag(objects: Object3D[], target: Target, mode: Mode, x0: 
     carry();
   }
 
-  return { update, revert, axis };
+  return { update, revert, axis, kind };
 }

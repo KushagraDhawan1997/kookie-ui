@@ -245,7 +245,7 @@ export function useTransformGestures(options: Options) {
           // The drag counts from here, so the selection keeps its distance from the finger.
           const objects = latest.current.selection().map((s) => s.object);
           gesture.drag = createDrag(objects, target, latest.current.mode, x, y, cam, size, latest.current.shift && target.kind === 'handle');
-          latest.current.onStart(target.kind);
+          latest.current.onStart(target.kind === 'object' ? 'object' : 'handle');
         } else {
           latest.current.onStart('box');
         }
@@ -283,7 +283,7 @@ export function useTransformGestures(options: Options) {
         }
       } else if (g.drag) {
         end();
-        if (g.text !== null) latest.current.onCommit({ mode: latest.current.mode, axis: g.drag.axis, text: g.text, x, y });
+        if (g.text !== null) latest.current.onCommit({ mode: g.drag.kind, axis: g.drag.axis, text: g.text, x, y });
         else {
           g.drag.revert();
           latest.current.onCancel();
