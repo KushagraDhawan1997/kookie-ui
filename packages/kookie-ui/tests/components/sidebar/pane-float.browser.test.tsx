@@ -67,9 +67,9 @@ describe('floating pane rows', () => {
     expect(container.querySelector('.kui-ShellPaneHeader .kui-BaseButton')!.className).toContain('kui-variant-raised');
   });
 
-  // The pane pads by --surface-p-N at the Shell's index: 16, 24, 32.
-  for (const [shellSize, pad, band] of [['1', 16, 32], ['2', 24, 40], ['3', 32, 48]] as const) {
-    it(`a floating row pads by the surface padding, and a band toolbar is one step up (size ${shellSize})`, () => {
+  // The pane pads by --panel-p-N at the Shell's index: 8, 12, 16.
+  for (const [shellSize, pad, band] of [['1', 8, 32], ['2', 12, 40], ['3', 16, 48]] as const) {
+    it(`a floating row pads by the panel padding, and a band toolbar is one step up (size ${shellSize})`, () => {
       const { container } = renderPane('band', shellSize);
       const header = container.querySelector<HTMLElement>('.kui-ShellPaneHeader')!;
       const style = getComputedStyle(header);
@@ -82,8 +82,8 @@ describe('floating pane rows', () => {
   }
 });
 
-describe('pane chrome pads as a surface', () => {
-  for (const [shellSize, pad] of [['1', 16], ['2', 24], ['3', 32]] as const) {
+describe('pane chrome pads as a panel', () => {
+  for (const [shellSize, pad] of [['1', 8], ['2', 12], ['3', 16]] as const) {
     it(`rows start on the header's inset (size ${shellSize})`, () => {
       const { container } = render(
         <Theme>
@@ -131,5 +131,33 @@ describe('pane chrome pads as a surface', () => {
     );
     expect(parseFloat(getComputedStyle(container.querySelector<HTMLElement>('.kui-ShellRail .kui-ShellPaneHeader')!).paddingTop)).toBe(8);
     expect(parseFloat(getComputedStyle(container.querySelector<HTMLElement>('.kui-ShellRail .kui-BaseMenuViewport')!).paddingTop)).toBe(8);
+  });
+});
+
+describe('pane chrome beside the list', () => {
+  it('shares one inset with it instead of doubling it', () => {
+    const { container } = render(
+      <Theme>
+        <Shell.Root size="2" height="400px">
+          <Shell.Sidebar defaultState="expanded" presentation="fixed">
+            <Shell.PaneHeader>
+              <span>Recents</span>
+            </Shell.PaneHeader>
+            <Shell.Scroll>
+              <Rows />
+            </Shell.Scroll>
+            <Shell.PaneFooter>
+              <span>Footer</span>
+            </Shell.PaneFooter>
+          </Shell.Sidebar>
+        </Shell.Root>
+      </Theme>,
+    );
+    const header = getComputedStyle(container.querySelector<HTMLElement>('.kui-ShellPaneHeader')!);
+    const footer = getComputedStyle(container.querySelector<HTMLElement>('.kui-ShellPaneFooter')!);
+    expect(parseFloat(header.paddingTop)).toBe(12);
+    expect(parseFloat(header.paddingBottom)).toBe(0);
+    expect(parseFloat(footer.paddingTop)).toBe(0);
+    expect(parseFloat(footer.paddingBottom)).toBe(12);
   });
 });

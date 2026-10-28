@@ -305,7 +305,7 @@
 
 /*
  * How tall the floating row is: one control row plus the row's padding on both sides, worked
- * out in CSS so the first paint is right. The padding is the pane's surface padding at the
+ * out in CSS so the first paint is right. The padding is the pane's panel padding at the
  * Shell's index, the same the row itself pads by. A Toolbar in the row publishes its own control
  * height as the band (one step above the Shell's when it states no size).
  */
@@ -316,7 +316,7 @@
 .kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-1)),
 .kui-ShellContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-1)) {
   --kui-pane-row-start: var(--control-height-1);
-  --kui-pane-pad-start: var(--surface-p-1);
+  --kui-pane-pad-start: var(--panel-p-1);
 }
 .kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-2)),
 .kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-2)),
@@ -325,7 +325,7 @@
 .kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-2)),
 .kui-ShellContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-2)) {
   --kui-pane-row-start: var(--control-height-2);
-  --kui-pane-pad-start: var(--surface-p-2);
+  --kui-pane-pad-start: var(--panel-p-2);
 }
 .kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-3)),
 .kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-3)),
@@ -334,7 +334,7 @@
 .kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-3)),
 .kui-ShellContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-3)) {
   --kui-pane-row-start: var(--control-height-3);
-  --kui-pane-pad-start: var(--surface-p-3);
+  --kui-pane-pad-start: var(--panel-p-3);
 }
 .kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-1)),
 .kui-ShellPanelContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-1)),
@@ -343,7 +343,7 @@
 .kui-ShellBottomContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-1)),
 .kui-ShellContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-1)) {
   --kui-pane-row-end: var(--control-height-1);
-  --kui-pane-pad-end: var(--surface-p-1);
+  --kui-pane-pad-end: var(--panel-p-1);
 }
 .kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-2)),
 .kui-ShellPanelContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-2)),
@@ -352,7 +352,7 @@
 .kui-ShellBottomContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-2)),
 .kui-ShellContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-2)) {
   --kui-pane-row-end: var(--control-height-2);
-  --kui-pane-pad-end: var(--surface-p-2);
+  --kui-pane-pad-end: var(--panel-p-2);
 }
 .kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-3)),
 .kui-ShellPanelContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-3)),
@@ -361,7 +361,7 @@
 .kui-ShellBottomContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-3)),
 .kui-ShellContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-3)) {
   --kui-pane-row-end: var(--control-height-3);
-  --kui-pane-pad-end: var(--surface-p-3);
+  --kui-pane-pad-end: var(--panel-p-3);
 }
 .kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
 .kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-1)),

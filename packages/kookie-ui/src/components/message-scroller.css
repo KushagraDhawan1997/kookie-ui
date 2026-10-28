@@ -45,6 +45,9 @@
   right: 0;
   margin-inline: auto;
   z-index: 1;
+  /* Centred by left/right 0 and auto margins, so it needs a width of its own: an icon-only button
+     is square by aspect-ratio, and without one it stretched across the transcript. */
+  width: var(--base-button-height);
 }
 
 /* Asleep while the reader is at the end: the primitive makes it inert; this makes it unseen. */

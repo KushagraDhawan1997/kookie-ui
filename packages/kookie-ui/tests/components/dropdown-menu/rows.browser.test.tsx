@@ -320,3 +320,33 @@ describe('table cells pad on the layout ladder', () => {
     });
   }
 });
+
+// v2 §6: a panel that hugs rows is concentric with them. Its corner is the row's plus its padding.
+describe('menu panel corner', () => {
+  for (const size of sizes) {
+    it(`size ${size} at full: ${rowHeight[size] / 2 + panelPadding[size]}px`, () => {
+      const { unmount } = render(<Menu size={size} radius="full" />);
+      const content = document.querySelector<HTMLElement>('.kui-DropdownMenuContent')!;
+      expect(px2n(getComputedStyle(content).borderTopLeftRadius)).toBe(rowHeight[size] / 2 + panelPadding[size]);
+      unmount();
+    });
+  }
+
+  it('is square at none', () => {
+    const { unmount } = render(
+      <Theme radius="none">
+        <DropdownMenu.Root open modal={false}>
+          <DropdownMenu.Trigger>
+            <button type="button">Open</button>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content>
+            <DropdownMenu.Item>Item</DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
+      </Theme>,
+    );
+    const content = document.querySelector<HTMLElement>('.kui-DropdownMenuContent')!;
+    expect(px2n(getComputedStyle(content).borderTopLeftRadius)).toBe(0);
+    unmount();
+  });
+});

@@ -1,7 +1,7 @@
 /*
  * RADIUS
  *
- * v2's structure, v1's roundness.
+ * v2's structure and v2's corners (since 0.28.0; see docs/LOG.md, 2026-10-27).
  *
  * 1. The palette: --radius-0 to --radius-10, plus --radius-full. Raw corners, scaled by the
  *    Theme radius through --radius-factor. --radius-full is 9999px at `full` and 0px below it.
@@ -11,12 +11,16 @@
  *                        the palette step N below it.
  *    --radius-row-N      a row's corner inside a panel that hugs rows. Half the row's own
  *                        height at `full`, --radius-control-N below it.
- *    --radius-surface-N  a surface's corner: cards, tables, panes, popovers, menus.
- *    --radius-overlay-N  a detached surface's corner: dialogs and sheets.
- *    Surfaces and overlays damp as the theme grows (--radius-surface-factor, capped at 1)
- *    and never go pill.
- * 3. Nesting: a pane inside a pane is concentric. Inner corner = outer corner minus outer
- *    padding, never below 0. See the end of this file.
+ *    --radius-panel-N    a panel that hugs rows (menus, Select, Combobox): its row's corner
+ *                        plus its padding, so the rows are concentric with it. 0 at `none`.
+ *    --radius-surface-N  a surface's corner: cards, tables, panes, popovers.
+ *    --radius-overlay-N  a detached surface's corner: dialogs and sheets. The corner of the
+ *                        surface one size up.
+ *    Surfaces and overlays are set per Theme radius: v2's bands at `medium` and below, a
+ *    flatter v1 band at `large` and `full`. They never go pill. `large` and `full` share them, so turning the dial up never squares a card.
+ * 3. Nesting: a pane inside a pane is concentric where it can be. Inner corner = outer corner
+ *    minus outer padding, never below 8px and never above its own corner. See the end of this
+ *    file.
  */
 
 [data-radius] {
@@ -43,44 +47,78 @@
   --radius-row-3: var(--radius-control-3);
   --radius-row-4: var(--radius-control-4);
 
-  --radius-surface-1: calc(8px * var(--scale) * var(--radius-surface-factor));
-  --radius-surface-2: calc(12px * var(--scale) * var(--radius-surface-factor));
-  --radius-surface-3: calc(16px * var(--scale) * var(--radius-surface-factor));
-  --radius-surface-4: calc(20px * var(--scale) * var(--radius-surface-factor));
+  --radius-panel-1: calc(var(--radius-row-1) + var(--panel-p-1));
+  --radius-panel-2: calc(var(--radius-row-2) + var(--panel-p-2));
+  --radius-panel-3: calc(var(--radius-row-3) + var(--panel-p-3));
+  --radius-panel-4: calc(var(--radius-row-4) + var(--panel-p-4));
 
-  --radius-overlay-1: calc(12px * var(--scale) * var(--radius-surface-factor));
-  --radius-overlay-2: calc(16px * var(--scale) * var(--radius-surface-factor));
-  --radius-overlay-3: calc(20px * var(--scale) * var(--radius-surface-factor));
-  --radius-overlay-4: calc(24px * var(--scale) * var(--radius-surface-factor));
+  /* The surface band at `large` and `full`, by eye (Kushagra, 2026-10-27): v2's band
+     (24/32/40/48, v2 tokens/config.ts radiusLevels) read too round, and so did 28px at
+     size 2. These sit at or under the surface padding (16/24/32/40), where the concentric
+     rule alone would square every nested surface, so nesting has a floor (section 3).
+     See docs/LOG.md, 2026-10-27. */
+  --radius-surface-1: calc(16px * var(--scale));
+  --radius-surface-2: calc(20px * var(--scale));
+  --radius-surface-3: calc(24px * var(--scale));
+  --radius-surface-4: calc(28px * var(--scale));
+
+  --radius-overlay-1: calc(20px * var(--scale));
+  --radius-overlay-2: calc(24px * var(--scale));
+  --radius-overlay-3: calc(28px * var(--scale));
+  --radius-overlay-4: calc(32px * var(--scale));
 }
 
 [data-radius='none'] {
   --radius-factor: 0;
-  --radius-surface-factor: 0;
   --radius-full: 0px;
+  --radius-panel-1: 0px;
+  --radius-panel-2: 0px;
+  --radius-panel-3: 0px;
+  --radius-panel-4: 0px;
+  --radius-surface-1: 0px;
+  --radius-surface-2: 0px;
+  --radius-surface-3: 0px;
+  --radius-surface-4: 0px;
+  --radius-overlay-1: 0px;
+  --radius-overlay-2: 0px;
+  --radius-overlay-3: 0px;
+  --radius-overlay-4: 0px;
 }
 
 [data-radius='small'] {
   --radius-factor: 0.75;
-  --radius-surface-factor: 0.5;
   --radius-full: 0px;
+  --radius-surface-1: calc(5px * var(--scale));
+  --radius-surface-2: calc(6px * var(--scale));
+  --radius-surface-3: calc(8px * var(--scale));
+  --radius-surface-4: calc(10px * var(--scale));
+  --radius-overlay-1: calc(6px * var(--scale));
+  --radius-overlay-2: calc(8px * var(--scale));
+  --radius-overlay-3: calc(10px * var(--scale));
+  --radius-overlay-4: calc(12px * var(--scale));
 }
 
 [data-radius='medium'] {
   --radius-factor: 1;
-  --radius-surface-factor: 0.75;
   --radius-full: 0px;
+  --radius-surface-1: calc(12px * var(--scale));
+  --radius-surface-2: calc(18px * var(--scale));
+  --radius-surface-3: calc(24px * var(--scale));
+  --radius-surface-4: calc(30px * var(--scale));
+  --radius-overlay-1: calc(18px * var(--scale));
+  --radius-overlay-2: calc(24px * var(--scale));
+  --radius-overlay-3: calc(30px * var(--scale));
+  --radius-overlay-4: calc(36px * var(--scale));
 }
 
 [data-radius='large'] {
+  /* Surfaces and overlays keep the base band, which is large's and full's. */
   --radius-factor: 1.5;
-  --radius-surface-factor: 0.9;
   --radius-full: 0px;
 }
 
 [data-radius='full'] {
   --radius-factor: 2;
-  --radius-surface-factor: 1;
   --radius-full: 9999px;
 
   /* A control at `full` is a capsule: half its own height. */
@@ -105,7 +143,10 @@
  *   --kui-sf-p       its padding (--surface-p-N)
  *   --kui-sf-r       the corner to draw: its own, or the nested corner when inside another
  * and on its CHILDREN:
- *   --kui-nest       outer corner minus outer padding
+ *   --kui-nest       outer corner minus outer padding, at least 8px. v1's corners are at or
+ *                    under their padding, where v2's rule gives 0 and the inner pane squares;
+ *                    a tighter inner corner reads fine, a square one reads as a missing
+ *                    corner. min() with its own corner keeps `small` and `none` honest.
  *
  * --kui-nest is written from the size tokens, not from --kui-sf-radius and --kui-sf-p: a
  * direct child that is itself a surface would resolve those against its own declarations.
@@ -122,28 +163,28 @@
       --kui-sf-p: var(--surface-p-1);
     }
     &:where(.kui-r-size-1) > * {
-      --kui-nest: max(0px, calc(var(--radius-surface-1) - var(--surface-p-1)));
+      --kui-nest: max(calc(8px * var(--scale)), calc(var(--radius-surface-1) - var(--surface-p-1)));
     }
     &:where(.kui-r-size-2) {
       --kui-sf-radius: var(--radius-surface-2);
       --kui-sf-p: var(--surface-p-2);
     }
     &:where(.kui-r-size-2) > * {
-      --kui-nest: max(0px, calc(var(--radius-surface-2) - var(--surface-p-2)));
+      --kui-nest: max(calc(8px * var(--scale)), calc(var(--radius-surface-2) - var(--surface-p-2)));
     }
     &:where(.kui-r-size-3) {
       --kui-sf-radius: var(--radius-surface-3);
       --kui-sf-p: var(--surface-p-3);
     }
     &:where(.kui-r-size-3) > * {
-      --kui-nest: max(0px, calc(var(--radius-surface-3) - var(--surface-p-3)));
+      --kui-nest: max(calc(8px * var(--scale)), calc(var(--radius-surface-3) - var(--surface-p-3)));
     }
     &:where(.kui-r-size-4) {
       --kui-sf-radius: var(--radius-surface-4);
       --kui-sf-p: var(--surface-p-4);
     }
     &:where(.kui-r-size-4) > * {
-      --kui-nest: max(0px, calc(var(--radius-surface-4) - var(--surface-p-4)));
+      --kui-nest: max(calc(8px * var(--scale)), calc(var(--radius-surface-4) - var(--surface-p-4)));
     }
   }
 }

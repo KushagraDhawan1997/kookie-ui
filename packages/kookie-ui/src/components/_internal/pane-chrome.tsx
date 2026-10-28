@@ -149,6 +149,12 @@ PaneFooter.displayName = 'Shell.PaneFooter';
 interface ScrollProps extends React.ComponentPropsWithoutRef<'div'> {
   /** Fades the list out toward an edge with more past it, and under a floating header or footer. */
   fade?: boolean;
+  /**
+   * Keeps the pane's list (its menu rows) when React puts this under `Shell.Content`, as when an
+   * app renders a pane's content in its page and portals it into `Shell.Panel`. In a Rail, Panel
+   * or Sidebar it is already the pane's list.
+   */
+  pane?: boolean;
 }
 
 /**
@@ -158,12 +164,12 @@ interface ScrollProps extends React.ComponentPropsWithoutRef<'div'> {
  * `className`, `style` and `dir` apply to the content inside it. In a Rail, Panel or Sidebar the pane is
  * already a navigation landmark, so it needs no role of its own.
  */
-const Scroll = React.forwardRef<HTMLDivElement, ScrollProps>(({ className, style, dir, children, fade = false, ...props }, forwardedRef) => {
+const Scroll = React.forwardRef<HTMLDivElement, ScrollProps>(({ className, style, dir, children, fade = false, pane = false, ...props }, forwardedRef) => {
   const chrome = useChromeClasses();
   // A Sidebar.Root inside the content still gets a menu.
   const contentPane = React.useContext(ShellContentContext);
   const visual = useSidebarVisual();
-  const inContent = contentPane && visual === null;
+  const inContent = contentPane && visual === null && !pane;
   // While the page scrolls, the content's viewport scrolls nothing: as a tab stop it would take a
   // Tab, ring the whole page and move nothing. Resolved after mount; a `tabIndex` of the caller's wins.
   const windowShell = React.useContext(ShellWindowContext);

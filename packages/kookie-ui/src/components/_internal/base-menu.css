@@ -208,7 +208,7 @@
       --base-menu-font-size: var(--font-size-1);
       --base-menu-line-height: var(--line-height-1);
       --base-menu-letter-spacing: var(--letter-spacing-1);
-      border-radius: var(--radius-surface-1);
+      border-radius: var(--radius-panel-1);
     }
 
     &:where(.kui-r-size-2) {
@@ -223,7 +223,7 @@
       --base-menu-font-size: var(--font-size-2);
       --base-menu-line-height: var(--line-height-2);
       --base-menu-letter-spacing: var(--letter-spacing-2);
-      border-radius: var(--radius-surface-2);
+      border-radius: var(--radius-panel-2);
     }
 
     &:where(.kui-r-size-3) {
@@ -238,7 +238,7 @@
       --base-menu-font-size: var(--font-size-3);
       --base-menu-line-height: var(--line-height-3);
       --base-menu-letter-spacing: var(--letter-spacing-3);
-      border-radius: var(--radius-surface-3);
+      border-radius: var(--radius-panel-3);
     }
 
     &:where(.kui-r-size-4) {
@@ -253,7 +253,7 @@
       --base-menu-font-size: var(--font-size-4);
       --base-menu-line-height: var(--line-height-4);
       --base-menu-letter-spacing: var(--letter-spacing-4);
-      border-radius: var(--radius-surface-4);
+      border-radius: var(--radius-panel-4);
     }
   }
 }

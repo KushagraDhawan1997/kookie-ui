@@ -1,3 +1,29 @@
+## [0.28.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.27.0...v0.28.1) (2026-10-28)
+
+Ships 0.27.1 and 0.28.0 too, which were never released on their own here.
+
+### Look
+
+* **shell:** a pane's header, footer and list pad by the panel padding, `--panel-p-N` (8/12/16px at Shell sizes 1 to 3), not the surface padding (16/24/32). Floating rows and the list's inset under them follow. Rows still start on the header's inset.
+* **shell:** a pane header or footer next to the pane's `Shell.Scroll` drops its padding on that side, so the gap to the list is one inset, not two.
+
+## 0.28.0 (2026-10-27)
+
+Rounder surfaces and nested corners. See MIGRATION.md and docs/LOG.md (2026-10-27).
+
+### Look
+
+* **radius:** at `large` and `full`, `--radius-surface-1..4` is 16/20/24/28px (was 8/12/16/20) and `--radius-overlay-1..4` is 20/24/28/32px (was 12/16/20/24). `medium`, `small` and `none` take v2's own sets, and `--radius-surface-factor` is gone.
+* **nesting:** a Card or surface inside another is no longer square. Its corner is the outer corner less the outer padding, at least 8px and at most its own.
+* **menus:** DropdownMenu, ContextMenu, Select and Combobox panels take `--radius-panel-N`, their row's corner plus their padding, so the pill rows are concentric with the panel.
+
+## 0.27.1 (2026-10-26)
+
+### Fixes
+
+* **shell:** `Shell.Scroll pane` keeps a pane's list (menu rows, sizes, active row) when React puts it under `Shell.Content`, as when an app renders a pane's content in its page and portals it into `Shell.Panel`. Since 0.24 such a Scroll became the page scroller and its rows lost their styling.
+* **message-scroller:** the jump button is one control wide. Centred by `left` and `right` at 0, an icon-only button, square by aspect-ratio since 0.18, stretched across the transcript.
+
 ## [0.27.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.26.3...v0.27.0) (2026-10-26)
 
 On a phone the page scrolls, as in v2. See MIGRATION.md.

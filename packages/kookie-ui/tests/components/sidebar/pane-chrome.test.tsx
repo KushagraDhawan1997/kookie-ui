@@ -104,6 +104,35 @@ describe('Sidebar parts inside Shell.Sidebar', () => {
   });
 });
 
+describe('Shell.Scroll under Shell.Content', () => {
+  it('is the page scroller there, with no menu', () => {
+    const { container } = renderWithProviders(
+      <Shell.Root>
+        <Shell.Content>
+          <Shell.Scroll>page</Shell.Scroll>
+        </Shell.Content>
+      </Shell.Root>,
+    );
+    expect(container.querySelector('.kui-ShellScrollContent')).toBeInTheDocument();
+    expect(container.querySelector('.kui-SidebarContent')).toBeNull();
+  });
+
+  it('keeps the pane list with `pane`, for a pane portalled from the page', () => {
+    const { container } = renderWithProviders(
+      <Shell.Root>
+        <Shell.Content>
+          <Shell.Scroll pane>
+            <Nav />
+          </Shell.Scroll>
+        </Shell.Content>
+      </Shell.Root>,
+    );
+    expect(container.querySelector('.kui-SidebarContent')).toHaveClass('kui-BaseMenuContent');
+    expect(container.querySelector('.kui-ShellScrollContent')).toBeNull();
+    expect(screen.getByRole('button', { name: 'Home' })).toHaveClass('kui-SidebarMenuButton');
+  });
+});
+
 describe('pane chrome in a pane with no Sidebar scope', () => {
   it('takes the Shell index in an Inspector and a Bottom', () => {
     const { container } = renderWithProviders(

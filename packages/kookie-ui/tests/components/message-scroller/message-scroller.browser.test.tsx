@@ -111,6 +111,9 @@ describe('MessageScroller in a browser', () => {
     const b = button().getBoundingClientRect();
     expect(Math.abs(b.left + b.width / 2 - (root.left + root.width / 2))).toBeLessThan(1);
     expect(b.width).toBeCloseTo(b.height, 0);
+    // One control wide, not stretched across the transcript by left and right 0.
+    expect(b.width).toBeCloseTo(parseFloat(getComputedStyle(button()).minHeight), 0);
+    expect(b.width).toBeLessThan(root.width / 2);
   });
 });
 
