@@ -4,10 +4,9 @@ import * as React from 'react';
 import { Canvas, useThree, type RootState } from '@react-three/fiber';
 import { Grid, OrbitControls, Text as SceneText } from '@react-three/drei';
 import { MathUtils, type Object3D } from 'three';
-import { Box, Button, DropdownMenu, Flex, Popover, SegmentedControl, Shell, Text, TextField, Theme, Toolbar, ToolbarButton, ToolbarGroup } from '@kushagradhawan/kookie-ui';
+import { Box, Button, DropdownMenu, Flex, SegmentedControl, Shell, Text, TextField, Theme, Toolbar, ToolbarButton, ToolbarGroup } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
-  AiMagicIcon,
   ArrowUpBigIcon,
   Copy01Icon,
   GroupLayersIcon,
@@ -126,11 +125,11 @@ function useHistory() {
 /**
  * Step 4 of the phone-first editor: selecting several objects, in persistent regions.
  *
- * Bottom up: the footer (Add, Ask AI, Shift) is always there; a selection floats its strip above
- * it and never takes it away. The camera cluster on the edge holds zoom, fit and Lock view, which
- * stops one-finger orbit. The header holds undo and redo.
+ * Undo and redo sit top left and + and Shift bottom left, always. A selection adds its count and
+ * actions top right and Move, Rotate, Scale bottom right, and takes nothing away. The camera
+ * cluster on the edge holds zoom, fit and Lock view, which stops one-finger orbit.
  *
- * A tap selects an object, or its whole group. Shift, in the selection strip, latches on: taps add
+ * A tap selects an object, or its whole group. Shift, bottom left, latches on: taps add
  * and remove, a one-finger drag on empty space draws a selection box, and on a handle it
  * constrains (proportions locked, rotation in 15° steps). A long press opens a menu for the object
  * under the finger. Several objects move, turn and scale as one unit around their shared centre,
@@ -302,15 +301,18 @@ export function Editor() {
     change(single.id, field.write(single, i, value));
   };
 
-  // Regions, bottom up. The footer is persistent: making things and the Shift modifier, there with
-  // a selection or without one. Context adds a layer and never takes a persistent command away: a
-  // selection floats its strip above the footer, over the canvas, and leaves when it clears.
-  let strip: React.ReactNode = null;
+  // Regions. Persistent commands keep their place; context adds a layer and never takes one away.
+  //   Top left, persistent: undo and redo.
+  //   Top right, only with a selection: the count and what to do with the selection.
+  //   Bottom, one row: + and Shift on the left, always; Move, Rotate, Scale on the right with a
+  //   selection. The exact-value steppers float above it while they are open.
+  //   Right edge: the camera cluster and Lock view.
+  let stepper: React.ReactNode = null;
   if (single && editing) {
     const field = FIELDS[editing.mode];
     const i = AXES.indexOf(editing.axis);
     const value = field.read(single, i);
-    strip = (
+    stepper = (
       <Toolbar aria-label="Exact value" backdrop>
         <ToolbarGroup>
           {/* Tap cycles the axis being edited. */}
@@ -336,23 +338,14 @@ export function Editor() {
         </ToolbarGroup>
       </Toolbar>
     );
-  } else if (chosen.length > 0) {
-    strip = (
+  }
+
+  const selectionActions =
+    chosen.length > 0 ? (
       <Toolbar aria-label="Selection" backdrop>
-        <SegmentedControl.Root
-          aria-label="Transform"
-          value={mode}
-          onValueChange={(value) => {
-            setMode(value as Mode);
-            setResult(null);
-          }}
-        >
-          {MODES.map((m) => (
-            <SegmentedControl.Item key={m.mode} value={m.mode} aria-label={m.label}>
-              <HugeiconsIcon icon={m.icon} strokeWidth={1.75} />
-            </SegmentedControl.Item>
-          ))}
-        </SegmentedControl.Root>
+        <Text size="2" weight="medium" role="status" style={{ whiteSpace: 'nowrap', paddingInline: 'var(--space-3)' }}>
+          {chosen.length} selected
+        </Text>
         <ToolbarGroup>
           <ToolbarButton iconOnly aria-label="Duplicate" onClick={() => duplicate(selected)}>
             <HugeiconsIcon icon={Copy01Icon} strokeWidth={1.75} />
@@ -366,7 +359,7 @@ export function Editor() {
                 <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
               </ToolbarButton>
             </DropdownMenu.Trigger>
-            <DropdownMenu.Content side="top" align="end" sideOffset={8}>
+            <DropdownMenu.Content side="bottom" align="end" sideOffset={8}>
               <DropdownMenu.Item disabled={chosen.length < 2} onSelect={toggleGroup}>
                 <HugeiconsIcon icon={isOneGroup ? UngroupLayersIcon : GroupLayersIcon} strokeWidth={1.75} />
                 {isOneGroup ? 'Ungroup' : 'Group'}
@@ -384,30 +377,46 @@ export function Editor() {
           </ToolbarButton>
         </ToolbarGroup>
       </Toolbar>
-    );
-  }
+    ) : null;
 
-  const footer = (
-    <Toolbar aria-label="Create" backdrop>
-      <ToolbarGroup>
-        <AddMenu onAdd={add} />
-        <MakeWithAi onMake={add} />
-      </ToolbarGroup>
-      <ToolbarGroup>
-        {/* Shift latches: on until tapped again. Its name says what it does right now. */}
-        <ToolbarButton
-          // Named apart from the + (also "Add"), which makes things rather than selecting them.
-          aria-label={dragging === 'handle' && shift ? 'Shift: constrain' : 'Shift: add to selection'}
-          aria-pressed={shift}
-          // On, it fills solid: a mode that changes what every touch does has to be unmissable.
-          variant={shift ? 'solid' : undefined}
-          onClick={() => setShift((s) => !s)}
-        >
-          <HugeiconsIcon icon={ArrowUpBigIcon} strokeWidth={1.75} />
-          {dragging === 'handle' && shift ? 'Constrain' : 'Add'}
-        </ToolbarButton>
-      </ToolbarGroup>
-    </Toolbar>
+  const constrains = dragging === 'handle' && shift;
+  const bottomRow = (
+    <Flex align="center" justify="between" gap="2" width="100%">
+      <Toolbar aria-label="Create" backdrop>
+        <ToolbarGroup>
+          <AddMenu onAdd={add} />
+          {/* Shift latches: on until tapped again. Its name says what it does right now. */}
+          <ToolbarButton
+            aria-label={constrains ? 'Shift: constrain' : 'Shift: select more'}
+            aria-pressed={shift}
+            // On, it fills solid: a mode that changes what every touch does has to be unmissable.
+            variant={shift ? 'solid' : undefined}
+            onClick={() => setShift((s) => !s)}
+          >
+            <HugeiconsIcon icon={ArrowUpBigIcon} strokeWidth={1.75} />
+            {constrains ? 'Constrain' : 'Select'}
+          </ToolbarButton>
+        </ToolbarGroup>
+      </Toolbar>
+      {chosen.length > 0 ? (
+        <Toolbar aria-label="Transform" backdrop>
+          <SegmentedControl.Root
+            aria-label="Transform"
+            value={mode}
+            onValueChange={(value) => {
+              setMode(value as Mode);
+              setResult(null);
+            }}
+          >
+            {MODES.map((m) => (
+              <SegmentedControl.Item key={m.mode} value={m.mode} aria-label={m.label}>
+                <HugeiconsIcon icon={m.icon} strokeWidth={1.75} />
+              </SegmentedControl.Item>
+            ))}
+          </SegmentedControl.Root>
+        </Toolbar>
+      ) : null}
+    </Flex>
   );
 
   const menuTarget = menu?.id ?? null;
@@ -531,9 +540,9 @@ export function Editor() {
             </DropdownMenu.Root>
           </Box>
 
-          {/* Header: history, and how many are selected when it is more than one. */}
+          {/* Header: history on the left, always; the selection's count and actions on the right. */}
           <Shell.PaneHeader float>
-            <Flex align="center" gap="3">
+            <Flex align="center" justify="between" gap="2" width="100%">
               <Toolbar aria-label="History" backdrop>
                 <ToolbarGroup>
                   <ToolbarButton
@@ -560,11 +569,7 @@ export function Editor() {
                   </ToolbarButton>
                 </ToolbarGroup>
               </Toolbar>
-              {chosen.length > 1 ? (
-                <Text size="2" weight="medium" role="status">
-                  {chosen.length} selected
-                </Text>
-              ) : null}
+              {selectionActions}
             </Flex>
           </Shell.PaneHeader>
 
@@ -590,11 +595,11 @@ export function Editor() {
             </Toolbar>
           </Box>
 
-          {/* Footer, persistent, with the selection strip floating above it while anything is selected. */}
+          {/* Bottom: one row, with the exact-value steppers above it while they are open. */}
           <Shell.PaneFooter float style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
             <Flex direction="column" align="center" gap="2" width="100%">
-              {strip}
-              {footer}
+              {stepper}
+              {bottomRow}
             </Flex>
           </Shell.PaneFooter>
         </Shell.Content>
@@ -676,51 +681,5 @@ function AddMenu({ onAdd }: { onAdd: (kind: Kind) => void }) {
         ))}
       </DropdownMenu.Content>
     </DropdownMenu.Root>
-  );
-}
-
-/** Make with AI, mocked: describe a shape, and a matching primitive appears after a moment. */
-function MakeWithAi({ onMake }: { onMake: (kind: Kind) => void }) {
-  const [open, setOpen] = React.useState(false);
-  const [prompt, setPrompt] = React.useState('');
-  const [busy, setBusy] = React.useState(false);
-
-  const make = () => {
-    setBusy(true);
-    window.setTimeout(() => {
-      const words = prompt.toLowerCase();
-      const match = PRIMITIVES.find((p) => words.includes(p.kind) || words.includes(p.label.toLowerCase()));
-      onMake(match?.kind ?? 'cube');
-      setBusy(false);
-      setPrompt('');
-      setOpen(false);
-    }, 900);
-  };
-
-  return (
-    <Popover.Root open={open} onOpenChange={setOpen}>
-      <Popover.Trigger>
-        <ToolbarButton>
-          {/* The sparkle's meaning isn't settled, so it keeps a short label. */}
-          <HugeiconsIcon icon={AiMagicIcon} strokeWidth={1.75} />
-          Ask AI
-        </ToolbarButton>
-      </Popover.Trigger>
-      <Popover.Content side="top" width="300px">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (prompt.trim()) make();
-          }}
-        >
-          <Flex direction="column" gap="3">
-            <TextField.Root aria-label="Describe a shape" placeholder="A tall cylinder…" value={prompt} onChange={(e) => setPrompt(e.target.value)} disabled={busy} />
-            <Button type="submit" emphasis="loud" loading={busy} disabled={!prompt.trim()}>
-              Make it
-            </Button>
-          </Flex>
-        </form>
-      </Popover.Content>
-    </Popover.Root>
   );
 }
