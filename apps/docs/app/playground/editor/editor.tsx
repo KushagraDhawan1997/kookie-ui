@@ -570,34 +570,38 @@ export function Editor() {
                   </Text>
                 </Box>
               ) : null}
-              <Toolbar aria-label="View" orientation="vertical" backdrop>
-                <ToolbarGroup>
-                  <ToolbarButton iconOnly aria-label="Zoom in" onClick={() => zoom(1 / ZOOM_STEP)}>
-                    <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.75} />
-                  </ToolbarButton>
-                  <ToolbarButton iconOnly aria-label="Zoom out" onClick={() => zoom(ZOOM_STEP)}>
-                    <HugeiconsIcon icon={MinusSignIcon} strokeWidth={1.75} />
-                  </ToolbarButton>
-                  <ToolbarButton iconOnly aria-label="Fit view" onClick={fit}>
-                    <HugeiconsIcon icon={CenterFocusIcon} strokeWidth={1.75} />
-                  </ToolbarButton>
-                </ToolbarGroup>
-                <ToolbarGroup>
-                  <ToolbarButton iconOnly aria-label="Lock view" aria-pressed={viewLocked} variant={viewLocked ? 'solid' : undefined} onClick={() => setViewLocked((v) => !v)}>
-                    <HugeiconsIcon icon={viewLocked ? SquareLock02Icon : SquareUnlock01Icon} strokeWidth={1.75} />
-                  </ToolbarButton>
-                  <ToolbarButton
-                    iconOnly
-                    aria-label={constrains ? 'Shift: constrain' : 'Shift: select more'}
-                    aria-pressed={shift}
-                    // On, it fills solid: a mode that changes what every touch does has to be unmissable.
-                    variant={shift ? 'solid' : undefined}
-                    onClick={() => setShift((s) => !s)}
-                  >
-                    <HugeiconsIcon icon={ArrowUpBigIcon} strokeWidth={1.75} />
-                  </ToolbarButton>
-                </ToolbarGroup>
-              </Toolbar>
+              <Flex direction="column" gap="3">
+                <Toolbar aria-label="View" orientation="vertical" backdrop>
+                  <ToolbarGroup>
+                    <ToolbarButton iconOnly aria-label="Zoom in" onClick={() => zoom(1 / ZOOM_STEP)}>
+                      <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.75} />
+                    </ToolbarButton>
+                    <ToolbarButton iconOnly aria-label="Zoom out" onClick={() => zoom(ZOOM_STEP)}>
+                      <HugeiconsIcon icon={MinusSignIcon} strokeWidth={1.75} />
+                    </ToolbarButton>
+                    <ToolbarButton iconOnly aria-label="Fit view" onClick={fit}>
+                      <HugeiconsIcon icon={CenterFocusIcon} strokeWidth={1.75} />
+                    </ToolbarButton>
+                  </ToolbarGroup>
+                </Toolbar>
+                <Toolbar aria-label="Modifiers" orientation="vertical" backdrop>
+                  <ToolbarGroup>
+                    <ToolbarButton iconOnly aria-label="Lock view" aria-pressed={viewLocked} variant={viewLocked ? 'solid' : undefined} onClick={() => setViewLocked((v) => !v)}>
+                      <HugeiconsIcon icon={viewLocked ? SquareLock02Icon : SquareUnlock01Icon} strokeWidth={1.75} />
+                    </ToolbarButton>
+                    <ToolbarButton
+                      iconOnly
+                      aria-label={constrains ? 'Shift: constrain' : 'Shift: select more'}
+                      aria-pressed={shift}
+                      // On, it fills solid: a mode that changes what every touch does has to be unmissable.
+                      variant={shift ? 'solid' : undefined}
+                      onClick={() => setShift((s) => !s)}
+                    >
+                      <HugeiconsIcon icon={ArrowUpBigIcon} strokeWidth={1.75} />
+                    </ToolbarButton>
+                  </ToolbarGroup>
+                </Toolbar>
+              </Flex>
             </Flex>
           </Box>
 
