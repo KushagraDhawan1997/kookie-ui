@@ -125,11 +125,11 @@ function useHistory() {
 /**
  * Step 4 of the phone-first editor: selecting several objects, in persistent regions.
  *
- * Undo and redo sit top left and + and Shift bottom left, always. A selection adds its
+ * Undo and redo sit top left and + bottom left, always. A selection adds its
  * actions top right and Move, Rotate, Scale bottom right, and takes nothing away. The camera
- * cluster on the edge holds zoom, fit and Lock view, which stops one-finger orbit.
+ * cluster on the edge holds zoom and fit, then Lock view, which stops one-finger orbit, and Shift.
  *
- * A tap selects an object, or its whole group. Shift, bottom left, latches on: taps add
+ * A tap selects an object, or its whole group. Shift, on the edge under Lock view, latches on: taps add
  * and remove, a one-finger drag on empty space draws a selection box, and on a handle it
  * constrains (proportions locked, rotation in 15° steps). A long press opens a menu for the object
  * under the finger. Several objects move, turn and scale as one unit around their shared centre,
@@ -304,9 +304,8 @@ export function Editor() {
   // Regions. Persistent commands keep their place; context adds a layer and never takes one away.
   //   Top left, persistent: undo and redo.
   //   Top right, only with a selection: what to do with it.
-  //   Bottom, one row: + and Shift on the left, always; Move, Rotate, Scale on the right with a
-  //   selection. The exact-value steppers float above it while they are open.
-  //   Right edge: the camera cluster and Lock view.
+  //   Bottom, one row: + on the left, always; Move, Rotate, Scale on the right with a selection. The exact-value steppers float above it while they are open.
+  //   Right edge: the camera cluster, then Lock view and Shift.
   let stepper: React.ReactNode = null;
   if (single && editing) {
     const field = FIELDS[editing.mode];
@@ -382,17 +381,6 @@ export function Editor() {
       <Toolbar aria-label="Create" backdrop>
         <ToolbarGroup>
           <AddMenu onAdd={add} />
-          {/* Shift latches: on until tapped again. Its name says what it does right now. */}
-          <ToolbarButton
-            aria-label={constrains ? 'Shift: constrain' : 'Shift: select more'}
-            aria-pressed={shift}
-            // On, it fills solid: a mode that changes what every touch does has to be unmissable.
-            variant={shift ? 'solid' : undefined}
-            onClick={() => setShift((s) => !s)}
-          >
-            <HugeiconsIcon icon={ArrowUpBigIcon} strokeWidth={1.75} />
-            {constrains ? 'Constrain' : 'Select'}
-          </ToolbarButton>
         </ToolbarGroup>
       </Toolbar>
       {chosen.length > 0 ? (
@@ -570,26 +558,47 @@ export function Editor() {
             </Flex>
           </Shell.PaneHeader>
 
-          {/* Camera: a small cluster on the canvas edge, like map zoom buttons. */}
+          {/* Right edge: the camera, then the modifiers. Lock view and Shift are both latched toggles
+              that change what a finger does, so they sit together. */}
           <Box position="absolute" right="0" top="50%" style={{ transform: 'translateY(-50%)', paddingRight: 'calc(env(safe-area-inset-right) + 12px)' }}>
-            <Toolbar aria-label="View" orientation="vertical" backdrop>
-              <ToolbarGroup>
-                <ToolbarButton iconOnly aria-label="Zoom in" onClick={() => zoom(1 / ZOOM_STEP)}>
-                  <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.75} />
-                </ToolbarButton>
-                <ToolbarButton iconOnly aria-label="Zoom out" onClick={() => zoom(ZOOM_STEP)}>
-                  <HugeiconsIcon icon={MinusSignIcon} strokeWidth={1.75} />
-                </ToolbarButton>
-                <ToolbarButton iconOnly aria-label="Fit view" onClick={fit}>
-                  <HugeiconsIcon icon={CenterFocusIcon} strokeWidth={1.75} />
-                </ToolbarButton>
-              </ToolbarGroup>
-              <ToolbarGroup>
-                <ToolbarButton iconOnly aria-label="Lock view" aria-pressed={viewLocked} variant={viewLocked ? 'solid' : undefined} onClick={() => setViewLocked((v) => !v)}>
-                  <HugeiconsIcon icon={viewLocked ? SquareLock02Icon : SquareUnlock01Icon} strokeWidth={1.75} />
-                </ToolbarButton>
-              </ToolbarGroup>
-            </Toolbar>
+            <Flex align="end" gap="2">
+              {/* On, Shift says what it does right now beside it; off, it is only its icon. */}
+              {shift ? (
+                <Box mb="2" px="3" py="2" style={{ background: 'var(--color-panel-solid)', borderRadius: 'var(--radius-full)', boxShadow: 'var(--floating-chrome)', pointerEvents: 'none' }}>
+                  <Text size="2" weight="medium" style={{ whiteSpace: 'nowrap' }}>
+                    {constrains ? 'Constrain' : 'Select'}
+                  </Text>
+                </Box>
+              ) : null}
+              <Toolbar aria-label="View" orientation="vertical" backdrop>
+                <ToolbarGroup>
+                  <ToolbarButton iconOnly aria-label="Zoom in" onClick={() => zoom(1 / ZOOM_STEP)}>
+                    <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.75} />
+                  </ToolbarButton>
+                  <ToolbarButton iconOnly aria-label="Zoom out" onClick={() => zoom(ZOOM_STEP)}>
+                    <HugeiconsIcon icon={MinusSignIcon} strokeWidth={1.75} />
+                  </ToolbarButton>
+                  <ToolbarButton iconOnly aria-label="Fit view" onClick={fit}>
+                    <HugeiconsIcon icon={CenterFocusIcon} strokeWidth={1.75} />
+                  </ToolbarButton>
+                </ToolbarGroup>
+                <ToolbarGroup>
+                  <ToolbarButton iconOnly aria-label="Lock view" aria-pressed={viewLocked} variant={viewLocked ? 'solid' : undefined} onClick={() => setViewLocked((v) => !v)}>
+                    <HugeiconsIcon icon={viewLocked ? SquareLock02Icon : SquareUnlock01Icon} strokeWidth={1.75} />
+                  </ToolbarButton>
+                  <ToolbarButton
+                    iconOnly
+                    aria-label={constrains ? 'Shift: constrain' : 'Shift: select more'}
+                    aria-pressed={shift}
+                    // On, it fills solid: a mode that changes what every touch does has to be unmissable.
+                    variant={shift ? 'solid' : undefined}
+                    onClick={() => setShift((s) => !s)}
+                  >
+                    <HugeiconsIcon icon={ArrowUpBigIcon} strokeWidth={1.75} />
+                  </ToolbarButton>
+                </ToolbarGroup>
+              </Toolbar>
+            </Flex>
           </Box>
 
           {/* Bottom: one row, with the exact-value steppers above it while they are open. */}
