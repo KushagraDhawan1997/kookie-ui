@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Canvas, useThree, type RootState } from '@react-three/fiber';
 import { Grid, Line, OrbitControls, Text as SceneText } from '@react-three/drei';
-import { MathUtils, type Object3D } from 'three';
+import { MathUtils, type Object3D, type PerspectiveCamera } from 'three';
 import { Box, Button, DropdownMenu, Flex, SegmentedControl, Shell, Text, TextField, Theme, Toolbar, ToolbarButton, ToolbarGroup } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
@@ -34,7 +34,8 @@ import {
   Undo02Icon,
 } from '@hugeicons/core-free-icons';
 import { Handles, SelectionBox } from './handles';
-import { AXES, MM_PER_UNIT, type Axis, type Mode } from './transform';
+import { MaterialsPane, PaneInset, RoomLight, materialById, materialProps, type PaneRest } from './materials';
+import { AXES, MM_PER_UNIT, pick, type Axis, type Mode } from './transform';
 import { useTransformGestures, type DragKind, type DragResult } from './use-transform-gestures';
 
 const ZOOM_STEP = 1.25;
@@ -45,7 +46,7 @@ const READOUT_EDGE = 96;
 type Kind = 'cube' | 'sphere' | 'cylinder' | 'cone' | 'pyramid' | 'torus' | 'text' | 'stroke';
 type Vec3 = [number, number, number];
 /** `group` ties objects together: a tap on one selects them all. */
-type SceneObject = { id: number; kind: Kind; position: Vec3; rotation: Vec3; scale: Vec3; group?: number; points?: Vec3[] };
+type SceneObject = { id: number; kind: Kind; position: Vec3; rotation: Vec3; scale: Vec3; group?: number; points?: Vec3[]; material?: string };
 
 const PRIMITIVES: { kind: Kind; label: string; icon: typeof CubeIcon }[] = [
   { kind: 'cube', label: 'Cube', icon: CubeIcon },
@@ -153,6 +154,29 @@ export function Editor() {
   const [viewLocked, setViewLocked] = React.useState(false);
   // Draw, latched: one finger draws in 3D. A stub for now: strokes lie on the ground.
   const [drawing, setDrawing] = React.useState(false);
+  // The one pane open at a time, Materials for now, and the space it covers over the canvas.
+  const [materialsRest, setMaterialsRest] = React.useState<PaneRest>('closed');
+  const [covered, setCovered] = React.useState({ bottom: 0, right: 0 });
+  const bottomRowRef = React.useRef<HTMLDivElement>(null);
+  const [bottomOffset, setBottomOffset] = React.useState(0);
+  const [docked, setDocked] = React.useState(false);
+  React.useEffect(() => {
+    const wide = window.matchMedia('(min-width: 768px)');
+    const read = () => {
+      setDocked(wide.matches);
+      const row = bottomRowRef.current?.getBoundingClientRect();
+      const area = surface.current?.getBoundingClientRect();
+      // The pane sits above the bottom row, which stays usable while it is open.
+      if (row && area) setBottomOffset(Math.round(area.bottom - row.top + 8));
+    };
+    read();
+    wide.addEventListener('change', read);
+    window.addEventListener('resize', read);
+    return () => {
+      wide.removeEventListener('change', read);
+      window.removeEventListener('resize', read);
+    };
+  }, [materialsRest]);
   const [liveStroke, setLiveStroke] = React.useState<Vec3[] | null>(null);
   const [dragging, setDragging] = React.useState<DragKind | null>(null);
   const [result, setResult] = React.useState<DragResult | null>(null);
@@ -315,6 +339,8 @@ export function Editor() {
   // Regions. Persistent commands keep their place; context adds a layer and never takes one away.
   //   Top left, persistent: undo and redo.
   //   Top right, only with a selection: what to do with it.
+  //   Above the bottom row, one pane at a time (Materials), floating over the canvas, which never
+  //   resizes; the camera keeps the scene centred in what the pane leaves visible.
   //   Bottom, one row: +, Draw and Materials on the left, always; Move and scale, Rotate on the right
   //   with a selection. The exact-value steppers float above it while they are open.
   //   Right edge: the camera cluster, then Lock view and Shift.
@@ -387,9 +413,30 @@ export function Editor() {
       </Toolbar>
     ) : null;
 
+  // A tap on a material applies it to the selection: one undo step.
+  const applyMaterial = (material: string) => {
+    if (chosen.length === 0) return;
+    commitChanges(new Map(chosen.map((o) => [o.id, { material }])));
+  };
+  // A material dropped on the canvas applies to the object under it, selected or not.
+  const dropMaterial = (material: string, clientX: number, clientY: number) => {
+    const area = surface.current?.getBoundingClientRect();
+    const cam = three.current?.().camera;
+    if (!area || !cam) return;
+    const scene = history.objects.flatMap((o) => (registry.current.has(o.id) ? [{ id: o.id, object: registry.current.get(o.id)! }] : []));
+    const index = pick(
+      clientX - area.left,
+      clientY - area.top,
+      scene.map((e) => e.object),
+      cam as PerspectiveCamera,
+      { width: area.width, height: area.height },
+    );
+    if (index >= 0) change(scene[index].id, { material });
+  };
+
   const constrains = dragging === 'handle' && shift;
   const bottomRow = (
-    <Flex align="center" justify="between" gap="2" width="100%">
+    <Flex ref={bottomRowRef} align="center" justify="between" gap="2" width="100%">
       <Toolbar aria-label="Create" backdrop>
         <ToolbarGroup>
           <AddMenu onAdd={add} />
@@ -407,8 +454,13 @@ export function Editor() {
           >
             <HugeiconsIcon icon={PaintBrush04Icon} strokeWidth={1.75} />
           </ToolbarButton>
-          {/* No panel yet: the pattern for panels is still open. */}
-          <ToolbarButton iconOnly aria-label="Materials">
+          <ToolbarButton
+            iconOnly
+            aria-label="Materials"
+            aria-pressed={materialsRest !== 'closed'}
+            variant={materialsRest !== 'closed' ? 'solid' : undefined}
+            onClick={() => setMaterialsRest((r) => (r === 'closed' ? 'peek' : 'closed'))}
+          >
             <HugeiconsIcon icon={PaletteIcon} strokeWidth={1.75} />
           </ToolbarButton>
         </ToolbarGroup>
@@ -455,6 +507,8 @@ export function Editor() {
               onPointerMissed={() => select([])}
             >
               <RedrawOnResize />
+              <PaneInset bottom={covered.bottom} right={covered.right} />
+              <RoomLight />
               <ambientLight intensity={0.7} />
               <directionalLight position={[5, 10, 5]} intensity={0.9} />
               <Grid infiniteGrid cellSize={0.5} sectionSize={2.5} cellThickness={0.6} sectionThickness={1} cellColor="#a8a8a8" sectionColor="#8a8a8a" fadeDistance={40} fadeStrength={1.5} />
@@ -479,7 +533,7 @@ export function Editor() {
                 ) : (
                   <mesh key={o.id} ref={register} {...transform} onClick={pickThis}>
                     <Geometry kind={o.kind} />
-                    <meshStandardMaterial color="#d4d4d4" roughness={0.6} />
+                    <meshStandardMaterial {...materialProps(materialById(o.material))} />
                   </mesh>
                 );
               })}
@@ -594,8 +648,16 @@ export function Editor() {
 
           {/* Right edge: the camera, then Lock view, then Shift, each its own pill. Lock view and Shift
               are latched toggles that change what a finger does. */}
-          <Box position="absolute" right="0" top="50%" style={{ transform: 'translateY(-50%)', paddingRight: 'calc(env(safe-area-inset-right) + 12px)' }}>
-            <Flex align="end" gap="2">
+          {/* It centres in what an open pane leaves visible, and moves beside a docked one. */}
+          <Box
+            position="absolute"
+            right={`${covered.right}px`}
+            // Centred in the space between the header and a bottom pane, or the whole height.
+            top={covered.bottom > 0 ? '72px' : '0'}
+            bottom={`${covered.bottom}px`}
+            style={{ display: 'flex', alignItems: 'center', pointerEvents: 'none', paddingRight: 'calc(env(safe-area-inset-right) + 12px)' }}
+          >
+            <Flex align="end" gap="2" style={{ pointerEvents: 'auto' }}>
               {/* On, Shift says what it does right now beside it; off, it is only its icon. */}
               {shift ? (
                 <Box mb="2" px="3" py="2" style={{ background: 'var(--color-panel-solid)', borderRadius: 'var(--radius-full)', boxShadow: 'var(--floating-chrome)', pointerEvents: 'none' }}>
@@ -642,6 +704,8 @@ export function Editor() {
               </Flex>
             </Flex>
           </Box>
+
+          <MaterialsPane rest={materialsRest} onRestChange={setMaterialsRest} docked={docked} bottomOffset={bottomOffset} onCovered={setCovered} onPick={applyMaterial} onDrop={dropMaterial} />
 
           {/* Bottom: one row, with the exact-value steppers above it while they are open. */}
           <Shell.PaneFooter float style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
