@@ -10,3 +10,4 @@ Each problem found while testing on a real phone. Axis is space, input or agency
 | Add menu opened and closed at once on a phone | Add a shape | Input | A touch opens the menu on click, after the tap |
 | Scaling grows from the centre, so a taller object sinks into the ground | Resize an object | Space | Open: scale from the base, or rest objects on the ground after each change |
 | Shift lives in the selection strip, so a box select needs one object picked first | Select several objects | Agency | Open: long-press empty space offers Select all; a box select from nothing may want its own entry |
+| With a selection the strip replaced the footer, so Add disappeared | Add while editing | Space | Footer is persistent; the selection strip floats above it and leaves with the selection |

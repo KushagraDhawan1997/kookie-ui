@@ -11,6 +11,8 @@ import {
   ArrowUpBigIcon,
   Copy01Icon,
   GroupLayersIcon,
+  SquareLock02Icon,
+  SquareUnlock01Icon,
   MoreHorizontalIcon,
   UngroupLayersIcon,
   MoveIcon,
@@ -21,7 +23,6 @@ import {
   Cylinder01Icon,
   Delete02Icon,
   DonutIcon,
-  GridIcon,
   MinusSignIcon,
   PlusSignIcon,
   PyramidIcon,
@@ -123,7 +124,11 @@ function useHistory() {
 }
 
 /**
- * Step 4 of the phone-first editor: selecting several objects.
+ * Step 4 of the phone-first editor: selecting several objects, in persistent regions.
+ *
+ * Bottom up: the footer (Add, Ask AI, Shift) is always there; a selection floats its strip above
+ * it and never takes it away. The camera cluster on the edge holds zoom, fit and Lock view, which
+ * stops one-finger orbit. The header holds undo and redo.
  *
  * A tap selects an object, or its whole group. Shift, in the selection strip, latches on: taps add
  * and remove, a one-finger drag on empty space draws a selection box, and on a handle it
@@ -144,6 +149,8 @@ export function Editor() {
   const [mode, setMode] = React.useState<Mode>('move');
   const [snap, setSnap] = React.useState(true);
   const [shift, setShift] = React.useState(false);
+  // Lock view stops one-finger orbit, so a finger on the canvas can only select or transform.
+  const [viewLocked, setViewLocked] = React.useState(false);
   const [dragging, setDragging] = React.useState<DragKind | null>(null);
   const [result, setResult] = React.useState<DragResult | null>(null);
   const [editing, setEditing] = React.useState<{ mode: Mode; axis: Axis } | null>(null);
@@ -175,8 +182,6 @@ export function Editor() {
     setSelected(ids);
     setResult(null);
     setEditing(null);
-    // Shift ends with the selection.
-    if (ids.length === 0) setShift(false);
   };
 
   const toggle = (id: number) => {
@@ -227,6 +232,8 @@ export function Editor() {
     onToggle: (id) => {
       if (id !== null) toggle(id);
     },
+    // A tap selects what it lands on, or its whole group; a tap on empty space clears the selection.
+    onSelect: (id) => select(id === null ? [] : selected.includes(id) ? selected : withGroup([id])),
     onBox: (ids) => {
       setDragging(null);
       select([...new Set([...selected, ...withGroup(ids)])]);
@@ -295,118 +302,113 @@ export function Editor() {
     change(single.id, field.write(single, i, value));
   };
 
-  let footer: React.ReactNode;
-  if (chosen.length > 0) {
-    let actions: React.ReactNode;
-    if (single && editing) {
-      const field = FIELDS[editing.mode];
-      const i = AXES.indexOf(editing.axis);
-      const value = field.read(single, i);
-      actions = (
-        <Toolbar aria-label="Exact value" backdrop>
-          <ToolbarGroup>
-            {/* Tap cycles the axis being edited. */}
-            <ToolbarButton aria-label={`Axis ${editing.axis.toUpperCase()}, change axis`} onClick={() => setEditing({ ...editing, axis: AXES[(i + 1) % 3] })}>
-              {editing.axis.toUpperCase()}
-            </ToolbarButton>
-            <ToolbarButton iconOnly aria-label={`Less, by ${field.step} ${field.unit}`} onClick={() => step(-1)}>
-              <HugeiconsIcon icon={MinusSignIcon} strokeWidth={1.75} />
-            </ToolbarButton>
-            <ExactValue
-              key={`${editing.mode}-${editing.axis}-${value}`}
-              value={value}
-              unit={field.unit}
-              label={`${MODES.find((m) => m.mode === editing.mode)?.label} ${editing.axis.toUpperCase()}`}
-              onCommit={(v) => change(single.id, field.write(single, i, v))}
-            />
-            <ToolbarButton iconOnly aria-label={`More, by ${field.step} ${field.unit}`} onClick={() => step(1)}>
-              <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.75} />
-            </ToolbarButton>
-            <ToolbarButton iconOnly aria-label="Done editing" onClick={() => setEditing(null)}>
-              <HugeiconsIcon icon={Tick02Icon} strokeWidth={1.75} />
-            </ToolbarButton>
-          </ToolbarGroup>
-        </Toolbar>
-      );
-    } else {
-      actions = (
-        <Toolbar aria-label="Selection actions" backdrop>
-          <SegmentedControl.Root
-            aria-label="Transform"
-            value={mode}
-            onValueChange={(value) => {
-              setMode(value as Mode);
-              setResult(null);
-            }}
-          >
-            {MODES.map((m) => (
-              <SegmentedControl.Item key={m.mode} value={m.mode} aria-label={m.label}>
-                <HugeiconsIcon icon={m.icon} strokeWidth={1.75} />
-              </SegmentedControl.Item>
-            ))}
-          </SegmentedControl.Root>
-          <ToolbarGroup>
-            <ToolbarButton iconOnly aria-label="Duplicate" onClick={() => duplicate(selected)}>
-              <HugeiconsIcon icon={Copy01Icon} strokeWidth={1.75} />
-            </ToolbarButton>
-            <ToolbarButton iconOnly aria-label={isOneGroup ? 'Ungroup' : 'Group'} disabled={chosen.length < 2} onClick={toggleGroup}>
-              <HugeiconsIcon icon={isOneGroup ? UngroupLayersIcon : GroupLayersIcon} strokeWidth={1.75} />
-            </ToolbarButton>
-            <ToolbarButton iconOnly aria-label="Delete" onClick={() => remove(selected)}>
-              <HugeiconsIcon icon={Delete02Icon} strokeWidth={1.75} />
-            </ToolbarButton>
-          </ToolbarGroup>
-        </Toolbar>
-      );
-    }
-    footer = (
-      <Flex direction="column" align="center" gap="2">
-        <Toolbar aria-label="Selection" backdrop>
-          <ToolbarGroup>
-            {/* Shift latches: on until tapped again. Its name says what it does right now. */}
-            <ToolbarButton
-              aria-pressed={shift}
-              // On, it fills solid: a mode that changes what every touch does has to be unmissable.
-              variant={shift ? 'solid' : undefined}
-              onClick={() => setShift((s) => !s)}
-            >
-              <HugeiconsIcon icon={ArrowUpBigIcon} strokeWidth={1.75} />
-              {dragging === 'handle' && shift ? 'Constrain' : 'Add'}
-            </ToolbarButton>
-          </ToolbarGroup>
-          <ToolbarGroup>
-            <ToolbarButton iconOnly aria-label="Snap" aria-pressed={snap} onClick={() => setSnap((s) => !s)}>
-              <HugeiconsIcon icon={GridIcon} strokeWidth={1.75} />
-            </ToolbarButton>
-            <DropdownMenu.Root modal={false}>
-              <DropdownMenu.Trigger>
-                <ToolbarButton iconOnly aria-label="More">
-                  <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
-                </ToolbarButton>
-              </DropdownMenu.Trigger>
-              <DropdownMenu.Content side="top" align="end" sideOffset={8}>
-                <DropdownMenu.Item onSelect={selectAll}>Select all</DropdownMenu.Item>
-                <DropdownMenu.Item onSelect={selectSimilar}>Select similar</DropdownMenu.Item>
-              </DropdownMenu.Content>
-            </DropdownMenu.Root>
-            <ToolbarButton iconOnly aria-label="Done" onClick={() => select([])}>
-              <HugeiconsIcon icon={Tick02Icon} strokeWidth={1.75} />
-            </ToolbarButton>
-          </ToolbarGroup>
-        </Toolbar>
-        {actions}
-      </Flex>
-    );
-  } else {
-    footer = (
-      <Toolbar aria-label="Create" backdrop>
+  // Regions, bottom up. The footer is persistent: making things and the Shift modifier, there with
+  // a selection or without one. Context adds a layer and never takes a persistent command away: a
+  // selection floats its strip above the footer, over the canvas, and leaves when it clears.
+  let strip: React.ReactNode = null;
+  if (single && editing) {
+    const field = FIELDS[editing.mode];
+    const i = AXES.indexOf(editing.axis);
+    const value = field.read(single, i);
+    strip = (
+      <Toolbar aria-label="Exact value" backdrop>
         <ToolbarGroup>
-          <AddMenu onAdd={add} />
-          <MakeWithAi onMake={add} />
+          {/* Tap cycles the axis being edited. */}
+          <ToolbarButton aria-label={`Axis ${editing.axis.toUpperCase()}, change axis`} onClick={() => setEditing({ ...editing, axis: AXES[(i + 1) % 3] })}>
+            {editing.axis.toUpperCase()}
+          </ToolbarButton>
+          <ToolbarButton iconOnly aria-label={`Less, by ${field.step} ${field.unit}`} onClick={() => step(-1)}>
+            <HugeiconsIcon icon={MinusSignIcon} strokeWidth={1.75} />
+          </ToolbarButton>
+          <ExactValue
+            key={`${editing.mode}-${editing.axis}-${value}`}
+            value={value}
+            unit={field.unit}
+            label={`${MODES.find((m) => m.mode === editing.mode)?.label} ${editing.axis.toUpperCase()}`}
+            onCommit={(v) => change(single.id, field.write(single, i, v))}
+          />
+          <ToolbarButton iconOnly aria-label={`More, by ${field.step} ${field.unit}`} onClick={() => step(1)}>
+            <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.75} />
+          </ToolbarButton>
+          <ToolbarButton iconOnly aria-label="Done editing" onClick={() => setEditing(null)}>
+            <HugeiconsIcon icon={Tick02Icon} strokeWidth={1.75} />
+          </ToolbarButton>
+        </ToolbarGroup>
+      </Toolbar>
+    );
+  } else if (chosen.length > 0) {
+    strip = (
+      <Toolbar aria-label="Selection" backdrop>
+        <SegmentedControl.Root
+          aria-label="Transform"
+          value={mode}
+          onValueChange={(value) => {
+            setMode(value as Mode);
+            setResult(null);
+          }}
+        >
+          {MODES.map((m) => (
+            <SegmentedControl.Item key={m.mode} value={m.mode} aria-label={m.label}>
+              <HugeiconsIcon icon={m.icon} strokeWidth={1.75} />
+            </SegmentedControl.Item>
+          ))}
+        </SegmentedControl.Root>
+        <ToolbarGroup>
+          <ToolbarButton iconOnly aria-label="Duplicate" onClick={() => duplicate(selected)}>
+            <HugeiconsIcon icon={Copy01Icon} strokeWidth={1.75} />
+          </ToolbarButton>
+          <ToolbarButton iconOnly aria-label="Delete" onClick={() => remove(selected)}>
+            <HugeiconsIcon icon={Delete02Icon} strokeWidth={1.75} />
+          </ToolbarButton>
+          <DropdownMenu.Root modal={false}>
+            <DropdownMenu.Trigger>
+              <ToolbarButton iconOnly aria-label="More">
+                <HugeiconsIcon icon={MoreHorizontalIcon} strokeWidth={1.75} />
+              </ToolbarButton>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content side="top" align="end" sideOffset={8}>
+              <DropdownMenu.Item disabled={chosen.length < 2} onSelect={toggleGroup}>
+                <HugeiconsIcon icon={isOneGroup ? UngroupLayersIcon : GroupLayersIcon} strokeWidth={1.75} />
+                {isOneGroup ? 'Ungroup' : 'Group'}
+              </DropdownMenu.Item>
+              <DropdownMenu.CheckboxItem checked={snap} onCheckedChange={setSnap}>
+                Snap to grid
+              </DropdownMenu.CheckboxItem>
+              <DropdownMenu.Separator />
+              <DropdownMenu.Item onSelect={selectAll}>Select all</DropdownMenu.Item>
+              <DropdownMenu.Item onSelect={selectSimilar}>Select similar</DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Root>
+          <ToolbarButton iconOnly aria-label="Done" onClick={() => select([])}>
+            <HugeiconsIcon icon={Tick02Icon} strokeWidth={1.75} />
+          </ToolbarButton>
         </ToolbarGroup>
       </Toolbar>
     );
   }
+
+  const footer = (
+    <Toolbar aria-label="Create" backdrop>
+      <ToolbarGroup>
+        <AddMenu onAdd={add} />
+        <MakeWithAi onMake={add} />
+      </ToolbarGroup>
+      <ToolbarGroup>
+        {/* Shift latches: on until tapped again. Its name says what it does right now. */}
+        <ToolbarButton
+          // Named apart from the + (also "Add"), which makes things rather than selecting them.
+          aria-label={dragging === 'handle' && shift ? 'Shift: constrain' : 'Shift: add to selection'}
+          aria-pressed={shift}
+          // On, it fills solid: a mode that changes what every touch does has to be unmissable.
+          variant={shift ? 'solid' : undefined}
+          onClick={() => setShift((s) => !s)}
+        >
+          <HugeiconsIcon icon={ArrowUpBigIcon} strokeWidth={1.75} />
+          {dragging === 'handle' && shift ? 'Constrain' : 'Add'}
+        </ToolbarButton>
+      </ToolbarGroup>
+    </Toolbar>
+  );
 
   const menuTarget = menu?.id ?? null;
   const menuSelected = menuTarget !== null && selected.includes(menuTarget);
@@ -458,7 +460,7 @@ export function Editor() {
                 <SelectionBox key={`box-${o.id}`} target={() => registry.current.get(o.id)} />
               ))}
               {chosen.length > 0 ? <Handles key={selected.join(',')} targets={() => chosen.flatMap((o) => registry.current.get(o.id) ?? [])} mode={mode} /> : null}
-              <OrbitControls ref={controls} makeDefault enableDamping={false} minDistance={MIN_DISTANCE} maxDistance={MAX_DISTANCE} />
+              <OrbitControls ref={controls} makeDefault enableRotate={!viewLocked} enableDamping={false} minDistance={MIN_DISTANCE} maxDistance={MAX_DISTANCE} />
             </Canvas>
 
             {/* The selection box while Shift drags on empty space. Drawn without a React render. */}
@@ -580,12 +582,18 @@ export function Editor() {
                   <HugeiconsIcon icon={CenterFocusIcon} strokeWidth={1.75} />
                 </ToolbarButton>
               </ToolbarGroup>
+              <ToolbarGroup>
+                <ToolbarButton iconOnly aria-label="Lock view" aria-pressed={viewLocked} variant={viewLocked ? 'solid' : undefined} onClick={() => setViewLocked((v) => !v)}>
+                  <HugeiconsIcon icon={viewLocked ? SquareLock02Icon : SquareUnlock01Icon} strokeWidth={1.75} />
+                </ToolbarButton>
+              </ToolbarGroup>
             </Toolbar>
           </Box>
 
-          {/* Footer: making things, or the selection strip while anything is selected. */}
+          {/* Footer, persistent, with the selection strip floating above it while anything is selected. */}
           <Shell.PaneFooter float style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
-            <Flex justify="center" width="100%">
+            <Flex direction="column" align="center" gap="2" width="100%">
+              {strip}
               {footer}
             </Flex>
           </Shell.PaneFooter>

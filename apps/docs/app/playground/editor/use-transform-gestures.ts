@@ -30,14 +30,18 @@ type Options = {
   onCancel(): void;
   /** A tap under Shift, on an object or (null) on empty space. */
   onToggle(id: number | null): void;
+  /** A plain tap: select what it lands on, or (null) clear the selection. */
+  onSelect(id: number | null): void;
   /** A finished selection box: the objects whose centres it holds. */
   onBox(ids: number[]): void;
   onLongPress(id: number | null, x: number, y: number): void;
 };
 
 /**
- * One finger on a handle or a selected object transforms the selection; anywhere else it orbits,
- * or draws a selection box under Shift. Two fingers are always the camera: a second finger cancels
+ * There is no camera mode and no select mode: the touch decides. One finger on a handle or a
+ * selected object transforms the selection; anywhere else it orbits, or draws a selection box
+ * under Shift. A tap selects and never moves the camera. With a pen, the pen edits (a pen drag on
+ * empty space draws a box) and a finger only moves the view. Two fingers are always the camera: a second finger cancels
  * whatever the first was doing and hands both to the orbit controls, so a pinch over the selection
  * zooms and never scales it.
  *
@@ -57,7 +61,7 @@ export function useTransformGestures(options: Options) {
       x0: number;
       y0: number;
       last: { clientX: number; clientY: number };
-      kind: 'transform' | 'box';
+      kind: 'transform' | 'box' | 'pending';
       target: ReturnType<typeof hitTest>;
       drag: ReturnType<typeof createDrag> | null;
       moved: boolean;
@@ -65,6 +69,8 @@ export function useTransformGestures(options: Options) {
     } | null = null;
     let press: { id: number; x: number; y: number; timer: number } | null = null;
     let swallowClick = false;
+    // Once a pen has touched the canvas, the pen edits and a finger only moves the view.
+    let penSeen = false;
 
     const local = (e: { clientX: number; clientY: number }) => {
       const rect = surface.getBoundingClientRect();
@@ -106,6 +112,13 @@ export function useTransformGestures(options: Options) {
       invalidate();
     };
 
+    /** Hand a pointer the orbit controls never saw to them, as if it went down at (clientX, clientY). */
+    const forward = (pointerId: number, pointerType: string, clientX: number, clientY: number) => {
+      latest.current.three
+        .current?.()
+        .gl.domElement.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true, pointerId, pointerType, isPrimary: true, button: 0, buttons: 1, clientX, clientY }));
+    };
+
     const longPress = () => {
       if (!press) return;
       const { x, y } = press;
@@ -129,6 +142,8 @@ export function useTransformGestures(options: Options) {
     };
 
     const onPointerDown = (e: PointerEvent) => {
+      // Our own hand-off to the orbit controls passes back through here; it is theirs.
+      if (!e.isTrusted) return;
       pointers.add(e.pointerId);
       swallowClick = false;
       clearPress();
@@ -140,19 +155,7 @@ export function useTransformGestures(options: Options) {
         // never saw it go down. This event then reaches them as the second.
         const first = gesture;
         cancel();
-        get().gl.domElement.dispatchEvent(
-          new PointerEvent('pointerdown', {
-            bubbles: true,
-            cancelable: true,
-            pointerId: first.id,
-            pointerType: e.pointerType,
-            isPrimary: true,
-            button: 0,
-            buttons: 1,
-            clientX: first.last.clientX,
-            clientY: first.last.clientY,
-          }),
-        );
+        forward(first.id, e.pointerType, first.last.clientX, first.last.clientY);
         return;
       }
       // Only touches on the canvas itself; the readout and anything else over it keep their own.
@@ -163,7 +166,10 @@ export function useTransformGestures(options: Options) {
       const { x, y, size } = local(e);
       press = { id: e.pointerId, x, y, timer: window.setTimeout(longPress, LONG_PRESS_MS) };
 
-      const selection = latest.current.selection();
+      if (e.pointerType === 'pen') penSeen = true;
+      // With a pen about, a finger never edits: it only moves the view or taps to select.
+      const edits = !(penSeen && e.pointerType === 'touch');
+      const selection = edits ? latest.current.selection() : [];
       const target = selection.length
         ? hitTest(
             x,
@@ -174,11 +180,13 @@ export function useTransformGestures(options: Options) {
             latest.current.mode,
           )
         : null;
-      if (!target && !latest.current.shift) return;
+      // Off the selection, Shift or a pen draws a selection box. Anything else waits to see: a tap
+      // selects without nudging the camera, and a drag goes to the orbit controls.
+      const kind = target ? 'transform' : edits && (latest.current.shift || e.pointerType === 'pen') ? 'box' : 'pending';
 
       e.stopPropagation();
       surface.setPointerCapture(e.pointerId);
-      gesture = { id: e.pointerId, x0: x, y0: y, last: e, kind: target ? 'transform' : 'box', target, drag: null, moved: false, text: null };
+      gesture = { id: e.pointerId, x0: x, y0: y, last: e, kind, target, drag: null, moved: false, text: null };
       swallowClick = true;
     };
 
@@ -197,6 +205,15 @@ export function useTransformGestures(options: Options) {
         if (Math.hypot(x - gesture.x0, y - gesture.y0) < TAP_SLOP) return;
         gesture.moved = true;
         const { target } = gesture;
+        if (gesture.kind === 'pending') {
+          // A drag on empty space orbits: the orbit controls take the pointer from where it went down.
+          const { id, x0, y0 } = gesture;
+          const rect = surface.getBoundingClientRect();
+          end();
+          clearPress();
+          forward(id, e.pointerType, rect.left + x0, rect.top + y0);
+          return;
+        }
         if (gesture.kind === 'transform' && target) {
           // The drag counts from here, so the selection keeps its distance from the finger.
           const objects = latest.current.selection().map((s) => s.object);
@@ -243,8 +260,9 @@ export function useTransformGestures(options: Options) {
         }
       } else {
         end();
-        // A tap. Under Shift it adds or removes whatever it lands on.
-        if (latest.current.shift && cam) {
+        // A tap. Under Shift it adds or removes whatever it lands on; otherwise it selects it. A tap
+        // on the selection or a handle leaves the selection as it is.
+        if (cam && (g.kind !== 'transform' || latest.current.shift)) {
           const scene = latest.current.scene();
           const index = pick(
             x,
@@ -253,7 +271,9 @@ export function useTransformGestures(options: Options) {
             cam,
             size,
           );
-          latest.current.onToggle(index >= 0 ? scene[index].id : null);
+          const id = index >= 0 ? scene[index].id : null;
+          if (latest.current.shift) latest.current.onToggle(id);
+          else latest.current.onSelect(id);
         }
       }
       invalidate();
