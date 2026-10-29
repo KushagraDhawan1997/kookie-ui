@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useThree } from '@react-three/fiber';
 import { AmbientLight, DirectionalLight, Mesh, MeshStandardMaterial, PerspectiveCamera, PMREMGenerator, Scene, SphereGeometry, WebGLRenderer } from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
-import { Box, Grid as LayoutGrid, Text } from '@kushagradhawan/kookie-ui';
+import { Box, Flex, Text } from '@kushagradhawan/kookie-ui';
 
 export type MaterialDef = { id: string; name: string; color: string; roughness: number; metalness: number; emissive?: string; opacity?: number };
 
@@ -114,7 +114,7 @@ type GridProps = {
 
 /**
  * The materials, a grid of spheres. A tap applies one to the selection; a drag carries it onto an
- * object. A mostly downward swipe scrolls the grid instead.
+ * object. A sideways swipe scrolls the row instead.
  */
 export function MaterialsGrid({ onPick, onDrop }: GridProps) {
   const thumbs = useThumbnails(SPHERE_PX);
@@ -135,7 +135,7 @@ export function MaterialsGrid({ onPick, onDrop }: GridProps) {
         const dx = e.clientX - d.x0;
         const dy = e.clientY - d.y0;
         if (Math.hypot(dx, dy) < 8) return;
-        if (Math.abs(dy) > Math.abs(dx) && dy > 0) {
+        if (Math.abs(dx) > Math.abs(dy)) {
           sphereDrag.current = null;
           return;
         }
@@ -159,10 +159,16 @@ export function MaterialsGrid({ onPick, onDrop }: GridProps) {
 
   return (
     <>
-      <LayoutGrid columns="4" gap="3" p="3" height="100%" style={{ overflowY: 'auto', touchAction: 'pan-y', alignContent: 'start' }}>
+      {/* One row of spheres that scrolls sideways; the pane never grows. */}
+      <Flex gap="3" px="3" align="center" height="100%" style={{ overflowX: 'auto', overflowY: 'hidden', touchAction: 'pan-x', scrollbarWidth: 'none', paddingBottom: 'env(safe-area-inset-bottom)' }}>
         {MATERIALS.map((m) => (
           <Box key={m.id} asChild>
-            <button type="button" aria-label={m.name} {...sphereHandlers(m.id)} style={{ all: 'unset', cursor: 'pointer', display: 'grid', justifyItems: 'center', gap: 4, touchAction: 'pan-y' }}>
+            <button
+              type="button"
+              aria-label={m.name}
+              {...sphereHandlers(m.id)}
+              style={{ all: 'unset', cursor: 'pointer', display: 'grid', justifyItems: 'center', gap: 4, flexShrink: 0, touchAction: 'pan-x' }}
+            >
               {thumbs[m.id] ? <img src={thumbs[m.id]} alt="" width={SPHERE_PX} height={SPHERE_PX} draggable={false} /> : <Box width={`${SPHERE_PX}px`} height={`${SPHERE_PX}px`} />}
               <Text size="1" emphasis="medium">
                 {m.name}
@@ -170,7 +176,7 @@ export function MaterialsGrid({ onPick, onDrop }: GridProps) {
             </button>
           </Box>
         ))}
-      </LayoutGrid>
+      </Flex>
       {ghost && thumbs[ghost.id] ? (
         <img src={thumbs[ghost.id]} alt="" width={56} height={56} style={{ position: 'fixed', left: ghost.x, top: ghost.y, transform: 'translate(-50%, -110%)', pointerEvents: 'none', zIndex: 10 }} />
       ) : null}

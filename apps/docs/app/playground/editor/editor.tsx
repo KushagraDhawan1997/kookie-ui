@@ -42,9 +42,8 @@ const ZOOM_STEP = 1.25;
 const MIN_DISTANCE = 1.5;
 const MAX_DISTANCE = 60;
 const READOUT_EDGE = 96;
-/** The Materials pane's rest heights, and how far its handle may drag it before it closes. */
-const PEEK_PX = 128;
-const MIN_DRAG_PX = 40;
+/** The Materials pane: one row of spheres and their names. */
+const PANE_PX = 128;
 /** The bottom row and its padding, which ride on top of an open pane. */
 const BOTTOM_ROW_PX = 72;
 
@@ -160,12 +159,9 @@ export function Editor() {
   // Draw, latched: one finger draws in 3D. A stub for now: strokes lie on the ground.
   const [drawing, setDrawing] = React.useState(false);
   // The one pane open at a time, Materials for now: a Shell.Bottom stacked over the canvas, with
-  // no scrim. The canvas never moves; the bottom row rides on top of the pane, and the camera
-  // buttons stay above it. It rests at peek (a row of spheres) or half; its handle resizes it.
+  // no scrim, one row of spheres high. The canvas never moves; the bottom row rides on top of it.
   const [materialsOpen, setMaterialsOpen] = React.useState(false);
-  const [paneSize, setPaneSize] = React.useState(PEEK_PX);
-  const halfPx = typeof window === 'undefined' ? 360 : Math.round(window.innerHeight / 2);
-  const covered = materialsOpen ? paneSize + BOTTOM_ROW_PX : 0;
+  const covered = materialsOpen ? PANE_PX + BOTTOM_ROW_PX : 0;
   const [liveStroke, setLiveStroke] = React.useState<Vec3[] | null>(null);
   const [dragging, setDragging] = React.useState<DragKind | null>(null);
   const [result, setResult] = React.useState<DragResult | null>(null);
@@ -443,16 +439,7 @@ export function Editor() {
           >
             <HugeiconsIcon icon={PaintBrush04Icon} strokeWidth={1.75} />
           </ToolbarButton>
-          <ToolbarButton
-            iconOnly
-            aria-label="Materials"
-            aria-pressed={materialsOpen}
-            variant={materialsOpen ? 'solid' : undefined}
-            onClick={() => {
-              setPaneSize(PEEK_PX);
-              setMaterialsOpen((o) => !o);
-            }}
-          >
+          <ToolbarButton iconOnly aria-label="Materials" aria-pressed={materialsOpen} variant={materialsOpen ? 'solid' : undefined} onClick={() => setMaterialsOpen((o) => !o)}>
             <HugeiconsIcon icon={PaletteIcon} strokeWidth={1.75} />
           </ToolbarButton>
         </ToolbarGroup>
@@ -697,7 +684,7 @@ export function Editor() {
           </Box>
 
           {/* Bottom: one row, with the exact-value steppers above it while they are open. */}
-          <Shell.PaneFooter float style={materialsOpen ? { bottom: paneSize, paddingBottom: 12 } : { paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
+          <Shell.PaneFooter float style={materialsOpen ? { bottom: PANE_PX, paddingBottom: 12 } : { paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
             <Flex direction="column" align="center" gap="2" width="100%">
               {stepper}
               {bottomRow}
@@ -705,24 +692,7 @@ export function Editor() {
           </Shell.PaneFooter>
         </Shell.Content>
 
-        <Shell.Bottom
-          presentation="stacked"
-          open={materialsOpen}
-          onOpenChange={setMaterialsOpen}
-          resizable
-          minSize={MIN_DRAG_PX}
-          maxSize={halfPx}
-          size={paneSize}
-          onSizeChange={(size) => setPaneSize(size)}
-          onResizeEnd={(size) => {
-            // Settle on the nearest rest; well below peek, it closes.
-            if (size < PEEK_PX * 0.6) {
-              setMaterialsOpen(false);
-              setPaneSize(PEEK_PX);
-            } else setPaneSize(size < (PEEK_PX + halfPx) / 2 ? PEEK_PX : halfPx);
-          }}
-          aria-label="Materials"
-        >
+        <Shell.Bottom presentation="stacked" open={materialsOpen} onOpenChange={setMaterialsOpen} size={PANE_PX} aria-label="Materials">
           <MaterialsGrid onPick={applyMaterial} onDrop={dropMaterial} />
         </Shell.Bottom>
       </Shell.Root>
