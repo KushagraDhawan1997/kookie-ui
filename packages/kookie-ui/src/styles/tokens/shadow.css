@@ -7,14 +7,17 @@
  *
  * Components read roles:
  * --surface-chrome: a raised card or a pane.
- * --control-chrome: a raised control or field, such as a button, a text field or a select.
+ * --control-chrome: a raised control, such as a button.
+ * --field-chrome: a raised field, such as a text field, a select or a raised segmented control.
  * --control-chrome-active: the same control while pressed. The drop tightens toward the surface.
  * --grip-chrome: the thumb of a switch or slider.
  * --control-light: an optional light across a raised control's top half (a background image); none by default.
  * --floating-chrome: a popover, menu, combobox or select list.
  * --dialog-chrome: a dialog. Like v2, a dialog is a surface that covers the page.
  *
- * Fields (text field, text area, select trigger) read --control-chrome, like a raised button.
+ * Fields (text field, text area, select trigger, raised segmented control) read --field-chrome: the
+ * control's edge and its 1px drop, without the wide blur. A field sits in the panel; a button lifts
+ * off it. In a panel of fields the blur under every row read as too heavy (2026-10-29).
  */
 
 /* prettier-ignore */
@@ -29,6 +32,7 @@
   --surface-chrome: var(--shadow-4);
   --control-chrome: inset 0 0 0 1px rgb(0 0 0 / 0.08), 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 14px -4px rgb(0 0 0 / 0.08);
   --control-chrome-active: inset 0 0 0 1px rgb(0 0 0 / 0.1), 0 1px 1px rgb(0 0 0 / 0.04);
+  --field-chrome: inset 0 0 0 1px rgb(0 0 0 / 0.08), 0 1px 2px rgb(0 0 0 / 0.04);
   --control-light: none;
   /* A grip: the thumb of a switch or slider. A small round object, so a tighter, darker cast. */
   --grip-chrome: 0 1px 2px rgb(0 0 0 / 0.16), 0 2px 6px -1px rgb(0 0 0 / 0.18);
@@ -51,6 +55,7 @@
      inner edge. v1 drew this edge with a ring in every shadow; now only the control role has it. */
   --control-chrome: inset 0 0 0 1px rgb(255 255 255 / 0.08), 0 1px 2px rgb(0 0 0 / 0.35), 0 4px 14px -4px rgb(0 0 0 / 0.45);
   --control-chrome-active: inset 0 0 0 1px rgb(255 255 255 / 0.1), 0 1px 1px rgb(0 0 0 / 0.4);
+  --field-chrome: inset 0 0 0 1px rgb(255 255 255 / 0.08), 0 1px 2px rgb(0 0 0 / 0.3);
   --control-light: none;
   --grip-chrome: 0 1px 2px rgb(0 0 0 / 0.5), 0 2px 6px -1px rgb(0 0 0 / 0.4);
   --floating-chrome: inset 0 1px 0 rgb(255 255 255 / 0.05), var(--shadow-3);

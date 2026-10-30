@@ -354,14 +354,14 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* Raised variant: the default. The surface colour with --control-chrome, like a raised button. */
+/* Raised variant: the default. The surface colour with --field-chrome. */
 .kui-TextAreaRoot:where(.kui-variant-raised) {
   --text-area-border-width: 1px;
   --v-selection-color: var(--focus-a5);
   --v-focus-color: var(--focus-8);
 
   background-color: var(--field-fill);
-  box-shadow: var(--control-chrome);
+  box-shadow: var(--field-chrome);
 
   & :where(.kui-TextAreaInput) {
     &::placeholder {

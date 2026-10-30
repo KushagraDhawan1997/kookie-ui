@@ -10,7 +10,8 @@ npm install @kushagradhawan/kookie-ui
 
 ```css
 var(--surface-chrome)         /* A raised card, a chatbar, a shell pane */
-var(--control-chrome)         /* A raised button, chip, field, segmented indicator */
+var(--control-chrome)         /* A raised button, chip, segmented indicator */
+var(--field-chrome)           /* A raised field: text field, text area, select trigger, raised segmented control */
 var(--control-chrome-active)  /* The same control while pressed */
 var(--grip-chrome)            /* A switch or slider thumb */
 var(--control-light)          /* An optional light on a raised control */
@@ -30,7 +31,7 @@ A dialog is a surface that covers the page, so `--dialog-chrome` is the surface 
 
 ## Fields
 
-A text field, text area or select trigger is the surface colour with `--control-chrome`, the same hairline and small shadow as a raised button. Hover moves the fill one step. Focus draws the focus ring. Disabled drops the shadow for a faint edge.
+A text field, text area or select trigger is the surface colour with `--field-chrome`: the hairline and 1px drop of a raised button, without its blur, so a panel of fields stays light. Hover moves the fill one step. Focus draws the focus ring. Disabled drops the shadow for a faint edge.
 
 ```css
 var(--field-fill)

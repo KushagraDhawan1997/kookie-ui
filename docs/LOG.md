@@ -2,6 +2,16 @@
 
 Decisions about Kookie UI v1 and why they were made. Newest first. The docs site is the source of truth for what the system says. This file records how it got there.
 
+## 2026-10-29: fields sit in the panel, buttons lift off it
+
+Fields wore `--control-chrome`, a raised button's shadow, by design. In Womp's property panel, a column of fields next to sliders, the 14px blur under each field read as too heavy (Kushagra). Fields now wear `--field-chrome`: the same edge and 1px drop, without the blur. A button is something you press and lifts off the surface; a field is where a value sits. Buttons keep the full shadow.
+
+## 2026-10-29: joined fields and a segmented control without a fill
+
+Womp's property panel joins X, Y and Z into one pill and had to fake it: per-field overrides for radius, shadow and a start border, inside a hand-drawn bar. `TextField.Group` makes the join part of the field: the group owns the edge, the fields keep fill, hover and focus. It lives on TextField's namespace, not as a generic FieldGroup, because a join only holds for one control's height and chrome. Ghost is the dividers alone, with no fill or edge (Kushagra asked for it). A joined Button group was not built; the panel's other bars are separate actions and read fine apart.
+
+In a raised or outlined panel the segmented control's filled track was the only filled shape left. It takes the TextField variant names, so a product sets one variant for every field-like control in a panel. On raised and outline the indicator turns soft, since chrome inside chrome draws two edges. v2 was not checked for this; Kushagra to confirm it agrees.
+
 ## 2026-10-27: pane chrome pads like a panel
 
 Since 0.17 a Shell pane counted as a surface: its header, footer and list padded by `--surface-p-N`, 24px at size 2, Card's padding. In Womp's app that read as too much (Kushagra): a header row of 32px controls sat in 24px on every side, and the app's own label inset stacked on top. A pane is chrome that holds rows, like a menu, not a card that holds content, so it now pads by `--panel-p-N` (8/12/16 at sizes 1 to 3), the padding menus already use. The rule that rows start on the header's inset is kept; only the inset is smaller.

@@ -92,80 +92,112 @@ describe('TextField.Slot pointer handlers', () => {
       </TextField.Root>,
     );
     const slot = screen.getByTestId('slot');
+    slot.setPointerCapture = vi.fn();
     slot.requestPointerLock = vi.fn();
     fireEvent.pointerDown(slot);
     expect(down).toHaveBeenCalledTimes(1);
-    expect(slot.requestPointerLock).toHaveBeenCalledTimes(1);
+    expect(slot.setPointerCapture).toHaveBeenCalledTimes(1);
   });
 });
 
-// jsdom's user agent takes the pointer lock path.
-function setPointerLockElement(el: Element | null) {
-  Object.defineProperty(document, 'pointerLockElement', { configurable: true, get: () => el });
-  document.dispatchEvent(new Event('pointerlockchange'));
-}
-
-function mouseMove(movementX: number, movementY: number) {
-  const event = new MouseEvent('mousemove', { bubbles: true });
-  Object.defineProperty(event, 'movementX', { value: movementX });
-  Object.defineProperty(event, 'movementY', { value: movementY });
-  document.dispatchEvent(event);
-}
-
-describe('TextField.Slot scrub pointer lock', () => {
-  it('does not end a scrub it never started when the lock changes elsewhere', () => {
-    const first = vi.fn();
-    const second = vi.fn();
-    renderWithProviders(
-      <TextField.Root aria-label="Size">
-        <TextField.Slot scrub onScrub={first}>
+describe('TextField.Slot scrub', () => {
+  function Field(props: { disabled?: boolean; readOnly?: boolean; onScrub: (delta: number, isChanging: boolean) => void; value?: number; max?: number }) {
+    return (
+      <TextField.Root aria-label="Size" disabled={props.disabled} readOnly={props.readOnly}>
+        <TextField.Slot scrub scrubValue={props.value ?? 5} scrubStep={2} scrubMax={props.max} onScrub={props.onScrub} data-testid="slot">
           X
         </TextField.Slot>
-        <TextField.Slot scrub side="right" onScrub={second}>
-          Y
-        </TextField.Slot>
-      </TextField.Root>,
+      </TextField.Root>
     );
-    act(() => setPointerLockElement(null));
-    expect(first).not.toHaveBeenCalled();
-    expect(second).not.toHaveBeenCalled();
-    Object.defineProperty(document, 'pointerLockElement', { configurable: true, get: () => null });
+  }
+
+  it('captures the pointer in every browser, never the pointer lock and its banner', () => {
+    const onScrub = vi.fn();
+    renderWithProviders(<Field onScrub={onScrub} />);
+    const slot = screen.getByTestId('slot');
+    slot.setPointerCapture = vi.fn();
+    slot.releasePointerCapture = vi.fn();
+    slot.requestPointerLock = vi.fn();
+    act(() => {
+      fireEvent.pointerDown(slot, { pointerId: 1, clientX: 100, clientY: 50 });
+    });
+    expect(slot.setPointerCapture).toHaveBeenCalledWith(1);
+    expect(slot.requestPointerLock).not.toHaveBeenCalled();
+    expect(slot).toHaveAttribute('data-scrubbing');
+    act(() => {
+      fireEvent.pointerUp(slot, { pointerId: 1 });
+    });
+    expect(slot).not.toHaveAttribute('data-scrubbing');
+    expect(onScrub).toHaveBeenLastCalledWith(0, false);
   });
 
-  it('moves the virtual cursor without re-rendering on every mouse move', () => {
-    const onScrub = vi.fn();
+  it('moves the virtual cursor without re-rendering on every pointer move', () => {
     let commits = 0;
     renderWithProviders(
       <React.Profiler id="field" onRender={() => commits++}>
         <TextField.Root aria-label="Size">
-          <TextField.Slot scrub scrubSensitivity={1000} onScrub={onScrub} data-testid="slot">
+          <TextField.Slot scrub scrubSensitivity={1000} data-testid="slot">
             X
           </TextField.Slot>
         </TextField.Root>
       </React.Profiler>,
     );
     const slot = screen.getByTestId('slot');
-    slot.requestPointerLock = vi.fn(() => setPointerLockElement(slot));
+    slot.setPointerCapture = vi.fn();
     act(() => {
-      fireEvent.pointerDown(slot, { clientX: 100, clientY: 50 });
+      fireEvent.pointerDown(slot, { pointerId: 1, clientX: 100, clientY: 50 });
     });
-    expect(slot).toHaveAttribute('data-scrubbing');
     const cursor = document.querySelector<HTMLImageElement>('.kui-TextFieldSlotScrubCursor')!;
     expect(cursor.style.left).toBe('100px');
-
     const before = commits;
     act(() => {
-      mouseMove(5, 2);
-      mouseMove(5, 2);
-      mouseMove(5, 2);
+      for (const x of [105, 110, 115]) fireEvent.pointerMove(slot, { pointerId: 1, clientX: x, clientY: 50 });
     });
     expect(commits).toBe(before);
     expect(cursor.style.left).toBe('115px');
-    expect(cursor.style.top).toBe('56px');
+  });
 
-    act(() => setPointerLockElement(null));
-    expect(slot).not.toHaveAttribute('data-scrubbing');
-    expect(onScrub).toHaveBeenLastCalledWith(0, false);
+  it('does not scrub a disabled or read-only field', () => {
+    for (const props of [{ disabled: true }, { readOnly: true }]) {
+      const onScrub = vi.fn();
+      const { unmount } = renderWithProviders(<Field {...props} onScrub={onScrub} />);
+      const slot = screen.getByTestId('slot');
+      slot.setPointerCapture = vi.fn();
+      expect(slot).not.toHaveAttribute('data-scrub');
+      fireEvent.pointerDown(slot, { pointerId: 1 });
+      fireEvent.keyDown(screen.getByLabelText('Size'), { key: 'ArrowUp' });
+      expect(slot.setPointerCapture).not.toHaveBeenCalled();
+      expect(onScrub).not.toHaveBeenCalled();
+      unmount();
+    }
+  });
+
+  it('steps once on Up and Down, with Shift times 10 and Option times 0.1, as a finished change', () => {
+    const onScrub = vi.fn();
+    renderWithProviders(<Field onScrub={onScrub} />);
+    const input = screen.getByLabelText('Size');
+    fireEvent.keyDown(input, { key: 'ArrowUp' });
+    expect(onScrub).toHaveBeenLastCalledWith(2, false);
+    fireEvent.keyDown(input, { key: 'ArrowDown', shiftKey: true });
+    expect(onScrub).toHaveBeenLastCalledWith(-20, false);
+    fireEvent.keyDown(input, { key: 'ArrowUp', altKey: true });
+    expect(onScrub.mock.lastCall![0]).toBeCloseTo(0.2);
+    expect(onScrub).toHaveBeenCalledTimes(3);
+  });
+
+  it('clamps a step to the slot max, and lets the caller cancel it', () => {
+    const onScrub = vi.fn();
+    renderWithProviders(<Field onScrub={onScrub} value={9} max={10} />);
+    const input = screen.getByLabelText('Size');
+    fireEvent.keyDown(input, { key: 'ArrowUp' });
+    expect(onScrub).toHaveBeenLastCalledWith(1, false);
+  });
+
+  it('leaves arrow keys alone on a field with no scrub slot', () => {
+    renderWithProviders(<TextField.Root aria-label="Name" />);
+    const event = new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true, cancelable: true });
+    screen.getByLabelText('Name').dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(false);
   });
 });
 

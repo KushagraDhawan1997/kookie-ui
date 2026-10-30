@@ -3,6 +3,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { Select as SelectPrimitive, ScrollArea as ScrollAreaPrimitive } from 'radix-ui';
+import { useComposedRefs, useLayoutEffect } from 'radix-ui/internal';
 
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSize } from '../hooks/theme-size.js';
@@ -261,11 +262,24 @@ const SelectItem = React.forwardRef<SelectItemElement, SelectItemProps>((props, 
   // Detect if this is rich content (not just a string)
   const isRichContent = typeof children !== 'string';
 
+  // Rich content is not the same as several lines: an icon and a label is one line, and its mark
+  // stays centred. Only content taller than one and a half lines pins the mark to the first line.
+  // Written to the DOM, not state, so measuring never re-renders the list.
+  const itemRef = React.useRef<HTMLDivElement>(null);
+  const composedRef = useComposedRefs(forwardedRef, itemRef);
+  useLayoutEffect(() => {
+    const item = itemRef.current;
+    const text = item?.querySelector(':scope > :not(.kui-SelectItemIndicator)');
+    if (!item || !text || !isRichContent) return;
+    const lineHeight = parseFloat(getComputedStyle(item).lineHeight);
+    item.toggleAttribute('data-multiline', text.getBoundingClientRect().height > lineHeight * 1.5);
+  });
+
   return (
     <SelectPrimitive.Item
       {...itemProps}
       asChild={false}
-      ref={forwardedRef}
+      ref={composedRef}
       className={classNames(
         'kui-reset',
         'kui-BaseMenuItem',

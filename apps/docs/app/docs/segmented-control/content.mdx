@@ -54,6 +54,10 @@ export function ProjectsHeader({ view, setView }: { view: string; setView: (view
 
 **Don't use it for actions.** Each item selects a state. An action such as "Export" is a [Button](/docs/button), and an on or off state such as bold is a [Toggle](/docs/toggle).
 
+## Variant
+
+`variant` sets the bar's look. `soft` is the default, a filled track. `raised` and `outline` wear the edge of a [TextField](/docs/text-field) of the same variant, with a soft indicator inside, so a panel of fields has no filled track in it.
+
 ## Size
 
 `size` picks one of four heights: 28, 32, 40 and 48 pixels. Size 2 is the default. The bar is as tall as a [Button](/docs/button) of the same size, so it lines up in a toolbar. `size` accepts a responsive object, such as `{ initial: '3', md: '2' }`.
@@ -121,6 +125,7 @@ A row of periods above a chart is a common use. The chart redraws as soon as the
 | `value` | `string` | | The selected value, controlled |
 | `defaultValue` | `string` | | The selected value at first render |
 | `onValueChange` | `(value: string) => void` | | Fires with the new value. It never fires with an empty value |
+| `variant` | `'soft' \| 'raised' \| 'outline'` | `'soft'` | The look of the bar |
 | `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | The height step |
 | `orientation` | `'horizontal' \| 'vertical'`, responsive | `'horizontal'` | The direction of the bar |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Theme radius | The corner |
