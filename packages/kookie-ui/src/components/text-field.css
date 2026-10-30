@@ -392,7 +392,7 @@
   }
 }
 
-/* raised: the default. The surface colour with --control-chrome, like a raised button. */
+/* raised: the default. The surface colour with --field-chrome. */
 
 .kui-TextFieldRoot:where(.kui-variant-raised) {
   --text-field-selection-color: var(--focus-a5);
@@ -400,7 +400,7 @@
   --text-field-border-width: 1px;
 
   background-color: var(--field-fill);
-  box-shadow: var(--control-chrome);
+  box-shadow: var(--field-chrome);
 
   /* Hover effects */
   @media (hover: hover) {
@@ -697,11 +697,18 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* Scrub-enabled slot hover state */
+/* The whole slot, padding included, is the grab area. A tint on hover shows it can be dragged. */
 .kui-TextFieldSlot:where([data-scrub]) {
   cursor: ew-resize !important;
   user-select: none;
   position: relative;
+  border-radius: calc(var(--text-field-border-radius, var(--radius-2)) - 2px);
+
+  @media (hover: hover) {
+    &:where(:hover:not([data-scrubbing])) {
+      background-color: var(--neutral-a3);
+    }
+  }
 }
 
 /* Ensure children also show ew-resize cursor */
@@ -738,3 +745,141 @@
     filter: none;
   }
 }
+
+/***************************************************************************************************
+ *                                                                                                 *
+ * GROUP                                                                                           *
+ *                                                                                                 *
+ ***************************************************************************************************/
+
+/*
+ * TextField.Group joins its fields into one control, such as X, Y and Z. The group draws the
+ * variant's edge once, over the fields, so a field's fill never covers it. Each field keeps its
+ * fill, hover and focus ring; its own edge goes, its inner corners are square, and a hairline
+ * divides it from the one before.
+ */
+
+/* stylelint-disable selector-max-specificity */
+
+.kui-TextFieldGroup {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--text-field-border-radius);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    box-shadow: var(--text-field-group-edge);
+    pointer-events: none;
+  }
+}
+
+@breakpoints {
+  .kui-TextFieldGroup {
+    &:where(.kui-r-size-1) {
+      --text-field-border-radius: var(--radius-control-1);
+    }
+    &:where(.kui-r-size-2) {
+      --text-field-border-radius: var(--radius-control-2);
+    }
+    &:where(.kui-r-size-3) {
+      --text-field-border-radius: var(--radius-control-3);
+    }
+    &:where(.kui-r-size-4) {
+      --text-field-border-radius: var(--radius-control-4);
+    }
+  }
+}
+
+/* Each variant's edge and divider are the ones its single field draws. */
+.kui-TextFieldGroup:where(.kui-variant-raised) {
+  --text-field-group-edge: var(--field-chrome);
+  --text-field-group-divider: var(--neutral-a4);
+
+  &:where([data-disabled]) {
+    --text-field-group-edge: inset 0 0 0 1px var(--field-edge-disabled);
+  }
+}
+
+.kui-TextFieldGroup:where(.kui-variant-outline, .kui-variant-surface) {
+  --text-field-group-edge: inset 0 0 0 1px var(--accent-6);
+  --text-field-group-divider: var(--accent-6);
+
+  &:where([data-disabled]) {
+    --text-field-group-edge: inset 0 0 0 1px var(--neutral-a6);
+    --text-field-group-divider: var(--neutral-a6);
+  }
+}
+
+.kui-TextFieldGroup:where(.kui-variant-soft) {
+  --text-field-group-edge: none;
+  --text-field-group-divider: var(--accent-a5);
+}
+
+/* ghost: the dividers alone. Each field keeps its ghost hover and focus fill. */
+.kui-TextFieldGroup:where(.kui-variant-ghost) {
+  --text-field-group-edge: none;
+  --text-field-group-divider: var(--neutral-a5);
+}
+
+.kui-TextFieldGroup > .kui-TextFieldWrapper > .kui-TextFieldRoot {
+  position: relative;
+  border-radius: 0;
+  box-shadow: none;
+
+  /* The focus ring and an invalid edge draw above the group's edge. */
+  &:focus-within {
+    z-index: 3;
+  }
+}
+
+.kui-TextFieldGroup > .kui-TextFieldWrapper:first-child > .kui-TextFieldRoot {
+  border-start-start-radius: var(--text-field-border-radius);
+  border-end-start-radius: var(--text-field-border-radius);
+}
+
+.kui-TextFieldGroup > .kui-TextFieldWrapper:last-child > .kui-TextFieldRoot {
+  border-start-end-radius: var(--text-field-border-radius);
+  border-end-end-radius: var(--text-field-border-radius);
+}
+
+.kui-TextFieldGroup > .kui-TextFieldWrapper + .kui-TextFieldWrapper > .kui-TextFieldRoot::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 1px;
+  background-color: var(--text-field-group-divider);
+  pointer-events: none;
+}
+
+/* A focused field's ring is its edge, so the hairlines on either side of it step back. */
+.kui-TextFieldGroup > .kui-TextFieldWrapper > .kui-TextFieldRoot:focus-within::before,
+.kui-TextFieldGroup > .kui-TextFieldWrapper:has(> .kui-TextFieldRoot:focus-within) + .kui-TextFieldWrapper > .kui-TextFieldRoot::before {
+  opacity: 0;
+}
+
+/* An invalid field keeps its red edge, on its own segment only. */
+.kui-TextFieldGroup > .kui-TextFieldWrapper > .kui-TextFieldRoot:has(> .kui-TextFieldInput[aria-invalid='true']) {
+  z-index: 3;
+  box-shadow: inset 0 0 0 1px var(--red-6);
+}
+
+
+@media (forced-colors: active) {
+  .kui-TextFieldGroup {
+    border: 1px solid CanvasText;
+  }
+  .kui-TextFieldGroup > .kui-TextFieldWrapper > .kui-TextFieldRoot {
+    border: none;
+  }
+}
+
+/* stylelint-enable selector-max-specificity */

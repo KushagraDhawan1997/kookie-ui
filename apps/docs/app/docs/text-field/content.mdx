@@ -42,10 +42,16 @@ export function EmailField({ error }: { error?: string }) {
   <TextField.Slot />
   <TextField.Slot side="right" />
 </TextField.Root>
+
+<TextField.Group>
+  <TextField.Root />
+  <TextField.Root />
+</TextField.Group>
 ```
 
 - **Root:** The input and the box around it. Props on Root go to the `input` element.
 - **Slot:** Content before or after the input, such as an icon, a unit or a button.
+- **Group:** Two or more fields as one control, such as X, Y and Z.
 
 ## Best practices
 
@@ -126,6 +132,24 @@ const [width, setWidth] = React.useState(320);
 </TextField.Root>
 ```
 
+### Three values in one control
+
+`TextField.Group` draws one edge around its fields and a hairline between them. Its `variant`, `size`, `radius`, `color` and `disabled` pass to every field. `ghost` keeps only the hairlines, for a dense panel.
+
+```tsx
+<TextField.Group aria-label="Position">
+  <TextField.Root defaultValue="0" aria-label="X">
+    <TextField.Slot><Text size="2" color="red">X</Text></TextField.Slot>
+  </TextField.Root>
+  <TextField.Root defaultValue="50" aria-label="Y">
+    <TextField.Slot><Text size="2" color="grass">Y</Text></TextField.Slot>
+  </TextField.Root>
+  <TextField.Root defaultValue="0" aria-label="Z">
+    <TextField.Slot><Text size="2" color="blue">Z</Text></TextField.Slot>
+  </TextField.Root>
+</TextField.Group>
+```
+
 ### Validation
 
 `error` marks the field as invalid and turns it red. `errorMessage` shows below the field and is read with it. Show the error after someone leaves the field or submits the form, not while they are still typing.
@@ -148,6 +172,18 @@ const [width, setWidth] = React.useState(320);
 | `required` | `boolean` | `false` | Must be filled before the form submits |
 
 Root also accepts every attribute of the HTML `input` element, such as `placeholder`, `disabled`, `readOnly`, `autoComplete` and `onChange`. Spell check follows the browser unless you set `spellCheck`.
+
+### Group
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'raised' \| 'surface' \| 'soft' \| 'outline' \| 'ghost'` | `'raised'` | The look of every field. `ghost` is the hairlines alone |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | The height step |
+| `color` | `AccentColor` | Theme accent | The colour of the focus ring |
+| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Theme radius | The outer corners |
+| `disabled` | `boolean` | `false` | Disables every field |
+
+A field in the group can still take its own `color`, `disabled` and `error`.
 
 ### Slot
 

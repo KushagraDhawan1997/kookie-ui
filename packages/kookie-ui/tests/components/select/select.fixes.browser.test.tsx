@@ -76,3 +76,49 @@ describe('Select trigger in forced colors', () => {
     }
   });
 });
+
+describe('Select.Item check mark', () => {
+  const Glyph = () => (
+    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden>
+      <circle cx="12" cy="12" r="6" fill="currentColor" />
+    </svg>
+  );
+  const centre = (r: DOMRect) => r.top + r.height / 2;
+
+  function open(children: React.ReactNode) {
+    render(
+      <Theme>
+        <Select.Root defaultValue="a" defaultOpen size="1">
+          <Select.Trigger aria-label="Pick" />
+          <Select.Content position="popper">{children}</Select.Content>
+        </Select.Root>
+      </Theme>,
+    );
+    const item = document.querySelector<HTMLElement>('.kui-SelectItem[data-state="checked"]')!;
+    return { item: item.getBoundingClientRect(), mark: item.querySelector('.kui-SelectItemIndicator')!.getBoundingClientRect() };
+  }
+
+  it('is centred on a one-line item with an icon, even when the icon makes the row taller', () => {
+    const { item, mark } = open(
+      <Select.Item value="a">
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+          <Glyph />
+          Sphere
+        </span>
+      </Select.Item>,
+    );
+    expect(centre(mark)).toBeCloseTo(centre(item), 0);
+  });
+
+  it('stays on the first line of an item that wraps', () => {
+    const { item, mark } = open(
+      <Select.Item value="a">
+        <span style={{ display: 'flex', flexDirection: 'column' }}>
+          <span>Sphere</span>
+          <span>A round primitive with a radius</span>
+        </span>
+      </Select.Item>,
+    );
+    expect(centre(mark)).toBeLessThan(centre(item) - 4);
+  });
+});

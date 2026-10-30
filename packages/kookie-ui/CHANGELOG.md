@@ -1,3 +1,31 @@
+## [0.29.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.28.1...v0.29.2) (2026-10-30)
+
+Ships 0.29.0 and 0.29.1 too, which were never released on their own here.
+
+### Fixes
+
+* **select:** an item with rich content on one line (an icon and a label) centres its check mark. Only content taller than one and a half lines pins the mark to the first line; before, any non-string content did, which put the mark about 5px high on a one-line row.
+* **text-field:** a scrub slot does nothing while its field is disabled or read-only.
+* **text-field:** scrubbing captures the pointer in every browser. Chrome took the pointer lock, and showed its "Press Esc to show your cursor" banner on every drag.
+
+### Features
+
+* **text-field:** with a scrub slot, Up and Down on the input step the value at once by `scrubStep`, Shift ×10 and Option ×0.1, clamped to `scrubMin`/`scrubMax`. Each press reports `onScrub(delta, false)`, a finished change. An `onKeyDown` that calls `preventDefault` keeps the keys for itself.
+* **text-field:** a scrub slot tints on hover, so the whole slot reads as the grab area.
+
+## 0.29.1 (2026-10-29)
+
+### Look
+
+* **fields:** raised fields wear `--field-chrome`, a new shadow role: the control's edge and its 1px drop, without the 14px blur. TextField, TextField.Group, TextArea, the Select trigger and a raised SegmentedControl take it. Buttons keep `--control-chrome`. In a panel of fields the blur under every row read as too heavy.
+
+## 0.29.0 (2026-10-29)
+
+### Features
+
+* **text-field:** `TextField.Group` joins two or more fields into one control, such as X, Y and Z. It takes `variant` (`raised`, `surface`, `soft`, `outline`, and `ghost`, which is the dividers alone), `size`, `radius`, `color` and `disabled`, and passes them to its fields. The group draws the edge once, the inner corners are square, and a hairline divides the fields; the hairlines next to a focused field step back. A field can still take its own `color`, `disabled` and `error`.
+* **segmented-control:** `variant` on `SegmentedControl.Root`: `soft` (the default, unchanged), `raised` and `outline`. Raised and outline wear the edge of a TextField of the same variant, with a soft indicator inset 2px from it, so a panel of raised or outlined fields has no filled track left in it.
+
 ## [0.28.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.27.0...v0.28.1) (2026-10-28)
 
 Ships 0.27.1 and 0.28.0 too, which were never released on their own here.

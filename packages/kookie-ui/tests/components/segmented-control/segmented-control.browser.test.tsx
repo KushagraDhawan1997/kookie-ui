@@ -215,3 +215,41 @@ describe('SegmentedControl in forced colours', () => {
     expect(indicator.backgroundColor).not.toBe(canvas);
   });
 });
+
+describe('SegmentedControl variant', () => {
+  const track = (container: HTMLElement) => getComputedStyle(container.querySelector('.kui-SegmentedControlRoot')!);
+  const indicator = (container: HTMLElement) => getComputedStyle(container.querySelector('.kui-SegmentedControlIndicator')!, '::before');
+
+  it('is soft by default: a filled track and a raised indicator', () => {
+    const { container } = render(
+      <Theme>
+        <Bar />
+      </Theme>,
+    );
+    expect(track(container).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+    expect(track(container).boxShadow).toBe('none');
+    expect(indicator(container).boxShadow).not.toBe('none');
+  });
+
+  it('raised wears the raised field edge, with a soft indicator inset from it', () => {
+    const { container } = render(
+      <Theme>
+        <Bar variant="raised" />
+      </Theme>,
+    );
+    expect(track(container).boxShadow).not.toBe('none');
+    expect(indicator(container).boxShadow).toBe('none');
+    expect(indicator(container).top).toBe('2px');
+  });
+
+  it('outline has no fill, only a hairline edge', () => {
+    const { container } = render(
+      <Theme>
+        <Bar variant="outline" />
+      </Theme>,
+    );
+    expect(track(container).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    expect(track(container).boxShadow).toMatch(/inset/);
+    expect(indicator(container).boxShadow).toBe('none');
+  });
+});

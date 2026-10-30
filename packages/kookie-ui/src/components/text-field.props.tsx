@@ -30,6 +30,21 @@ const textFieldRootPropDefs = {
   'aria-labelledby': PropDef<string | undefined>;
 };
 
+// Ghost is the dividers alone: no fill, no edge.
+const groupVariants = ['raised', 'surface', 'soft', 'outline', 'ghost'] as const;
+
+const textFieldGroupPropDefs = {
+  size: { type: 'enum', className: 'kui-r-size', values: sizes, default: '2', responsive: true },
+  variant: { type: 'enum', className: 'kui-variant', values: groupVariants, default: 'raised' },
+  disabled: { type: 'boolean', default: false },
+  ...colorPropDef,
+  ...radiusPropDef,
+} satisfies {
+  size: PropDef<(typeof sizes)[number]>;
+  variant: PropDef<(typeof groupVariants)[number]>;
+  disabled: PropDef<boolean>;
+};
+
 const sides = ['left', 'right'] as const;
 
 const textFieldSlotPropDefs = {
@@ -49,7 +64,10 @@ const textFieldSlotPropDefs = {
 
 /** Scrubbing props for TextField.Slot - handled separately from PropDef system */
 interface TextFieldSlotScrubProps {
-  /** Enable scrubbing behavior on this slot */
+  /**
+   * Drag the slot to change the value; Up and Down on the input step it once. Ignored while the
+   * field is disabled or read-only.
+   */
   scrub?: boolean;
   /** Current value (required for min/max clamping to work correctly) */
   scrubValue?: number;
@@ -75,4 +93,4 @@ interface TextFieldSlotScrubProps {
 
 export type { TextFieldSlotScrubProps };
 
-export { textFieldRootPropDefs, textFieldSlotPropDefs };
+export { textFieldRootPropDefs, textFieldGroupPropDefs, textFieldSlotPropDefs };

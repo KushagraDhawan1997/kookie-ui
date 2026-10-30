@@ -70,8 +70,8 @@
   }
 }
 
-/* Rich content grows the row; the mark stays on the first line. */
-.kui-SelectItem:where(.kui-SelectItemRich) {
+/* Content of more than one line grows the row; the mark stays on the first line. */
+.kui-SelectItem:where(.kui-SelectItemRich[data-multiline]) {
   align-items: flex-start;
 
   & :where(.kui-SelectItemIndicator) {
@@ -194,13 +194,13 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* raised: the default. A field: the surface colour with --control-chrome, like a raised button. */
+/* raised: the default. A field: the surface colour with --field-chrome. */
 
 .kui-SelectTrigger:where(.kui-variant-raised) {
   position: relative;
   color: var(--accent-ink);
   background-color: var(--field-fill);
-  box-shadow: var(--control-chrome);
+  box-shadow: var(--field-chrome);
 
   &:where(:focus-visible) {
     outline: 2px solid var(--focus-8);

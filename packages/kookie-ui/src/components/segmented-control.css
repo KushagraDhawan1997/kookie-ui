@@ -304,6 +304,49 @@
 
 /* * * * * * * * * * * * * * * * * * * */
 /*                                     */
+/*     Variants / Raised and Outline   */
+/*                                     */
+/* * * * * * * * * * * * * * * * * * * */
+
+/*
+ * The track wears the edge a TextField of the same variant wears, so a panel of raised or outlined
+ * fields has no filled shape left in it. The indicator turns soft: chrome inside chrome would
+ * stack two edges, so it is a neutral fill inset from the track's edge.
+ */
+.kui-SegmentedControlRoot:where(.kui-variant-raised, .kui-variant-outline) {
+  --segmented-control-indicator-background-color: var(--neutral-a4);
+
+  & :where(.kui-SegmentedControlIndicator)::before {
+    inset: var(--segmented-control-indicator-inset);
+    border-radius: max(var(--border-width-standard), calc(var(--segmented-control-border-radius) - var(--segmented-control-indicator-inset)));
+    box-shadow: none;
+  }
+}
+
+.kui-SegmentedControlRoot:where(.kui-variant-raised) {
+  --segmented-control-indicator-inset: 2px;
+  background-color: var(--field-fill);
+  box-shadow: var(--field-chrome);
+
+  &:where([data-disabled]) {
+    background-color: var(--field-fill-disabled);
+    box-shadow: inset 0 0 0 1px var(--field-edge-disabled);
+  }
+}
+
+.kui-SegmentedControlRoot:where(.kui-variant-outline) {
+  --segmented-control-indicator-inset: 2px;
+  background-color: transparent;
+  box-shadow: inset 0 0 0 1px var(--neutral-6);
+
+  &:where([data-disabled]) {
+    background-color: transparent;
+    box-shadow: inset 0 0 0 1px var(--neutral-a6);
+  }
+}
+
+/* * * * * * * * * * * * * * * * * * * */
+/*                                     */
 /*            Icon-Only Mode           */
 /*                                     */
 /* * * * * * * * * * * * * * * * * * * */
