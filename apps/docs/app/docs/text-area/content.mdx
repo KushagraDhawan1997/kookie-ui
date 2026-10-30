@@ -80,35 +80,26 @@ export function FeedbackField() {
 
 `maxLength` stops typing at the limit. Show the count below so people know how much room is left.
 
-```tsx showLineNumbers
-const [bio, setBio] = React.useState('');
-
-<Flex direction="column" gap="1">
-  <TextArea
-    aria-label="Bio"
-    value={bio}
-    onChange={(event) => setBio(event.target.value)}
-    maxLength={160}
-  />
-  <Text size="1" emphasis="medium">{bio.length} / 160</Text>
-</Flex>
-```
+<Example src="./examples/character-limit" />
 
 ### Validation
 
 `error` marks the text area as invalid and `errorMessage` shows below it, linked so a screen reader reads it with the field.
 
-```tsx
-<TextArea
-  aria-label="Steps to reproduce"
-  error
-  errorMessage="Describe what you did before the error appeared"
-/>
-```
+<Example src="./examples/validation" />
 
 ### Read-only text
 
 `readOnly` keeps the text selectable and focusable but stops edits. Use it for something people copy, such as a generated key or a log. Use `disabled` only when the field doesn't apply right now.
+
+<Example src="./examples/read-only-text" />
+
+### Notes without a box
+
+`variant="ghost"` drops the box, so the text area reads as part of the page, as in a notes app. It keeps its focus ring, so people can still see where they are typing.
+
+<Example src="./examples/notes-without-a-box" />
+
 
 ## Props
 

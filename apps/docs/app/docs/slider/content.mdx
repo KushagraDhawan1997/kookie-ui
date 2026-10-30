@@ -65,46 +65,19 @@ export function VolumeSetting({ volume, setVolume }: { volume: number; setVolume
 
 Two numbers make a range with two handles. `minStepsBetweenThumbs` keeps the handles apart, so the range can't close to nothing.
 
-```tsx
-<Slider
-  defaultValue={[200, 800]}
-  min={0}
-  max={1000}
-  step={50}
-  minStepsBetweenThumbs={1}
-  aria-label="Price range"
-/>
-```
+<Example src="./examples/price-range" />
 
 ### Marked positions
 
 `ticks` draws a mark under the track for each value, with an optional label. Each mark is a button that moves the nearest handle to it. Add `snapToTicks` when only those values are allowed. The slider keeps room for the marks, below a horizontal track and beside a vertical one. The marks follow the track when it runs right to left, is `inverted`, or is vertical.
 
-```tsx
-<Slider
-  defaultValue={[50]}
-  ticks={[
-    { value: 0, label: 'Low' },
-    { value: 50, label: 'Medium' },
-    { value: 100, label: 'High' },
-  ]}
-  snapToTicks
-  aria-label="Quality"
-/>
-```
+<Example src="./examples/marked-positions" />
 
 ### Saving when the drag ends
 
 Update the shown value on every change, and save once with `onValueCommit`.
 
-```tsx
-<Slider
-  value={[brightness]}
-  onValueChange={([v]) => setBrightness(v)}
-  onValueCommit={([v]) => saveBrightness(v)}
-  aria-label="Brightness"
-/>
-```
+<Example src="./examples/saving-when-the-drag-ends" />
 
 ## Props
 

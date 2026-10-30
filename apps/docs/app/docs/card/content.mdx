@@ -72,48 +72,25 @@ When the card is a link, a `button` or a `label`, every variant shows a hover an
 
 Render your router's link with `asChild`. The element stays an anchor, so it opens in a new tab like any link, and the card shows a focus ring for the keyboard.
 
-```tsx
-<Card asChild>
-  <Link href="/projects/atlas">
-    <Flex direction="column" gap="1">
-      <Heading as="h3" size="3">Atlas</Heading>
-      <Text size="2" emphasis="medium">Updated 2 hours ago</Text>
-    </Flex>
-  </Link>
-</Card>
-```
+<Example src="./examples/card-that-opens-a-page" />
 
 ### Choosing one option
 
 A card rendered as a `label` that holds a checked [Checkbox](/docs/checkbox) or [Radio](/docs/radio) shows an accent fill and border, and a press anywhere on the card toggles the control. A plain card holding a form of checkboxes doesn't light up.
 
-```tsx
-<Card asChild>
-  <label>
-    <Flex gap="3" align="start">
-      <Radio name="plan" value="pro" />
-      <Text size="2">Pro, with unlimited projects</Text>
-    </Flex>
-  </label>
-</Card>
-```
+<Example src="./examples/choosing-one-option" />
 
 ### Image to the edge
 
 Set a margin of `bleed` on a `Box` to pull it out by the card's padding, so an image reaches the edge. The card clips it to its corner.
 
-```tsx
-<Card>
-  <Box mx="bleed" mt="bleed" mb="4">
-    <Image src="/cover.jpg" alt="Mountain lake at dawn" />
-  </Box>
-  <Text size="2">Lake Louise</Text>
-</Card>
-```
+<Example src="./examples/image-to-the-edge" />
 
 ### Card inside a card
 
 A card inside another card draws its corner as the outer corner minus the outer padding, so the two corners stay parallel. You don't need to set a radius.
+
+<Example src="./examples/card-inside-a-card" />
 
 ## Props
 

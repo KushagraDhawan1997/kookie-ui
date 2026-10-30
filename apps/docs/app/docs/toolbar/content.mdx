@@ -96,30 +96,13 @@ Toolbar.Button rests as a gray `soft` button, and as a gray `ghost` inside a Gro
 
 `asChild` renders your own element with the button's look, such as a link. It stays in the arrow-key row, and a link gets no `type` attribute.
 
-```tsx
-<Toolbar aria-label="Document">
-  <Toolbar.Button asChild>
-    <a href="/docs/help">Help</a>
-  </Toolbar.Button>
-</Toolbar>
-```
+<Example src="./examples/link" />
 
 ### Overflow
 
 Toolbar.Overflow takes the room the row leaves. When its controls don't fit, they move into a "More" menu, starting from the end. A Button shows as a menu item there, and an icon-only Button uses its `aria-label` as the item's text. A toggle with `aria-pressed` shows as a checkbox item, checked while it is pressed. A Group shows as a menu group.
 
-```tsx showLineNumbers
-<Toolbar aria-label="Formatting">
-  <Toolbar.Title>Meeting notes</Toolbar.Title>
-  <Toolbar.Overflow>
-    <Toolbar.Button iconOnly aria-label="Bold" onClick={onBold}>
-      <HugeiconsIcon icon={TextBoldIcon} strokeWidth={1.75} />
-    </Toolbar.Button>
-    <Toolbar.Button onClick={onExport}>Export</Toolbar.Button>
-    <Toolbar.Button onClick={onShare}>Share</Toolbar.Button>
-  </Toolbar.Overflow>
-</Toolbar>
-```
+<Example src="./examples/overflow" />
 
 For a control of your own, call `useToolbarOverflow()`. It returns `true` while the control is drawn in the menu, so it can render a menu form there.
 
@@ -134,20 +117,7 @@ function Zoom() {
 
 When a layout owns the toolbar and a page adds its own controls, put a Toolbar.Slot in the toolbar and a Toolbar.Fill with the same `name` in the page. The page's controls render in the toolbar, take its size, and join its arrow keys. A React portal can't do this: a Button portalled into the toolbar renders as a plain Button with its own tab stop.
 
-```tsx showLineNumbers
-// In the layout
-<Toolbar aria-label="Page">
-  <Toolbar.Button asChild>
-    <a href="/">Home</a>
-  </Toolbar.Button>
-  <Toolbar.Slot name="page-actions" />
-</Toolbar>
-
-// In the page
-<Toolbar.Fill name="page-actions">
-  <Toolbar.Button onClick={onPublish}>Publish</Toolbar.Button>
-</Toolbar.Fill>
-```
+<Example src="./examples/page-actions-in-a-layout-toolbar" />
 
 The filled controls read the toolbar's context, not the page's, and appear once the page mounts in the browser.
 
@@ -155,34 +125,19 @@ The filled controls read the toolbar's context, not the page's, and appear once 
 
 Toolbar takes the padding and position props a [Box](/docs/box) takes, such as `p`, `px`, `position` and `top`. It takes no margin props.
 
-```tsx
-<Toolbar aria-label="Formatting" position="sticky" top="0" px="3">{/* controls */}</Toolbar>
-```
+<Example src="./examples/sticky-row" />
 
 ### Vertical tool strip
 
 `orientation="vertical"` stacks the controls, and the arrow keys become Up and Down. Use it for a strip of tools along the edge of a canvas.
 
-```tsx showLineNumbers
-<Toolbar orientation="vertical" aria-label="Tools">
-  <Toolbar.Group aria-label="Draw">
-    <Toolbar.Button iconOnly aria-label="Select" aria-pressed={tool === 'select'}>
-      <HugeiconsIcon icon={Cursor01Icon} strokeWidth={1.75} />
-    </Toolbar.Button>
-    <Toolbar.Button iconOnly aria-label="Pen" aria-pressed={tool === 'pen'}>
-      <HugeiconsIcon icon={PencilEdit01Icon} strokeWidth={1.75} />
-    </Toolbar.Button>
-  </Toolbar.Group>
-</Toolbar>
-```
+<Example src="./examples/vertical-tool-strip" />
 
 ### Read-only document
 
 `disabled` on a Group turns off every button in it at once, such as the formatting tools while a document is locked.
 
-```tsx
-<Toolbar.Group aria-label="Text style" disabled={locked}>{/* buttons */}</Toolbar.Group>
-```
+<Example src="./examples/read-only-document" />
 
 ## Props
 

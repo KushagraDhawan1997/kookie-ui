@@ -68,21 +68,19 @@ The bar is 6 pixels tall and grows to fill its row in a Flex. The filled part us
 
 Set `max` to the number of steps, so the value reads in steps rather than percent.
 
-```tsx
-<Progress value={3} max={12} aria-label="Importing contacts" getValueLabel={(value, max) => `${value} of ${max} files`} />
-```
+<Example src="./examples/counting-steps" />
 
 ### Unknown length
 
 Pass `null` while the server hasn't told you the total yet, then pass the value once you know. The bar switches from indeterminate to filled in place.
 
-```tsx
-<Progress value={total ? (done / total) * 100 : null} aria-label="Preparing export" />
-```
+<Example src="./examples/unknown-length" />
 
 ### Status colours
 
 Use `color` to match what the bar reports, such as `green` once a check has passed or `red` for a quota that is almost full. Keep the text saying the same thing, because colour alone doesn't reach everyone.
+
+<Example src="./examples/status-colours" />
 
 ## Props
 

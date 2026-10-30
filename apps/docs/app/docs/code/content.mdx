@@ -66,31 +66,19 @@ With no `size`, Code is 0.925 times the surrounding font size, so it follows the
 
 Code inside a sentence follows the sentence's size.
 
-```tsx
-<Text as="p" size="2">
-  Set <Code>emphasis</Code> to <Code>medium</Code> for secondary copy.
-</Text>
-```
+<Example src="./examples/prop-names-in-a-description" />
 
 ### Status in a table cell
 
 A coloured `solid` Code works as a short, fixed label next to plain text.
 
-```tsx
-<Code variant="solid" color="green">
-  200 OK
-</Code>
-```
+<Example src="./examples/status-in-a-table-cell" />
 
 ### Code that is a link
 
 Put Code inside a [Link](/docs/link). The link hides its underline when Code is its only child, and the tint changes on hover instead.
 
-```tsx
-<Link href="/docs/button">
-  <Code>Button</Code>
-</Link>
-```
+<Example src="./examples/code-that-is-a-link" />
 
 ## Props
 

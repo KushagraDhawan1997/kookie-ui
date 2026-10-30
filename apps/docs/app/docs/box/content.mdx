@@ -89,25 +89,19 @@ Every layout prop accepts an object keyed by breakpoint. A key applies from that
 
 `position`, `top` and the other edge props place the box. Edges take space steps, negative steps or CSS strings.
 
-```tsx
-<Box position="sticky" top="0" py="3">
-  <Toolbar />
-</Box>
-```
+<Example src="./examples/sticky-header" />
 
 ### Inline wrapper
 
 `as="span"` keeps the box inline, for space around a word or icon inside a line of text.
 
+<Example src="./examples/inline-wrapper" />
+
 ### Rendering another element
 
 `asChild` puts the box's layout props on its only child, such as a `section` or a link, and renders no `div` of its own.
 
-```tsx
-<Box asChild p="4">
-  <section aria-labelledby="billing">…</section>
-</Box>
-```
+<Example src="./examples/rendering-another-element" />
 
 ## Props
 

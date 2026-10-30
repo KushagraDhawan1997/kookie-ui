@@ -64,16 +64,13 @@ const [muted, setMuted] = React.useState(false);
 
 A toggle with a label works as an on or off filter beside other controls. The list updates as soon as it changes.
 
-```tsx
-<Toggle defaultPressed={false} onPressedChange={setShowArchived}>
-  <HugeiconsIcon icon={Archive01Icon} strokeWidth={1.75} />
-  Show archived
-</Toggle>
-```
+<Example src="./examples/filter-in-a-list-header" />
 
 ### Icon only
 
 `iconOnly` makes the toggle square. It has no visible text, so the types require `aria-label` or `aria-labelledby`. Add `tooltip` so people who use a pointer can see the name too.
+
+<Example src="./examples/icon-only" />
 
 ## Props
 

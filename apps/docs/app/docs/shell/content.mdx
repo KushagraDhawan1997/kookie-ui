@@ -120,48 +120,19 @@ A pane is in one of three states:
 
 `resizable` adds a handle on the pane's inner edge. Shell doesn't store sizes, so keep the width in your own state to restore it on the next visit.
 
-```tsx showLineNumbers
-const [width, setWidth] = React.useState(320);
-
-<Shell.Inspector
-  resizable
-  size={width}
-  onSizeChange={setWidth}
-  minSize={240}
-  maxSize={480}
->
-  {/* Properties */}
-</Shell.Inspector>
-```
+<Example src="./examples/resizable-inspector" />
 
 ### Navigation with a logo and a profile row
 
 `Shell.PaneHeader` and `Shell.PaneFooter` stay put while `Shell.Scroll` scrolls between them. With `float`, the rows sit over the list and it scrolls behind them. Add `fade` to the Scroll and `backdrop` to a Toolbar in the row so its buttons stay readable.
 
-```tsx showLineNumbers
-<Shell.Sidebar aria-label="Main">
-  <Shell.PaneHeader float>
-    <Toolbar backdrop aria-label="Workspace">{/* Logo, search */}</Toolbar>
-  </Shell.PaneHeader>
-  <Shell.Scroll fade>
-    {/* Sidebar rows */}
-  </Shell.Scroll>
-  <Shell.PaneFooter>{/* Profile */}</Shell.PaneFooter>
-</Shell.Sidebar>
-```
+<Example src="./examples/navigation-with-a-logo-and-a-profile-row" />
 
 ### Page with a pinned toolbar
 
 The same parts work in `Shell.Content`. With a `Shell.Scroll` in it, the content stops scrolling and the Scroll scrolls the page. A `Shell.PaneHeader float` beside it stays pinned, with the same inset as a sidebar's header, and the page starts below it. Link targets and focused controls scroll into view below it too.
 
-```tsx showLineNumbers
-<Shell.Content>
-  <Shell.PaneHeader float>
-    <Toolbar backdrop aria-label="Page">{/* Page actions */}</Toolbar>
-  </Shell.PaneHeader>
-  <Shell.Scroll fade>{/* Page */}</Shell.Scroll>
-</Shell.Content>
-```
+<Example src="./examples/page-with-a-pinned-toolbar" />
 
 The floating row's height is published as `--kui-pane-inset-start` inside the Scroll. Use it to place something under the row, such as a sticky table of contents (`top: var(--kui-pane-inset-start)`), or to pull a full-bleed band up to the pane's top edge.
 

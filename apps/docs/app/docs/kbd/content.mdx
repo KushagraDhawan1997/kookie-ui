@@ -55,22 +55,13 @@ export function SearchHint() {
 
 Put the shortcut at the end of the item, so people learn it while they use the menu. The [Sidebar](/docs/sidebar) does this for its items with a `shortcut`.
 
-```tsx
-<Flex justify="between" align="center" gap="4">
-  <Text size="2">New file</Text>
-  <Kbd size="1" variant="soft">⌘ N</Kbd>
-</Flex>
-```
+<Example src="./examples/shortcuts-in-a-menu" />
 
 ### A key people can press
 
 When a key on screen does something, such as a list of shortcuts people can try, render a button with `asChild`. Kbd adds hover, pressed and focus styles to a button or a link.
 
-```tsx
-<Kbd asChild>
-  <button type="button" onClick={openSearch}>⌘ K</button>
-</Kbd>
-```
+<Example src="./examples/a-key-people-can-press" />
 
 ## Props
 

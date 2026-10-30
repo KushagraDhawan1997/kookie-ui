@@ -71,47 +71,31 @@ export function ProjectTabs() {
 
 Control the value with `value` and `onValueChange`, and keep it in the URL so a link or a reload opens the same tab.
 
-```tsx
-<Tabs.Root value={tab} onValueChange={(next) => setSearchParam('tab', next)}>
-  {/* ... */}
-</Tabs.Root>
-```
+<Example src="./examples/showing-the-active-tab-in-the-url" />
 
 ### Icon and label
 
 Put the icon before the label, inside the trigger. The list sizes the icon and sets the gap.
 
-```tsx
-<Tabs.Trigger value="activity">
-  <HugeiconsIcon icon={Activity01Icon} strokeWidth={1.75} />
-  Activity
-</Tabs.Trigger>
-```
+<Example src="./examples/icon-and-label" />
 
 ### Tab that isn't ready
 
 `disabled` on a trigger greys it out and skips it with the arrow keys. Add a reason nearby, because a disabled tab doesn't say why.
 
+<Example src="./examples/tab-that-isnt-ready" />
+
 ### Vertical tabs
 
 `orientation="vertical"` stacks the tabs in a column beside the panels, with the active line on the edge next to them. Arrow Up and Arrow Down move between tabs.
 
-```tsx
-<Tabs.Root defaultValue="general" orientation="vertical">
-  <Tabs.List aria-label="Settings">
-    <Tabs.Trigger value="general">General</Tabs.Trigger>
-    <Tabs.Trigger value="billing">Billing</Tabs.Trigger>
-  </Tabs.List>
-  <Box pl="5">
-    <Tabs.Content value="general">General settings.</Tabs.Content>
-    <Tabs.Content value="billing">Billing settings.</Tabs.Content>
-  </Box>
-</Tabs.Root>
-```
+<Example src="./examples/vertical-tabs" />
 
 ### Panels that keep their state
 
-A panel unmounts when its tab is inactive, so a half-filled form in it loses its input. Set `forceMount` on the panel to keep it mounted, and hide the inactive one with its `data-state="inactive"` attribute.
+A panel unmounts when its tab is inactive, so a half-filled form in it loses its input. Set `forceMount` on the panel to keep it mounted, and hide the inactive one yourself, with `hidden` or its `data-state="inactive"` attribute.
+
+<Example src="./examples/panels-that-keep-their-state" />
 
 ## Props
 

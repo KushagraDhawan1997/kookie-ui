@@ -95,26 +95,7 @@ export function CountryFilter({ value, onChange }: { value: string | null; onCha
 
 Set `shouldFilter={false}` when your API does the search. Control `searchValue` to send each query, and render only the items the server returns.
 
-```tsx
-<Combobox.Root
-  shouldFilter={false}
-  searchValue={query}
-  onSearchValueChange={setQuery}
->
-  <Combobox.Trigger aria-label="Assignee" loading={isFetching} />
-  <Combobox.Content>
-    <Combobox.Input placeholder="Search people" />
-    <Combobox.List>
-      <Combobox.Empty>No one matches "{query}"</Combobox.Empty>
-      {results.map((person) => (
-        <Combobox.Item key={person.id} value={person.id}>
-          {person.name}
-        </Combobox.Item>
-      ))}
-    </Combobox.List>
-  </Combobox.Content>
-</Combobox.Root>
-```
+<Example src="./examples/search-on-the-server" />
 
 While `loading` or `readOnly` is set, the trigger stays focusable but doesn't open.
 
@@ -122,34 +103,19 @@ While `loading` or `readOnly` is set, the trigger stays focusable but doesn't op
 
 Group items under a `Label` when the list has natural sections, such as recent and all projects. A group whose items all fail the search hides itself.
 
-```tsx
-<Combobox.List>
-  <Combobox.Group>
-    <Combobox.Label>Recent</Combobox.Label>
-    <Combobox.Item value="atlas">Atlas</Combobox.Item>
-  </Combobox.Group>
-  <Combobox.Separator />
-  <Combobox.Group>
-    <Combobox.Label>All projects</Combobox.Label>
-    <Combobox.Item value="beacon">Beacon</Combobox.Item>
-    <Combobox.Item value="compass">Compass</Combobox.Item>
-  </Combobox.Group>
-</Combobox.List>
-```
+<Example src="./examples/grouped-options" />
 
 ### Rich items
 
 An item can hold an avatar or a second line of text. Search reads the text inside the children. When the children are components whose text isn't in the JSX, set `label` to the text to search.
 
-```tsx
-<Combobox.Item value={user.id} label={user.name}>
-  <UserRow user={user} />
-</Combobox.Item>
-```
+<Example src="./examples/rich-items" />
 
 ### Invalid value
 
 Set `error` on `Trigger` when a form check fails. The trigger shows a red border and sets `aria-invalid`. Put the message in text next to the field, because the colour alone doesn't say what is wrong.
+
+<Example src="./examples/invalid-value" />
 
 ## Props
 
