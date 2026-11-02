@@ -253,7 +253,9 @@ export function Hero() {
   return (
     <Box className="kd-hero" aria-hidden inert>
       <Box className="kd-hero-stage">
-        <Builder />
+        <Box className="kd-device">
+          <Builder />
+        </Box>
       </Box>
     </Box>
   );
