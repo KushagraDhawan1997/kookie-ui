@@ -87,39 +87,13 @@ Fixed and sticky bars sit above the page with a `z-index` of 50 and paint the pa
 
 Actions is a [Flex](/docs/flex), so put the controls in it side by side.
 
-```tsx showLineNumbers
-<Navbar.Actions>
-  <Button iconOnly emphasis="quiet" aria-label="Notifications" tooltip="Notifications">
-    <HugeiconsIcon icon={Notification01Icon} strokeWidth={1.75} />
-  </Button>
-  <DropdownMenu.Root>
-    <DropdownMenu.Trigger>
-      <Button emphasis="quiet">Account</Button>
-    </DropdownMenu.Trigger>
-    <DropdownMenu.Content>{/* Profile, settings, sign out */}</DropdownMenu.Content>
-  </DropdownMenu.Root>
-</Navbar.Actions>
-```
+<Example src="./examples/profile-menu-in-the-actions" />
 
 ### Small screens
 
 Navbar doesn't change at narrow widths, so plan for them. Hide the links below `md` with the Flex `display` prop, and offer them from a menu button in the actions.
 
-```tsx showLineNumbers
-<Navbar.Navigation aria-label="Main" display={{ initial: 'none', md: 'flex' }}>
-  {/* links */}
-</Navbar.Navigation>
-<Navbar.Actions>
-  <DropdownMenu.Root>
-    <DropdownMenu.Trigger>
-      <Button iconOnly emphasis="quiet" aria-label="Menu">
-        <HugeiconsIcon icon={Menu01Icon} strokeWidth={1.75} />
-      </Button>
-    </DropdownMenu.Trigger>
-    <DropdownMenu.Content>{/* the same links */}</DropdownMenu.Content>
-  </DropdownMenu.Root>
-</Navbar.Actions>
-```
+<Example src="./examples/small-screens" />
 
 ## Props
 

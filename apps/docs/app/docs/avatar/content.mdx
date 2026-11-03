@@ -65,35 +65,43 @@ export function Author({ name, email, photo }: { name: string; email: string; ph
 
 `status` adds a dot in the colour you pass, in the bottom corner on the end side: bottom-right in left-to-right text, bottom-left in right-to-left. It grows with the avatar. `statusLabel` names the dot for screen readers.
 
-```tsx
-<Avatar fallback="MK" status="green" statusLabel="Online" />
-```
+<Example src="./examples/presence" />
 
 ### Count or badge
 
 `badge` puts any content in the same corner, such as a [Chip](/docs/chip) with a count. `badge` and `status` share the corner, so pass only one. If you pass both, `badge` wins.
 
-```tsx
-<Avatar fallback="MK" badge={<Chip size="1" variant="solid" color="red">3</Chip>} />
-```
+<Example src="./examples/count-or-badge" />
 
 ### Logo that must not be cropped
 
 `fit` sets how the image fills the square. The default `cover` crops to fill. Use `contain` for a logo that must show in full.
 
-```tsx
-<Avatar src="/logos/acme.png" alt="Acme" fallback="AC" fit="contain" radius="medium" />
-```
+<Example src="./examples/logo-that-must-not-be-cropped" />
 
 ### Avatar that opens a profile
 
 Render a link or a button with `asChild`. The avatar adds a hover filter to the image and a focus ring for the keyboard. Give the element a name, because initials alone don't say where it goes.
 
-```tsx
-<Avatar asChild fallback="MK">
-  <a href="/people/mira" aria-label="Mira Kapoor's profile" />
-</Avatar>
-```
+<Example src="./examples/avatar-that-opens-a-profile" />
+
+### Team member list
+
+Keep one size and one variant for every avatar in a list, so the names line up. Show the role in text and the access level in a [Chip](/docs/chip).
+
+<Example src="./examples/team-member-list" />
+
+### Profile header
+
+A large avatar anchors a profile page or card. Use `solid` for the one person the page is about.
+
+<Example src="./examples/profile-header" />
+
+### Members with an invite
+
+An outline [Button](/docs/button) with `radius="full"` at the end of a row of avatars reads as an empty slot to fill. Give each avatar an `alt` with the name, because no text sits beside it.
+
+<Example src="./examples/members-with-an-invite" />
 
 ## Props
 

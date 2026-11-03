@@ -124,7 +124,8 @@
   margin-top: var(--markdown-text-gap);
 }
 
-.markdown img {
+/* Prose images only: a Kookie Image in an example keeps its own size and corner. */
+.markdown img:where(:not([class*='kui-'])) {
   display: block;
   max-width: 100%;
   height: auto;

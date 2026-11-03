@@ -106,40 +106,31 @@ With every value but `none`, an attached file opens the chatbar, and leaving it 
 
 AttachTrigger is a quiet icon-only Button with a paperclip, at the Chatbar's size. Put it at the start of the open row. Pass your own icon as its child, or render your own Button through `asChild`.
 
-```tsx
-<Chatbar.RowStart>
-  <Chatbar.AttachTrigger>
-    <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
-  </Chatbar.AttachTrigger>
-</Chatbar.RowStart>
-```
+<Example src="./examples/attach-button" />
 
 ### Files people paste or drop
 
 Paste and drop are on by default. Both follow the same rules as the picker. `pasteAccept` sets other types for paste, such as images only.
 
-```tsx
-<Chatbar.Root accept=".pdf,.csv" pasteAccept="image/*" maxFileSize={10 * 1024 * 1024}>
-  <Chatbar.AttachmentsRow />
-  <Chatbar.Textarea aria-label="Message" />
-</Chatbar.Root>
-```
+<Example src="./examples/files-people-paste-or-drop" />
 
 ### Upload progress
 
 Control `attachments` and set each one's `status` to `uploading`, `error` or `done`. An uploading pill shows a spinner, and a screen reader reads its size and status with its name.
 
+<Example src="./examples/upload-progress" />
+
 ### Things that aren't files
 
 `Chatbar.Item` shows a pill for an object the message is about, such as a selected layer. Your app owns the list, so `onRemove` only tells you it was pressed. Leave `onRemove` out for a pill that can't be removed.
 
-```tsx
-<Chatbar.AttachmentsRow>
-  <Chatbar.Item icon={<HugeiconsIcon icon={Layers01Icon} strokeWidth={1.75} />} onRemove={clearSelection}>
-    Header frame
-  </Chatbar.Item>
-</Chatbar.AttachmentsRow>
-```
+<Example src="./examples/things-that-arent-files" />
+
+### Assistant start screen
+
+An open `soft` chatbar under a question gives an assistant a clear place to start. With `sendMode="always"` the send button stays in view, disabled until there is text or a file.
+
+<Example src="./examples/assistant-start-screen" />
 
 ## Props
 

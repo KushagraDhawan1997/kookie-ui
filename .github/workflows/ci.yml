@@ -52,6 +52,11 @@ jobs:
       - name: Build
         run: pnpm build:pkg
 
+      # Every live example on a docs page renders against the built package, so an
+      # example can't fall behind the API without failing here.
+      - name: Docs examples
+        run: pnpm --filter docs test
+
       # tsd over the emitted declarations, so the public prop types are
       # checked as consumers see them. tsd rewrites `moduleResolution` to the
       # legacy `node` resolver unless `module` is node16 or nodenext, which

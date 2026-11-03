@@ -98,27 +98,19 @@ Use `ghost` when the accordion sits inside a [Card](/docs/card) or a page sectio
 
 Pass an array to `defaultValue` with `type="multiple"`. Each value is an item's `value`.
 
-```tsx
-<Accordion.Root type="multiple" defaultValue={['shipping', 'returns']} variant="ghost">
-  {/* items */}
-</Accordion.Root>
-```
+<Example src="./examples/open-several-at-once" />
 
 ### Controlled
 
 Hold the open state yourself when another control opens a section, such as a link that jumps to an answer.
 
-```tsx
-const [open, setOpen] = React.useState('refunds');
-
-<Accordion.Root type="single" value={open} onValueChange={setOpen}>
-  {/* items */}
-</Accordion.Root>
-```
+<Example src="./examples/controlled" />
 
 ### Section that can't open
 
 Set `disabled` on an item to keep it closed and skip it with the keyboard. Say why nearby, because a disabled heading doesn't explain itself.
+
+<Example src="./examples/section-that-cant-open" />
 
 ## Props
 

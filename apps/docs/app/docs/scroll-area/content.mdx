@@ -69,25 +69,13 @@ export function ActivityPanel({ events }: { events: { id: string; text: string }
 
 A row of filters or cards that is wider than its container scrolls sideways, and the page keeps the vertical scroll. [Table](/docs/table) already wraps itself in a scroll area, so it doesn't need one.
 
-```tsx
-<ScrollArea scrollbars="horizontal">
-  <Flex gap="2" pb="3">
-    {filters.map((filter) => (
-      <Chip key={filter}>{filter}</Chip>
-    ))}
-  </Flex>
-</ScrollArea>
-```
+<Example src="./examples/horizontal-row" />
 
 ### Scrolling with the keyboard
 
 While the content overflows, the viewport is in the tab order, so keyboard users can reach it and scroll with the arrow keys. The area then shows a focus ring. Give it an `aria-label`, so a screen reader can say what it holds.
 
-```tsx
-<ScrollArea height="240px" aria-label="Terms of service">
-  <Text as="p">…</Text>
-</ScrollArea>
-```
+<Example src="./examples/scrolling-with-the-keyboard" />
 
 ## Props
 

@@ -53,40 +53,19 @@ The bar takes the accent colour. Set `color` to change the bar and the text toge
 
 Inside running copy, match the paragraph's size, so the quote reads as part of the text.
 
-```tsx
-<Flex direction="column" gap="3">
-  <Text as="p" size="3">
-    The review found one main cause of the outage.
-  </Text>
-  <Blockquote size="3" cite="https://example.com/review">
-    The retry limit was set per request, not per user.
-  </Blockquote>
-</Flex>
-```
+<Example src="./examples/quote-in-an-article" />
 
 ### Pull quote
 
 A larger size and a lighter weight lift one line out of a long page.
 
-```tsx
-<Blockquote
-  size="6"
-  weight="regular"
-  wrap="balance"
->
-  Ship the smallest change that tells you something.
-</Blockquote>
-```
+<Example src="./examples/pull-quote" />
 
 ### Quote in a list of reviews
 
 Use `emphasis="medium"` when the quote sits next to stronger content, such as a product name.
 
-```tsx
-<Blockquote size="2" emphasis="medium">
-  Setup took ten minutes.
-</Blockquote>
-```
+<Example src="./examples/quote-in-a-list-of-reviews" />
 
 ## Props
 

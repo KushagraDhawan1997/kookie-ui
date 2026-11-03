@@ -90,55 +90,26 @@ export function FileCard({ name, onRename, onDuplicate, onDelete }: { name: stri
 
 Wrap each row in its own `Root` and `Trigger`, so the menu acts on the row under the pointer. Keep the same actions in a row button for people who can't right-click.
 
-```tsx
-{files.map((file) => (
-  <ContextMenu.Root key={file.id}>
-    <ContextMenu.Trigger>
-      <Table.Row>{/* cells */}</Table.Row>
-    </ContextMenu.Trigger>
-    <ContextMenu.Content>
-      <ContextMenu.Item onSelect={() => open(file)}>Open</ContextMenu.Item>
-      <ContextMenu.Item onSelect={() => share(file)}>Share</ContextMenu.Item>
-    </ContextMenu.Content>
-  </ContextMenu.Root>
-))}
-```
+<Example src="./examples/rows-in-a-list" />
 
 ### Canvas options
 
 Use `CheckboxItem` and a `RadioGroup` for settings that belong to the area, such as a design canvas. Each choice closes the menu unless you call `event.preventDefault()` in `onSelect`.
 
-```tsx
-<ContextMenu.Content>
-  <ContextMenu.CheckboxItem checked={showGrid} onCheckedChange={setShowGrid}>
-    Show grid
-  </ContextMenu.CheckboxItem>
-  <ContextMenu.Separator />
-  <ContextMenu.Label>Zoom</ContextMenu.Label>
-  <ContextMenu.RadioGroup value={zoom} onValueChange={setZoom}>
-    <ContextMenu.RadioItem value="fit">Fit to screen</ContextMenu.RadioItem>
-    <ContextMenu.RadioItem value="100">100%</ContextMenu.RadioItem>
-  </ContextMenu.RadioGroup>
-</ContextMenu.Content>
-```
+<Example src="./examples/canvas-options" />
 
 ### Nested actions
 
 Group related targets under a `Sub`. Submenus always open beside the menu.
 
-```tsx
-<ContextMenu.Sub>
-  <ContextMenu.SubTrigger>Move to</ContextMenu.SubTrigger>
-  <ContextMenu.SubContent>
-    <ContextMenu.Item>Drafts</ContextMenu.Item>
-    <ContextMenu.Item>Archive</ContextMenu.Item>
-  </ContextMenu.SubContent>
-</ContextMenu.Sub>
-```
+<Example src="./examples/nested-actions" />
 
 ### Shortcut hints
 
 `shortcut` shows a key hint at the end of the item and sets `aria-keyshortcuts`. It doesn't bind the key, so register the shortcut in your app as well.
+
+<Example src="./examples/shortcut-hints" />
+
 
 ## Props
 

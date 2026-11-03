@@ -68,43 +68,25 @@ With no `color` and no `emphasis`, Text inherits its colour, so it matches the B
 
 Set `color` so the message reads as an error, and keep it at the field's size.
 
-```tsx
-<Text as="p" size="1" color="red">
-  Enter an email address with an @ sign.
-</Text>
-```
+<Example src="./examples/error-message-under-a-field" />
 
 ### One line in a narrow space
 
 `truncate` keeps the text on one line and ends it with an ellipsis. Give the parent a width so the text has a limit to truncate against.
 
-```tsx
-<Box maxWidth="240px">
-  <Text as="div" size="2" truncate>
-    quarterly-report-final-version-approved.pdf
-  </Text>
-</Box>
-```
+<Example src="./examples/one-line-in-a-narrow-space" />
 
 ### Text aligned to the edge of a box
 
 `trim` removes the space above the first line or below the last line, so the text lines up with an icon or the edge of a card. Use `start`, `end` or `both`.
 
-```tsx
-<Text as="p" size="3" trim="both">
-  Your plan renews on 1 March.
-</Text>
-```
+<Example src="./examples/text-aligned-to-the-edge-of-a-box" />
 
 ### Styling another element
 
 `asChild` puts Text's styles on its child, such as a `time` element.
 
-```tsx
-<Text asChild size="1" emphasis="quiet">
-  <time dateTime="2026-03-01">1 March</time>
-</Text>
-```
+<Example src="./examples/styling-another-element" />
 
 ## Props
 

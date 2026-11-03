@@ -75,29 +75,19 @@ import { Theme, TooltipProvider } from '@kushagradhawan/kookie-ui';
 
 Pair the action's name with its shortcut, so people learn it while they use the pointer.
 
-```tsx
-<Tooltip content="Bold ⌘B">
-  <Button iconOnly emphasis="quiet" aria-label="Bold">
-    <HugeiconsIcon icon={TextBoldIcon} strokeWidth={1.75} />
-  </Button>
-</Tooltip>
-```
+<Example src="./examples/keyboard-shortcut" />
 
 ### Truncated text
 
 When a label is cut short with an ellipsis, a tooltip can show the full text. The trigger must be able to take focus, such as a link or a button, so keyboard users can reach it too.
 
+<Example src="./examples/truncated-text" />
+
 ### Side placement in a sidebar
 
 In a narrow sidebar of icon buttons, set `side="right"` so the tooltip opens into the page instead of over the next button.
 
-```tsx
-<Tooltip content="Projects" side="right">
-  <Button iconOnly emphasis="quiet" aria-label="Projects">
-    <HugeiconsIcon icon={Folder01Icon} strokeWidth={1.75} />
-  </Button>
-</Tooltip>
-```
+<Example src="./examples/side-placement-in-a-sidebar" />
 
 ## Props
 

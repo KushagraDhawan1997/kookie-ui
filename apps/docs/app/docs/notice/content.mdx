@@ -60,30 +60,19 @@ A button in the `action` that sets no `size` takes the notice's size, so it cent
 
 A notice with no action and no dismiss button is right when the app will clear it on its own, such as when the connection comes back.
 
-```tsx
-<Notice icon={<HugeiconsIcon icon={WifiDisconnected01Icon} strokeWidth={1.75} />}>
-  You're offline. Changes will sync when you reconnect.
-</Notice>
-```
+<Example src="./examples/lost-connection" />
 
 ### Asking before a costly step
 
 `Confirmation` holds a question with a quiet no and a loud yes, and no dismiss button, because closing a question doesn't answer it. Name the yes after the action. `busy` shows a spinner on the yes and disables the no while the action runs.
 
-```tsx
-<Confirmation
-  confirmLabel="Allow up to $18"
-  onConfirm={onAllow}
-  onCancel={onDecline}
-  busy={allowing}
->
-  This run may use more than your daily budget.
-</Confirmation>
-```
+<Example src="./examples/asking-before-a-costly-step" />
 
 ### In a chat
 
 Pass notices to the `notices` slot of `Chatbar.Root`. They sit above the composer and take the chatbar's size.
+
+<Example src="./examples/in-a-chat" />
 
 ## Props
 

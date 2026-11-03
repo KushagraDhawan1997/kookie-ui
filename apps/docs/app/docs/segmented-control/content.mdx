@@ -72,49 +72,19 @@ export function ProjectsHeader({ view, setView }: { view: string; setView: (view
 
 `iconOnly` makes each item a square as wide as it is tall. The item has no visible text, so give each one an `aria-label`.
 
-```tsx
-<SegmentedControl.Root defaultValue="left" aria-label="Text alignment">
-  <SegmentedControl.Item value="left" iconOnly aria-label="Align left">
-    <HugeiconsIcon icon={TextAlignLeftIcon} strokeWidth={1.75} />
-  </SegmentedControl.Item>
-  <SegmentedControl.Item value="center" iconOnly aria-label="Align centre">
-    <HugeiconsIcon icon={TextAlignCenterIcon} strokeWidth={1.75} />
-  </SegmentedControl.Item>
-  <SegmentedControl.Item value="right" iconOnly aria-label="Align right">
-    <HugeiconsIcon icon={TextAlignRightIcon} strokeWidth={1.75} />
-  </SegmentedControl.Item>
-</SegmentedControl.Root>
-```
+<Example src="./examples/icon-only" />
 
 ### Icon and label
 
 Put the icon before the text, inside the item. The item sizes the icon, so don't size it yourself.
 
-```tsx
-<SegmentedControl.Root defaultValue="grid" aria-label="View">
-  <SegmentedControl.Item value="list">
-    <HugeiconsIcon icon={Menu01Icon} strokeWidth={1.75} />
-    List
-  </SegmentedControl.Item>
-  <SegmentedControl.Item value="grid">
-    <HugeiconsIcon icon={GridViewIcon} strokeWidth={1.75} />
-    Grid
-  </SegmentedControl.Item>
-</SegmentedControl.Root>
-```
+<Example src="./examples/icon-and-label" />
 
 ### Time range
 
 A row of periods above a chart is a common use. The chart redraws as soon as the selection changes.
 
-```tsx
-<SegmentedControl.Root value={range} onValueChange={setRange} aria-label="Time range">
-  <SegmentedControl.Item value="day">Day</SegmentedControl.Item>
-  <SegmentedControl.Item value="week">Week</SegmentedControl.Item>
-  <SegmentedControl.Item value="month">Month</SegmentedControl.Item>
-  <SegmentedControl.Item value="year">Year</SegmentedControl.Item>
-</SegmentedControl.Root>
-```
+<Example src="./examples/time-range" />
 
 ## Props
 

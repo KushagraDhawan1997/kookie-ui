@@ -23,14 +23,15 @@ export function markdownFor(pagePath: string): string | null {
   const chapter = BY_SLUG.get(clean.slice(1));
   if (chapter) {
     const source = read(path.join(process.cwd(), 'content', `${chapter.slug}.mdx`));
-    return source === null ? null : document(chapter.title, chapter.blurb, matter(source).content, null);
+    return source === null ? null : document(chapter.title, chapter.blurb, matter(source).content, null, path.join(process.cwd(), 'content'));
   }
 
-  const source = read(path.join(process.cwd(), 'app', ...clean.split('/').filter(Boolean), 'content.mdx'));
+  const dir = path.join(process.cwd(), 'app', ...clean.split('/').filter(Boolean));
+  const source = read(path.join(dir, 'content.mdx'));
   if (source === null) return null;
   const { data, content } = matter(source);
   const block = /^\/docs\/blocks\/([^/]+)$/.exec(clean)?.[1] ?? null;
-  return document(String(data.title ?? ''), data.description ? String(data.description) : undefined, content, block);
+  return document(String(data.title ?? ''), data.description ? String(data.description) : undefined, content, block, dir);
 }
 
 function read(file: string): string | null {
@@ -41,10 +42,10 @@ function read(file: string): string | null {
   }
 }
 
-function document(title: string, description: string | undefined, body: string, block: string | null): string {
+function document(title: string, description: string | undefined, body: string, block: string | null, dir: string): string {
   const parts = [`# ${title}`];
   if (description) parts.push(description);
-  parts.push(toMarkdown(body, block));
+  parts.push(toMarkdown(body, block, dir));
   return `${dropEmptySections(parts.join('\n\n').replace(/\n{3,}/g, '\n\n')).trim()}\n`;
 }
 
@@ -81,9 +82,9 @@ const TAG = /<(\/)?([A-Za-z][\w.]*)((?:[^>{}]|\{(?:[^{}]|\{[^{}]*\})*\})*?)(\/)?
  * MDX to Markdown, line by line. Fences pass through (their meta string is dropped, the language
  * kept). Outside fences, `import`/`export` lines go, and a live component is replaced by what a
  * reader with no pixels can use: a playground goes, a preview becomes its source, and the block
- * installation steps are written out.
+ * installation steps are written out. An `Example` becomes its file's source.
  */
-function toMarkdown(mdx: string, block: string | null): string {
+function toMarkdown(mdx: string, block: string | null, dir: string): string {
   const lines = mdx.split('\n');
   const out: string[] = [];
   let open: string | null = null;
@@ -115,7 +116,7 @@ function toMarkdown(mdx: string, block: string | null): string {
       const end = jsxEnd(lines, i);
       const blockLines = lines.slice(i, end + 1);
       i = end;
-      out.push(expand(jsx[1], blockLines, block));
+      out.push(expand(jsx[1], blockLines, block, dir));
       continue;
     }
 
@@ -148,11 +149,19 @@ function dedent(lines: string[]): string {
   return lines.map((l) => l.slice(Number.isFinite(indent) ? indent : 0)).join('\n');
 }
 
-function expand(name: string, lines: string[], block: string | null): string {
+function expand(name: string, lines: string[], block: string | null, dir: string): string {
   if (name.endsWith('Playground')) return '';
+  if (name === 'Example') return example(lines.join('\n'), dir);
   if (name === 'BlockInstallation') return block ? installation(block) : '';
   if (name === 'PreviewBlock') return lines.length > 2 ? fence(dedent(lines.slice(1, -1))) : '';
   return fence(dedent(lines));
+}
+
+/** `<Example src="./examples/name" />` is the file it renders, as a fence. */
+function example(tag: string, dir: string): string {
+  const src = /\bsrc=["']([^"']+)["']/.exec(tag)?.[1];
+  const code = src ? read(path.join(dir, src.endsWith('.tsx') ? src : `${src}.tsx`)) : null;
+  return code === null ? '' : fence(code);
 }
 
 /** The words and files `BlockInstallation` renders on the page, as Markdown. */

@@ -72,42 +72,19 @@ A single `Checkbox` stands on its own. A group is a compound component:
 
 Wrap a lone checkbox and its text in `Text as="label"`, so the text toggles the box too.
 
-```tsx
-<Text as="label" size="2">
-  <Flex gap="2">
-    <Checkbox defaultChecked />
-    Remember me on this device
-  </Flex>
-</Text>
-```
+<Example src="./examples/single-checkbox" />
 
 ### Select all
 
 A parent checkbox is `'indeterminate'` while only some of its children are checked. Clicking it checks them all.
 
-```tsx
-const allChecked = selected.length === rows.length;
-const someChecked = selected.length > 0 && !allChecked;
-
-<Checkbox
-  aria-label="Select all rows"
-  checked={allChecked ? true : someChecked ? 'indeterminate' : false}
-  onCheckedChange={(checked) => setSelected(checked === true ? rows.map((r) => r.id) : [])}
-/>
-```
+<Example src="./examples/select-all" />
 
 ### Required agreement
 
 `required` stops the form from submitting until the box is checked. Inside a `form`, the checkbox submits its `name` and `value` like a native input.
 
-```tsx
-<Text as="label" size="2">
-  <Flex gap="2">
-    <Checkbox name="terms" required />
-    I agree to the terms of service
-  </Flex>
-</Text>
-```
+<Example src="./examples/required-agreement" />
 
 ## Props
 

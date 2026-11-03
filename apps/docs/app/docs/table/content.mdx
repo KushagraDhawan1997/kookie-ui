@@ -98,28 +98,19 @@ export function MembersTable({ members }: { members: { id: string; name: string;
 
 The table scrolls sideways inside its root when it is wider than its container, so the page doesn't scroll. Set `minWidth` on a column that must not get narrower than its content.
 
-```tsx
-<Table.ColumnHeaderCell minWidth="200px">Project</Table.ColumnHeaderCell>
-```
+<Example src="./examples/wide-tables-on-small-screens" />
 
 ### Fixed column widths
 
 `layout="fixed"` makes columns take the widths you set on the header cells instead of sizing to their content. Use it when rows load in pages and the columns must not shift.
 
-```tsx
-<Table.Root layout="fixed">
-  <Table.Header>
-    <Table.Row>
-      <Table.ColumnHeaderCell width="40%">Name</Table.ColumnHeaderCell>
-      <Table.ColumnHeaderCell>Updated</Table.ColumnHeaderCell>
-    </Table.Row>
-  </Table.Header>
-</Table.Root>
-```
+<Example src="./examples/fixed-column-widths" />
 
 ### Rows with mixed heights
 
 Cells line up to the top by default. Set `align="center"` on a row that mixes an [Avatar](/docs/avatar) with a line of text, so the text centres beside it.
+
+<Example src="./examples/rows-with-mixed-heights" />
 
 ## Props
 

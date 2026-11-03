@@ -108,50 +108,25 @@ The rows take their size from `Shell.Root size`: `'1'`, `'2'` or `'3'`. Without 
 
 `badge` shows a [Chip](/docs/chip) at the end of the row. Pass a string for a soft chip, or an object to set its look.
 
-```tsx
-<Sidebar.MenuButton badge={{ content: 'New', variant: 'solid', color: 'crimson' }}>
-  <HugeiconsIcon icon={SparklesIcon} strokeWidth={1.75} />
-  Features
-</Sidebar.MenuButton>
-```
+<Example src="./examples/unread-count" />
 
 ### Keyboard shortcut
 
 `shortcut` shows a [Kbd](/docs/kbd) at the end of the row. It only shows the keys. Bind the shortcut yourself.
 
-```tsx
-<Sidebar.MenuButton shortcut="⌘K">
-  <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
-  Search
-</Sidebar.MenuButton>
-```
+<Example src="./examples/keyboard-shortcut" />
 
 ### Nested pages
 
 `Sidebar.MenuSub` opens and closes its rows in place. Set `defaultOpen` when the current page is inside it. In a Rail, the same sub-menu opens as a dropdown beside the tile.
 
-```tsx showLineNumbers
-<Sidebar.MenuItem>
-  <Sidebar.MenuSub defaultOpen>
-    <Sidebar.MenuSubTrigger>Projects</Sidebar.MenuSubTrigger>
-    <Sidebar.MenuSubContent>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton asChild isActive>
-          <Link href="/projects/atlas">Atlas</Link>
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.MenuSubContent>
-  </Sidebar.MenuSub>
-</Sidebar.MenuItem>
-```
+<Example src="./examples/nested-pages" />
 
 ### Filtering the rows
 
 `Sidebar.Search` is controlled: filter the rows with its `value`. In a Rail it becomes a search tile that opens a popover, and its children render there as the results.
 
-```tsx
-<Sidebar.Search value={query} onValueChange={setQuery} placeholder="Search pages..." />
-```
+<Example src="./examples/filtering-the-rows" />
 
 ## Props
 

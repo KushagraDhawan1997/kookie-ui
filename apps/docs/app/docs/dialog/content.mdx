@@ -99,26 +99,19 @@ The panel fills its width up to that cap, minus the space kept around it. Set `m
 
 Hold the open state yourself to close the dialog after a request succeeds, rather than when the button is pressed.
 
-```tsx
-const [open, setOpen] = React.useState(false);
-
-async function save() {
-  await updateProject();
-  setOpen(false);
-}
-
-<Dialog.Root open={open} onOpenChange={setOpen}>
-  {/* trigger and content */}
-</Dialog.Root>
-```
+<Example src="./examples/controlled" />
 
 ### Content that bleeds to the edge
 
 The panel publishes its padding, so a child with `m="bleed"` reaches the panel's edges. Use it for an image or a full-width list at the top of the dialog.
 
+<Example src="./examples/content-that-bleeds-to-the-edge" />
+
 ### Long content
 
 When the panel is taller than the window, the overlay scrolls and the panel moves with it. Keep the title and the actions in the content so they scroll into view together.
+
+<Example src="./examples/long-content" />
 
 ## Props
 

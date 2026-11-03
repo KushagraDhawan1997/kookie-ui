@@ -72,46 +72,19 @@ export function DeliveryOptions() {
 
 Pass your own layout as children. The whole block becomes the label, so a click anywhere on it selects the option.
 
-```tsx
-<RadioGroup.Root defaultValue="monthly" aria-label="Billing period">
-  <RadioGroup.Item value="monthly">
-    <Flex direction="column">
-      <Text weight="medium">Monthly</Text>
-      <Text emphasis="medium">Billed every month, cancel any time</Text>
-    </Flex>
-  </RadioGroup.Item>
-  <RadioGroup.Item value="yearly">
-    <Flex direction="column">
-      <Text weight="medium">Yearly</Text>
-      <Text emphasis="medium">Two months free, billed once a year</Text>
-    </Flex>
-  </RadioGroup.Item>
-</RadioGroup.Root>
-```
+<Example src="./examples/options-with-a-description" />
 
 ### Required answer
 
 Leave out `defaultValue` and set `required` when people must make a choice. The form won't submit until one option is selected.
 
-```tsx
-<RadioGroup.Root name="role" required aria-labelledby="role-label">
-  <RadioGroup.Item value="admin">Admin</RadioGroup.Item>
-  <RadioGroup.Item value="member">Member</RadioGroup.Item>
-</RadioGroup.Root>
-```
+<Example src="./examples/required-answer" />
 
 ### Native radio inputs
 
 `Radio` renders a real `input type="radio"`. Inputs with the same `name` form a group, as in plain HTML. `onValueChange` fires with the input's `value` when it is selected.
 
-```tsx
-<Text as="label" size="2">
-  <Flex gap="2">
-    <Radio name="plan" value="free" defaultChecked />
-    Free
-  </Flex>
-</Text>
-```
+<Example src="./examples/native-radio-inputs" />
 
 ## Props
 

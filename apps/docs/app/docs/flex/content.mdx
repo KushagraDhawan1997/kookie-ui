@@ -66,37 +66,23 @@ export function MemberRow({ name, email }: { name: string; email: string }) {
 
 ### Page header
 
-```tsx
-<Flex justify="between" align="center" gap="3">
-  <Heading size="5">Projects</Heading>
-  <Button emphasis="loud">New project</Button>
-</Flex>
-```
+<Example src="./examples/page-header" />
 
 ### Stacked form fields
 
-```tsx
-<Flex direction="column" gap="4" maxWidth="400px">
-  <TextField.Root aria-label="Name" />
-  <TextField.Root aria-label="Email" type="email" />
-</Flex>
-```
+<Example src="./examples/stacked-form-fields" />
 
 ### Wrapping chips
 
 `wrap="wrap"` moves children to a new line when the row runs out of room. Set `gapY` when the rows need a different gap from the items.
 
-```tsx
-<Flex wrap="wrap" gapX="2" gapY="2">
-  {tags.map((tag) => (
-    <Chip key={tag}>{tag}</Chip>
-  ))}
-</Flex>
-```
+<Example src="./examples/wrapping-chips" />
 
 ### Hidden on small screens
 
 `display` accepts a responsive object. `display={{ initial: 'none', md: 'flex' }}` hides the row below 1024 pixels.
+
+<Example src="./examples/hidden-on-small-screens" />
 
 ## Props
 
