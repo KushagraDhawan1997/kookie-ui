@@ -9,6 +9,7 @@ import { usePane, paneAttributes, usePresentationTable } from './shell-pane.js';
 import { splitHandles, useInitialPaneSize, useResizablePane, type SizeChangeMeta } from './shell-resizable.js';
 import { useInsetRegistration, warnOnce } from './shell-store.js';
 import { detailRest, endAnchoredGrowth, toPaneValue, withoutRemovedPaneProps } from './shell-rest.js';
+import { PageScope } from './page-scope.js';
 import { readBreakpoint } from '../../hooks/use-breakpoint.js';
 import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps } from '../shell.types.js';
 
@@ -150,7 +151,9 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
         } as CSSPropertiesWithVars
       }
     >
-      <div className="kui-ShellInspectorContent">{content}</div>
+      <div className="kui-ShellInspectorContent">
+        <PageScope>{content}</PageScope>
+      </div>
       {handle}
     </div>
   );

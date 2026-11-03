@@ -117,7 +117,13 @@ describe('in a Dialog', () => {
     const dialog = await waitFor(() => document.querySelector<HTMLElement>('[role=dialog]')!);
     const labelledBy = dialog.getAttribute('aria-labelledby')!;
     expect(document.getElementById(labelledBy)?.textContent).toBe('Settings');
-    dialog.querySelector<HTMLButtonElement>("[aria-label='Close']")!.click();
+    // After a push the dialog is named by the top screen, and no id is shared with a hidden one.
+    dialog.querySelector<HTMLButtonElement>('.kui-NavigatorLink')!.click();
+    await waitFor(() => expect(document.getElementById(dialog.getAttribute('aria-labelledby')!)?.textContent).toBe('Notifications'));
+    expect(dialog.querySelectorAll(`[id="${dialog.getAttribute('aria-labelledby')}"]`)).toHaveLength(1);
+    [...dialog.querySelectorAll<HTMLButtonElement>("[aria-label='Back to Settings']")].find((b) => b.offsetParent !== null)!.click();
+    await waitFor(() => expect(document.getElementById(dialog.getAttribute('aria-labelledby')!)?.textContent).toBe('Settings'));
+    [...dialog.querySelectorAll<HTMLButtonElement>("[aria-label='Close']")].find((b) => b.offsetParent !== null)!.click();
     await waitFor(() => expect(open).toBe(false));
   });
 });

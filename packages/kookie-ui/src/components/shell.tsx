@@ -52,6 +52,7 @@ import { useShell, useSidebarMode } from './shell.context.js';
 import { useResponsivePresentation } from './shell.hooks.js';
 import { readBreakpoint } from '../hooks/use-breakpoint.js';
 import { useThemeSize } from '../hooks/theme-size.js';
+import { PageScope } from './_internal/page-scope.js';
 import { PaneChromeScope, PaneFooter, PaneHeader, Scroll, ShellContentContext, ShellSizeContext, ShellWindowContext } from './_internal/pane-chrome.js';
 import { onPageScrollMediaChange, pageScrollMatches } from './_internal/shell-page-scroll.js';
 import type { PaneSize, PaneHeaderProps, PaneFooterProps, ScrollProps } from './_internal/pane-chrome.js';
@@ -784,7 +785,9 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
       }
     >
       <div className="kui-ShellPanelContent">
-        <PaneChromeScope>{content}</PaneChromeScope>
+        <PaneChromeScope>
+          <PageScope>{content}</PageScope>
+        </PaneChromeScope>
       </div>
       {handle}
     </div>
@@ -808,7 +811,10 @@ const Content = React.forwardRef<HTMLElement, ShellContentProps>(({ className, i
   useInsetRegistration('content', inset);
   return (
     <main {...props} ref={ref} className={classNames('kui-ShellContent', className)} data-inset={inset || undefined}>
-      <ShellContentContext.Provider value={true}>{children}</ShellContentContext.Provider>
+      {/* Each pane holds its own page store, so a band's title can mirror the page beside it. */}
+      <ShellContentContext.Provider value={true}>
+        <PageScope>{children}</PageScope>
+      </ShellContentContext.Provider>
     </main>
   );
 });

@@ -158,6 +158,17 @@
   flex-shrink: 1;
 }
 
+/* A mirroring title is the page's own, said again in the band: silent while the page's large
+   title is on screen, shown at once when it is not. Paint only, so the clusters beside it never
+   move when someone scrolls. */
+.kui-ToolbarTitle:where([data-mirror]) {
+  opacity: 0;
+}
+
+.kui-ToolbarTitle:where([data-mirror][data-collapsed]) {
+  opacity: 1;
+}
+
 /* A title is a different kind of thing from the controls beside it, so it takes more air than
    they take from each other. It reaches inside a cluster, since a band is often written
    <Flex>{back}{title}</Flex>. No air against the row's own ends. */

@@ -9,6 +9,7 @@ import { usePane, paneAttributes, usePresentationTable } from './shell-pane.js';
 import { splitHandles, useInitialPaneSize, useResizablePane, type SizeChangeMeta } from './shell-resizable.js';
 import { useInsetRegistration, warnOnce } from './shell-store.js';
 import { bottomAnchoredGrowth, detailRest, toPaneValue, withoutRemovedPaneProps } from './shell-rest.js';
+import { PageScope } from './page-scope.js';
 import { readBreakpoint } from '../../hooks/use-breakpoint.js';
 import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps } from '../shell.types.js';
 
@@ -148,7 +149,9 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((props
         } as CSSPropertiesWithVars
       }
     >
-      <div className="kui-ShellBottomContent">{content}</div>
+      <div className="kui-ShellBottomContent">
+        <PageScope>{content}</PageScope>
+      </div>
       {handle}
     </div>
   );

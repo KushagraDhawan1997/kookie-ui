@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { useLayoutEffect } from 'radix-ui/internal';
+import { useComposedRefs, useLayoutEffect } from 'radix-ui/internal';
 import classNames from 'classnames';
 import { Toolbar as ToolbarPrimitive } from 'radix-ui';
 
@@ -13,6 +13,7 @@ import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSize } from '../hooks/theme-size.js';
 import { layoutPropDefs } from '../props/layout.props.js';
 import { usePaneBandSize } from './_internal/pane-chrome.js';
+import { usePageMirror, usePageScope, usePageTitle } from './_internal/page-scope.js';
 
 import type { ButtonProps } from './button.js';
 import type { LayoutProps } from '../props/layout.props.js';
@@ -671,7 +672,11 @@ ToolbarSeparator.displayName = 'Toolbar.Separator';
 const TITLE_SIZE = { '1': '2', '2': '3', '3': '4', '4': '5' } as const satisfies Record<ToolbarSize, TextProps['size']>;
 
 interface ToolbarTitleProps {
-  /** The title text. With none, the title renders nothing. */
+  /**
+   * The title text. With none, the title mirrors the page in this Shell pane: it shows the
+   * `Page`'s title once that title has scrolled behind the band. Outside a pane with a page, it
+   * renders nothing.
+   */
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
@@ -689,10 +694,16 @@ const ToolbarTitle = React.forwardRef<HTMLSpanElement, ToolbarTitleProps>(
     const toolbar = React.useContext(ToolbarContext);
     const themeSize = useThemeSize<ToolbarSize>(undefined, toolbarRootPropDefs.size);
     const size = toolbar?.size ?? themeSize;
-    if (children === undefined || children === null || children === false) return null;
+    const store = usePageScope();
+    const pageTitle = usePageTitle(store);
+    const mirrorRef = usePageMirror(store);
+    const mirroring = children === undefined || children === null || children === false;
+    const words = mirroring ? pageTitle : children;
+    const ref = useComposedRefs(forwardedRef, mirroring ? mirrorRef : undefined);
+    if (words === undefined || words === null) return null;
     return (
       <Text
-        ref={forwardedRef}
+        ref={ref}
         as="span"
         size={TITLE_SIZE[size]}
         weight="medium"
@@ -700,8 +711,9 @@ const ToolbarTitle = React.forwardRef<HTMLSpanElement, ToolbarTitleProps>(
         id={id}
         style={style}
         className={classNames('kui-ToolbarTitle', className)}
+        data-mirror={mirroring || undefined}
       >
-        {children}
+        {words}
       </Text>
     );
   },
