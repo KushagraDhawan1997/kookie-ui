@@ -1,3 +1,11 @@
+## [0.30.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.29.2...v0.30.0) (2026-11-03)
+
+### Features
+
+* **navigator:** `Navigator`, from Kookie UI v2: a stack of screens of any depth. `root` is the first screen, `path` (or `defaultPath`) lists the values above it, and `screen` turns each value into a `NavigatorScreen`. `NavigatorLink` opens the next screen, `NavigatorBack` closes the top one, and `useNavigator` gives `push`, `pop` and `popTo`. Screens underneath stay mounted, hidden, so they keep their scroll and drafts. A pushed screen takes focus at its top; on pop, focus returns to the control that opened it.
+* **navigator:** in a Shell pane (Sidebar, Panel, Inspector, Bottom), the pane's band holds Back and the top screen's title. Elsewhere each screen draws its own band: Back, the title, and in a Dialog, Sheet or Popover the overlay's close, with the title naming the panel. Pass children with `NavigatorOutlet`, `NavigatorBack` and `NavigatorTitle` for a band of your own.
+* No motion between screens, unlike v2: v1 has none.
+
 ## [0.29.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.28.1...v0.29.2) (2026-10-30)
 
 Ships 0.29.0 and 0.29.1 too, which were never released on their own here.

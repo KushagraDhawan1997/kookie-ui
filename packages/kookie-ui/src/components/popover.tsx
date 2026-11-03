@@ -7,6 +7,7 @@ import { useThemeSizeProps } from '../hooks/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
 import { popoverContentPropDefs } from './popover.props.js';
 import { PortalTheme } from './_internal/portal-theme.js';
+import { NavigatorHostContext, type NavigatorHost } from './_internal/navigator-host.js';
 
 import type { PopoverContentOwnProps } from './popover.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
@@ -31,6 +32,22 @@ const usePopoverContentContext = (caller: string) => {
 };
 
 interface PopoverRootProps extends React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Root> {}
+/** A Navigator screen's title names the popover through the content's label. */
+function PopoverNavigatorTitle({ children }: { children: React.ReactElement<{ id?: string }> }) {
+  const setLabelId = usePopoverContentContext('Navigator')?.setLabelId;
+  const id = React.useId();
+  React.useEffect(() => {
+    setLabelId?.(id);
+    return () => setLabelId?.(undefined);
+  }, [id, setLabelId]);
+  return React.cloneElement(children, { id });
+}
+
+const popoverNavigatorHost: NavigatorHost = {
+  Title: PopoverNavigatorTitle,
+  Close: ({ children }) => <PopoverPrimitive.Close asChild>{children}</PopoverPrimitive.Close>,
+};
+
 const PopoverRoot: React.FC<PopoverRootProps> = (props: PopoverRootProps) => (
   <PopoverPrimitive.Root {...props} />
 );
@@ -81,7 +98,7 @@ const PopoverContent = React.forwardRef<PopoverContentElement, PopoverContentPro
             className={classNames('kui-PopperContent', 'kui-PopoverContent', className)}
           >
             <PopoverContentContext.Provider value={contextValue}>
-              {props.children}
+              <NavigatorHostContext.Provider value={popoverNavigatorHost}>{props.children}</NavigatorHostContext.Provider>
             </PopoverContentContext.Provider>
           </PopoverPrimitive.Content>
         </PortalTheme>
