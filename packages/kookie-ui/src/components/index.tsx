@@ -70,6 +70,30 @@ export {
 } from './toolbar.js';
 export { Page, type PageProps } from './page.js';
 export {
+  Command,
+  CommandTrigger,
+  CommandContent,
+  CommandInput,
+  CommandList,
+  CommandGroup,
+  CommandGroupLabel,
+  CommandCollection,
+  CommandItem,
+  CommandEmpty,
+  type CommandProps,
+  type CommandTriggerProps,
+  type CommandContentProps,
+  type CommandInputProps,
+  type CommandListProps,
+  type CommandGroupProps,
+  type CommandGroupLabelProps,
+  type CommandCollectionProps,
+  type CommandItemProps,
+  type CommandEmptyProps,
+  type CommandOpenChangeDetails,
+  type CommandOpenChangeReason,
+} from './command.js';
+export {
   Navigator,
   NavigatorOutlet,
   NavigatorBack,

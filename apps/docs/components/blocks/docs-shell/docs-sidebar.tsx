@@ -1,10 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import { Avatar, Flex, Shell, Sidebar, TextField, Toolbar, ToolbarButton } from '@kushagradhawan/kookie-ui';
+import { Avatar, Flex, Shell, Sidebar, Toolbar } from '@kushagradhawan/kookie-ui';
 import { Logo } from '@/components/logo';
 import { HugeiconsIcon, type IconSvgElement } from '@hugeicons/react';
-import { Cancel01Icon, Search01Icon } from '@hugeicons/core-free-icons';
+import { DocsSearch } from './docs-search';
 import type { DocsLinkComponent, DocsLinkProps, DocsLogoConfig, DocsNavigationConfig, DocsNavigationItem } from './types';
 
 export interface DocsSidebarProps {
@@ -40,16 +40,6 @@ function renderIcon(icon: DocsNavigationItem['icon']) {
 }
 
 export function DocsSidebar({ navigation, logo, headerActions, footer, pathname = '', linkComponent: LinkComponent = Anchor }: DocsSidebarProps) {
-  const [searchQuery, setSearchQuery] = React.useState('');
-  const [searchOpen, setSearchOpen] = React.useState(false);
-  const query = searchQuery.trim().toLowerCase();
-  const isSearching = query.length > 0;
-
-  const filteredGroups = React.useMemo(() => {
-    if (!query) return navigation.groups;
-    return navigation.groups.map((group) => ({ ...group, items: group.items.filter((item) => item.title.toLowerCase().includes(query)) })).filter((group) => group.items.length > 0);
-  }, [navigation.groups, query]);
-
   const renderItem = (item: DocsNavigationItem, withBadge: boolean) => (
     <Sidebar.MenuItem key={item.href}>
       <Sidebar.MenuButton asChild isActive={pathname === item.href} badge={withBadge ? item.badge : undefined}>
@@ -89,78 +79,40 @@ export function DocsSidebar({ navigation, logo, headerActions, footer, pathname 
     );
   };
 
-  const flatResults = filteredGroups.flatMap((group) => group.items);
-
-  const closeSearch = () => {
-    setSearchOpen(false);
-    setSearchQuery('');
-  };
-
   return (
     <>
       {/* The rows float over the list, as in v2: the list runs the pane's full height, starts
           clear of them, and fades out as it passes under them. */}
       <Shell.PaneHeader float>
         <Toolbar backdrop size="3" aria-label="Site">
-          {searchOpen ? (
-            <>
-              <TextField.Root
-                size="3"
-                autoFocus
-                placeholder="Search..."
-                aria-label="Search the documentation"
-                value={searchQuery}
-                onChange={(event) => setSearchQuery(event.target.value)}
-                onKeyDown={(event) => {
-                  if (event.key === 'Escape') closeSearch();
-                }}
-                style={{ flex: 1 }}
-              >
-                <TextField.Slot>
-                  <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
-                </TextField.Slot>
-              </TextField.Root>
-              <ToolbarButton iconOnly aria-label="Close search" onClick={closeSearch}>
-                <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
-              </ToolbarButton>
-            </>
-          ) : (
-            <>
-              <Flex align="center" gap="4">
-                {logo && (
-                  <LinkComponent href={logo.href ?? '/'} aria-label={logo.alt ?? 'Home'}>
-                    {logo.label ? (
-                      /* THE MARK ALONE (2026-09-27, Kushagra): the word said the name a second time
-                       in a row that is only ever glanced at. `label` stays the accessible name. */
-                      <Logo height="var(--line-height-7)" />
-                    ) : (
-                      <Avatar fallback={logo.alt?.[0] ?? 'K'} size={logo.size ?? '3'} src={logo.src} />
-                    )}
-                  </LinkComponent>
+          <Flex align="center" gap="4">
+            {logo && (
+              <LinkComponent href={logo.href ?? '/'} aria-label={logo.alt ?? 'Home'}>
+                {logo.label ? (
+                  /* THE MARK ALONE (2026-09-27, Kushagra): the word said the name a second time
+                   in a row that is only ever glanced at. `label` stays the accessible name. */
+                  <Logo height="var(--line-height-7)" />
+                ) : (
+                  <Avatar fallback={logo.alt?.[0] ?? 'K'} size={logo.size ?? '3'} src={logo.src} />
                 )}
-                {headerActions}
-              </Flex>
-              <ToolbarButton iconOnly aria-label="Search" onClick={() => setSearchOpen(true)}>
-                <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
-              </ToolbarButton>
-            </>
-          )}
+              </LinkComponent>
+            )}
+            {headerActions}
+          </Flex>
+          {/* Search opens the package's Command, as v2's docs do (2026-11-03). */}
+          <DocsSearch navigation={navigation} linkComponent={LinkComponent} />
         </Toolbar>
       </Shell.PaneHeader>
 
       <Shell.Scroll fade>
-        {isSearching ? (
-          <Sidebar.Menu>{flatResults.map((item) => renderItem(item, true))}</Sidebar.Menu>
-        ) : (
-          filteredGroups.map((group) => (
-            <Sidebar.Group key={group.label}>
-              <Sidebar.GroupLabel>{group.label}</Sidebar.GroupLabel>
-              <Sidebar.GroupContent>
-                <Sidebar.Menu>{group.items.map(renderGroupItem)}</Sidebar.Menu>
-              </Sidebar.GroupContent>
-            </Sidebar.Group>
-          ))
-        )}
+        {navigation.groups.map((group) => (
+          <Sidebar.Group key={group.label}>
+            <Sidebar.GroupLabel>{group.label}</Sidebar.GroupLabel>
+            <Sidebar.GroupContent>
+              <Sidebar.Menu>{group.items.map(renderGroupItem)}</Sidebar.Menu>
+            </Sidebar.GroupContent>
+          </Sidebar.Group>
+        ))}
       </Shell.Scroll>
 
       {footer && (

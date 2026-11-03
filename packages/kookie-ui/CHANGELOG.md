@@ -1,3 +1,11 @@
+## [0.34.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.33.0...v0.34.0) (2026-11-03)
+
+### Features
+
+* **command:** `Command`, from Kookie UI v2: a command palette in a dialog. `Command` takes `items`, `open`, `onOpenChange` and `size`; `CommandContent` holds a `CommandInput` (with a `leading` slot) over a `CommandList`, whose children turn each item into a `CommandItem`. `CommandGroup`, `CommandGroupLabel` and `CommandCollection` build labelled groups from items that carry their own `items`, and `CommandEmpty` shows inside the results when nothing matches.
+* **command:** the field and the results are two panes in a column anchored to the top, so the field never moves as results change. The palette opens with the caret in the field and a row highlighted. Typing narrows the rows without reordering them, and Enter or a press runs a row and closes the palette (`onOpenChange(false, { reason: 'item-press' })`). Pass `filter={null}` to narrow and rank `items` yourself, with `onQueryChange` for the query. A row with `asChild` around a link follows it on Enter.
+* **command:** built on cmdk, where v2 uses Base UI's Autocomplete. Rows are one size step above the palette, as in v2.
+
 ## [0.33.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.32.0...v0.33.0) (2026-11-03)
 
 ### Breaking
