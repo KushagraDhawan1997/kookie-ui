@@ -8,18 +8,19 @@
  * turns a value into a screen, so an app can keep the path in its URL, restore it, or open three
  * levels deep from a link.
  *
- * IT HAS NO REGION OF ITS OWN. The host decides how a screen carries its title. In a Shell pane
- * (Sidebar, Panel, Inspector, Bottom), the pane's band holds Back and the title, and the screens
- * go in the pane's scroller. Anywhere else (a card, a Dialog, a Sheet, a Popover, `Shell.Content`)
- * each screen draws its own band: Back, the title, and the overlay's close when it has one.
+ * IT HAS NO REGION OF ITS OWN. The host decides how a screen carries its title. In
+ * `Shell.Content` a screen is a `Page`, whose large title collapses into the band with Back. In a
+ * side pane (Sidebar, Panel, Inspector, Bottom) the band holds Back and the title from the start.
+ * Anywhere else (a card, a Dialog, a Sheet, a Popover) each screen draws its own band: Back, the
+ * title, and the overlay's close when it has one.
  *
  * SCREENS UNDER THE TOP STAY MOUNTED, hidden, so a list keeps its scroll and a field its draft.
  *
  * Focus: a pushed screen takes focus at its top; on pop, focus returns to the control that opened
  * the screen. Escape never goes back; it belongs to whatever overlay holds this.
  *
- * Differs from v2 in look only: no motion, since v1 has none. v1 has no Page or Row yet, so a pane
- * screen's title lives in the band from the start, and `NavigatorLink` is its own row.
+ * Differs from v2 in look only: no motion, since v1 has none. v1 has no Row yet, so
+ * `NavigatorLink` is its own row.
  */
 
 import * as React from 'react';
@@ -27,9 +28,10 @@ import classNames from 'classnames';
 
 import { NavigatorHostContext } from './_internal/navigator-host.js';
 import { PaneHeader, Scroll, ShellContentContext } from './_internal/pane-chrome.js';
-import { ShellStoreContext } from './_internal/shell-store.js';
+import { setPageCollapsed, useClaimPage, usePageScope } from './_internal/page-scope.js';
 import { Flex } from './flex.js';
 import { Heading } from './heading.js';
+import { Page } from './page.js';
 import { Toolbar, ToolbarButton, ToolbarTitle } from './toolbar.js';
 
 type NavigatorApi<T> = {
@@ -60,14 +62,13 @@ const LevelContext = React.createContext<number>(0);
 const OutletContext = React.createContext<React.ReactNode>(null);
 
 /**
- * True in a Shell pane, not in `Shell.Content` and not in an overlay opened from the pane: there
- * the pane's band carries the title. Overlays set the host context, which is how they opt out.
+ * True in a Shell pane, `Shell.Content` included, and not in an overlay opened from one: there
+ * the pane's band carries Back and the title. Overlays cut the pane's page scope at the portal.
  */
 function useInPane() {
-  const store = React.useContext(ShellStoreContext);
-  const inContent = React.useContext(ShellContentContext);
+  const scope = usePageScope();
   const host = React.useContext(NavigatorHostContext);
-  return store !== null && !inContent && host === null;
+  return scope !== null && host === null;
 }
 
 // Activity keeps a hidden screen's state and cleans up its effects (React 19.2). On an older
@@ -214,7 +215,7 @@ function PaneFrame() {
           {/* One cluster: as two loose toolbar children, the band splits them to its two ends. */}
           <Flex align="center">
             <NavigatorBack />
-            <NavigatorTitle />
+            <ToolbarTitle />
           </Flex>
         </Toolbar>
       </PaneHeader>
@@ -282,9 +283,13 @@ function NavigatorBack(props: NavigatorBackProps) {
   );
 }
 
-/** The top screen's title, for a toolbar in a frame of your own. */
+/**
+ * The top screen's title, for a toolbar in a frame of your own. In a pane it is the band's
+ * mirroring `Toolbar.Title`, which shows once the page's large title has scrolled away.
+ */
 function NavigatorTitle() {
   const state = useNavigatorState();
+  if (state.inPane) return <ToolbarTitle />;
   return <ToolbarTitle>{state.titles.current[state.path.length]}</ToolbarTitle>;
 }
 
@@ -305,6 +310,7 @@ function NavigatorScreen({ title, children, className }: NavigatorScreenProps) {
   const state = useNavigatorState();
   const depth = React.useContext(LevelContext);
   const Host = React.useContext(NavigatorHostContext);
+  const inWorkArea = React.useContext(ShellContentContext);
   const node = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -315,7 +321,7 @@ function NavigatorScreen({ title, children, className }: NavigatorScreenProps) {
   // pane the title is in the band, outside the screen, so the screen itself takes it.
   React.useEffect(() => {
     if (depth === 0 || state.direction !== 'push') return;
-    const target = node.current?.querySelector<HTMLElement>('.kui-NavigatorBar .kui-ToolbarTitle') ?? node.current;
+    const target = node.current?.querySelector<HTMLElement>('.kui-NavigatorBar .kui-ToolbarTitle, h1') ?? node.current;
     if (target) {
       target.tabIndex = -1;
       target.focus({ preventScroll: true });
@@ -324,9 +330,19 @@ function NavigatorScreen({ title, children, className }: NavigatorScreenProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (state.inPane) {
+  if (state.inPane && inWorkArea) {
     return (
       <div ref={node} className={classNames('kui-NavigatorScreen', className)}>
+        <Page title={title}>{children}</Page>
+      </div>
+    );
+  }
+  if (state.inPane) {
+    // A side pane keeps its title in its band: a page's large title would dwarf a narrow
+    // inspector's rows. The screen claims the pane's title, collapsed from the start.
+    return (
+      <div ref={node} className={classNames('kui-NavigatorScreen', className)}>
+        <SidePaneTitle title={title} />
         {children}
       </div>
     );
@@ -361,6 +377,17 @@ function NavigatorScreen({ title, children, className }: NavigatorScreenProps) {
       <div className="kui-NavigatorBody">{children}</div>
     </div>
   );
+}
+
+function SidePaneTitle({ title }: { title: string }) {
+  const store = usePageScope();
+  useClaimPage(store, title);
+  React.useEffect(() => {
+    if (!store) return;
+    setPageCollapsed(store, true);
+    return () => setPageCollapsed(store, false);
+  }, [store]);
+  return null;
 }
 
 interface NavigatorLinkProps<T> extends Omit<React.ComponentPropsWithoutRef<'button'>, 'value' | 'onClick'> {

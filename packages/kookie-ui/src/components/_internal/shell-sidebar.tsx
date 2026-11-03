@@ -11,6 +11,7 @@ import { useInsetRegistration, warnOnce, type PaneValue } from './shell-store.js
 import { navigationRest, startAnchoredGrowth, withoutRemovedPaneProps } from './shell-rest.js';
 import { readBreakpoint } from '../../hooks/use-breakpoint.js';
 import { PaneChromeScope } from './pane-chrome.js';
+import { PageScope } from './page-scope.js';
 import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, Responsive, SidebarMode } from '../shell.types.js';
 
 type SidebarStateChangeMeta = { reason: 'init' | 'toggle' | 'responsive' | 'dismiss' };
@@ -171,7 +172,9 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
       }
     >
       <div className="kui-ShellSidebarContent">
-        <PaneChromeScope>{content}</PaneChromeScope>
+        <PaneChromeScope>
+          <PageScope>{content}</PageScope>
+        </PaneChromeScope>
       </div>
       {handle}
     </div>

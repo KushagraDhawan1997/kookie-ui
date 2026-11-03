@@ -68,6 +68,7 @@ export {
   type ToolbarSlotProps,
   type ToolbarFillProps,
 } from './toolbar.js';
+export { Page, type PageProps } from './page.js';
 export {
   Navigator,
   NavigatorOutlet,
