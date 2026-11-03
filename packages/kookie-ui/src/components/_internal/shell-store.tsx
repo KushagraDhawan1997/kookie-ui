@@ -171,25 +171,25 @@ export function usePeeking(store: ShellStore, name: PaneName): boolean {
   );
 }
 
-/* ── Inset ─────────────────────────────────────────────────────────────────── */
+/* ── Off the frame ─────────────────────────────────────────────────────────── */
 
-export type InsetPaneId = 'rail' | 'panel' | 'sidebar' | 'content' | 'inspector' | 'bottom';
+export type FramePaneId = 'rail' | 'panel' | 'sidebar' | 'content' | 'inspector' | 'bottom';
 
-export const ShellInsetContext = React.createContext<{
-  registerInset: (id: InsetPaneId) => void;
-  unregisterInset: (id: InsetPaneId) => void;
+export const ShellFrameContext = React.createContext<{
+  registerOffFrame: (id: FramePaneId) => void;
+  unregisterOffFrame: (id: FramePaneId) => void;
 } | null>(null);
 
-/** Registers a pane's `inset` with the Root, which paints the backdrop while any pane is inset. */
-export function useInsetRegistration(id: InsetPaneId, inset: boolean | undefined) {
-  const ctx = React.useContext(ShellInsetContext);
+/** Tells the Root a pane is off the frame (`flush={false}`); the Rail's card moves a floating Panel over. */
+export function useFrameRegistration(id: FramePaneId, flush: boolean) {
+  const ctx = React.useContext(ShellFrameContext);
   if (!ctx) throw new Error('Shell panes must be used within <Shell.Root>');
-  const { registerInset, unregisterInset } = ctx;
+  const { registerOffFrame, unregisterOffFrame } = ctx;
   useLayoutEffect(() => {
-    if (!inset) return;
-    registerInset(id);
-    return () => unregisterInset(id);
-  }, [id, inset, registerInset, unregisterInset]);
+    if (flush) return;
+    registerOffFrame(id);
+    return () => unregisterOffFrame(id);
+  }, [id, flush, registerOffFrame, unregisterOffFrame]);
 }
 
 /* ── Development warnings ──────────────────────────────────────────────────── */

@@ -72,14 +72,15 @@ describe('the Shell stylesheet and its JS mirror agree on the breakpoints', () =
 });
 
 /**
- * The inset backdrop must not wait for a script. The Root's `data-has-inset`
- * is set after hydration; the `:has()` arm paints the same backdrop from the
- * server markup, so a first paint already shows the gray behind inset panes.
+ * Off the frame is decided in CSS from the panes' own attributes, so it is right before any
+ * script: the Shell's background, the seams and the floating content all key on `data-flush`.
  */
-describe('the inset backdrop paints before hydration', () => {
-  it('has a :has() arm sharing the data-has-inset rule', () => {
-    const rule = css.match(/([^{}]*\.kui-ShellRoot\[data-has-inset\]::before)\s*\{/);
-    expect(rule, 'the data-has-inset backdrop rule').not.toBeNull();
-    expect(rule?.[1]).toContain('.kui-ShellRoot:has(> [data-inset])::before');
+describe('flush is resolved in the stylesheet', () => {
+  it('keys the background, the seams and floating on data-flush, with no inset left', () => {
+    expect(css).toContain('.kui-ShellRoot:has(> .kui-ShellContent:not([data-flush])) {');
+    expect(css).toContain('border: 0 solid var(--color-border);');
+    expect(css).toContain('grid-column-start: sidebar-start;');
+    expect(css).not.toMatch(/data-(has-)?inset/);
+    expect(css).not.toContain('--shell-inset-gap');
   });
 });

@@ -1,3 +1,24 @@
+## [0.33.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.32.0...v0.33.0) (2026-11-03)
+
+### Breaking
+
+* **shell:** `inset` is removed from `Shell.Rail`, `Shell.Panel`, `Shell.Sidebar`, `Shell.Content`, `Shell.Inspector` and `Shell.Bottom`. Every pane, and `Shell.Header`, takes `flush` instead, from Kookie UI v2. It defaults to `true`. `inset` becomes `flush={false}`.
+* **shell:** a flush pane now draws one hairline on its inner edge in `--color-border`: under the header, on the trailing edge of the Rail, Panel and Sidebar, on the leading edge of the Inspector and above the Bottom. The content draws none. Apps that drew their own seams should remove them.
+* **shell:** `--shell-inset-gap` is renamed `--shell-gap`, and the Root's `data-has-inset` attribute is gone.
+
+### Features
+
+* **shell:** a pane with `flush={false}` is a card with its own margin, corner and shadow. With the content flush, it floats over the content, and the content's area runs underneath it. With `Shell.Content flush={false}`, nothing floats: the Shell paints its background, the content is a card, and flush panes draw no hairline toward it. Two cards side by side share one gap.
+* **tokens:** `--color-border`, the rule between two regions, the same role as in v2 (`--neutral-6`).
+
+### Migrating swan-frontend
+
+* Replace every `inset` on a Shell pane or `Shell.Content` with `flush={false}`, and remove `inset={false}`.
+* Rename any `--shell-inset-gap` override to `--shell-gap`.
+* Remove hand-drawn borders between Shell panes (a sidebar's `border-right`, an inspector's `border-left`, a header's `border-bottom`). The panes draw their own now.
+* Where a pane must have no hairline at all, set `flush={false}` on the content, or pass `style={{ borderWidth: 0 }}` on that pane.
+* Anything that selected `[data-inset]` or `[data-has-inset]` selects `:not([data-flush])` instead.
+
 ## [0.32.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.31.0...v0.32.0) (2026-11-03)
 
 ### Breaking
