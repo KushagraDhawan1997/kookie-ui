@@ -5,6 +5,7 @@ Each release groups its changes as Major, Minor or Quiet. Major is a new product
 ## 0.31.0 (November 3)
 
 1. `Minor` **Page.** A page's large title and description, from Kookie UI v2. When the title scrolls behind the pane's band, the band's title takes its place. A Navigator in the main content now shows each screen as a page.
+2. `Quiet` **Dialog names follow the Navigator.** In a dialog or sheet, the panel is named by the screen you're on, not the first one.
 
 ## 0.30.0 (November 3)
 
