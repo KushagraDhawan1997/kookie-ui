@@ -12,9 +12,12 @@
   &:where(:focus-visible) {
     border-radius: calc(0.07em * var(--radius-factor));
     outline-color: var(--focus-8);
-    outline-width: 2px;
+    outline-width: var(--focus-ring-width);
     outline-style: solid;
-    outline-offset: 2px;
+    outline-offset: var(--focus-ring-offset);
+    /* A wrapped link rings each line's fragment whole, not with square ends mid-word. */
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
   }
 
   :where([data-accent-color]:not(.kui-theme)) &:where([data-accent-color='']) {
@@ -22,23 +25,22 @@
   }
 }
 
-/***************************************************************************************************
- *                                                                                                 *
- * UNDERLINE                                                                                       *
- *                                                                                                 *
- ***************************************************************************************************/
-
+/* THE UNDERLINE IS ALWAYS THERE (from v2, 2026-11-03). Colour alone does not tell everyone which
+   words are a link (WCAG 1.4.1), and a hover-only underline cannot be found on a touch screen.
+   It rests as a quiet line in the link's own colour and darkens to the ink under the pointer. */
 .kui-Link {
   &:where(:any-link, button) {
-    text-decoration-line: none;
+    text-decoration-line: underline;
     text-decoration-style: solid;
     text-decoration-thickness: min(2px, max(1px, 0.05em));
-    text-underline-offset: calc(0.025em + 2px);
-    text-decoration-color: var(--accent-a5);
+    /* Relative to the link's own type: a fixed distance crowds a descender large and floats small. */
+    text-underline-offset: 0.2em;
+    text-decoration-color: var(--accent-a6);
 
-    /* Enhancement for bright colors */
-    @supports (color: color-mix(in oklab, white, black)) {
-      text-decoration-color: color-mix(in oklab, var(--accent-a5), var(--neutral-a6));
+    @media (hover: hover) {
+      &:where(:hover) {
+        text-decoration-color: currentcolor;
+      }
     }
 
     @media (pointer: coarse) {
@@ -48,40 +50,8 @@
         outline-offset: -0.6em;
       }
     }
-
-    &:where(.kui-underline-auto) {
-      @media (hover: hover) {
-        &:where(:hover) {
-          text-decoration-line: underline;
-        }
-      }
-
-      :where([data-accent-color]:not(.kui-theme)) &:where([data-accent-color='']) {
-        text-decoration-line: underline;
-        text-decoration-color: var(--accent-a6);
-
-        /* Enhancement for bright colors */
-        @supports (color: color-mix(in oklab, white, black)) {
-          text-decoration-color: color-mix(in oklab, var(--accent-a6), var(--neutral-a6));
-        }
-      }
-    }
-
-    &:where(.kui-underline-hover) {
-      @media (hover: hover) {
-        &:where(:hover) {
-          text-decoration-line: underline;
-        }
-      }
-    }
-
-    &:where(.kui-underline-always) {
-      text-decoration-line: underline;
-    }
   }
 }
-
-/* Focus keeps the link's own underline setting; the focus outline marks focus. */
 
 /* Enhancement – hide underline for when Link's only child is a Code where underline is hard to see */
 .kui-Link:where(:has(.kui-Code:not(.kui-variant-ghost):only-child)) {

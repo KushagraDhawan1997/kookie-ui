@@ -8,7 +8,6 @@ import { weightPropDef } from '../props/weight.prop.js';
 import type { PropDef } from '../props/prop-def.js';
 
 const sizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
-const underline = ['auto', 'always', 'hover', 'none'] as const;
 
 const linkPropDefs = {
   ...asChildPropDef,
@@ -22,11 +21,9 @@ const linkPropDefs = {
   ...leadingTrimPropDef,
   ...truncatePropDef,
   ...textWrapPropDef,
-  underline: { type: 'enum', className: 'kui-underline', values: underline, default: 'auto' },
   ...accentColorPropDef,
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;
-  underline: PropDef<(typeof underline)[number]>;
 };
 
 export { linkPropDefs };

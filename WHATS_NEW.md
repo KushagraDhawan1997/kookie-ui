@@ -2,6 +2,10 @@
 
 Each release groups its changes as Major, Minor or Quiet. Major is a new product or a change to what it is. Minor is a change you notice when you use it. Quiet is a small touch, a fix, a rename or a removal, or how the work is made. Breaking lists the changes that need an edit in your app.
 
+## 0.32.0 (November 3)
+
+1. `Minor` **Links are always underlined (breaking).** The underline is a quiet line in the link's colour that darkens on hover. The `underline` prop is gone.
+
 ## 0.31.0 (November 3)
 
 1. `Minor` **Page.** A page's large title and description, from Kookie UI v2. When the title scrolls behind the pane's band, the band's title takes its place. A Navigator in the main content now shows each screen as a page.
