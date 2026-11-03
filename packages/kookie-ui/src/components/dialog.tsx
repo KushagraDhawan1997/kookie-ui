@@ -6,6 +6,7 @@ import { dialogContentPropDefs } from './dialog.props.js';
 import { Heading } from './heading.js';
 import { Text } from './text.js';
 import { PortalTheme } from './_internal/portal-theme.js';
+import { NavigatorHostContext, type NavigatorHost } from './_internal/navigator-host.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../hooks/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
@@ -37,6 +38,12 @@ type DialogContentElement = React.ElementRef<typeof DialogPrimitive.Content>;
 interface DialogContentProps extends ComponentPropsWithout<typeof DialogPrimitive.Content, RemovedProps>, DialogContentOwnProps {
   container?: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Portal>['container'];
 }
+/** What a Navigator screen in this panel uses: its title names the panel, its close closes it. */
+const dialogNavigatorHost: NavigatorHost = {
+  Title: ({ children }) => <DialogPrimitive.Title asChild>{children}</DialogPrimitive.Title>,
+  Close: ({ children }) => <DialogPrimitive.Close asChild>{children}</DialogPrimitive.Close>,
+};
+
 const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>(({ align, ...ownProps }, forwardedRef) => {
   const props = useThemeSizeProps(ownProps, contentPropDefs.size);
   const { className: alignClassName } = extractProps({ align }, alignPropDefs);
@@ -56,6 +63,7 @@ const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>
                 {...contentProps}
                 ref={forwardedRef}
                 className={classNames('kui-BaseDialogContent', 'kui-DialogContent', className)}
+                children={<NavigatorHostContext.Provider value={dialogNavigatorHost}>{contentProps.children}</NavigatorHostContext.Provider>}
                 aria-modal="true"
                 onCloseAutoFocus={(event) => {
                   // Radix returns focus to the trigger unless the caller prevents it.

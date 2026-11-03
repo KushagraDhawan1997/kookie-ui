@@ -68,6 +68,20 @@ export {
   type ToolbarSlotProps,
   type ToolbarFillProps,
 } from './toolbar.js';
+export {
+  Navigator,
+  NavigatorOutlet,
+  NavigatorBack,
+  NavigatorTitle,
+  NavigatorScreen,
+  NavigatorLink,
+  useNavigator,
+  type NavigatorProps,
+  type NavigatorBackProps,
+  type NavigatorScreenProps,
+  type NavigatorLinkProps,
+  type NavigatorApi,
+} from './navigator.js';
 export { Tooltip, TooltipProvider, type TooltipProps, type TooltipProviderProps } from './tooltip.js';
 export { VirtualMenu, type VirtualMenuProps, type VirtualMenuItemProps, type VirtualMenuRenderItemProps } from './virtual-menu.js';
 export { VisuallyHidden, type VisuallyHiddenProps } from './visually-hidden.js';

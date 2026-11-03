@@ -39,6 +39,7 @@ import { Dialog as DialogPrimitive } from 'radix-ui';
 import { dialogContentPropDefs } from './dialog.props.js';
 import type { DialogContentOwnProps } from './dialog.props.js';
 import { PortalTheme } from './_internal/portal-theme.js';
+import { NavigatorHostContext, type NavigatorHost } from './_internal/navigator-host.js';
 import { Heading } from './heading.js';
 import { Text } from './text.js';
 import { extractProps } from '../helpers/extract-props.js';
@@ -88,6 +89,12 @@ Trigger.displayName = 'Sheet.Trigger';
 // them every time a sheet renders.
 const { align: _alignPropDef, ...dialogPropDefsForSheet } = dialogContentPropDefs;
 const sheetPropDefs = dialogPropDefsForSheet;
+
+/** What a Navigator screen in this panel uses: its title names the sheet, its close closes it. */
+const sheetNavigatorHost: NavigatorHost = {
+  Title: ({ children }) => <DialogPrimitive.Title asChild>{children}</DialogPrimitive.Title>,
+  Close: ({ children }) => <DialogPrimitive.Close asChild>{children}</DialogPrimitive.Close>,
+};
 
 /** Counts the Sheet.Title elements mounted inside a Sheet.Content, for the dev-only name check. */
 const SheetTitleCountContext = React.createContext<React.MutableRefObject<number> | null>(null);
@@ -155,6 +162,7 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>((allPro
               className={classNames('kui-BaseDialogContent', 'kui-SheetContent', className, extractedClassName)}
               data-side={normalizedSide}
               aria-modal="true"
+              children={<NavigatorHostContext.Provider value={sheetNavigatorHost}>{contentProps.children}</NavigatorHostContext.Provider>}
             />
           </DialogPrimitive.Overlay>
         </PortalTheme>
