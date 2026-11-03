@@ -1,3 +1,13 @@
+## [0.32.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.31.0...v0.32.0) (2026-11-03)
+
+### Breaking
+
+* **link:** a link is always underlined, and the `underline` prop is removed. Colour alone doesn't tell everyone which words are a link, and a hover-only underline can't be found on a touch screen. Remove `underline="…"` from your links.
+
+### Look
+
+* **link:** the underline rests in the link's own colour at `--accent-a6` and darkens to the ink (`currentcolor`) on hover. It sits `0.2em` below the text, so the gap scales with the type. The focus ring takes `--focus-ring-width` and `--focus-ring-offset`, and a link that wraps rings each line whole.
+
 ## [0.31.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.30.0...v0.31.0) (2026-11-03)
 
 ### Fixes
