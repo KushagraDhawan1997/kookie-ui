@@ -132,8 +132,15 @@ h6 {
   overflow: clip;
   /* The surface at the top deepening to a soft neutral at the bottom, from the theme's own steps
      so it turns over with the mode. */
-  background-color: var(--color-surface);
-  background-image: linear-gradient(to bottom, var(--color-surface), var(--neutral-6));
+  background-color: var(--neutral-6);
+  /* A dot grid that comes through toward the cut (kushagradhawan-v3/FIGURES.md, 2026-11-03): 12px
+     dots on the soft neutral, under a wash of the surface from solid at the top to clear at the
+     bottom, which is the same gradient as before. */
+  background-image:
+    linear-gradient(to bottom, var(--color-surface), transparent),
+    radial-gradient(circle, var(--neutral-a6) 1px, transparent 1.5px);
+  background-size: auto, var(--space-4) var(--space-4);
+  background-position: 0 0, calc(var(--space-4) / 2) calc(var(--space-4) / 2);
 }
 
 .kd-hero::before,
