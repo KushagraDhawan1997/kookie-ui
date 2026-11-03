@@ -34,8 +34,8 @@ import {
 
 /**
  * The front page's hero (2026-10-22): a real builder made with Womp's Design System, laid out like
- * the Kookie UI builder (layers, the canvas with floating toolbars, the inspector), standing on the
- * line grid and cropped by the band's bottom edge. The same figure is on kushagradhawan.com's
+ * the Kookie UI builder (layers, the canvas with floating toolbars, the inspector), in a laptop
+ * lid on a grey gradient and cropped by the band's bottom edge. The same figure is on kushagradhawan.com's
  * Womp's Design System page. DocsShell runs it to the content pane's top, left and right edges,
  * with the top bar floating over it.
  */
@@ -253,7 +253,9 @@ export function Hero() {
   return (
     <Box className="kd-hero" aria-hidden inert>
       <Box className="kd-hero-stage">
-        <Builder />
+        <Box className="kd-device">
+          <Builder />
+        </Box>
       </Box>
     </Box>
   );
