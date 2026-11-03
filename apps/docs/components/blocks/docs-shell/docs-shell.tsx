@@ -57,10 +57,6 @@ export function DocsShell({
         resizable={sidebarResizable}
         defaultState={{ initial: 'collapsed', sm: 'expanded' }}
         presentation={{ initial: 'overlay', sm: 'fixed' }}
-        // The outline sidebar: the page's own ground with a hairline at its inner edge, where the
-        // soft one painted a grey fill (Kushagra, 2026-11-03). v1's Shell draws no lines between
-        // panes, so the line is the hero's own hairline.
-        style={{ borderInlineEnd: '1px solid var(--neutral-a5)' }}
       >
         <DocsSidebar
           navigation={navigation}

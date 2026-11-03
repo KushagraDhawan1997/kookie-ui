@@ -206,15 +206,6 @@ h6 {
   background-color: var(--neutral-a5);
 }
 
-/* v1's Shell draws no lines between panes; the hero's builder adds hairlines, as the app would. */
-.kd-hero .kui-ShellSidebar {
-  border-inline-end: 1px solid var(--neutral-a5);
-}
-
-.kd-hero .kui-ShellInspector {
-  border-inline-start: 1px solid var(--neutral-a5);
-}
-
 /* The sign-in card sits under the floating toolbar, the same distance down as in the v2 figure. */
 .kd-hero-canvas {
   padding-top: calc(var(--space-11) + var(--space-5));

@@ -31,7 +31,7 @@ export default function ShellInsetTest() {
         defaultState="expanded"
         expandedSize={280}
         presentation={{ initial: 'overlay', md: 'fixed' }}
-        inset={insetConfig.sidebar}
+        flush={!insetConfig.sidebar}
       >
         <Flex direction="column" gap="5" p="5" style={{ height: '100%' }}>
           <Flex align="center" gap="3">
@@ -54,7 +54,7 @@ export default function ShellInsetTest() {
       </Shell.Sidebar>
 
       {/* Content with inset */}
-      <Shell.Content inset={insetConfig.content}>
+      <Shell.Content flush={!insetConfig.content}>
         <Box p="7" style={{ height: '100%' }}>
           <Box mb="5">
             <Heading as="h1" size="6">Shell Inset Test</Heading>
@@ -155,7 +155,7 @@ export default function ShellInsetTest() {
         defaultOpen={{ initial: false, lg: true }}
         expandedSize={300}
         presentation={{ initial: 'overlay', lg: 'fixed' }}
-        inset={insetConfig.inspector}
+        flush={!insetConfig.inspector}
       >
         <Flex direction="column" gap="5" p="5" style={{ height: '100%' }}>
           <Heading size="4">Inspector</Heading>
@@ -170,7 +170,7 @@ export default function ShellInsetTest() {
       <Shell.Bottom
         defaultOpen={false}
         expandedSize={200}
-        inset={insetConfig.bottom}
+        flush={!insetConfig.bottom}
       >
         <Flex direction="column" gap="3" p="5" style={{ height: '100%' }}>
           <Heading size="4">Bottom Panel</Heading>

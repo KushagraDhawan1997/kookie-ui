@@ -190,7 +190,7 @@ The floating row's height is published as `--kui-pane-inset-start` inside the Sc
 | `onStateChange` | `(state, { reason }) => void` | | Runs when a person changes the state |
 | `presentation` | `'fixed' \| 'overlay' \| 'stacked'`, responsive | `{ initial: 'overlay', sm: 'fixed' }` | How it sits in the frame |
 | `expandedSize` | `number` | `288` | The open width in pixels |
-| `inset` | `boolean` | `false` | Adds a margin, rounded corners and a shadow over a gray backdrop |
+| `flush` | `boolean` | `true` | Joins the frame, with a hairline to its neighbour. `false` makes it a card |
 
 Sidebar also takes the resize props, with `minSize` 200 and `maxSize` 400.
 
@@ -203,7 +203,7 @@ Sidebar also takes the resize props, with `minSize` 200 and `maxSize` 400.
 | `onOpenChange` | `(open, { reason }) => void` | | Runs when a person opens or closes the pane |
 | `presentation` | `'fixed' \| 'overlay' \| 'stacked'`, responsive | See below | How it sits in the frame |
 | `expandedSize` | `number` | See below | The open width, or height for Bottom, in pixels |
-| `inset` | `boolean` | `false` | Lifts the pane off the frame |
+| `flush` | `boolean` | `true` | Joins the frame, with a hairline to its neighbour. `false` makes it a card |
 
 | Pane | `presentation` | `expandedSize` | `minSize` / `maxSize` | Untouched |
 | --- | --- | --- | --- | --- |
@@ -231,7 +231,7 @@ Sidebar, Panel, Inspector and Bottom take these.
 
 ### Content
 
-Content takes `inset`, like the panes. With a `Shell.Scroll` child, the Scroll scrolls the page instead of the content. Where the page scrolls (see [Scrolling](#scrolling)), the Scroll is out of the tab order.
+Content takes `flush`, like the panes. With `flush={false}` it is a card on the Shell's background, and nothing floats over it. With a `Shell.Scroll` child, the Scroll scrolls the page instead of the content. Where the page scrolls (see [Scrolling](#scrolling)), the Scroll is out of the tab order.
 
 ### Trigger
 

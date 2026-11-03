@@ -30,7 +30,7 @@ export default function ShellPlayground({ showControls = false, showToolbar = tr
   const [presentation, setPresentation] = React.useState<(typeof presentations)[number]>('fixed');
   const [state, setState] = React.useState<(typeof states)[number]>('expanded');
   const [size, setSize] = React.useState<(typeof sizes)[number]>('2');
-  const [inset, setInset] = React.useState(false);
+  const [flush, setFlush] = React.useState(true);
   const [resizable, setResizable] = React.useState(false);
   const [page, setPage] = React.useState('projects');
 
@@ -48,7 +48,7 @@ export default function ShellPlayground({ showControls = false, showToolbar = tr
     if (size !== '2') rootProps.push(`size="${size}"`);
 
     const sidebarProps = ['aria-label="Main"', `presentation="${presentation}"`, 'state={state}', 'onStateChange={setState}'];
-    if (inset) sidebarProps.push('inset');
+    if (!flush) sidebarProps.push('flush={false}');
     if (resizable) sidebarProps.push('resizable');
 
     return `import React from 'react';
@@ -97,7 +97,7 @@ export function AppFrame() {
           </Sidebar.Menu>
         </Shell.Scroll>
       </Shell.Sidebar>
-      <Shell.Content${inset ? ' inset' : ''}>
+      <Shell.Content${flush ? '' : ' flush={false}'}>
         <Flex direction="column" gap="2" p="6">
           <Heading size="5">Projects</Heading>
           <Text emphasis="medium">Twelve projects, three due this week.</Text>
@@ -127,7 +127,7 @@ export function AppFrame() {
           presentation={presentation}
           state={state}
           onStateChange={setState}
-          inset={inset}
+          flush={flush}
           resizable={resizable}
         >
           <Shell.Scroll>
@@ -143,7 +143,7 @@ export function AppFrame() {
             </Sidebar.Menu>
           </Shell.Scroll>
         </Shell.Sidebar>
-        <Shell.Content inset={inset}>
+        <Shell.Content flush={flush}>
           <Flex direction="column" gap="2" p="6">
             <Heading size="5">{current.label}</Heading>
             <Text emphasis="medium">Press the button in the header to open and close the sidebar.</Text>
@@ -182,11 +182,11 @@ export function AppFrame() {
       placeholder: 'Size',
     },
     {
-      id: 'inset',
-      label: 'Inset',
+      id: 'flush',
+      label: 'Flush',
       type: 'switch' as const,
-      value: inset,
-      onChange: setInset,
+      value: flush,
+      onChange: setFlush,
     },
     {
       id: 'resizable',
