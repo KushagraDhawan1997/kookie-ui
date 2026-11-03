@@ -5,6 +5,12 @@
 * **page:** `Page`, from Kookie UI v2: the screen you navigated to, with its title as the document's one `h1` at step 9, an optional `description` at step 4, and an optional `mark` above the title. It takes no width, level, size or actions. It adds air above its title; a floating band's reach is already cleared by `Shell.Scroll`.
 * **toolbar:** a `Toolbar.Title` with no children mirrors the `Page` in its Shell pane. It keeps its room but stays invisible while the page's large title is on screen, and shows the page's title once that title passes behind the band, floating or pinned. Outside a pane with a page it renders nothing, as before.
 * **shell:** each pane (`Shell.Content`, Sidebar, Panel, Inspector, Bottom) holds its own page, so two panes can each have a titled page. Popovers, dialogs, sheets and menus cut the scope, so a page inside one never takes the pane's band.
+### Fixes
+
+* **navigator:** in a Dialog or Sheet, only the top screen names the panel. Every screen wrapped its title in the dialog's title part, so after a push the hidden screens shared its id and the dialog kept the root screen's name.
+
+### Features (navigator)
+
 * **navigator:** in `Shell.Content` each screen is a `Page`, and the band shows Back with the mirrored title. A side pane keeps the screen's title in its band from the start. `NavigatorTitle` in a pane is the mirroring title.
 
 ## [0.30.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.29.2...v0.30.0) (2026-11-03)

@@ -348,6 +348,9 @@ function NavigatorScreen({ title, children, className }: NavigatorScreenProps) {
     );
   }
 
+  // Only the top screen names the panel. Screens underneath stay mounted, and if each wrapped its
+  // title in the overlay's title part they would share its id, and the panel would keep the root's name.
+  const isTop = depth === state.path.length;
   const heading = (
     <Heading as="h2" size="4" weight="medium" truncate>
       {title}
@@ -364,7 +367,7 @@ function NavigatorScreen({ title, children, className }: NavigatorScreenProps) {
               <BackGlyph />
             </ToolbarButton>
           ) : null}
-          <ToolbarTitle className="kui-NavigatorBarTitle">{Host ? <Host.Title>{heading}</Host.Title> : heading}</ToolbarTitle>
+          <ToolbarTitle className="kui-NavigatorBarTitle">{Host && isTop ? <Host.Title>{heading}</Host.Title> : heading}</ToolbarTitle>
           {Host ? (
             <Host.Close>
               <ToolbarButton iconOnly aria-label="Close">
