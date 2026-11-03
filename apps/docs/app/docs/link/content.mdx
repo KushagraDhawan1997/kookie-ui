@@ -23,7 +23,7 @@ export function SignUpFooter() {
     <Flex direction="column" gap="2" align="center">
       <Text as="p" size="2" emphasis="medium">
         By signing up you agree to the{' '}
-        <Link asChild underline="always">
+        <Link asChild>
           <NextLink href="/terms">terms of service</NextLink>
         </Link>
         .
@@ -38,7 +38,7 @@ export function SignUpFooter() {
 
 ## Best practices
 
-**Underline links in running text.** In a paragraph, colour alone doesn't tell everyone which words are a link. Set `underline="always"` there. In a menu, a footer or a list of links, the default is enough.
+**Links are always underlined.** Colour alone doesn't tell everyone which words are a link, so the underline stays. It darkens under the pointer.
 
 **Say where the link goes.** "View invoice" or "Read the setup guide" makes sense on its own. "Click here" and "Learn more" don't, and screen reader users often hear links as a list.
 
@@ -48,19 +48,6 @@ export function SignUpFooter() {
 
 **Mark links that leave your product.** Add `target="_blank"` and `rel="noopener noreferrer"` only when people need to keep the current page open, and say so in the label or with an icon.
 
-## Underline
-
-`underline` sets when the underline shows.
-
-| Underline | Behaviour | Use it for |
-| --- | --- | --- |
-| `auto` | Underlines on hover. Always underlined inside text that has its own `color` | Most links. This is the default |
-| `always` | Always underlined | Links in paragraphs and body copy |
-| `hover` | Underlines on hover only | Links in navigation and lists |
-| `none` | Never underlined | Links whose place on the screen already shows they are links |
-
-Keyboard focus keeps the underline as it is and adds the focus ring.
-
 ## Size and colour
 
 With no `size`, a link inherits the font size of the text around it, so it fits into a sentence. `size` picks a step from 1 to 9 on the same scale as Text, for a link that stands on its own. `color` sets the link's colour. With no `color`, the link takes the theme accent.
@@ -69,27 +56,12 @@ With no `size`, a link inherits the font size of the text around it, so it fits 
 
 ### Link in a paragraph
 
-Leave `size` unset so the link matches the sentence. Use `underline="always"` so the link shows without colour.
+Leave `size` unset so the link matches the sentence.
 
 ```tsx
 <Text as="p" size="3">
-  Read the <Link href="/start/theming" underline="always">theming guide</Link> before you change tokens.
+  Read the <Link href="/start/theming">theming guide</Link> before you change tokens.
 </Text>
-```
-
-### Navigation list
-
-In a list where every item is a link, the underline adds noise. `hover` shows it only under the pointer.
-
-```tsx
-<Flex direction="column" gap="2">
-  <Link href="/account" size="2" underline="hover">
-    Account
-  </Link>
-  <Link href="/billing" size="2" underline="hover">
-    Billing
-  </Link>
-</Flex>
 ```
 
 ### Link to a reference
@@ -110,7 +82,6 @@ Put a [Code](/docs/code) inside the link. The link hides its underline when Code
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `underline` | `'auto' \| 'always' \| 'hover' \| 'none'` | `'auto'` | When the underline shows |
 | `size` | `'1'` to `'9'`, responsive | | The type step. Inherits when unset |
 | `weight` | `'regular' \| 'medium' \| 'semibold'`, responsive | | The font weight. Inherits when unset |
 | `color` | `AccentColor` | Theme accent | The colour |

@@ -4,7 +4,6 @@ import React from 'react';
 import { Box, Link, Text } from '@kushagradhawan/kookie-ui';
 import Playground from '@/components/playground';
 
-const underlines = ['auto', 'always', 'hover', 'none'] as const;
 const sizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
 const weights = ['regular', 'medium', 'semibold'] as const;
 const accentColors = ['gray', 'gold', 'amber', 'crimson', 'plum', 'iris', 'blue', 'teal', 'jade', 'grass'] as const;
@@ -16,21 +15,11 @@ type LinkPlaygroundProps = {
 };
 
 export default function LinkPlayground({ showControls = false, showToolbar = true, height }: LinkPlaygroundProps = {}) {
-  const [underline, setUnderline] = React.useState<string>('auto');
   const [size, setSize] = React.useState<string>('3');
   const [color, setColor] = React.useState<string>('theme');
   const [weight, setWeight] = React.useState<string>('theme');
 
   const items = [
-    {
-      id: 'underline',
-      label: 'Underline',
-      type: 'select' as const,
-      value: underline,
-      onChange: setUnderline,
-      options: underlines.map((u) => ({ label: u, value: u })),
-      placeholder: 'Select underline',
-    },
     {
       id: 'size',
       label: 'Size',
@@ -63,7 +52,6 @@ export default function LinkPlayground({ showControls = false, showToolbar = tru
 
   const generateCode = () => {
     const props = ['href="/docs/theme"'];
-    if (underline !== 'auto') props.push(`underline="${underline}"`);
     if (color !== 'theme') props.push(`color="${color}"`);
     if (weight !== 'theme') props.push(`weight="${weight}"`);
 
@@ -83,7 +71,6 @@ export default function LinkPlayground({ showControls = false, showToolbar = tru
             <Link
               href="#"
               onClick={(event) => event.preventDefault()}
-              underline={underline as any}
               color={color === 'theme' ? undefined : (color as any)}
               weight={weight === 'theme' ? undefined : (weight as any)}
             >
