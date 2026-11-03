@@ -26,8 +26,8 @@
 /* ── Frame ─────────────────────────────────────────────────────────────────── */
 
 .kui-ShellRoot {
-  /* Read by inset panes. Declared here, so the documented override on the Root works. */
-  --shell-inset-gap: var(--space-3);
+  /* The air around a pane pulled off the frame (`flush={false}`). Declared here, so the documented override on the Root works. */
+  --shell-gap: var(--space-3);
   /* Written inline by the Root while a Rail shows; stated here so a nested Shell never inherits its parent's. */
   --shell-rail-offset: 0px;
   /* How far the stuck header reaches down the screen while the page scrolls. Stated here so a nested Shell never inherits its parent's. */
@@ -938,66 +938,152 @@
   position: fixed;
 }
 
-/* ── Inset ─────────────────────────────────────────────────────────────────── */
+/* ── Flush and off the frame (from v2, 0.33.0) ─────────────────────────────── */
 
 /*
- * The backdrop behind the middle row while any pane is inset. A grid item of
- * its own, so the header and the bottom row keep the page. `:has()` paints it
- * from the server markup, before any script; `data-has-inset` is the Root's
- * own record, which also covers a pane wrapped in another element.
+ * Every pane says one thing about itself: whether it joins the app frame (`flush`, the default)
+ * or is pulled off it as a card (`flush={false}`). Whether a card floats or sits on the Shell's
+ * background is not stated anywhere; it falls out of the content's own answer, here, so it is
+ * right at first paint:
+ *
+ * - A flush pane is level with the page: square, no fill, no shadow, and one hairline in
+ *   `--color-border` on its inner edge. Each seam is drawn by exactly one pane, and the content
+ *   draws none, so two neighbours never double a line.
+ * - With the content flush, a card floats over it: the content's grid area grows underneath.
+ * - With the content off the frame, nothing floats. The Shell paints its background and every
+ *   pane, flush or not, sits on it; the content is a card, and a flush pane draws no hairline
+ *   toward it, because a line beside a card's own edge is a second boundary.
  */
-.kui-ShellRoot:has(> [data-inset])::before,
-.kui-ShellRoot[data-has-inset]::before {
-  content: '';
-  grid-row: 2;
-  grid-column: 1 / -1;
-  background: var(--neutral-2);
+
+.kui-ShellHeader[data-flush],
+.kui-ShellPane[data-flush],
+.kui-ShellContent[data-flush] {
+  border: 0 solid var(--color-border);
+  border-radius: 0;
 }
 
-.kui-ShellPane[data-inset],
-.kui-ShellContent[data-inset] {
-  margin: var(--shell-inset-gap);
+.kui-ShellHeader[data-flush] {
+  border-block-end-width: 1px;
+}
+
+.kui-ShellRail[data-flush],
+.kui-ShellPanel[data-flush],
+.kui-ShellSidebar[data-flush] {
+  border-inline-end-width: 1px;
+}
+
+.kui-ShellInspector[data-flush] {
+  border-inline-start-width: 1px;
+}
+
+.kui-ShellBottom[data-flush] {
+  border-block-start-width: 1px;
+}
+
+/* A seam needs something on the other side. Against a card content there is only the gap. The
+   Panel and the Rail face the content only when no flush pane stands between them. */
+.kui-ShellRoot:has(> .kui-ShellContent:not([data-flush])) > .kui-ShellHeader[data-flush] {
+  border-block-end-width: 0;
+}
+
+.kui-ShellRoot:has(> .kui-ShellContent:not([data-flush])) > .kui-ShellSidebar[data-flush],
+.kui-ShellRoot:has(> .kui-ShellContent:not([data-flush])):not(:has(> .kui-ShellSidebar[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))) > .kui-ShellPanel[data-flush],
+.kui-ShellRoot:has(> .kui-ShellContent:not([data-flush])):not(:has(> .kui-ShellPanel[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']), > .kui-ShellSidebar[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))) > .kui-ShellRail[data-flush] {
+  border-inline-end-width: 0;
+}
+
+.kui-ShellRoot:has(> .kui-ShellContent:not([data-flush])) > .kui-ShellInspector[data-flush] {
+  border-inline-start-width: 0;
+}
+
+.kui-ShellRoot:has(> .kui-ShellContent:not([data-flush])) > .kui-ShellBottom[data-flush] {
+  border-block-start-width: 0;
+}
+
+/* Off the frame: a card, with its own air on every side. */
+.kui-ShellHeader:not([data-flush]),
+.kui-ShellPane:not([data-flush]),
+.kui-ShellContent:not([data-flush]) {
+  margin: var(--shell-gap);
   border-radius: var(--radius-surface-1);
-  background: var(--color-page);
+  background-color: var(--color-page);
   box-shadow: var(--surface-chrome);
 }
 
+/* A header card rests level with the panes below it, so its shadow falls behind them, not on them. */
+.kui-ShellHeader:not([data-flush]) {
+  z-index: 1;
+}
+
+/* With the content off the frame, the Shell paints the background the cards sit on. */
+.kui-ShellRoot:has(> .kui-ShellContent:not([data-flush])) {
+  background-color: var(--neutral-2);
+}
+
 /*
- * Two inset panes side by side share one gap rather than doubling it: the
- * later pane in the row drops the margin on the side that meets the earlier
- * one. Only the pane right beside it counts, and only while it is shown in
- * the frame (the JS mirror's data-presentation and data-mode), so a closed,
- * hidden or floating pane never takes the gap away. Before hydration the
- * gap is doubled.
+ * Two cards side by side share one gap rather than doubling it: the later card in the row drops
+ * its margin on the side that meets the earlier one, so card to card and card to edge come out
+ * equal. Only a pane shown in the frame counts.
  */
-.kui-ShellRoot:has(> .kui-ShellRail[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .kui-ShellPanel[data-inset][data-presentation='fixed'],
-.kui-ShellRoot:has(> .kui-ShellPanel[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .kui-ShellSidebar[data-inset][data-presentation='fixed'],
-.kui-ShellRoot:has(> .kui-ShellRail[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])):not(
-    :has(> .kui-ShellPanel[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))
-  )
-  > .kui-ShellSidebar[data-inset][data-presentation='fixed'],
-.kui-ShellRoot:has(> .kui-ShellSidebar[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .kui-ShellContent[data-inset],
-.kui-ShellRoot:has(> .kui-ShellPanel[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])):not(
-    :has(> .kui-ShellSidebar[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))
-  )
-  > .kui-ShellContent[data-inset],
-.kui-ShellRoot:has(> .kui-ShellRail[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])):not(
-    :has(> .kui-ShellPanel[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']), > .kui-ShellSidebar[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))
-  )
-  > .kui-ShellContent[data-inset],
-.kui-ShellRoot:has(> .kui-ShellContent[data-inset]) > .kui-ShellInspector[data-inset][data-presentation='fixed'] {
+.kui-ShellRoot:has(> .kui-ShellRail:not([data-flush])[data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .kui-ShellPanel:not([data-flush])[data-presentation='fixed'],
+.kui-ShellRoot:has(> .kui-ShellPanel:not([data-flush])[data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .kui-ShellSidebar:not([data-flush])[data-presentation='fixed'],
+.kui-ShellRoot:has(> .kui-ShellRail:not([data-flush])[data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])):not(:has(> .kui-ShellPanel[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))) > .kui-ShellSidebar:not([data-flush])[data-presentation='fixed'],
+.kui-ShellRoot:has(> .kui-ShellSidebar:not([data-flush])[data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .kui-ShellContent:not([data-flush]),
+.kui-ShellRoot:has(> .kui-ShellPanel:not([data-flush])[data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])):not(:has(> .kui-ShellSidebar[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))) > .kui-ShellContent:not([data-flush]),
+.kui-ShellRoot:has(> .kui-ShellRail:not([data-flush])[data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])):not(:has(> .kui-ShellPanel[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']), > .kui-ShellSidebar[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))) > .kui-ShellContent:not([data-flush]),
+.kui-ShellRoot:has(> .kui-ShellContent:not([data-flush])) > .kui-ShellInspector:not([data-flush])[data-presentation='fixed'] {
   margin-inline-start: 0;
 }
 
-.kui-ShellRoot:has(
-    > .kui-ShellRail[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed']),
-    > .kui-ShellPanel[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed']),
-    > .kui-ShellSidebar[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed']),
-    > .kui-ShellContent[data-inset],
-    > .kui-ShellInspector[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])
-  )
-  > .kui-ShellBottom[data-inset] {
+.kui-ShellRoot:has(> .kui-ShellHeader:not([data-flush])) > :is(.kui-ShellPane:not(.kui-ShellBottom), .kui-ShellContent):not([data-flush]),
+.kui-ShellRoot:has(> :is(.kui-ShellRail, .kui-ShellPanel, .kui-ShellSidebar, .kui-ShellInspector):not([data-flush])[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']), > .kui-ShellContent:not([data-flush])) > .kui-ShellBottom:not([data-flush]) {
   margin-block-start: 0;
+}
+
+/* A card content pays no air toward a flush side pane in the frame: the pane's padding is the
+   air. Toward a flush header it keeps its gap, since a header's row has no padding below it. */
+.kui-ShellRoot:has(> .kui-ShellSidebar[data-flush][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .kui-ShellContent:not([data-flush]),
+.kui-ShellRoot:has(> .kui-ShellPanel[data-flush][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])):not(:has(> .kui-ShellSidebar[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))) > .kui-ShellContent:not([data-flush]),
+.kui-ShellRoot:has(> .kui-ShellRail[data-flush][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])):not(:has(> .kui-ShellPanel[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']), > .kui-ShellSidebar[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))) > .kui-ShellContent:not([data-flush]) {
+  margin-inline-start: 0;
+}
+
+.kui-ShellRoot:has(> .kui-ShellInspector[data-flush][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .kui-ShellContent:not([data-flush]) {
+  margin-inline-end: 0;
+}
+
+.kui-ShellRoot:has(> .kui-ShellBottom[data-flush][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .kui-ShellContent:not([data-flush]) {
+  margin-block-end: 0;
+}
+
+/*
+ * Floating: with the content flush, a card is over it, and the content's grid area grows to the
+ * card's own line so the content runs underneath. It grows only on the sides something floats
+ * on. The Rail and the Panel float over the content only when no flush pane stands between.
+ * The panes already sit above the content (`z-index` 1 against the content's isolated layer).
+ */
+.kui-ShellRoot:has(> .kui-ShellSidebar:not([data-flush])) > .kui-ShellContent[data-flush] {
+  grid-column-start: sidebar-start;
+}
+
+.kui-ShellRoot:has(> .kui-ShellPanel:not([data-flush])):not(:has(> .kui-ShellSidebar[data-flush])) > .kui-ShellContent[data-flush] {
+  grid-column-start: panel-start;
+}
+
+.kui-ShellRoot:has(> .kui-ShellRail:not([data-flush])):not(:has(> .kui-ShellPanel[data-flush], > .kui-ShellSidebar[data-flush])) > .kui-ShellContent[data-flush] {
+  grid-column-start: rail-start;
+}
+
+.kui-ShellRoot:has(> .kui-ShellInspector:not([data-flush])) > .kui-ShellContent[data-flush] {
+  grid-column-end: inspector-end;
+}
+
+.kui-ShellRoot:has(> .kui-ShellHeader:not([data-flush])) > .kui-ShellContent[data-flush] {
+  grid-row-start: header-start;
+}
+
+.kui-ShellRoot:has(> .kui-ShellBottom:not([data-flush])) > .kui-ShellContent[data-flush] {
+  grid-row-end: bottom-end;
 }
 
 /* ── On a phone, the page scrolls (0.27.0) ────────────────────────────────── */

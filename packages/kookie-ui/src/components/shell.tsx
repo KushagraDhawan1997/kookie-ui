@@ -36,16 +36,16 @@ import { usePane, paneAttributes, usePresentationTable } from './_internal/shell
 import { splitHandles, useInitialPaneSize, useResizablePane } from './_internal/shell-resizable.js';
 import {
   FIXED_TABLE,
-  ShellInsetContext,
+  ShellFrameContext,
   ShellStoreContext,
   createShellStore,
   setShellPeek,
   subscribeShellStore,
-  useInsetRegistration,
+  useFrameRegistration,
   usePaneEntry,
   useShellStore,
   warnOnce,
-  type InsetPaneId,
+  type FramePaneId,
 } from './_internal/shell-store.js';
 import { navigationRest, detailRest, toPaneValue, startAnchoredGrowth, withoutRemovedPaneProps } from './_internal/shell-rest.js';
 import { useShell, useSidebarMode } from './shell.context.js';
@@ -145,20 +145,20 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
   const rootRef = React.useRef<HTMLDivElement | null>(null);
   const composedRef = useComposedRefs(ref, rootRef);
 
-  // Inset: the Root paints the backdrop while any pane is inset.
-  const [insetPanes, setInsetPanes] = React.useState<ReadonlySet<InsetPaneId>>(() => new Set());
-  const registerInset = React.useCallback((id: InsetPaneId) => {
-    setInsetPanes((prev) => (prev.has(id) ? prev : new Set(prev).add(id)));
+  // The panes pulled off the frame (`flush={false}`). Only the Rail's is read, for the offset below.
+  const [offFrame, setOffFrame] = React.useState<ReadonlySet<FramePaneId>>(() => new Set());
+  const registerOffFrame = React.useCallback((id: FramePaneId) => {
+    setOffFrame((prev) => (prev.has(id) ? prev : new Set(prev).add(id)));
   }, []);
-  const unregisterInset = React.useCallback((id: InsetPaneId) => {
-    setInsetPanes((prev) => {
+  const unregisterOffFrame = React.useCallback((id: FramePaneId) => {
+    setOffFrame((prev) => {
       if (!prev.has(id)) return prev;
       const next = new Set(prev);
       next.delete(id);
       return next;
     });
   }, []);
-  const insetContext = React.useMemo(() => ({ registerInset, unregisterInset }), [registerInset, unregisterInset]);
+  const frameContext = React.useMemo(() => ({ registerOffFrame, unregisterOffFrame }), [registerOffFrame, unregisterOffFrame]);
 
   const closeOverlays = React.useCallback(() => {
     for (const entry of store.entries.values()) {
@@ -444,10 +444,10 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
   };
 
   // A floating Panel sits beside the Rail when the Rail is showing, and
-  // beside its card when the Rail is inset.
+  // beside its card when the Rail is off the frame.
   const rail = store.entries.get('rail');
   const railShown = rail !== undefined && rail.value !== undefined && rail.value !== 'closed';
-  const railOffset = railShown ? (insetPanes.has('rail') ? `calc(${rail.size}px + 2 * var(--shell-inset-gap))` : `${rail.size}px`) : undefined;
+  const railOffset = railShown ? (offFrame.has('rail') ? `calc(${rail.size}px + 2 * var(--shell-gap))` : `${rail.size}px`) : undefined;
 
   // `full` writes no inline height: the stylesheet states it as 100vh with a
   // 100dvh override where supported, and an inline value would beat both.
@@ -459,7 +459,7 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
       <ShellContentContext.Provider value={false}>
       <ShellWindowContext.Provider value={windowShell}>
       <ShellHeaderHeightContext.Provider value={setHeaderHeight}>
-      <ShellInsetContext.Provider value={insetContext}>
+      <ShellFrameContext.Provider value={frameContext}>
       {/* A Shell inside a portalled surface's Theme starts with no band, like any other. */}
       <PaneBandSizeContext.Provider value={undefined}>
         {/* The Root is not a widget: it hears Escape bubbling up from the panes,
@@ -472,7 +472,6 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
           data-height={height === 'auto' && !contained ? 'auto' : undefined}
           data-contained={contained || undefined}
           data-window={windowShell || undefined}
-          data-has-inset={insetPanes.size > 0 || undefined}
           data-overlay-live={liveCount > 0 || undefined}
           onKeyDown={handleKeyDown}
           onFocus={handleFocus}
@@ -490,7 +489,7 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
           <div className="kui-ShellScrim" aria-hidden onClick={closeOverlays} />
         </div>
       </PaneBandSizeContext.Provider>
-      </ShellInsetContext.Provider>
+      </ShellFrameContext.Provider>
       </ShellHeaderHeightContext.Provider>
       </ShellWindowContext.Provider>
       </ShellContentContext.Provider>
@@ -504,9 +503,14 @@ Root.displayName = 'Shell.Root';
 
 interface ShellHeaderProps extends React.ComponentPropsWithoutRef<'header'> {
   height?: number;
+  /**
+   * Sets whether the header joins the app frame. The default is `true`: a hairline under it. Set
+   * `flush={false}` to make it a card off the frame.
+   */
+  flush?: boolean;
 }
 
-const Header = React.forwardRef<HTMLElement, ShellHeaderProps>(({ className, height = DEFAULT_HEADER_HEIGHT, style, ...props }, ref) => {
+const Header = React.forwardRef<HTMLElement, ShellHeaderProps>(({ className, height = DEFAULT_HEADER_HEIGHT, flush = true, style, ...props }, ref) => {
   // Rows that stick beneath the header while the page scrolls need its height. The stylesheet
   // assumes the default, so only another height is told to the Root.
   const setHeaderHeight = React.useContext(ShellHeaderHeightContext);
@@ -520,6 +524,7 @@ const Header = React.forwardRef<HTMLElement, ShellHeaderProps>(({ className, hei
       {...props}
       ref={ref}
       className={classNames('kui-ShellHeader', className)}
+      data-flush={flush || undefined}
       style={
         {
           ...style,
@@ -541,7 +546,6 @@ interface LeftProps extends React.ComponentPropsWithoutRef<'div'> {
   collapsible?: boolean;
   onExpand?: () => void;
   onCollapse?: () => void;
-  inset?: boolean;
 }
 
 /**
@@ -572,14 +576,19 @@ type RailProps = React.ComponentPropsWithoutRef<'div'> & {
   onExpand?: () => void;
   /** @deprecated Use `onOpenChange`. */
   onCollapse?: () => void;
-  /** When true, adds margin and triggers the gray backdrop on the Shell. */
-  inset?: boolean;
+  /**
+   * Sets whether this pane joins the app frame. The default is `true`: the pane sits against its
+   * neighbours with one hairline between them. Set `flush={false}` to pull it off the frame as a
+   * card. It then floats over the content if the content is flush, and otherwise sits on the
+   * Shell's background beside a card content.
+   */
+  flush?: boolean;
 } & (RailControlledProps | RailUncontrolledProps);
 
 const RAIL_PROP_NAMES = { controlled: 'open', default: 'defaultOpen' };
 
 const Rail = React.forwardRef<HTMLDivElement, RailProps>((props, ref) => {
-  const { className, presentation, expandedSize = 64, collapsible: _collapsible, onExpand, onCollapse, children, style, open, defaultOpen, onOpenChange, inset, id, ...domProps } = props;
+  const { className, presentation, expandedSize = 64, collapsible: _collapsible, onExpand, onCollapse, children, style, open, defaultOpen, onOpenChange, flush = true, id, ...domProps } = props;
   const { table, attributes } = usePresentationTable(presentation, 'fixed');
   const pane = usePane({
     name: 'rail',
@@ -595,7 +604,7 @@ const Rail = React.forwardRef<HTMLDivElement, RailProps>((props, ref) => {
     onCollapse,
     size: expandedSize,
   });
-  useInsetRegistration('rail', inset);
+  useFrameRegistration('rail', flush);
   const composedRef = useComposedRefs(ref, pane.setElement);
 
   return (
@@ -606,7 +615,7 @@ const Rail = React.forwardRef<HTMLDivElement, RailProps>((props, ref) => {
       ref={composedRef}
       className={classNames('kui-ShellPane', 'kui-ShellRail', className)}
       {...paneAttributes(pane, attributes)}
-      data-inset={inset || undefined}
+      data-flush={flush || undefined}
       tabIndex={pane.overlaying ? -1 : domProps.tabIndex}
       style={{ ...style, '--rail-size': `${expandedSize}px` } as CSSPropertiesWithVars}
     >
@@ -644,8 +653,13 @@ type PanelPublicProps = PaneBaseProps &
     onSizeChange?: (size: number, meta: PanelSizeChangeMeta) => void;
     sizeUpdate?: 'throttle' | 'debounce';
     sizeUpdateMs?: number;
-    /** When true, adds margin and triggers the gray backdrop on the Shell. */
-    inset?: boolean;
+    /**
+     * Sets whether this pane joins the app frame. The default is `true`: the pane sits against its
+     * neighbours with one hairline between them. Set `flush={false}` to pull it off the frame as a
+     * card. It then floats over the content if the content is flush, and otherwise sits on the
+     * Shell's background beside a card content.
+     */
+    flush?: boolean;
   };
 type PanelComponent = React.ForwardRefExoticComponent<PanelPublicProps & React.RefAttributes<HTMLDivElement>> & {
   Handle: HandleComponent;
@@ -688,7 +702,7 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
     onSizeChange,
     sizeUpdate,
     sizeUpdateMs = 50,
-    inset,
+    flush = true,
     id,
     ...domProps
   } = props;
@@ -713,7 +727,7 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
     onCollapse,
     size: expandedSize,
   });
-  useInsetRegistration('panel', inset);
+  useFrameRegistration('panel', flush);
 
   React.useEffect(() => {
     if (snapPoints !== undefined || collapseThreshold !== undefined || paneId !== undefined || persistence !== undefined) {
@@ -774,7 +788,7 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
       ref={composedRef}
       className={classNames('kui-ShellPane', 'kui-ShellPanel', className)}
       {...paneAttributes(pane, presentationAttributes)}
-      data-inset={inset || undefined}
+      data-flush={flush || undefined}
       tabIndex={pane.overlaying ? -1 : domProps.tabIndex}
       style={
         {
@@ -799,18 +813,22 @@ Panel.Handle = PanelHandle;
 /* ── Content ───────────────────────────────────────────────────────────────── */
 
 interface ShellContentProps extends React.ComponentPropsWithoutRef<'main'> {
-  /** When true, adds margin and triggers the gray backdrop on the Shell. */
-  inset?: boolean;
+  /**
+   * Sets whether the work area joins the app frame. The default is `true`. Set `flush={false}`
+   * to make it a card on the Shell's background; the panes beside it then sit on that background
+   * too, and draw no hairline toward it.
+   */
+  flush?: boolean;
 }
 
 /**
  * The work area. It scrolls as it is; with a `Shell.Scroll` child it becomes a column and the
  * Scroll scrolls instead, so a `Shell.PaneHeader float` beside it stays pinned over the page.
  */
-const Content = React.forwardRef<HTMLElement, ShellContentProps>(({ className, inset, children, ...props }, ref) => {
-  useInsetRegistration('content', inset);
+const Content = React.forwardRef<HTMLElement, ShellContentProps>(({ className, flush = true, children, ...props }, ref) => {
+  useFrameRegistration('content', flush);
   return (
-    <main {...props} ref={ref} className={classNames('kui-ShellContent', className)} data-inset={inset || undefined}>
+    <main {...props} ref={ref} className={classNames('kui-ShellContent', className)} data-flush={flush || undefined}>
       {/* Each pane holds its own page store, so a band's title can mirror the page beside it. */}
       <ShellContentContext.Provider value={true}>
         <PageScope>{children}</PageScope>

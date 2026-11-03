@@ -8,6 +8,8 @@
   --color-page: white;
   --color-overlay: var(--black-a6);
   --color-surface: white;
+  /* A rule between two regions, such as the hairline between two flush Shell panes. The same role and value as v2's. */
+  --color-border: var(--neutral-6, var(--gray-6));
   /* A background for an app page that holds raised surfaces. No component reads it. */
   --color-ground: var(--neutral-1, var(--gray-1));
 

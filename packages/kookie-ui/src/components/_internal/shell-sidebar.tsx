@@ -7,7 +7,7 @@ import { PaneResizeContext } from './shell-resize.js';
 import { PaneHandle, SidebarHandle } from './shell-handles.js';
 import { usePane, paneAttributes, usePresentationTable } from './shell-pane.js';
 import { splitHandles, useInitialPaneSize, useResizablePane, type SizeChangeMeta } from './shell-resizable.js';
-import { useInsetRegistration, warnOnce, type PaneValue } from './shell-store.js';
+import { useFrameRegistration, warnOnce, type PaneValue } from './shell-store.js';
 import { navigationRest, startAnchoredGrowth, withoutRemovedPaneProps } from './shell-rest.js';
 import { readBreakpoint } from '../../hooks/use-breakpoint.js';
 import { PaneChromeScope } from './pane-chrome.js';
@@ -23,8 +23,13 @@ type SidebarPublicProps = PaneBaseProps & {
   onSizeChange?: (size: number, meta: SizeChangeMeta) => void;
   sizeUpdate?: 'throttle' | 'debounce';
   sizeUpdateMs?: number;
-  /** When true, adds margin and triggers the gray backdrop on the Shell. */
-  inset?: boolean;
+  /**
+   * Sets whether this pane joins the app frame. The default is `true`: the pane sits against its
+   * neighbours with one hairline between them. Set `flush={false}` to pull it off the frame as a
+   * card. It then floats over the content if the content is flush, and otherwise sits on the
+   * Shell's background beside a card content.
+   */
+  flush?: boolean;
 } & (SidebarControlledProps | SidebarUncontrolledProps);
 
 type SidebarComponent = React.ForwardRefExoticComponent<SidebarPublicProps & React.RefAttributes<HTMLDivElement>> & { Handle: typeof SidebarHandle };
@@ -77,7 +82,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
     onSizeChange,
     sizeUpdate,
     sizeUpdateMs = 50,
-    inset,
+    flush = true,
     id,
     ...domProps
   } = props;
@@ -97,7 +102,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
     onCollapse,
     size: expandedSize,
   });
-  useInsetRegistration('sidebar', inset);
+  useFrameRegistration('sidebar', flush);
 
   React.useEffect(() => {
     if (snapPoints !== undefined || collapseThreshold !== undefined || paneId !== undefined || persistence !== undefined) {
@@ -158,7 +163,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
       ref={composedRef}
       className={classNames('kui-ShellPane', 'kui-ShellSidebar', className)}
       {...paneAttributes(pane, attributes)}
-      data-inset={inset || undefined}
+      data-flush={flush || undefined}
       tabIndex={pane.overlaying ? -1 : domProps.tabIndex}
       style={
         {
