@@ -23,7 +23,7 @@ export function SiteFooter() {
     <Footer.Root gap="9">
       <Footer.Main>
         <Footer.Brand>
-          <NextLink href="/" aria-label="Womp's Design System" style={{ color: 'inherit' }}>
+          <NextLink href="/" aria-label="Womp UI" style={{ color: 'inherit' }}>
             <Logo height="var(--line-height-7)" />
           </NextLink>
         </Footer.Brand>

@@ -18,8 +18,8 @@ export function DocsLayout({ children }: { children: React.ReactNode }) {
     <DocsShell
       navigation={docsNavigation}
       logo={{
-        label: 'Womp Design',
-        alt: 'Womp Design',
+        label: 'Womp UI',
+        alt: 'Womp UI',
         href: '/',
       }}
       pathname={pathname}

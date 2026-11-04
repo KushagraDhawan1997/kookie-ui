@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Womp Design System";
+export const alt = "Womp UI";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -18,7 +18,7 @@ async function loadGoogleFont(font: string, weight: number, text: string) {
 }
 
 export default async function Image() {
-  const title = "Womp Design";
+  const title = "Womp UI";
   const subtitle = "Built on Kookie UI v1";
   const text = title + subtitle;
 

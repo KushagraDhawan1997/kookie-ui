@@ -19,7 +19,7 @@ const DESCRIPTION =
  */
 export default function Home() {
   return (
-    <SiteDocsPage meta={{ title: "Womp's Design System", description: DESCRIPTION }} showCopyButton={false}>
+    <SiteDocsPage meta={{ title: "Womp UI", description: DESCRIPTION }} showCopyButton={false}>
       <Flex direction="column" gap="10">
         <Hero />
         <Grid columns={{ initial: '1', sm: '2' }} gapX="8" gapY="10">

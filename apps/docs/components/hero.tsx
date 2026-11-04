@@ -33,10 +33,10 @@ import {
 } from '@kushagradhawan/kookie-ui';
 
 /**
- * The front page's hero (2026-10-22): a real builder made with Womp's Design System, laid out like
+ * The front page's hero (2026-10-22): a real builder made with Womp UI, laid out like
  * the Kookie UI builder (layers, the canvas with floating toolbars, the inspector), in a laptop
  * lid on a grey gradient and cropped by the band's bottom edge. The same figure is on kushagradhawan.com's
- * Womp's Design System page. DocsShell runs it to the content pane's top, left and right edges,
+ * Womp UI page. DocsShell runs it to the content pane's top, left and right edges,
  * with the top bar floating over it.
  */
 const icon = (glyph: IconSvgElement, size = 16) => <HugeiconsIcon icon={glyph} size={size} strokeWidth={1.5} aria-hidden />;

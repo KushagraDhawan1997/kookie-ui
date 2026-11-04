@@ -11,13 +11,13 @@ import { DevOutlineGate } from '../components/dev-outline';
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: 'Womp Design System',
-    template: '%s – Womp Design',
+    default: 'Womp UI',
+    template: '%s – Womp UI',
   },
   description:
-    "Womp's design system: React components built on Kookie UI v1, an open-source fork of Radix Themes by Kushagra Dhawan.",
+    "Womp UI is Womp's design system: React components built on Kookie UI v1, an open-source fork of Radix Themes by Kushagra Dhawan.",
   keywords: [
-    'Womp Design',
+    'Womp UI',
     'Womp',
     'Kookie UI',
     'React UI components',
@@ -35,17 +35,17 @@ export const metadata: Metadata = {
   publisher: 'Kushagra Dhawan',
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'Womp Design System',
+    title: 'Womp UI',
     description:
-      "Womp's design system: React components built on Kookie UI v1, an open-source fork of Radix Themes by Kushagra Dhawan.",
+      "Womp UI is Womp's design system: React components built on Kookie UI v1, an open-source fork of Radix Themes by Kushagra Dhawan.",
     url: BASE_URL,
-    siteName: 'Womp Design',
+    siteName: 'Womp UI',
     images: [
       {
         url: '/logos/kookie-ui/kookie-ui.png',
         width: 1200,
         height: 630,
-        alt: 'Womp Design System',
+        alt: 'Womp UI',
       },
     ],
     locale: 'en_US',
@@ -53,9 +53,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Womp Design System',
+    title: 'Womp UI',
     description:
-      "Womp's design system: React components built on Kookie UI v1, an open-source fork of Radix Themes by Kushagra Dhawan.",
+      "Womp UI is Womp's design system: React components built on Kookie UI v1, an open-source fork of Radix Themes by Kushagra Dhawan.",
     images: ['/logos/kookie-ui/kookie-ui.png'],
     site: '@kookieui',
     creator: '@kushagradhawan',
@@ -119,18 +119,18 @@ export default function RootLayout({
                 '@type': 'WebSite',
                 '@id': `${BASE_URL}/#website`,
                 url: BASE_URL,
-                name: 'Womp Design',
+                name: 'Womp UI',
                 description:
-                  "Womp's design system: React components built on Kookie UI v1, an open-source fork of Radix Themes by Kushagra Dhawan.",
+                  "Womp UI is Womp's design system: React components built on Kookie UI v1, an open-source fork of Radix Themes by Kushagra Dhawan.",
                 publisher: { '@id': 'https://kushagradhawan.com/#person' },
                 inLanguage: 'en-US',
               },
               {
                 '@type': 'SoftwareApplication',
                 '@id': `${BASE_URL}/#software`,
-                name: 'Womp Design',
+                name: 'Womp UI',
                 description:
-                  "Womp's design system, built on Kookie UI v1, an open-source fork of Radix Themes.",
+                  "Womp UI is Womp's design system, built on Kookie UI v1, an open-source fork of Radix Themes.",
                 url: BASE_URL,
                 applicationCategory: 'DeveloperApplication',
                 operatingSystem: 'Cross-platform',
@@ -147,7 +147,7 @@ export default function RootLayout({
                 '@id': `${BASE_URL}/#sourcecode`,
                 name: 'Kookie UI v1',
                 description:
-                  'Source code for Kookie UI v1, the open-source library Womp Design is built on.',
+                  'Source code for Kookie UI v1, the open-source library Womp UI is built on.',
                 url: BASE_URL,
                 codeRepository: 'https://github.com/KushagraDhawan1997/kookie-ui',
                 programmingLanguage: ['TypeScript', 'React'],
@@ -159,11 +159,11 @@ export default function RootLayout({
                 '@type': 'WebPage',
                 '@id': `${BASE_URL}/#webpage`,
                 url: BASE_URL,
-                name: 'Womp Design System',
+                name: 'Womp UI',
                 isPartOf: { '@id': `${BASE_URL}/#website` },
                 about: { '@id': `${BASE_URL}/#software` },
                 description:
-                  "Womp's design system: React components built on Kookie UI v1, an open-source fork of Radix Themes by Kushagra Dhawan.",
+                  "Womp UI is Womp's design system: React components built on Kookie UI v1, an open-source fork of Radix Themes by Kushagra Dhawan.",
                 inLanguage: 'en-US',
               },
               {
