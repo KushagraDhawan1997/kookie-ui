@@ -1,6 +1,6 @@
 export const previewSources = {
   grid: `<PreviewBlock background="grid" label="Storage card" code={source}>
-  <Card variant="classic" size="2">
+  <Card variant="raised" size="2">
     <Flex direction="column" gap="1" width="240px">
       <Text size="2" weight="medium">Storage</Text>
       <Text size="2" emphasis="medium">18.4 GB of 50 GB used</Text>
@@ -9,7 +9,7 @@ export const previewSources = {
 </PreviewBlock>`,
   dark: `<PreviewBlock appearance="dark" showThemeToggle={false} code={source}>
   <Flex gap="2" align="center">
-    <Badge color="green" variant="soft">Live</Badge>
+    <Chip color="green" variant="soft">Live</Chip>
     <Text size="2">Deployed 2 minutes ago</Text>
   </Flex>
 </PreviewBlock>`,
@@ -20,6 +20,6 @@ export const previewSources = {
   }}
   code={source}
 >
-  <Button variant="soft" material="translucent">Action</Button>
+  <Button variant="soft">Action</Button>
 </PreviewBlock>`,
 };

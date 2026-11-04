@@ -1,315 +1,96 @@
 import * as React from 'react';
 import classNames from 'classnames';
+import { useComposedRefs, useLayoutEffect } from 'radix-ui/internal';
 
 import { imagePropDefs } from './image.props.js';
 import { extractProps } from '../helpers/extract-props.js';
-import { marginPropDefs } from '../props/margin.props.js';
 import { widthPropDefs } from '../props/width.props.js';
 import { heightPropDefs } from '../props/height.props.js';
-import { layoutPropDefs } from '../props/layout.props.js';
-import { Skeleton } from './skeleton.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
-import type { MarginProps } from '../props/margin.props.js';
 import type { WidthProps } from '../props/width.props.js';
 import type { HeightProps } from '../props/height.props.js';
-import type { LayoutProps } from '../props/layout.props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
 type ImageElement = React.ElementRef<'img'>;
+type ImageOwnProps = GetPropDefTypes<typeof imagePropDefs>;
+type ImageStatus = 'loading' | 'loaded' | 'error';
 
-type ImageOwnProps = GetPropDefTypes<typeof imagePropDefs> & {
-  /**
-   * Native loading behavior for the image
-   * @default 'lazy'
-   */
-  loading?: 'eager' | 'lazy';
-  /**
-   * Placeholder image URL to show while the main image is loading (LQIP pattern)
-   */
-  placeholder?: string;
-  /**
-   * Shows a skeleton placeholder while loading
-   */
-  showSkeleton?: boolean;
-  /**
-   * Whether the image should fade in when loaded
-   * @default true
-   */
-  fadeIn?: boolean;
-  /**
-   * Callback fired when the image successfully loads
-   */
-  onLoad?: (event: React.SyntheticEvent<HTMLImageElement>) => void;
-  /**
-   * Callback fired when the image fails to load
-   */
-  onError?: (event: React.SyntheticEvent<HTMLImageElement>) => void;
-  /**
-   * Alternative text for the image (required for accessibility)
-   */
+interface ImageProps
+  extends ComponentPropsWithout<'img', RemovedProps | 'width' | 'height' | 'src' | 'alt'>,
+    Omit<WidthProps, 'width'>,
+    Omit<HeightProps, 'height'>,
+    ImageOwnProps {
+  src: string;
+  /** Required. Pass `""` for a decorative picture. */
   alt: string;
   /**
-   * Image source URL
+   * A number is the picture's intrinsic width in pixels, written as the `width` attribute, so the
+   * browser reserves its box before it loads. A string or responsive object sets the CSS width.
    */
-  src: string;
-  /**
-   * When true, the image will fill its parent container (for Next.js Image compatibility).
-   * Parent must have `position: relative` and defined dimensions.
-   */
-  fill?: boolean;
-};
-
-interface CommonImageProps
-  extends MarginProps,
-    WidthProps,
-    HeightProps,
-    LayoutProps,
-    ImageOwnProps {}
-
-type ImageImgProps = { as?: 'img' } & ComponentPropsWithout<'img', RemovedProps | 'color' | 'width' | 'height' | 'alt'>;
-type ImageComponentProps = { as: React.ComponentType<any> } & Record<string, any>;
-type ImageProps = CommonImageProps & (ImageImgProps | ImageComponentProps);
+  width?: WidthProps['width'] | number;
+  /** A number is the intrinsic height attribute; a string or responsive object sets the CSS height. */
+  height?: HeightProps['height'] | number;
+}
 
 /**
- * Image component for displaying images with enhanced loading states and accessibility.
+ * A plain `<img>` that loads lazily, fills its box by `fit` and takes the theme's corner.
+ * One element and no wrapper: `width`, `height`, `className` and `style` all land on the
+ * `<img>` itself. Numeric `width` and `height` are the native attributes, which reserve the box.
  *
- * Supports polymorphic rendering via the `as` prop for Next.js Image compatibility.
- *
- * @example
- * ```tsx
- * // Basic usage
- * <Image src="/photo.jpg" alt="Team photo" />
- *
- * // With Next.js Image (fixed dimensions)
- * import NextImage from 'next/image';
- * <Image as={NextImage} src="/photo.jpg" alt="..." width={400} height={300} />
- *
- * // With Next.js Image (fill mode - parent needs position: relative and dimensions)
- * <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9' }}>
- *   <Image as={NextImage} src="/photo.jpg" alt="..." fill />
- * </div>
- *
- * // With placeholder and skeleton
- * <Image
- *   src="/high-res.jpg"
- *   placeholder="/low-res.jpg"
- *   showSkeleton
- *   alt="Product showcase"
- * />
- *
- * // With caption
- * <Image
- *   src="/chart.png"
- *   alt="Sales data visualization"
- *   caption="Q3 2024 Sales Performance"
- * />
- * ```
+ * Until it loads it rests on a quiet neutral fill, which is also what stays if it fails.
  */
 const Image = React.forwardRef<ImageElement, ImageProps>((props, forwardedRef) => {
-  // Extract native width/height before extractProps consumes them (for Next.js Image compatibility)
-  const nativeWidth = typeof props.width === 'number' ? props.width : undefined;
-  const nativeHeight = typeof props.height === 'number' ? props.height : undefined;
-  // Check if fill prop is used (for Next.js Image compatibility)
-  const hasFill = 'fill' in props && props.fill === true;
-
-  const {
-    as: Component = 'img',
-    asChild: _asChild, // Extract to prevent passing to DOM element
-    fill: _fill, // Extract to prevent passing to native img element (only used for custom components)
-    className,
-    style,
-    loading = 'lazy',
-    alt,
-    src,
-    placeholder,
-    showSkeleton = false,
-    fadeIn = true,
-    loadingAriaLabel = 'Loading image...',
-    errorAriaLabel = 'Failed to load image',
-    radius,
-    caption,
-    onLoad: userOnLoad,
-    onError: userOnError,
-    ...restProps
-  } = extractProps(
-    props,
+  // Numbers are the native attributes, which give the browser an aspect ratio before load.
+  const { width, height, ...layoutProps } = props;
+  const widthAttribute = typeof width === 'number' ? width : undefined;
+  const heightAttribute = typeof height === 'number' ? height : undefined;
+  const { className, alt, radius, loading = 'lazy', decoding = 'async', onLoad, onError, ...imageProps } = extractProps(
+    {
+      ...layoutProps,
+      width: typeof width === 'number' ? undefined : width,
+      height: typeof height === 'number' ? undefined : height,
+    },
     imagePropDefs,
-    marginPropDefs,
     widthPropDefs,
     heightPropDefs,
-    layoutPropDefs,
   );
 
-  // When using a custom component (like Next.js Image), pass native width/height and fill
-  const isCustomComponent = Component !== 'img';
-  const componentDimensionProps = isCustomComponent
-    ? { width: nativeWidth, height: nativeHeight, ...(hasFill ? { fill: true } : {}) }
-    : {};
+  const [status, setStatus] = React.useState<ImageStatus>('loading');
+  const ref = React.useRef<HTMLImageElement>(null);
 
-  const [loadingState, setLoadingState] = React.useState<'loading' | 'loaded' | 'error'>('loading');
-  const [showPlaceholder, setShowPlaceholder] = React.useState(!!placeholder);
-  const imgRef = React.useRef<HTMLImageElement>(null);
+  // A cached image, or one that finished before hydration, never fires onLoad for us.
+  useLayoutEffect(() => {
+    const img = ref.current;
+    if (img?.complete) setStatus(img.naturalWidth > 0 ? 'loaded' : 'error');
+    else setStatus('loading');
+  }, [props.src]);
 
-  const handleLoad = React.useCallback(
-    (event: React.SyntheticEvent<HTMLImageElement>) => {
-      setLoadingState('loaded');
-      setShowPlaceholder(false);
-      userOnLoad?.(event);
-    },
-    [userOnLoad],
-  );
+  const setRefs = useComposedRefs(ref, forwardedRef);
 
-  const handleError = React.useCallback(
-    (event: React.SyntheticEvent<HTMLImageElement>) => {
-      setLoadingState('error');
-      setShowPlaceholder(false);
-      userOnError?.(event);
-    },
-    [userOnError],
-  );
-
-  // Check if image is already cached
-  React.useEffect(() => {
-    const img = imgRef.current;
-    if (img && img.complete && img.naturalWidth > 0) {
-      setLoadingState('loaded');
-      setShowPlaceholder(false);
-    }
-  }, [src]);
-
-  if (!src) {
-    console.warn('Image component: src prop is required');
-    return null;
-  }
-
-  const isLoading = loadingState === 'loading';
-  const isError = loadingState === 'error';
-  const isLoaded = loadingState === 'loaded';
-
-  // When using fill (Next.js Image), don't add dimension/position styles as Next.js handles them
-  const imgStyle: React.CSSProperties = hasFill
-    ? {
-        display: 'block',
-        opacity: fadeIn ? (isLoaded ? 1 : 0) : 1,
-        transition: fadeIn ? 'opacity 0.3s ease-out' : 'none',
-      }
-    : {
-        width: '100%',
-        height: '100%',
-        display: 'block',
-        opacity: fadeIn ? (isLoaded ? 1 : 0) : 1,
-        transition: fadeIn ? 'opacity 0.3s ease-out' : 'none',
-      };
-
-  const mergeRefs = (node: HTMLImageElement | null) => {
-    (imgRef as React.RefObject<HTMLImageElement | null>).current = node;
-    if (typeof forwardedRef === 'function') {
-      forwardedRef(node);
-    } else if (forwardedRef) {
-      forwardedRef.current = node;
-    }
-  };
-
-  const imageElement = (
-    <Component
-      ref={mergeRefs}
-      loading={loading}
-      style={hasFill ? imgStyle : { ...imgStyle, position: 'relative', zIndex: 1 }}
-      className={classNames('rt-reset', 'rt-Image')}
-      alt={alt}
-      src={src}
-      data-radius={radius}
-      onLoad={handleLoad}
-      onError={handleError}
-      aria-busy={isLoading}
-      aria-invalid={isError}
-      aria-describedby={isError ? 'image-error' : undefined}
-      {...componentDimensionProps}
-      {...restProps}
-    />
-  );
-
-  const loadingAnnouncement = isLoading && (
-    <div className="rt-sr-only" aria-live="polite" role="status">
-      {loadingAriaLabel}
-    </div>
-  );
-
-  const errorAnnouncement = isError && (
-    <div id="image-error" className="rt-sr-only" aria-live="polite" role="alert">
-      {errorAriaLabel}
-    </div>
-  );
-
-  const skeletonElement = showSkeleton && isLoading && (
-    <Skeleton width="100%" height="100%" style={{ position: 'absolute', inset: 0 }} />
-  );
-
-  const placeholderElement = placeholder && showPlaceholder && (
-    <img
-      style={{
-        ...imgStyle,
-        position: 'absolute',
-        inset: 0,
-        filter: 'blur(4px)',
-        opacity: 0.7,
-        zIndex: 0,
-      }}
-      className={classNames('rt-reset', 'rt-Image', 'rt-Image--placeholder')}
-      alt=""
-      src={placeholder}
-    />
-  );
-
-  // Simple flat structure when no caption
-  if (!caption) {
-    // When using fill, wrapper uses absolute positioning to fill the nearest positioned ancestor
-    const wrapperStyle: React.CSSProperties = hasFill
-      ? { position: 'absolute', inset: 0, ...style }
-      : { position: 'relative', ...style };
-    return (
-      <div className={className} style={wrapperStyle}>
-        {loadingAnnouncement}
-        {errorAnnouncement}
-        {skeletonElement}
-        {placeholderElement}
-        {imageElement}
-      </div>
-    );
-  }
-
-  // Flexbox structure when caption is present
   return (
-    <div
-      className={className}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        ...style,
+    <img
+      {...imageProps}
+      width={widthAttribute}
+      height={heightAttribute}
+      ref={setRefs}
+      alt={alt}
+      loading={loading}
+      decoding={decoding}
+      data-radius={radius}
+      data-status={status}
+      className={classNames('kui-Image', className)}
+      onLoad={(event) => {
+        setStatus('loaded');
+        onLoad?.(event);
       }}
-    >
-      <div
-        style={{
-          position: 'relative',
-          flex: '1 1 0%',
-          minHeight: 0,
-        }}
-      >
-        {loadingAnnouncement}
-        {errorAnnouncement}
-        {skeletonElement}
-        {placeholderElement}
-        {imageElement}
-      </div>
-
-      <div className="rt-Image-caption" style={{ flex: '0 0 auto' }}>
-        {caption}
-      </div>
-    </div>
+      onError={(event) => {
+        setStatus('error');
+        onError?.(event);
+      }}
+    />
   );
 });
-
 Image.displayName = 'Image';
 
 export { Image };

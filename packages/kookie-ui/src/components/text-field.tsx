@@ -3,15 +3,15 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import classNames from 'classnames';
-import { composeRefs } from 'radix-ui/internal';
+import { composeEventHandlers, composeRefs, useLayoutEffect } from 'radix-ui/internal';
 
-import { textFieldRootPropDefs, textFieldSlotPropDefs, type TextFieldSlotScrubProps } from './text-field.props.js';
+import { textFieldRootPropDefs, textFieldGroupPropDefs, textFieldSlotPropDefs, type TextFieldSlotScrubProps } from './text-field.props.js';
 import { extractProps } from '../helpers/extract-props.js';
-import { marginPropDefs } from '../props/margin.props.js';
+import { mergeStyles } from '../helpers/merge-styles.js';
+import { useThemeSizeProps } from '../hooks/theme-size.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { NotInputTextualAttributes } from '../helpers/input-attributes.js';
-import type { MarginProps } from '../props/margin.props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
 type TextFieldRootElement = React.ElementRef<'input'>;
@@ -21,116 +21,236 @@ type TextFieldRootOwnProps = GetPropDefTypes<typeof textFieldRootPropDefs> & {
   type?: 'date' | 'datetime-local' | 'email' | 'hidden' | 'month' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'time' | 'url' | 'week';
 };
 type TextFieldInputProps = ComponentPropsWithout<'input', NotInputTextualAttributes | 'color' | 'defaultValue' | 'size' | 'type' | 'value'>;
-interface TextFieldRootProps extends TextFieldInputProps, MarginProps, TextFieldRootOwnProps {}
-const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>((props, forwardedRef) => {
+interface TextFieldRootProps extends TextFieldInputProps, TextFieldRootOwnProps {}
+
+// Each Slot registers its id here, so the input can list slot content in aria-describedby. A scrub
+// slot also registers its arrow-key step, and reads whether the field takes input at all.
+type ScrubKeyHandler = (direction: 1 | -1, shiftKey: boolean, altKey: boolean) => void;
+type TextFieldContextValue = {
+  registerSlot: (id: string) => () => void;
+  registerScrub: (handler: ScrubKeyHandler) => () => void;
+  inert: boolean;
+};
+const TextFieldContext = React.createContext<TextFieldContextValue | null>(null);
+
+// Clicking anything a person could mean to press keeps its own press: the guard is a focusability
+// list, not a tag list. `[tabindex]` catches role-based widgets; `label` already redirects a click.
+const FOCUSABLE_IN_SLOT = 'button, a, input, select, textarea, label, [tabindex], [contenteditable]';
+
+// A Group decides the look of its fields: their size, variant and radius come from it. A field
+// can still take its own color, and is disabled when either it or the group is.
+type TextFieldGroupContextValue = Pick<TextFieldGroupOwnProps, 'size' | 'variant' | 'radius' | 'color' | 'disabled'>;
+const TextFieldGroupContext = React.createContext<TextFieldGroupContextValue | null>(null);
+
+const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>((fieldProps, forwardedRef) => {
+  const group = React.useContext(TextFieldGroupContext);
+  const ownProps = group
+    ? {
+        ...fieldProps,
+        size: group.size,
+        variant: group.variant,
+        radius: group.radius,
+        color: fieldProps.color ?? group.color,
+        disabled: Boolean(group.disabled || fieldProps.disabled),
+      }
+    : fieldProps;
+  // The caller's className and style are kept apart from the size and variant classes: with an
+  // error message they go on the wrapper, which is then the one box the parent lays out.
+  const { className: ownClassName, style: ownStyle, ...themedProps } = useThemeSizeProps(ownProps, textFieldRootPropDefs.size);
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const { children, className, color, radius, panelBackground, material, style, ...inputProps } = extractProps(props, textFieldRootPropDefs, marginPropDefs);
-  const effectiveMaterial = material || panelBackground;
+  const { children, className, color, radius, style, ...inputProps } = extractProps(themedProps, textFieldRootPropDefs);
+  const wrapped = Boolean(inputProps.errorMessage);
 
   // Generate unique IDs for accessibility
   const errorId = React.useId();
 
-  // Determine invalid state
-  const isInvalid = inputProps.error || inputProps.isInvalid;
+  // Slot content qualifies the value, so it describes the input (as in v2), in mount order.
+  const [slotIds, setSlotIds] = React.useState<string[]>([]);
+  const registerSlot = React.useCallback((id: string) => {
+    setSlotIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
+    return () => setSlotIds((prev) => prev.filter((slotId) => slotId !== id));
+  }, []);
+  const scrubKeyRef = React.useRef<ScrubKeyHandler | null>(null);
+  const registerScrub = React.useCallback((handler: ScrubKeyHandler) => {
+    scrubKeyRef.current = handler;
+    return () => {
+      if (scrubKeyRef.current === handler) scrubKeyRef.current = null;
+    };
+  }, []);
+  // A disabled or read-only field takes no input, so its slot does not scrub or step either.
+  const inert = Boolean(inputProps.disabled || inputProps.readOnly);
+  const contextValue = React.useMemo(() => ({ registerSlot, registerScrub, inert }), [registerSlot, registerScrub, inert]);
 
-  const { 'aria-describedby': ariaDescribedby, 'aria-labelledby': ariaLabelledby } = inputProps;
+  const { 'aria-describedby': ariaDescribedby, 'aria-labelledby': ariaLabelledby, 'aria-invalid': ariaInvalid } = inputProps;
 
-  // Build aria-describedby string
+  // Invalid when `error` is set or the caller passes aria-invalid; the CSS keys on aria-invalid only.
+  const isInvalid = Boolean(inputProps.error) || ariaInvalid === true || ariaInvalid === 'true';
+
+  // Build aria-describedby string. The caller's ids stay; ours are appended.
   const describedBy = React.useMemo(() => {
     const parts = [];
     if (inputProps.errorMessage) parts.push(errorId);
     if (ariaDescribedby) parts.push(ariaDescribedby);
+    parts.push(...slotIds);
     return parts.length > 0 ? parts.join(' ') : undefined;
-  }, [inputProps.errorMessage, ariaDescribedby, errorId]);
+  }, [inputProps.errorMessage, ariaDescribedby, errorId, slotIds]);
 
   // Build aria attributes
   const ariaProps = React.useMemo(
     () => ({
-      'aria-invalid': isInvalid,
+      'aria-invalid': isInvalid ? true : ariaInvalid,
       'aria-describedby': describedBy,
       'aria-labelledby': ariaLabelledby,
     }),
-    [isInvalid, describedBy, ariaLabelledby],
+    [isInvalid, ariaInvalid, describedBy, ariaLabelledby],
   );
 
   // Filter out our custom props to avoid DOM warnings
-  const { error, errorMessage, isInvalid: _isInvalid, required, 'aria-describedby': _ariaDescribedby, 'aria-labelledby': _ariaLabelledby, ...nativeInputProps } = inputProps;
+  const { error, errorMessage, required, 'aria-describedby': _ariaDescribedby, 'aria-labelledby': _ariaLabelledby, onKeyDown, ...nativeInputProps } = inputProps;
 
-  // Memoized pointer event handler
-  const handlePointerDown = React.useCallback((event: React.PointerEvent) => {
+  // With a scrub slot, Up and Down step the value at once, by the slot's step, with the same Shift
+  // and Option multipliers as a drag. The caller's handler runs first and can prevent it.
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const step = scrubKeyRef.current;
+    if (!step || inert || (event.key !== 'ArrowUp' && event.key !== 'ArrowDown')) return;
+    event.preventDefault();
+    step(event.key === 'ArrowUp' ? 1 : -1, event.shiftKey, event.altKey);
+  };
+
+  // Clicking the padding or a passive slot focuses the input. preventDefault stops the browser
+  // from moving focus to the root first, so the input is focused once, synchronously.
+  const handleMouseDown = React.useCallback((event: React.MouseEvent) => {
     const target = event.target as HTMLElement;
-    if (target.closest('input, button, a')) return;
+    if (target.closest(FOCUSABLE_IN_SLOT)) return;
 
     const input = inputRef.current;
     if (!input) return;
 
     // Same selector as in the CSS to find the right slot
     const isRightSlot = target.closest(`
-        .rt-TextFieldSlot[data-side='right'],
-        .rt-TextFieldSlot:not([data-side='right']) ~ .rt-TextFieldSlot:not([data-side='left'])
+        .kui-TextFieldSlot[data-side='right'],
+        .kui-TextFieldSlot:not([data-side='right']) ~ .kui-TextFieldSlot:not([data-side='left'])
       `);
 
     const cursorPosition = isRightSlot ? input.value.length : 0;
 
-    requestAnimationFrame(() => {
-      // Only some input types support this, browsers will throw an error if not supported
-      // See: https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/setSelectionRange#:~:text=Note%20that%20according,not%20support%20selection%22.
-      try {
-        input.setSelectionRange(cursorPosition, cursorPosition);
-      } catch {}
-      input.focus();
-    });
+    event.preventDefault();
+    input.focus();
+    // Only some input types support this, browsers will throw an error if not supported
+    // See: https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/setSelectionRange#:~:text=Note%20that%20according,not%20support%20selection%22.
+    try {
+      input.setSelectionRange(cursorPosition, cursorPosition);
+    } catch {}
   }, []);
 
-  return (
+  // A pointer-only hit-target redirect to the input; keyboard users reach the input directly.
+  const field = (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
       data-accent-color={color}
       data-radius={radius}
-      data-panel-background={effectiveMaterial}
-      data-material={effectiveMaterial}
-      style={style}
-      className={classNames('rt-TextFieldRoot', className, {
-        'rt-error': isInvalid,
+      style={wrapped ? style : mergeStyles(style, ownStyle)}
+      className={classNames('kui-TextFieldRoot', className, !wrapped && ownClassName, {
+        // Not used by the library's CSS (invalid styling keys on aria-invalid); kept as a hook for app styles.
+        'kui-error': isInvalid,
       })}
-      onPointerDown={handlePointerDown}
+      onMouseDown={handleMouseDown}
     >
-      <input spellCheck="false" {...nativeInputProps} {...ariaProps} ref={composeRefs(inputRef, forwardedRef)} className="rt-reset rt-TextFieldInput" />
-      {children}
-      {inputProps.errorMessage && (
-        <div id={errorId} className="rt-TextFieldErrorMessage" role="alert" aria-live="polite">
+      <input
+        {...nativeInputProps}
+        required={required || undefined}
+        {...ariaProps}
+        onKeyDown={composeEventHandlers(onKeyDown, handleKeyDown)}
+        ref={composeRefs(inputRef, forwardedRef)}
+        className="kui-reset kui-TextFieldInput"
+      />
+      <TextFieldContext.Provider value={contextValue}>{children}</TextFieldContext.Provider>
+    </div>
+  );
+  // The wrapper is always there, so a message coming or going never moves the field in the tree:
+  // moving it would remount the input, dropping focus, the caret and an uncontrolled value. With
+  // no message it is `display: contents` and the field is the box the parent lays out; with one
+  // it holds the field and the message below it, and the caller's className and style size the pair.
+  return (
+    <div className={classNames('kui-TextFieldWrapper', wrapped && ownClassName)} style={wrapped ? ownStyle : undefined} data-message={wrapped || undefined}>
+      {field}
+      {wrapped ? (
+        <div id={errorId} className="kui-TextFieldErrorMessage" role="alert">
           {inputProps.errorMessage}
         </div>
-      )}
+      ) : null}
     </div>
   );
 });
 TextFieldRoot.displayName = 'TextField.Root';
 
+type TextFieldGroupOwnProps = GetPropDefTypes<typeof textFieldGroupPropDefs>;
+interface TextFieldGroupProps extends ComponentPropsWithout<'div', RemovedProps>, TextFieldGroupOwnProps {}
+
+/**
+ * Joins two or more fields into one, such as X, Y and Z: one edge, square inner corners and a
+ * hairline between the fields. The group draws the edge, so each field keeps only its fill.
+ */
+const TextFieldGroup = React.forwardRef<HTMLDivElement, TextFieldGroupProps>((ownProps, forwardedRef) => {
+  const props = useThemeSizeProps(ownProps, textFieldGroupPropDefs.size);
+  const { size, variant, radius, color, disabled } = props;
+  const { className, children, radius: _radius, color: _color, disabled: _disabled, ...domProps } = extractProps(props, textFieldGroupPropDefs);
+  const contextValue = React.useMemo(() => ({ size, variant, radius, color, disabled }), [size, variant, radius, color, disabled]);
+  return (
+    <div
+      role="group"
+      data-accent-color={color}
+      data-radius={radius}
+      data-disabled={disabled || undefined}
+      {...domProps}
+      ref={forwardedRef}
+      className={classNames('kui-TextFieldGroup', className)}
+    >
+      <TextFieldGroupContext.Provider value={contextValue}>{children}</TextFieldGroupContext.Provider>
+    </div>
+  );
+});
+TextFieldGroup.displayName = 'TextField.Group';
+
 type TextFieldSlotElement = React.ElementRef<'div'>;
 type TextFieldSlotOwnProps = GetPropDefTypes<typeof textFieldSlotPropDefs> & TextFieldSlotScrubProps;
 interface TextFieldSlotProps extends ComponentPropsWithout<'div', RemovedProps>, TextFieldSlotOwnProps {}
 
-// Detect if we should use pointer capture instead of pointer lock
-// Safari and Firefox show intrusive browser warnings with pointer lock
-const usePointerCapture = (() => {
-  if (typeof navigator === 'undefined') return false;
-  const ua = navigator.userAgent;
-  const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
-  const isFirefox = /firefox/i.test(ua);
-  return isSafari || isFirefox;
-})();
-
 const TextFieldSlot = React.forwardRef<TextFieldSlotElement, TextFieldSlotProps>((props, forwardedRef) => {
   // Extract scrub props first (not part of PropDef system)
-  const { scrub, scrubValue, scrubStep = 1, scrubSensitivity = 1, scrubMin, scrubMax, scrubShiftMultiplier = 10, scrubAltMultiplier = 0.1, onScrub, ...restProps } = props;
+  const { scrub: scrubProp, scrubValue, scrubStep = 1, scrubSensitivity = 1, scrubMin, scrubMax, scrubShiftMultiplier = 10, scrubAltMultiplier = 0.1, onScrub, ...restProps } = props;
 
   // Then extract styling props
-  const { className, color, side, ...slotProps } = extractProps(restProps, textFieldSlotPropDefs);
+  const { className, color, side, onPointerDown, onPointerMove, onPointerUp, onLostPointerCapture, ...slotProps } = extractProps(
+    restProps,
+    textFieldSlotPropDefs,
+  );
 
+  // A slot of text describes the input (see TextFieldRoot); a caller's own id is kept. A slot
+  // holding a control, such as a show-password button, does not: the input would be described
+  // by the button's name.
+  const generatedId = React.useId();
+  const slotId = slotProps.id ?? generatedId;
+  const fieldContext = React.useContext(TextFieldContext);
+  const registerSlot = fieldContext?.registerSlot;
+  const registerScrub = fieldContext?.registerScrub;
+  const scrub = Boolean(scrubProp) && !fieldContext?.inert;
   const slotRef = React.useRef<HTMLDivElement>(null);
+  // Unknown until the slot has rendered; it registers once it is known to hold only text.
+  const [holdsControl, setHoldsControl] = React.useState<boolean | null>(null);
+  useLayoutEffect(() => {
+    const next = Boolean(slotRef.current?.querySelector(FOCUSABLE_IN_SLOT));
+    setHoldsControl((prev) => (prev === next ? prev : next));
+  });
+  React.useEffect(() => (holdsControl === false ? registerSlot?.(slotId) : undefined), [registerSlot, slotId, holdsControl]);
+
   const [isScrubbing, setIsScrubbing] = React.useState(false);
-  // Virtual cursor position - X wraps around viewport, Y follows mouse
-  const [cursorPosition, setCursorPosition] = React.useState({ x: 0, y: 0 });
+  // Where the virtual cursor starts. Movement is written straight to the cursor element, so a
+  // scrub does not re-render the slot on every mouse move.
+  const [cursorStart, setCursorStart] = React.useState({ x: 0, y: 0 });
+  const cursorRef = React.useRef<HTMLImageElement>(null);
+  // Virtual cursor Y, tracked beside virtualX
+  const virtualY = React.useRef(0);
 
   // Track accumulated sub-step movement for precision
   const accumulatedMovement = React.useRef(0);
@@ -171,7 +291,7 @@ const TextFieldSlot = React.forwardRef<TextFieldSlotElement, TextFieldSlotProps>
 
       // Don't start scrubbing if clicking on interactive elements
       const target = event.target as HTMLElement;
-      if (target.closest('input, button, a')) return;
+      if (target.closest(FOCUSABLE_IN_SLOT)) return;
 
       event.preventDefault();
       accumulatedMovement.current = 0;
@@ -180,45 +300,23 @@ const TextFieldSlot = React.forwardRef<TextFieldSlotElement, TextFieldSlotProps>
 
       // Initialize virtual cursor at actual mouse position
       virtualX.current = event.clientX;
-      setCursorPosition({ x: event.clientX, y: event.clientY });
+      virtualY.current = event.clientY;
+      setCursorStart({ x: event.clientX, y: event.clientY });
 
       const slot = slotRef.current;
       if (!slot) return;
 
-      if (usePointerCapture) {
-        // Safari/Firefox: Use pointer capture (no browser warning)
-        pointerIdRef.current = event.pointerId;
-        lastXRef.current = event.clientX;
-        slot.setPointerCapture(event.pointerId);
-        setIsScrubbing(true);
-      } else {
-        // Chrome: Use pointer lock for infinite movement
-        slot.requestPointerLock();
-      }
+      // Pointer capture in every browser. Pointer lock gave endless travel in Chrome, but Chrome
+      // shows its "Press Esc to show your cursor" banner on every drag, which is noise for a
+      // gesture repeated all day. Captured, the drag keeps going past the window, up to the edge
+      // of the screen.
+      pointerIdRef.current = event.pointerId;
+      lastXRef.current = event.clientX;
+      slot.setPointerCapture(event.pointerId);
+      setIsScrubbing(true);
     },
     [scrub, scrubValue],
   );
-
-  // Handle pointer lock state changes (Chrome only)
-  React.useEffect(() => {
-    if (usePointerCapture) return;
-
-    const handlePointerLockChange = () => {
-      const isLocked = document.pointerLockElement === slotRef.current;
-      setIsScrubbing(isLocked);
-      if (!isLocked) {
-        // Fire callback with isChanging = false when scrubbing ends
-        scrubConfigRef.current.onScrub?.(0, false);
-        accumulatedMovement.current = 0;
-        currentValue.current = 0;
-      }
-    };
-
-    document.addEventListener('pointerlockchange', handlePointerLockChange);
-    return () => {
-      document.removeEventListener('pointerlockchange', handlePointerLockChange);
-    };
-  }, []);
 
   // Shared scrub calculation logic
   const processScrubMovement = React.useCallback((movementX: number, movementY: number, shiftKey: boolean, altKey: boolean) => {
@@ -235,15 +333,19 @@ const TextFieldSlot = React.forwardRef<TextFieldSlotElement, TextFieldSlotProps>
     }
 
     // Also track Y with wrap-around
-    setCursorPosition((prev) => {
-      let newY = prev.y + movementY;
-      if (newY > viewportHeight) {
-        newY = newY % viewportHeight;
-      } else if (newY < 0) {
-        newY = viewportHeight + (newY % viewportHeight);
-      }
-      return { x: virtualX.current, y: newY };
-    });
+    let newY = virtualY.current + movementY;
+    if (newY > viewportHeight) {
+      newY = newY % viewportHeight;
+    } else if (newY < 0) {
+      newY = viewportHeight + (newY % viewportHeight);
+    }
+    virtualY.current = newY;
+
+    const cursor = cursorRef.current;
+    if (cursor) {
+      cursor.style.left = `${virtualX.current}px`;
+      cursor.style.top = `${newY}px`;
+    }
 
     // Accumulate movement for sensitivity calculation
     accumulatedMovement.current += movementX;
@@ -294,10 +396,9 @@ const TextFieldSlot = React.forwardRef<TextFieldSlotElement, TextFieldSlotProps>
     setIsScrubbing(false);
   }, []);
 
-  // Handle pointer capture mode events (Safari/Firefox)
   const handlePointerMove = React.useCallback(
     (event: React.PointerEvent) => {
-      if (!isScrubbing || !usePointerCapture) return;
+      if (!isScrubbing) return;
 
       const movementX = event.clientX - lastXRef.current;
       lastXRef.current = event.clientX;
@@ -309,7 +410,7 @@ const TextFieldSlot = React.forwardRef<TextFieldSlotElement, TextFieldSlotProps>
 
   const handlePointerUp = React.useCallback(
     (event: React.PointerEvent) => {
-      if (!usePointerCapture || pointerIdRef.current !== event.pointerId) return;
+      if (pointerIdRef.current !== event.pointerId) return;
 
       const slot = slotRef.current;
       if (slot && pointerIdRef.current !== null) {
@@ -321,41 +422,14 @@ const TextFieldSlot = React.forwardRef<TextFieldSlotElement, TextFieldSlotProps>
   );
 
   const handleLostPointerCapture = React.useCallback(() => {
-    if (usePointerCapture && isScrubbing) {
+    if (isScrubbing) {
       endScrubbing();
     }
   }, [isScrubbing, endScrubbing]);
 
-  // Attach document-level listeners for pointer lock mode (Chrome)
-  React.useEffect(() => {
-    if (!isScrubbing || usePointerCapture) return;
-
-    const handleMouseMove = (event: MouseEvent) => {
-      processScrubMovement(event.movementX, event.movementY, event.shiftKey, event.altKey);
-    };
-
-    const handleMouseUp = () => {
-      // Exit pointer lock to end scrubbing
-      document.exitPointerLock();
-    };
-
-    // Use mousemove for pointer lock (pointermove doesn't work well with pointer lock)
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-
-    // Disable text selection during scrubbing
-    document.body.style.userSelect = 'none';
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.body.style.userSelect = '';
-    };
-  }, [isScrubbing, processScrubMovement]);
-
   // Hide native cursor and disable text selection during pointer capture scrubbing
   React.useEffect(() => {
-    if (!isScrubbing || !usePointerCapture) return;
+    if (!isScrubbing) return;
 
     // Create a style element to hide cursor globally during scrub
     const style = document.createElement('style');
@@ -367,18 +441,32 @@ const TextFieldSlot = React.forwardRef<TextFieldSlotElement, TextFieldSlotProps>
     };
   }, [isScrubbing]);
 
+  // Up and Down on the input step once. The step is a whole change, so it reports isChanging
+  // false at once: one undo step per press, as a drag is one per release.
+  React.useEffect(() => {
+    if (!scrub || !registerScrub) return;
+    return registerScrub((direction, shiftKey, altKey) => {
+      const config = scrubConfigRef.current;
+      const multiplier = shiftKey ? config.scrubShiftMultiplier : altKey ? config.scrubAltMultiplier : 1;
+      const start = config.scrubValue ?? 0;
+      const next = Math.max(config.scrubMin ?? -Infinity, Math.min(config.scrubMax ?? Infinity, start + direction * config.scrubStep * multiplier));
+      if (next !== start) config.onScrub?.(next - start, false);
+    });
+  }, [scrub, registerScrub]);
+
   // Render virtual cursor via portal to body so it's not clipped
   // Using a data URI of ew-resize cursor for a native look
   const virtualCursor = isScrubbing
     ? ReactDOM.createPortal(
         <img
-          className="rt-TextFieldSlotScrubCursor"
+          ref={cursorRef}
+          className="kui-TextFieldSlotScrubCursor"
           src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='black' stroke='white' stroke-width='1' d='M0 12 L5 7 L5 10 L19 10 L19 7 L24 12 L19 17 L19 14 L5 14 L5 17 Z'/%3E%3C/svg%3E"
           alt=""
           style={{
             position: 'fixed',
-            left: cursorPosition.x,
-            top: cursorPosition.y,
+            left: cursorStart.x,
+            top: cursorStart.y,
             transform: 'translate(-50%, -50%)',
             pointerEvents: 'none',
             zIndex: 99999,
@@ -398,12 +486,14 @@ const TextFieldSlot = React.forwardRef<TextFieldSlotElement, TextFieldSlotProps>
       data-scrub={scrub || undefined}
       data-scrubbing={isScrubbing || undefined}
       {...slotProps}
+      id={slotId}
       ref={composeRefs(slotRef, forwardedRef)}
-      className={classNames('rt-TextFieldSlot', className)}
-      onPointerDown={scrub ? handlePointerDown : undefined}
-      onPointerMove={scrub ? handlePointerMove : undefined}
-      onPointerUp={scrub ? handlePointerUp : undefined}
-      onLostPointerCapture={scrub ? handleLostPointerCapture : undefined}
+      className={classNames('kui-TextFieldSlot', className)}
+      // The caller's handlers run first; the scrub handlers only when `scrub` is set.
+      onPointerDown={scrub ? composeEventHandlers(onPointerDown, handlePointerDown) : onPointerDown}
+      onPointerMove={scrub ? composeEventHandlers(onPointerMove, handlePointerMove) : onPointerMove}
+      onPointerUp={scrub ? composeEventHandlers(onPointerUp, handlePointerUp) : onPointerUp}
+      onLostPointerCapture={scrub ? composeEventHandlers(onLostPointerCapture, handleLostPointerCapture) : onLostPointerCapture}
     >
       {slotProps.children}
       {virtualCursor}
@@ -412,5 +502,5 @@ const TextFieldSlot = React.forwardRef<TextFieldSlotElement, TextFieldSlotProps>
 });
 TextFieldSlot.displayName = 'TextField.Slot';
 
-export { TextFieldRoot as Root, TextFieldSlot as Slot };
-export type { TextFieldRootProps as RootProps, TextFieldSlotProps as SlotProps };
+export { TextFieldRoot as Root, TextFieldGroup as Group, TextFieldSlot as Slot };
+export type { TextFieldRootProps as RootProps, TextFieldGroupProps as GroupProps, TextFieldSlotProps as SlotProps };

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { renderWithProviders, screen } from '../test-utils';
-import { Button, IconButton } from '../../src/components/index';
+import { Button } from '../../src/components/index';
 
 let observed: number;
 let RealMutationObserver: typeof MutationObserver;
@@ -30,18 +30,11 @@ afterEach(() => {
  * per-instance observers and forced style reads are worth keeping out.
  */
 describe('Button mounts cheaply', () => {
-  test('creates no MutationObserver, translucent or not', () => {
+  test('creates no MutationObserver', () => {
     renderWithProviders(
       <>
-        {Array.from({ length: 20 }, (_, i) => (
-          <Button key={i} material="translucent">
-            {i}
-          </Button>
-        ))}
-        {Array.from({ length: 20 }, (_, i) => (
-          <Button key={`solid-${i}`} material="solid">
-            {i}
-          </Button>
+        {Array.from({ length: 40 }, (_, i) => (
+          <Button key={i}>{i}</Button>
         ))}
       </>,
     );
@@ -50,21 +43,10 @@ describe('Button mounts cheaply', () => {
   });
 
   test('does not write will-change inline', () => {
-    // The blur already promotes the element; the inline write was per-instance
-    // DOM mutation buying nothing.
-    renderWithProviders(
-      <>
-        <Button data-testid="translucent" material="translucent">
-          a
-        </Button>
-        <Button data-testid="solid" material="solid">
-          b
-        </Button>
-      </>,
-    );
+    // An inline write is per-instance DOM mutation that buys nothing.
+    renderWithProviders(<Button data-testid="btn">a</Button>);
 
-    expect(screen.getByTestId('translucent').style.willChange).toBe('');
-    expect(screen.getByTestId('solid').style.willChange).toBe('');
+    expect(screen.getByTestId('btn').style.willChange).toBe('');
   });
 
   test('does not call getComputedStyle while mounting', () => {
@@ -73,9 +55,7 @@ describe('Button mounts cheaply', () => {
     renderWithProviders(
       <>
         {Array.from({ length: 10 }, (_, i) => (
-          <Button key={i} material="translucent">
-            {i}
-          </Button>
+          <Button key={i}>{i}</Button>
         ))}
       </>,
     );
@@ -112,36 +92,19 @@ describe('Button refs', () => {
     expect(ref.current).toBe(screen.getByTestId('btn'));
   });
 
-  test('IconButton forwards its ref too', () => {
+  test('an icon-only Button forwards its ref too', () => {
     const ref = React.createRef<HTMLButtonElement>();
-    renderWithProviders(<IconButton ref={ref} aria-label="act" data-testid="icon" />);
+    renderWithProviders(<Button iconOnly ref={ref} aria-label="act" data-testid="icon" />);
 
     expect(ref.current).toBe(screen.getByTestId('icon'));
   });
 });
 
-describe('Button still renders its material attributes', () => {
-  test('material is reflected for CSS to key off', () => {
-    renderWithProviders(
-      <Button data-testid="btn" material="translucent">
-        a
-      </Button>,
-    );
-    const button = screen.getByTestId('btn');
-
-    expect(button.dataset.material).toBe('translucent');
-    expect(button.dataset.panelBackground).toBe('translucent');
-  });
-
-  test('panelBackground still feeds material for backwards compatibility', () => {
-    vi.spyOn(console, 'warn').mockImplementation(() => {});
-    renderWithProviders(
-      <Button data-testid="btn" panelBackground="solid">
-        a
-      </Button>,
-    );
-
-    expect(screen.getByTestId('btn').dataset.material).toBe('solid');
+describe('Button attributes', () => {
+  test('a button carries no material attribute', () => {
+    // v1 is solid only; nothing keys off a material.
+    renderWithProviders(<Button data-testid="btn">a</Button>);
+    expect(screen.getByTestId('btn')).not.toHaveAttribute('data-material');
   });
 
   test('a button defaults to type="button"', () => {

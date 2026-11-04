@@ -1,639 +1,208 @@
 ---
-title: Sidebar (Presentation)
-description: Standalone navigation sidebar with menus, groups, and adaptive layouts
+title: Sidebar
+description: Sidebar provides the navigation rows, groups, sub-menus and search that go inside a Shell pane.
 source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/sidebar.tsx
 ---
 
-A presentational sidebar component for building navigation menus. Works standalone or inside `Shell.Sidebar` for layout integration. Adapts between rail (icon-focused) and panel (full-width) presentations.
+Sidebar is the set of navigation rows in an app: a list of links, grouped and labelled, with sub-menus and a search field. The column that holds them is a [Shell](/docs/shell) pane. For a list of commands that opens from a button, use a [Dropdown Menu](/docs/dropdown-menu).
 
-## Installation
+## Playground
 
-```bash
-npm install @kushagradhawan/kookie-ui
-```
+import SidebarPlayground from '../../playground/sidebar-playground';
+
+<SidebarPlayground />
 
 ## Usage
 
-```tsx
-import { Sidebar } from '@kushagradhawan/kookie-ui';
+```tsx showLineNumbers
+import { Shell, Sidebar } from '@kushagradhawan/kookie-ui';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Home01Icon, InboxIcon } from '@hugeicons/core-free-icons';
+import Link from 'next/link';
 
-export function MyNavigation() {
+export function MainNav({ pathname }: { pathname: string }) {
   return (
-    <Sidebar.Root>
-      <Sidebar.Header>
-        <Logo />
-      </Sidebar.Header>
-      <Sidebar.Content>
+    <Shell.Sidebar aria-label="Main">
+      <Shell.Scroll>
         <Sidebar.Menu>
           <Sidebar.MenuItem>
-            <Sidebar.MenuButton isActive>
-              <HomeIcon />
-              Home
+            <Sidebar.MenuButton asChild isActive={pathname === '/'}>
+              <Link href="/">
+                <HugeiconsIcon icon={Home01Icon} strokeWidth={1.75} />
+                Home
+              </Link>
+            </Sidebar.MenuButton>
+          </Sidebar.MenuItem>
+          <Sidebar.MenuItem>
+            <Sidebar.MenuButton asChild isActive={pathname === '/inbox'} badge="3">
+              <Link href="/inbox">
+                <HugeiconsIcon icon={InboxIcon} strokeWidth={1.75} />
+                Inbox
+              </Link>
             </Sidebar.MenuButton>
           </Sidebar.MenuItem>
         </Sidebar.Menu>
-      </Sidebar.Content>
-    </Sidebar.Root>
+      </Shell.Scroll>
+    </Shell.Sidebar>
   );
 }
 ```
 
 ## Anatomy
 
-Sidebar is a compound component with the following parts:
-
 ```tsx
-<Sidebar.Root>
-  <Sidebar.Header>{/* Logo, app name, controls */}</Sidebar.Header>
-  <Sidebar.Content>
+<Shell.Sidebar>
+  <Shell.PaneHeader>
+    <Sidebar.Search />
+  </Shell.PaneHeader>
+  <Shell.Scroll>
     <Sidebar.Group>
-      <Sidebar.GroupLabel>{/* Section label */}</Sidebar.GroupLabel>
+      <Sidebar.GroupLabel />
       <Sidebar.GroupContent>
         <Sidebar.Menu>
           <Sidebar.MenuItem>
-            <Sidebar.MenuButton>{/* Nav item */}</Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-          <Sidebar.MenuSub>
-            <Sidebar.MenuSubTrigger>{/* Expandable item */}</Sidebar.MenuSubTrigger>
-            <Sidebar.MenuSubContent>
-              {/* Nested items */}
-            </Sidebar.MenuSubContent>
-          </Sidebar.MenuSub>
-        </Sidebar.Menu>
-      </Sidebar.GroupContent>
-    </Sidebar.Group>
-  </Sidebar.Content>
-  <Sidebar.Footer>{/* User profile, settings */}</Sidebar.Footer>
-  <Sidebar.Separator />
-</Sidebar.Root>
-```
-
-## Root Props
-
-The Root component provides context and styling for all child components.
-
-| Prop              | Type                                          | Default     | Description                                                                 |
-| ----------------- | --------------------------------------------- | ----------- | --------------------------------------------------------------------------- |
-| `size`            | `'1' \| '2'`                                  | `'2'`       | Controls density and spacing. Supports responsive objects                   |
-| `variant`         | `'soft' \| 'outline' \| 'surface' \| 'ghost'` | `'outline'` | Visual style of the sidebar container                                       |
-| `menuVariant`     | `'solid' \| 'soft'`                           | `'soft'`    | Style of menu item highlights                                               |
-| `presentation`    | `'thin' \| 'expanded'`                        | —           | Layout mode: thin for rail-style, expanded for panel-style                  |
-| `layout`          | `'rail' \| 'panel'`                           | `'panel'`   | Alternative to presentation. Use presentation for clearer intent            |
-| `color`           | `AccentColor`                                 | theme       | Accent color for active states and highlights                               |
-| `panelBackground` | `'solid' \| 'translucent'`                    | —           | Background appearance when used with translucent theme                      |
-
-## Content Props
-
-Scrollable container for navigation content.
-
-| Prop         | Type                       | Default               | Description                              |
-| ------------ | -------------------------- | --------------------- | ---------------------------------------- |
-| `role`       | `'navigation' \| 'none'`   | `'navigation'`        | ARIA role for accessibility              |
-| `aria-label` | `string`                   | `'Main navigation'`   | Accessible label for the navigation area |
-
-## Header Props
-
-Container for logo, app name, and header controls.
-
-| Prop          | Type      | Default | Description                                        |
-| ------------- | --------- | ------- | -------------------------------------------------- |
-| `asContainer` | `boolean` | `true`  | Applies default flex container layout when true    |
-
-## Footer Props
-
-Container for user profile, settings, and footer content.
-
-| Prop          | Type      | Default | Description                                        |
-| ------------- | --------- | ------- | -------------------------------------------------- |
-| `asContainer` | `boolean` | `true`  | Applies default flex container layout when true    |
-
-## MenuButton Props
-
-Interactive button for navigation items.
-
-| Prop       | Type                    | Default | Description                                              |
-| ---------- | ----------------------- | ------- | -------------------------------------------------------- |
-| `isActive` | `boolean`               | `false` | Marks the item as currently active/selected              |
-| `asChild`  | `boolean`               | `false` | Merges props with child element (for routing links)      |
-| `shortcut` | `ReactNode`             | —       | Keyboard shortcut displayed on the right                 |
-| `badge`    | `string \| BadgeConfig` | —       | Badge content or full configuration object               |
-
-### BadgeConfig
-
-```tsx
-type BadgeConfig = {
-  content: React.ReactNode;
-  variant?: 'solid' | 'soft' | 'surface' | 'outline';
-  size?: '1' | '2';
-  color?: AccentColor;
-  radius?: 'none' | 'small' | 'medium' | 'large' | 'full';
-};
-```
-
-## MenuSub Props
-
-Container for collapsible sub-menus. Renders as accordion in expanded mode, dropdown in thin mode.
-
-| Prop          | Type      | Default | Description                            |
-| ------------- | --------- | ------- | -------------------------------------- |
-| `defaultOpen` | `boolean` | `false` | Whether the sub-menu starts expanded   |
-
-## Presentation
-
-Use the `presentation` prop to control the sidebar layout mode.
-
-### Expanded
-
-Full-width panel layout with text labels. Ideal for main navigation.
-
-```tsx
-<Sidebar.Root presentation="expanded">
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>
-          <HomeIcon />
-          Dashboard
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>
-```
-
-### Thin
-
-Compact rail layout with icons and minimal text. Icons stack vertically, text appears below icons in smaller font. Sub-menus render as dropdowns instead of accordions.
-
-```tsx
-<Sidebar.Root presentation="thin">
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>
-          <HomeIcon />
-          Home
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>
-```
-
-## Sizes
-
-Set `size` for sidebar density: `1` for compact interfaces, `2` for standard spacing.
-
-### Size 1
-
-Compact density for information-dense layouts.
-
-```tsx
-<Sidebar.Root size="1">
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>
-          <FileIcon />
-          Files
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>
-```
-
-### Size 2
-
-Standard density for most applications.
-
-```tsx
-<Sidebar.Root size="2">
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>
-          <FileIcon />
-          Files
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>
-```
-
-## Variants
-
-Use the `variant` prop to set the sidebar container style.
-
-### Outline
-
-Default bordered style providing clear visual boundaries.
-
-```tsx
-<Sidebar.Root variant="outline">
-  {/* content */}
-</Sidebar.Root>
-```
-
-### Soft
-
-Subtle background for less prominent sidebars.
-
-```tsx
-<Sidebar.Root variant="soft">
-  {/* content */}
-</Sidebar.Root>
-```
-
-### Surface
-
-Elevated surface for content-heavy UIs.
-
-```tsx
-<Sidebar.Root variant="surface">
-  {/* content */}
-</Sidebar.Root>
-```
-
-### Ghost
-
-Minimal style that blends with the background.
-
-```tsx
-<Sidebar.Root variant="ghost">
-  {/* content */}
-</Sidebar.Root>
-```
-
-## Menu Variants
-
-Use the `menuVariant` prop to control how menu item highlights appear.
-
-### Soft
-
-Subtle background highlights on hover and active states.
-
-```tsx
-<Sidebar.Root menuVariant="soft">
-  {/* content */}
-</Sidebar.Root>
-```
-
-### Solid
-
-Bold filled highlights for maximum emphasis.
-
-```tsx
-<Sidebar.Root menuVariant="solid">
-  {/* content */}
-</Sidebar.Root>
-```
-
-## Colors
-
-Use the `color` prop to set the accent color for active states and highlights.
-
-```tsx
-<Sidebar.Root color="crimson">
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton isActive>
-          <HomeIcon />
-          Active Item
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>
-```
-
-With `menuVariant="solid"`, a gray sidebar fills its active items with step 12 on its own:
-
-```tsx
-<Sidebar.Root color="gray" menuVariant="solid">
-  {/* content */}
-</Sidebar.Root>
-```
-
-## Groups
-
-Use `Sidebar.Group` to organize related navigation items with optional labels.
-
-```tsx
-<Sidebar.Root>
-  <Sidebar.Content>
-    <Sidebar.Group>
-      <Sidebar.GroupLabel>Main</Sidebar.GroupLabel>
-      <Sidebar.GroupContent>
-        <Sidebar.Menu>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton>Dashboard</Sidebar.MenuButton>
+            <Sidebar.MenuButton />
           </Sidebar.MenuItem>
           <Sidebar.MenuItem>
-            <Sidebar.MenuButton>Analytics</Sidebar.MenuButton>
+            <Sidebar.MenuSub>
+              <Sidebar.MenuSubTrigger />
+              <Sidebar.MenuSubContent />
+            </Sidebar.MenuSub>
           </Sidebar.MenuItem>
         </Sidebar.Menu>
       </Sidebar.GroupContent>
     </Sidebar.Group>
-
     <Sidebar.Separator />
-
-    <Sidebar.Group>
-      <Sidebar.GroupLabel>Settings</Sidebar.GroupLabel>
-      <Sidebar.GroupContent>
-        <Sidebar.Menu>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton>Preferences</Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-        </Sidebar.Menu>
-      </Sidebar.GroupContent>
-    </Sidebar.Group>
-  </Sidebar.Content>
-</Sidebar.Root>
+  </Shell.Scroll>
+  <Shell.PaneFooter />
+</Shell.Sidebar>
 ```
 
-## Sub-menus
+- **Menu:** A list of rows, a `ul`.
+- **MenuItem:** One row's slot, an `li`.
+- **MenuButton:** The row people press. Render a link with `asChild`.
+- **MenuSub, MenuSubTrigger, MenuSubContent:** A row that opens a nested list.
+- **Group, GroupLabel, GroupContent:** A set of rows under a plain-text label.
+- **Separator:** A line between groups.
+- **Search:** A search field for the rows.
 
-Use `Sidebar.MenuSub` for collapsible nested navigation. Automatically adapts: accordion in expanded mode, dropdown in thin mode.
+## Best practices
 
-```tsx
-<Sidebar.Root>
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuSub defaultOpen>
-        <Sidebar.MenuSubTrigger>
-          <FolderIcon />
-          Projects
-        </Sidebar.MenuSubTrigger>
-        <Sidebar.MenuSubContent>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton>Project Alpha</Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton>Project Beta</Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-        </Sidebar.MenuSubContent>
-      </Sidebar.MenuSub>
-    </Sidebar.Menu>
-  </Sidebar.Content>
-</Sidebar.Root>
-```
+**Make every row a link.** A sidebar row goes somewhere, so render your router's link with `asChild`. People can then open it in a new tab and see its address.
 
-## Badges
+**Mark the current page with `isActive`.** It highlights the row and sets `aria-current="page"`, so a screen reader announces where you are too.
 
-Add badges to menu buttons for notifications or status indicators.
+**Put an icon on every row or on none.** A column where some rows have icons and others don't is hard to scan. In a Rail, the icon is what people see, so every row needs one.
 
-### Simple Badge
+**Group by what people look for.** A short group label, such as "Workspace" or "Settings", helps people find a row in a long list. A list of five rows needs no groups.
 
-Pass a string for a simple badge:
+**Keep commands out of the list.** "New project" or "Log out" is an action. Put it in a Button in the pane's header or footer, or in a [Dropdown Menu](/docs/dropdown-menu).
+
+## Size
+
+The rows take their size from `Shell.Root size`: `'1'`, `'2'` or `'3'`. Without it, they follow the Theme's size, and a Theme size of 4 maps to 3. A row is as tall as a [Button](/docs/button) of the same size, and its badge and shortcut follow. Rows outside a Shell pane are size 2.
+
+## Examples
+
+### Unread count
+
+`badge` shows a [Chip](/docs/chip) at the end of the row. Pass a string for a soft chip, or an object to set its look.
 
 ```tsx
-<Sidebar.MenuButton badge="3">
-  <InboxIcon />
-  Inbox
-</Sidebar.MenuButton>
-```
-
-### Configured Badge
-
-Pass an object for full badge customization:
-
-```tsx
-<Sidebar.MenuButton
-  badge={{
-    content: 'New',
-    variant: 'solid',
-    color: 'crimson',
-  }}
->
-  <SparklesIcon />
+<Sidebar.MenuButton badge={{ content: 'New', variant: 'solid', color: 'crimson' }}>
+  <HugeiconsIcon icon={SparklesIcon} strokeWidth={1.75} />
   Features
 </Sidebar.MenuButton>
 ```
 
-## Shortcuts
+### Keyboard shortcut
 
-Display keyboard shortcuts on menu buttons:
+`shortcut` shows a [Kbd](/docs/kbd) at the end of the row. It only shows the keys. Bind the shortcut yourself.
 
 ```tsx
 <Sidebar.MenuButton shortcut="⌘K">
-  <SearchIcon />
+  <HugeiconsIcon icon={Search01Icon} strokeWidth={1.75} />
   Search
 </Sidebar.MenuButton>
 ```
 
-## With Routing
+### Nested pages
 
-Use `asChild` to integrate with routing libraries like Next.js:
+`Sidebar.MenuSub` opens and closes its rows in place. Set `defaultOpen` when the current page is inside it. In a Rail, the same sub-menu opens as a dropdown beside the tile.
 
-```tsx
-import Link from 'next/link';
-
+```tsx showLineNumbers
 <Sidebar.MenuItem>
-  <Sidebar.MenuButton asChild isActive={pathname === '/dashboard'}>
-    <Link href="/dashboard">
-      <DashboardIcon />
-      Dashboard
-    </Link>
-  </Sidebar.MenuButton>
+  <Sidebar.MenuSub defaultOpen>
+    <Sidebar.MenuSubTrigger>Projects</Sidebar.MenuSubTrigger>
+    <Sidebar.MenuSubContent>
+      <Sidebar.MenuItem>
+        <Sidebar.MenuButton asChild isActive>
+          <Link href="/projects/atlas">Atlas</Link>
+        </Sidebar.MenuButton>
+      </Sidebar.MenuItem>
+    </Sidebar.MenuSubContent>
+  </Sidebar.MenuSub>
 </Sidebar.MenuItem>
 ```
 
-## With Shell
+### Filtering the rows
 
-`Sidebar` does not read the Shell's state by itself. Inside `Shell.Sidebar`, read the Shell's sidebar mode with `Shell.useSidebarMode()` in a small wrapper, and pass it to `presentation`:
-
-```tsx showLineNumbers
-import { Shell, Sidebar } from '@kushagradhawan/kookie-ui';
-
-function Nav() {
-  const { sidebarMode } = Shell.useSidebarMode();
-  return (
-    <Sidebar.Root presentation={sidebarMode === 'thin' ? 'thin' : 'expanded'}>
-      <Sidebar.Content>{/* Navigation items */}</Sidebar.Content>
-    </Sidebar.Root>
-  );
-}
-
-<Shell.Root>
-  <Shell.Sidebar>
-    <Nav />
-  </Shell.Sidebar>
-  <Shell.Content>{/* Main content */}</Shell.Content>
-</Shell.Root>
-```
-
-`Shell.useSidebarMode()` returns `sidebarMode` (`'collapsed'`, `'thin'` or `'expanded'`) and `setSidebarMode`. The setter acts like a Trigger: it calls the Shell Sidebar's `onStateChange` with `reason: 'toggle'`, and a controlled Sidebar changes only when you pass the new `state`. It must be called inside `Shell.Root`.
-
-## Examples
-
-### Application Sidebar
-
-Complete sidebar with header, grouped navigation, and footer:
+`Sidebar.Search` is controlled: filter the rows with its `value`. In a Rail it becomes a search tile that opens a popover, and its children render there as the results.
 
 ```tsx
-<Sidebar.Root presentation="expanded" size="2">
-  <Sidebar.Header>
-    <Logo />
-    <span>Acme Inc</span>
-  </Sidebar.Header>
-
-  <Sidebar.Content>
-    <Sidebar.Group>
-      <Sidebar.GroupLabel>Platform</Sidebar.GroupLabel>
-      <Sidebar.GroupContent>
-        <Sidebar.Menu>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton isActive>
-              <LayoutDashboardIcon />
-              Dashboard
-            </Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton badge="12">
-              <InboxIcon />
-              Inbox
-            </Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-          <Sidebar.MenuSub>
-            <Sidebar.MenuSubTrigger>
-              <FolderIcon />
-              Projects
-            </Sidebar.MenuSubTrigger>
-            <Sidebar.MenuSubContent>
-              <Sidebar.MenuItem>
-                <Sidebar.MenuButton>Design System</Sidebar.MenuButton>
-              </Sidebar.MenuItem>
-              <Sidebar.MenuItem>
-                <Sidebar.MenuButton>Marketing Site</Sidebar.MenuButton>
-              </Sidebar.MenuItem>
-            </Sidebar.MenuSubContent>
-          </Sidebar.MenuSub>
-        </Sidebar.Menu>
-      </Sidebar.GroupContent>
-    </Sidebar.Group>
-
-    <Sidebar.Separator />
-
-    <Sidebar.Group>
-      <Sidebar.GroupLabel>Settings</Sidebar.GroupLabel>
-      <Sidebar.GroupContent>
-        <Sidebar.Menu>
-          <Sidebar.MenuItem>
-            <Sidebar.MenuButton shortcut="⌘,">
-              <SettingsIcon />
-              Settings
-            </Sidebar.MenuButton>
-          </Sidebar.MenuItem>
-        </Sidebar.Menu>
-      </Sidebar.GroupContent>
-    </Sidebar.Group>
-  </Sidebar.Content>
-
-  <Sidebar.Footer>
-    <Sidebar.MenuButton>
-      <Avatar size="1" fallback="JD" />
-      John Doe
-    </Sidebar.MenuButton>
-  </Sidebar.Footer>
-</Sidebar.Root>
+<Sidebar.Search value={query} onValueChange={setQuery} placeholder="Search pages..." />
 ```
 
-### Rail Sidebar
+## Props
 
-Compact icon-focused sidebar:
+### MenuButton
 
-```tsx
-<Sidebar.Root presentation="thin" size="1">
-  <Sidebar.Header>
-    <Logo />
-  </Sidebar.Header>
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `isActive` | `boolean` | `false` | Marks the current page and sets `aria-current="page"` |
+| `badge` | `string \| BadgeConfig` | | A chip at the end of the row |
+| `shortcut` | `ReactNode` | | Keys shown at the end of the row |
+| `asChild` | `boolean` | `false` | Renders the child element, such as a link, with the row's look |
 
-  <Sidebar.Content>
-    <Sidebar.Menu>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton isActive>
-          <HomeIcon />
-          Home
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>
-          <SearchIcon />
-          Search
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-      <Sidebar.MenuItem>
-        <Sidebar.MenuButton>
-          <BellIcon />
-          Alerts
-        </Sidebar.MenuButton>
-      </Sidebar.MenuItem>
-    </Sidebar.Menu>
-  </Sidebar.Content>
+`BadgeConfig` is `{ content, variant?, size?, color?, radius? }`, with the [Chip](/docs/chip) values. MenuButton accepts the attributes of the HTML `button` element, and renders `type="button"` unless you pass a `type`.
 
-  <Sidebar.Footer>
-    <Sidebar.MenuButton>
-      <SettingsIcon />
-      Settings
-    </Sidebar.MenuButton>
-  </Sidebar.Footer>
-</Sidebar.Root>
-```
+In a Rail, the row's icon sits in a tile that shows the hover and active states. The icon is an `svg`, a `HugeiconsIcon`, or the first element before the label, so icons from any set work, and so does a link with `asChild`.
+
+### MenuSub
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `defaultOpen` | `boolean` | `false` | Starts with the nested rows showing |
+
+MenuSubTrigger takes `asChild`. With it, you supply the chevron yourself.
+
+### GroupLabel
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `asChild` | `boolean` | `false` | Renders the child element, such as a heading, with the label's look |
+
+### Search
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` | | The text in the field. Required |
+| `onValueChange` | `(value: string) => void` | | Runs on each change. Required |
+| `placeholder` | `string` | `'Search...'` | The placeholder, and the field's name without the trailing dots |
+| `children` | `ReactNode` | | In a Rail, the results shown under the field |
+
+Menu accepts the attributes of `ul`, MenuItem those of `li`, Separator the [Separator](/docs/separator) props, and the other parts those of `div`.
 
 ## Accessibility
 
-Sidebar provides comprehensive accessibility through semantic HTML and ARIA attributes.
+| Key | Action |
+| --- | --- |
+| Arrow Down or Arrow Up | From a row's button or a sub-menu's trigger, moves to the next or previous visible row in the same `Shell.Scroll`. Your `onKeyDown` runs first, and `preventDefault()` keeps the key for you |
+| Enter or Space | Opens a row, or opens and closes a sub-menu |
+| Escape | In Search, clears the text |
 
-### Keyboard Navigation
-
-- **Tab** - Move focus between interactive elements
-- **Enter / Space** - Activate focused menu button
-- **Arrow Down** - Move to next menu item
-- **Arrow Up** - Move to previous menu item
-- **Arrow Right** - Expand sub-menu (accordion mode)
-- **Arrow Left** - Collapse sub-menu (accordion mode)
-- **Escape** - Close dropdown (thin mode sub-menus)
-
-### ARIA Attributes
-
-- `role="menu"` on menu containers
-- `role="menuitem"` on interactive items
-- `aria-current="page"` on active items
-- `aria-haspopup="menu"` on sub-menu triggers
-- `aria-expanded` on collapsible sections
-- `role="navigation"` with `aria-label` on content container
-
-### Screen Readers
-
-- Semantic structure with proper heading hierarchy via group labels
-- Active state announcements for current page
-- Sub-menu expansion state announcements
-- Badge content included in accessible name
-
-## Changelog
-
-### Added
-
-- Initial release of standalone Sidebar (Presentation) component
-- Compound component API with Root, Content, Header, Footer, Menu, MenuItem, MenuButton, MenuSub, MenuSubTrigger, MenuSubContent, Group, GroupLabel, GroupContent, Separator
-- Two presentation modes: expanded (panel) and thin (rail)
-- Automatic sub-menu behavior adaptation: accordion in expanded, dropdown in thin
-- Badge support with string or full configuration object
-- Keyboard shortcut display
-- Integration with routing via asChild
-- Full keyboard navigation
-- Responsive size prop support
-
-### Changed
-
-- Decoupled from Shell context for standalone usage
-- Simplified API focused on presentation rather than state management
-- Solid gray menu items fill with step 12 automatically, and labels read the strong ink
-
-### Removed
-
-- `highContrast` on `Sidebar.Root` and in `BadgeConfig`. Delete it; gray and text contrast are now automatic
-
+- **Landmark:** A Rail, Panel or Sidebar pane is a navigation landmark. Give the pane an `aria-label`, such as "Main".
+- **Current page:** `isActive` sets `aria-current="page"`, which a screen reader reads with the row's name.
+- **Roles:** The rows are a list of links, not a `menu`, so a screen reader announces them as a list.
+- **Group label:** A Group with a GroupLabel is a `role="group"` named by its label. A Group without one has no role, so it isn't announced as an empty group.
+- **Search:** The field has `role="search"` around it and takes its name from `placeholder`. The clear button is named "Clear search". In a Rail, the popover's arrow keys move between the field and the results.

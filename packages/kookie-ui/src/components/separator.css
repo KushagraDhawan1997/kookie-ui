@@ -1,9 +1,11 @@
-.rt-Separator {
+.kui-Separator {
+  /* Fills its container along its own axis, as in v2. */
+  --separator-size: 100%;
   display: block;
   background-color: var(--accent-a5);
 }
 
-.rt-Separator:where(.rt-light) {
+.kui-Separator:where(.kui-light) {
   background-color: var(--accent-a3);
 }
 
@@ -14,37 +16,21 @@
  ***************************************************************************************************/
 
 @breakpoints {
-  .rt-Separator {
-    &:where(.rt-r-orientation-horizontal) {
+  .kui-Separator {
+    /* The min sizes keep a squeezed flex parent from thinning the line toward zero. */
+    &:where(.kui-r-orientation-horizontal) {
       width: var(--separator-size);
       height: 1px;
+      min-height: 1px;
     }
-    &:where(.rt-r-orientation-vertical) {
+    /* Stretches to the row it sits in. A percentage height would resolve to 0 in an
+     * auto-height row and stop the stretch, so the parent's height is a minimum instead. */
+    &:where(.kui-r-orientation-vertical) {
       width: 1px;
-      height: var(--separator-size);
-    }
-  }
-}
-
-/***************************************************************************************************
- *                                                                                                 *
- * SIZES                                                                                           *
- *                                                                                                 *
- ***************************************************************************************************/
-
-@breakpoints {
-  .rt-Separator {
-    &:where(.rt-r-size-1) {
-      --separator-size: var(--space-4);
-    }
-    &:where(.rt-r-size-2) {
-      --separator-size: var(--space-6);
-    }
-    &:where(.rt-r-size-3) {
-      --separator-size: var(--space-9);
-    }
-    &:where(.rt-r-size-4) {
-      --separator-size: 100%;
+      min-width: 1px;
+      height: auto;
+      min-height: var(--separator-size);
+      align-self: stretch;
     }
   }
 }

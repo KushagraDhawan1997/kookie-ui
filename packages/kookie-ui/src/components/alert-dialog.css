@@ -1,1 +1,5 @@
 @import './_internal/base-dialog.css';
+
+.kui-AlertDialogContent {
+  max-width: var(--overlay-w);
+}

@@ -6,7 +6,9 @@ source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/comp
 
 import { BlockInstallation } from '@/components/block-doc-page';
 
-Docs Page lays out a single documentation page: a header with the category and actions on one row, then the title, a lead and optional tabs; a reading column capped at a comfortable line length; and a table of contents that sticks beside it on large screens. Every page on this site uses it.
+Docs Page lays out a single documentation page: a header with the title, a lead and optional tabs; a reading column capped at a comfortable line length; and a table of contents that sticks beside it on large screens. Every page on this site uses it.
+
+The page's actions, such as Source, go to the end of the [Docs Shell](/docs/blocks/docs-shell) toolbar, not the header.
 
 ## Installation
 
@@ -27,7 +29,6 @@ export default function ButtonPage() {
       meta={{
         title: 'Button',
         description: 'Trigger an action or event.',
-        category: 'Components',
       }}
       tableOfContents={<TableOfContents />}
     >
@@ -37,22 +38,22 @@ export default function ButtonPage() {
 }
 ```
 
-The content column is marked with `data-content-area`. [Table of Contents](/docs/blocks/table-of-contents) reads headings from it, and "Copy page" copies its text.
+The content column is marked with `data-content-area`. [Table of Contents](/docs/blocks/table-of-contents) reads headings from it.
 
 ## Anatomy
 
 | File | Contains |
 | ---- | -------- |
 | `docs-page.tsx` | `DocsPage` and the `DocsPageMeta` type |
-| `docs-page-header.tsx` | `DocsPageHeader`, built on [Page Header](/docs/blocks/page-header). Usable on its own |
+| `docs-page-header.tsx` | `DocsPageHeader`, built on [Page Header](/docs/blocks/page-header). Sends its actions to the Docs Shell toolbar through `ToolbarFill`. Usable on its own |
 
 ## Props
 
 | Prop | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
-| `meta` | `DocsPageMeta` | - | Category, title, description and source link for the header. |
+| `meta` | `DocsPageMeta` | - | Title, description and source link. |
 | `header` | `ReactNode` | - | Replaces the generated header. |
-| `headerActions` | `ReactNode` | - | Extra buttons in the header's action row, before "Copy page". |
+| `headerActions` | `ReactNode` | - | Extra controls at the end of the Docs Shell toolbar, before Source. Use `ToolbarButton`s so the arrow keys reach them. |
 | `headerTabs` | `ReactNode` | - | Tabs under the header, e.g. Documentation and Examples. They replace the header's rule. |
 | `tableOfContents` | `ReactNode` | - | Shown in a sticky column from the `lg` breakpoint. |
 | `maxWidth` | `string` | `'44rem'` | Width cap for the reading column, around 75 characters of body text. |
@@ -64,8 +65,7 @@ The content column is marked with `data-content-area`. [Table of Contents](/docs
 | ----- | ---- | ----------- |
 | `title` | `string` | Page title, rendered as the `h1`. |
 | `description` | `string` | The lead under the title. |
-| `category` | `string` | Shown at the start of the action row. |
-| `source` | `string` | URL for a "Source" button in the action row. |
+| `source` | `string` | URL for a Source button at the end of the Docs Shell toolbar. |
 
 ## Examples
 
@@ -89,4 +89,4 @@ The page doesn't style its content. Render MDX inside [Markdown](/docs/blocks/ma
 
 ## Accessibility
 
-The title renders as the page's only `h1`. "Copy page" changes to "Copied" once the text is on the clipboard, and "Source" opens in a new tab.
+The title renders as the page's only `h1`. Source opens in a new tab, and its accessible name is "View source on GitHub".

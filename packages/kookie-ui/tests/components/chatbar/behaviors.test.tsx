@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { renderWithProviders, screen, fireEvent, act } from '../../test-utils';
 import userEvent from '@testing-library/user-event';
-import { Chatbar, IconButton } from '../../../src/components/index';
+import { Button, Chatbar } from '../../../src/components/index';
 
 type RootProps = React.ComponentProps<typeof Chatbar.Root>;
 
@@ -15,7 +15,7 @@ function ChatbarFixture({ submitOnEnter, ...props }: RootProps & { submitOnEnter
         <Chatbar.Textarea aria-label="Message" submitOnEnter={submitOnEnter} />
         <Chatbar.Row>
           <Chatbar.AttachTrigger asChild>
-            <IconButton aria-label="Attach" />
+            <Button iconOnly aria-label="Attach" />
           </Chatbar.AttachTrigger>
           <Chatbar.Send>Send</Chatbar.Send>
         </Chatbar.Row>
@@ -42,7 +42,7 @@ function pasteFiles(target: HTMLElement, files: File[], text?: string) {
 }
 
 const getTextarea = () => screen.getByLabelText('Message') as HTMLTextAreaElement;
-const getRoot = () => getTextarea().closest('.rt-ChatbarRoot') as HTMLElement;
+const getRoot = () => getTextarea().closest('.kui-ChatbarRoot') as HTMLElement;
 
 describe('Chatbar behaviors', () => {
   it('expands on focus when expandOn="focus" and collapses on blur when empty', async () => {
@@ -174,7 +174,7 @@ describe('Chatbar behaviors', () => {
     it('hidden Send is disabled, not focusable and aria-hidden', () => {
       const onSubmit = vi.fn();
       renderWithProviders(<ChatbarFixture onSubmit={onSubmit} defaultOpen />);
-      const send = getRoot().querySelector('.rt-ChatbarSend') as HTMLButtonElement;
+      const send = getRoot().querySelector('.kui-ChatbarSend') as HTMLButtonElement;
       expect(send).toBeDisabled();
       expect(send).toHaveAttribute('aria-hidden', 'true');
       expect(send).toHaveAttribute('tabindex', '-1');

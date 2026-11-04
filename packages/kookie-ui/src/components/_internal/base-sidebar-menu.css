@@ -5,31 +5,33 @@
   - Relies on Base Menu tokens: --base-menu-*
 */
 
-/* Sidebar Menu - based on rt-BaseMenuViewport */
-.rt-SidebarMenu {
+/* Sidebar Menu - based on kui-BaseMenuViewport */
+.kui-SidebarMenu {
   flex: 1;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   list-style: none;
   margin: 0;
+  /* No list indent: rows start on the pane's inset, level with the header's controls. */
+  padding: 0;
   min-height: 0;
 
-  :where(.rt-SidebarContent:has(.rt-ScrollAreaScrollbar[data-orientation='vertical'])) & {
-    padding-inline-end: var(--space-3);
+  :where(.kui-SidebarContent:has(.kui-ScrollAreaScrollbar[data-orientation='vertical'])) & {
+    padding-inline-end: var(--space-4);
   }
 }
 
 /* Sidebar Menu Item */
-.rt-SidebarMenuItem {
+.kui-SidebarMenuItem {
   list-style: none;
 }
 
 /* Sidebar Menu Button - inherit from BaseMenuItem */
-.rt-SidebarMenuButton {
+.kui-SidebarMenuButton {
   display: flex;
   align-items: center;
-  gap: var(--space-2); /* Will be overridden by size-specific gap */
+  gap: var(--base-menu-item-gap);
   min-height: var(--base-menu-item-height);
   padding-top: var(--base-menu-item-padding-y);
   padding-bottom: var(--base-menu-item-padding-y);
@@ -46,10 +48,6 @@
   /* No default border radius - inherited from size-specific rules */
 
   /* Step 3: restrict to paint-only transitions to avoid Chrome compositing nudge */
-  transition:
-    background-color var(--motion-duration-micro) var(--motion-ease-standard),
-    color var(--motion-duration-small) var(--motion-ease-standard),
-    font-weight var(--motion-duration-small) var(--motion-ease-standard);
 
   /* Fix sticky text highlighting after selection in Firefox */
   user-select: none;
@@ -58,11 +56,11 @@
   cursor: var(--cursor-menu-item);
   &:where([data-disabled]) {
     cursor: default;
-    color: var(--gray-a8);
+    color: var(--neutral-a8);
   }
 
   /* Active navigation state - always accent-based */
-  &:where([data-active], .rt-active) {
+  &:where([data-active], .kui-active) {
     background-color: var(--accent-a3);
     color: var(--accent-a12);
   }
@@ -79,40 +77,42 @@
   }
 
   /* Muted text sits a step lower inside items */
-  & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
-    color: var(--gray-a10);
+  & :where(.kui-Text.kui-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
+    color: var(--neutral-a10);
   }
 
   /* Ensure shortcuts inherit color in disabled/highlighted/hover/active states */
-  &:where([data-disabled], [data-highlighted], :hover, [data-active]) {
-    & :where(.rt-SidebarMenuShortcut) {
+  &:where([data-disabled], [data-highlighted], [data-active]) {
+    & :where(.kui-SidebarMenuShortcut) {
       color: inherit;
     }
   }
 
-  /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
+  @media (hover: hover) {
+    &:where(:hover) {
+      & :where(.kui-SidebarMenuShortcut) {
+        color: inherit;
+      }
+    }
   }
+
+  /* Reduced motion support */
 }
 
 /* Sidebar Menu Sub Components - Radix Accordion */
-.rt-SidebarMenuSubTrigger {
+.kui-SidebarMenuSubTrigger {
   justify-content: space-between;
 }
 
 /* Accordion trigger icon rotation */
-.rt-SidebarMenuSubTrigger {
-  & :where(.rt-SidebarMenuSubTriggerIcon) {
-    transition: transform var(--motion-duration-micro) var(--motion-ease-standard);
-  }
+.kui-SidebarMenuSubTrigger {
 
-  &:where([data-state='open']) :where(.rt-SidebarMenuSubTriggerIcon) {
+  &:where([data-state='open']) :where(.kui-SidebarMenuSubTriggerIcon) {
     transform: rotate(90deg);
   }
 }
 
-.rt-SidebarMenuSubContent {
+.kui-SidebarMenuSubContent {
   overflow: hidden;
 
   /* Allow focus outlines to show */
@@ -121,65 +121,15 @@
   }
 
   /* Radix Accordion animation support */
-  &:where([data-state='open']) {
-    animation: rt-sidebar-slide-down var(--motion-duration-small) var(--motion-ease-standard);
-  }
-
-  &:where([data-state='closed']) {
-    animation: rt-sidebar-slide-up var(--motion-duration-small) var(--motion-ease-standard);
-  }
 }
 
-@keyframes rt-sidebar-slide-down {
-  from {
-    height: 0;
-  }
-  to {
-    height: var(--radix-accordion-content-height);
-  }
+.kui-SidebarMenuSubList {
+  padding-inline-start: var(--space-5);
+  border-inline-start: 1px solid var(--neutral-a5);
+  margin-inline-start: var(--space-4);
 }
 
-@keyframes rt-sidebar-slide-up {
-  from {
-    height: var(--radix-accordion-content-height);
-  }
-  to {
-    height: 0;
-  }
-}
-
-.rt-SidebarMenuSubList {
-  padding-inline-start: var(--space-4);
-  border-inline-start: 1px solid var(--gray-a5);
-  margin-inline-start: var(--space-3);
-}
-
-/* Sub-menu items have consistent heights based on size - match dropdown menu exactly */
-:where(.rt-SidebarContent.rt-r-size-1) :where(.rt-SidebarMenuSubList) .rt-SidebarMenuButton {
-  padding-inline-start: var(--space-3);
-  padding-top: calc(var(--space-1) * 0.75);
-  padding-bottom: calc(var(--space-1) * 0.75);
-  min-height: var(--space-6); /* bumped from space-5 */
-  font-size: var(--font-size-1);
-}
-
-:where(.rt-SidebarContent.rt-r-size-2) :where(.rt-SidebarMenuSubList) .rt-SidebarMenuButton {
-  padding-inline-start: var(--space-3);
-  padding-top: var(--space-1);
-  padding-bottom: var(--space-1);
-  min-height: var(--space-7); /* bumped from space-6 */
-  font-size: var(--font-size-2);
-}
-
-:where(.rt-SidebarContent.rt-r-size-3) :where(.rt-SidebarMenuSubList) .rt-SidebarMenuButton {
-  padding-inline-start: var(--space-3);
-  padding-top: var(--space-2);
-  padding-bottom: var(--space-2);
-  min-height: var(--space-8);
-  font-size: var(--font-size-3);
-}
-
-.rt-SidebarGroupLabel {
+.kui-SidebarGroupLabel {
   /* Inherit all BaseMenuLabel styles */
   display: flex;
   align-items: center;
@@ -190,52 +140,56 @@
   padding-inline-end: var(--base-menu-item-padding-right);
   box-sizing: border-box;
   /* a11 keeps the label above 4.5:1 on every sidebar background. */
-  color: var(--gray-a11);
+  color: var(--neutral-a11);
   user-select: none;
   cursor: default;
 
-  /* Add margin-top when following menu items - identical to BaseMenuLabel */
-  :where(.rt-SidebarMenuItem) + & {
-    margin-top: var(--space-2);
+  /* After items, the extra air is inside the label's own box - identical to BaseMenuLabel */
+  :where(.kui-SidebarMenuItem) + & {
+    min-height: calc(var(--base-menu-item-height) + var(--space-3));
+    padding-top: calc(var(--base-menu-item-padding-y) + var(--space-3));
   }
 }
 
-/* Reduce right padding on menu buttons with trailing elements */
-.rt-SidebarMenuButton:where(:has(.rt-SidebarMenuShortcut, .rt-SidebarMenuBadge)) {
-  /* Use base menu padding tokens */
-  :where(.rt-SidebarContent.rt-r-size-1) & {
-    padding-inline-end: var(--base-menu-item-padding-y); /* Matches top/bottom padding */
-  }
-
-  :where(.rt-SidebarContent.rt-r-size-2) & {
-    padding-inline-end: var(--base-menu-item-padding-y); /* Matches top/bottom padding */
-  }
-}
-
-.rt-SidebarMenuShortcut {
+.kui-SidebarMenuShortcut {
   display: flex;
   align-items: center;
   margin-inline-start: auto;
-  padding-inline-start: var(--space-4);
-  color: var(--gray-a11);
+  padding-inline-start: var(--space-5);
+  color: var(--neutral-a11);
 }
 
-.rt-SidebarMenuBadge {
+/*
+ * A trailing badge sits the row's inset from the far edge, like a shortcut. A badge is taller
+ * than the line, so it may spend the row's block insets rather than grow the row past its height.
+ */
+.kui-SidebarMenuBadge {
   display: flex;
   align-items: center;
   margin-inline-start: auto;
-  padding-inline-start: var(--space-2);
+  margin-inline-end: calc(var(--base-menu-item-padding-y) - var(--base-menu-item-padding-right));
+  margin-top: calc(-1 * var(--base-menu-item-padding-y));
+  margin-bottom: calc(-1 * var(--base-menu-item-padding-y));
+  padding-inline-start: var(--space-3);
 }
 
 /* Add balanced spacing for sidebar menu items while preserving base menu border radius */
-.rt-SidebarContent :where(.rt-BaseMenuItem) {
+.kui-SidebarContent :where(.kui-BaseMenuItem) {
   margin-top: 1px;
   margin-bottom: 1px;
 }
 
 /* Add same balanced spacing for submenu items */
 /* stylelint-disable-next-line selector-max-specificity */
-.rt-SidebarContent :where(.rt-SidebarMenuSubList) .rt-SidebarMenuButton {
+.kui-SidebarContent :where(.kui-SidebarMenuSubList) .kui-SidebarMenuButton {
   margin-top: 1px;
   margin-bottom: 1px;
+}
+
+/* A sub-menu's rows are list items, so their list is a list. Zero specificity: only the UA's
+   list indent is removed. */
+:where(.kui-SidebarMenuSubList) {
+  list-style: none;
+  margin-block: 0;
+  padding: 0;
 }

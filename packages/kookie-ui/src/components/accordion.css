@@ -1,590 +1,298 @@
 /* Accordion Root */
-.rt-AccordionRoot {
+.kui-AccordionRoot {
   overflow: hidden;
   contain: layout;
   isolation: isolate;
-
-  /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
-
-  /* Prevent backdrop-filter stacking with parents */
-  isolation: isolate;
-
-  /* Component-level overrides */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-  
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 }
 
 /* Size-specific border radius — surface channel */
 @breakpoints {
-  .rt-AccordionRoot {
-    &:where(.rt-r-size-1) {
+  .kui-AccordionRoot {
+    &:where(.kui-r-size-1) {
       border-radius: var(--radius-surface-1);
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       border-radius: var(--radius-surface-2);
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       border-radius: var(--radius-surface-3);
     }
-    &:where(.rt-r-size-4) {
+    &:where(.kui-r-size-4) {
       border-radius: var(--radius-surface-4);
     }
   }
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-surface)) {
-  /* Base state: solid accent for solid panels */
+:where(.kui-AccordionRoot:where(.kui-variant-surface)) {
   background-color: var(--accent-2);
   box-shadow: inset 0 0 0 1px var(--accent-6);
-  transition: var(--transition-background-blur);
-
-  /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-    backdrop-filter: var(--backdrop-filter-components);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    background-color: var(--accent-2);
-    box-shadow: inset 0 0 0 1px var(--accent-6);
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-classic)) {
-  /* Base state: solid surface for solid panels */
-  background-color: var(--color-surface-solid);
-  box-shadow: var(--shadow-2);
-  transition: var(--transition-text-field);
-
-  /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: var(--color-surface-translucent);
-    backdrop-filter: var(--backdrop-filter-components);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    background-color: var(--color-surface-solid);
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: var(--color-surface-translucent);
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
+:where(.kui-AccordionRoot:where(.kui-variant-raised)) {
+  background-color: var(--color-surface);
+  box-shadow: var(--surface-chrome);
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-soft)) {
-  /* Base state: solid color for solid panels */
+:where(.kui-AccordionRoot:where(.kui-variant-soft)) {
   background-color: var(--accent-2);
-  transition: var(--transition-background-blur);
-
-  /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    backdrop-filter: var(--backdrop-filter-components);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    background-color: var(--accent-2);
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-outline)) {
-  /* Base state: solid colors for solid panels */
+:where(.kui-AccordionRoot:where(.kui-variant-outline)) {
   box-shadow: inset 0 0 0 1px var(--accent-6);
-  transition: var(--transition-background-blur);
-
-  /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    box-shadow: inset 0 0 0 1px var(--accent-6);
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-ghost)) {
+:where(.kui-AccordionRoot:where(.kui-variant-ghost)) {
   background-color: transparent;
 }
 
-/* Ghost variant flush support */
-:where(.rt-AccordionRoot:where(.rt-variant-ghost)[data-flush='true']) {
-  /* We reset the defined margin variables to avoid inheriting them from a higher component */
-  /* If a margin IS defined on the component itself, the utility class will win and reset it */
-  --margin-top: 0px;
-  --margin-right: 0px;
-  --margin-bottom: 0px;
-  --margin-left: 0px;
-
-  /* Calculate padding values for different accordion sizes */
-  --accordion-padding-x: calc(var(--space-4) * var(--padding-ratio-horizontal) / 4);
-  --accordion-padding-y: calc(var(--space-3) / 8);
-
-  /* Define the overrides to incorporate the negative margins */
-  --margin-top-override: calc(var(--margin-top) - var(--accordion-padding-y));
-  --margin-right-override: calc(var(--margin-right) - var(--accordion-padding-x));
-  --margin-bottom-override: calc(var(--margin-bottom) - var(--accordion-padding-y));
-  --margin-left-override: calc(var(--margin-left) - var(--accordion-padding-x));
-
-  margin-top: var(--margin-top-override);
-  margin-right: var(--margin-right-override);
-  margin-bottom: var(--margin-bottom-override);
-  margin-left: var(--margin-left-override);
-
-  /* Reset the overrides on direct children */
-  :where(&) > * {
-    --margin-top-override: initial;
-    --margin-right-override: initial;
-    --margin-bottom-override: initial;
-    --margin-left-override: initial;
-  }
-}
-
-
-
 /* Accordion Item */
-.rt-AccordionItem {
+.kui-AccordionItem {
   overflow: hidden;
 }
 
-:where(.rt-AccordionItem:not(:last-child)) {
-  border-bottom: 1px solid var(--gray-a6);
+:where(.kui-AccordionItem:not(:last-child)) {
+  border-bottom: 1px solid var(--neutral-a6);
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-ghost)) :where(.rt-AccordionItem:not(:last-child)) {
-  border-bottom: 1px solid var(--gray-a4);
+:where(.kui-AccordionRoot:where(.kui-variant-ghost)) :where(.kui-AccordionItem:not(:last-child)) {
+  border-bottom: 1px solid var(--neutral-a4);
 }
 
 /* Accordion Header */
-.rt-AccordionHeader {
+.kui-AccordionHeader {
   display: flex;
 }
 
 /* Accordion Trigger */
-.rt-AccordionTrigger {
+.kui-AccordionTrigger {
   all: unset;
   font-family: inherit;
   display: flex;
   flex: 1;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-4) var(--space-5);
   font-size: var(--font-size-2);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-3);
-  color: var(--gray-12);
+  color: var(--neutral-12);
   cursor: pointer;
-  transition: var(--transition-accordion-trigger);
 }
 
-/* Size variants */
-:where(.rt-AccordionRoot:where(.rt-r-size-1)) .rt-AccordionTrigger {
-  padding: var(--space-2) var(--space-3);
-  font-size: var(--font-size-1);
+/* Size variants, per breakpoint */
+@breakpoints {
+  :where(.kui-AccordionRoot:where(.kui-r-size-1)) .kui-AccordionTrigger {
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-size-1);
+  }
+
+  :where(.kui-AccordionRoot:where(.kui-r-size-2)) .kui-AccordionTrigger {
+    padding: var(--space-4) var(--space-5);
+    font-size: var(--font-size-2);
+  }
+
+  :where(.kui-AccordionRoot:where(.kui-r-size-3)) .kui-AccordionTrigger {
+    padding: var(--space-5) var(--space-6);
+    font-size: var(--font-size-3);
+  }
+
+  :where(.kui-AccordionRoot:where(.kui-r-size-4)) .kui-AccordionTrigger {
+    padding: var(--space-6) var(--space-7);
+    font-size: var(--font-size-4);
+  }
 }
 
-:where(.rt-AccordionRoot:where(.rt-r-size-2)) .rt-AccordionTrigger {
-  padding: var(--space-3) var(--space-4);
-  font-size: var(--font-size-2);
+/* Disclosure chevron: at the far end of the trigger, turned up while the section is open */
+.kui-AccordionChevron {
+  flex-shrink: 0;
+  width: var(--icon-size-2);
+  height: var(--icon-size-2);
+  margin-inline-start: var(--space-3);
+  color: var(--neutral-a11);
 }
 
-:where(.rt-AccordionRoot:where(.rt-r-size-3)) .rt-AccordionTrigger {
-  padding: var(--space-4) var(--space-5);
-  font-size: var(--font-size-3);
+:where(.kui-AccordionTrigger[data-state='open']) .kui-AccordionChevron {
+  rotate: 180deg;
 }
 
-:where(.rt-AccordionRoot:where(.rt-r-size-4)) .rt-AccordionTrigger {
-  padding: var(--space-5) var(--space-6);
-  font-size: var(--font-size-4);
+/* Chevron size, per breakpoint */
+@breakpoints {
+  :where(.kui-AccordionRoot:where(.kui-r-size-1)) .kui-AccordionChevron {
+    width: var(--icon-size-1);
+    height: var(--icon-size-1);
+  }
+
+  :where(.kui-AccordionRoot:where(.kui-r-size-2)) .kui-AccordionChevron {
+    width: var(--icon-size-2);
+    height: var(--icon-size-2);
+  }
+
+  :where(.kui-AccordionRoot:where(.kui-r-size-3)) .kui-AccordionChevron {
+    width: var(--icon-size-3);
+    height: var(--icon-size-3);
+  }
+
+  :where(.kui-AccordionRoot:where(.kui-r-size-4)) .kui-AccordionChevron {
+    width: var(--icon-size-4);
+    height: var(--icon-size-4);
+  }
+}
+
+:where(.kui-AccordionTrigger[data-disabled]) .kui-AccordionChevron {
+  color: inherit;
 }
 
 /* Trigger hover states */
-:where(.rt-AccordionTrigger:hover) {
-  background-color: var(--gray-a3);
-  transform: translateY(-1px);
-}
-
-:where(.rt-AccordionTrigger:active) {
-  transform: translateY(0px) scale(0.98);
-  transition: var(--transition-accordion-trigger-active);
+@media (hover: hover) {
+  :where(.kui-AccordionTrigger:hover) {
+    background-color: var(--neutral-a3);
+  }
 }
 
 /* Trigger colour reads the loud ink in every variant; gray resolves to step 12 */
-:where(.rt-AccordionRoot:where(.rt-variant-soft, .rt-variant-outline, .rt-variant-surface, .rt-variant-ghost, .rt-variant-classic)) .rt-AccordionTrigger {
+:where(.kui-AccordionRoot:where(.kui-variant-soft, .kui-variant-outline, .kui-variant-surface, .kui-variant-ghost, .kui-variant-raised)) .kui-AccordionTrigger {
   color: var(--accent-ink);
 }
 
-/* Classic variant shadow states */
-:where(.rt-AccordionRoot:where(.rt-variant-classic):hover) {
-  background-color: var(--accent-2);
-  box-shadow: var(--shadow-2);
-
-  /* Theme-level translucent override for hover */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-  }
-
-  /* Component-level overrides for hover */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+/* Raised variant shadow states */
+@media (hover: hover) {
+  :where(.kui-AccordionRoot:where(.kui-variant-raised):hover) {
     background-color: var(--accent-2);
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
+    box-shadow: var(--surface-chrome);
   }
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-classic):focus-within) {
-  outline: 2px solid var(--focus-8);
-  outline-offset: 2px;
-  transition: var(--transition-text-field);
-}
-
-:where(.rt-AccordionRoot:where(.rt-variant-soft)) :where(.rt-AccordionTrigger:hover) {
-  background-color: var(--accent-4);
-  
-  /* Theme-level translucent override for hover */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-  }
-
-  /* Component-level overrides for hover */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+@media (hover: hover) {
+  :where(.kui-AccordionRoot:where(.kui-variant-soft)) :where(.kui-AccordionTrigger:hover) {
     background-color: var(--accent-4);
   }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-  }
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-outline)) :where(.rt-AccordionTrigger:hover) {
-  background-color: var(--accent-2);
-  box-shadow: inset 0 0 0 1px var(--accent-7);
-  
-  /* Theme-level translucent override for hover */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a7);
-  }
-
-  /* Component-level overrides for hover */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+@media (hover: hover) {
+  :where(.kui-AccordionRoot:where(.kui-variant-outline)) :where(.kui-AccordionTrigger:hover) {
     background-color: var(--accent-2);
     box-shadow: inset 0 0 0 1px var(--accent-7);
   }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a7);
-  }
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-surface)) :where(.rt-AccordionTrigger:hover) {
-  background-color: var(--accent-3);
-  box-shadow: inset 0 0 0 1px var(--accent-7);
-  
-  /* Theme-level translucent override for hover */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a7);
-  }
-
-  /* Component-level overrides for hover */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+@media (hover: hover) {
+  :where(.kui-AccordionRoot:where(.kui-variant-surface)) :where(.kui-AccordionTrigger:hover) {
     background-color: var(--accent-3);
     box-shadow: inset 0 0 0 1px var(--accent-7);
   }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a7);
-  }
 }
 
-:where(.rt-AccordionRoot:where(.rt-variant-ghost)) :where(.rt-AccordionTrigger:hover) {
-  /* Base state: solid accent for solid panels */
-  background-color: var(--accent-3);
-  
-  /* Theme-level translucent override for hover */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-  }
-
-  /* Component-level overrides for hover */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
+@media (hover: hover) {
+  :where(.kui-AccordionRoot:where(.kui-variant-ghost)) :where(.kui-AccordionTrigger:hover) {
     background-color: var(--accent-3);
   }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-  }
-
-  /* Disable backdrop-filter when inside elements that already have backdrop-filter */
-  /* :where(.rt-PopoverContent, .rt-BaseDialogContent, .rt-BaseMenuContent, .rt-DropdownMenuContent, .rt-ContextMenuContent, .rt-AlertDialogContent, .rt-HoverCardContent, .rt-TooltipContent, .rt-Card) & {
-    backdrop-filter: none !important;
-  } */
 }
 
 /* Trigger focus states */
-:where(.rt-AccordionTrigger:focus-visible) {
+:where(.kui-AccordionTrigger:focus-visible) {
   outline: var(--focus-outline-width) solid var(--focus-8);
   outline-offset: var(--focus-outline-offset-inset);
 }
 
-/* Variant-specific focus styles */
-:where(.rt-AccordionRoot:where(.rt-variant-soft):focus-within) {
-  outline: 2px solid var(--focus-8);
-  outline-offset: 2px;
-}
-
-:where(.rt-AccordionRoot:where(.rt-variant-surface):focus-within) {
-  outline: 2px solid var(--focus-8);
-  outline-offset: 2px;
-}
-
-:where(.rt-AccordionRoot:where(.rt-variant-outline):focus-within) {
-  outline: 2px solid var(--focus-8);
-  outline-offset: 2px;
-}
-
-:where(.rt-AccordionRoot:where(.rt-variant-ghost):focus-within) {
-  outline: 2px solid var(--focus-8);
-  outline-offset: 2px;
-}
-
 /* Accordion Content */
-.rt-AccordionContent {
+.kui-AccordionContent {
   overflow: hidden;
   /* remove padding here */
   font-size: var(--font-size-2);
   color: var(--accent-ink);
   line-height: var(--line-height-4);
   transform-origin: top;
-  will-change: height, opacity, transform;
 }
 
-.rt-AccordionContentInner {
-  padding: 0 var(--space-4) var(--space-3);
-}
-
-/* Size variants for content */
-:where(.rt-AccordionRoot:where(.rt-r-size-1)) .rt-AccordionContentInner {
-  padding: 0 var(--space-3) var(--space-2);
-  font-size: var(--font-size-1);
-}
-
-:where(.rt-AccordionRoot:where(.rt-r-size-2)) .rt-AccordionContentInner {
-  padding: 0 var(--space-4) var(--space-3);
-  font-size: var(--font-size-2);
-}
-
-:where(.rt-AccordionRoot:where(.rt-r-size-3)) .rt-AccordionContentInner {
+.kui-AccordionContentInner {
   padding: 0 var(--space-5) var(--space-4);
-  font-size: var(--font-size-3);
 }
 
-:where(.rt-AccordionRoot:where(.rt-r-size-4)) .rt-AccordionContentInner {
-  padding: 0 var(--space-6) var(--space-5);
-  font-size: var(--font-size-4);
+/* Size variants for content, per breakpoint */
+@breakpoints {
+  :where(.kui-AccordionRoot:where(.kui-r-size-1)) .kui-AccordionContentInner {
+    padding: 0 var(--space-4) var(--space-3);
+    font-size: var(--font-size-1);
+  }
+
+  :where(.kui-AccordionRoot:where(.kui-r-size-2)) .kui-AccordionContentInner {
+    padding: 0 var(--space-5) var(--space-4);
+    font-size: var(--font-size-2);
+  }
+
+  :where(.kui-AccordionRoot:where(.kui-r-size-3)) .kui-AccordionContentInner {
+    padding: 0 var(--space-6) var(--space-5);
+    font-size: var(--font-size-3);
+  }
+
+  :where(.kui-AccordionRoot:where(.kui-r-size-4)) .kui-AccordionContentInner {
+    padding: 0 var(--space-7) var(--space-6);
+    font-size: var(--font-size-4);
+  }
 }
 
 /* Content animations */
-:where(.rt-AccordionContent[data-state="open"]) {
-  animation: rt-slide-down var(--motion-duration-small) var(--motion-spring-snappy);
-}
-
-:where(.rt-AccordionContent[data-state="closed"]) {
-  animation: rt-slide-up var(--motion-duration-micro) var(--motion-spring-snappy);
-}
-
-@keyframes rt-slide-down {
-  0% {
-    height: 0;
-    opacity: 0;
-    transform: translateY(-4px) scaleY(0.98);
-  }
-  100% {
-    height: var(--radix-accordion-content-height);
-    opacity: 1;
-    transform: translateY(0) scaleY(1);
-  }
-}
-
-@keyframes rt-slide-up {
-  0% {
-    height: var(--radix-accordion-content-height);
-    opacity: 1;
-    transform: translateY(0) scaleY(1);
-  }
-  100% {
-    height: 0;
-    opacity: 0;
-    transform: translateY(-4px) scaleY(0.98);
-  }
-}
 
 /* Color accent support */
-:where(.rt-AccordionRoot:where(.rt-variant-soft)[data-accent-color]) :where(.rt-AccordionTrigger:hover) {
-  background-color: var(--accent-a4);
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  :where(.rt-AccordionContent[data-state="open"]),
-  :where(.rt-AccordionContent[data-state="closed"]) {
-    animation: none;
-  }
-}
-
-/* Safari backdrop-filter fallback */
-@supports not (backdrop-filter: blur(1px)) {
-  :where(.rt-AccordionRoot[data-material='translucent']) {
-    background-color: var(--accent-2);
-  }
-  
-  :where(.rt-AccordionRoot[data-material='translucent']) :where(.rt-AccordionTrigger:hover) {
-    background-color: var(--accent-4);
+@media (hover: hover) {
+  :where(.kui-AccordionRoot:where(.kui-variant-soft)[data-accent-color]) :where(.kui-AccordionTrigger:hover) {
+    background-color: var(--accent-a4);
   }
 }
 
 /* Forced colors support */
 @media (forced-colors: active) {
-  :where(.rt-AccordionTrigger) {
+  :where(.kui-AccordionTrigger) {
     border: 1px solid CanvasText;
   }
-  
-  :where(.rt-AccordionTrigger:focus-visible) {
+
+  :where(.kui-AccordionTrigger:focus-visible) {
     outline: 2px solid CanvasText;
     outline-offset: 2px;
   }
-  
-  :where(.rt-AccordionItem:not(:last-child)) {
+
+  :where(.kui-AccordionItem:not(:last-child)) {
     border-bottom: 1px solid CanvasText;
   }
-  
-  :where(.rt-AccordionRoot) {
+
+  :where(.kui-AccordionRoot) {
     border: 1px solid CanvasText;
   }
-  
-  :where(.rt-AccordionRoot[data-material='translucent']) {
-    background-color: Canvas;
-    backdrop-filter: none;
-  }
-} 
+}
 
 /* Soft variant hover states */
 @media (hover: hover) {
-  :where(.rt-AccordionRoot.rt-variant-soft:hover) {
+  :where(.kui-AccordionRoot.kui-variant-soft:hover) {
     background-color: var(--accent-4);
-  }
-  :where([data-panel-background='translucent'], [data-material='translucent']) :where(.rt-AccordionRoot.rt-variant-soft:hover) {
-    background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-  }
-  :where(.rt-AccordionRoot.rt-variant-soft[data-panel-background='solid'], .rt-AccordionRoot.rt-variant-soft[data-material='solid']:hover) {
-    background-color: var(--accent-4);
-  }
-  :where(.rt-AccordionRoot.rt-variant-soft[data-panel-background='translucent'], .rt-AccordionRoot.rt-variant-soft[data-material='translucent']:hover) {
-    background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
   }
 }
 
 /* Outline variant hover states */
 @media (hover: hover) {
-  :where(.rt-AccordionRoot.rt-variant-outline:hover) {
+  :where(.kui-AccordionRoot.kui-variant-outline:hover) {
     background-color: var(--accent-2);
     box-shadow: inset 0 0 0 1px var(--accent-7);
-  }
-  :where([data-panel-background='translucent'], [data-material='translucent']) :where(.rt-AccordionRoot.rt-variant-outline:hover) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a7);
-  }
-  :where(.rt-AccordionRoot.rt-variant-outline[data-panel-background='solid'], .rt-AccordionRoot.rt-variant-outline[data-material='solid']:hover) {
-    background-color: var(--accent-2);
-    box-shadow: inset 0 0 0 1px var(--accent-7);
-  }
-  :where(.rt-AccordionRoot.rt-variant-outline[data-panel-background='translucent'], .rt-AccordionRoot.rt-variant-outline[data-material='translucent']:hover) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a7);
   }
 }
 
 /* Surface variant hover states */
 @media (hover: hover) {
-  :where(.rt-AccordionRoot.rt-variant-surface:hover) {
+  :where(.kui-AccordionRoot.kui-variant-surface:hover) {
     background-color: var(--accent-3);
     box-shadow: inset 0 0 0 1px var(--accent-7);
-  }
-  :where([data-panel-background='translucent'], [data-material='translucent']) :where(.rt-AccordionRoot.rt-variant-surface:hover) {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a7);
-  }
-  :where(.rt-AccordionRoot.rt-variant-surface[data-panel-background='solid'], .rt-AccordionRoot.rt-variant-surface[data-material='solid']:hover) {
-    background-color: var(--accent-3);
-    box-shadow: inset 0 0 0 1px var(--accent-7);
-  }
-  :where(.rt-AccordionRoot.rt-variant-surface[data-panel-background='translucent'], .rt-AccordionRoot.rt-variant-surface[data-material='translucent']:hover) {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a7);
   }
 }
 
 /* Ghost variant hover with lowered specificity */
 @media (hover: hover) {
-  :where(.rt-AccordionRoot.rt-variant-ghost:hover) {
+  :where(.kui-AccordionRoot.kui-variant-ghost:hover) {
     background-color: var(--accent-2);
   }
-  :where([data-panel-background='translucent'], [data-material='translucent']) :where(.rt-AccordionRoot.rt-variant-ghost:hover) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-  }
-  :where(.rt-AccordionRoot.rt-variant-ghost[data-panel-background='solid'], .rt-AccordionRoot.rt-variant-ghost[data-material='solid']:hover) {
-    background-color: var(--accent-2);
-  }
-  :where(.rt-AccordionRoot.rt-variant-ghost[data-panel-background='translucent'], .rt-AccordionRoot.rt-variant-ghost[data-material='translucent']:hover) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-  }
-} 
+}
+/* Disabled: the same treatment as a disabled menu item. It keeps no hover fill or lift. */
+.kui-AccordionTrigger:where([data-disabled]) {
+  color: var(--neutral-a8);
+  cursor: default;
+  background-color: transparent;
+  transform: none;
+}

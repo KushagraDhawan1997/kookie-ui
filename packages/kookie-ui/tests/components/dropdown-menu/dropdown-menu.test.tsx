@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event';
 import { renderWithProviders, render, screen } from '../../test-utils';
 import * as DropdownMenu from '../../../src/components/dropdown-menu';
 import { Button } from '../../../src/components/button';
-import { Theme } from '../../../src/components/theme';
 import { VirtualMenu } from '../../../src/components/virtual-menu';
 
 /** Opens the first cascade submenu from the keyboard. */
@@ -56,39 +55,19 @@ describe('DropdownMenu', () => {
     expect(screen.queryByRole('menu')).toBeNull();
   });
 
-  it('applies size, variant, material and color to the content', async () => {
+  it('applies size and color to the content, with the soft highlight', async () => {
     renderMenu(<DropdownMenu.Item>One</DropdownMenu.Item>, {
       size: '1',
-      variant: 'soft',
-      material: 'solid',
       color: 'red',
     });
     const menu = await screen.findByRole('menu');
-    expect(menu).toHaveClass('rt-r-size-1', 'rt-variant-soft');
-    expect(menu).toHaveAttribute('data-material', 'solid');
-    expect(menu).toHaveAttribute('data-panel-background', 'solid');
+    expect(menu).toHaveClass('kui-r-size-1', 'kui-variant-soft');
     expect(menu).toHaveAttribute('data-accent-color', 'red');
+    expect(menu).not.toHaveAttribute('data-material');
     expect(menu).not.toHaveAttribute('color');
     expect(menu).not.toHaveAttribute('submenubehavior');
   });
 
-  it('follows the nearest Theme material', async () => {
-    render(
-      <Theme material="translucent">
-        <Theme material="solid">
-          <DropdownMenu.Root defaultOpen>
-            <DropdownMenu.Trigger>
-              <Button>Open</Button>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Content>
-              <DropdownMenu.Item>One</DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
-        </Theme>
-      </Theme>,
-    );
-    expect(await screen.findByRole('menu')).toHaveAttribute('data-material', 'solid');
-  });
 
   it('renders shortcuts as hidden hints with aria-keyshortcuts', async () => {
     renderMenu(
@@ -102,7 +81,7 @@ describe('DropdownMenu', () => {
 
     const copy = await screen.findByRole('menuitem', { name: 'Copy' });
     expect(copy).toHaveAttribute('aria-keyshortcuts', 'Meta+C');
-    expect(copy.querySelector('.rt-BaseMenuShortcut')).toHaveAttribute('aria-hidden', 'true');
+    expect(copy.querySelector('.kui-BaseMenuShortcut')).toHaveAttribute('aria-hidden', 'true');
     expect(screen.getByRole('menuitemcheckbox', { name: 'Bold' })).toHaveAttribute('aria-keyshortcuts', 'Control+B');
   });
 
@@ -121,8 +100,8 @@ describe('DropdownMenu', () => {
 
     const item = await screen.findByRole('menuitemcheckbox', { name: 'Show grid' });
     expect(item).toHaveAttribute('aria-checked', 'true');
-    expect(item.querySelector('.rt-DropdownMenuItemIndicatorIcon')).not.toBeNull();
-    expect(item.querySelector('.rt-ContextMenuItemIndicatorIcon')).toBeNull();
+    expect(item.querySelector('.kui-DropdownMenuItemIndicatorIcon')).not.toBeNull();
+    expect(item.querySelector('.kui-ContextMenuItemIndicatorIcon')).toBeNull();
 
     await user.click(item);
     expect(onCheckedChange).toHaveBeenCalledWith(false);
@@ -139,7 +118,7 @@ describe('DropdownMenu', () => {
 
     const list = await screen.findByRole('menuitemradio', { name: 'List' });
     expect(list).toHaveAttribute('aria-checked', 'true');
-    expect(list.querySelector('.rt-BaseMenuItemIndicatorIcon')).not.toBeNull();
+    expect(list.querySelector('.kui-BaseMenuItemIndicatorIcon')).not.toBeNull();
 
     await user.click(screen.getByRole('menuitemradio', { name: 'Grid' }));
     expect(onValueChange).toHaveBeenCalledWith('grid');
@@ -147,7 +126,7 @@ describe('DropdownMenu', () => {
 
   it('merges the TriggerIcon className', () => {
     const { container } = render(<DropdownMenu.TriggerIcon className="custom" />);
-    expect(container.querySelector('svg')).toHaveClass('rt-DropdownMenuTriggerIcon', 'custom');
+    expect(container.querySelector('svg')).toHaveClass('kui-DropdownMenuTriggerIcon', 'custom');
   });
 
   describe('cascade submenus', () => {
@@ -168,7 +147,7 @@ describe('DropdownMenu', () => {
       await user.keyboard('{ArrowDown}{ArrowDown}');
       const trigger = screen.getByRole('menuitem', { name: 'Share' });
       expect(trigger).toHaveFocus();
-      expect(trigger.querySelector('.rt-DropdownMenuSubTriggerIcon')).not.toBeNull();
+      expect(trigger.querySelector('.kui-DropdownMenuSubTriggerIcon')).not.toBeNull();
 
       await user.keyboard('{ArrowRight}');
       expect(await screen.findByRole('menuitem', { name: 'Email' })).toBeInTheDocument();
@@ -182,18 +161,17 @@ describe('DropdownMenu', () => {
       const user = renderMenu(
         <DropdownMenu.Sub>
           <DropdownMenu.SubTrigger>Share</DropdownMenu.SubTrigger>
-          <DropdownMenu.SubContent size="1" color="red" material="solid" data-testid="sub">
+          <DropdownMenu.SubContent size="1" color="red" data-testid="sub">
             <DropdownMenu.Item>Email</DropdownMenu.Item>
           </DropdownMenu.SubContent>
         </DropdownMenu.Sub>,
-        { size: '2', color: 'blue', material: 'translucent' },
+        { size: '2', color: 'blue' },
       );
 
       await openFirstSub(user, 'Share');
       const sub = await screen.findByTestId('sub');
-      expect(sub).toHaveClass('rt-r-size-1');
+      expect(sub).toHaveClass('kui-r-size-1');
       expect(sub).toHaveAttribute('data-accent-color', 'red');
-      expect(sub).toHaveAttribute('data-material', 'solid');
       expect(sub).not.toHaveAttribute('color');
     });
 
@@ -205,14 +183,13 @@ describe('DropdownMenu', () => {
             <DropdownMenu.Item>Email</DropdownMenu.Item>
           </DropdownMenu.SubContent>
         </DropdownMenu.Sub>,
-        { size: '1', variant: 'soft', color: 'blue', material: 'solid' },
+        { size: '1', variant: 'soft', color: 'blue' },
       );
 
       await openFirstSub(user, 'Share');
       const sub = await screen.findByTestId('sub');
-      expect(sub).toHaveClass('rt-r-size-1', 'rt-variant-soft');
+      expect(sub).toHaveClass('kui-r-size-1', 'kui-variant-soft');
       expect(sub).toHaveAttribute('data-accent-color', 'blue');
-      expect(sub).toHaveAttribute('data-material', 'solid');
     });
 
     it('never produces a NaN offset for a responsive size', async () => {
@@ -240,8 +217,8 @@ describe('DropdownMenu', () => {
       });
 
       const menu = await screen.findByRole('menu');
-      expect(menu.querySelector('.rt-ScrollAreaRoot')).toBeNull();
-      expect(menu.querySelector('.rt-virtualized')).not.toBeNull();
+      expect(menu.querySelector('.kui-ScrollAreaRoot')).toBeNull();
+      expect(menu.querySelector('.kui-virtualized')).not.toBeNull();
       // The nested list is a group; the content owns role="menu".
       expect(screen.getAllByRole('menu')).toHaveLength(1);
       expect(menu).not.toHaveAttribute('virtualized');
@@ -250,8 +227,8 @@ describe('DropdownMenu', () => {
     it('uses a vertical-only ScrollArea when not virtualized', async () => {
       renderMenu(<DropdownMenu.Item>One</DropdownMenu.Item>);
       const menu = await screen.findByRole('menu');
-      expect(menu.querySelector('.rt-ScrollAreaRoot')).not.toBeNull();
-      expect(menu.querySelector('.rt-ScrollAreaScrollbar[data-orientation="horizontal"]')).toBeNull();
+      expect(menu.querySelector('.kui-ScrollAreaRoot')).not.toBeNull();
+      expect(menu.querySelector('.kui-ScrollAreaScrollbar[data-orientation="horizontal"]')).toBeNull();
     });
   });
 
@@ -267,7 +244,7 @@ describe('DropdownMenu', () => {
           </DropdownMenu.SubContent>
         </DropdownMenu.Sub>
       </>,
-      { submenuBehavior: 'cascade', material: 'solid' },
+      { submenuBehavior: 'cascade' },
     );
     await openFirstSub(user, 'More');
     await screen.findByRole('menuitem', { name: 'Nested' });
@@ -275,5 +252,30 @@ describe('DropdownMenu', () => {
       /does not recognize|Unknown prop|non-boolean attribute|Invalid value for prop/i.test(String(message)),
     );
     expect(propWarnings).toEqual([]);
+  });
+
+  it('names a group by the label inside it', async () => {
+    renderMenu(
+      <>
+        <DropdownMenu.Group>
+          <DropdownMenu.Label>Recent</DropdownMenu.Label>
+          <DropdownMenu.Item>Report.pdf</DropdownMenu.Item>
+        </DropdownMenu.Group>
+        <DropdownMenu.RadioGroup value="list">
+          <DropdownMenu.Label id="view-label">View</DropdownMenu.Label>
+          <DropdownMenu.RadioItem value="list">List</DropdownMenu.RadioItem>
+        </DropdownMenu.RadioGroup>
+        <DropdownMenu.Group aria-labelledby="external">
+          <DropdownMenu.Label>Ignored</DropdownMenu.Label>
+        </DropdownMenu.Group>
+        <DropdownMenu.Group data-testid="unlabelled">
+          <DropdownMenu.Item>Plain</DropdownMenu.Item>
+        </DropdownMenu.Group>
+      </>,
+    );
+    expect(await screen.findByRole('group', { name: 'Recent' })).toBeInTheDocument();
+    expect(screen.getByRole('group', { name: 'View' })).toHaveAttribute('aria-labelledby', 'view-label');
+    expect(screen.getAllByRole('group')[2]).toHaveAttribute('aria-labelledby', 'external');
+    expect(screen.getByTestId('unlabelled')).not.toHaveAttribute('aria-labelledby');
   });
 });

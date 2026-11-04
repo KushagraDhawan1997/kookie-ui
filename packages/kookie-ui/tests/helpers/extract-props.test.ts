@@ -26,34 +26,34 @@ function classesOf(result: Record<string, unknown>) {
 
 describe('extractProps: class names', () => {
   test('a scale value becomes a value-suffixed class', () => {
-    expect(classesOf(flex({ gap: '3' }))).toContain('rt-r-gap-3');
-    expect(classesOf(flex({ direction: 'column' }))).toContain('rt-r-fd-column');
+    expect(classesOf(flex({ gap: '3' }))).toContain('kui-r-gap-3');
+    expect(classesOf(flex({ direction: 'column' }))).toContain('kui-r-fd-column');
   });
 
   test('an arbitrary value becomes a bare class plus a custom property', () => {
     const result = flex({ gap: '13px' });
-    expect(classesOf(result)).toContain('rt-r-gap');
-    expect(classesOf(result)).not.toContain('rt-r-gap-13px');
+    expect(classesOf(result)).toContain('kui-r-gap');
+    expect(classesOf(result)).not.toContain('kui-r-gap-13px');
     expect(result.style).toMatchObject({ '--gap': '13px' });
   });
 
   test('a negative scale value keeps the minus outside the class name', () => {
-    expect(classesOf(flex({ mt: '-3' }))).toContain('-rt-r-mt-3');
+    expect(classesOf(flex({ mt: '-3' }))).toContain('-kui-r-mt-3');
   });
 
   test('several props each contribute their own class', () => {
     const classes = classesOf(flex({ direction: 'column', align: 'center', gap: '3', p: '4' }));
-    expect(classes).toEqual(expect.arrayContaining(['rt-r-fd-column', 'rt-r-ai-center', 'rt-r-gap-3', 'rt-r-p-4']));
+    expect(classes).toEqual(expect.arrayContaining(['kui-r-fd-column', 'kui-r-ai-center', 'kui-r-gap-3', 'kui-r-p-4']));
   });
 
   test('boolean props contribute a flag class only when true', () => {
-    expect(classesOf(extractProps({ truncate: true } as never, textPropDefs as Defs))).toContain('rt-truncate');
-    expect(classesOf(extractProps({ truncate: false } as never, textPropDefs as Defs))).not.toContain('rt-truncate');
+    expect(classesOf(extractProps({ truncate: true } as never, textPropDefs as Defs))).toContain('kui-truncate');
+    expect(classesOf(extractProps({ truncate: false } as never, textPropDefs as Defs))).not.toContain('kui-truncate');
   });
 
   test('emphasis contributes a non-responsive class and no class when unset', () => {
-    expect(classesOf(extractProps({ emphasis: 'quiet' } as never, textPropDefs as Defs))).toContain('rt-emphasis-quiet');
-    expect(classesOf(extractProps({ color: 'red' } as never, textPropDefs as Defs)).some((c) => c.startsWith('rt-emphasis'))).toBe(false);
+    expect(classesOf(extractProps({ emphasis: 'quiet' } as never, textPropDefs as Defs))).toContain('kui-emphasis-quiet');
+    expect(classesOf(extractProps({ color: 'red' } as never, textPropDefs as Defs)).some((c) => c.startsWith('kui-emphasis'))).toBe(false);
   });
 
   test('an unset prop contributes nothing', () => {
@@ -63,7 +63,7 @@ describe('extractProps: class names', () => {
 
   test('the caller className is preserved and comes last', () => {
     const result = flex({ gap: '2', className: 'mine other' });
-    expect(result.className).toBe('rt-r-gap-2 mine other');
+    expect(result.className).toBe('kui-r-gap-2 mine other');
   });
 
   test('a caller className survives even with no styling props', () => {
@@ -74,8 +74,8 @@ describe('extractProps: class names', () => {
 describe('extractProps: enum validation', () => {
   test('an invalid enum value is dropped rather than emitted as a class', () => {
     const classes = classesOf(flex({ direction: 'sideways', align: 'center' }));
-    expect(classes).toContain('rt-r-ai-center');
-    expect(classes.some((c) => c.startsWith('rt-r-fd'))).toBe(false);
+    expect(classes).toContain('kui-r-ai-center');
+    expect(classes.some((c) => c.startsWith('kui-r-fd'))).toBe(false);
   });
 
   test('an invalid enum value falls back to the prop def default', () => {
@@ -97,26 +97,26 @@ describe('extractProps: enum validation', () => {
 describe('extractProps: responsive values', () => {
   test('each breakpoint gets a prefixed class', () => {
     const classes = classesOf(flex({ direction: { initial: 'column', md: 'row' } }));
-    expect(classes).toContain('rt-r-fd-column');
-    expect(classes).toContain('md:rt-r-fd-row');
+    expect(classes).toContain('kui-r-fd-column');
+    expect(classes).toContain('md:kui-r-fd-row');
   });
 
   test('arbitrary values at a breakpoint get a suffixed custom property', () => {
     const result = flex({ gap: { initial: '2', lg: '17px' } });
-    expect(classesOf(result)).toContain('rt-r-gap-2');
-    expect(classesOf(result)).toContain('lg:rt-r-gap');
+    expect(classesOf(result)).toContain('kui-r-gap-2');
+    expect(classesOf(result)).toContain('lg:kui-r-gap');
     expect(result.style).toMatchObject({ '--gap-lg': '17px' });
   });
 
   test('keys that are not breakpoints are ignored', () => {
     const classes = classesOf(flex({ direction: { md: 'row', nonsense: 'row' } }));
-    expect(classes).toContain('md:rt-r-fd-row');
+    expect(classes).toContain('md:kui-r-fd-row');
     expect(classes.some((c) => c.includes('nonsense'))).toBe(false);
   });
 
   test('a responsive value on a non-responsive styling prop def emits no class', () => {
     const defs: Defs = {
-      tone: { type: 'enum', values: ['a', 'b'], className: 'rt-tone' } as PropDef,
+      tone: { type: 'enum', values: ['a', 'b'], className: 'kui-tone' } as PropDef,
     };
     const result = extractProps({ tone: { initial: 'a', md: 'b' } } as never, defs) as Record<string, unknown>;
 
@@ -153,8 +153,8 @@ describe('extractProps: responsive values', () => {
     const first = extractProps({ size } as never, baseButtonPropDefs as Defs) as Record<string, unknown>;
 
     expect(size).toEqual({ md: '3' });
-    expect(classesOf(first)).toContain('rt-r-size-2');
-    expect(classesOf(first)).toContain('md:rt-r-size-3');
+    expect(classesOf(first)).toContain('kui-r-size-2');
+    expect(classesOf(first)).toContain('md:kui-r-size-3');
   });
 
   test('repeated calls with the same hoisted object give the same result', () => {

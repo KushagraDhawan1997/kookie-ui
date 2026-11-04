@@ -53,9 +53,9 @@ Every part accepts the props of the component it wraps. Only changed defaults ar
 
 | Part | Wraps | Defaults |
 | ---- | ----- | -------- |
-| `Root` | `Flex` | `direction="column"`, `align="center"`, `justify="center"`, `gap="6"` |
+| `Root` | `Flex` | `direction="column"`, `align="center"`, `justify="center"`, `gap="7"` |
 | `Quote` | `Heading` | `size="7"`, `weight="medium"`, `align="center"`. Wraps children in quotation marks |
-| `Author` | `Flex` | `direction="column"`, `align="center"`, `gap="2"` |
+| `Author` | `Flex` | `direction="column"`, `align="center"`, `gap="3"` |
 | `Avatar` | `Avatar` | `size="4"`, `radius="full"` |
 | `Details` | `Flex` | `direction="column"`, `align="center"`, `gap="0"` |
 | `Name` | `Text` | `size="3"`, `weight="medium"` |
@@ -66,7 +66,7 @@ Every part accepts the props of the component it wraps. Only changed defaults ar
 ### Centered Quote
 
 <PreviewBlock background="none" height="auto">
-  <Box py="8" px="5" maxWidth="36rem">
+  <Box py="9" px="6" maxWidth="36rem">
     <Testimonial.Root>
       <Testimonial.Quote as="h3" size="5">We shipped the redesign two weeks early, and nobody had to learn a new system.</Testimonial.Quote>
       <Testimonial.Author>

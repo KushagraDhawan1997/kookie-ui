@@ -41,10 +41,10 @@ describe('Chatbar.Item in a browser', () => {
       </Bar>,
     );
     expect(screen.getByRole('list', { name: 'Attachments' })).toBeTruthy();
-    const pill = document.querySelector('.rt-ChatbarItem')!;
-    const lead = rect(pill.querySelector('.rt-ChatbarItemLead'));
-    const remove = rect(pill.querySelector('.rt-ChatbarItemRemove'));
-    const label = rect(pill.querySelector('.rt-ChatbarItemLabel'));
+    const pill = document.querySelector('.kui-ChatbarItem')!;
+    const lead = rect(pill.querySelector('.kui-ChatbarItemLead'));
+    const remove = rect(pill.querySelector('.kui-ChatbarItemRemove'));
+    const label = rect(pill.querySelector('.kui-ChatbarItemLabel'));
     expect(lead.right).toBeLessThanOrEqual(label.left + 0.5);
     expect(label.right).toBeLessThanOrEqual(remove.left + 0.5);
     // The lead is square and sits inside the pill.
@@ -87,7 +87,7 @@ describe('Chatbar.Item in a browser', () => {
         <Chatbar.Item>Selection</Chatbar.Item>
       </Bar>,
     );
-    expect(document.querySelector('.rt-ChatbarItemRemove')).toBeNull();
+    expect(document.querySelector('.kui-ChatbarItemRemove')).toBeNull();
   });
 
   it('grows its lead with the bar size', () => {
@@ -96,14 +96,14 @@ describe('Chatbar.Item in a browser', () => {
         <Chatbar.Item>Small</Chatbar.Item>
       </Bar>,
     );
-    const small = rect(document.querySelector('.rt-ChatbarItemLead')).height;
+    const small = rect(document.querySelector('.kui-ChatbarItemLead')).height;
     unmount();
     render(
       <Bar size="3">
         <Chatbar.Item>Large</Chatbar.Item>
       </Bar>,
     );
-    expect(rect(document.querySelector('.rt-ChatbarItemLead')).height).toBeGreaterThan(small);
+    expect(rect(document.querySelector('.kui-ChatbarItemLead')).height).toBeGreaterThan(small);
   });
 
   it('truncates a long label inside its maximum width', () => {
@@ -112,8 +112,8 @@ describe('Chatbar.Item in a browser', () => {
         <Chatbar.Item onRemove={() => {}}>a-very-long-reference-name-that-would-never-fit-in-one-pill.step</Chatbar.Item>
       </Bar>,
     );
-    const pill = rect(document.querySelector('.rt-ChatbarItem'));
-    const remove = rect(document.querySelector('.rt-ChatbarItemRemove'));
+    const pill = rect(document.querySelector('.kui-ChatbarItem'));
+    const remove = rect(document.querySelector('.kui-ChatbarItemRemove'));
     expect(pill.width).toBeLessThanOrEqual(240.5);
     expect(remove.right).toBeLessThanOrEqual(pill.right + 0.5);
   });
@@ -126,8 +126,8 @@ describe('Chatbar.Attachment as a pill', () => {
         <Chatbar.Item>Base plate</Chatbar.Item>
       </Bar>,
     );
-    const pills = Array.from(document.querySelectorAll('.rt-ChatbarItem'));
-    expect(pills.map((p) => p.querySelector('.rt-ChatbarItemLabel')!.textContent)).toEqual([
+    const pills = Array.from(document.querySelectorAll('.kui-ChatbarItem'));
+    expect(pills.map((p) => p.querySelector('.kui-ChatbarItemLabel')!.textContent)).toEqual([
       'stand-ref.png, 2 KB',
       'notes.pdf, 2 KB',
       'Base plate',

@@ -36,7 +36,6 @@ const accentColors = [
 const variants = ['solid', 'soft', 'surface', 'outline'] as const;
 const sizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
 const radiusOptions = ['none', 'small', 'medium', 'large', 'full'] as const;
-const materials = ['solid', 'translucent'] as const;
 const fitOptions = ['cover', 'contain', 'fill', 'scale-down', 'none'] as const;
 
 type AvatarPlaygroundProps = {
@@ -54,7 +53,6 @@ export default function AvatarPlayground({
   const [color, setColor] = React.useState<string>('theme');
   const [radius, setRadius] = React.useState<string>('theme');
   const [size, setSize] = React.useState<string>('3');
-  const [material, setMaterial] = React.useState<string>('theme');
   const [fit, setFit] = React.useState<string>('cover');
   const [showImage, setShowImage] = React.useState<boolean>(false);
 
@@ -97,15 +95,6 @@ export default function AvatarPlayground({
       placeholder: 'Select size',
     },
     {
-      id: 'material',
-      label: 'Material',
-      type: 'select' as const,
-      value: material,
-      onChange: setMaterial,
-      options: [{ label: 'Theme', value: 'theme' }, ...materials.map((m) => ({ label: m, value: m }))],
-      placeholder: 'Theme',
-    },
-    {
       id: 'show-image',
       label: 'Show Image',
       type: 'switch' as const,
@@ -128,7 +117,6 @@ export default function AvatarPlayground({
 
     if (color !== 'theme') props.push(`color="${color}"`);
     if (radius !== 'theme') props.push(`radius="${radius}"`);
-    if (material !== 'theme') props.push(`material="${material}"`);
     if (fit !== 'cover') props.push(`fit="${fit}"`);
     if (showImage) props.push('src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"');
     props.push('fallback="JD"');
@@ -147,7 +135,6 @@ export default function AvatarPlayground({
           variant={variant as any}
           color={color === 'theme' ? undefined : (color as any)}
           radius={radius === 'theme' ? undefined : (radius as any)}
-          material={material === 'theme' ? undefined : (material as any)}
           fit={fit as any}
           src={showImage ? 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' : undefined}
           fallback="JD"
@@ -155,8 +142,6 @@ export default function AvatarPlayground({
       }
       code={generateCode()}
       items={items}
-      showBackground={material === 'translucent'}
-      hint={material === 'translucent' ? 'Translucent material is best observed with soft or surface variants.' : undefined}
       showControls={showControls}
       showToolbar={showToolbar}
       height={height}

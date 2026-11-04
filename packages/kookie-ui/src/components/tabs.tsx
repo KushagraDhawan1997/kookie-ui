@@ -4,10 +4,9 @@ import { Tabs as TabsPrimitive } from 'radix-ui';
 
 import { tabsListPropDefs } from './tabs.props.js';
 import { extractProps } from '../helpers/extract-props.js';
-import { marginPropDefs } from '../props/margin.props.js';
+import { useThemeSizeProps } from '../hooks/theme-size.js';
 
 import type { tabsContentPropDefs, tabsRootPropDefs } from './tabs.props.js';
-import type { MarginProps } from '../props/margin.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
@@ -15,15 +14,14 @@ type TabsRootElement = React.ElementRef<typeof TabsPrimitive.Root>;
 type TabsRootOwnProps = GetPropDefTypes<typeof tabsRootPropDefs>;
 interface TabsRootProps
   extends ComponentPropsWithout<typeof TabsPrimitive.Root, 'asChild' | 'color' | 'defaultChecked'>,
-    MarginProps,
     TabsRootOwnProps {}
 const TabsRoot = React.forwardRef<TabsRootElement, TabsRootProps>((props, forwardedRef) => {
-  const { className, ...rootProps } = extractProps(props, marginPropDefs);
+  const { className, ...rootProps } = props;
   return (
     <TabsPrimitive.Root
       {...rootProps}
       ref={forwardedRef}
-      className={classNames('rt-TabsRoot', className)}
+      className={classNames('kui-TabsRoot', className)}
     />
   );
 });
@@ -33,22 +31,20 @@ type TabsListElement = React.ElementRef<typeof TabsPrimitive.List>;
 type TabsListOwnProps = GetPropDefTypes<typeof tabsListPropDefs>;
 interface TabsListProps
   extends ComponentPropsWithout<typeof TabsPrimitive.List, RemovedProps>,
-    MarginProps,
     TabsListOwnProps {}
-const TabsList = React.forwardRef<TabsListElement, TabsListProps>((props, forwardedRef) => {
-  const { className, color, panelBackground, ...listProps } = extractProps(
+const TabsList = React.forwardRef<TabsListElement, TabsListProps>((ownProps, forwardedRef) => {
+  const props = useThemeSizeProps(ownProps, tabsListPropDefs.size);
+  const { className, color, ...listProps } = extractProps(
     props,
     tabsListPropDefs,
-    marginPropDefs,
   );
   return (
     <TabsPrimitive.List
       data-accent-color={color}
-      data-panel-background={panelBackground}
       {...listProps}
       asChild={false}
       ref={forwardedRef}
-      className={classNames('rt-BaseTabList', 'rt-TabsList', className)}
+      className={classNames('kui-BaseTabList', 'kui-TabsList', className)}
     />
   );
 });
@@ -60,17 +56,24 @@ interface TabsTriggerProps
 const TabsTrigger = React.forwardRef<TabsTriggerElement, TabsTriggerProps>(
   (props, forwardedRef) => {
     const { className, children, ...triggerProps } = props;
+    // A hidden bold copy reserves the active width. Only plain text is copied: copying elements
+    // would duplicate their ids and mount them twice.
+    const isText = React.Children.toArray(children).every(
+      (child) => typeof child === 'string' || typeof child === 'number',
+    );
     return (
       <TabsPrimitive.Trigger
         {...triggerProps}
         asChild={false}
         ref={forwardedRef}
-        className={classNames('rt-reset', 'rt-BaseTabListTrigger', 'rt-TabsTrigger', className)}
+        className={classNames('kui-reset', 'kui-BaseTabListTrigger', 'kui-TabsTrigger', className)}
       >
-        <span className="rt-BaseTabListTriggerInner rt-TabsTriggerInner">{children}</span>
-        <span className="rt-BaseTabListTriggerInnerHidden rt-TabsTriggerInnerHidden">
-          {children}
-        </span>
+        <span className="kui-BaseTabListTriggerInner kui-TabsTriggerInner">{children}</span>
+        {isText ? (
+          <span className="kui-BaseTabListTriggerInnerHidden kui-TabsTriggerInnerHidden" aria-hidden>
+            {children}
+          </span>
+        ) : null}
       </TabsPrimitive.Trigger>
     );
   },
@@ -81,18 +84,15 @@ type TabsContentElement = React.ElementRef<typeof TabsPrimitive.Content>;
 type TabsContentOwnProps = GetPropDefTypes<typeof tabsContentPropDefs>;
 interface TabsContentProps
   extends ComponentPropsWithout<typeof TabsPrimitive.Content, RemovedProps>,
-    MarginProps,
     TabsContentOwnProps {}
 const TabsContent = React.forwardRef<TabsContentElement, TabsContentProps>(
   (props, forwardedRef) => {
-    const { className, ...contentProps } = extractProps(props, marginPropDefs);
+    const { className, ...contentProps } = props;
     return (
       <TabsPrimitive.Content
         {...contentProps}
         ref={forwardedRef}
-        className={classNames('rt-TabsContent', className)}
-        aria-live="polite"
-        aria-atomic="true"
+        className={classNames('kui-TabsContent', className)}
       />
     );
   },

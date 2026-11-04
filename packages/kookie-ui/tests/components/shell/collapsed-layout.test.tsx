@@ -12,9 +12,9 @@ import { Shell } from '../../../src/components/index';
  * 2. The layout relationship between content and body
  * 
  * The actual CSS rules are verified by inspecting shell.css which has:
- * - .rt-ShellInspector[data-mode='collapsed'] { position: absolute; width: 0px; flex-shrink: 0; flex-basis: 0; }
- * - .rt-ShellSidebar[data-mode='collapsed'] { position: absolute; width: 0px; flex-shrink: 0; flex-basis: 0; }
- * - .rt-ShellBottom[data-mode='collapsed'] { position: absolute; height: 0px; }
+ * - .kui-ShellInspector[data-mode='collapsed'] { position: absolute; width: 0px; flex-shrink: 0; flex-basis: 0; }
+ * - .kui-ShellSidebar[data-mode='collapsed'] { position: absolute; width: 0px; flex-shrink: 0; flex-basis: 0; }
+ * - .kui-ShellBottom[data-mode='collapsed'] { position: absolute; height: 0px; }
  */
 describe('Collapsed panes layout (Issue 1: space taken when collapsed)', () => {
   describe('Inspector collapsed layout', () => {
@@ -28,7 +28,7 @@ describe('Collapsed panes layout (Issue 1: space taken when collapsed)', () => {
         </Shell.Root>,
       );
 
-      const inspector = screen.getByText('inspector').closest('.rt-ShellInspector') as HTMLElement;
+      const inspector = screen.getByText('inspector').closest('.kui-ShellInspector') as HTMLElement;
       expect(inspector).toHaveAttribute('data-mode', 'collapsed');
     });
 
@@ -42,7 +42,7 @@ describe('Collapsed panes layout (Issue 1: space taken when collapsed)', () => {
         </Shell.Root>,
       );
 
-      const inspector = screen.getByText('inspector').closest('.rt-ShellInspector') as HTMLElement;
+      const inspector = screen.getByText('inspector').closest('.kui-ShellInspector') as HTMLElement;
       expect(inspector).toHaveAttribute('data-mode', 'expanded');
     });
 
@@ -64,7 +64,7 @@ describe('Collapsed panes layout (Issue 1: space taken when collapsed)', () => {
 
       renderWithProviders(<Fixture />);
 
-      const inspector = screen.getByText('inspector').closest('.rt-ShellInspector') as HTMLElement;
+      const inspector = screen.getByText('inspector').closest('.kui-ShellInspector') as HTMLElement;
       expect(inspector).toHaveAttribute('data-mode', 'expanded');
 
       await userEvent.click(screen.getByRole('button', { name: /close/i }));
@@ -86,7 +86,7 @@ describe('Collapsed panes layout (Issue 1: space taken when collapsed)', () => {
         </Shell.Root>,
       );
 
-      const sidebar = screen.getByText('sidebar').closest('.rt-ShellSidebar') as HTMLElement;
+      const sidebar = screen.getByText('sidebar').closest('.kui-ShellSidebar') as HTMLElement;
       expect(sidebar).toHaveAttribute('data-mode', 'collapsed');
     });
 
@@ -100,27 +100,13 @@ describe('Collapsed panes layout (Issue 1: space taken when collapsed)', () => {
         </Shell.Root>,
       );
 
-      const sidebar = screen.getByText('sidebar').closest('.rt-ShellSidebar') as HTMLElement;
+      const sidebar = screen.getByText('sidebar').closest('.kui-ShellSidebar') as HTMLElement;
       expect(sidebar).toHaveAttribute('data-mode', 'expanded');
-    });
-
-    it('has data-mode="thin" when defaultState is thin', () => {
-      renderWithProviders(
-        <Shell.Root>
-          <Shell.Sidebar presentation="fixed" defaultState="thin">
-            sidebar
-          </Shell.Sidebar>
-          <Shell.Content>content</Shell.Content>
-        </Shell.Root>,
-      );
-
-      const sidebar = screen.getByText('sidebar').closest('.rt-ShellSidebar') as HTMLElement;
-      expect(sidebar).toHaveAttribute('data-mode', 'thin');
     });
 
     it('transitions from expanded to collapsed correctly', async () => {
       function Fixture() {
-        const [state, setState] = React.useState<'collapsed' | 'thin' | 'expanded'>('expanded');
+        const [state, setState] = React.useState<'collapsed' | 'expanded'>('expanded');
         return (
           <Shell.Root>
             <Shell.Header>
@@ -136,7 +122,7 @@ describe('Collapsed panes layout (Issue 1: space taken when collapsed)', () => {
 
       renderWithProviders(<Fixture />);
 
-      const sidebar = screen.getByText('sidebar').closest('.rt-ShellSidebar') as HTMLElement;
+      const sidebar = screen.getByText('sidebar').closest('.kui-ShellSidebar') as HTMLElement;
       expect(sidebar).toHaveAttribute('data-mode', 'expanded');
 
       await userEvent.click(screen.getByRole('button', { name: /collapse/i }));
@@ -158,7 +144,7 @@ describe('Collapsed panes layout (Issue 1: space taken when collapsed)', () => {
         </Shell.Root>,
       );
 
-      const bottom = screen.getByText('bottom').closest('.rt-ShellBottom') as HTMLElement;
+      const bottom = screen.getByText('bottom').closest('.kui-ShellBottom') as HTMLElement;
       expect(bottom).toHaveAttribute('data-mode', 'collapsed');
     });
 
@@ -172,7 +158,7 @@ describe('Collapsed panes layout (Issue 1: space taken when collapsed)', () => {
         </Shell.Root>,
       );
 
-      const bottom = screen.getByText('bottom').closest('.rt-ShellBottom') as HTMLElement;
+      const bottom = screen.getByText('bottom').closest('.kui-ShellBottom') as HTMLElement;
       expect(bottom).toHaveAttribute('data-mode', 'expanded');
     });
 
@@ -194,7 +180,7 @@ describe('Collapsed panes layout (Issue 1: space taken when collapsed)', () => {
 
       renderWithProviders(<Fixture />);
 
-      const bottom = screen.getByText('bottom').closest('.rt-ShellBottom') as HTMLElement;
+      const bottom = screen.getByText('bottom').closest('.kui-ShellBottom') as HTMLElement;
       expect(bottom).toHaveAttribute('data-mode', 'expanded');
 
       await userEvent.click(screen.getByRole('button', { name: /close/i }));
@@ -219,8 +205,8 @@ describe('Collapsed panes layout (Issue 1: space taken when collapsed)', () => {
         </Shell.Root>,
       );
 
-      const sidebar = screen.getByText('sidebar').closest('.rt-ShellSidebar') as HTMLElement;
-      const inspector = screen.getByText('inspector').closest('.rt-ShellInspector') as HTMLElement;
+      const sidebar = screen.getByText('sidebar').closest('.kui-ShellSidebar') as HTMLElement;
+      const inspector = screen.getByText('inspector').closest('.kui-ShellInspector') as HTMLElement;
 
       expect(sidebar).toHaveAttribute('data-mode', 'collapsed');
       expect(inspector).toHaveAttribute('data-mode', 'collapsed');
@@ -242,9 +228,9 @@ describe('Collapsed panes layout (Issue 1: space taken when collapsed)', () => {
         </Shell.Root>,
       );
 
-      const sidebar = screen.getByText('sidebar').closest('.rt-ShellSidebar') as HTMLElement;
-      const inspector = screen.getByText('inspector').closest('.rt-ShellInspector') as HTMLElement;
-      const bottom = screen.getByText('bottom').closest('.rt-ShellBottom') as HTMLElement;
+      const sidebar = screen.getByText('sidebar').closest('.kui-ShellSidebar') as HTMLElement;
+      const inspector = screen.getByText('inspector').closest('.kui-ShellInspector') as HTMLElement;
+      const bottom = screen.getByText('bottom').closest('.kui-ShellBottom') as HTMLElement;
 
       expect(sidebar).toHaveAttribute('data-mode', 'collapsed');
       expect(inspector).toHaveAttribute('data-mode', 'collapsed');

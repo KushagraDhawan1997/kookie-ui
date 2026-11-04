@@ -45,7 +45,7 @@ const gridPropDefs = {
    */
   display: {
     type: 'enum',
-    className: 'rt-r-display',
+    className: 'kui-r-display',
     values: displayValues,
     responsive: true,
   },
@@ -61,7 +61,7 @@ const gridPropDefs = {
    */
   areas: {
     type: 'string',
-    className: 'rt-r-gta',
+    className: 'kui-r-gta',
     customProperties: ['--grid-template-areas'],
     responsive: true,
   },
@@ -81,7 +81,7 @@ const gridPropDefs = {
    */
   columns: {
     type: 'enum | string',
-    className: 'rt-r-gtc',
+    className: 'kui-r-gtc',
     customProperties: ['--grid-template-columns'],
     values: columnsValues,
     parseValue: parseGridValue,
@@ -103,7 +103,7 @@ const gridPropDefs = {
    */
   rows: {
     type: 'enum | string',
-    className: 'rt-r-gtr',
+    className: 'kui-r-gtr',
     customProperties: ['--grid-template-rows'],
     values: rowsValues,
     parseValue: parseGridValue,
@@ -122,7 +122,7 @@ const gridPropDefs = {
    */
   flow: {
     type: 'enum',
-    className: 'rt-r-gaf',
+    className: 'kui-r-gaf',
     values: flowValues,
     responsive: true,
   },
@@ -139,7 +139,7 @@ const gridPropDefs = {
    */
   align: {
     type: 'enum',
-    className: 'rt-r-ai',
+    className: 'kui-r-ai',
     values: alignValues,
     responsive: true,
   },
@@ -156,7 +156,7 @@ const gridPropDefs = {
    */
   justify: {
     type: 'enum',
-    className: 'rt-r-jc',
+    className: 'kui-r-jc',
     values: justifyValues,
     parseValue: parseJustifyValue,
     responsive: true,
@@ -174,7 +174,7 @@ const gridPropDefs = {
    */
   alignContent: {
     type: 'enum',
-    className: 'rt-r-ac',
+    className: 'kui-r-ac',
     values: alignContentValues,
     parseValue: parseAlignContentValue,
     responsive: true,
@@ -192,7 +192,7 @@ const gridPropDefs = {
    */
   justifyItems: {
     type: 'enum',
-    className: 'rt-r-ji',
+    className: 'kui-r-ji',
     values: justifyItemsValues,
     responsive: true,
   },

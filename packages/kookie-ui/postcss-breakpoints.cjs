@@ -79,25 +79,25 @@ function addPrefix(node, prefix) {
   }
 
   /**
-   * Should match responsive classes (rt-r- prefix):
+   * Should match responsive classes (kui-r- prefix):
    * ```
-   * .rt-r-size-1
-   * .rt-m-2
-   * .-rt-m-2
-   * .rt-Button.rt-r-size-1 (captures "rt-r-size-1")
+   * .kui-r-size-1
+   * .kui-m-2
+   * .-kui-m-2
+   * .kui-Button.kui-r-size-1 (captures "kui-r-size-1")
    * ```
    *
    * Should not match:
-   * .rt-Button
+   * .kui-Button
    */
-  const classNameRegexp = /\.(-?rt-r-[a-z0-9-]+)/g;
+  const classNameRegexp = /\.(-?kui-r-[a-z0-9-]+)/g;
 
   // Check for rules that use compound props on a component:
-  // - a component name (prefixed with "rt-" and pascal cased)
+  // - a component name (prefixed with "kui-" and pascal cased)
   // - followed by 2 or more prop selectors (lowercase, numbers, -)
   //
-  // e.g. ".rt-DialogContent.rt-r-size-2.gray"
-  if (/\.rt-(?:[A-Z][a-z]+)+(?:\.[a-z0-9-]+){2,}/.test(node.selector)) {
+  // e.g. ".kui-DialogContent.kui-r-size-2.gray"
+  if (/\.kui-(?:[A-Z][a-z]+)+(?:\.[a-z0-9-]+){2,}/.test(node.selector)) {
     throw Error(`
       "${node.selector}" looks like it uses compound props on a component.
       "@breakpoints" does not support compound props yet.

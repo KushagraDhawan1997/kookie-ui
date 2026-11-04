@@ -30,7 +30,7 @@ interface UseToggleStateOptions {
  *   pressed,
  *   onPressedChange,
  *   getAccessibleName,
- *   componentName: 'ToggleButton',
+ *   componentName: 'Toggle',
  * });
  * ```
  */

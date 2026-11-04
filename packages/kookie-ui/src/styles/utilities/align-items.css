@@ -1,21 +1,21 @@
 @breakpoints {
-  .rt-r-ai-start {
+  .kui-r-ai-start {
     align-items: flex-start;
   }
 
-  .rt-r-ai-center {
+  .kui-r-ai-center {
     align-items: center;
   }
 
-  .rt-r-ai-end {
+  .kui-r-ai-end {
     align-items: flex-end;
   }
 
-  .rt-r-ai-baseline {
+  .kui-r-ai-baseline {
     align-items: baseline;
   }
 
-  .rt-r-ai-stretch {
+  .kui-r-ai-stretch {
     align-items: stretch;
   }
 }

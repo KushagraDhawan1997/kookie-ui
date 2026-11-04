@@ -25,7 +25,7 @@ function ControlledFixture() {
 describe('Sidebar controlled state', () => {
   it('parent drives; callback emitted', async () => {
     renderWithProviders(<ControlledFixture />);
-    const el = () => screen.getByText('sidebar').closest('.rt-ShellSidebar') as HTMLElement;
+    const el = () => screen.getByText('sidebar').closest('.kui-ShellSidebar') as HTMLElement;
     expect(el()).toHaveAttribute('data-mode', 'collapsed');
     await userEvent.click(screen.getByRole('button', { name: /expand sidebar/i }));
     expect(el()).toHaveAttribute('data-mode', 'expanded');

@@ -26,12 +26,15 @@ function emit() {
   for (const listener of listeners) listener();
 }
 
+// The last choice made on this page, for when storage is blocked and cannot hold it.
+let pageChoice: AppearanceChoice = 'system';
+
 function readChoice(): AppearanceChoice {
   try {
     const value = globalThis.localStorage?.getItem(APPEARANCE_STORAGE_KEY);
     return value === 'light' || value === 'dark' ? value : 'system';
   } catch {
-    return 'system';
+    return pageChoice;
   }
 }
 
@@ -67,34 +70,44 @@ function getSnapshot() {
 
 const serverSnapshot = { choice: 'system' as AppearanceChoice, resolved: 'light' as ResolvedAppearance };
 
-function subscribe(listener: () => void) {
-  listeners.add(listener);
-  const media = window.matchMedia('(prefers-color-scheme: dark)');
-  // With no stored choice, follow the system as it changes.
-  const onSystemChange = () => {
-    if (readChoice() === 'system') {
-      stamp(systemAppearance());
-      emit();
-    }
-  };
-  // Another tab changed the choice.
-  const onStorage = (event: StorageEvent) => {
-    if (event.key !== APPEARANCE_STORAGE_KEY) return;
-    const choice = readChoice();
-    stamp(choice === 'system' ? systemAppearance() : choice);
+// With no stored choice, follow the system as it changes.
+function onSystemChange() {
+  if (readChoice() === 'system') {
+    stamp(systemAppearance());
     emit();
-  };
-  media.addEventListener('change', onSystemChange);
-  window.addEventListener('storage', onStorage);
+  }
+}
+
+// Another tab changed the choice.
+function onStorage(event: StorageEvent) {
+  if (event.key !== APPEARANCE_STORAGE_KEY) return;
+  const choice = readChoice();
+  stamp(choice === 'system' ? systemAppearance() : choice);
+  emit();
+}
+
+let media: MediaQueryList | null = null;
+
+// One set of window listeners for every subscriber, so one change stamps `<html>` once.
+function subscribe(listener: () => void) {
+  if (listeners.size === 0) {
+    media = window.matchMedia('(prefers-color-scheme: dark)');
+    media.addEventListener('change', onSystemChange);
+    window.addEventListener('storage', onStorage);
+  }
+  listeners.add(listener);
   return () => {
     listeners.delete(listener);
-    media.removeEventListener('change', onSystemChange);
+    if (listeners.size > 0) return;
+    media?.removeEventListener('change', onSystemChange);
+    media = null;
     window.removeEventListener('storage', onStorage);
   };
 }
 
 /** Applies a choice to `<html>` and stores it. The change applies even if storage is blocked. */
 function setAppearance(choice: AppearanceChoice) {
+  pageChoice = choice;
   try {
     if (choice === 'system') localStorage.removeItem(APPEARANCE_STORAGE_KEY);
     else localStorage.setItem(APPEARANCE_STORAGE_KEY, choice);

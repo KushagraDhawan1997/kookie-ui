@@ -17,27 +17,8 @@ const gapPropDefs = {
    */
   gap: {
     type: 'enum | string',
-    className: 'rt-r-gap',
+    className: 'kui-r-gap',
     customProperties: ['--gap'],
-    values: gapValues,
-    responsive: true,
-  },
-  /**
-   * Sets the CSS **row-gap** property.
-   * Supports space scale values, CSS strings, and responsive objects.
-   *
-   * @example
-   * gapX="4"
-   * gapX="20px"
-   * gapX={{ sm: '2', lg: '3em' }}
-   *
-   * @link
-   * https://developer.mozilla.org/en-US/docs/Web/CSS/row-gap
-   */
-  gapX: {
-    type: 'enum | string',
-    className: 'rt-r-cg',
-    customProperties: ['--column-gap'],
     values: gapValues,
     responsive: true,
   },
@@ -46,16 +27,35 @@ const gapPropDefs = {
    * Supports space scale values, CSS strings, and responsive objects.
    *
    * @example
+   * gapX="4"
+   * gapX="20px"
+   * gapX={{ sm: '2', lg: '3em' }}
+   *
+   * @link
+   * https://developer.mozilla.org/en-US/docs/Web/CSS/column-gap
+   */
+  gapX: {
+    type: 'enum | string',
+    className: 'kui-r-cg',
+    customProperties: ['--column-gap'],
+    values: gapValues,
+    responsive: true,
+  },
+  /**
+   * Sets the CSS **row-gap** property.
+   * Supports space scale values, CSS strings, and responsive objects.
+   *
+   * @example
    * gapY="4"
    * gapY="20px"
    * gapY={{ sm: '2', lg: '3em' }}
    *
    * @link
-   * https://developer.mozilla.org/en-US/docs/Web/CSS/column-gap
+   * https://developer.mozilla.org/en-US/docs/Web/CSS/row-gap
    */
   gapY: {
     type: 'enum | string',
-    className: 'rt-r-rg',
+    className: 'kui-r-rg',
     customProperties: ['--row-gap'],
     values: gapValues,
     responsive: true,

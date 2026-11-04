@@ -1,41 +1,21 @@
-.rt-SelectTrigger {
+.kui-SelectTrigger {
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
   user-select: none;
   vertical-align: top;
-  line-height: var(--height);
-  transition: var(--transition-select);
 
   font-family: var(--default-font-family);
   font-weight: var(--font-weight-regular);
   font-style: normal;
   text-align: start;
 
-  /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
-
-  /* Prevent backdrop-filter stacking with parents */
   isolation: isolate;
-
-  /* Component-level overrides */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-  
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 
   /* Selected values use medium font weight */
   &:where(:not([data-placeholder])) {
-    & :where(.rt-SelectTriggerInner) {
+    & :where(.kui-SelectTriggerInner) {
       font-weight: var(--font-weight-medium);
     }
   }
@@ -44,44 +24,36 @@
     outline: var(--focus-outline-width) solid var(--focus-8);
     outline-offset: var(--focus-outline-offset-inset);
   }
-
-  /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 }
 
-.rt-SelectTriggerInner {
+.kui-SelectTriggerInner {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.rt-SelectIcon {
+.kui-SelectIcon {
   flex-shrink: 0;
-  margin-left: auto;
+  margin-inline-start: auto;
   width: var(--trigger-icon-size-default);
   height: var(--trigger-icon-size-default);
 }
 
-.rt-SelectContent {
-  /*
-   * This surface blurs its own backdrop, which makes it the backdrop root for
-   * everything inside it. A component nested here would re-blur an already
-   * blurred, already flat surface for the full cost of another blur pass, so
-   * switch the component filter off for the subtree. See tokens/blur.css.
-   */
-  --backdrop-filter-components-enabled: none;
-  --scrollarea-scrollbar-vertical-margin-top: var(--select-content-padding);
-  --scrollarea-scrollbar-vertical-margin-bottom: var(--select-content-padding);
-  --scrollarea-scrollbar-horizontal-margin-left: var(--select-content-padding);
-  --scrollarea-scrollbar-horizontal-margin-right: var(--select-content-padding);
+/*
+ * The panel and its rows are the menu's (base-menu.css): the content is a BaseMenuContent and
+ * every item a BaseMenuItem, so the panel pads --panel-p-N and a row hugs its line. What is
+ * left here is the select's own: the check mark's box and rich rows.
+ */
+.kui-SelectContent {
+  --scrollarea-scrollbar-vertical-margin-top: var(--base-menu-content-padding);
+  --scrollarea-scrollbar-vertical-margin-bottom: var(--base-menu-content-padding);
+  --scrollarea-scrollbar-horizontal-margin-left: var(--base-menu-content-padding);
+  --scrollarea-scrollbar-horizontal-margin-right: var(--base-menu-content-padding);
 
   overflow: hidden;
   z-index: 200; /* Above dialogs (100) so select inside dialogs/sheets work */
-  background-color: var(--color-panel);
-  backdrop-filter: var(--backdrop-filter-panel);
-  box-shadow: var(--shadow-5);
+  background-color: var(--color-surface);
+  box-shadow: var(--floating-chrome);
 
   &:where([data-side]) {
     min-width: var(--radix-select-trigger-width);
@@ -90,75 +62,41 @@
   }
 }
 
-.rt-SelectViewport {
+.kui-SelectViewport {
   box-sizing: border-box;
-  padding: var(--select-content-padding);
 
-  :where(.rt-SelectContent:has(.rt-ScrollAreaScrollbar[data-orientation='vertical'])) & {
-    padding-right: var(--space-3);
+  :where(.kui-SelectContent:has(.kui-ScrollAreaScrollbar[data-orientation='vertical'])) & {
+    padding-inline-end: var(--space-4);
   }
 }
 
-.rt-SelectItem {
-  display: flex;
-  align-items: center;
-  height: var(--select-item-height);
-  padding-left: var(--select-item-indicator-width);
-  padding-right: var(--select-item-indicator-width);
-  position: relative;
-  box-sizing: border-box;
-  outline: none;
-  scroll-margin: var(--select-content-padding) 0;
+/* Content of more than one line grows the row; the mark stays on the first line. */
+.kui-SelectItem:where(.kui-SelectItemRich[data-multiline]) {
+  align-items: flex-start;
 
-  /* Fix sticky text highlighting after selection in Firefox */
-  user-select: none;
-
-  /* Cursors */
-  cursor: var(--cursor-menu-item);
-  &:where([data-disabled]) {
-    cursor: default;
-  }
-
-  /* Allow rich content to expand height */
-  &:where(.rt-SelectItemRich) {
-    height: auto;
-    min-height: var(--select-item-height);
-    align-items: flex-start;
-    padding-top: var(--space-2);
-    padding-bottom: var(--space-2);
+  & :where(.kui-SelectItemIndicator) {
+    bottom: auto;
+    height: var(--base-menu-item-height);
   }
 }
 
-.rt-SelectItemIndicator {
+.kui-SelectItemIndicator {
   position: absolute;
-  left: 0;
-  width: var(--select-item-indicator-width);
+  inset-inline-start: var(--base-menu-item-px);
+  top: 0;
+  bottom: 0;
+  width: var(--base-menu-icon-size);
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
-.rt-SelectSeparator {
+.kui-SelectSeparator {
   height: var(--separator-height-thin);
-  margin-top: var(--space-2);
-  margin-bottom: var(--space-2);
-  margin-left: var(--select-item-indicator-width);
-  margin-right: var(--select-separator-margin-right);
 }
 
-.rt-SelectLabel {
-  display: flex;
-  align-items: center;
-  height: var(--select-item-height);
-  padding-left: var(--select-item-indicator-width);
-  padding-right: var(--select-item-indicator-width);
-  color: var(--gray-a10);
-  user-select: none;
-  cursor: default;
-
-  :where(.rt-SelectItem) + & {
-    margin-top: var(--space-2);
-  }
+.kui-SelectLabel {
+  color: var(--neutral-a10);
 }
 
 /***************************************************************************************************
@@ -167,159 +105,84 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-SelectTrigger {
-  color: var(--gray-12);
+.kui-SelectTrigger {
+  color: var(--neutral-12);
+  box-sizing: border-box;
+  /* min-height, not height: a hard height clips text resized to 200%. */
+  min-height: var(--select-trigger-height);
+  gap: var(--select-trigger-gap);
 
-  &:where(:not(.rt-variant-ghost)) {
-    box-sizing: border-box;
-    height: var(--select-trigger-height);
-  }
-  &:where(.rt-variant-ghost) {
-    box-sizing: border-box;
-    height: var(--select-trigger-height);
-    padding: 0 var(--select-trigger-ghost-padding-x);
-
-
-  }
+  /*
+   * The label's edge is bare, so under a full radius it pads wider (the curve cuts into the
+   * text). `--radius-full` is 0px below `full` and 9999px at `full`. The chevron's edge keeps
+   * the plain padding.
+   */
+  padding-inline-start: calc(
+    var(--select-trigger-px) + min(var(--radius-full, 0px), var(--select-trigger-px-pill) - var(--select-trigger-px))
+  );
+  padding-inline-end: var(--select-trigger-px);
 }
 
 @breakpoints {
-  .rt-SelectTrigger {
-    &:where(.rt-r-size-1) {
+  .kui-SelectTrigger {
+    &:where(.kui-r-size-1) {
       --select-trigger-height: var(--control-height-1);
-      gap: var(--component-gap-1);
+      --select-trigger-px: var(--control-px-1);
+      --select-trigger-px-pill: var(--control-px-pill-1);
+      --select-trigger-gap: var(--control-gap-1);
       font-size: var(--font-size-1);
       line-height: var(--line-height-1);
       letter-spacing: var(--letter-spacing-1);
-      border-radius: max(var(--radius-1), var(--radius-full));
+      border-radius: var(--radius-control-1);
 
-      &:where(:not(.rt-variant-ghost)) {
-        padding-left: var(--space-2);
-        padding-right: var(--space-2);
-      }
-      &:where(.rt-variant-ghost) {
-        gap: var(--component-gap-ghost-1);
-        --select-trigger-ghost-padding-x: var(--space-2);
-      }
-      & :where(.rt-SelectIcon) {
+      & :where(.kui-SelectIcon) {
         width: var(--trigger-icon-size-1);
         height: var(--trigger-icon-size-1);
       }
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       --select-trigger-height: var(--control-height-2);
-      gap: var(--component-gap-2);
+      --select-trigger-px: var(--control-px-2);
+      --select-trigger-px-pill: var(--control-px-pill-2);
+      --select-trigger-gap: var(--control-gap-2);
       font-size: var(--font-size-2);
       line-height: var(--line-height-2);
       letter-spacing: var(--letter-spacing-2);
-      border-radius: max(var(--radius-2), var(--radius-full));
+      border-radius: var(--radius-control-2);
 
-      &:where(:not(.rt-variant-ghost)) {
-        padding-left: var(--space-3);
-        padding-right: var(--space-3);
-      }
-      &:where(.rt-variant-ghost) {
-        gap: var(--component-gap-ghost-2);
-        --select-trigger-ghost-padding-x: var(--space-2);
-      }
-      & :where(.rt-SelectIcon) {
+      & :where(.kui-SelectIcon) {
         width: var(--trigger-icon-size-2);
         height: var(--trigger-icon-size-2);
       }
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       --select-trigger-height: var(--control-height-3);
-      gap: var(--component-gap-3);
+      --select-trigger-px: var(--control-px-3);
+      --select-trigger-px-pill: var(--control-px-pill-3);
+      --select-trigger-gap: var(--control-gap-3);
       font-size: var(--font-size-3);
       line-height: var(--line-height-3);
       letter-spacing: var(--letter-spacing-3);
-      border-radius: max(var(--radius-3), var(--radius-full));
+      border-radius: var(--radius-control-3);
 
-      &:where(:not(.rt-variant-ghost)) {
-        padding-left: var(--space-4);
-        padding-right: var(--space-4);
-      }
-      &:where(.rt-variant-ghost) {
-        gap: var(--component-gap-ghost-3);
-        --select-trigger-ghost-padding-x: var(--space-3);
-      }
-      & :where(.rt-SelectIcon) {
+      & :where(.kui-SelectIcon) {
         width: var(--trigger-icon-size-3);
         height: var(--trigger-icon-size-3);
       }
     }
-  }
-}
+    &:where(.kui-r-size-4) {
+      --select-trigger-height: var(--control-height-4);
+      --select-trigger-px: var(--control-px-4);
+      --select-trigger-px-pill: var(--control-px-pill-4);
+      --select-trigger-gap: var(--control-gap-4);
+      font-size: var(--font-size-4);
+      line-height: var(--line-height-4);
+      letter-spacing: var(--letter-spacing-4);
+      border-radius: var(--radius-control-4);
 
-/***************************************************************************************************
- *                                                                                                 *
- * CONTENT SIZES                                                                                   *
- *                                                                                                 *
- ***************************************************************************************************/
-
-@breakpoints {
-  .rt-SelectContent {
-    &:where(.rt-r-size-1) {
-      --select-content-padding: var(--space-1);
-      --select-item-height: var(--control-height-1);
-      --select-item-indicator-width: calc(var(--space-5) / var(--select-item-indicator-width-factor));
-      --select-separator-margin-right: var(--space-2);
-      border-radius: var(--radius-surface-3);
-
-      & :where(.rt-SelectLabel) {
-        font-size: var(--font-size-1);
-        letter-spacing: var(--letter-spacing-1);
-        line-height: var(--line-height-1);
-      }
-      & :where(.rt-SelectItem) {
-        font-size: var(--font-size-1);
-        line-height: var(--line-height-1);
-        letter-spacing: var(--letter-spacing-1);
-        border-radius: var(--radius-1);
-      }
-      & :where(.rt-SelectItemIndicatorIcon) {
-        width: var(--select-indicator-icon-size-1);
-        height: var(--select-indicator-icon-size-1);
-      }
-    }
-    &:where(.rt-r-size-2, .rt-r-size-3) {
-      --select-content-padding: var(--space-2);
-      --select-item-indicator-width: var(--space-5);
-      --select-separator-margin-right: var(--space-3);
-      border-radius: var(--radius-surface-4);
-
-      & :where(.rt-SelectLabel) {
-        font-size: var(--font-size-2);
-        letter-spacing: var(--letter-spacing-2);
-        line-height: var(--line-height-2);
-      }
-      & :where(.rt-SelectItem) {
-        line-height: var(--line-height-2);
-        border-radius: var(--radius-2);
-      }
-    }
-    &:where(.rt-r-size-2) {
-      --select-item-height: var(--control-height-2);
-
-      & :where(.rt-SelectItem) {
-        font-size: var(--font-size-2);
-        letter-spacing: var(--letter-spacing-2);
-      }
-      & :where(.rt-SelectItemIndicatorIcon) {
-        width: var(--select-indicator-icon-size-2);
-        height: var(--select-indicator-icon-size-2);
-      }
-    }
-    &:where(.rt-r-size-3) {
-      --select-item-height: var(--control-height-3);
-
-      & :where(.rt-SelectItem) {
-        font-size: var(--font-size-3);
-        letter-spacing: var(--letter-spacing-3);
-      }
-      & :where(.rt-SelectItemIndicatorIcon) {
-        width: var(--select-indicator-icon-size-3);
-        height: var(--select-indicator-icon-size-3);
+      & :where(.kui-SelectIcon) {
+        width: var(--trigger-icon-size-4);
+        height: var(--trigger-icon-size-4);
       }
     }
   }
@@ -331,29 +194,13 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* classic */
+/* raised: the default. A field: the surface colour with --field-chrome. */
 
-.rt-SelectTrigger:where(.rt-variant-classic) {
+.kui-SelectTrigger:where(.kui-variant-raised) {
   position: relative;
-  top: var(--classic-elevation-offset);
   color: var(--accent-ink);
-  background-color: var(--color-surface);
-  box-shadow: var(--shadow-2);
-  transition: var(--transition-text-field);
-
-  /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: var(--color-surface);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    background-color: var(--color-surface);
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: var(--color-surface);
-  }
+  background-color: var(--field-fill);
+  box-shadow: var(--field-chrome);
 
   &:where(:focus-visible) {
     outline: 2px solid var(--focus-8);
@@ -361,99 +208,36 @@
   }
 
   @media (hover: hover) {
-    &:where(:hover) {
-      background-color: var(--accent-2);
-      box-shadow: var(--shadow-2);
-
-      /* Theme-level translucent override for hover */
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      }
-
-      /* Component-level overrides for hover */
-      &:where([data-panel-background='solid'], [data-material='solid']) {
-        background-color: var(--accent-2);
-      }
-
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      }
+    &:where(:hover:not(:disabled)) {
+      background-color: var(--field-fill-hover);
     }
   }
 
-  &:where([data-state='open']) {
-    background-color: var(--accent-3);
-
-    /* Theme-level translucent override for open */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
-
-    /* Component-level overrides for open */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--accent-3);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
-  }
-
+  &:where([data-state='open']),
   &:where(:active:not([data-state='open'], [data-disabled])) {
-    background-color: var(--accent-3);
-
-    /* Theme-level translucent override for active */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
-
-    /* Component-level overrides for active */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--accent-3);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
+    background-color: var(--neutral-5);
   }
 
   &:where(:disabled) {
-    color: var(--gray-a8);
-    background-color: var(--gray-a3);
-    box-shadow: none;
+    color: var(--neutral-a8);
+    background-color: var(--field-fill-disabled);
+    box-shadow: inset 0 0 0 1px var(--field-edge-disabled);
     outline: none;
-    cursor: not-allowed;
-    pointer-events: none;
-    top: 0;
+    cursor: default;
   }
 
   &:where([data-placeholder]) {
-    & :where(.rt-SelectTriggerInner) {
-      color: var(--gray-a10);
+    & :where(.kui-SelectTriggerInner) {
+      color: var(--neutral-a10);
     }
   }
 }
 
 /* soft */
 
-.rt-SelectTrigger:where(.rt-variant-soft) {
-  /* Base state: solid accent for solid panels */
+.kui-SelectTrigger:where(.kui-variant-soft) {
   background-color: var(--accent-3);
   color: var(--accent-ink);
-
-  /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    background-color: var(--accent-3);
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-  }
 
   &:where(:focus-visible) {
     outline: 2px solid var(--accent-8);
@@ -461,70 +245,27 @@
   }
 
   @media (hover: hover) {
-    &:where(:hover) {
+    &:where(:hover:not(:disabled)) {
       background-color: var(--accent-4);
-      
-      /* Theme-level translucent override for hover */
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-      }
-
-      /* Component-level overrides for hover */
-      &:where([data-panel-background='solid'], [data-material='solid']) {
-        background-color: var(--accent-4);
-      }
-
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-      }
     }
   }
 
   &:where([data-state='open']) {
     background-color: var(--accent-4);
-    
-    /* Theme-level translucent override for open */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-    }
-
-    /* Component-level overrides for open */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--accent-4);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-    }
   }
 
-  &:where(:active:not([data-state='open'])) {
+  &:where(:active:not([data-state='open'], :disabled)) {
     background-color: var(--accent-5);
-    
-    /* Theme-level translucent override for active */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a5), var(--accent-5) 60%);
-    }
-
-    /* Component-level overrides for active */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--accent-5);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a5), var(--accent-5) 60%);
-    }
   }
 
   &:where(:disabled) {
-    color: var(--gray-a8);
-    background-color: var(--gray-a3);
-    cursor: not-allowed;
-    pointer-events: none;
+    color: var(--neutral-a8);
+    background-color: var(--neutral-a3);
+    cursor: default;
   }
 
   &:where([data-placeholder]) {
-    & :where(.rt-SelectTriggerInner) {
+    & :where(.kui-SelectTriggerInner) {
       color: var(--accent-a11);
       opacity: 0.6;
       font-weight: var(--font-weight-regular);
@@ -534,40 +275,20 @@
 
 /* ghost */
 
-.rt-SelectTrigger:where(.rt-variant-ghost) {
+.kui-SelectTrigger:where(.kui-variant-ghost) {
   background-color: transparent;
   color: var(--accent-ink);
 
   &:where([data-placeholder]) {
-    & :where(.rt-SelectTriggerInner) {
-      color: var(--gray-a10);
+    & :where(.kui-SelectTriggerInner) {
+      color: var(--neutral-a10);
       font-weight: var(--font-weight-regular);
     }
   }
 
   @media (hover: hover) {
-    &:where(:hover) {
-      /* Base state: solid accent for solid panels */
+    &:where(:hover:not(:disabled)) {
       background-color: var(--accent-3);
-      
-      /* Theme-level translucent override for hover */
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      }
-
-      /* Component-level overrides for hover */
-      &:where([data-panel-background='solid'], [data-material='solid']) {
-        background-color: var(--accent-3);
-      }
-
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      }
-
-      /* Disable backdrop-filter when inside elements that already have backdrop-filter */
-      /* :where(.rt-PopoverContent, .rt-BaseDialogContent, .rt-BaseMenuContent, .rt-DropdownMenuContent, .rt-ContextMenuContent, .rt-AlertDialogContent, .rt-HoverCardContent, .rt-TooltipContent, .rt-Card) & {
-        backdrop-filter: none !important;
-      } */
     }
   }
 
@@ -577,149 +298,41 @@
   }
 
   &:where([data-state='open']) {
-    /* Base state: solid accent for solid panels */
     background-color: var(--accent-3);
-    
-    /* Theme-level translucent override for open */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
-
-    /* Component-level overrides for open */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--accent-3);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
-
-    /* Disable backdrop-filter when inside elements that already have backdrop-filter */
-    /* :where(.rt-PopoverContent, .rt-BaseDialogContent, .rt-BaseMenuContent, .rt-DropdownMenuContent, .rt-ContextMenuContent, .rt-AlertDialogContent, .rt-HoverCardContent, .rt-TooltipContent, .rt-Card) & {
-      backdrop-filter: none !important;
-    } */
   }
 
-  &:where(:active:not([data-state='open'])) {
-    /* Base state: solid accent for solid panels */
+  &:where(:active:not([data-state='open'], :disabled)) {
     background-color: var(--accent-4);
-    
-    /* Theme-level translucent override for active */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-    }
-
-    /* Component-level overrides for active */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--accent-4);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-    }
-
-    /* Disable backdrop-filter when inside elements that already have backdrop-filter */
-    /* :where(.rt-PopoverContent, .rt-BaseDialogContent, .rt-BaseMenuContent, .rt-DropdownMenuContent, .rt-ContextMenuContent, .rt-AlertDialogContent, .rt-HoverCardContent, .rt-TooltipContent, .rt-Card) & {
-      backdrop-filter: none !important;
-    } */
   }
 
   &:where(:disabled) {
-    color: var(--gray-a8);
+    color: var(--neutral-a8);
     background-color: transparent;
-    cursor: not-allowed;
-    pointer-events: none;
+    cursor: default;
   }
 }
 
 /* outline */
 
-.rt-SelectTrigger:where(.rt-variant-outline) {
-  /* Base state: solid colors for solid panels */
+.kui-SelectTrigger:where(.kui-variant-outline) {
   box-shadow: inset 0 0 0 1px var(--accent-6);
   color: var(--accent-ink);
-  transition: var(--transition-background-blur);
-
-  /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    box-shadow: inset 0 0 0 1px var(--accent-6);
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-  }
 
   @media (hover: hover) {
-    &:where(:hover) {
+    &:where(:hover:not(:disabled)) {
       background-color: var(--accent-2);
       box-shadow: inset 0 0 0 1px var(--accent-7);
-      
-      /* Theme-level translucent override for hover */
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-        box-shadow: inset 0 0 0 1px var(--accent-a7);
-      }
-
-      /* Component-level overrides for hover */
-      &:where([data-panel-background='solid'], [data-material='solid']) {
-        background-color: var(--accent-2);
-        box-shadow: inset 0 0 0 1px var(--accent-7);
-      }
-
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-        box-shadow: inset 0 0 0 1px var(--accent-a7);
-      }
     }
   }
 
   &:where([data-state='open']) {
     background-color: var(--accent-2);
     box-shadow: inset 0 0 0 1px var(--accent-7);
-    
-    /* Theme-level translucent override for open */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a7);
-    }
-
-    /* Component-level overrides for open */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--accent-2);
-      box-shadow: inset 0 0 0 1px var(--accent-7);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a7);
-    }
   }
 
-  &:where(:active:not([data-state='open'])) {
+  &:where(:active:not([data-state='open'], :disabled)) {
     background-color: var(--accent-3);
     box-shadow: inset 0 0 0 1px var(--accent-8);
-    
-    /* Theme-level translucent override for active */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a8);
-    }
-
-    /* Component-level overrides for active */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--accent-3);
-      box-shadow: inset 0 0 0 1px var(--accent-8);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a8);
-    }
   }
 
   &:where(:focus-visible) {
@@ -728,16 +341,15 @@
   }
 
   &:where(:disabled) {
-    color: var(--gray-a8);
-    box-shadow: inset 0 0 0 1px var(--gray-a7);
+    color: var(--neutral-a8);
+    box-shadow: inset 0 0 0 1px var(--neutral-a7);
     background-color: transparent;
-    cursor: not-allowed;
-    pointer-events: none;
+    cursor: default;
   }
 
   &:where([data-placeholder]) {
-    & :where(.rt-SelectTriggerInner) {
-      color: var(--gray-a10);
+    & :where(.kui-SelectTriggerInner) {
+      color: var(--neutral-a10);
       font-weight: var(--font-weight-regular);
     }
   }
@@ -745,95 +357,26 @@
 
 /* surface */
 
-.rt-SelectTrigger:where(.rt-variant-surface) {
-  /* Base state: solid accent for solid panels */
+.kui-SelectTrigger:where(.kui-variant-surface) {
   background-color: var(--accent-2);
   box-shadow: inset 0 0 0 1px var(--accent-6);
   color: var(--accent-ink);
 
-  /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-  }
-
-  /* Component-level overrides (higher specificity) */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    background-color: var(--accent-2);
-    box-shadow: inset 0 0 0 1px var(--accent-6);
-  }
-
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-    box-shadow: inset 0 0 0 1px var(--accent-a6);
-  }
-
   @media (hover: hover) {
-    &:where(:hover) {
+    &:where(:hover:not(:disabled)) {
       background-color: var(--accent-3);
       box-shadow: inset 0 0 0 1px var(--accent-7);
-      
-      /* Theme-level translucent override for hover */
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-        box-shadow: inset 0 0 0 1px var(--accent-a7);
-      }
-
-      /* Component-level overrides for hover */
-      &:where([data-panel-background='solid'], [data-material='solid']) {
-        background-color: var(--accent-3);
-        box-shadow: inset 0 0 0 1px var(--accent-7);
-      }
-
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-        box-shadow: inset 0 0 0 1px var(--accent-a7);
-      }
     }
   }
 
   &:where([data-state='open']) {
     background-color: var(--accent-3);
     box-shadow: inset 0 0 0 1px var(--accent-8);
-    
-    /* Theme-level translucent override for open */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a8);
-    }
-
-    /* Component-level overrides for open */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--accent-3);
-      box-shadow: inset 0 0 0 1px var(--accent-8);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a8);
-    }
   }
 
-  &:where(:active:not([data-state='open'])) {
+  &:where(:active:not([data-state='open'], :disabled)) {
     background-color: var(--accent-4);
     box-shadow: inset 0 0 0 1px var(--accent-8);
-    
-    /* Theme-level translucent override for active */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a8);
-    }
-
-    /* Component-level overrides for active */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--accent-4);
-      box-shadow: inset 0 0 0 1px var(--accent-a8);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a4), var(--accent-4) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a8);
-    }
   }
 
   &:where(:focus-visible) {
@@ -842,80 +385,75 @@
   }
 
   &:where(:disabled) {
-    color: var(--gray-a8);
-    box-shadow: inset 0 0 0 1px var(--gray-a6);
-    background-color: var(--gray-a2);
-    cursor: not-allowed;
-    pointer-events: none;
+    color: var(--neutral-a8);
+    box-shadow: inset 0 0 0 1px var(--neutral-a6);
+    background-color: var(--neutral-a2);
+    cursor: default;
   }
 
   &:where([data-placeholder]) {
-    & :where(.rt-SelectTriggerInner) {
-      color: var(--gray-a10);
+    & :where(.kui-SelectTriggerInner) {
+      color: var(--neutral-a10);
       font-weight: var(--font-weight-regular);
     }
   }
 }
 
-/* all disabled */
-.rt-SelectTrigger {
+/* all disabled: a colour remap, never opacity, and the arrow cursor */
+.kui-SelectTrigger {
   &:where(:disabled) {
-    & :where(.rt-SelectIcon) {
-      color: var(--gray-a9);
+    & :where(.kui-SelectIcon) {
+      color: var(--neutral-a9);
+    }
+    &:where([data-placeholder]) :where(.kui-SelectTriggerInner) {
+      color: var(--neutral-a8);
+      opacity: 1;
     }
   }
 }
 
-/* Error state styling */
-.rt-SelectTrigger:where([data-error="true"]) {
-  box-shadow: inset 0 0 0 1px var(--red-9);
-}
+/*
+ * Invalid. Keyed on `aria-invalid`, which the `error` prop sets, so both paths style the same.
+ * Only the border and the focus ring move; the fill stays the variant's.
+ */
+.kui-SelectTrigger:where([aria-invalid='true']) {
+  box-shadow: inset 0 0 0 1px var(--red-6);
 
-.rt-SelectTrigger:where([data-error="true"]:focus-visible) {
-  outline: 2px solid var(--red-8);
-}
-
-/* Loading state styling */
-.rt-SelectLoadingIcon {
-  animation: rt-spin 1s linear infinite;
-}
-
-.rt-SelectLoadingIconCircle {
-  animation: rt-dash 1.5s ease-in-out infinite;
-}
-
-@keyframes rt-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes rt-dash {
-  0% {
-    stroke-dasharray: 1, 150;
-    stroke-dashoffset: 0;
+  @media (hover: hover) {
+    &:where(:hover:not(:disabled)) {
+      box-shadow: inset 0 0 0 1px var(--red-7);
+    }
   }
-  50% {
-    stroke-dasharray: 90, 150;
-    stroke-dashoffset: -35;
+
+  &:where([data-state='open'], :active) {
+    box-shadow: inset 0 0 0 1px var(--red-7);
   }
-  100% {
-    stroke-dasharray: 90, 150;
-    stroke-dashoffset: -124;
+
+  &:where(:focus-visible) {
+    outline-color: var(--red-8);
   }
 }
 
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .rt-SelectLoadingIcon,
-  .rt-SelectLoadingIconCircle {
-    animation: none;
-  }
+/* Loading: the library Spinner fills the icon box, so it follows the trigger size and reduced motion. */
+.kui-SelectLoadingIcon {
+  display: block;
+}
+
+/* Two classes: spinner.css loads after this file and sets its own fixed size. */
+/* stylelint-disable-next-line selector-max-specificity */
+.kui-SelectLoadingIcon > .kui-Spinner {
+  width: 100%;
+  height: 100%;
 }
 
 /* Forced colors support */
+/* Box-shadows, which draw every variant's boundary, are dropped there, so the trigger gets a real border. */
 @media (forced-colors: active) {
-  .rt-SelectTrigger:where([data-error="true"]) {
+  .kui-SelectTrigger {
     border: 1px solid CanvasText;
+  }
+  .kui-SelectTrigger:where(:disabled, [data-disabled]) {
+    border-color: GrayText;
   }
 }
 
@@ -925,51 +463,52 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-SelectItem:where([data-accent-color]) {
+.kui-SelectItem:where([data-accent-color]) {
   color: var(--accent-ink);
 }
-.rt-SelectItem:where([data-disabled]) {
-  color: var(--gray-a8);
+.kui-SelectItem:where([data-disabled]) {
+  color: var(--neutral-a8);
 }
 
-.rt-SelectSeparator {
-  background-color: var(--gray-a6);
+.kui-SelectSeparator {
+  background-color: var(--neutral-a6);
 }
 
 /* Muted text sits a step lower inside items */
-.rt-SelectItem :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
-  color: var(--gray-a10);
-}
-
-/* solid */
-
-.rt-SelectContent:where(.rt-variant-solid) {
-  /* Gray fills with step 12 through the solid tokens */
-  & :where(.rt-SelectItem[data-highlighted]) {
-    background-color: var(--accent-solid);
-    color: var(--accent-solid-contrast);
-
-    /* Force all text elements to inherit hover color, including those with color="gray" */
-    & :where(.rt-Text) {
-      color: inherit !important;
-    }
-
-    /* Also target any element with data-accent-color="gray" */
-    & :where([data-accent-color='gray']) {
-      color: inherit !important;
-    }
-  }
+.kui-SelectItem :where(.kui-Text.kui-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
+  color: var(--neutral-a10);
 }
 
 /* soft */
 
-.rt-SelectContent:where(.rt-variant-soft) {
-  & :where(.rt-SelectItem[data-highlighted]) {
+.kui-SelectContent:where(.kui-variant-soft) {
+  & :where(.kui-SelectItem[data-highlighted]) {
     background-color: var(--accent-a4);
 
     /* In soft variant, lift muted text a step while keeping the hierarchy */
-    & :where(.rt-Text.rt-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
-      color: var(--gray-11) !important;
+    & :where(.kui-Text.kui-emphasis-medium:where(:not([data-accent-color]), [data-accent-color='gray'])) {
+      color: var(--neutral-11) !important;
+    }
+  }
+}
+
+/* The highlight is solid when the system asks for more contrast. */
+@media (prefers-contrast: more) {
+  .kui-SelectContent:where(.kui-variant-soft) {
+    /* Gray fills with step 12 through the solid tokens */
+    & :where(.kui-SelectItem[data-highlighted]) {
+      background-color: var(--accent-solid);
+      color: var(--accent-solid-contrast);
+
+      /* Force all text elements to inherit hover color, including those with color="gray" */
+      & :where(.kui-Text) {
+        color: inherit !important;
+      }
+
+      /* Also target any element with data-accent-color="gray" */
+      & :where([data-accent-color='gray']) {
+        color: inherit !important;
+      }
     }
   }
 }

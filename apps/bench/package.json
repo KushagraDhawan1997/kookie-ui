@@ -1,0 +1,20 @@
+{
+  "name": "bench",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "bench": "node run.mjs",
+    "bench:update": "node run.mjs --update",
+    "bench:serve": "node run.mjs --serve"
+  },
+  "dependencies": {
+    "@kushagradhawan/kookie-ui": "workspace:*",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "playwright": "^1.64.1"
+  }
+}

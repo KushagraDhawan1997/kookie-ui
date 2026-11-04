@@ -13,30 +13,35 @@ import {
   dropdownMenuCheckboxItemPropDefs,
   dropdownMenuRadioItemPropDefs,
 } from './dropdown-menu.props.js';
-import { Theme, useThemeContext } from './theme.js';
+import { useThemeContext } from './theme.js';
+import { PortalTheme } from './_internal/portal-theme.js';
 import { ChevronDownIcon, ThickCheckIcon, ThickChevronLeftIcon, ThickChevronRightIcon, ThickDotIcon } from './icons.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../hooks/theme-size.js';
 import {
   DrillDownLevelContext,
   DrillDownRoot,
   SubContext,
   useCreateDrillDownStore,
-  useDrillDownDirection,
   useDrillDownStore,
   usePanelPosition,
   useStackEntry,
   useSubContext,
 } from './_internal/dropdown-menu-drill-down.js';
-import { MenuProvider } from './_internal/menu-context.js';
+import {
+  MenuCloseProvider,
+  MenuGroupLabelProvider,
+  MenuProvider,
+  useMenuGroupLabelId,
+  useMenuGroupLabelledBy,
+} from './_internal/menu-context.js';
 import {
   MenuShortcut,
   getMenuAlignOffset,
-  resolveMenuMaterial,
   toAriaKeyShortcuts,
   useResolvedResponsiveValue,
 } from './_internal/base-menu.utils.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
-import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
 
 import type { SubmenuBehavior } from './_internal/dropdown-menu-drill-down.js';
 import type { IconProps } from './icons.js';
@@ -65,9 +70,13 @@ const DropdownMenuRoot: React.FC<DropdownMenuRootProps> = (props) => {
     [handleOpenChangeProp],
   );
 
+  const close = React.useCallback(() => handleOpenChange(false), [handleOpenChange]);
+
   return (
     <DropdownMenuOpenContext.Provider value={open}>
-      <DropdownMenuPrimitive.Root {...props} onOpenChange={handleOpenChange} />
+      <MenuCloseProvider value={close}>
+        <DropdownMenuPrimitive.Root {...props} open={open} onOpenChange={handleOpenChange} />
+      </MenuCloseProvider>
     </DropdownMenuOpenContext.Provider>
   );
 };
@@ -90,9 +99,7 @@ type DropdownMenuSurfaceProps = GetPropDefTypes<typeof dropdownMenuSubContentPro
 
 type DropdownMenuContentContextValue = {
   size?: DropdownMenuSurfaceProps['size'];
-  variant?: DropdownMenuSurfaceProps['variant'];
   color?: DropdownMenuSurfaceProps['color'];
-  material?: DropdownMenuSurfaceProps['material'];
 };
 const DropdownMenuContentContext = React.createContext<DropdownMenuContentContextValue>({});
 
@@ -130,15 +137,11 @@ interface DropdownMenuContentProps
   virtualized?: boolean;
 }
 const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, DropdownMenuContentProps>(
-  (props, forwardedRef) => {
+  (ownProps, forwardedRef) => {
+    const props = useThemeSizeProps(ownProps, dropdownMenuContentPropDefs.size);
     const themeContext = useThemeContext();
-
-    useDeprecatedPanelBackgroundWarning(props.panelBackground);
-
-    const material = resolveMenuMaterial(props.material, props.panelBackground, themeContext);
     const {
       size = dropdownMenuContentPropDefs.size.default,
-      variant = dropdownMenuContentPropDefs.variant.default,
     } = props;
     const {
       className,
@@ -146,8 +149,6 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
       color,
       container,
       forceMount,
-      material: _material,
-      panelBackground: _panelBackground,
       submenuBehavior,
       virtualized = false,
       onEscapeKeyDown,
@@ -180,8 +181,8 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
     };
 
     const contextValue = React.useMemo(
-      () => ({ size, variant, color: resolvedColor, material }),
-      [size, variant, resolvedColor, material],
+      () => ({ size, color: resolvedColor }),
+      [size, resolvedColor],
     );
 
     const contentBody = (
@@ -196,11 +197,9 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
 
     return (
       <DropdownMenuPrimitive.Portal container={container} forceMount={forceMount}>
-        <Theme asChild>
+        <PortalTheme asChild>
           <DropdownMenuPrimitive.Content
             data-accent-color={resolvedColor}
-            data-material={material}
-            data-panel-background={material}
             align="start"
             sideOffset={4}
             collisionPadding={10}
@@ -210,25 +209,26 @@ const DropdownMenuContent = React.forwardRef<DropdownMenuContentElement, Dropdow
             asChild={false}
             ref={forwardedRef}
             className={classNames(
-              'rt-PopperContent',
-              'rt-BaseMenuContent',
-              'rt-DropdownMenuContent',
+              'kui-PopperContent',
+              'kui-BaseMenuContent',
+          'kui-variant-soft',
+              'kui-DropdownMenuContent',
               className,
             )}
           >
             {virtualized ? (
-              <div className={classNames('rt-BaseMenuViewport', 'rt-DropdownMenuViewport', 'rt-virtualized')}>
+              <div className={classNames('kui-BaseMenuViewport', 'kui-DropdownMenuViewport', 'kui-virtualized')}>
                 {contentBody}
               </div>
             ) : (
               <ScrollArea type="auto" scrollbars="vertical">
-                <div className={classNames('rt-BaseMenuViewport', 'rt-DropdownMenuViewport')}>
+                <div className={classNames('kui-BaseMenuViewport', 'kui-DropdownMenuViewport')}>
                   {contentBody}
                 </div>
               </ScrollArea>
             )}
           </DropdownMenuPrimitive.Content>
-        </Theme>
+        </PortalTheme>
       </DropdownMenuPrimitive.Portal>
     );
   },
@@ -239,14 +239,17 @@ type DropdownMenuLabelElement = React.ElementRef<typeof DropdownMenuPrimitive.La
 interface DropdownMenuLabelProps
   extends ComponentPropsWithout<typeof DropdownMenuPrimitive.Label, RemovedProps> {}
 const DropdownMenuLabel = React.forwardRef<DropdownMenuLabelElement, DropdownMenuLabelProps>(
-  ({ className, ...props }, forwardedRef) => {
-    if (!React.useContext(DrillDownLevelContext)) return null;
+  ({ className, id: idProp, ...props }, forwardedRef) => {
+    const isLevelVisible = React.useContext(DrillDownLevelContext);
+    const id = useMenuGroupLabelId(idProp, isLevelVisible);
+    if (!isLevelVisible) return null;
     return (
       <DropdownMenuPrimitive.Label
         {...props}
+        id={id}
         asChild={false}
         ref={forwardedRef}
-        className={classNames('rt-BaseMenuLabel', 'rt-DropdownMenuLabel', className)}
+        className={classNames('kui-BaseMenuLabel', 'kui-DropdownMenuLabel', className)}
       />
     );
   },
@@ -275,10 +278,10 @@ const DropdownMenuItem = React.forwardRef<DropdownMenuItemElement, DropdownMenuI
         aria-keyshortcuts={shortcut ? toAriaKeyShortcuts(shortcut) : undefined}
         {...itemProps}
         ref={forwardedRef}
-        className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-DropdownMenuItem', className)}
+        className={classNames('kui-reset', 'kui-BaseMenuItem', 'kui-DropdownMenuItem', className)}
       >
         <Slot.Slottable>{children}</Slot.Slottable>
-        {shortcut && <MenuShortcut shortcut={shortcut} className="rt-DropdownMenuShortcut" />}
+        {shortcut && <MenuShortcut shortcut={shortcut} className="kui-DropdownMenuShortcut" />}
       </DropdownMenuPrimitive.Item>
     );
   },
@@ -289,14 +292,22 @@ type DropdownMenuGroupElement = React.ElementRef<typeof DropdownMenuPrimitive.Gr
 interface DropdownMenuGroupProps
   extends ComponentPropsWithout<typeof DropdownMenuPrimitive.Group, RemovedProps> {}
 const DropdownMenuGroup = React.forwardRef<DropdownMenuGroupElement, DropdownMenuGroupProps>(
-  ({ className, ...props }, forwardedRef) => (
-    <DropdownMenuPrimitive.Group
-      {...props}
-      asChild={false}
-      ref={forwardedRef}
-      className={classNames('rt-BaseMenuGroup', 'rt-DropdownMenuGroup', className)}
-    />
-  ),
+  ({ className, 'aria-labelledby': ariaLabelledBy, ...props }, forwardedRef) => {
+    const [labelledBy, setLabelId] = useMenuGroupLabelledBy(ariaLabelledBy);
+    // A drill-down level that is not on screen keeps its groups only to hold the open path.
+    const isLevelVisible = React.useContext(DrillDownLevelContext);
+    return (
+      <MenuGroupLabelProvider value={setLabelId}>
+        <DropdownMenuPrimitive.Group
+          {...(isLevelVisible ? { 'aria-labelledby': labelledBy } : { role: 'none' })}
+          {...props}
+          asChild={false}
+          ref={forwardedRef}
+          className={classNames('kui-BaseMenuGroup', 'kui-DropdownMenuGroup', className)}
+        />
+      </MenuGroupLabelProvider>
+    );
+  },
 );
 DropdownMenuGroup.displayName = 'DropdownMenu.Group';
 
@@ -306,14 +317,21 @@ interface DropdownMenuRadioGroupProps
 const DropdownMenuRadioGroup = React.forwardRef<
   DropdownMenuRadioGroupElement,
   DropdownMenuRadioGroupProps
->(({ className, ...props }, forwardedRef) => (
-  <DropdownMenuPrimitive.RadioGroup
-    {...props}
-    asChild={false}
-    ref={forwardedRef}
-    className={classNames('rt-BaseMenuRadioGroup', 'rt-DropdownMenuRadioGroup', className)}
-  />
-));
+>(({ className, 'aria-labelledby': ariaLabelledBy, ...props }, forwardedRef) => {
+  const [labelledBy, setLabelId] = useMenuGroupLabelledBy(ariaLabelledBy);
+  const isLevelVisible = React.useContext(DrillDownLevelContext);
+  return (
+    <MenuGroupLabelProvider value={setLabelId}>
+      <DropdownMenuPrimitive.RadioGroup
+        {...(isLevelVisible ? { 'aria-labelledby': labelledBy } : { role: 'none' })}
+        {...props}
+        asChild={false}
+        ref={forwardedRef}
+        className={classNames('kui-BaseMenuRadioGroup', 'kui-DropdownMenuRadioGroup', className)}
+      />
+    </MenuGroupLabelProvider>
+  );
+});
 DropdownMenuRadioGroup.displayName = 'DropdownMenu.RadioGroup';
 
 type DropdownMenuRadioItemElement = React.ElementRef<typeof DropdownMenuPrimitive.RadioItem>;
@@ -339,16 +357,16 @@ const DropdownMenuRadioItem = React.forwardRef<
       ref={forwardedRef}
       data-accent-color={color}
       className={classNames(
-        'rt-BaseMenuItem',
-        'rt-BaseMenuRadioItem',
-        'rt-DropdownMenuItem',
-        'rt-DropdownMenuRadioItem',
+        'kui-BaseMenuItem',
+        'kui-BaseMenuRadioItem',
+        'kui-DropdownMenuItem',
+        'kui-DropdownMenuRadioItem',
         className,
       )}
     >
-      {children}
-      <DropdownMenuPrimitive.ItemIndicator className="rt-BaseMenuItemIndicator rt-DropdownMenuItemIndicator">
-        <ThickDotIcon className="rt-BaseMenuItemIndicatorIcon rt-DropdownMenuItemIndicatorIcon" />
+      <Slot.Slottable>{children}</Slot.Slottable>
+      <DropdownMenuPrimitive.ItemIndicator className="kui-BaseMenuItemIndicator kui-DropdownMenuItemIndicator">
+        <ThickDotIcon className="kui-BaseMenuItemIndicatorIcon kui-DropdownMenuItemIndicatorIcon" />
       </DropdownMenuPrimitive.ItemIndicator>
     </DropdownMenuPrimitive.RadioItem>
   );
@@ -380,18 +398,18 @@ const DropdownMenuCheckboxItem = React.forwardRef<
       ref={forwardedRef}
       data-accent-color={color}
       className={classNames(
-        'rt-BaseMenuItem',
-        'rt-BaseMenuCheckboxItem',
-        'rt-DropdownMenuItem',
-        'rt-DropdownMenuCheckboxItem',
+        'kui-BaseMenuItem',
+        'kui-BaseMenuCheckboxItem',
+        'kui-DropdownMenuItem',
+        'kui-DropdownMenuCheckboxItem',
         className,
       )}
     >
-      {children}
-      <DropdownMenuPrimitive.ItemIndicator className="rt-BaseMenuItemIndicator rt-DropdownMenuItemIndicator">
-        <ThickCheckIcon className="rt-BaseMenuItemIndicatorIcon rt-DropdownMenuItemIndicatorIcon" />
+      <Slot.Slottable>{children}</Slot.Slottable>
+      <DropdownMenuPrimitive.ItemIndicator className="kui-BaseMenuItemIndicator kui-DropdownMenuItemIndicator">
+        <ThickCheckIcon className="kui-BaseMenuItemIndicatorIcon kui-DropdownMenuItemIndicatorIcon" />
       </DropdownMenuPrimitive.ItemIndicator>
-      {shortcut && <MenuShortcut shortcut={shortcut} className="rt-DropdownMenuShortcut" />}
+      {shortcut && <MenuShortcut shortcut={shortcut} className="kui-DropdownMenuShortcut" />}
     </DropdownMenuPrimitive.CheckboxItem>
   );
 });
@@ -417,28 +435,44 @@ const DropdownMenuSub: React.FC<DropdownMenuSubProps> = ({
   const subContextValue = React.useMemo(() => ({ id, label }), [id, label]);
   const isOpenInDrillDown = usePanelPosition(drillDownStore, id) !== 'closed';
 
-  // Drill-down: `open` and `defaultOpen` drive the stack; the stack drives
-  // `onOpenChange`. A controlled `open` is applied when it changes.
+  const handleOpenChange = useCallbackRef(onOpenChange);
+  const isControlled = open !== undefined;
+
+  // Drill-down, controlled: navigating asks `onOpenChange` and leaves the stack to `open`.
+  React.useLayoutEffect(() => {
+    if (!drillDownStore || !isControlled) return;
+    drillDownStore.setController(id, handleOpenChange);
+    return () => drillDownStore.setController(id, null);
+  }, [drillDownStore, isControlled, id, handleOpenChange]);
+
   React.useLayoutEffect(() => {
     if (!drillDownStore || open === undefined) return;
-    if (open && !drillDownStore.isOpen(id)) drillDownStore.push(id, null);
-    else if (!open && drillDownStore.isOpen(id)) drillDownStore.close(id);
+    if (open && !drillDownStore.isOpen(id)) drillDownStore.open(id, drillDownStore.takePendingModality(id));
+    else if (!open && drillDownStore.isOpen(id)) drillDownStore.close(id, drillDownStore.takePendingModality(id));
   }, [drillDownStore, open, id]);
 
-  const defaultOpenRef = React.useRef(defaultOpen);
+  // A `defaultOpen` push on mount is the starting state, not a change to report.
+  const defaultOpenRef = React.useRef(open === undefined && Boolean(defaultOpen));
   React.useLayoutEffect(() => {
-    if (drillDownStore && defaultOpenRef.current && open === undefined) drillDownStore.push(id, null);
+    if (drillDownStore && defaultOpenRef.current) drillDownStore.open(id);
+    else defaultOpenRef.current = false;
     // Only on mount, like an uncontrolled default.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleOpenChange = useCallbackRef(onOpenChange);
+  // Uncontrolled, the stack drives `onOpenChange`. Controlled, it reports only a close
+  // the `open` prop did not ask for, such as a parent level closing.
   const wasOpenRef = React.useRef(isOpenInDrillDown);
   React.useEffect(() => {
     if (!drillDownStore || wasOpenRef.current === isOpenInDrillDown) return;
     wasOpenRef.current = isOpenInDrillDown;
+    if (isOpenInDrillDown && defaultOpenRef.current) {
+      defaultOpenRef.current = false;
+      return;
+    }
+    if (open !== undefined && open === isOpenInDrillDown) return;
     handleOpenChange(isOpenInDrillDown);
-  }, [drillDownStore, isOpenInDrillDown, handleOpenChange]);
+  }, [drillDownStore, isOpenInDrillDown, handleOpenChange, open]);
 
   // Radix Sub stays mounted in both behaviors so switching behavior does not
   // remount the subtree. It only renders context; in drill-down its trigger
@@ -488,8 +522,8 @@ const DropdownMenuSubTrigger = React.forwardRef<
     };
 
     return (
+      // The row navigates within the same menu, so it announces no popup.
       <DropdownMenuPrimitive.Item
-        aria-haspopup="menu"
         {...subTriggerProps}
         data-drill-down-trigger={subContext.id}
         data-drill-down-name={subTriggerProps.textValue}
@@ -497,18 +531,18 @@ const DropdownMenuSubTrigger = React.forwardRef<
         onKeyDown={handleKeyDown}
         ref={forwardedRef}
         className={classNames(
-          'rt-reset',
-          'rt-BaseMenuItem',
-          'rt-BaseMenuSubTrigger',
-          'rt-DropdownMenuItem',
-          'rt-DropdownMenuSubTrigger',
-          'rt-DropdownMenuDrillDownSubTrigger',
+          'kui-reset',
+          'kui-BaseMenuItem',
+          'kui-BaseMenuSubTrigger',
+          'kui-DropdownMenuItem',
+          'kui-DropdownMenuSubTrigger',
+          'kui-DropdownMenuDrillDownSubTrigger',
           className,
         )}
       >
         {children}
-        <div className="rt-BaseMenuShortcut rt-DropdownMenuShortcut">
-          <ThickChevronRightIcon className="rt-BaseMenuSubTriggerIcon rt-DropdownMenuSubTriggerIcon" />
+        <div className="kui-BaseMenuShortcut kui-DropdownMenuShortcut">
+          <ThickChevronRightIcon className="kui-BaseMenuSubTriggerIcon kui-DropdownMenuSubTriggerIcon" />
         </div>
       </DropdownMenuPrimitive.Item>
     );
@@ -521,16 +555,16 @@ const DropdownMenuSubTrigger = React.forwardRef<
       asChild={false}
       ref={forwardedRef}
       className={classNames(
-        'rt-BaseMenuItem',
-        'rt-BaseMenuSubTrigger',
-        'rt-DropdownMenuItem',
-        'rt-DropdownMenuSubTrigger',
+        'kui-BaseMenuItem',
+        'kui-BaseMenuSubTrigger',
+        'kui-DropdownMenuItem',
+        'kui-DropdownMenuSubTrigger',
         className,
       )}
     >
       {children}
-      <div className="rt-BaseMenuShortcut rt-DropdownMenuShortcut">
-        <ThickChevronRightIcon className="rt-BaseMenuSubTriggerIcon rt-DropdownMenuSubTriggerIcon" />
+      <div className="kui-BaseMenuShortcut kui-DropdownMenuShortcut">
+        <ThickChevronRightIcon className="kui-BaseMenuSubTriggerIcon kui-DropdownMenuSubTriggerIcon" />
       </div>
     </DropdownMenuPrimitive.SubTrigger>
   );
@@ -550,7 +584,7 @@ const DropdownMenuSeparator = React.forwardRef<
       {...props}
       asChild={false}
       ref={forwardedRef}
-      className={classNames('rt-BaseMenuSeparator', 'rt-DropdownMenuSeparator', className)}
+      className={classNames('kui-BaseMenuSeparator', 'kui-DropdownMenuSeparator', className)}
     />
   );
 });
@@ -580,14 +614,14 @@ function DrillDownBackItem({ label, name }: { label: React.ReactNode; name: stri
       textValue={labelText || 'Back'}
       onSelect={handleSelect}
       className={classNames(
-        'rt-reset',
-        'rt-BaseMenuItem',
-        'rt-DropdownMenuItem',
-        'rt-DropdownMenuDrillDownBackItem',
+        'kui-reset',
+        'kui-BaseMenuItem',
+        'kui-DropdownMenuItem',
+        'kui-DropdownMenuDrillDownBackItem',
       )}
     >
-      <ThickChevronLeftIcon className="rt-BaseMenuSubTriggerIcon rt-DropdownMenuDrillDownBackIcon" />
-      <span className="rt-DropdownMenuDrillDownBackLabel">{label}</span>
+      <ThickChevronLeftIcon className="kui-BaseMenuSubTriggerIcon kui-DropdownMenuDrillDownBackIcon" />
+      <span className="kui-DropdownMenuDrillDownBackLabel">{label}</span>
     </DropdownMenuPrimitive.Item>
   );
 }
@@ -661,16 +695,10 @@ DropdownMenuSubContent.displayName = 'DropdownMenu.SubContent';
 const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, DropdownMenuSubContentProps>(
   (props, forwardedRef) => {
     const parent = React.useContext(DropdownMenuContentContext);
-    const themeContext = useThemeContext();
-
-    useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
     // A submenu inherits the parent surface, and its own props win.
     const size = props.size ?? parent.size;
-    const variant = props.variant ?? parent.variant;
     const color = props.color ?? parent.color;
-    const material =
-      props.material ?? props.panelBackground ?? parent.material ?? resolveMenuMaterial(undefined, undefined, themeContext);
 
     const {
       className,
@@ -678,17 +706,15 @@ const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, Dropdo
       container,
       forceMount,
       color: _color,
-      material: _material,
-      panelBackground: _panelBackground,
       virtualized = false,
       ...subContentProps
-    } = extractProps({ ...props, size, variant }, dropdownMenuSubContentPropDefs);
+    } = extractProps({ ...props, size }, dropdownMenuSubContentPropDefs);
 
     const scalarSize = useResolvedResponsiveValue(size, dropdownMenuSubContentPropDefs.size.default);
 
     const contextValue = React.useMemo(
-      () => ({ size, variant, color, material }),
-      [size, variant, color, material],
+      () => ({ size, color }),
+      [size, color],
     );
 
     const body = (
@@ -699,12 +725,10 @@ const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, Dropdo
 
     return (
       <DropdownMenuPrimitive.Portal container={container} forceMount={forceMount}>
-        <Theme asChild>
+        <PortalTheme asChild>
           <DropdownMenuPrimitive.SubContent
             data-accent-color={color}
-            data-material={material}
-            data-panel-background={material}
-            alignOffset={getMenuAlignOffset(scalarSize, themeContext.scaling)}
+            alignOffset={getMenuAlignOffset(scalarSize)}
             // Side offset accounts for the outer solid box-shadow
             sideOffset={1}
             collisionPadding={10}
@@ -712,25 +736,26 @@ const CascadeSubContent = React.forwardRef<DropdownMenuSubContentElement, Dropdo
             asChild={false}
             ref={forwardedRef}
             className={classNames(
-              'rt-PopperContent',
-              'rt-BaseMenuContent',
-              'rt-BaseMenuSubContent',
-              'rt-DropdownMenuContent',
-              'rt-DropdownMenuSubContent',
+              'kui-PopperContent',
+              'kui-BaseMenuContent',
+          'kui-variant-soft',
+              'kui-BaseMenuSubContent',
+              'kui-DropdownMenuContent',
+              'kui-DropdownMenuSubContent',
               className,
             )}
           >
             {virtualized ? (
-              <div className={classNames('rt-BaseMenuViewport', 'rt-DropdownMenuViewport', 'rt-virtualized')}>
+              <div className={classNames('kui-BaseMenuViewport', 'kui-DropdownMenuViewport', 'kui-virtualized')}>
                 {body}
               </div>
             ) : (
               <ScrollArea type="auto" scrollbars="vertical">
-                <div className={classNames('rt-BaseMenuViewport', 'rt-DropdownMenuViewport')}>{body}</div>
+                <div className={classNames('kui-BaseMenuViewport', 'kui-DropdownMenuViewport')}>{body}</div>
               </ScrollArea>
             )}
           </DropdownMenuPrimitive.SubContent>
-        </Theme>
+        </PortalTheme>
       </DropdownMenuPrimitive.Portal>
     );
   },
@@ -751,7 +776,6 @@ const DrillDownPanel = React.forwardRef<DropdownMenuSubContentElement, DrillDown
   ({ store, sub, ...props }, forwardedRef) => {
     const position = usePanelPosition(store, sub.id);
     const entry = useStackEntry(store, sub.id);
-    const direction = useDrillDownDirection(position === 'top' ? store : null);
 
     if (position === 'closed') return null;
 
@@ -762,10 +786,7 @@ const DrillDownPanel = React.forwardRef<DropdownMenuSubContentElement, DrillDown
       forceMount: _forceMount,
       virtualized: _virtualized,
       size: _size,
-      variant: _variant,
       color: _color,
-      material: _material,
-      panelBackground: _panelBackground,
       ...panelProps
     } = omitPopperProps(props);
 
@@ -780,16 +801,17 @@ const DrillDownPanel = React.forwardRef<DropdownMenuSubContentElement, DrillDown
         ref={forwardedRef}
         data-drill-down-panel={sub.id}
         data-drill-down-active={isTop ? true : undefined}
-        data-animation-direction={isTop ? (direction ?? undefined) : undefined}
-        className={classNames('rt-DropdownMenuDrillDownPanel', className)}
+        className={classNames('kui-DropdownMenuDrillDownPanel', className)}
       >
         {isTop && (
           <>
             <DrillDownBackItem label={sub.label} name={name} />
-            <DropdownMenuPrimitive.Separator className="rt-BaseMenuSeparator rt-DropdownMenuSeparator" />
+            <DropdownMenuPrimitive.Separator className="kui-BaseMenuSeparator kui-DropdownMenuSeparator" />
           </>
         )}
-        <DrillDownLevelContext.Provider value={isTop}>{children}</DrillDownLevelContext.Provider>
+        <MenuGroupLabelProvider value={null}>
+          <DrillDownLevelContext.Provider value={isTop}>{children}</DrillDownLevelContext.Provider>
+        </MenuGroupLabelProvider>
       </div>
     );
   },
@@ -805,7 +827,7 @@ const DropdownMenuTriggerIcon = React.forwardRef<
   <ChevronDownIcon
     {...props}
     ref={forwardedRef}
-    className={classNames('rt-DropdownMenuTriggerIcon', className)}
+    className={classNames('kui-DropdownMenuTriggerIcon', className)}
   />
 ));
 DropdownMenuTriggerIcon.displayName = 'DropdownMenu.TriggerIcon';

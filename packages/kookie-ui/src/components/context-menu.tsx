@@ -7,6 +7,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { ContextMenu as ContextMenuPrimitive, Slot } from 'radix-ui';
+import { useCallbackRef } from 'radix-ui/internal';
 
 import { ScrollArea } from './scroll-area.js';
 import {
@@ -16,16 +17,22 @@ import {
   contextMenuCheckboxItemPropDefs,
   contextMenuRadioItemPropDefs,
 } from './context-menu.props.js';
-import { Theme, useThemeContext } from './theme.js';
+import { useThemeContext } from './theme.js';
+import { PortalTheme } from './_internal/portal-theme.js';
 import { ThickCheckIcon, ThickChevronRightIcon, ThickDotIcon } from './icons.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../hooks/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
-import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
-import { MenuProvider } from './_internal/menu-context.js';
+import {
+  MenuCloseProvider,
+  MenuGroupLabelProvider,
+  MenuProvider,
+  useMenuGroupLabelId,
+  useMenuGroupLabelledBy,
+} from './_internal/menu-context.js';
 import {
   MenuShortcut,
   getMenuAlignOffset,
-  resolveMenuMaterial,
   toAriaKeyShortcuts,
   useResolvedResponsiveValue,
 } from './_internal/base-menu.utils.js';
@@ -35,9 +42,27 @@ import type { GetPropDefTypes, Responsive } from '../props/prop-def.js';
 
 interface ContextMenuRootProps
   extends React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Root> {}
-const ContextMenuRoot: React.FC<ContextMenuRootProps> = (props) => (
-  <ContextMenuPrimitive.Root {...props} />
-);
+const ContextMenuRoot: React.FC<ContextMenuRootProps> = (props) => {
+  const { open: openProp, onOpenChange } = props;
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false);
+  const open = openProp ?? uncontrolledOpen;
+
+  const handleOpenChangeProp = useCallbackRef(onOpenChange);
+  const handleOpenChange = React.useCallback(
+    (next: boolean) => {
+      setUncontrolledOpen(next);
+      handleOpenChangeProp(next);
+    },
+    [handleOpenChangeProp],
+  );
+  const close = React.useCallback(() => handleOpenChange(false), [handleOpenChange]);
+
+  return (
+    <MenuCloseProvider value={close}>
+      <ContextMenuPrimitive.Root {...props} open={open} onOpenChange={handleOpenChange} />
+    </MenuCloseProvider>
+  );
+};
 ContextMenuRoot.displayName = 'ContextMenu.Root';
 
 type ContextMenuTriggerElement = React.ElementRef<typeof ContextMenuPrimitive.Trigger>;
@@ -57,9 +82,7 @@ type ContextMenuSurfaceProps = GetPropDefTypes<typeof contextMenuContentPropDefs
 
 type ContextMenuContentContextValue = {
   size?: ContextMenuSurfaceProps['size'];
-  variant?: ContextMenuSurfaceProps['variant'];
   color?: ContextMenuSurfaceProps['color'];
-  material?: ContextMenuSurfaceProps['material'];
 };
 const ContextMenuContentContext = React.createContext<ContextMenuContentContextValue>({});
 type ContextMenuContentElement = React.ElementRef<typeof ContextMenuPrimitive.Content>;
@@ -78,15 +101,11 @@ interface ContextMenuContentProps
   submenuBehavior?: Responsive<'cascade' | 'drill-down'>;
 }
 const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMenuContentProps>(
-  (props, forwardedRef) => {
+  (ownProps, forwardedRef) => {
+    const props = useThemeSizeProps(ownProps, contextMenuContentPropDefs.size);
     const themeContext = useThemeContext();
-
-    useDeprecatedPanelBackgroundWarning(props.panelBackground);
-
-    const material = resolveMenuMaterial(props.material, props.panelBackground, themeContext);
     const {
       size = contextMenuContentPropDefs.size.default,
-      variant = contextMenuContentPropDefs.variant.default,
     } = props;
     const {
       className,
@@ -94,8 +113,6 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
       color,
       container,
       forceMount,
-      material: _material,
-      panelBackground: _panelBackground,
       submenuBehavior: _submenuBehavior,
       virtualized = false,
       ...contentProps
@@ -105,8 +122,8 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
     const scalarSize = useResolvedResponsiveValue(size, contextMenuContentPropDefs.size.default);
 
     const contextValue = React.useMemo(
-      () => ({ size, variant, color: resolvedColor, material }),
-      [size, variant, resolvedColor, material],
+      () => ({ size, color: resolvedColor }),
+      [size, resolvedColor],
     );
 
     const body = (
@@ -117,34 +134,33 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
 
     return (
       <ContextMenuPrimitive.Portal container={container} forceMount={forceMount}>
-        <Theme asChild>
+        <PortalTheme asChild>
           <ContextMenuPrimitive.Content
             data-accent-color={resolvedColor}
-            data-material={material}
-            data-panel-background={material}
-            alignOffset={getMenuAlignOffset(scalarSize, themeContext.scaling)}
+            alignOffset={getMenuAlignOffset(scalarSize)}
             collisionPadding={10}
             {...contentProps}
             asChild={false}
             ref={forwardedRef}
             className={classNames(
-              'rt-PopperContent',
-              'rt-BaseMenuContent',
-              'rt-ContextMenuContent',
+              'kui-PopperContent',
+              'kui-BaseMenuContent',
+          'kui-variant-soft',
+              'kui-ContextMenuContent',
               className,
             )}
           >
             {virtualized ? (
-              <div className={classNames('rt-BaseMenuViewport', 'rt-ContextMenuViewport', 'rt-virtualized')}>
+              <div className={classNames('kui-BaseMenuViewport', 'kui-ContextMenuViewport', 'kui-virtualized')}>
                 {body}
               </div>
             ) : (
               <ScrollArea type="auto" scrollbars="vertical">
-                <div className={classNames('rt-BaseMenuViewport', 'rt-ContextMenuViewport')}>{body}</div>
+                <div className={classNames('kui-BaseMenuViewport', 'kui-ContextMenuViewport')}>{body}</div>
               </ScrollArea>
             )}
           </ContextMenuPrimitive.Content>
-        </Theme>
+        </PortalTheme>
       </ContextMenuPrimitive.Portal>
     );
   },
@@ -155,14 +171,18 @@ type ContextMenuLabelElement = React.ElementRef<typeof ContextMenuPrimitive.Labe
 interface ContextMenuLabelProps
   extends ComponentPropsWithout<typeof ContextMenuPrimitive.Label, RemovedProps> {}
 const ContextMenuLabel = React.forwardRef<ContextMenuLabelElement, ContextMenuLabelProps>(
-  ({ className, ...props }, forwardedRef) => (
-    <ContextMenuPrimitive.Label
-      {...props}
-      asChild={false}
-      ref={forwardedRef}
-      className={classNames('rt-BaseMenuLabel', 'rt-ContextMenuLabel', className)}
-    />
-  ),
+  ({ className, id: idProp, ...props }, forwardedRef) => {
+    const id = useMenuGroupLabelId(idProp);
+    return (
+      <ContextMenuPrimitive.Label
+        {...props}
+        id={id}
+        asChild={false}
+        ref={forwardedRef}
+        className={classNames('kui-BaseMenuLabel', 'kui-ContextMenuLabel', className)}
+      />
+    );
+  },
 );
 ContextMenuLabel.displayName = 'ContextMenu.Label';
 
@@ -186,10 +206,10 @@ const ContextMenuItem = React.forwardRef<ContextMenuItemElement, ContextMenuItem
         aria-keyshortcuts={shortcut ? toAriaKeyShortcuts(shortcut) : undefined}
         {...itemProps}
         ref={forwardedRef}
-        className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-ContextMenuItem', className)}
+        className={classNames('kui-reset', 'kui-BaseMenuItem', 'kui-ContextMenuItem', className)}
       >
         <Slot.Slottable>{children}</Slot.Slottable>
-        {shortcut && <MenuShortcut shortcut={shortcut} className="rt-ContextMenuShortcut" />}
+        {shortcut && <MenuShortcut shortcut={shortcut} className="kui-ContextMenuShortcut" />}
       </ContextMenuPrimitive.Item>
     );
   },
@@ -200,14 +220,20 @@ type ContextMenuGroupElement = React.ElementRef<typeof ContextMenuPrimitive.Grou
 interface ContextMenuGroupProps
   extends ComponentPropsWithout<typeof ContextMenuPrimitive.Group, RemovedProps> {}
 const ContextMenuGroup = React.forwardRef<ContextMenuGroupElement, ContextMenuGroupProps>(
-  ({ className, ...props }, forwardedRef) => (
-    <ContextMenuPrimitive.Group
-      {...props}
-      asChild={false}
-      ref={forwardedRef}
-      className={classNames('rt-BaseMenuGroup', 'rt-ContextMenuGroup', className)}
-    />
-  ),
+  ({ className, 'aria-labelledby': ariaLabelledBy, ...props }, forwardedRef) => {
+    const [labelledBy, setLabelId] = useMenuGroupLabelledBy(ariaLabelledBy);
+    return (
+      <MenuGroupLabelProvider value={setLabelId}>
+        <ContextMenuPrimitive.Group
+          aria-labelledby={labelledBy}
+          {...props}
+          asChild={false}
+          ref={forwardedRef}
+          className={classNames('kui-BaseMenuGroup', 'kui-ContextMenuGroup', className)}
+        />
+      </MenuGroupLabelProvider>
+    );
+  },
 );
 ContextMenuGroup.displayName = 'ContextMenu.Group';
 
@@ -217,14 +243,20 @@ interface ContextMenuRadioGroupProps
 const ContextMenuRadioGroup = React.forwardRef<
   ContextMenuRadioGroupElement,
   ContextMenuRadioGroupProps
->(({ className, ...props }, forwardedRef) => (
-  <ContextMenuPrimitive.RadioGroup
-    {...props}
-    asChild={false}
-    ref={forwardedRef}
-    className={classNames('rt-BaseMenuRadioGroup', 'rt-ContextMenuRadioGroup', className)}
-  />
-));
+>(({ className, 'aria-labelledby': ariaLabelledBy, ...props }, forwardedRef) => {
+  const [labelledBy, setLabelId] = useMenuGroupLabelledBy(ariaLabelledBy);
+  return (
+    <MenuGroupLabelProvider value={setLabelId}>
+      <ContextMenuPrimitive.RadioGroup
+        aria-labelledby={labelledBy}
+        {...props}
+        asChild={false}
+        ref={forwardedRef}
+        className={classNames('kui-BaseMenuRadioGroup', 'kui-ContextMenuRadioGroup', className)}
+      />
+    </MenuGroupLabelProvider>
+  );
+});
 ContextMenuRadioGroup.displayName = 'ContextMenu.RadioGroup';
 
 type ContextMenuRadioItemElement = React.ElementRef<typeof ContextMenuPrimitive.RadioItem>;
@@ -249,16 +281,16 @@ const ContextMenuRadioItem = React.forwardRef<
       ref={forwardedRef}
       data-accent-color={color}
       className={classNames(
-        'rt-BaseMenuItem',
-        'rt-BaseMenuRadioItem',
-        'rt-ContextMenuItem',
-        'rt-ContextMenuRadioItem',
+        'kui-BaseMenuItem',
+        'kui-BaseMenuRadioItem',
+        'kui-ContextMenuItem',
+        'kui-ContextMenuRadioItem',
         className,
       )}
     >
       <Slot.Slottable>{children}</Slot.Slottable>
-      <ContextMenuPrimitive.ItemIndicator className="rt-BaseMenuItemIndicator rt-ContextMenuItemIndicator">
-        <ThickDotIcon className="rt-BaseMenuItemIndicatorIcon rt-ContextMenuItemIndicatorIcon" />
+      <ContextMenuPrimitive.ItemIndicator className="kui-BaseMenuItemIndicator kui-ContextMenuItemIndicator">
+        <ThickDotIcon className="kui-BaseMenuItemIndicatorIcon kui-ContextMenuItemIndicatorIcon" />
       </ContextMenuPrimitive.ItemIndicator>
     </ContextMenuPrimitive.RadioItem>
   );
@@ -289,18 +321,18 @@ const ContextMenuCheckboxItem = React.forwardRef<
       ref={forwardedRef}
       data-accent-color={color}
       className={classNames(
-        'rt-BaseMenuItem',
-        'rt-BaseMenuCheckboxItem',
-        'rt-ContextMenuItem',
-        'rt-ContextMenuCheckboxItem',
+        'kui-BaseMenuItem',
+        'kui-BaseMenuCheckboxItem',
+        'kui-ContextMenuItem',
+        'kui-ContextMenuCheckboxItem',
         className,
       )}
     >
       <Slot.Slottable>{children}</Slot.Slottable>
-      <ContextMenuPrimitive.ItemIndicator className="rt-BaseMenuItemIndicator rt-ContextMenuItemIndicator">
-        <ThickCheckIcon className="rt-BaseMenuItemIndicatorIcon rt-ContextMenuItemIndicatorIcon" />
+      <ContextMenuPrimitive.ItemIndicator className="kui-BaseMenuItemIndicator kui-ContextMenuItemIndicator">
+        <ThickCheckIcon className="kui-BaseMenuItemIndicatorIcon kui-ContextMenuItemIndicatorIcon" />
       </ContextMenuPrimitive.ItemIndicator>
-      {shortcut && <MenuShortcut shortcut={shortcut} className="rt-ContextMenuShortcut" />}
+      {shortcut && <MenuShortcut shortcut={shortcut} className="kui-ContextMenuShortcut" />}
     </ContextMenuPrimitive.CheckboxItem>
   );
 });
@@ -327,16 +359,16 @@ const ContextMenuSubTrigger = React.forwardRef<
       asChild={false}
       ref={forwardedRef}
       className={classNames(
-        'rt-BaseMenuItem',
-        'rt-BaseMenuSubTrigger',
-        'rt-ContextMenuItem',
-        'rt-ContextMenuSubTrigger',
+        'kui-BaseMenuItem',
+        'kui-BaseMenuSubTrigger',
+        'kui-ContextMenuItem',
+        'kui-ContextMenuSubTrigger',
         className,
       )}
     >
       {children}
-      <div className="rt-BaseMenuShortcut rt-ContextMenuShortcut">
-        <ThickChevronRightIcon className="rt-BaseMenuSubTriggerIcon rt-ContextMenuSubTriggerIcon" />
+      <div className="kui-BaseMenuShortcut kui-ContextMenuShortcut">
+        <ThickChevronRightIcon className="kui-BaseMenuSubTriggerIcon kui-ContextMenuSubTriggerIcon" />
       </div>
     </ContextMenuPrimitive.SubTrigger>
   );
@@ -358,16 +390,10 @@ const ContextMenuSubContent = React.forwardRef<
   ContextMenuSubContentProps
 >((props, forwardedRef) => {
   const parent = React.useContext(ContextMenuContentContext);
-  const themeContext = useThemeContext();
-
-  useDeprecatedPanelBackgroundWarning(props.panelBackground);
 
   // A submenu inherits the parent surface, and its own props win.
   const size = props.size ?? parent.size;
-  const variant = props.variant ?? parent.variant;
   const color = props.color ?? parent.color;
-  const material =
-    props.material ?? props.panelBackground ?? parent.material ?? resolveMenuMaterial(undefined, undefined, themeContext);
 
   const {
     className,
@@ -375,17 +401,15 @@ const ContextMenuSubContent = React.forwardRef<
     container,
     forceMount,
     color: _color,
-    material: _material,
-    panelBackground: _panelBackground,
     virtualized = false,
     ...subContentProps
-  } = extractProps({ ...props, size, variant }, contextMenuSubContentPropDefs);
+  } = extractProps({ ...props, size }, contextMenuSubContentPropDefs);
 
   const scalarSize = useResolvedResponsiveValue(size, contextMenuSubContentPropDefs.size.default);
 
   const contextValue = React.useMemo(
-    () => ({ size, variant, color, material }),
-    [size, variant, color, material],
+    () => ({ size, color }),
+    [size, color],
   );
 
   const body = (
@@ -396,12 +420,10 @@ const ContextMenuSubContent = React.forwardRef<
 
   return (
     <ContextMenuPrimitive.Portal container={container} forceMount={forceMount}>
-      <Theme asChild>
+      <PortalTheme asChild>
         <ContextMenuPrimitive.SubContent
           data-accent-color={color}
-          data-material={material}
-          data-panel-background={material}
-          alignOffset={getMenuAlignOffset(scalarSize, themeContext.scaling)}
+          alignOffset={getMenuAlignOffset(scalarSize)}
           // Side offset accounts for the outer solid box-shadow
           sideOffset={1}
           collisionPadding={10}
@@ -409,25 +431,26 @@ const ContextMenuSubContent = React.forwardRef<
           asChild={false}
           ref={forwardedRef}
           className={classNames(
-            'rt-PopperContent',
-            'rt-BaseMenuContent',
-            'rt-BaseMenuSubContent',
-            'rt-ContextMenuContent',
-            'rt-ContextMenuSubContent',
+            'kui-PopperContent',
+            'kui-BaseMenuContent',
+          'kui-variant-soft',
+            'kui-BaseMenuSubContent',
+            'kui-ContextMenuContent',
+            'kui-ContextMenuSubContent',
             className,
           )}
         >
           {virtualized ? (
-            <div className={classNames('rt-BaseMenuViewport', 'rt-ContextMenuViewport', 'rt-virtualized')}>
+            <div className={classNames('kui-BaseMenuViewport', 'kui-ContextMenuViewport', 'kui-virtualized')}>
               {body}
             </div>
           ) : (
             <ScrollArea type="auto" scrollbars="vertical">
-              <div className={classNames('rt-BaseMenuViewport', 'rt-ContextMenuViewport')}>{body}</div>
+              <div className={classNames('kui-BaseMenuViewport', 'kui-ContextMenuViewport')}>{body}</div>
             </ScrollArea>
           )}
         </ContextMenuPrimitive.SubContent>
-      </Theme>
+      </PortalTheme>
     </ContextMenuPrimitive.Portal>
   );
 });
@@ -444,7 +467,7 @@ const ContextMenuSeparator = React.forwardRef<
     {...props}
     asChild={false}
     ref={forwardedRef}
-    className={classNames('rt-BaseMenuSeparator', 'rt-ContextMenuSeparator', className)}
+    className={classNames('kui-BaseMenuSeparator', 'kui-ContextMenuSeparator', className)}
   />
 ));
 ContextMenuSeparator.displayName = 'ContextMenu.Separator';

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 /**
  * State that tracks a prop but can also be set imperatively — the shape `Theme`
- * needs, where a prop sets the value and `ThemePanel` can change it at runtime.
+ * needs, where a prop sets the value and the context setters can change it at runtime.
  *
  * Adjusts state during render rather than syncing in a `useEffect`. An effect
  * would commit one render carrying the *old* value and schedule a second one,

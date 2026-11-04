@@ -6,8 +6,8 @@
  * - The Root is a CSS grid and renders its children as given, in JSX order.
  *   Each pane claims its own grid area, so the Root never scans or reorders
  *   children, any child renders, and a pane mounted after the Root works.
- * - State lives on each pane: `auto` (untouched), `open` or `closed`, and the
- *   Sidebar's `thin`. An untouched pane follows the window, resolved by the
+ * - State lives on each pane: `auto` (untouched), `open` or `closed`. An
+ *   untouched pane follows the window, resolved by the
  *   stylesheet, so first paint needs no script and no open-state callback
  *   fires on mount or on a resize.
  * - A pane is one element at every width. `overlay` is a posture of that
@@ -22,38 +22,61 @@
 
 import * as React from 'react';
 import classNames from 'classnames';
-import { useComposedRefs } from 'radix-ui/internal';
+import { Slot } from 'radix-ui';
+import { useComposedRefs, useLayoutEffect } from 'radix-ui/internal';
 import { PaneResizeContext } from './_internal/shell-resize.js';
 import { PaneHandle, PanelHandle } from './_internal/shell-handles.js';
 import { Sidebar } from './_internal/shell-sidebar.js';
+import type { SidebarPublicProps } from './_internal/shell-sidebar.js';
 import { Bottom } from './_internal/shell-bottom.js';
+import type { BottomPublicProps } from './_internal/shell-bottom.js';
 import { Inspector } from './_internal/shell-inspector.js';
+import type { InspectorPublicProps } from './_internal/shell-inspector.js';
 import { usePane, paneAttributes, usePresentationTable } from './_internal/shell-pane.js';
-import { splitHandles, useResizablePane } from './_internal/shell-resizable.js';
+import { splitHandles, useInitialPaneSize, useResizablePane } from './_internal/shell-resizable.js';
 import {
   FIXED_TABLE,
-  ShellInsetContext,
+  ShellFrameContext,
   ShellStoreContext,
   createShellStore,
   setShellPeek,
   subscribeShellStore,
-  useInsetRegistration,
+  useFrameRegistration,
   usePaneEntry,
   useShellStore,
   warnOnce,
-  type InsetPaneId,
+  type FramePaneId,
 } from './_internal/shell-store.js';
 import { navigationRest, detailRest, toPaneValue, startAnchoredGrowth, withoutRemovedPaneProps } from './_internal/shell-rest.js';
 import { useShell, useSidebarMode } from './shell.context.js';
 import { useResponsivePresentation } from './shell.hooks.js';
 import { readBreakpoint } from '../hooks/use-breakpoint.js';
+import { useThemeSize } from '../hooks/theme-size.js';
+import { PageScope } from './_internal/page-scope.js';
+import { PaneChromeScope, PaneFooter, PaneHeader, Scroll, ShellContentContext, ShellSizeContext, ShellWindowContext } from './_internal/pane-chrome.js';
+import { onPageScrollMediaChange, pageScrollMatches } from './_internal/shell-page-scroll.js';
+import type { PaneSize, PaneHeaderProps, PaneFooterProps, ScrollProps } from './_internal/pane-chrome.js';
+import { PaneBandSizeContext } from './_internal/pane-band-context.js';
 import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, PaneMode, PaneName, PaneTarget, ResponsivePresentation, SidebarMode } from './shell.types.js';
 
 /* ── Root ──────────────────────────────────────────────────────────────────── */
 
 export interface ShellRootProps extends React.ComponentPropsWithoutRef<'div'> {
   children: React.ReactNode;
+  /**
+   * The Shell's height. `full` (the default) is the window's height; on a narrow touch screen the
+   * page scrolls instead of the content, so the browser can hide its toolbars. `auto` grows with
+   * the content. Any other value is the Shell's own height, and makes it contained.
+   */
   height?: 'full' | 'auto' | string | number;
+  /**
+   * Makes the Shell fill its parent instead of the window, and always scroll inside itself. Its
+   * overlays cover only its own box and leave the page free to scroll. Use it for a Shell in a
+   * card, a demo or a canvas. An explicit `height` implies it.
+   */
+  contained?: boolean;
+  /** The index the panes' chrome takes: `Shell.PaneHeader`, `Shell.Scroll`, `Shell.PaneFooter` and the Sidebar rows in them. Defaults to the nearest Theme's size (3 when the Theme is 4), else `2`. */
+  size?: PaneSize;
 }
 
 /**
@@ -65,12 +88,12 @@ let pageLockHolders = 0;
 function updatePageLock(delta: 1 | -1) {
   pageLockHolders = Math.max(0, pageLockHolders + delta);
   const doc = document.documentElement;
-  if (pageLockHolders > 0) doc.setAttribute('data-rt-shell-lock', '');
-  else doc.removeAttribute('data-rt-shell-lock');
+  if (pageLockHolders > 0) doc.setAttribute('data-kui-shell-lock', '');
+  else doc.removeAttribute('data-kui-shell-lock');
 }
 
 /** Marks a child the Root made inert, so closing removes only what the Root added. */
-const INERT_MARK = 'data-rt-shell-inert';
+const INERT_MARK = 'data-kui-shell-inert';
 
 /** How many frames a focus rescue watches after an overlay opens or closes. */
 const RESCUE_FRAMES = 30;
@@ -92,7 +115,23 @@ function triggerFor(doc: Document, id: string, within?: HTMLElement[]): HTMLElem
 
 type LivePane = { name: PaneName; id: string; el: HTMLElement };
 
-const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, children, height = 'full', style, onKeyDown, onFocus, ...props }, ref) => {
+/** Shell.Root's own range; a Theme size above it maps to 3. */
+const shellSizePropDef = { values: ['1', '2', '3'] as const };
+
+/** Lets a Shell.Header tell the Root its height, for the rows that stick beneath it while the page scrolls. */
+const ShellHeaderHeightContext = React.createContext<((height: number | undefined) => void) | null>(null);
+
+/** The Shell.Header's default height, which the stylesheet assumes until a Header says otherwise. */
+const DEFAULT_HEADER_HEIGHT = 64;
+
+/** The content's scroller while the frame scrolls: the Shell.Scroll's viewport, or the content itself. */
+function frameScroller(rootEl: HTMLElement): HTMLElement | null {
+  return rootEl.querySelector<HTMLElement>(':scope > .kui-ShellContent > .kui-ShellScroll > .kui-ScrollAreaViewport') ?? rootEl.querySelector<HTMLElement>(':scope > .kui-ShellContent');
+}
+
+const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, children, height = 'full', contained: containedProp, size: sizeProp, style, onKeyDown, onFocus, ...props }, ref) => {
+  // No size of its own: the nearest Theme's, mapped into 1-3.
+  const size = useThemeSize(sizeProp, shellSizePropDef);
   const [store] = React.useState(createShellStore);
   const subscribe = React.useCallback((listener: () => void) => subscribeShellStore(store, listener), [store]);
   // Subscribed for the re-render, not for a value: a pane opening or closing
@@ -106,20 +145,20 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
   const rootRef = React.useRef<HTMLDivElement | null>(null);
   const composedRef = useComposedRefs(ref, rootRef);
 
-  // Inset: the Root paints the backdrop while any pane is inset.
-  const [insetPanes, setInsetPanes] = React.useState<ReadonlySet<InsetPaneId>>(() => new Set());
-  const registerInset = React.useCallback((id: InsetPaneId) => {
-    setInsetPanes((prev) => (prev.has(id) ? prev : new Set(prev).add(id)));
+  // The panes pulled off the frame (`flush={false}`). Only the Rail's is read, for the offset below.
+  const [offFrame, setOffFrame] = React.useState<ReadonlySet<FramePaneId>>(() => new Set());
+  const registerOffFrame = React.useCallback((id: FramePaneId) => {
+    setOffFrame((prev) => (prev.has(id) ? prev : new Set(prev).add(id)));
   }, []);
-  const unregisterInset = React.useCallback((id: InsetPaneId) => {
-    setInsetPanes((prev) => {
+  const unregisterOffFrame = React.useCallback((id: FramePaneId) => {
+    setOffFrame((prev) => {
       if (!prev.has(id)) return prev;
       const next = new Set(prev);
       next.delete(id);
       return next;
     });
   }, []);
-  const insetContext = React.useMemo(() => ({ registerInset, unregisterInset }), [registerInset, unregisterInset]);
+  const frameContext = React.useMemo(() => ({ registerOffFrame, unregisterOffFrame }), [registerOffFrame, unregisterOffFrame]);
 
   const closeOverlays = React.useCallback(() => {
     for (const entry of store.entries.values()) {
@@ -133,10 +172,72 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
   );
   const liveCount = [...store.entries.values()].filter((entry) => entry.overlayLive && entry.el).length;
 
-  // A Shell given a height of its own sits inside a page, and its overlays
-  // cover only its box: it holds no page lock. `full` is the page, and
-  // `auto` grows with its content, so its overlays are placed on the window.
-  const contained = height !== 'full' && height !== 'auto';
+  // A contained Shell sits inside a page, and its overlays cover only its box:
+  // it holds no page lock. A height of its own implies it. `full` is the
+  // window, and `auto` grows with its content, so its overlays are placed on
+  // the window. Only a `full` Shell lets the page scroll on a phone.
+  const contained = containedProp === true || (height !== 'full' && height !== 'auto');
+  const windowShell = !contained && height === 'full';
+
+  const [headerHeight, setHeaderHeight] = React.useState<number | undefined>(undefined);
+
+  /*
+   * The reading position crosses with the scroller. When a touch window
+   * crosses the narrow boundary (a phone rotating, an iPad entering Split
+   * View), the scroller changes between the content and the page, and the new
+   * one starts at the top. The offset is remembered on `scroll` from whichever
+   * scroller is live, because by the time the change is reported the old one
+   * has already been laid out again and clamped. Only the live scroller is
+   * heard. The clamp itself is reported as a scroll in the same frame as the
+   * resize and before the media change, so scrolls are not heard from a resize
+   * until that frame's animation callbacks.
+   */
+  React.useEffect(() => {
+    if (!windowShell) return;
+    const rootEl = rootRef.current;
+    const win = rootEl?.ownerDocument.defaultView;
+    if (!rootEl || !win || typeof win.matchMedia !== 'function') return;
+    let pageScrolls = pageScrollMatches();
+    let offset = pageScrolls ? win.scrollY : (frameScroller(rootEl)?.scrollTop ?? 0);
+    let frame = 0;
+    let resizing = 0;
+    const onResize = () => {
+      if (resizing) cancelAnimationFrame(resizing);
+      resizing = requestAnimationFrame(() => {
+        resizing = 0;
+      });
+    };
+    const fromPage = () => {
+      if (pageScrolls && !resizing) offset = win.scrollY;
+    };
+    const fromFrame = (event: Event) => {
+      if (!pageScrolls && !resizing && event.target instanceof HTMLElement && event.target === frameScroller(rootEl)) offset = event.target.scrollTop;
+    };
+    win.addEventListener('resize', onResize);
+    win.addEventListener('scroll', fromPage, { passive: true });
+    rootEl.addEventListener('scroll', fromFrame, { passive: true, capture: true });
+    const stop = onPageScrollMediaChange((matches) => {
+      pageScrolls = matches;
+      const carried = offset;
+      if (frame) cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        if (matches) win.scrollTo(0, carried);
+        else {
+          const el = frameScroller(rootEl);
+          if (el) el.scrollTop = carried;
+        }
+      });
+    });
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      if (resizing) cancelAnimationFrame(resizing);
+      win.removeEventListener('resize', onResize);
+      win.removeEventListener('scroll', fromPage);
+      rootEl.removeEventListener('scroll', fromFrame, { capture: true });
+      stop();
+    };
+  }, [windowShell]);
 
   /*
    * Containment is the Root's, not the pane's. Only the Root can see every live
@@ -154,7 +255,7 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
     if (!rootEl) return;
     const liveEls = livePanes().map((pane) => pane.el);
     for (const child of rootEl.children) {
-      if (!(child instanceof HTMLElement) || child.classList.contains('rt-ShellScrim')) continue;
+      if (!(child instanceof HTMLElement) || child.classList.contains('kui-ShellScrim')) continue;
       const holdsLive = liveEls.some((el) => child === el || child.contains(el));
       if (liveEls.length === 0 || holdsLive) {
         if (child.hasAttribute(INERT_MARK)) {
@@ -343,10 +444,10 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
   };
 
   // A floating Panel sits beside the Rail when the Rail is showing, and
-  // beside its card when the Rail is inset.
+  // beside its card when the Rail is off the frame.
   const rail = store.entries.get('rail');
   const railShown = rail !== undefined && rail.value !== undefined && rail.value !== 'closed';
-  const railOffset = railShown ? (insetPanes.has('rail') ? `calc(${rail.size}px + 2 * var(--shell-inset-gap))` : `${rail.size}px`) : undefined;
+  const railOffset = railShown ? (offFrame.has('rail') ? `calc(${rail.size}px + 2 * var(--shell-gap))` : `${rail.size}px`) : undefined;
 
   // `full` writes no inline height: the stylesheet states it as 100vh with a
   // 100dvh override where supported, and an inline value would beat both.
@@ -354,28 +455,45 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
 
   return (
     <ShellStoreContext.Provider value={store}>
-      <ShellInsetContext.Provider value={insetContext}>
+      <ShellSizeContext.Provider value={size}>
+      <ShellContentContext.Provider value={false}>
+      <ShellWindowContext.Provider value={windowShell}>
+      <ShellHeaderHeightContext.Provider value={setHeaderHeight}>
+      <ShellFrameContext.Provider value={frameContext}>
+      {/* A Shell inside a portalled surface's Theme starts with no band, like any other. */}
+      <PaneBandSizeContext.Provider value={undefined}>
         {/* The Root is not a widget: it hears Escape bubbling up from the panes,
             after their own handlers, to close the overlays. */}
         {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <div
           {...props}
           ref={composedRef}
-          className={classNames('rt-ShellRoot', className)}
-          data-height={height === 'auto' ? 'auto' : undefined}
-          data-has-inset={insetPanes.size > 0 || undefined}
+          className={classNames('kui-ShellRoot', className)}
+          data-height={height === 'auto' && !contained ? 'auto' : undefined}
+          data-contained={contained || undefined}
+          data-window={windowShell || undefined}
           data-overlay-live={liveCount > 0 || undefined}
           onKeyDown={handleKeyDown}
           onFocus={handleFocus}
-          style={{ ...heightStyle, ...(railOffset ? ({ '--shell-rail-offset': railOffset } as CSSPropertiesWithVars) : {}), ...style }}
+          style={{
+            ...heightStyle,
+            ...(railOffset ? ({ '--shell-rail-offset': railOffset } as CSSPropertiesWithVars) : {}),
+            ...(headerHeight !== undefined ? ({ '--kui-shell-header-h': `${headerHeight}px` } as CSSPropertiesWithVars) : {}),
+            ...style,
+          }}
         >
           {children}
           {/* Root-owned and always mounted. The stylesheet shows it while an
               overlay is live; containment takes the rest of the frame out of
               the accessibility tree, so the scrim itself is hidden from it. */}
-          <div className="rt-ShellScrim" aria-hidden onClick={closeOverlays} />
+          <div className="kui-ShellScrim" aria-hidden onClick={closeOverlays} />
         </div>
-      </ShellInsetContext.Provider>
+      </PaneBandSizeContext.Provider>
+      </ShellFrameContext.Provider>
+      </ShellHeaderHeightContext.Provider>
+      </ShellWindowContext.Provider>
+      </ShellContentContext.Provider>
+      </ShellSizeContext.Provider>
     </ShellStoreContext.Provider>
   );
 });
@@ -385,21 +503,37 @@ Root.displayName = 'Shell.Root';
 
 interface ShellHeaderProps extends React.ComponentPropsWithoutRef<'header'> {
   height?: number;
+  /**
+   * Sets whether the header joins the app frame. The default is `true`: a hairline under it. Set
+   * `flush={false}` to make it a card off the frame.
+   */
+  flush?: boolean;
 }
 
-const Header = React.forwardRef<HTMLElement, ShellHeaderProps>(({ className, height = 64, style, ...props }, ref) => (
-  <header
-    {...props}
-    ref={ref}
-    className={classNames('rt-ShellHeader', className)}
-    style={
-      {
-        ...style,
-        '--shell-header-height': `${height}px`,
-      } as CSSPropertiesWithVars
-    }
-  />
-));
+const Header = React.forwardRef<HTMLElement, ShellHeaderProps>(({ className, height = DEFAULT_HEADER_HEIGHT, flush = true, style, ...props }, ref) => {
+  // Rows that stick beneath the header while the page scrolls need its height. The stylesheet
+  // assumes the default, so only another height is told to the Root.
+  const setHeaderHeight = React.useContext(ShellHeaderHeightContext);
+  useLayoutEffect(() => {
+    if (!setHeaderHeight) return;
+    setHeaderHeight(height === DEFAULT_HEADER_HEIGHT ? undefined : height);
+    return () => setHeaderHeight(undefined);
+  }, [setHeaderHeight, height]);
+  return (
+    <header
+      {...props}
+      ref={ref}
+      className={classNames('kui-ShellHeader', className)}
+      data-flush={flush || undefined}
+      style={
+        {
+          ...style,
+          '--shell-header-height': `${height}px`,
+        } as CSSPropertiesWithVars
+      }
+    />
+  );
+});
 Header.displayName = 'Shell.Header';
 
 /* ── Left (deprecated) ─────────────────────────────────────────────────────── */
@@ -412,7 +546,6 @@ interface LeftProps extends React.ComponentPropsWithoutRef<'div'> {
   collapsible?: boolean;
   onExpand?: () => void;
   onCollapse?: () => void;
-  inset?: boolean;
 }
 
 /**
@@ -443,14 +576,19 @@ type RailProps = React.ComponentPropsWithoutRef<'div'> & {
   onExpand?: () => void;
   /** @deprecated Use `onOpenChange`. */
   onCollapse?: () => void;
-  /** When true, adds margin and triggers the gray backdrop on the Shell. */
-  inset?: boolean;
+  /**
+   * Sets whether this pane joins the app frame. The default is `true`: the pane sits against its
+   * neighbours with one hairline between them. Set `flush={false}` to pull it off the frame as a
+   * card. It then floats over the content if the content is flush, and otherwise sits on the
+   * Shell's background beside a card content.
+   */
+  flush?: boolean;
 } & (RailControlledProps | RailUncontrolledProps);
 
 const RAIL_PROP_NAMES = { controlled: 'open', default: 'defaultOpen' };
 
 const Rail = React.forwardRef<HTMLDivElement, RailProps>((props, ref) => {
-  const { className, presentation, expandedSize = 64, collapsible: _collapsible, onExpand, onCollapse, children, style, open, defaultOpen, onOpenChange, inset, id, ...domProps } = props;
+  const { className, presentation, expandedSize = 64, collapsible: _collapsible, onExpand, onCollapse, children, style, open, defaultOpen, onOpenChange, flush = true, id, ...domProps } = props;
   const { table, attributes } = usePresentationTable(presentation, 'fixed');
   const pane = usePane({
     name: 'rail',
@@ -466,25 +604,36 @@ const Rail = React.forwardRef<HTMLDivElement, RailProps>((props, ref) => {
     onCollapse,
     size: expandedSize,
   });
-  useInsetRegistration('rail', inset);
+  useFrameRegistration('rail', flush);
   const composedRef = useComposedRefs(ref, pane.setElement);
 
   return (
     <div
       {...domProps}
+      role={domProps.role ?? 'navigation'}
       id={pane.id}
       ref={composedRef}
-      className={classNames('rt-ShellPane', 'rt-ShellRail', className)}
+      className={classNames('kui-ShellPane', 'kui-ShellRail', className)}
       {...paneAttributes(pane, attributes)}
-      data-inset={inset || undefined}
+      data-flush={flush || undefined}
       tabIndex={pane.overlaying ? -1 : domProps.tabIndex}
       style={{ ...style, '--rail-size': `${expandedSize}px` } as CSSPropertiesWithVars}
     >
-      <div className="rt-ShellRailContent">{children}</div>
+      <RailContent>{children}</RailContent>
     </div>
   );
 });
 Rail.displayName = 'Shell.Rail';
+
+/** The Rail's content carries the index, so the thin row styles can size themselves by it. */
+function RailContent({ children }: { children: React.ReactNode }) {
+  const size = React.useContext(ShellSizeContext);
+  return (
+    <div className={classNames('kui-ShellRailContent', `kui-r-size-${size}`)}>
+      <PaneChromeScope presentation="thin">{children}</PaneChromeScope>
+    </div>
+  );
+}
 
 /* ── Panel ─────────────────────────────────────────────────────────────────── */
 
@@ -504,8 +653,13 @@ type PanelPublicProps = PaneBaseProps &
     onSizeChange?: (size: number, meta: PanelSizeChangeMeta) => void;
     sizeUpdate?: 'throttle' | 'debounce';
     sizeUpdateMs?: number;
-    /** When true, adds margin and triggers the gray backdrop on the Shell. */
-    inset?: boolean;
+    /**
+     * Sets whether this pane joins the app frame. The default is `true`: the pane sits against its
+     * neighbours with one hairline between them. Set `flush={false}` to pull it off the frame as a
+     * card. It then floats over the content if the content is flush, and otherwise sits on the
+     * Shell's background beside a card content.
+     */
+    flush?: boolean;
   };
 type PanelComponent = React.ForwardRefExoticComponent<PanelPublicProps & React.RefAttributes<HTMLDivElement>> & {
   Handle: HandleComponent;
@@ -548,7 +702,7 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
     onSizeChange,
     sizeUpdate,
     sizeUpdateMs = 50,
-    inset,
+    flush = true,
     id,
     ...domProps
   } = props;
@@ -573,7 +727,7 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
     onCollapse,
     size: expandedSize,
   });
-  useInsetRegistration('panel', inset);
+  useFrameRegistration('panel', flush);
 
   React.useEffect(() => {
     if (snapPoints !== undefined || collapseThreshold !== undefined || paneId !== undefined || persistence !== undefined) {
@@ -621,26 +775,34 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
     requestToggle: () => pane.toggle('toggle'),
   });
 
+  // The starting size is in the server HTML, so the pane does not jump on hydration.
+  const initialSize = useInitialPaneSize(size, defaultSize, minSize, maxSize);
   const { handles, content } = splitHandles(children, PanelHandle);
   const handle = resizable && pane.shown !== false && !pane.overlaying ? <PaneResizeContext.Provider value={resize}>{handles.length > 0 ? handles : <PaneHandle />}</PaneResizeContext.Provider> : null;
 
   return (
     <div
       {...withoutRemovedPaneProps(domProps)}
+      role={domProps.role ?? 'navigation'}
       id={pane.id}
       ref={composedRef}
-      className={classNames('rt-ShellPane', 'rt-ShellPanel', className)}
+      className={classNames('kui-ShellPane', 'kui-ShellPanel', className)}
       {...paneAttributes(pane, presentationAttributes)}
-      data-inset={inset || undefined}
+      data-flush={flush || undefined}
       tabIndex={pane.overlaying ? -1 : domProps.tabIndex}
       style={
         {
           ...style,
           '--panel-expanded-size': `${expandedSize}px`,
+          ...(initialSize ? { '--panel-size': initialSize } : {}),
         } as CSSPropertiesWithVars
       }
     >
-      <div className="rt-ShellPanelContent">{content}</div>
+      <div className="kui-ShellPanelContent">
+        <PaneChromeScope>
+          <PageScope>{content}</PageScope>
+        </PaneChromeScope>
+      </div>
       {handle}
     </div>
   );
@@ -651,13 +813,28 @@ Panel.Handle = PanelHandle;
 /* ── Content ───────────────────────────────────────────────────────────────── */
 
 interface ShellContentProps extends React.ComponentPropsWithoutRef<'main'> {
-  /** When true, adds margin and triggers the gray backdrop on the Shell. */
-  inset?: boolean;
+  /**
+   * Sets whether the work area joins the app frame. The default is `true`. Set `flush={false}`
+   * to make it a card on the Shell's background; the panes beside it then sit on that background
+   * too, and draw no hairline toward it.
+   */
+  flush?: boolean;
 }
 
-const Content = React.forwardRef<HTMLElement, ShellContentProps>(({ className, inset, ...props }, ref) => {
-  useInsetRegistration('content', inset);
-  return <main {...props} ref={ref} className={classNames('rt-ShellContent', className)} data-inset={inset || undefined} />;
+/**
+ * The work area. It scrolls as it is; with a `Shell.Scroll` child it becomes a column and the
+ * Scroll scrolls instead, so a `Shell.PaneHeader float` beside it stays pinned over the page.
+ */
+const Content = React.forwardRef<HTMLElement, ShellContentProps>(({ className, flush = true, children, ...props }, ref) => {
+  useFrameRegistration('content', flush);
+  return (
+    <main {...props} ref={ref} className={classNames('kui-ShellContent', className)} data-flush={flush || undefined}>
+      {/* Each pane holds its own page store, so a band's title can mirror the page beside it. */}
+      <ShellContentContext.Provider value={true}>
+        <PageScope>{children}</PageScope>
+      </ShellContentContext.Provider>
+    </main>
+  );
 });
 Content.displayName = 'Shell.Content';
 
@@ -668,6 +845,12 @@ type TriggerAction = 'toggle' | 'expand' | 'collapse';
 interface TriggerProps extends React.ComponentPropsWithoutRef<'button'> {
   target: PaneTarget;
   action?: TriggerAction;
+  /**
+   * Renders the single child in place of the trigger's own button, with the trigger's click,
+   * `aria-controls`, `aria-expanded` and data attributes merged onto it. Use it to make a
+   * `Button` the trigger: `<Shell.Trigger asChild><Button iconOnly aria-label="Toggle sidebar">…</Button></Shell.Trigger>`.
+   */
+  asChild?: boolean;
   /**
    * Whether to show a preview of the target pane on hover while it is closed
    * and not an overlay. Defaults to false.
@@ -682,9 +865,10 @@ interface TriggerProps extends React.ComponentPropsWithoutRef<'button'> {
  * A button that drives a pane by name, through the registry. It sets
  * `aria-controls` and `aria-expanded` (left off while an untouched pane
  * cannot know its state yet), renders `type="button"`, and runs the
- * consumer's `onClick` first: calling `preventDefault()` there cancels it.
+ * consumer's `onClick` first: calling `preventDefault()` there cancels it. With `asChild` the
+ * child is the button, and its own `type` stands.
  */
-const Trigger = React.forwardRef<HTMLButtonElement, TriggerProps>(({ target, action = 'toggle', peekOnHover, onClick, onMouseEnter, onMouseLeave, children, ...props }, ref) => {
+const Trigger = React.forwardRef<HTMLButtonElement, TriggerProps>(({ target, action = 'toggle', peekOnHover, asChild = false, onClick, onMouseEnter, onMouseLeave, children, ...props }, ref) => {
   const store = useShellStore('Shell.Trigger');
   React.useEffect(() => {
     if (target === 'left') warnOnce('Shell.Trigger target="left" is deprecated and is removed in 1.0. Use target="rail".');
@@ -718,10 +902,13 @@ const Trigger = React.forwardRef<HTMLButtonElement, TriggerProps>(({ target, act
     if (peekOnHover && store.peek === name) setShellPeek(store, null);
   };
 
+  const Comp = asChild ? Slot.Root : 'button';
   return (
-    <button
+    <Comp
       // A button's default type is `submit`. Stated before the spread, so a consumer's own wins.
-      type="button"
+      // An asChild child states its own (Button already says `button`; a link has none), so the
+      // key is left off rather than passed as undefined.
+      {...(!asChild && { type: 'button' as const })}
       aria-controls={entry?.id}
       aria-expanded={shown}
       {...props}
@@ -733,7 +920,7 @@ const Trigger = React.forwardRef<HTMLButtonElement, TriggerProps>(({ target, act
       data-shell-action={action}
     >
       {children}
-    </button>
+    </Comp>
   );
 });
 Trigger.displayName = 'Shell.Trigger';
@@ -750,6 +937,9 @@ export {
   Inspector,
   Bottom,
   Trigger,
+  PaneHeader,
+  PaneFooter,
+  Scroll,
   useShell,
   useSidebarMode,
   useResponsivePresentation,
@@ -758,4 +948,16 @@ export {
   type ResponsivePresentation,
   type PaneTarget,
   type TriggerAction,
+  type ShellRootProps as RootProps,
+  type ShellHeaderProps as HeaderProps,
+  type RailProps,
+  type PanelPublicProps as PanelProps,
+  type SidebarPublicProps as SidebarProps,
+  type ShellContentProps as ContentProps,
+  type InspectorPublicProps as InspectorProps,
+  type BottomPublicProps as BottomProps,
+  type TriggerProps,
+  type PaneHeaderProps,
+  type PaneFooterProps,
+  type ScrollProps,
 };

@@ -16,11 +16,11 @@ export function useLiveAnnouncer() {
 
   // Create aria-live region if it doesn't exist
   React.useEffect(() => {
-    let liveRegion = document.getElementById('rt-live-announcer');
+    let liveRegion = document.getElementById('kui-live-announcer');
 
     if (!liveRegion) {
       liveRegion = document.createElement('div');
-      liveRegion.id = 'rt-live-announcer';
+      liveRegion.id = 'kui-live-announcer';
       liveRegion.setAttribute('aria-live', 'polite');
       liveRegion.setAttribute('aria-atomic', 'true');
       liveRegion.style.cssText = `
@@ -49,7 +49,7 @@ export function useLiveAnnouncer() {
 
       // Only remove the live region if no components are using it
       if (liveRegionRefCount === 0) {
-        const region = document.getElementById('rt-live-announcer');
+        const region = document.getElementById('kui-live-announcer');
         if (region) {
           region.remove();
         }
@@ -58,7 +58,7 @@ export function useLiveAnnouncer() {
   }, []);
 
   const announce = React.useCallback((message: string) => {
-    const liveRegion = document.getElementById('rt-live-announcer');
+    const liveRegion = document.getElementById('kui-live-announcer');
     if (liveRegion) {
       // Clear any pending timeout
       if (timeoutRef.current) {

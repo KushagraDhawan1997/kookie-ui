@@ -1,0 +1,197 @@
+@import './_internal/base-menu.css';
+
+/* Command (from v2, 2026-11-03): a command palette. The dialog's panel paints nothing; it is a
+ * column of two panes, the search bar and the results, anchored to the top at every width so a
+ * result count never moves the field. Rows are menu rows. No motion. */
+
+.kui-CommandOverlay {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: max(var(--space-9), 12vh) var(--space-4) var(--space-4);
+}
+
+.kui-CommandContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: var(--overlay-w);
+  max-height: 100%;
+  outline: none;
+}
+
+.kui-CommandContent:where(.kui-r-size-1) {
+  --overlay-w: var(--overlay-w-1);
+}
+
+.kui-CommandContent:where(.kui-r-size-2) {
+  --overlay-w: var(--overlay-w-2);
+}
+
+.kui-CommandContent:where(.kui-r-size-3) {
+  --overlay-w: var(--overlay-w-3);
+}
+
+.kui-CommandContent:where(.kui-r-size-4) {
+  --overlay-w: var(--overlay-w-4);
+}
+
+.kui-CommandRoot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 0;
+}
+
+/* The search bar: a pane of its own, with type one step above the rows it filters. It pads by the
+   panel ladder at its index, one rung wider along the line than above and below it. */
+.kui-CommandSearch {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  background-color: var(--color-surface);
+  box-shadow: var(--floating-chrome);
+  cursor: text;
+}
+
+.kui-CommandSearch:where(.kui-r-size-1) {
+  gap: var(--space-2);
+  padding: var(--panel-p-1) var(--panel-p-2);
+  border-radius: var(--radius-panel-1);
+  font-size: var(--font-size-3);
+  line-height: var(--line-height-3);
+}
+
+.kui-CommandSearch:where(.kui-r-size-2) {
+  gap: var(--space-3);
+  padding: var(--panel-p-2) var(--panel-p-3);
+  border-radius: var(--radius-panel-2);
+  font-size: var(--font-size-4);
+  line-height: var(--line-height-4);
+}
+
+.kui-CommandSearch:where(.kui-r-size-3) {
+  gap: var(--space-3);
+  padding: var(--panel-p-3) var(--panel-p-4);
+  border-radius: var(--radius-panel-3);
+  font-size: var(--font-size-5);
+  line-height: var(--line-height-5);
+}
+
+.kui-CommandSearch:where(.kui-r-size-4) {
+  gap: var(--space-4);
+  padding: var(--panel-p-4) var(--panel-p-4);
+  border-radius: var(--radius-panel-4);
+  font-size: var(--font-size-6);
+  line-height: var(--line-height-6);
+}
+
+.kui-CommandSearchSlot {
+  display: flex;
+  flex-shrink: 0;
+  color: var(--neutral-a10);
+}
+
+.kui-CommandSearchSlot > :where(*) {
+  width: 1em;
+  height: 1em;
+}
+
+.kui-CommandInput {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  color: var(--neutral-12);
+  background: none;
+  outline: none;
+}
+
+.kui-CommandInput::placeholder {
+  color: var(--neutral-a10);
+}
+
+/* The results: a menu pane whose height is its rows, up to what the window leaves. */
+.kui-CommandPanel {
+  min-height: 0;
+  flex-shrink: 1;
+}
+
+.kui-CommandList {
+  max-height: min(60vh, calc(480px * var(--scale)));
+  overflow: auto;
+  overscroll-behavior: contain;
+  outline: 0;
+}
+
+/* A pane with nothing in it (no rows, no empty state) shows nothing. */
+.kui-CommandPanel:where(:not(:has(.kui-CommandItem, .kui-CommandEmpty))) {
+  display: none;
+}
+
+.kui-CommandSeat:where(:empty) {
+  display: none;
+}
+
+/* cmdk marks every enabled row data-disabled="false"; base-menu.css reads any [data-disabled]. */
+.kui-CommandItem:where([data-disabled='false']) {
+  color: inherit;
+  cursor: var(--cursor-menu-item);
+}
+
+/* The highlighted row: cmdk's [data-selected='true'], from the pointer and the keyboard. */
+.kui-CommandItem:where([data-selected='true']) {
+  background-color: var(--accent-4);
+}
+
+.kui-CommandItem:where([data-tone='destructive']) {
+  color: var(--red-11);
+}
+
+.kui-CommandItem:where([data-disabled='true']) {
+  color: var(--neutral-a8);
+  cursor: default;
+  pointer-events: none;
+}
+
+/* A link row takes the row's look, not a link's. */
+.kui-CommandItem:where(:any-link) {
+  text-decoration: none;
+}
+
+.kui-CommandItemLabel {
+  flex: 1;
+  min-width: 0;
+}
+
+.kui-CommandItemSlot {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.kui-CommandItemSlot:where([data-slot='leading']) {
+  color: var(--neutral-a11);
+}
+
+.kui-CommandItemSlot:where([data-slot='trailing']) {
+  color: var(--neutral-a10);
+}
+
+.kui-CommandEmpty {
+  padding: var(--space-5);
+  text-align: center;
+  color: var(--neutral-a11);
+}
+
+@media (forced-colors: active) {
+  .kui-CommandItem:where([data-selected='true']) {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+
+  .kui-CommandSearch {
+    border: 1px solid CanvasText;
+  }
+}

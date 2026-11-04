@@ -1,10 +1,10 @@
-.rt-CheckboxGroupRoot {
+.kui-CheckboxGroupRoot {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-2);
 }
 
-.rt-CheckboxGroupItem {
+.kui-CheckboxGroupItem {
   display: flex;
   gap: 0.5em;
 
@@ -12,24 +12,15 @@
   width: fit-content;
 }
 
-.rt-CheckboxGroupItemCheckbox {
-  &:where(:focus-visible) {
-    &::before {
-      outline: 2px solid var(--focus-8);
-      outline-offset: 2px;
-    }
-  }
-
-  &:where(:disabled) {
-    cursor: var(--cursor-disabled);
-
-    &::before {
-      background-color: var(--gray-a3);
-    }
+/* The disabled cursor and colours live in the base mark. */
+.kui-CheckboxGroupItemCheckbox {
+  &:where(:focus-visible)::before {
+    outline: var(--focus-ring-width, 2px) solid var(--focus-8);
+    outline-offset: var(--focus-ring-offset, 2px);
   }
 }
 
-.rt-CheckboxGroupItemInner {
+.kui-CheckboxGroupItemInner {
   /* Make layouts with text truncation possible */
   min-width: 0;
 }

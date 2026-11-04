@@ -12,15 +12,15 @@
 .markdown {
   --markdown-font-size: var(--font-size-3);
   --markdown-line-height: 1.65;
-  --markdown-text-gap: var(--space-4);
-  --markdown-block-gap: var(--space-5);
-  --markdown-list-gap: var(--space-2);
-  --markdown-h2-gap: var(--space-8);
-  --markdown-h3-gap: var(--space-6);
-  --markdown-h4-gap: var(--space-5);
-  --markdown-after-h2: var(--space-4);
-  --markdown-after-h3: var(--space-3);
-  --markdown-after-h4: var(--space-2);
+  --markdown-text-gap: var(--space-5);
+  --markdown-block-gap: var(--space-6);
+  --markdown-list-gap: var(--space-3);
+  --markdown-h2-gap: var(--space-9);
+  --markdown-h3-gap: var(--space-7);
+  --markdown-h4-gap: var(--space-6);
+  --markdown-after-h2: var(--space-5);
+  --markdown-after-h3: var(--space-4);
+  --markdown-after-h4: var(--space-3);
 
   /* A block formatting context: margins stay inside, and adjacent ones collapse. */
   display: flow-root;
@@ -33,15 +33,15 @@
 .markdown[data-spacing='compact'] {
   --markdown-font-size: inherit;
   --markdown-line-height: 1.6;
-  --markdown-text-gap: var(--space-3);
-  --markdown-block-gap: var(--space-3);
-  --markdown-list-gap: var(--space-1);
-  --markdown-h2-gap: var(--space-5);
-  --markdown-h3-gap: var(--space-4);
-  --markdown-h4-gap: var(--space-4);
-  --markdown-after-h2: var(--space-2);
-  --markdown-after-h3: var(--space-2);
-  --markdown-after-h4: var(--space-1);
+  --markdown-text-gap: var(--space-4);
+  --markdown-block-gap: var(--space-4);
+  --markdown-list-gap: var(--space-2);
+  --markdown-h2-gap: var(--space-6);
+  --markdown-h3-gap: var(--space-5);
+  --markdown-h4-gap: var(--space-5);
+  --markdown-after-h2: var(--space-3);
+  --markdown-after-h3: var(--space-3);
+  --markdown-after-h4: var(--space-2);
 }
 
 /* ---------------------------------------------------------------------------------------------
@@ -93,30 +93,30 @@
  * Text
  * -------------------------------------------------------------------------------------------*/
 
-.markdown :is(ul, ol) {
-  margin-block: 0;
+.markdown :is(ul, ol):where(:not([class*='kui-'])) {
   padding-left: 1.5em;
 }
 
-.markdown ul {
+.markdown ul:where(:not([class*='kui-'])) {
   list-style-type: disc;
 }
 
-.markdown ol {
+.markdown ol:where(:not([class*='kui-'])) {
   list-style-type: decimal;
 }
 
-.markdown li {
+/* A component's own list (Sidebar.Menu and the like) is not prose. */
+.markdown li:where(:not([class*='kui-'])) {
   padding-left: 0.25em;
 }
 
-.markdown li + li,
-.markdown li > :is(ul, ol) {
+.markdown li:where(:not([class*='kui-'])) + li,
+.markdown li:where(:not([class*='kui-'])) > :is(ul, ol) {
   margin-top: var(--markdown-list-gap);
 }
 
 .markdown li::marker {
-  color: var(--gray-a9);
+  color: var(--neutral-a9);
 }
 
 /* Loose lists and blockquotes hold their own blocks. */
@@ -128,7 +128,7 @@
   display: block;
   max-width: 100%;
   height: auto;
-  border-radius: var(--radius-surface-3);
+  border-radius: var(--radius-surface-1);
 }
 
 /* ---------------------------------------------------------------------------------------------
@@ -137,12 +137,12 @@
 
 .markdown-heading {
   /* Land a little below the top when jumped to from the table of contents. */
-  scroll-margin-top: var(--space-6);
+  scroll-margin-top: var(--space-7);
 }
 
 .markdown-heading-anchor {
   margin-left: 0.35em;
-  color: var(--gray-a8);
+  color: var(--neutral-a8);
   text-decoration: none;
   opacity: 0;
   transition: opacity 120ms;
@@ -158,7 +158,7 @@
 }
 
 .markdown-heading-anchor:hover {
-  color: var(--gray-a11);
+  color: var(--neutral-a11);
 }
 
 @media (prefers-reduced-motion: reduce) {

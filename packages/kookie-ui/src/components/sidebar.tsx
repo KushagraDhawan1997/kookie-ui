@@ -7,207 +7,29 @@ import * as Accordion from '@radix-ui/react-accordion';
 import * as DropdownMenu from './dropdown-menu.js';
 import * as Popover from './popover.js';
 
-import { sidebarPropDefs } from './sidebar.props.js';
-import { useThemeContext } from './theme.js';
-// import { IconButton } from './icon-button.js';
-import { ScrollArea } from './scroll-area.js';
 import { Separator } from './separator.js';
 import { ThickChevronRightIcon } from './icons.js';
-import { extractProps } from '../helpers/extract-props.js';
 import { Kbd } from './kbd.js';
-import { Badge } from './badge.js';
+import { Chip } from './chip.js';
+import { ShellSizeContext, useSidebarVisual } from './_internal/pane-chrome.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
-import type { GetPropDefTypes } from '../props/prop-def.js';
-import type { BadgeProps } from './badge.js';
+import type { ChipProps } from './chip.js';
 
-// Badge configuration type for sidebar menu buttons
+// Chip configuration for the `badge` slot of sidebar menu buttons
 type BadgeConfig = {
   content: React.ReactNode;
-  variant?: BadgeProps['variant'];
-  size?: BadgeProps['size'];
-  color?: BadgeProps['color'];
-  radius?: BadgeProps['radius'];
+  variant?: ChipProps['variant'];
+  size?: ChipProps['size'];
+  color?: ChipProps['color'];
+  radius?: ChipProps['radius'];
 };
-
-// Internal presentational context (not exported) for size/menu variant
-type SidebarVisualContextValue = {
-  size: '1' | '2' | '3';
-  menuVariant: 'solid' | 'soft';
-  presentation?: 'thin' | 'expanded';
-  color?: string;
-};
-const SidebarVisualContext = React.createContext<SidebarVisualContextValue | null>(null);
-function useSidebarVisual() {
-  return React.useContext(SidebarVisualContext);
-}
-
-// Sidebar is now independent of Shell - no integration needed
-
-// Main Sidebar component
-type SidebarOwnProps = GetPropDefTypes<typeof sidebarPropDefs>;
-interface SidebarProps extends ComponentPropsWithout<'div', RemovedProps>, SidebarOwnProps {
-  /**
-   * Presentational mode independent of Shell.
-   * 'thin' renders a rail-style sidebar, 'expanded' renders a panel-style sidebar.
-   * If both `presentation` and `layout` are provided, `presentation` takes precedence.
-   */
-  presentation?: 'thin' | 'expanded';
-}
-
-const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>((props, forwardedRef) => {
-  const themeContext = useThemeContext();
-
-  const {
-    size = sidebarPropDefs.size.default,
-    variant = sidebarPropDefs.variant.default,
-    menuVariant = sidebarPropDefs.menuVariant.default,
-    layout = sidebarPropDefs.layout.default,
-    presentation,
-    // type = sidebarPropDefs.type.default,
-    // side = sidebarPropDefs.side.default,
-    // collapsible = sidebarPropDefs.collapsible.default,
-    panelBackground,
-    color,
-  } = props;
-
-  const { className, children, ...rootProps } = extractProps(props, sidebarPropDefs);
-  // Remove internal-only props from DOM
-  const { asChild: _, panelBackground: __, presentation: ___, ...safeRootProps } = rootProps;
-  const resolvedColor = color || themeContext.accentColor;
-
-  // Resolve layout (default to 'panel'). `presentation` takes precedence over `layout`.
-  const resolvedLayout = presentation === 'thin' ? 'rail' : presentation === 'expanded' ? 'panel' : layout || 'panel';
-
-  // Update context with current props - we'll pass the resolved values
-  const resolvedSize = typeof size === 'object' ? size.initial || '2' : size;
-  const visualContextValue = React.useMemo(
-    () => ({ size: resolvedSize, menuVariant, presentation, color: resolvedColor }),
-    [resolvedSize, menuVariant, presentation, resolvedColor],
-  );
-  return (
-    <div {...safeRootProps} ref={forwardedRef} data-accent-color={resolvedColor} className={classNames('rt-SidebarRoot', className)}>
-      <SidebarVisualContext.Provider value={visualContextValue}>
-        <div
-          className={classNames('rt-SidebarContainer', `rt-variant-${variant}`, `rt-r-size-${resolvedSize}`, `rt-menu-variant-${menuVariant}`, resolvedLayout && `rt-layout-${resolvedLayout}`)}
-          data-accent-color={resolvedColor}
-          data-panel-background={panelBackground}
-          data-presentation={presentation}
-          data-layout={resolvedLayout}
-        >
-          {children}
-        </div>
-      </SidebarVisualContext.Provider>
-    </div>
-  );
-});
-Sidebar.displayName = 'Sidebar.Root';
-
-// Sidebar content area
-interface SidebarContentProps extends React.ComponentPropsWithoutRef<'div'> {
-  id?: string;
-  role?: 'navigation' | 'none';
-  'aria-label'?: string;
-}
-
-const SidebarContent = React.forwardRef<HTMLDivElement, SidebarContentProps>(
-  ({ className, children, role = 'navigation', 'aria-label': ariaLabel = 'Main navigation', id, ...props }, forwardedRef) => {
-    const visual = useSidebarVisual();
-    const size = visual?.size ?? '2';
-    const menuVariant = visual?.menuVariant ?? 'soft';
-
-    return (
-      <ScrollArea type="hover">
-        <div
-          {...props}
-          ref={forwardedRef}
-          id={id}
-          role={role}
-          aria-label={ariaLabel}
-          className={classNames('rt-BaseMenuContent', 'rt-SidebarContent', `rt-r-size-${size}`, `rt-menu-variant-${menuVariant}`, className)}
-        >
-          <div className="rt-BaseMenuViewport">{children}</div>
-        </div>
-      </ScrollArea>
-    );
-  },
-);
-SidebarContent.displayName = 'Sidebar.Content';
-
-// Sidebar header
-interface SidebarHeaderProps extends React.ComponentPropsWithoutRef<'div'> {
-  /**
-   * Whether to use the default flex container layout.
-   * @default true
-   */
-  asContainer?: boolean;
-}
-
-const SidebarHeader = React.forwardRef<HTMLDivElement, SidebarHeaderProps>(({ className, asContainer = true, ...props }, forwardedRef) => {
-  const visual = useSidebarVisual();
-  const size = visual?.size ?? '2';
-  const menuVariant = visual?.menuVariant ?? 'soft';
-
-  return (
-    <div
-      {...props}
-      ref={forwardedRef}
-      className={classNames(
-        'rt-SidebarHeader',
-        `rt-r-size-${size}`,
-        `rt-menu-variant-${menuVariant}`,
-        {
-          'rt-SidebarHeader--container': asContainer,
-        },
-        className,
-      )}
-    />
-  );
-});
-SidebarHeader.displayName = 'Sidebar.Header';
-
-// Sidebar footer
-interface SidebarFooterProps extends React.ComponentPropsWithoutRef<'div'> {
-  /**
-   * Whether to use the default flex container layout.
-   * @default true
-   */
-  asContainer?: boolean;
-}
-
-const SidebarFooter = React.forwardRef<HTMLDivElement, SidebarFooterProps>(({ className, asContainer = true, ...props }, forwardedRef) => {
-  const visual = useSidebarVisual();
-  const size = visual?.size ?? '2';
-  const menuVariant = visual?.menuVariant ?? 'soft';
-
-  return (
-    <div
-      {...props}
-      ref={forwardedRef}
-      className={classNames(
-        'rt-SidebarFooter',
-        `rt-r-size-${size}`,
-        `rt-menu-variant-${menuVariant}`,
-        {
-          'rt-SidebarFooter--container': asContainer,
-        },
-        className,
-      )}
-    />
-  );
-});
-SidebarFooter.displayName = 'Sidebar.Footer';
-
-// Sidebar trigger button
-// removed Trigger in presentational-only Sidebar
-
-// Removed SidebarInset - not needed
 
 // Sidebar separator
 interface SidebarSeparatorProps extends ComponentPropsWithout<typeof Separator, RemovedProps> {}
 
 const SidebarSeparator = React.forwardRef<React.ComponentRef<typeof Separator>, SidebarSeparatorProps>(({ className, ...props }, forwardedRef) => (
-  <Separator {...props} ref={forwardedRef} className={classNames('rt-SidebarSeparator', className)} />
+  <Separator {...props} ref={forwardedRef} className={classNames('kui-SidebarSeparator', className)} />
 ));
 SidebarSeparator.displayName = 'Sidebar.Separator';
 
@@ -216,14 +38,14 @@ SidebarSeparator.displayName = 'Sidebar.Separator';
 interface SidebarMenuProps extends React.ComponentPropsWithoutRef<'ul'> {}
 
 const SidebarMenu = React.forwardRef<HTMLUListElement, SidebarMenuProps>(({ className, ...props }, forwardedRef) => (
-  <ul {...props} ref={forwardedRef} className={classNames('rt-SidebarMenu', className)} />
+  <ul {...props} ref={forwardedRef} className={classNames('kui-SidebarMenu', className)} />
 ));
 SidebarMenu.displayName = 'Sidebar.Menu';
 
 interface SidebarMenuItemProps extends React.ComponentPropsWithoutRef<'li'> {}
 
 const SidebarMenuItem = React.forwardRef<HTMLLIElement, SidebarMenuItemProps>(({ className, ...props }, forwardedRef) => (
-  <li {...props} ref={forwardedRef} className={classNames('rt-SidebarMenuItem', className)} />
+  <li {...props} ref={forwardedRef} className={classNames('kui-SidebarMenuItem', className)} />
 ));
 SidebarMenuItem.displayName = 'Sidebar.MenuItem';
 
@@ -234,169 +56,154 @@ interface SidebarMenuButtonProps extends React.ComponentPropsWithoutRef<'button'
   badge?: string | BadgeConfig;
 }
 
-// Extracted to module scope to avoid re-creation on every render
+// The name a component type goes by: a function, or the function inside forwardRef or memo.
+function componentName(type: unknown): string | undefined {
+  if (typeof type === 'function') {
+    const fn = type as { displayName?: string; name?: string };
+    return fn.displayName || fn.name;
+  }
+  if (type && typeof type === 'object') {
+    const wrapped = type as { displayName?: string; render?: unknown; type?: unknown };
+    return wrapped.displayName || componentName(wrapped.render) || componentName(wrapped.type);
+  }
+  return undefined;
+}
+
+function isIconElement(el: React.ReactElement<{ icon?: unknown }>): boolean {
+  if (el.type === 'svg') return true;
+  if (el.props?.icon) return true;
+  return componentName(el.type)?.includes('Icon') ?? false;
+}
+
+function isText(node: React.ReactNode): node is string | number {
+  return typeof node === 'string' || typeof node === 'number';
+}
+
+// Thin mode puts the row's icon in a wrapper that carries the hover and active tile. An icon is
+// an svg, a HugeiconsIcon, or a component named *Icon. Failing that, the first element ahead of
+// other content is taken as the icon (Lucide and other icon sets).
 function separateIconsAndLabels(node: React.ReactNode): { icons: React.ReactNode[]; labels: React.ReactNode[] } {
+  const children = React.Children.toArray(node);
   const icons: React.ReactNode[] = [];
   const labels: React.ReactNode[] = [];
 
-  React.Children.forEach(node, (child) => {
-    if (typeof child === 'string' || typeof child === 'number') {
-      labels.push(<span key={labels.length} className="rt-SidebarMenuLabel">{child}</span>);
-    } else if (React.isValidElement(child)) {
-      const el = child as React.ReactElement<any>;
-      if (el.type === 'svg' || (el.props && el.props.icon) || (typeof el.type === 'function' && ((el.type as any).displayName?.includes('Icon') || (el.type as any).name?.includes('Icon')))) {
-        icons.push(child);
-      } else {
-        labels.push(child);
-      }
-    } else if (child) {
-      labels.push(child);
-    }
-  });
+  for (const child of children) {
+    if (React.isValidElement<{ icon?: unknown }>(child) && isIconElement(child)) icons.push(child);
+    else labels.push(isText(child) ? <span key={labels.length} className="kui-SidebarMenuLabel">{child}</span> : child);
+  }
+
+  if (icons.length === 0 && children.length > 1 && React.isValidElement(children[0])) {
+    icons.push(children[0]);
+    labels.shift();
+  }
 
   return { icons, labels };
 }
 
+// Wraps the row's own text in a label span. Text inside the caller's elements is left alone.
 function wrapTextNodes(node: React.ReactNode): React.ReactNode {
-  if (typeof node === 'string' || typeof node === 'number') {
-    return <span className="rt-SidebarMenuLabel">{node}</span>;
+  return React.Children.map(node, (child) => (isText(child) ? <span className="kui-SidebarMenuLabel">{child}</span> : child));
+}
+
+// Arrow Up and Down move between the visible buttons of the same sidebar, as a
+// convenience on top of Tab. Sub-menu triggers take part, so the one-item Accordion
+// behind each sub-menu doesn't keep focus on its own trigger.
+function focusAdjacentSidebarButton(event: React.KeyboardEvent<HTMLElement>) {
+  if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+  const scope = event.currentTarget.closest('.kui-SidebarContent, .kui-SidebarSearchPopover');
+  const buttons = scope
+    ? Array.from(scope.querySelectorAll<HTMLElement>('.kui-SidebarMenuButton')).filter((el) => el.offsetParent !== null)
+    : [];
+  const index = buttons.indexOf(event.currentTarget);
+  const next = buttons[index + (event.key === 'ArrowDown' ? 1 : -1)];
+  if (index !== -1 && next) {
+    event.preventDefault();
+    next.focus();
   }
-  if (Array.isArray(node)) {
-    return node.map((child, index) => <React.Fragment key={index}>{wrapTextNodes(child)}</React.Fragment>);
-  }
-  if (React.isValidElement(node)) {
-    const el = node as React.ReactElement<any>;
-    const className: string = (el.props && (el.props as any).className) || '';
-    const isAlreadyLabel = typeof el.type === 'string' && className.split(' ').includes('rt-SidebarMenuLabel');
-    if (isAlreadyLabel) return el;
-    const newChildren = wrapTextNodes((el.props as any)?.children);
-    return React.cloneElement(el, { ...(el.props as any) }, newChildren);
-  }
-  return node;
 }
 
 const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonProps>(
   ({ asChild = false, isActive = false, shortcut, badge, className, children, onKeyDown, ...props }, forwardedRef) => {
     const visual = useSidebarVisual();
-    const sidebarSize = visual?.size ?? '2';
+    // A pane with no scope (Inspector, Bottom) still takes the Shell's index.
+    const shellSize = React.useContext(ShellSizeContext);
+    const sidebarSize = visual?.size ?? shellSize;
     const isThinMode = visual?.presentation === 'thin';
 
     const Comp = asChild ? Slot : 'button';
 
-    // Enter and Space are left to the native button or link. Arrow keys move between
-    // the visible buttons of the same sidebar, as a convenience on top of Tab.
-    const handleKeyDown = React.useCallback(
-      (event: React.KeyboardEvent<HTMLButtonElement>) => {
-        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-          const scope = event.currentTarget.closest('.rt-SidebarContent, .rt-SidebarSearchPopover');
-          const buttons = scope
-            ? Array.from(scope.querySelectorAll<HTMLElement>('.rt-SidebarMenuButton')).filter((el) => el.offsetParent !== null)
-            : [];
-          const index = buttons.indexOf(event.currentTarget);
-          const next = buttons[index + (event.key === 'ArrowDown' ? 1 : -1)];
-          if (index !== -1 && next) {
-            event.preventDefault();
-            next.focus();
-          }
+    // Enter and Space are left to the native button or link. The caller's handler runs first,
+    // so it can preventDefault to keep the arrow keys for itself.
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+      onKeyDown?.(event);
+      if (!event.defaultPrevented) focusAdjacentSidebarButton(event);
+    };
+
+    const extras = isThinMode ? null : (
+      <>
+        {badge && (
+          <div className="kui-SidebarMenuBadge">
+            {typeof badge === 'string' ? (
+              <Chip size={sidebarSize} variant="soft">
+                {badge}
+              </Chip>
+            ) : (
+              <Chip size={badge.size || sidebarSize} variant={badge.variant || 'soft'} color={badge.color} radius={badge.radius}>
+                {badge.content}
+              </Chip>
+            )}
+          </div>
+        )}
+        {shortcut && (
+          <div className="kui-BaseMenuShortcut kui-SidebarMenuShortcut">
+            <Kbd size={sidebarSize}>{shortcut}</Kbd>
+          </div>
+        )}
+      </>
+    );
+
+    const renderContent = (content: React.ReactNode): React.ReactNode => {
+      if (isThinMode) {
+        const { icons, labels } = separateIconsAndLabels(content);
+        if (icons.length > 0) {
+          return (
+            <>
+              <span className="kui-SidebarMenuIconWrapper">{icons}</span>
+              {labels}
+            </>
+          );
         }
-        onKeyDown?.(event);
-      },
-      [onKeyDown],
-    );
-
-    // Memoize child processing to avoid re-traversal on every render
-    const processedChildren = React.useMemo(() => wrapTextNodes(children), [children]);
-
-    // For thin mode, separate icons into a wrapper for targeted background styling
-    const { icons, labels } = React.useMemo(
-      () => isThinMode ? separateIconsAndLabels(children) : { icons: [] as React.ReactNode[], labels: [] as React.ReactNode[] },
-      [isThinMode, children],
-    );
-
-    // When rendering asChild, Slot expects a single child element. We still want to
-    // append optional badge/shortcut inside that element so they render with Link.
-    const slottedChildren = React.useMemo(() => {
-      if (!asChild) return null;
-      try {
-        const onlyChild = React.Children.only(processedChildren as React.ReactElement<any>) as React.ReactElement<any>;
-        const originalInnerChildren = (onlyChild.props as any)?.children;
-        const enhancedInnerChildren = (
-          <>
-            {originalInnerChildren}
-            {badge && (
-              <div className="rt-SidebarMenuBadge">
-                {typeof badge === 'string' ? (
-                  <Badge size={sidebarSize} variant="soft">
-                    {badge}
-                  </Badge>
-                ) : (
-                  <Badge size={badge.size || sidebarSize} variant={badge.variant || 'soft'} color={badge.color} radius={badge.radius}>
-                    {badge.content}
-                  </Badge>
-                )}
-              </div>
-            )}
-            {shortcut && (
-              <div className="rt-BaseMenuShortcut rt-SidebarMenuShortcut">
-                <Kbd size={sidebarSize}>{shortcut}</Kbd>
-              </div>
-            )}
-          </>
-        );
-        return React.cloneElement(onlyChild, { ...(onlyChild.props as any) }, enhancedInnerChildren);
-      } catch {
-        // Fallback: if multiple children were passed incorrectly, just return processedChildren
-        return processedChildren as React.ReactNode;
       }
-    }, [asChild, processedChildren, badge, shortcut, sidebarSize]);
+      return (
+        <>
+          {wrapTextNodes(content)}
+          {extras}
+        </>
+      );
+    };
+
+    // When rendering asChild, Slot expects a single child element. The row's content goes
+    // inside that element, so a Link gets the label, icon tile, badge and shortcut.
+    let body: React.ReactNode;
+    if (asChild && React.isValidElement<{ children?: React.ReactNode }>(children) && React.Children.count(children) === 1) {
+      body = React.cloneElement(children, undefined, renderContent(children.props.children));
+    } else if (asChild) {
+      body = children;
+    } else {
+      body = renderContent(children);
+    }
 
     return (
       <Comp
+        type={asChild ? undefined : 'button'}
         {...props}
         ref={forwardedRef}
         aria-current={isActive ? 'page' : undefined}
-        className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-SidebarMenuButton', className)}
+        className={classNames('kui-reset', 'kui-BaseMenuItem', 'kui-SidebarMenuButton', className)}
         data-active={isActive || undefined}
         onKeyDown={handleKeyDown}
       >
-        {asChild ? (
-          slottedChildren
-        ) : isThinMode && icons.length > 0 ? (
-          <>
-            <span className="rt-SidebarMenuIconWrapper">{icons}</span>
-            {labels.map((label, index) => (
-              <React.Fragment key={index}>
-                {typeof label === 'string' || typeof label === 'number' ? (
-                  <span className="rt-SidebarMenuLabel">{label}</span>
-                ) : (
-                  label
-                )}
-              </React.Fragment>
-            ))}
-          </>
-        ) : (
-          <>
-            {processedChildren}
-            {badge && (
-              <div className="rt-SidebarMenuBadge">
-                {typeof badge === 'string' ? (
-                  <Badge size={sidebarSize} variant="soft">
-                    {badge}
-                  </Badge>
-                ) : (
-                  <Badge size={badge.size || sidebarSize} variant={badge.variant || 'soft'} color={badge.color} radius={badge.radius}>
-                    {badge.content}
-                  </Badge>
-                )}
-              </div>
-            )}
-            {shortcut && (
-              <div className="rt-BaseMenuShortcut rt-SidebarMenuShortcut">
-                <Kbd size={sidebarSize}>{shortcut}</Kbd>
-              </div>
-            )}
-          </>
-        )}
+        {body}
       </Comp>
     );
   },
@@ -440,7 +247,7 @@ interface SidebarMenuSubTriggerProps extends React.ComponentPropsWithoutRef<type
 }
 
 const SidebarMenuSubTrigger = React.forwardRef<React.ElementRef<typeof Accordion.Trigger>, SidebarMenuSubTriggerProps>(
-  ({ asChild = false, className, children, ...props }, forwardedRef) => {
+  ({ asChild = false, className, children, onKeyDown, ...props }, forwardedRef) => {
     const mode = React.useContext(SidebarSubMenuModeContext);
 
     if (mode === 'dropdown') {
@@ -448,10 +255,11 @@ const SidebarMenuSubTrigger = React.forwardRef<React.ElementRef<typeof Accordion
         <DropdownMenu.Trigger>
           <button
             {...(props as any)}
+            onKeyDown={onKeyDown}
             ref={forwardedRef as any}
             type="button"
             aria-haspopup="menu"
-            className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-SidebarMenuButton', 'rt-SidebarMenuSubTrigger', className)}
+            className={classNames('kui-reset', 'kui-BaseMenuItem', 'kui-SidebarMenuButton', 'kui-SidebarMenuSubTrigger', className)}
           >
             {children}
           </button>
@@ -464,16 +272,21 @@ const SidebarMenuSubTrigger = React.forwardRef<React.ElementRef<typeof Accordion
         <div>
           <Accordion.Trigger
             {...props}
+            onKeyDown={(event) => {
+              // Runs before the Accordion's own arrow handling, which would keep focus here.
+              focusAdjacentSidebarButton(event);
+              onKeyDown?.(event);
+            }}
             ref={forwardedRef}
             asChild={asChild}
-            className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-SidebarMenuButton', 'rt-SidebarMenuSubTrigger', className)}
+            className={classNames('kui-reset', 'kui-BaseMenuItem', 'kui-SidebarMenuButton', 'kui-SidebarMenuSubTrigger', className)}
           >
             {asChild ? (
               children
             ) : (
               <>
                 {children}
-                <ThickChevronRightIcon className={classNames('rt-BaseMenuSubTriggerIcon', 'rt-SidebarMenuSubTriggerIcon')} />
+                <ThickChevronRightIcon className={classNames('kui-BaseMenuSubTriggerIcon', 'kui-SidebarMenuSubTriggerIcon')} />
               </>
             )}
           </Accordion.Trigger>
@@ -486,86 +299,134 @@ SidebarMenuSubTrigger.displayName = 'Sidebar.MenuSubTrigger';
 
 interface SidebarMenuSubContentProps extends React.ComponentPropsWithoutRef<typeof Accordion.Content> {}
 
+// In a Rail a sub-menu is a dropdown. Each row becomes a menu item: a MenuButton hands the item
+// its props (onClick, disabled, active), and an asChild one hands it its link.
+function toDropdownItem(node: React.ReactNode, key: React.Key): React.ReactNode {
+  if (React.isValidElement<SidebarMenuButtonProps>(node) && node.type === SidebarMenuButton) {
+    // The badge and shortcut have no place in a dropdown row; `type` belongs to a button only.
+    const { asChild, isActive, shortcut, badge, type, children, ...rest } = node.props;
+    const itemProps = {
+      ...(rest as Omit<React.ComponentPropsWithoutRef<typeof DropdownMenu.Item>, 'color'>),
+      'data-active': isActive || undefined,
+      'aria-current': isActive ? ('page' as const) : undefined,
+    };
+    if (asChild && React.isValidElement(children) && React.Children.count(children) === 1) {
+      return (
+        <DropdownMenu.Item key={key} {...itemProps} asChild>
+          {children}
+        </DropdownMenu.Item>
+      );
+    }
+    return (
+      <DropdownMenu.Item key={key} {...itemProps}>
+        {children}
+      </DropdownMenu.Item>
+    );
+  }
+  if (React.isValidElement(node)) {
+    return (
+      <DropdownMenu.Item key={key} asChild>
+        {node}
+      </DropdownMenu.Item>
+    );
+  }
+  return <DropdownMenu.Item key={key}>{node}</DropdownMenu.Item>;
+}
+
+// The sub-list is a <ul>, so each row needs its own <li>. A MenuButton written straight into
+// MenuSubContent gets a MenuItem around it, rather than leaving an <a> or <button> in the list.
+function wrapBareMenuButtons(children: React.ReactNode): React.ReactNode {
+  return React.Children.map(children, (child, index) =>
+    React.isValidElement(child) && child.type === SidebarMenuButton ? (
+      <SidebarMenuItem key={child.key ?? index}>{child}</SidebarMenuItem>
+    ) : (
+      child
+    ),
+  );
+}
+
 const SidebarMenuSubContent = React.forwardRef<React.ElementRef<typeof Accordion.Content>, SidebarMenuSubContentProps>(({ className, children, ...props }, forwardedRef) => {
   const visual = useSidebarVisual();
   const mode = React.useContext(SidebarSubMenuModeContext);
 
   if (mode === 'dropdown') {
-    const unwrapMenuButton = (node: React.ReactNode): React.ReactNode => {
-      if (Array.isArray(node)) {
-        return node.map((n, i) => <React.Fragment key={i}>{unwrapMenuButton(n)}</React.Fragment>);
+    const items = React.Children.map(children, (child, index) => {
+      if (React.isValidElement<{ children?: React.ReactNode }>(child) && child.type === SidebarMenuItem) {
+        const rows = React.Children.toArray(child.props.children);
+        return toDropdownItem(rows.length === 1 ? rows[0] : rows, index);
       }
-      if (React.isValidElement(node)) {
-        const typeDisplay = (node.type as any)?.displayName;
-        if (typeDisplay === 'Sidebar.MenuButton') {
-          return (node.props as any)?.children;
-        }
-        const child = (node.props as any)?.children;
-        if (child !== undefined) {
-          return React.cloneElement(node as any, { ...(node.props as any), children: unwrapMenuButton(child) });
-        }
-      }
-      return node;
-    };
-
-    const normalized = React.Children.map(children as React.ReactNode, (child, index) => {
-      if (React.isValidElement(child) && (child.type as any)?.displayName === 'Sidebar.MenuItem') {
-        const itemChildren = (child.props as any)?.children;
-        const content = unwrapMenuButton(itemChildren);
-        return (
-          <DropdownMenu.Item key={index} asChild>
-            {content as any}
-          </DropdownMenu.Item>
-        );
-      }
-      // Fallback: wrap raw nodes too for consistent menu styling
-      return (
-        <DropdownMenu.Item key={index} asChild>
-          {unwrapMenuButton(child) as any}
-        </DropdownMenu.Item>
-      );
+      return toDropdownItem(child, index);
     });
 
-    // DropdownMenu only supports sizes 1 and 2, so map size 3 to 2
-    const dropdownSize = visual?.size === '3' ? '2' : visual?.size;
     return (
-      <DropdownMenu.Content size={dropdownSize} variant={visual?.menuVariant} className={classNames(className)}>
-        <DropdownMenu.Group>{normalized}</DropdownMenu.Group>
+      <DropdownMenu.Content
+        {...(props as Omit<React.ComponentPropsWithoutRef<typeof DropdownMenu.Content>, 'color'>)}
+        ref={forwardedRef}
+        size={visual?.size}
+        className={classNames(className)}
+      >
+        <DropdownMenu.Group>{items}</DropdownMenu.Group>
       </DropdownMenu.Content>
     );
   }
 
   return (
-    <Accordion.Content {...props} ref={forwardedRef} className={classNames('rt-SidebarMenuSubContent', className)}>
-      <div className="rt-SidebarMenuSubList">{children}</div>
+    <Accordion.Content {...props} ref={forwardedRef} className={classNames('kui-SidebarMenuSubContent', className)}>
+      <ul className="kui-SidebarMenuSubList">{wrapBareMenuButtons(children)}</ul>
     </Accordion.Content>
   );
 });
 SidebarMenuSubContent.displayName = 'Sidebar.MenuSubContent';
 
-// Group components. The label is plain text: no role, so it isn't announced as an empty group.
+// Group components. A group with a label is a named group; one without stays a plain div, so it
+// isn't announced as an empty group.
+type SidebarGroupContextValue = { labelId: string; setLabelId: (id: string | null) => void };
+const SidebarGroupContext = React.createContext<SidebarGroupContextValue | null>(null);
+
 interface SidebarGroupProps extends React.ComponentPropsWithoutRef<'div'> {}
 
-const SidebarGroup = React.forwardRef<HTMLDivElement, SidebarGroupProps>(({ className, ...props }, forwardedRef) => (
-  <div {...props} ref={forwardedRef} className={classNames('rt-BaseMenuGroup', 'rt-SidebarGroup', className)} />
-));
+const SidebarGroup = React.forwardRef<HTMLDivElement, SidebarGroupProps>(({ className, ...props }, forwardedRef) => {
+  const labelId = React.useId();
+  const [renderedLabelId, setLabelId] = React.useState<string | null>(null);
+  const context = React.useMemo(() => ({ labelId, setLabelId }), [labelId]);
+  return (
+    <SidebarGroupContext.Provider value={context}>
+      <div
+        role={renderedLabelId ? 'group' : undefined}
+        aria-labelledby={renderedLabelId ?? undefined}
+        {...props}
+        ref={forwardedRef}
+        className={classNames('kui-BaseMenuGroup', 'kui-SidebarGroup', className)}
+      />
+    </SidebarGroupContext.Provider>
+  );
+});
 SidebarGroup.displayName = 'Sidebar.Group';
 
 interface SidebarGroupLabelProps extends React.ComponentPropsWithoutRef<'div'> {
   asChild?: boolean;
 }
 
-const SidebarGroupLabel = React.forwardRef<HTMLDivElement, SidebarGroupLabelProps>(({ asChild = false, className, ...props }, forwardedRef) => {
+const SidebarGroupLabel = React.forwardRef<HTMLDivElement, SidebarGroupLabelProps>(({ asChild = false, className, id, ...props }, forwardedRef) => {
   const Comp = asChild ? Slot : 'div';
+  const group = React.useContext(SidebarGroupContext);
+  const labelId = id ?? group?.labelId;
+  const setLabelId = group?.setLabelId;
 
-  return <Comp {...props} ref={forwardedRef} className={classNames('rt-BaseMenuLabel', 'rt-SidebarGroupLabel', className)} />;
+  React.useEffect(() => {
+    if (!setLabelId || !labelId) return;
+    setLabelId(labelId);
+    return () => setLabelId(null);
+  }, [setLabelId, labelId]);
+
+  return <Comp {...props} id={labelId} ref={forwardedRef} className={classNames('kui-BaseMenuLabel', 'kui-SidebarGroupLabel', className)} />;
 });
 SidebarGroupLabel.displayName = 'Sidebar.GroupLabel';
 
 interface SidebarGroupContentProps extends React.ComponentPropsWithoutRef<'div'> {}
 
 const SidebarGroupContent = React.forwardRef<HTMLDivElement, SidebarGroupContentProps>(({ className, ...props }, forwardedRef) => (
-  <div {...props} ref={forwardedRef} className={classNames('rt-SidebarGroupContent', className)} />
+  <div {...props} ref={forwardedRef} className={classNames('kui-SidebarGroupContent', className)} />
 ));
 SidebarGroupContent.displayName = 'Sidebar.GroupContent';
 
@@ -624,6 +485,9 @@ const SidebarSearch = React.forwardRef<HTMLDivElement, SidebarSearchProps>(
     // Arrow key navigation within the popover (input ↔ results)
     const handlePopoverKeyDown = React.useCallback(
       (e: React.KeyboardEvent<HTMLDivElement>) => {
+        // A result row already moved focus with its own arrow handling (focusAdjacentSidebarButton
+        // scopes to this popover); moving again would skip a row.
+        if (e.defaultPrevented) return;
         const container = popoverRef.current;
         if (!container) return;
 
@@ -693,34 +557,34 @@ const SidebarSearch = React.forwardRef<HTMLDivElement, SidebarSearchProps>(
 
     if (isThin) {
       return (
-        <div {...props} ref={forwardedRef} className={classNames('rt-SidebarSearch', 'rt-SidebarSearch--thin', className)}>
+        <div {...props} ref={forwardedRef} className={classNames('kui-SidebarSearch', 'kui-SidebarSearch--thin', className)}>
           <Popover.Root>
             <Popover.Trigger>
               <button
                 type="button"
-                className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-SidebarMenuButton', 'rt-SidebarSearchTrigger')}
+                className={classNames('kui-reset', 'kui-BaseMenuItem', 'kui-SidebarMenuButton', 'kui-SidebarSearchTrigger')}
                 aria-label={searchLabel}
               >
-                <span className="rt-SidebarMenuIconWrapper">
+                <span className="kui-SidebarMenuIconWrapper">
                   <SearchIcon />
                 </span>
-                <span className="rt-SidebarMenuLabel">Search</span>
+                <span className="kui-SidebarMenuLabel">Search</span>
               </button>
             </Popover.Trigger>
             <Popover.Content side="right" align="start" size="2" width="280px" aria-label={searchLabel}>
               {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- keyDown manages arrow-key navigation between input and results, which is accessibility-enhancing */}
               <div
                 ref={popoverRef}
-                className="rt-SidebarSearchPopover"
+                className="kui-SidebarSearchPopover"
                 role="search"
                 onKeyDown={handlePopoverKeyDown}
               >
-                <div className="rt-SidebarSearchInputWrapper">
-                  <SearchIcon className="rt-SidebarSearchIcon" />
+                <div className="kui-SidebarSearchInputWrapper">
+                  <SearchIcon className="kui-SidebarSearchIcon" />
                   <input
                     ref={inputRef}
                     type="search"
-                    className="rt-SidebarSearchInput"
+                    className="kui-SidebarSearchInput"
                     value={value}
                     onChange={(e) => onValueChange(e.target.value)}
                     onKeyDown={handleKeyDown}
@@ -733,7 +597,7 @@ const SidebarSearch = React.forwardRef<HTMLDivElement, SidebarSearchProps>(
                   {value && (
                     <button
                       type="button"
-                      className="rt-reset rt-SidebarSearchClear"
+                      className="kui-reset kui-SidebarSearchClear"
                       onClick={() => {
                         onValueChange('');
                         inputRef.current?.focus();
@@ -758,13 +622,13 @@ const SidebarSearch = React.forwardRef<HTMLDivElement, SidebarSearchProps>(
 
     // Expanded mode: inline input
     return (
-      <div {...props} ref={forwardedRef} className={classNames('rt-SidebarSearch', 'rt-SidebarSearch--expanded', className)} role="search">
-        <div className="rt-SidebarSearchInputWrapper">
-          <SearchIcon className="rt-SidebarSearchIcon" />
+      <div {...props} ref={forwardedRef} className={classNames('kui-SidebarSearch', 'kui-SidebarSearch--expanded', 'kui-ShellPaneChrome', `kui-r-size-${visual?.size ?? '2'}`, className)} role="search">
+        <div className="kui-SidebarSearchInputWrapper">
+          <SearchIcon className="kui-SidebarSearchIcon" />
           <input
             ref={inputRef}
             type="search"
-            className="rt-SidebarSearchInput"
+            className="kui-SidebarSearchInput"
             value={value}
             onChange={(e) => onValueChange(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -774,7 +638,7 @@ const SidebarSearch = React.forwardRef<HTMLDivElement, SidebarSearchProps>(
           {value && (
             <button
               type="button"
-              className="rt-reset rt-SidebarSearchClear"
+              className="kui-reset kui-SidebarSearchClear"
               onClick={() => {
                 onValueChange('');
                 inputRef.current?.focus();
@@ -793,10 +657,6 @@ SidebarSearch.displayName = 'Sidebar.Search';
 
 // Export all components following shadcn's pattern
 export {
-  Sidebar as Root,
-  SidebarContent as Content,
-  SidebarHeader as Header,
-  SidebarFooter as Footer,
   SidebarSeparator as Separator,
   SidebarMenu as Menu,
   SidebarMenuItem as MenuItem,
@@ -810,57 +670,4 @@ export {
   SidebarSearch as Search,
 };
 
-/**
- * Enhanced Sidebar Header and Footer Usage Examples:
- *
- * 1. Simple default container (backwards compatible):
- * <Sidebar.Header>
- *   <Logo />
- *   <span>App Name</span>
- * </Sidebar.Header>
- *
- * 2. Custom flex layout:
- * <Sidebar.Header className="rt-justify-between rt-gap-3">
- *   <Logo />
- *   <Sidebar.MenuButton>
- *     <SettingsIcon />
- *   </Sidebar.MenuButton>
- * </Sidebar.Header>
- *
- * 3. Column layout for multiple rows:
- * <Sidebar.Header className="rt-flex-col rt-gap-2" asContainer={false}>
- *   <div className="rt-flex rt-items-center rt-gap-2">
- *     <Logo />
- *     <span>App Name</span>
- *   </div>
- *   <Sidebar.MenuButton>
- *     <UserAvatar />
- *     <span>John Doe</span>
- *   </Sidebar.MenuButton>
- * </Sidebar.Header>
- *
- * 4. Interactive footer with menu button:
- * <Sidebar.Footer>
- *   <Sidebar.MenuButton>
- *     <UserIcon />
- *     <span>Settings</span>
- *     <ChevronUpIcon />
- *   </Sidebar.MenuButton>
- * </Sidebar.Footer>
- *
- * 5. Custom footer layout:
- * <Sidebar.Footer className="rt-justify-between">
- *   <span>v1.0.0</span>
- *   <Sidebar.MenuButton>
- *     <HelpIcon />
- *   </Sidebar.MenuButton>
- * </Sidebar.Footer>
- *
- * Available utility classes:
- * - Layout: rt-flex-row, rt-flex-col
- * - Alignment: rt-items-center, rt-items-start, rt-items-end
- * - Justification: rt-justify-between, rt-justify-center, rt-justify-start, rt-justify-end
- * - Gap: rt-gap-1, rt-gap-2, rt-gap-3, rt-gap-4
- */
-
-export type { SidebarProps as RootProps, SidebarContentProps as ContentProps, SidebarHeaderProps as HeaderProps, SidebarFooterProps as FooterProps, BadgeConfig };
+export type { BadgeConfig };

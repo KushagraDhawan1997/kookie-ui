@@ -15,7 +15,7 @@ export interface PreviewBlockProps {
   background?: 'none' | 'dots' | 'grid' | React.CSSProperties;
   /** Spacing of the dots or grid lines, in pixels. @default 20 */
   patternSize?: number;
-  /** Pattern color. Defaults to `--gray-a5` for dots and `--gray-a3` for grid. */
+  /** Pattern color. Defaults to `--neutral-a5` for dots and `--neutral-a3` for grid. */
   patternColor?: string;
   /** Fixed stage height, e.g. `"24rem"` for demos that open menus. Without it the stage fits its content. */
   height?: string;
@@ -45,11 +45,11 @@ function getBackgroundStyle(
 
   const size = `${patternSize}px ${patternSize}px`;
   if (background === 'dots') {
-    const color = patternColor ?? 'var(--gray-a5)';
+    const color = patternColor ?? 'var(--neutral-a5)';
     return { backgroundImage: `radial-gradient(circle, ${color} 1px, transparent 1px)`, backgroundSize: size, backgroundPosition: 'center' };
   }
   if (background === 'grid') {
-    const color = patternColor ?? 'var(--gray-a3)';
+    const color = patternColor ?? 'var(--neutral-a3)';
     return {
       backgroundImage: `linear-gradient(${color} 1px, transparent 1px), linear-gradient(90deg, ${color} 1px, transparent 1px)`,
       backgroundSize: size,

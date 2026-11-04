@@ -7,8 +7,8 @@
  * standing level with a button beside it. A ToolbarSeparator is a gray hairline.
  */
 
-.rt-Toolbar {
-  --toolbar-group-inset: calc(var(--space-1) / 2);
+.kui-Toolbar {
+  --toolbar-group-inset: calc(var(--space-2) / 2);
 
   display: flex;
   align-items: center;
@@ -25,32 +25,32 @@
     min-width: var(--toolbar-control-height);
   }
 
-  &:where(.rt-r-size-1) {
+  &:where(.kui-r-size-1) {
     --toolbar-control-height: var(--control-height-1);
-    --toolbar-radius: max(var(--radius-1), var(--radius-full));
-    --toolbar-gap: var(--space-1);
-    --toolbar-title-gap: var(--space-2);
-  }
-
-  &:where(.rt-r-size-2) {
-    --toolbar-control-height: var(--control-height-2);
-    --toolbar-radius: max(var(--radius-2), var(--radius-full));
+    --toolbar-radius: var(--radius-control-1);
     --toolbar-gap: var(--space-2);
     --toolbar-title-gap: var(--space-3);
   }
 
-  &:where(.rt-r-size-3) {
-    --toolbar-control-height: var(--control-height-3);
-    --toolbar-radius: max(var(--radius-3), var(--radius-full));
-    --toolbar-gap: var(--space-2);
+  &:where(.kui-r-size-2) {
+    --toolbar-control-height: var(--control-height-2);
+    --toolbar-radius: var(--radius-control-2);
+    --toolbar-gap: var(--space-3);
     --toolbar-title-gap: var(--space-4);
   }
 
-  &:where(.rt-r-size-4) {
-    --toolbar-control-height: var(--control-height-4);
-    --toolbar-radius: max(var(--radius-4), var(--radius-full));
+  &:where(.kui-r-size-3) {
+    --toolbar-control-height: var(--control-height-3);
+    --toolbar-radius: var(--radius-control-3);
     --toolbar-gap: var(--space-3);
     --toolbar-title-gap: var(--space-5);
+  }
+
+  &:where(.kui-r-size-4) {
+    --toolbar-control-height: var(--control-height-4);
+    --toolbar-radius: var(--radius-control-4);
+    --toolbar-gap: var(--space-4);
+    --toolbar-title-gap: var(--space-6);
   }
 }
 
@@ -60,7 +60,7 @@
 /*                                     */
 /* * * * * * * * * * * * * * * * * * * */
 
-.rt-ToolbarGroup {
+.kui-ToolbarGroup {
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
@@ -68,7 +68,7 @@
   height: var(--toolbar-control-height);
   padding: var(--toolbar-group-inset);
   border-radius: var(--toolbar-radius);
-  background-color: var(--gray-a3);
+  background-color: var(--neutral-a3);
 
   &:where([data-orientation='vertical']) {
     flex-direction: column;
@@ -77,11 +77,51 @@
   }
 }
 
+/* Over content, the well is a raised surface of its own, like a raised button beside it. */
+:where(.kui-Toolbar[data-backdrop]) .kui-ToolbarGroup {
+  background-color: var(--color-surface);
+  box-shadow: var(--control-chrome);
+}
+
 /* A button in the group is hosted: the group's height minus the inset on both sides, and a
    concentric corner. Overriding the height variable (not `height`) keeps an icon button square. */
-.rt-ToolbarGroup > :where(.rt-BaseButton) {
+.kui-ToolbarGroup > :where(.kui-BaseButton) {
   --base-button-height: calc(var(--toolbar-control-height) - 2 * var(--toolbar-group-inset));
   border-radius: max(0px, calc(var(--toolbar-radius) - var(--toolbar-group-inset)));
+}
+
+/* * * * * * * * * * * * * * * * * * * */
+/*                                     */
+/*              Overflow               */
+/*                                     */
+/* * * * * * * * * * * * * * * * * * * */
+
+/* Takes the room the row leaves and packs its controls at the end, so the ones that don't fit
+   move into the "More" menu from the end. The empty part of it lets clicks through. */
+.kui-ToolbarOverflow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--toolbar-gap);
+  flex: 1 1 0%;
+  min-width: 0;
+  pointer-events: none;
+
+  & > * {
+    pointer-events: auto;
+  }
+}
+
+/* One seat per child, so a child that renders nothing keeps every index in place. A seat never
+   shrinks, because its width is the measurement; an empty one leaves the layout and its gaps. */
+.kui-ToolbarOverflowSeat {
+  display: flex;
+  align-items: center;
+  flex: none;
+
+  &:where(:empty) {
+    display: none;
+  }
 }
 
 /* * * * * * * * * * * * * * * * * * * */
@@ -91,9 +131,9 @@
 /* * * * * * * * * * * * * * * * * * * */
 
 /* The same gray a Separator draws, at the height of the glyphs beside it rather than the row. */
-.rt-ToolbarSeparator {
+.kui-ToolbarSeparator {
   flex-shrink: 0;
-  background-color: var(--gray-a5);
+  background-color: var(--neutral-a5);
 
   &:where([data-orientation='vertical']) {
     width: var(--border-width-standard);
@@ -113,18 +153,42 @@
 /* * * * * * * * * * * * * * * * * * * */
 
 /* One line; truncates rather than wrapping, so the row stays one control row tall. */
-.rt-ToolbarTitle {
+.kui-ToolbarTitle {
   min-width: 0;
   flex-shrink: 1;
+}
+
+/* A mirroring title is the page's own, said again in the band: silent while the page's large
+   title is on screen, shown at once when it is not. Paint only, so the clusters beside it never
+   move when someone scrolls. */
+.kui-ToolbarTitle:where([data-mirror]) {
+  opacity: 0;
+}
+
+.kui-ToolbarTitle:where([data-mirror][data-collapsed]) {
+  opacity: 1;
 }
 
 /* A title is a different kind of thing from the controls beside it, so it takes more air than
    they take from each other. It reaches inside a cluster, since a band is often written
    <Flex>{back}{title}</Flex>. No air against the row's own ends. */
-:where(.rt-Toolbar) .rt-ToolbarTitle:where(:not(:first-child)) {
+:where(.kui-Toolbar) .kui-ToolbarTitle:where(:not(:first-child)) {
   margin-inline-start: calc(var(--toolbar-title-gap) - var(--toolbar-gap));
 }
 
-:where(.rt-Toolbar) .rt-ToolbarTitle:where(:not(:last-child)) {
+:where(.kui-Toolbar) .kui-ToolbarTitle:where(:not(:last-child)) {
   margin-inline-end: calc(var(--toolbar-title-gap) - var(--toolbar-gap));
+}
+
+/* High contrast drops the group's fill, so the group takes the outline and its buttons give theirs
+   up, the way a segmented control's segments sit inside one border. A border colour is forced in
+   this mode, so the buttons drop the style, not the colour. */
+@media (forced-colors: active) {
+  .kui-ToolbarGroup {
+    border: 1px solid CanvasText;
+  }
+
+  .kui-ToolbarGroup > :where(.kui-BaseButton) {
+    border-style: none;
+  }
 }

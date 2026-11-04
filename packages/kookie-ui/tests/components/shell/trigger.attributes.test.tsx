@@ -59,10 +59,10 @@ describe('Shell.Trigger attributes', () => {
     );
 
     const expected: Record<string, string> = {
-      rail: 'rt-ShellRail',
-      panel: 'rt-ShellPanel',
-      inspector: 'rt-ShellInspector',
-      bottom: 'rt-ShellBottom',
+      rail: 'kui-ShellRail',
+      panel: 'kui-ShellPanel',
+      inspector: 'kui-ShellInspector',
+      bottom: 'kui-ShellBottom',
     };
     for (const [name, className] of Object.entries(expected)) {
       const controls = screen.getByRole('button', { name }).getAttribute('aria-controls');
@@ -80,7 +80,7 @@ describe('Shell.Trigger attributes', () => {
       </Frame>,
     );
     expect(screen.getByRole('button', { name: 'inspector' }).getAttribute('aria-controls')).toBe('my-inspector');
-    expect(document.getElementById('my-inspector')?.classList.contains('rt-ShellInspector')).toBe(true);
+    expect(document.getElementById('my-inspector')?.classList.contains('kui-ShellInspector')).toBe(true);
   });
 
   it('points a sidebar trigger at the sidebar', () => {
@@ -94,7 +94,7 @@ describe('Shell.Trigger attributes', () => {
       </Shell.Root>,
     );
     const controls = screen.getByRole('button', { name: 'sidebar' }).getAttribute('aria-controls');
-    expect(document.getElementById(controls!)?.classList.contains('rt-ShellSidebar')).toBe(true);
+    expect(document.getElementById(controls!)?.classList.contains('kui-ShellSidebar')).toBe(true);
   });
 
   it('reports whether its pane is open with aria-expanded', () => {
@@ -133,7 +133,7 @@ describe('Shell.Trigger attributes', () => {
 
     expect(onOpenChange).not.toHaveBeenCalled();
     // Still untouched, and still showing nothing.
-    const inspector = document.querySelector('.rt-ShellInspector');
+    const inspector = document.querySelector('.kui-ShellInspector');
     expect(inspector?.getAttribute('data-state')).toBe('auto');
     expect(inspector?.getAttribute('data-mode')).toBe('collapsed');
   });
@@ -149,7 +149,7 @@ describe('Shell.Trigger attributes', () => {
         </Shell.Trigger>
       </Frame>,
     );
-    const inspector = document.querySelector('.rt-ShellInspector') as HTMLElement;
+    const inspector = document.querySelector('.kui-ShellInspector') as HTMLElement;
 
     fireEvent.click(screen.getByRole('button', { name: 'expand' }));
     fireEvent.click(screen.getByRole('button', { name: 'expand' }));

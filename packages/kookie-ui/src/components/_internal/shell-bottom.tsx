@@ -6,9 +6,10 @@ import { useComposedRefs } from 'radix-ui/internal';
 import { PaneResizeContext } from './shell-resize.js';
 import { BottomHandle, PaneHandle } from './shell-handles.js';
 import { usePane, paneAttributes, usePresentationTable } from './shell-pane.js';
-import { splitHandles, useResizablePane, type SizeChangeMeta } from './shell-resizable.js';
-import { useInsetRegistration, warnOnce } from './shell-store.js';
+import { splitHandles, useInitialPaneSize, useResizablePane, type SizeChangeMeta } from './shell-resizable.js';
+import { useFrameRegistration, warnOnce } from './shell-store.js';
 import { bottomAnchoredGrowth, detailRest, toPaneValue, withoutRemovedPaneProps } from './shell-rest.js';
+import { PageScope } from './page-scope.js';
 import { readBreakpoint } from '../../hooks/use-breakpoint.js';
 import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps } from '../shell.types.js';
 
@@ -24,8 +25,13 @@ type BottomPublicProps = PaneBaseProps &
     onSizeChange?: (size: number, meta: SizeChangeMeta) => void;
     sizeUpdate?: 'throttle' | 'debounce';
     sizeUpdateMs?: number;
-    /** When true, adds margin and triggers the gray backdrop on the Shell. */
-    inset?: boolean;
+    /**
+     * Sets whether this pane joins the app frame. The default is `true`: the pane sits against its
+     * neighbours with one hairline between them. Set `flush={false}` to pull it off the frame as a
+     * card. It then floats over the content if the content is flush, and otherwise sits on the
+     * Shell's background beside a card content.
+     */
+    flush?: boolean;
   };
 
 type BottomComponent = React.ForwardRefExoticComponent<BottomPublicProps & React.RefAttributes<HTMLDivElement>> & { Handle: typeof BottomHandle };
@@ -61,7 +67,7 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((props
     onSizeChange,
     sizeUpdate,
     sizeUpdateMs = 50,
-    inset,
+    flush = true,
     id,
     ...domProps
   } = props;
@@ -81,7 +87,7 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((props
     onCollapse,
     size: expandedSize,
   });
-  useInsetRegistration('bottom', inset);
+  useFrameRegistration('bottom', flush);
 
   React.useEffect(() => {
     if (snapPoints !== undefined || collapseThreshold !== undefined || paneId !== undefined || persistence !== undefined) {
@@ -124,6 +130,8 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((props
     requestToggle: () => pane.toggle('toggle'),
   });
 
+  // The starting size is in the server HTML, so the pane does not jump on hydration.
+  const initialSize = useInitialPaneSize(size, defaultSize, minSize, maxSize);
   const { handles, content } = splitHandles(children, BottomHandle);
   const handle = resizable && pane.shown !== false && !pane.overlaying ? <PaneResizeContext.Provider value={resize}>{handles.length > 0 ? handles : <PaneHandle />}</PaneResizeContext.Provider> : null;
 
@@ -132,20 +140,23 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((props
       {...withoutRemovedPaneProps(domProps)}
       id={pane.id}
       ref={composedRef}
-      className={classNames('rt-ShellPane', 'rt-ShellBottom', className)}
+      className={classNames('kui-ShellPane', 'kui-ShellBottom', className)}
       {...paneAttributes(pane, attributes)}
-      data-inset={inset || undefined}
+      data-flush={flush || undefined}
       tabIndex={pane.overlaying ? -1 : domProps.tabIndex}
       style={
         {
           ...style,
           '--bottom-expanded-size': `${expandedSize}px`,
+          ...(initialSize ? { '--bottom-size': initialSize } : {}),
           '--bottom-min-size': `${minSize}px`,
           '--bottom-max-size': `${maxSize}px`,
         } as CSSPropertiesWithVars
       }
     >
-      <div className="rt-ShellBottomContent">{content}</div>
+      <div className="kui-ShellBottomContent">
+        <PageScope>{content}</PageScope>
+      </div>
       {handle}
     </div>
   );
@@ -153,3 +164,5 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((props
 
 Bottom.displayName = 'Shell.Bottom';
 Bottom.Handle = BottomHandle;
+
+export type { BottomPublicProps };

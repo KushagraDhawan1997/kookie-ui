@@ -1,9 +1,9 @@
-.rt-TableRootTable {
+.kui-TableRootTable {
   --table-row-background-color: transparent;
-  --table-row-box-shadow: inset 0 -1px var(--gray-a5);
+  --table-row-box-shadow: inset 0 -1px var(--neutral-a5);
 
   width: 100%;
-  text-align: left;
+  text-align: start;
   vertical-align: top;
   border-collapse: collapse;
   border-radius: calc(var(--table-border-radius) - 1px);
@@ -14,40 +14,35 @@
   height: 0;
 }
 
-.rt-TableHeader {
+.kui-TableHeader {
   vertical-align: inherit;
 }
 
-.rt-TableBody {
+.kui-TableBody {
   vertical-align: inherit;
 }
 
-.rt-TableRow {
+.kui-TableRow {
   vertical-align: inherit;
-  color: var(--gray-12);
+  color: var(--neutral-12);
 }
 
-.rt-TableCell {
+.kui-TableCell {
   background-color: var(--table-row-background-color);
   box-shadow: var(--table-row-box-shadow);
   box-sizing: border-box;
   vertical-align: inherit;
-  padding: var(--table-cell-padding);
-  /* Works as min-height */
-  height: var(--table-cell-min-height);
-
-  /* Inset with Table */
-  .rt-Inset :where(&:first-child) {
-    padding-left: var(--inset-padding-left, var(--table-cell-padding));
-  }
-  .rt-Inset :where(&:last-child) {
-    padding-right: var(--inset-padding-right, var(--table-cell-padding));
-  }
+  /* A cell hugs its line: the inset above and below, the wider inset at the sides. */
+  padding: var(--table-cell-py) var(--table-cell-px);
 }
-.rt-TableColumnHeaderCell {
+/* Header cells follow the table's start alignment, not the browser's centred default */
+:where(.kui-TableCell) {
+  text-align: inherit;
+}
+.kui-TableColumnHeaderCell {
   font-weight: 600;
 }
-.rt-TableRowHeaderCell {
+.kui-TableRowHeaderCell {
   font-weight: normal;
 }
 
@@ -58,55 +53,49 @@
  ***************************************************************************************************/
 
 @breakpoints {
-  .rt-TableRoot {
-    &:where(.rt-r-size-1) {
-      --table-border-radius: min(var(--radius-surface-5), calc(var(--radius-surface-1) + var(--space-1)));
-      --table-cell-padding: var(--space-2);
-      --table-cell-min-height: calc(36px * var(--scaling));
+  .kui-TableRoot {
+    &:where(.kui-r-size-1) {
+      --table-border-radius: var(--radius-surface-1);
+      --table-cell-py: var(--layout-space-2);
+      --table-cell-px: var(--layout-space-3);
 
-      & :where(.rt-TableRootTable) {
+      & :where(.kui-TableRootTable) {
+        font-size: var(--font-size-1);
+        line-height: var(--line-height-1);
+        letter-spacing: var(--letter-spacing-1);
+      }
+    }
+    &:where(.kui-r-size-2) {
+      --table-border-radius: var(--radius-surface-2);
+      --table-cell-py: var(--layout-space-3);
+      --table-cell-px: var(--layout-space-4);
+
+      & :where(.kui-TableRootTable) {
         font-size: var(--font-size-2);
         line-height: var(--line-height-2);
+        letter-spacing: var(--letter-spacing-2);
       }
     }
-    &:where(.rt-r-size-2) {
-      --table-border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-2) + var(--space-2)));
-      --table-cell-padding: var(--space-3);
-      --table-cell-min-height: calc(44px * var(--scaling));
+    &:where(.kui-r-size-3) {
+      --table-border-radius: var(--radius-surface-3);
+      --table-cell-py: var(--layout-space-4);
+      --table-cell-px: var(--layout-space-5);
 
-      & :where(.rt-TableRootTable) {
-        font-size: var(--font-size-2);
-        line-height: var(--line-height-2);
-      }
-    }
-    &:where(.rt-r-size-3) {
-      --table-border-radius: min(var(--radius-surface-7), calc(var(--radius-surface-3) + var(--space-3)));
-      --table-cell-padding: var(--space-4);
-      --table-cell-min-height: var(--space-8);
-
-      & :where(.rt-TableRootTable) {
+      & :where(.kui-TableRootTable) {
         font-size: var(--font-size-3);
         line-height: var(--line-height-3);
+        letter-spacing: var(--letter-spacing-3);
       }
     }
-    &:where(.rt-r-size-4) {
-      --table-border-radius: min(var(--radius-surface-8), calc(var(--radius-surface-4) + var(--space-4)));
-      --table-cell-padding: var(--space-5);
-      --table-cell-min-height: var(--space-9);
+    &:where(.kui-r-size-4) {
+      --table-border-radius: var(--radius-surface-4);
+      --table-cell-py: var(--layout-space-5);
+      --table-cell-px: var(--layout-space-6);
 
-      & :where(.rt-TableRootTable) {
-        font-size: var(--font-size-3);
-        line-height: var(--line-height-3);
-      }
-    }
-    &:where(.rt-r-size-5) {
-      --table-border-radius: min(var(--radius-surface-9), calc(var(--radius-surface-5) + var(--space-5)));
-      --table-cell-padding: var(--space-6);
-      --table-cell-min-height: var(--space-10);
-
-      & :where(.rt-TableRootTable) {
+      & :where(.kui-TableRootTable) {
         font-size: var(--font-size-4);
         line-height: var(--line-height-4);
+        letter-spacing: var(--letter-spacing-4);
       }
     }
   }
@@ -120,34 +109,26 @@
 
 /* surface */
 
-.rt-TableRoot:where(.rt-variant-surface) {
-  /*
-   * This surface blurs its own backdrop, which makes it the backdrop root for
-   * everything inside it. A component nested here would re-blur an already
-   * blurred, already flat surface for the full cost of another blur pass, so
-   * switch the component filter off for the subtree. See tokens/blur.css.
-   */
-  --backdrop-filter-components-enabled: none;
+.kui-TableRoot:where(.kui-variant-surface) {
   box-sizing: border-box;
-  border: 1px solid var(--gray-a5);
+  border: 1px solid var(--neutral-a5);
   border-radius: var(--table-border-radius);
-  background-color: var(--color-panel);
-  backdrop-filter: var(--backdrop-filter-panel);
+  background-color: var(--color-surface);
   background-clip: padding-box;
   position: relative;
 
   /* When possible, use half-transparent gray for nicer border blending with the background */
   @supports (box-shadow: 0 0 0 1px color-mix(in oklab, white, black)) {
-    border-color: color-mix(in oklab, var(--gray-a5), var(--gray-6));
+    border-color: color-mix(in oklab, var(--neutral-a5), var(--neutral-6));
   }
 
-  & :where(.rt-TableRootTable) {
+  & :where(.kui-TableRootTable) {
     overflow: hidden;
 
-    & :where(.rt-TableHeader) {
-      --table-row-background-color: var(--gray-a2);
+    & :where(.kui-TableHeader) {
+      --table-row-background-color: var(--neutral-a2);
     }
-    & :where(.rt-TableBody) :where(.rt-TableRow:last-child) {
+    & :where(.kui-TableBody) :where(.kui-TableRow:last-child) {
       --table-row-box-shadow: none;
     }
   }
@@ -155,11 +136,11 @@
 
 /* ghost */
 
-.rt-TableRoot:where(.rt-variant-ghost) {
+.kui-TableRoot:where(.kui-variant-ghost) {
   --scrollarea-scrollbar-horizontal-margin-left: 0;
   --scrollarea-scrollbar-horizontal-margin-right: 0;
 
-  & :where(.rt-TableBody) :where(.rt-TableRow:last-child) {
+  & :where(.kui-TableBody) :where(.kui-TableRow:last-child) {
     --table-row-box-shadow: none;
   }
 }

@@ -5,10 +5,8 @@ import { radii } from '../props/radius.prop.js';
 import type { GetPropDefTypes, PropDef } from '../props/prop-def.js';
 
 const appearances = ['inherit', 'light', 'dark'] as const;
-const panelBackgrounds = ['solid', 'translucent'] as const;
-const materials = ['solid', 'translucent'] as const;
-const scalings = ['90%', '95%', '100%', '105%', '110%'] as const;
 const fontFamilies = ['sans', 'mono', 'serif'] as const;
+const sizes = ['1', '2', '3', '4'] as const;
 
 const themePropDefs = {
   ...asChildPropDef,
@@ -32,32 +30,14 @@ const themePropDefs = {
    * @link
    * https://www.radix-ui.com/themes/docs/theme/color
    */
-  accentColor: { type: 'enum', values: accentColors, default: 'blue' },
+  accentColor: { type: 'enum', values: accentColors, default: 'gray' },
   /**
    * Selects one of the gray color options to use in the Theme.
    *
    * @link
    * https://www.radix-ui.com/themes/docs/theme/color
    */
-  grayColor: { type: 'enum', values: grayColors, default: 'slate' },
-  /**
-   * Controls whether to use a solid or translucent background color on panelled
-   * elements such as Card or Table is solid or translucent.
-   *
-   * @link
-   * https://www.radix-ui.com/themes/docs/theme/visual-style
-   */
-  material: { type: 'enum', values: materials, default: 'translucent' },
-  /**
-   * Controls whether to use a solid or translucent background color on panelled
-   * elements such as Card or Table is solid or translucent.
-   *
-   * @deprecated Use `material` prop instead. This prop will be removed in a future version.
-   *
-   * @link
-   * https://www.radix-ui.com/themes/docs/theme/visual-style
-   */
-  panelBackground: { type: 'enum', values: panelBackgrounds, default: 'translucent' },
+  grayColor: { type: 'enum', values: grayColors, default: 'gray' },
   /**
    * Sets the default radius of the components.
    *
@@ -65,13 +45,6 @@ const themePropDefs = {
    * https://www.radix-ui.com/themes/docs/theme/visual-style
    */
   radius: { type: 'enum', values: radii, default: 'full' },
-  /**
-   * Sets a scaling multiplier for values like spacing, font sizes, line heights, etc. are scaled.
-   *
-   * @link
-   * https://www.radix-ui.com/themes/docs/theme/layout
-   */
-  scaling: { type: 'enum', values: scalings, default: '100%' },
   /**
    * Sets the font family used for body text in the theme.
    *
@@ -89,17 +62,23 @@ const themePropDefs = {
    * `--font-heading` override in your own CSS survives a `fontFamily` switch.
    */
   headingFontFamily: { type: 'enum', values: fontFamilies },
+  /**
+   * The app-wide size index. Every component on the 1-4 control and surface
+   * scale that states no `size` of its own takes this one; an explicit
+   * `size` always wins. Nested Themes override it for their subtree.
+   *
+   * @default '2'
+   */
+  size: { type: 'enum', values: sizes, default: '2' },
 } satisfies {
   hasBackground: PropDef<boolean>;
   appearance: PropDef<(typeof appearances)[number]>;
   accentColor: PropDef<(typeof accentColors)[number]>;
   grayColor: PropDef<(typeof grayColors)[number]>;
-  material: PropDef<(typeof materials)[number]>;
-  panelBackground: PropDef<(typeof panelBackgrounds)[number]>;
   radius: PropDef<(typeof radii)[number]>;
-  scaling: PropDef<(typeof scalings)[number]>;
   fontFamily: PropDef<(typeof fontFamilies)[number]>;
   headingFontFamily: PropDef<(typeof fontFamilies)[number]>;
+  size: PropDef<(typeof sizes)[number]>;
 };
 
 type ThemeOwnProps = GetPropDefTypes<typeof themePropDefs & typeof asChildPropDef>;

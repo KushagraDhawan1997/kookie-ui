@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from 'vitest/browser';
 import {
   Button,
-  IconButton,
   Separator,
   Theme,
   Toolbar,
@@ -44,7 +43,7 @@ describe('Toolbar announces itself', () => {
     render(<Row />);
     const toolbar = screen.getByRole('toolbar', { name: 'Formatting' });
     expect(toolbar.getAttribute('aria-orientation')).toBe('horizontal');
-    expect(toolbar.classList.contains('rt-Toolbar')).toBe(true);
+    expect(toolbar.classList.contains('kui-Toolbar')).toBe(true);
   });
 
   it('a toolbar button is a real <button>, with no extra role on top of it', () => {
@@ -52,13 +51,23 @@ describe('Toolbar announces itself', () => {
     const bold = screen.getByRole('button', { name: 'Bold' });
     expect(bold.tagName).toBe('BUTTON');
     expect(bold.getAttribute('role')).toBeNull();
-    expect(bold.classList.contains('rt-Button')).toBe(true);
+    expect(bold.classList.contains('kui-Button')).toBe(true);
   });
 
-  it('throws outside a Toolbar rather than silently becoming a plain button', () => {
-    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    expect(() => render(<ToolbarButton>Loose</ToolbarButton>)).toThrow(/inside a Toolbar/);
-    spy.mockRestore();
+  it('outside a Toolbar it renders a plain button with the toolbar rest look, and does not throw', () => {
+    render(
+      <Theme>
+        <ToolbarButton>Loose</ToolbarButton>
+        <Button variant="soft" color="gray">
+          Twin
+        </Button>
+      </Theme>,
+    );
+    const loose = screen.getByRole('button', { name: 'Loose' });
+    expect(loose.tagName).toBe('BUTTON');
+    expect(getComputedStyle(loose).backgroundColor).toBe(
+      getComputedStyle(screen.getByRole('button', { name: 'Twin' })).backgroundColor,
+    );
   });
 });
 
@@ -143,7 +152,7 @@ describe('Toolbar orientation', () => {
 });
 
 describe('ToolbarButton', () => {
-  it('icon-only: renders an IconButton named by its aria-label, square like an IconButton', () => {
+  it('icon-only: renders an icon-only Button named by its aria-label, square like one', () => {
     render(
       <Theme>
         <Toolbar aria-label="Formatting">
@@ -151,14 +160,14 @@ describe('ToolbarButton', () => {
             <Glyph />
           </ToolbarButton>
         </Toolbar>
-        <IconButton aria-label="Twin" variant="soft" color="gray">
+        <Button iconOnly aria-label="Twin" variant="soft" color="gray">
           <Glyph />
-        </IconButton>
+        </Button>
       </Theme>,
     );
     const bold = screen.getByRole('button', { name: 'Bold' });
     const twin = screen.getByRole('button', { name: 'Twin' });
-    expect(bold.classList.contains('rt-IconButton')).toBe(true);
+    expect(bold.hasAttribute('data-icon-only')).toBe(true);
     expect(rect(bold).width).toBeCloseTo(rect(bold).height, 1);
     expect(rect(bold).width).toBeCloseTo(rect(twin).width, 1);
   });
@@ -402,7 +411,7 @@ describe('ToolbarSeparator', () => {
         <Separator data-testid="twin" />
       </Theme>,
     );
-    const separator = screen.getByRole('toolbar').querySelector('.rt-ToolbarSeparator')!;
+    const separator = screen.getByRole('toolbar').querySelector('.kui-ToolbarSeparator')!;
     expect(separator.getAttribute('role')).toBe('separator');
     expect(separator.getAttribute('aria-orientation')).toBe('vertical');
     const box = rect(separator);
@@ -424,7 +433,7 @@ describe('ToolbarSeparator', () => {
         </Toolbar>
       </Theme>,
     );
-    const separator = screen.getByRole('toolbar').querySelector('.rt-ToolbarSeparator')!;
+    const separator = screen.getByRole('toolbar').querySelector('.kui-ToolbarSeparator')!;
     const box = rect(separator);
     expect(box.height).toBeCloseTo(1, 1);
     expect(box.width).toBeGreaterThan(4);
@@ -454,7 +463,7 @@ describe('ToolbarTitle', () => {
         </Toolbar>
       </Theme>,
     );
-    expect(screen.getByRole('toolbar').querySelector('.rt-ToolbarTitle')).toBeNull();
+    expect(screen.getByRole('toolbar').querySelector('.kui-ToolbarTitle')).toBeNull();
   });
 
   it('truncates rather than wrapping, so the row stays one control row tall', () => {
@@ -469,7 +478,7 @@ describe('ToolbarTitle', () => {
       </Theme>,
     );
     const toolbar = screen.getByRole('toolbar');
-    const title = toolbar.querySelector('.rt-ToolbarTitle')!;
+    const title = toolbar.querySelector('.kui-ToolbarTitle')!;
     expect(getComputedStyle(title).whiteSpace).toBe('nowrap');
     expect(rect(toolbar).width).toBeLessThanOrEqual(200.5);
     expect(rect(toolbar).height).toBeCloseTo(rect(screen.getByRole('button', { name: 'Share' })).height, 1);

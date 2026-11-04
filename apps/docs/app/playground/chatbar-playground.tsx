@@ -1,15 +1,14 @@
 'use client';
 
 import React from 'react';
-import { Chatbar, IconButton } from '@kushagradhawan/kookie-ui';
+import { Chatbar, Button } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Attachment01Icon } from '@hugeicons/core-free-icons';
 import Playground from '@/components/playground';
 
-const variants = ['classic', 'surface', 'soft', 'outline', 'ghost'] as const;
+const variants = ['raised', 'surface', 'soft', 'outline', 'ghost'] as const;
 const sizes = ['1', '2', '3'] as const;
 const radiusOptions = ['none', 'small', 'medium', 'large', 'full'] as const;
-const materials = ['solid', 'translucent'] as const;
 const expandOnOptions = ['none', 'focus', 'overflow', 'both'] as const;
 const sendModeOptions = ['always', 'whenDirty', 'never'] as const;
 
@@ -27,7 +26,6 @@ export default function ChatbarPlayground({
   const [variant, setVariant] = React.useState<string>('soft');
   const [size, setSize] = React.useState<string>('2');
   const [radius, setRadius] = React.useState<string>('theme');
-  const [material, setMaterial] = React.useState<string>('theme');
   const [expandOn, setExpandOn] = React.useState<string>('both');
   const [sendMode, setSendMode] = React.useState<string>('always');
   const [disabled, setDisabled] = React.useState<boolean>(false);
@@ -62,15 +60,6 @@ export default function ChatbarPlayground({
       value: radius,
       onChange: setRadius,
       options: [{ label: 'Theme', value: 'theme' }, ...radiusOptions.map((r) => ({ label: r, value: r }))],
-      placeholder: 'Theme',
-    },
-    {
-      id: 'material',
-      label: 'Material',
-      type: 'select' as const,
-      value: material,
-      onChange: setMaterial,
-      options: [{ label: 'Theme', value: 'theme' }, ...materials.map((m) => ({ label: m, value: m }))],
       placeholder: 'Theme',
     },
     {
@@ -123,7 +112,6 @@ export default function ChatbarPlayground({
     const props = [`variant="${variant}"`, `size="${size}"`];
 
     if (radius !== 'theme') props.push(`radius="${radius}"`);
-    if (material !== 'theme') props.push(`material="${material}"`);
     if (expandOn !== 'both') props.push(`expandOn="${expandOn}"`);
     if (sendMode !== 'whenDirty') props.push(`sendMode="${sendMode}"`);
     if (disabled) props.push('disabled');
@@ -132,7 +120,7 @@ export default function ChatbarPlayground({
 
     const imports = [
       `import { useState } from 'react';`,
-      `import { Chatbar${showAttach ? ', IconButton' : ''} } from '@kushagradhawan/kookie-ui';`,
+      `import { Chatbar${showAttach ? ', Button' : ''} } from '@kushagradhawan/kookie-ui';`,
       ...(showAttach
         ? [`import { HugeiconsIcon } from '@hugeicons/react';`, `import { Attachment01Icon } from '@hugeicons/core-free-icons';`]
         : []),
@@ -148,14 +136,14 @@ export default function ChatbarPlayground({
       ? `
         <Chatbar.RowStart>
           <Chatbar.AttachTrigger asChild>
-            <IconButton
+            <Button iconOnly
               variant="ghost"
               size="${size}"
               color="gray"
               aria-label="Attach file"
             >
               <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
-            </IconButton>
+            </Button>
           </Chatbar.AttachTrigger>
         </Chatbar.RowStart>`
       : `
@@ -191,7 +179,6 @@ export function ChatbarDemo() {
           variant={variant as any}
           size={size as any}
           radius={radius === 'theme' ? undefined : (radius as any)}
-          material={material === 'theme' ? undefined : (material as any)}
           expandOn={expandOn as any}
           sendMode={sendMode as any}
           disabled={disabled}
@@ -211,14 +198,14 @@ export function ChatbarDemo() {
             <Chatbar.RowStart>
               {showAttach && (
                 <Chatbar.AttachTrigger asChild>
-                  <IconButton
+                  <Button iconOnly
                     variant="ghost"
                     size={size as any}
                     color="gray"
                     aria-label="Attach file"
                   >
                     <HugeiconsIcon icon={Attachment01Icon} strokeWidth={1.75} />
-                  </IconButton>
+                  </Button>
                 </Chatbar.AttachTrigger>
               )}
             </Chatbar.RowStart>
@@ -230,15 +217,12 @@ export function ChatbarDemo() {
       }
       code={generateCode()}
       items={items}
-      showBackground={material === 'translucent'}
       hint={
-        material === 'translucent'
-          ? 'Translucent material adds backdrop blur for depth over complex backgrounds.'
-          : expandOn === 'both' || expandOn === 'focus'
-            ? 'Click to focus and expand the chatbar. Type multiple lines to see auto-resize.'
-            : expandOn === 'overflow'
-              ? 'Type multiple lines to expand the chatbar automatically.'
-              : 'expandOn="none" never opens on its own. Use the Open switch, which drives the controlled open prop.'
+        expandOn === 'both' || expandOn === 'focus'
+          ? 'Click to focus and expand the chatbar. Type multiple lines to see auto-resize.'
+          : expandOn === 'overflow'
+            ? 'Type multiple lines to expand the chatbar automatically.'
+            : 'expandOn="none" never opens on its own. Use the Open switch, which drives the controlled open prop.'
       }
       showControls={showControls}
       showToolbar={showToolbar}

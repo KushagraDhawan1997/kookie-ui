@@ -1,13 +1,13 @@
 /**
  * TextArea Component Styles
- * 
+ *
  * ARCHITECTURE (following base-button pattern):
- * - Base styles: Layout, accessibility, material system
+ * - Base styles: Layout, accessibility
  * - Sizes: Responsive sizing and typography
  * - Variant palettes: Each variant defines its color scale as CSS variables
  * - Shared state logic: Single set of hover/focus/disabled selectors
- * - Special variants: classic (unique behavior, kept separate)
- * - Error states: Override colors for error styling
+ * - Special variants: raised (unique behavior, kept separate)
+ * - Invalid state: border and focus ring only, keyed on aria-invalid
  */
 
 /***************************************************************************************************
@@ -16,21 +16,7 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-TextAreaRoot {
-  /*
-   * Component-level material override
-   * When component has explicit material prop, override the inherited theme values.
-   */
-  &:where([data-material='solid'], [data-panel-background='solid']) {
-    --material-blend: 100%;
-    --material-alpha: 0;
-  }
-
-  &:where([data-material='translucent'], [data-panel-background='translucent']) {
-    --material-blend: 60%;
-    --material-alpha: 1;
-  }
-
+.kui-TextAreaRoot {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -39,30 +25,12 @@
   font-weight: var(--font-weight-regular);
   font-style: normal;
   text-align: start;
-  transition: var(--transition-text-field);
 
-  /* Allows the `resize` property to work on the div */
+  /* Allows the `resize` property to work on the div. Vertical by default, as in v2; the `resize` prop overrides it. */
   overflow: hidden;
+  resize: vertical;
 
-  /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
-
-  /* Prevent backdrop-filter stacking with parents */
   isolation: isolate;
-
-  /* Component-level overrides */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-  
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 
   &:where(:focus-within) {
     outline: 2px solid var(--v-focus-color, var(--focus-8));
@@ -72,13 +40,9 @@
   &::selection {
     background-color: var(--v-selection-color, var(--focus-a5));
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 }
 
-.rt-TextAreaInput {
+.kui-TextAreaInput {
   border-radius: inherit;
   resize: none;
   min-width: 0; /* allow shrinking in flex/relative containers */
@@ -99,30 +63,30 @@
     cursor: auto;
   }
   &::-webkit-scrollbar {
-    width: var(--space-3);
-    height: var(--space-3);
+    width: var(--space-4);
+    height: var(--space-4);
   }
   &::-webkit-scrollbar-track,
   &::-webkit-scrollbar-thumb {
     background-clip: content-box;
-    border: var(--space-1) solid transparent;
-    border-radius: var(--space-3);
+    border: var(--space-2) solid transparent;
+    border-radius: var(--space-4);
   }
   &::-webkit-scrollbar-track {
-    background-color: var(--gray-a3);
+    background-color: var(--neutral-a3);
   }
   &::-webkit-scrollbar-thumb {
-    background-color: var(--gray-a8);
+    background-color: var(--neutral-a8);
   }
   @media (hover: hover) {
     :where(&:not(:disabled))::-webkit-scrollbar-thumb:hover {
-      background-color: var(--gray-a9);
+      background-color: var(--neutral-a9);
     }
   }
   &:where(:autofill, [data-com-onepassword-filled]) {
     /* Reliably removes native autofill colors */
     background-clip: text;
-    -webkit-text-fill-color: var(--gray-12);
+    -webkit-text-fill-color: var(--neutral-12);
   }
 
   &::selection {
@@ -136,53 +100,59 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-TextAreaRoot {
+.kui-TextAreaRoot {
   box-sizing: border-box;
   padding: var(--text-area-border-width);
 }
-.rt-TextAreaInput {
-  padding: var(--text-area-padding-y) var(--text-area-padding-x);
+/* One inset on all four sides, the control padding of the size; the control height is the floor. */
+.kui-TextAreaInput {
+  padding: calc(var(--text-area-padding) - var(--text-area-border-width));
 }
 
 @breakpoints {
-  .rt-TextAreaRoot {
-    &:where(.rt-r-size-1) {
-      min-height: var(--space-8);
+  .kui-TextAreaRoot {
+    &:where(.kui-r-size-1) {
+      --text-area-padding: var(--control-px-1);
+      min-height: var(--control-height-1);
       border-radius: var(--radius-1);
 
-      & :where(.rt-TextAreaInput) {
-        /* Clip text to border */
-        --text-area-padding-y: calc(var(--space-2) - var(--text-area-border-width));
-        --text-area-padding-x: calc(var(--space-2) - var(--text-area-border-width));
+      & :where(.kui-TextAreaInput) {
         font-size: var(--font-size-1);
         line-height: var(--line-height-1);
         letter-spacing: var(--letter-spacing-1);
       }
     }
-    &:where(.rt-r-size-2) {
-      min-height: var(--space-9);
+    &:where(.kui-r-size-2) {
+      --text-area-padding: var(--control-px-2);
+      min-height: var(--control-height-2);
       border-radius: var(--radius-2);
 
-      & :where(.rt-TextAreaInput) {
-        /* Clip text to border */
-        --text-area-padding-y: calc(var(--space-2) - var(--text-area-border-width));
-        --text-area-padding-x: calc(var(--space-2) - var(--text-area-border-width));
+      & :where(.kui-TextAreaInput) {
         font-size: var(--font-size-2);
         line-height: var(--line-height-2);
         letter-spacing: var(--letter-spacing-2);
       }
     }
-    &:where(.rt-r-size-3) {
-      min-height: 80px;
+    &:where(.kui-r-size-3) {
+      --text-area-padding: var(--control-px-3);
+      min-height: var(--control-height-3);
       border-radius: var(--radius-3);
 
-      & :where(.rt-TextAreaInput) {
-        /* Clip text to border */
-        --text-area-padding-y: calc(var(--space-3) - var(--text-area-border-width));
-        --text-area-padding-x: calc(var(--space-3) - var(--text-area-border-width));
+      & :where(.kui-TextAreaInput) {
         font-size: var(--font-size-3);
         line-height: var(--line-height-3);
         letter-spacing: var(--letter-spacing-3);
+      }
+    }
+    &:where(.kui-r-size-4) {
+      --text-area-padding: var(--control-px-4);
+      min-height: var(--control-height-4);
+      border-radius: var(--radius-4);
+
+      & :where(.kui-TextAreaInput) {
+        font-size: var(--font-size-4);
+        line-height: var(--line-height-4);
+        letter-spacing: var(--letter-spacing-4);
       }
     }
   }
@@ -198,7 +168,7 @@
  ***************************************************************************************************/
 
 /* Soft variant palette */
-.rt-TextAreaRoot:where(.rt-variant-soft) {
+.kui-TextAreaRoot:where(.kui-variant-soft) {
   --text-area-border-width: 0px;
   --v-selection-color: var(--accent-a5);
   --v-focus-color: var(--accent-8);
@@ -211,7 +181,7 @@
 }
 
 /* Ghost variant palette */
-.rt-TextAreaRoot:where(.rt-variant-ghost) {
+.kui-TextAreaRoot:where(.kui-variant-ghost) {
   --text-area-border-width: 0px;
   --v-selection-color: var(--accent-a5);
   --v-focus-color: var(--accent-8);
@@ -221,11 +191,11 @@
   --v-bg-hover-a: var(--accent-a3);
   --v-bg-focus: var(--accent-2);
   --v-bg-focus-a: var(--accent-a2);
-  --v-placeholder-color: var(--gray-a10);
+  --v-placeholder-color: var(--neutral-a10);
 }
 
 /* Outline variant palette */
-.rt-TextAreaRoot:where(.rt-variant-outline) {
+.kui-TextAreaRoot:where(.kui-variant-outline) {
   --text-area-border-width: 1px;
   --v-selection-color: var(--focus-a5);
   --v-focus-color: var(--focus-8);
@@ -237,13 +207,12 @@
   --v-border-a: var(--accent-a6);
   --v-border-hover: var(--accent-7);
   --v-border-hover-a: var(--accent-a7);
-  --v-placeholder-color: var(--gray-a10);
+  --v-placeholder-color: var(--neutral-a10);
   /* Outline uses a different transition */
-  transition: var(--transition-background-blur);
 }
 
 /* Surface variant palette */
-.rt-TextAreaRoot:where(.rt-variant-surface) {
+.kui-TextAreaRoot:where(.kui-variant-surface) {
   --text-area-border-width: 1px;
   --v-selection-color: var(--accent-a5);
   --v-focus-color: var(--accent-8);
@@ -259,7 +228,7 @@
   --v-border-hover-a: var(--accent-a7);
   --v-border-focus: var(--accent-8);
   --v-border-focus-a: var(--accent-a8);
-  --v-placeholder-color: var(--gray-a10);
+  --v-placeholder-color: var(--neutral-a10);
 }
 
 /***************************************************************************************************
@@ -271,137 +240,109 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-TextAreaRoot:where(.rt-variant-soft, .rt-variant-ghost, .rt-variant-outline, .rt-variant-surface) {
+.kui-TextAreaRoot:where(.kui-variant-soft, .kui-variant-ghost, .kui-variant-outline, .kui-variant-surface) {
   /* Rest state */
-  background-color: color-mix(
-    in srgb,
-    var(--v-bg-a) calc(var(--material-alpha) * 100%),
-    var(--v-bg) var(--material-blend)
-  );
+  background-color: var(--v-bg);
 
   /* Placeholder styling */
-  & :where(.rt-TextAreaInput) {
+  & :where(.kui-TextAreaInput) {
     &::placeholder {
-      color: var(--v-placeholder-color, var(--gray-a10));
+      color: var(--v-placeholder-color, var(--neutral-a10));
       opacity: var(--v-placeholder-opacity, 1);
     }
   }
 
   /* Hover state */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      background-color: color-mix(
-        in srgb,
-        var(--v-bg-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-bg-hover) var(--material-blend)
-      );
+    &:where(:hover:not(:has(.kui-TextAreaInput:where(:focus, :disabled)))) {
+      background-color: var(--v-bg-hover);
     }
   }
 
   /* Autofill state */
   /* prettier-ignore */
-  &:where(:has(.rt-TextAreaInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
+  &:where(:has(.kui-TextAreaInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
     background-image: linear-gradient(var(--focus-a2), var(--focus-a2));
     box-shadow: inset 0 0 0 1px var(--focus-a5);
   }
 
   /* Disabled/read-only state */
-  &:where(:has(.rt-TextAreaInput:where(:disabled, :read-only))) {
-    background-color: var(--gray-a2);
-    background-image: linear-gradient(var(--gray-a2), var(--gray-a2));
+  &:where(:has(.kui-TextAreaInput:where(:disabled, :read-only))) {
+    background-color: var(--neutral-a2);
+    background-image: linear-gradient(var(--neutral-a2), var(--neutral-a2));
   }
 }
 
 /* Border variants: outline and surface */
-.rt-TextAreaRoot:where(.rt-variant-outline, .rt-variant-surface) {
+.kui-TextAreaRoot:where(.kui-variant-outline, .kui-variant-surface) {
   /* Rest state border */
-  box-shadow: inset 0 0 0 1px color-mix(
-    in srgb,
-    var(--v-border-a) calc(var(--material-alpha) * 100%),
-    var(--v-border) var(--material-blend)
-  );
+  box-shadow: inset 0 0 0 1px var(--v-border);
 
   /* Hover state border */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      box-shadow: inset 0 0 0 1px color-mix(
-        in srgb,
-        var(--v-border-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-border-hover) var(--material-blend)
-      );
+    &:where(:hover:not(:has(.kui-TextAreaInput:where(:focus, :disabled)))) {
+      box-shadow: inset 0 0 0 1px var(--v-border-hover);
     }
   }
 
   /* Disabled state border */
-  &:where(:has(.rt-TextAreaInput:where(:disabled, :read-only))) {
-    box-shadow: inset 0 0 0 var(--text-area-border-width) var(--gray-a6);
+  &:where(:has(.kui-TextAreaInput:where(:disabled, :read-only))) {
+    box-shadow: inset 0 0 0 var(--text-area-border-width) var(--neutral-a6);
   }
 }
 
 /* Ghost focus state - needs background on focus */
-.rt-TextAreaRoot:where(.rt-variant-ghost) {
+.kui-TextAreaRoot:where(.kui-variant-ghost) {
   &:where(:focus-within) {
-    background-color: color-mix(
-      in srgb,
-      var(--v-bg-focus-a, var(--v-bg-a)) calc(var(--material-alpha) * 100%),
-      var(--v-bg-focus, var(--v-bg)) var(--material-blend)
-    );
+    background-color: var(--v-bg-focus, var(--v-bg));
   }
 }
 
 /* Surface focus state - border changes on focus */
-.rt-TextAreaRoot:where(.rt-variant-surface) {
+.kui-TextAreaRoot:where(.kui-variant-surface) {
   &:where(:focus-within) {
-    background-color: color-mix(
-      in srgb,
-      var(--v-bg-focus-a, var(--v-bg-a)) calc(var(--material-alpha) * 100%),
-      var(--v-bg-focus, var(--v-bg)) var(--material-blend)
-    );
-    box-shadow: inset 0 0 0 var(--text-area-border-width) color-mix(
-      in srgb,
-      var(--v-border-focus-a) calc(var(--material-alpha) * 100%),
-      var(--v-border-focus) var(--material-blend)
-    );
+    background-color: var(--v-bg-focus, var(--v-bg));
+    box-shadow: inset 0 0 0 var(--text-area-border-width) var(--v-border-focus);
   }
 }
 
 /* Soft autofill - uses accent colors */
-.rt-TextAreaRoot:where(.rt-variant-soft) {
+.kui-TextAreaRoot:where(.kui-variant-soft) {
   /* prettier-ignore */
-  &:where(:has(.rt-TextAreaInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
-    box-shadow: inset 0 0 0 1px var(--accent-a5), inset 0 0 0 1px var(--gray-a4);
+  &:where(:has(.kui-TextAreaInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
+    box-shadow: inset 0 0 0 1px var(--accent-a5), inset 0 0 0 1px var(--neutral-a4);
     background-image: none;
   }
 
-  &:where(:has(.rt-TextAreaInput:where(:disabled, :read-only))) {
-    background-color: var(--gray-a3);
+  &:where(:has(.kui-TextAreaInput:where(:disabled, :read-only))) {
+    background-color: var(--neutral-a3);
     background-image: none;
   }
 }
 
 /* Ghost disabled - specific color */
-.rt-TextAreaRoot:where(.rt-variant-ghost) {
-  &:where(:has(.rt-TextAreaInput:where(:disabled, :read-only))) {
-    color: var(--gray-a8);
+.kui-TextAreaRoot:where(.kui-variant-ghost) {
+  &:where(:has(.kui-TextAreaInput:where(:disabled, :read-only))) {
+    color: var(--neutral-a8);
   }
 
   /* prettier-ignore */
-  &:where(:has(.rt-TextAreaInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
+  &:where(:has(.kui-TextAreaInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
     background-color: var(--accent-a2);
-    box-shadow: inset 0 0 0 1px var(--accent-a5), inset 0 0 0 1px var(--gray-a4);
+    box-shadow: inset 0 0 0 1px var(--accent-a5), inset 0 0 0 1px var(--neutral-a4);
   }
 }
 
 /* Surface disabled - specific color */
-.rt-TextAreaRoot:where(.rt-variant-surface) {
-  &:where(:has(.rt-TextAreaInput:where(:disabled, :read-only))) {
-    color: var(--gray-a8);
+.kui-TextAreaRoot:where(.kui-variant-surface) {
+  &:where(:has(.kui-TextAreaInput:where(:disabled, :read-only))) {
+    color: var(--neutral-a8);
   }
 
   /* prettier-ignore */
-  &:where(:has(.rt-TextAreaInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
+  &:where(:has(.kui-TextAreaInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
     background-color: var(--accent-a2);
-    box-shadow: inset 0 0 0 1px var(--accent-a5), inset 0 0 0 1px var(--gray-a4);
+    box-shadow: inset 0 0 0 1px var(--accent-a5), inset 0 0 0 1px var(--neutral-a4);
   }
 }
 
@@ -413,52 +354,42 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* Classic variant - uses --color-surface and shadow */
-.rt-TextAreaRoot:where(.rt-variant-classic) {
-  --text-area-border-width: 0px;
+/* Raised variant: the default. The surface colour with --field-chrome. */
+.kui-TextAreaRoot:where(.kui-variant-raised) {
+  --text-area-border-width: 1px;
   --v-selection-color: var(--focus-a5);
   --v-focus-color: var(--focus-8);
 
-  background-color: var(--color-surface-solid);
-  box-shadow: var(--shadow-2);
-  transition: var(--transition-text-field);
+  background-color: var(--field-fill);
+  box-shadow: var(--field-chrome);
 
-  /* Translucent theme override */
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    background-color: var(--color-surface-translucent);
-  }
-
-  & :where(.rt-TextAreaInput) {
+  & :where(.kui-TextAreaInput) {
     &::placeholder {
-      color: var(--gray-a10);
+      color: var(--neutral-a10);
     }
   }
 
   /* Hover effects */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      background-color: color-mix(
-        in srgb,
-        var(--accent-a2) calc(var(--material-alpha) * 100%),
-        var(--accent-2) var(--material-blend)
-      );
-      box-shadow: var(--shadow-2);
+    &:where(:hover:not(:has(.kui-TextAreaInput:where(:focus, :disabled, :read-only)))) {
+      background-color: var(--field-fill-hover);
     }
   }
 
-  /* Focus state - accent ring with minimal inset */
-  &:where(:has(.rt-TextAreaInput:focus)) {
-    box-shadow: var(--shadow-2), 0 0 0 2px var(--focus-8);
-  }
-
   /* prettier-ignore */
-  &:where(:has(.rt-TextAreaInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
+  &:where(:has(.kui-TextAreaInput:where(:autofill, [data-com-onepassword-filled]):not(:disabled, :read-only))) {
     background-image: linear-gradient(var(--focus-a2), var(--focus-a2));
-    box-shadow: var(--shadow-2);
+    box-shadow: inset 0 0 0 1px var(--focus-a5);
   }
 
-  &:where(:has(.rt-TextAreaInput:where(:disabled, :read-only))) {
-    background-image: linear-gradient(var(--gray-a2), var(--gray-a2));
+  /* Read-only keeps the value and drops the fill: nothing here takes input. */
+  &:where(:has(.kui-TextAreaInput:read-only:not(:disabled))) {
+    background-color: transparent;
+  }
+
+  &:where(:has(.kui-TextAreaInput:disabled)) {
+    background-color: var(--field-fill-disabled);
+    box-shadow: inset 0 0 0 1px var(--field-edge-disabled);
   }
 }
 
@@ -468,166 +399,62 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* All disabled and read-only text areas */
-.rt-TextAreaInput {
-  &:where(:disabled, :read-only) {
-    cursor: text;
-    color: var(--gray-a11);
+/* Read-only text areas: the value stays selectable, so the caret cursor stays. */
+.kui-TextAreaInput {
+  &:where(:read-only:not(:disabled)) {
+    color: var(--neutral-a11);
     /* Safari */
-    -webkit-text-fill-color: var(--gray-a11);
+    -webkit-text-fill-color: var(--neutral-a11);
+
+    .kui-TextAreaRoot:where(:has(&)) {
+      --v-selection-color: var(--neutral-a5);
+      --v-focus-color: var(--neutral-8);
+    }
+  }
+}
+
+/* Disabled is a colour remap, never opacity, and the cursor goes back to the arrow. */
+.kui-TextAreaInput {
+  &:where(:disabled) {
+    cursor: default;
+    color: var(--neutral-a8);
+    /* Safari */
+    -webkit-text-fill-color: var(--neutral-a8);
 
     &::placeholder {
-      opacity: 0.5;
-    }
-    &:where(:placeholder-shown) {
-      cursor: var(--cursor-disabled);
+      color: var(--neutral-a8);
+      -webkit-text-fill-color: var(--neutral-a8);
+      opacity: 1;
     }
 
-    .rt-TextAreaRoot:where(:has(&)) {
-      --v-selection-color: var(--gray-a5);
-      --v-focus-color: var(--gray-8);
+    .kui-TextAreaRoot:where(:has(&)) {
+      --v-selection-color: var(--neutral-a5);
+      --v-focus-color: var(--neutral-8);
+      cursor: default;
     }
   }
 }
 
 /***************************************************************************************************
  *                                                                                                 *
- * ERROR STATES                                                                                    *
+ * INVALID                                                                                         *
+ *                                                                                                 *
+ * Keyed on the textarea's `aria-invalid`, which the `error` prop also sets. Only the border and   *
+ * the focus ring move; the fill stays the variant's.                                              *
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-TextAreaRoot:where(.rt-error) {
-  --v-selection-color: var(--red-a5);
+.kui-TextAreaRoot:where(:has(> .kui-TextAreaInput[aria-invalid='true'])) {
   --v-focus-color: var(--red-8);
-}
 
-/* Error outline variant */
-.rt-TextAreaRoot:where(.rt-error.rt-variant-outline) {
-  --v-bg-hover: var(--red-2);
-  --v-bg-hover-a: var(--red-a2);
-  --v-border: var(--red-6);
-  --v-border-a: var(--red-a6);
-  --v-border-hover: var(--red-7);
-  --v-border-hover-a: var(--red-a7);
+  &:where(.kui-variant-raised, .kui-variant-outline, .kui-variant-surface, .kui-variant-soft, .kui-variant-ghost) {
+    box-shadow: inset 0 0 0 1px var(--red-6);
 
-  box-shadow: inset 0 0 0 1px color-mix(
-    in srgb,
-    var(--v-border-a) calc(var(--material-alpha) * 100%),
-    var(--v-border) var(--material-blend)
-  );
-
-  @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      background-color: color-mix(
-        in srgb,
-        var(--v-bg-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-bg-hover) var(--material-blend)
-      );
-      box-shadow: inset 0 0 0 1px color-mix(
-        in srgb,
-        var(--v-border-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-border-hover) var(--material-blend)
-      );
+    @media (hover: hover) {
+      &:where(:hover:not(:has(.kui-TextAreaInput:where(:focus, :disabled)))) {
+        box-shadow: inset 0 0 0 1px var(--red-7);
+      }
     }
-  }
-}
-
-/* Error surface variant */
-.rt-TextAreaRoot:where(.rt-error.rt-variant-surface) {
-  --v-bg: var(--red-2);
-  --v-bg-a: var(--red-a2);
-  --v-bg-hover: var(--red-3);
-  --v-bg-hover-a: var(--red-a3);
-  --v-border: var(--red-6);
-  --v-border-a: var(--red-a6);
-  --v-border-hover: var(--red-7);
-  --v-border-hover-a: var(--red-a7);
-
-  background-color: color-mix(
-    in srgb,
-    var(--v-bg-a) calc(var(--material-alpha) * 100%),
-    var(--v-bg) var(--material-blend)
-  );
-  box-shadow: inset 0 0 0 1px color-mix(
-    in srgb,
-    var(--v-border-a) calc(var(--material-alpha) * 100%),
-    var(--v-border) var(--material-blend)
-  );
-
-  @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      background-color: color-mix(
-        in srgb,
-        var(--v-bg-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-bg-hover) var(--material-blend)
-      );
-      box-shadow: inset 0 0 0 1px color-mix(
-        in srgb,
-        var(--v-border-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-border-hover) var(--material-blend)
-      );
-    }
-  }
-}
-
-/* Error classic variant */
-.rt-TextAreaRoot:where(.rt-error.rt-variant-classic) {
-  box-shadow: var(--shadow-2), inset 0 0 0 1px var(--red-6);
-  
-  @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      box-shadow: var(--shadow-3), inset 0 0 0 1px var(--red-7);
-    }
-  }
-}
-
-/* Error soft variant */
-.rt-TextAreaRoot:where(.rt-error.rt-variant-soft) {
-  --v-bg: var(--red-2);
-  --v-bg-a: var(--red-a2);
-  --v-bg-hover: var(--red-4);
-  --v-bg-hover-a: var(--red-a4);
-  
-  background-color: color-mix(
-    in srgb,
-    var(--v-bg-a) calc(var(--material-alpha) * 100%),
-    var(--v-bg) var(--material-blend)
-  );
-  
-  @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      background-color: color-mix(
-        in srgb,
-        var(--v-bg-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-bg-hover) var(--material-blend)
-      );
-    }
-  }
-}
-
-/* Error ghost variant */
-.rt-TextAreaRoot:where(.rt-error.rt-variant-ghost) {
-  --v-bg-hover: var(--red-3);
-  --v-bg-hover-a: var(--red-a3);
-  --v-bg-focus: var(--red-2);
-  --v-bg-focus-a: var(--red-a2);
-
-  @media (hover: hover) {
-    &:where(:hover:not(:has(.rt-TextAreaInput:focus))) {
-      background-color: color-mix(
-        in srgb,
-        var(--v-bg-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-bg-hover) var(--material-blend)
-      );
-    }
-  }
-  
-  &:where(:focus-within) {
-    background-color: color-mix(
-      in srgb,
-      var(--v-bg-focus-a) calc(var(--material-alpha) * 100%),
-      var(--v-bg-focus) var(--material-blend)
-    );
   }
 }
 
@@ -637,19 +464,52 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-TextAreaErrorMessage {
+/* With an error message, one box holds the field and the message below it. Without one the
+   wrapper steps out of layout, and the field is the box. */
+.kui-TextAreaWrapper:where(:not([data-message])) {
+  display: contents;
+}
+
+.kui-TextAreaWrapper:where([data-message]) {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  /* A height given to the pair goes to the box, the message keeps its own. */
+  & > :where(.kui-TextAreaRoot) {
+    flex: 1 1 auto;
+  }
+}
+
+/* Below the box, outside its paint: it takes the field's type itself. */
+.kui-TextAreaErrorMessage {
+  font-family: var(--default-font-family);
+  font-weight: var(--font-weight-regular);
+  padding-top: var(--space-2);
   color: var(--red-11);
   font-size: var(--font-size-1);
   line-height: var(--line-height-1);
-  margin-top: var(--space-1);
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-2);
 }
 
-.rt-TextAreaErrorMessage::before {
+.kui-TextAreaErrorMessage::before {
   content: "⚠";
   color: var(--red-9);
   font-size: var(--font-size-1);
   line-height: 1;
+}
+
+/*
+ * Forced colors drop box-shadows, which draw every variant's boundary, so the box gets a real
+ * border there, as BaseButton does.
+ */
+@media (forced-colors: active) {
+  .kui-TextAreaRoot {
+    border: 1px solid CanvasText;
+  }
+  .kui-TextAreaRoot:where(:has(.kui-TextAreaInput:disabled)) {
+    border-color: GrayText;
+  }
 }

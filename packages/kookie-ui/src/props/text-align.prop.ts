@@ -5,7 +5,7 @@ const textAlignValues = ['left', 'center', 'right'] as const;
 const textAlignPropDef = {
   align: {
     type: 'enum',
-    className: 'rt-r-ta',
+    className: 'kui-r-ta',
     values: textAlignValues,
     responsive: true,
   },

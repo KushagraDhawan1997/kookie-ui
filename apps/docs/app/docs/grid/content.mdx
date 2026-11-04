@@ -1,0 +1,121 @@
+---
+title: Grid
+description: Grid lays out its children in rows and columns that line up with each other.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/grid.tsx
+---
+
+Grid places children in rows and columns, so items line up both across and down. Use it for card galleries, dashboards and two-column forms. For a single row or column, use [Flex](/docs/flex).
+
+## Playground
+
+import GridPlayground from '../../playground/grid-playground';
+
+<GridPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Card, Grid, Heading, Text } from '@kushagradhawan/kookie-ui';
+
+const stats = [
+  { label: 'Visitors', value: '12,480' },
+  { label: 'Sign-ups', value: '342' },
+  { label: 'Revenue', value: '$8,120' },
+];
+
+export function StatsRow() {
+  return (
+    <Grid columns={{ initial: '1', sm: '3' }} gap="4">
+      {stats.map((stat) => (
+        <Card key={stat.label}>
+          <Text size="2" emphasis="medium">
+            {stat.label}
+          </Text>
+          <Heading size="6">{stat.value}</Heading>
+        </Card>
+      ))}
+    </Grid>
+  );
+}
+```
+
+## Best practices
+
+**Change the column count at breakpoints.** Start with one column and add more as the screen widens, such as `columns={{ initial: '1', sm: '2', lg: '4' }}`. Cards stay readable on a phone and use the room on a desktop.
+
+**Use Grid when items should line up across rows.** In a [Flex](/docs/flex) with `wrap`, each row sizes itself. In a Grid, every row shares the same columns.
+
+**Keep the reading order in the markup.** `flow`, `gridColumn` and `areas` can move items on screen, but screen readers and the Tab key follow the source order. Don't place an item somewhere that changes what it means.
+
+## Columns and rows
+
+`columns` and `rows` take a number from `'1'` to `'9'`, which makes that many equal tracks. Any other whole number works too, and so does a CSS `grid-template` value such as `'200px 1fr'` or `'repeat(auto-fill, minmax(240px, 1fr))'`.
+
+Without `columns`, a grid has one column that fills its width. The equal tracks use `minmax(0, 1fr)`, so long content wraps or truncates instead of widening its column.
+
+```tsx
+<Grid columns="240px 1fr" gap="6">
+  <SettingsNav />
+  <SettingsPanel />
+</Grid>
+```
+
+## Gap
+
+`gap` takes a step from the space scale, `'0'` to `'12'`, or a CSS string. `gapX` sets the space between columns and `gapY` the space between rows. The full scale is on the [Box](/docs/box) page.
+
+## Examples
+
+### Named areas
+
+`areas` takes a CSS `grid-template-areas` string. Children place themselves with `gridArea`, which Box, Flex and Grid all take.
+
+```tsx
+<Grid
+  areas='"header header" "nav main"'
+  columns="200px 1fr"
+  rows="auto 1fr"
+  height="100vh"
+>
+  <Box gridArea="header">…</Box>
+  <Box gridArea="nav">…</Box>
+  <Box gridArea="main">…</Box>
+</Grid>
+```
+
+### A wide item
+
+`gridColumn` lets one child span several columns, such as a field that takes the full width of a two-column form.
+
+```tsx
+<Grid columns="2" gap="4">
+  <TextField.Root aria-label="First name" />
+  <TextField.Root aria-label="Last name" />
+  <Box gridColumn="1 / -1">
+    <TextArea aria-label="Bio" />
+  </Box>
+</Grid>
+```
+
+### Filling gaps
+
+`flow="dense"` lets later items fill holes left by wide ones. Use it for galleries where the order doesn't carry meaning.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `as` | `'div' \| 'span'` | `'div'` | The element to render |
+| `asChild` | `boolean` | `false` | Renders the child element with the grid props |
+| `display` | `'none' \| 'inline-grid' \| 'grid'`, responsive | `'grid'` | The CSS display |
+| `columns` | `'1'`–`'9'` or `string`, responsive | One column | The column tracks |
+| `rows` | `'1'`–`'9'` or `string`, responsive | `none` | The row tracks |
+| `areas` | `string`, responsive | | Named areas, as `grid-template-areas` |
+| `flow` | `'row' \| 'column' \| 'dense' \| 'row-dense' \| 'column-dense'`, responsive | `'row'` | How items fill the grid |
+| `align` | `'start' \| 'center' \| 'end' \| 'baseline' \| 'stretch'`, responsive | `'stretch'` | Block alignment of items in their cells |
+| `justify` | `'start' \| 'center' \| 'end' \| 'between'`, responsive | `'start'` | Inline placement of the tracks in the grid |
+| `alignContent` | `'start' \| 'center' \| 'end' \| 'baseline' \| 'between' \| 'around' \| 'evenly' \| 'stretch'`, responsive | | Block placement of the tracks in the grid |
+| `justifyItems` | `'start' \| 'center' \| 'end' \| 'baseline' \| 'stretch'`, responsive | | Inline alignment of items in their cells |
+| `gap`, `gapX`, `gapY` | `'0'`–`'12'` or `string`, responsive | | Space between tracks |
+
+Grid also takes every layout prop that [Box](/docs/box#props) takes: padding, margin, width, height, position, inset, overflow, and the flex and grid child props. It accepts every attribute of the HTML `div` element, or `span` with `as="span"`.

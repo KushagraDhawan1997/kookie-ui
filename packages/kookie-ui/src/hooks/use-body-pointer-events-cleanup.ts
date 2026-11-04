@@ -1,142 +1,141 @@
 import * as React from 'react';
 
-let cleanupInstalled = false;
+// How many overlays currently use the hook. The listeners are shared: the first mount installs
+// them and the last unmount removes them, so closing one overlay never strips the fallback from
+// another that is still mounted.
+let mountCount = 0;
+let teardown: (() => void) | null = null;
+
+const devLog = (message: string) => {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(message);
+  }
+};
+
+function install(): () => void {
+  // Deferred cleanups are tracked so teardown can cancel the ones still queued. A timer that
+  // outlives the document reaches for `document.body` after it is gone; under jsdom that surfaces
+  // as an unhandled ReferenceError attributed to whichever test happened to be running.
+  const pending = new Set<ReturnType<typeof setTimeout>>();
+
+  const defer = (fn: () => void, delay: number) => {
+    const id = setTimeout(() => {
+      pending.delete(id);
+      fn();
+    }, delay);
+    pending.add(id);
+  };
+
+  const isStuck = () => document.body.style.pointerEvents === 'none';
+
+  const hasOpenModal = (): boolean => {
+    // Open dialogs and alert dialogs
+    const hasDialogs = Boolean(
+      document.querySelector('[role="dialog"][aria-modal="true"], [role="alertdialog"][aria-modal="true"]'),
+    );
+
+    // Any Radix overlay that is still mounted. Only overlays count: an open Accordion or
+    // Collapsible also carries data-state="open" and must not keep a stuck page blocked.
+    const hasRadixOverlays = Boolean(
+      document.querySelector(
+        '[data-radix-popper-content-wrapper], [role="dialog"][data-state="open"], [role="alertdialog"][data-state="open"]',
+      ),
+    );
+
+    return hasDialogs || hasRadixOverlays;
+  };
+
+  // Only clears pointer-events when no modal is open. Scroll-lock attributes belong to
+  // react-remove-scroll and are never touched here.
+  const safeCleanup = () => {
+    if (isStuck() && !hasOpenModal()) {
+      devLog('[KookieUI] Cleaning stuck pointer-events: none from body');
+      document.body.style.pointerEvents = '';
+    }
+  };
+
+  // Every trigger queues a check only while the body is actually blocked.
+  const scheduleCleanup = (delay: number) => {
+    if (isStuck()) defer(safeCleanup, delay);
+  };
+
+  const onDocumentClick = (event: Event) => {
+    const target = event.target as Element;
+    if (target && !target.closest('[role="dialog"], [role="alertdialog"], [data-radix-popper-content-wrapper]')) {
+      scheduleCleanup(100);
+    }
+  };
+
+  const onEscapeKey = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      scheduleCleanup(200);
+    }
+  };
+
+  const onInteraction = () => {
+    scheduleCleanup(50);
+  };
+
+  document.addEventListener('click', onDocumentClick, true);
+  document.addEventListener('keydown', onEscapeKey, true);
+  document.addEventListener('pointerup', onInteraction, true);
+  document.addEventListener('transitionend', onInteraction, true);
+  document.addEventListener('animationend', onInteraction, true);
+
+  // Portals mount and unmount as direct children of body, and the stuck value lives in body's
+  // style, so body's own children and style are all that need watching.
+  const observer = new MutationObserver(() => {
+    scheduleCleanup(0);
+  });
+  observer.observe(document.body, { childList: true, attributes: true, attributeFilter: ['style'] });
+
+  // Fallback periodic cleanup
+  const intervalId = setInterval(safeCleanup, 1000);
+
+  // Initial cleanup
+  scheduleCleanup(100);
+
+  // Tear everything down together. The observer is the important one: it fires while React
+  // unmounts the tree, so leaving it connected keeps queueing work against a document that is
+  // about to go away.
+  return () => {
+    clearInterval(intervalId);
+
+    pending.forEach(clearTimeout);
+    pending.clear();
+
+    observer.disconnect();
+
+    document.removeEventListener('click', onDocumentClick, true);
+    document.removeEventListener('keydown', onEscapeKey, true);
+    document.removeEventListener('pointerup', onInteraction, true);
+    document.removeEventListener('transitionend', onInteraction, true);
+    document.removeEventListener('animationend', onInteraction, true);
+  };
+}
 
 /**
  * Hook to cleanup stuck pointer-events: none on document.body
  *
  * This addresses an issue where react-remove-scroll (used by Radix UI Dialog)
  * sometimes fails to restore body pointer-events after dialog closes,
- * leaving the page unclickable.
+ * leaving the page unclickable. It never clears the value while a modal is open.
  */
 export function useBodyPointerEventsCleanup() {
   React.useEffect(() => {
     if (typeof document === 'undefined') return;
-    if (cleanupInstalled) return;
 
-    cleanupInstalled = true;
+    mountCount += 1;
+    if (mountCount === 1) {
+      teardown = install();
+    }
 
-    // Deferred cleanups are tracked so unmount can cancel the ones still
-    // queued. A timer that outlives the document reaches for `document.body`
-    // after it is gone; under jsdom that surfaces as an unhandled
-    // ReferenceError attributed to whichever test happened to be running.
-    const pending = new Set<ReturnType<typeof setTimeout>>();
-
-    const defer = (fn: () => void, delay: number) => {
-      const id = setTimeout(() => {
-        pending.delete(id);
-        fn();
-      }, delay);
-      pending.add(id);
-    };
-
-    const hasOpenModal = (): boolean => {
-      // Check for open dialogs/alertdialogs
-      const hasDialogs = Boolean(
-        document.querySelector(
-          '[role="dialog"][aria-modal="true"], [role="alertdialog"][aria-modal="true"]',
-        ),
-      );
-
-      // Also check for any Radix overlays that are still mounted
-      const hasRadixOverlays = Boolean(
-        document.querySelector('[data-radix-popper-content-wrapper], [data-state="open"]'),
-      );
-
-      return hasDialogs || hasRadixOverlays;
-    };
-
-    const forceCleanup = () => {
-      // Aggressive cleanup - remove pointer-events regardless
-      if (document.body.style.pointerEvents === 'none') {
-        console.log('[KookieUI] Force cleaning stuck pointer-events: none from body');
-        document.body.style.pointerEvents = '';
-
-        // Also remove any scroll-lock related attributes
-        document.body.removeAttribute('data-scroll-locked');
-        document.body.removeAttribute('data-remove-scroll');
-
-        // Remove any classes that might be causing issues
-        document.body.classList.remove('ReactModal__Body--open');
-      }
-    };
-
-    const safeCleanup = () => {
-      if (document.body.style.pointerEvents === 'none' && !hasOpenModal()) {
-        console.log('[KookieUI] Safe cleaning stuck pointer-events: none from body');
-        document.body.style.pointerEvents = '';
-      }
-    };
-
-    // Force cleanup on any click outside modal content
-    const onDocumentClick = (event: Event) => {
-      const target = event.target as Element;
-      if (
-        target &&
-        !target.closest(
-          '[role="dialog"], [role="alertdialog"], [data-radix-popper-content-wrapper]',
-        )
-      ) {
-        // Clicked outside any modal - force cleanup after a short delay
-        defer(forceCleanup, 100);
-      }
-    };
-
-    // Force cleanup on ESC key
-    const onEscapeKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        defer(forceCleanup, 200);
-      }
-    };
-
-    // Safe cleanup on other interactions
-    const onInteraction = () => {
-      defer(safeCleanup, 50);
-    };
-
-    // Install global listeners
-    document.addEventListener('click', onDocumentClick, true);
-    document.addEventListener('keydown', onEscapeKey, true);
-    document.addEventListener('pointerup', onInteraction, true);
-    document.addEventListener('transitionend', onInteraction, true);
-    document.addEventListener('animationend', onInteraction, true);
-
-    // Watch for DOM changes that might indicate overlay removal
-    const observer = new MutationObserver(() => {
-      defer(safeCleanup, 0);
-    });
-    observer.observe(document.body, { childList: true, subtree: true, attributes: true });
-
-    // Fallback periodic cleanup
-    const intervalId = setInterval(() => {
-      if (document.body.style.pointerEvents === 'none' && !hasOpenModal()) {
-        console.log('[KookieUI] Periodic cleanup of stuck pointer-events');
-        document.body.style.pointerEvents = '';
-      }
-    }, 1000);
-
-    // Initial cleanup
-    defer(safeCleanup, 100);
-
-    // Tear everything down together. The observer is the important one: it
-    // fires while React unmounts the tree, so leaving it connected keeps
-    // queueing work against a document that is about to go away. Releasing the
-    // latch lets a later mount reinstall.
     return () => {
-      clearInterval(intervalId);
-
-      pending.forEach(clearTimeout);
-      pending.clear();
-
-      observer.disconnect();
-
-      document.removeEventListener('click', onDocumentClick, true);
-      document.removeEventListener('keydown', onEscapeKey, true);
-      document.removeEventListener('pointerup', onInteraction, true);
-      document.removeEventListener('transitionend', onInteraction, true);
-      document.removeEventListener('animationend', onInteraction, true);
-
-      cleanupInstalled = false;
+      mountCount -= 1;
+      if (mountCount === 0) {
+        teardown?.();
+        teardown = null;
+      }
     };
   }, []);
 }

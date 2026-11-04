@@ -59,3 +59,8 @@ jobs:
       # package.json and the ESM-scoped tests/types/package.json.
       - name: Type tests
         run: pnpm --filter @kushagradhawan/kookie-ui test:types
+
+      # Five heavy screens from apps/bench, measured in Chromium against apps/bench/budget.json.
+      # Counts fail on any increase; times fail past their margin once recorded from CI.
+      - name: Performance budget
+        run: pnpm --filter bench bench

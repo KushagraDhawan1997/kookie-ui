@@ -1,2 +1,2 @@
-@import './scaling.css';
+/* The layout-only bundle needs the spacing scale (and --scale) its props resolve to. */
 @import './space.css';

@@ -3,10 +3,11 @@ import classNames from 'classnames';
 import { Popover as PopoverPrimitive } from 'radix-ui';
 
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../hooks/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
 import { popoverContentPropDefs } from './popover.props.js';
-import { Theme } from './theme.js';
-import { useThemeContext } from './theme.js';
+import { PortalTheme } from './_internal/portal-theme.js';
+import { NavigatorHostContext, type NavigatorHost } from './_internal/navigator-host.js';
 
 import type { PopoverContentOwnProps } from './popover.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
@@ -15,10 +16,6 @@ import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-p
 // Popover Content Context
 // ---------------------------------------------
 type PopoverContentContextValue = {
-  /** Ref to the Popover.Content DOM node */
-  contentRef: React.MutableRefObject<HTMLDivElement | null>;
-  /** Update content's toolbar offset variable and presence flag */
-  setToolbarOffset: (offsetPx: number) => void;
   /** Wire up aria-labelledby for toolbar title */
   setLabelId: (id: string | undefined) => void;
 };
@@ -35,6 +32,22 @@ const usePopoverContentContext = (caller: string) => {
 };
 
 interface PopoverRootProps extends React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Root> {}
+/** A Navigator screen's title names the popover through the content's label. */
+function PopoverNavigatorTitle({ children }: { children: React.ReactElement<{ id?: string }> }) {
+  const setLabelId = usePopoverContentContext('Navigator')?.setLabelId;
+  const id = React.useId();
+  React.useEffect(() => {
+    setLabelId?.(id);
+    return () => setLabelId?.(undefined);
+  }, [id, setLabelId]);
+  return React.cloneElement(children, { id });
+}
+
+const popoverNavigatorHost: NavigatorHost = {
+  Title: PopoverNavigatorTitle,
+  Close: ({ children }) => <PopoverPrimitive.Close asChild>{children}</PopoverPrimitive.Close>,
+};
+
 const PopoverRoot: React.FC<PopoverRootProps> = (props: PopoverRootProps) => (
   <PopoverPrimitive.Root {...props} />
 );
@@ -59,63 +72,36 @@ interface PopoverContentProps
   container?: React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Portal>['container'];
 }
 const PopoverContent = React.forwardRef<PopoverContentElement, PopoverContentProps>(
-  (props, forwardedRef) => {
-    const themeContext = useThemeContext();
-    const panelBackground = props.panelBackground ?? themeContext.panelBackground;
+  (ownProps, forwardedRef) => {
+    const props = useThemeSizeProps(ownProps, popoverContentPropDefs.size);
     const {
       className,
       forceMount,
       container,
-      panelBackground: _,
       ...contentProps
     } = extractProps(props, popoverContentPropDefs);
 
-    // Manage refs (we need the DOM node to apply CSS variables)
-    const contentRef = React.useRef<HTMLDivElement>(null);
-    const combinedRef = React.useCallback(
-      (node: HTMLDivElement | null) => {
-        contentRef.current = node;
-        if (typeof forwardedRef === 'function') {
-          forwardedRef(node);
-        } else if (forwardedRef) {
-          (forwardedRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-        }
-      },
-      [forwardedRef],
-    );
-
     const [labelId, setLabelId] = React.useState<string | undefined>(undefined);
-
-    const setToolbarOffset = React.useCallback((offsetPx: number) => {
-      const el = contentRef.current;
-      if (!el) return;
-      if (offsetPx > 0) {
-        el.style.setProperty('--popover-toolbar-offset', `${offsetPx}px`);
-        el.setAttribute('data-has-toolbar', 'true');
-      } else {
-        el.style.removeProperty('--popover-toolbar-offset');
-        el.removeAttribute('data-has-toolbar');
-      }
-    }, []);
+    const contextValue = React.useMemo(() => ({ setLabelId }), []);
 
     return (
       <PopoverPrimitive.Portal container={container} forceMount={forceMount}>
-        <Theme asChild>
+        <PortalTheme asChild>
           <PopoverPrimitive.Content
             align="start"
             sideOffset={8}
             collisionPadding={10}
             {...contentProps}
-            ref={combinedRef}
-            aria-labelledby={labelId}
-            data-panel-background={panelBackground}
-            className={classNames('rt-PopperContent', 'rt-PopoverContent', className)}
+            ref={forwardedRef}
+            // A Toolbar.Title names the panel; without one, the caller's own value stands.
+            aria-labelledby={labelId ?? contentProps['aria-labelledby']}
+            className={classNames('kui-PopperContent', 'kui-PopoverContent', className)}
           >
-            <PopoverContentContext.Provider value={React.useMemo(() => ({ contentRef, setToolbarOffset, setLabelId }), [setToolbarOffset])}>
-              {props.children}
+            <PopoverContentContext.Provider value={contextValue}>
+              <NavigatorHostContext.Provider value={popoverNavigatorHost}>{props.children}</NavigatorHostContext.Provider>
             </PopoverContentContext.Provider>
           </PopoverPrimitive.Content>
-        </Theme>
+        </PortalTheme>
       </PopoverPrimitive.Portal>
     );
   },
@@ -138,9 +124,7 @@ type PopoverAnchorElement = React.ElementRef<typeof PopoverPrimitive.Anchor>;
 interface PopoverAnchorProps
   extends React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Anchor> {}
 const PopoverAnchor = React.forwardRef<PopoverAnchorElement, PopoverAnchorProps>(
-  ({ children, ...props }, forwardedRef) => (
-    <PopoverPrimitive.Anchor {...props} ref={forwardedRef} />
-  ),
+  (props, forwardedRef) => <PopoverPrimitive.Anchor {...props} ref={forwardedRef} />,
 );
 
 PopoverAnchor.displayName = 'Popover.Anchor';
@@ -154,85 +138,60 @@ type PopoverToolbarProps = React.ComponentPropsWithoutRef<'div'>;
 
 const PopoverToolbarBase = React.forwardRef<PopoverToolbarElement, PopoverToolbarProps>(
   ({ className, children, ...props }, forwardedRef) => {
-    const ctx = usePopoverContentContext('Popover.Toolbar');
-
-    const localRef = React.useRef<HTMLDivElement | null>(null);
-    const setRefs = React.useCallback(
-      (node: HTMLDivElement | null) => {
-        localRef.current = node;
-        if (typeof forwardedRef === 'function') forwardedRef(node);
-        else if (forwardedRef)
-          (forwardedRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-      },
-      [forwardedRef],
-    );
-
-    React.useEffect(() => {
-      if (!ctx || !localRef.current) return;
-      const el = localRef.current;
-      const update = () => {
-        const height = el.getBoundingClientRect().height;
-        ctx.setToolbarOffset(height);
-      };
-      update();
-      const ro = new ResizeObserver(update);
-      ro.observe(el);
-      return () => {
-        ro.disconnect();
-        ctx.setToolbarOffset(0);
-      };
-    }, [ctx]);
+    // The toolbar is sticky in the content's own CSS, so it needs no measuring; this only warns
+    // when it is used outside Popover.Content.
+    usePopoverContentContext('Popover.Toolbar');
 
     return (
-      <div {...props} ref={setRefs} className={classNames('rt-PopoverToolbar', className)}>
+      <div {...props} ref={forwardedRef} className={classNames('kui-PopoverToolbar', className)}>
         {children}
       </div>
     );
   },
 );
-(PopoverToolbarBase as any).displayName = 'Popover.Toolbar';
+PopoverToolbarBase.displayName = 'Popover.Toolbar';
 
-type SectionProps = React.ComponentPropsWithoutRef<'div'>;
+type PopoverToolbarSectionProps = React.ComponentPropsWithoutRef<'div'>;
 
-const PopoverToolbarLeft = React.forwardRef<HTMLDivElement, SectionProps>(
+const PopoverToolbarLeft = React.forwardRef<HTMLDivElement, PopoverToolbarSectionProps>(
   ({ className, ...props }, ref) => (
     <div
       {...props}
       ref={ref}
-      className={classNames('rt-PopoverToolbarSection', 'rt-PopoverToolbarLeft', className)}
+      className={classNames('kui-PopoverToolbarSection', 'kui-PopoverToolbarLeft', className)}
     />
   ),
 );
 PopoverToolbarLeft.displayName = 'Popover.Toolbar.Left';
 
-const PopoverToolbarCenter = React.forwardRef<HTMLDivElement, SectionProps>(
+const PopoverToolbarCenter = React.forwardRef<HTMLDivElement, PopoverToolbarSectionProps>(
   ({ className, ...props }, ref) => (
     <div
       {...props}
       ref={ref}
-      className={classNames('rt-PopoverToolbarSection', 'rt-PopoverToolbarCenter', className)}
+      className={classNames('kui-PopoverToolbarSection', 'kui-PopoverToolbarCenter', className)}
     />
   ),
 );
 PopoverToolbarCenter.displayName = 'Popover.Toolbar.Center';
 
-const PopoverToolbarRight = React.forwardRef<HTMLDivElement, SectionProps>(
+const PopoverToolbarRight = React.forwardRef<HTMLDivElement, PopoverToolbarSectionProps>(
   ({ className, ...props }, ref) => (
     <div
       {...props}
       ref={ref}
-      className={classNames('rt-PopoverToolbarSection', 'rt-PopoverToolbarRight', className)}
+      className={classNames('kui-PopoverToolbarSection', 'kui-PopoverToolbarRight', className)}
     />
   ),
 );
 PopoverToolbarRight.displayName = 'Popover.Toolbar.Right';
 
-type TitleProps = React.ComponentPropsWithoutRef<'span'>;
-const PopoverToolbarTitle = React.forwardRef<HTMLSpanElement, TitleProps>(
+type PopoverToolbarTitleProps = React.ComponentPropsWithoutRef<'span'>;
+const PopoverToolbarTitle = React.forwardRef<HTMLSpanElement, PopoverToolbarTitleProps>(
   ({ className, id: idProp, ...props }, ref) => {
     const ctx = usePopoverContentContext('Popover.Toolbar.Title');
     const reactId = React.useId();
-    const id = idProp ?? `rt-popover-toolbar-title-${reactId}`;
+    const id = idProp ?? `kui-popover-toolbar-title-${reactId}`;
     React.useEffect(() => {
       ctx?.setLabelId(id);
       return () => ctx?.setLabelId(undefined);
@@ -242,7 +201,7 @@ const PopoverToolbarTitle = React.forwardRef<HTMLSpanElement, TitleProps>(
         {...props}
         id={id}
         ref={ref}
-        className={classNames('rt-PopoverToolbarTitle', className)}
+        className={classNames('kui-PopoverToolbarTitle', className)}
       />
     );
   },
@@ -279,4 +238,7 @@ export type {
   PopoverTriggerProps as TriggerProps,
   PopoverCloseProps as CloseProps,
   PopoverAnchorProps as AnchorProps,
+  PopoverToolbarProps as ToolbarProps,
+  PopoverToolbarSectionProps as ToolbarSectionProps,
+  PopoverToolbarTitleProps as ToolbarTitleProps,
 };

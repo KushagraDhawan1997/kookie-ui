@@ -3,46 +3,21 @@ import { colorPropDef } from '../../props/color.prop.js';
 
 import type { PropDef } from '../../props/prop-def.js';
 
-const contentSizes = ['1', '2'] as const;
-const contentVariants = ['solid', 'soft'] as const;
-const panelBackgrounds = ['solid', 'translucent'] as const;
-const materials = ['solid', 'translucent'] as const;
+const contentSizes = ['1', '2', '3', '4'] as const;
 const submenuBehaviors = ['cascade', 'drill-down'] as const;
 
 // Base props shared between Content and SubContent
 const baseMenuSharedPropDefs = {
   size: {
     type: 'enum',
-    className: 'rt-r-size',
+    className: 'kui-r-size',
     values: contentSizes,
     default: '2',
     responsive: true,
   },
-  variant: {
-    type: 'enum',
-    className: 'rt-variant',
-    values: contentVariants,
-    default: 'solid',
-  },
-  material: {
-    type: 'enum',
-    values: materials,
-    default: undefined,
-  },
-  /**
-   * @deprecated Use `material` prop instead. This prop will be removed in a future version.
-   */
-  panelBackground: {
-    type: 'enum',
-    values: panelBackgrounds,
-    default: undefined,
-  },
   ...colorPropDef,
 } satisfies {
   size: PropDef<(typeof contentSizes)[number]>;
-  variant: PropDef<(typeof contentVariants)[number]>;
-  material: PropDef<(typeof materials)[number] | undefined>;
-  panelBackground: PropDef<(typeof panelBackgrounds)[number] | undefined>;
 };
 
 // Content-specific props (includes submenuBehavior)
@@ -62,9 +37,6 @@ const baseMenuContentPropDefs = {
   },
 } satisfies {
   size: PropDef<(typeof contentSizes)[number]>;
-  variant: PropDef<(typeof contentVariants)[number]>;
-  material: PropDef<(typeof materials)[number] | undefined>;
-  panelBackground: PropDef<(typeof panelBackgrounds)[number] | undefined>;
   submenuBehavior: PropDef<(typeof submenuBehaviors)[number]>;
 };
 

@@ -22,26 +22,27 @@ import * as React from 'react';
 import classNames from 'classnames';
 
 import { Button } from './button.js';
-import { IconButton } from './icon-button.js';
 import { Text } from './text.js';
+import { ThemeSizeContext, useThemeSize } from '../hooks/theme-size.js';
 import { accentColorPropDef } from '../props/color.prop.js';
 
-type NoticeSize = '1' | '2' | '3';
+type NoticeSize = '1' | '2' | '3' | '4';
 
 /** The size a notice takes when it doesn't set one. `Chatbar.Root` provides its own size here. */
 const NoticeSizeContext = React.createContext<NoticeSize | undefined>(undefined);
+
+/** Notice's own range, the Theme's four sizes. */
+const noticeSizePropDef = { values: ['1', '2', '3', '4'] as const };
 type NoticeColor = (typeof accentColorPropDef)['color']['values'][number];
 
 interface StripProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'color' | 'children'> {
-  /** Padding, text and button size. Default `2`. */
+  /** Padding, text and button size. Defaults to the nearest Theme's size. */
   size?: NoticeSize;
   /**
    * The category of the message, not its volume. Default `gray`. Use a colour only when it adds a
    * fact the words don't already give, such as `red` for something that stops the next step.
    */
   color?: NoticeColor;
-  /** `translucent` when content scrolls behind the strip. */
-  material?: 'solid' | 'translucent';
   /** The message. */
   children: React.ReactNode;
 }
@@ -49,7 +50,10 @@ interface StripProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'color'
 interface NoticeProps extends StripProps {
   /** An icon before the message. It is hidden from assistive technology. */
   icon?: React.ReactNode;
-  /** One action that fixes the condition, such as `<Button>Add credits</Button>`. */
+  /**
+   * One action that fixes the condition, such as `<Button>Add credits</Button>`. A control in it
+   * that sets no `size` takes the notice's size.
+   */
   action?: React.ReactNode;
   /**
    * Called when the person presses the dismiss button, which shows only when this is set.
@@ -73,23 +77,22 @@ interface ConfirmationProps extends StripProps {
 }
 
 const Strip = React.forwardRef<HTMLDivElement, StripProps & { kind: 'notice' | 'confirmation'; trailing: React.ReactNode; leading?: React.ReactNode }>(
-  ({ kind, size = '2', color = 'gray', material, className, children, trailing, leading, ...props }, forwardedRef) => (
+  ({ kind, size = '2', color = 'gray', className, children, trailing, leading, ...props }, forwardedRef) => (
     <div
       role="status"
       aria-live="polite"
       {...props}
       ref={forwardedRef}
-      className={classNames('rt-NoticeRoot', `rt-r-size-${size}`, className)}
+      className={classNames('kui-NoticeRoot', `kui-r-size-${size}`, className)}
       data-kind={kind}
       data-accent-color={color}
-      data-material={material}
     >
       {leading ? (
-        <span className="rt-NoticeIcon" aria-hidden>
+        <span className="kui-NoticeIcon" aria-hidden>
           {leading}
         </span>
       ) : null}
-      <Text as="div" size={size} className="rt-NoticeText">
+      <Text as="div" size={size} className="kui-NoticeText">
         {children}
       </Text>
       {trailing}
@@ -101,17 +104,17 @@ Strip.displayName = 'Strip';
 /** A condition that is true now, with at most one action that fixes it. */
 const Notice = React.forwardRef<HTMLDivElement, NoticeProps>(({ icon, action, onDismiss, dismissLabel = 'Dismiss', size: sizeProp, ...props }, forwardedRef) => {
   const contextSize = React.useContext(NoticeSizeContext);
-  const size = sizeProp ?? contextSize ?? '2';
+  const size = useThemeSize(sizeProp ?? contextSize, noticeSizePropDef);
   const trailing =
     action || onDismiss ? (
-      <span className="rt-NoticeActions">
-        {action}
+      <span className="kui-NoticeActions">
+        {action ? <ThemeSizeContext.Provider value={size}>{action}</ThemeSizeContext.Provider> : null}
         {onDismiss ? (
-          <IconButton size={size} variant="ghost" color="gray" aria-label={dismissLabel} className="rt-NoticeDismiss" onClick={onDismiss}>
+          <Button iconOnly size={size} variant="ghost" color="gray" aria-label={dismissLabel} className="kui-NoticeDismiss" onClick={onDismiss}>
             <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden>
               <path d="M4 4l7 7M11 4l-7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
-          </IconButton>
+          </Button>
         ) : null}
       </span>
     ) : null;
@@ -123,7 +126,7 @@ Notice.displayName = 'Notice';
 const Confirmation = React.forwardRef<HTMLDivElement, ConfirmationProps>(
   ({ confirmLabel, cancelLabel = 'Not now', onConfirm, onCancel, busy = false, size: sizeProp, color = 'gray', ...props }, forwardedRef) => {
     const contextSize = React.useContext(NoticeSizeContext);
-    const size = sizeProp ?? contextSize ?? '2';
+    const size = useThemeSize(sizeProp ?? contextSize, noticeSizePropDef);
     return (
     <Strip
       {...props}
@@ -132,7 +135,7 @@ const Confirmation = React.forwardRef<HTMLDivElement, ConfirmationProps>(
       ref={forwardedRef}
       kind="confirmation"
       trailing={
-        <span className="rt-NoticeActions">
+        <span className="kui-NoticeActions">
           <Button size={size} variant="ghost" color="gray" disabled={busy} onClick={onCancel}>
             {cancelLabel}
           </Button>

@@ -14,7 +14,7 @@ describe('Bottom (stacked) data-open', () => {
       </Shell.Root>,
     );
 
-    const bottom = document.querySelector('.rt-ShellBottom') as HTMLElement;
+    const bottom = document.querySelector('.kui-ShellBottom') as HTMLElement;
     expect(bottom).toBeTruthy();
     expect(bottom.hasAttribute('data-open')).toBe(true);
   });
@@ -27,7 +27,7 @@ describe('Bottom (stacked) data-open', () => {
       </Shell.Root>,
     );
 
-    const bottom = document.querySelector('.rt-ShellBottom') as HTMLElement;
+    const bottom = document.querySelector('.kui-ShellBottom') as HTMLElement;
     expect(bottom).toBeTruthy();
     expect(bottom.hasAttribute('data-open')).toBe(false);
   });

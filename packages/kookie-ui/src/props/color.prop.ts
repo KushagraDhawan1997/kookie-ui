@@ -27,8 +27,20 @@ const accentColorPropDef = {
   color: PropDef<(typeof accentColors)[number]>;
 };
 
+// For components whose colour comes from their content (Chip, Avatar, Code): they rest gray, and `color` picks a category when it means something.
+const grayAccentColorPropDef = {
+  color: {
+    type: 'enum',
+    values: accentColors,
+    default: 'gray' as (typeof accentColors)[number],
+  },
+} satisfies {
+  color: PropDef<(typeof accentColors)[number]>;
+};
+
 export {
   accentColorPropDef,
+  grayAccentColorPropDef,
   colorPropDef,
   //
   accentColors,

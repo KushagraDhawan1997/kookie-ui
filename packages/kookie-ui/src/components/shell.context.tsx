@@ -11,9 +11,9 @@ import { useBreakpoint } from '../hooks/use-breakpoint.js';
 import type { Breakpoint, PaneMode, PaneName, PaneTarget, PresentationValue, SidebarMode } from './shell.types.js';
 import { setShellPeek, subscribeShellStore, useShellStore, warnOnce, type PaneValue, type ShellStore } from './_internal/shell-store.js';
 
-const toSidebarMode = (value: PaneValue | undefined): SidebarMode | undefined => (value === undefined ? undefined : value === 'closed' ? 'collapsed' : value === 'thin' ? 'thin' : 'expanded');
+const toSidebarMode = (value: PaneValue | undefined): SidebarMode | undefined => (value === undefined ? undefined : value === 'closed' ? 'collapsed' : 'expanded');
 
-const fromSidebarMode = (mode: SidebarMode): PaneValue => (mode === 'collapsed' ? 'closed' : mode === 'thin' ? 'thin' : 'open');
+const fromSidebarMode = (mode: SidebarMode): PaneValue => (mode === 'collapsed' ? 'closed' : 'open');
 
 const toPaneMode = (value: PaneValue | undefined): PaneMode => (value === undefined || value === 'closed' ? 'collapsed' : 'expanded');
 

@@ -1,7 +1,7 @@
 import type { PropDef } from '../props/prop-def.js';
 
 const positions = ['static', 'fixed', 'sticky'] as const;
-const sizes = ['1', '2', '3'] as const;
+const sizes = ['1', '2', '3', '4'] as const;
 
 const navbarRootPropDefs = {
   position: {

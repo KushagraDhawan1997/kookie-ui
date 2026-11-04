@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Shell, IconButton, Flex, Box, Text, Heading, Button, SegmentedControl } from '@kushagradhawan/kookie-ui';
+import { Shell, Button, Flex, Box, Text, Heading, SegmentedControl } from '@kushagradhawan/kookie-ui';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Menu01Icon, SidebarLeft01Icon, Settings01Icon, GridViewIcon } from '@hugeicons/core-free-icons';
 
@@ -30,17 +30,16 @@ export default function ShellInsetTest() {
       <Shell.Sidebar
         defaultState="expanded"
         expandedSize={280}
-        thinSize={64}
         presentation={{ initial: 'overlay', md: 'fixed' }}
-        inset={insetConfig.sidebar}
+        flush={!insetConfig.sidebar}
       >
-        <Flex direction="column" gap="4" p="4" style={{ height: '100%' }}>
-          <Flex align="center" gap="2">
-            <IconButton variant="ghost" size="2" asChild>
+        <Flex direction="column" gap="5" p="5" style={{ height: '100%' }}>
+          <Flex align="center" gap="3">
+            <Button iconOnly aria-label="Toggle sidebar" variant="ghost" size="2" asChild>
               <Shell.Trigger target="sidebar">
                 <HugeiconsIcon icon={Menu01Icon} size={18} />
               </Shell.Trigger>
-            </IconButton>
+            </Button>
             <Heading size="4">Sidebar</Heading>
           </Flex>
           
@@ -48,25 +47,31 @@ export default function ShellInsetTest() {
             {insetConfig.sidebar ? '✓ Inset enabled' : '✗ Inset disabled'}
           </Text>
           
-          <Flex direction="column" gap="2" style={{ flex: 1 }}>
+          <Flex direction="column" gap="3" style={{ flex: 1 }}>
             <Text size="2">Navigation items...</Text>
           </Flex>
         </Flex>
       </Shell.Sidebar>
 
       {/* Content with inset */}
-      <Shell.Content inset={insetConfig.content}>
-        <Box p="6" style={{ height: '100%' }}>
-          <Heading size="6" mb="4">Shell Inset Test</Heading>
+      <Shell.Content flush={!insetConfig.content}>
+        <Box p="7" style={{ height: '100%' }}>
+          <Box mb="5">
+            <Heading as="h1" size="6">Shell Inset Test</Heading>
+          </Box>
           
-          <Text size="2" emphasis="medium" mb="6">
-            The inset prop creates floating panes with a gray backdrop. Toggle each pane's inset below.
-          </Text>
+          <Box mb="7">
+            <Text size="2" emphasis="medium">
+              The inset prop creates floating panes with a gray backdrop. Toggle each pane's inset below.
+            </Text>
+          </Box>
 
           {/* Inset Controls */}
-          <Box mb="6" p="4" style={{ background: 'var(--gray-a3)', borderRadius: 'var(--radius-3)' }}>
-            <Heading size="3" mb="4">Inset Controls</Heading>
-            <Flex gap="3" wrap="wrap">
+          <Box mb="7" p="5" style={{ background: 'var(--neutral-a3)', borderRadius: 'var(--radius-3)' }}>
+            <Box mb="5">
+              <Heading size="3">Inset Controls</Heading>
+            </Box>
+            <Flex gap="4" wrap="wrap">
               <Button
                 variant={insetConfig.sidebar ? 'solid' : 'outline'}
                 onClick={() => toggleInset('sidebar')}
@@ -95,39 +100,49 @@ export default function ShellInsetTest() {
           </Box>
 
           {/* Pane Controls */}
-          <Box mb="6" p="4" style={{ background: 'var(--blue-a3)', borderRadius: 'var(--radius-3)' }}>
-            <Heading size="3" mb="4">Pane Toggles</Heading>
-            <Flex gap="3" wrap="wrap">
-              <IconButton variant="soft" size="3" asChild>
+          <Box mb="7" p="5" style={{ background: 'var(--blue-a3)', borderRadius: 'var(--radius-3)' }}>
+            <Box mb="5">
+              <Heading size="3">Pane Toggles</Heading>
+            </Box>
+            <Flex gap="4" wrap="wrap">
+              <Button iconOnly aria-label="Toggle sidebar" variant="soft" size="3" asChild>
                 <Shell.Trigger target="sidebar">
                   <HugeiconsIcon icon={SidebarLeft01Icon} size={20} />
                 </Shell.Trigger>
-              </IconButton>
-              <IconButton variant="soft" size="3" asChild>
+              </Button>
+              <Button iconOnly aria-label="Toggle inspector" variant="soft" size="3" asChild>
                 <Shell.Trigger target="inspector">
                   <HugeiconsIcon icon={Settings01Icon} size={20} />
                 </Shell.Trigger>
-              </IconButton>
-              <IconButton variant="soft" size="3" asChild>
+              </Button>
+              <Button iconOnly aria-label="Toggle bottom" variant="soft" size="3" asChild>
                 <Shell.Trigger target="bottom">
                   <HugeiconsIcon icon={GridViewIcon} size={20} />
                 </Shell.Trigger>
-              </IconButton>
+              </Button>
             </Flex>
           </Box>
 
           {/* Current State */}
-          <Box p="4" style={{ background: 'var(--gray-a3)', borderRadius: 'var(--radius-3)' }}>
-            <Heading size="3" mb="2">How Inset Works</Heading>
-            <Text as="div" size="2" mb="2">
-              • The Shell root paints <code>var(--gray-2)</code> behind the middle row when any pane has inset
-            </Text>
-            <Text as="div" size="2" mb="2">
-              • Each inset pane gets a margin, rounded corners, a background and a shadow
-            </Text>
-            <Text as="div" size="2" mb="2">
-              • The backdrop is painted from the server HTML, before hydration
-            </Text>
+          <Box p="5" style={{ background: 'var(--neutral-a3)', borderRadius: 'var(--radius-3)' }}>
+            <Box mb="3">
+              <Heading size="3">How Inset Works</Heading>
+            </Box>
+            <Box mb="3">
+              <Text as="div" size="2">
+                • The Shell root paints <code>var(--neutral-2)</code> behind the middle row when any pane has inset
+              </Text>
+            </Box>
+            <Box mb="3">
+              <Text as="div" size="2">
+                • Each inset pane gets a margin, rounded corners, a background and a shadow
+              </Text>
+            </Box>
+            <Box mb="3">
+              <Text as="div" size="2">
+                • The backdrop is painted from the server HTML, before hydration
+              </Text>
+            </Box>
             <Text as="div" size="2">
               • Adjacent inset panes share one gap
             </Text>
@@ -140,9 +155,9 @@ export default function ShellInsetTest() {
         defaultOpen={{ initial: false, lg: true }}
         expandedSize={300}
         presentation={{ initial: 'overlay', lg: 'fixed' }}
-        inset={insetConfig.inspector}
+        flush={!insetConfig.inspector}
       >
-        <Flex direction="column" gap="4" p="4" style={{ height: '100%' }}>
+        <Flex direction="column" gap="5" p="5" style={{ height: '100%' }}>
           <Heading size="4">Inspector</Heading>
           <Text size="2" emphasis="medium">
             {insetConfig.inspector ? '✓ Inset enabled' : '✗ Inset disabled'}
@@ -155,9 +170,9 @@ export default function ShellInsetTest() {
       <Shell.Bottom
         defaultOpen={false}
         expandedSize={200}
-        inset={insetConfig.bottom}
+        flush={!insetConfig.bottom}
       >
-        <Flex direction="column" gap="2" p="4" style={{ height: '100%' }}>
+        <Flex direction="column" gap="3" p="5" style={{ height: '100%' }}>
           <Heading size="4">Bottom Panel</Heading>
           <Text size="2" emphasis="medium">
             {insetConfig.bottom ? '✓ Inset enabled' : '✗ Inset disabled'}

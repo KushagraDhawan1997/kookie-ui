@@ -27,7 +27,7 @@ const TestimonialAuthor = React.forwardRef<HTMLDivElement, FlexProps>(
 );
 TestimonialAuthor.displayName = 'Testimonial.Author';
 
-const TestimonialAvatar = React.forwardRef<HTMLImageElement, AvatarProps>(
+const TestimonialAvatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
   ({ size = '4', radius = 'full', ...props }, ref) => <Avatar ref={ref} size={size} radius={radius} {...props} />,
 );
 TestimonialAvatar.displayName = 'Testimonial.Avatar';

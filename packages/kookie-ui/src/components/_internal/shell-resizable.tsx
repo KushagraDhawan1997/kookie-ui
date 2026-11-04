@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useLayoutEffect } from 'radix-ui/internal';
 import { normalizeToPx } from '../../helpers/normalize-to-px.js';
 import type { PaneName, PaneSizePersistence } from '../shell.types.js';
 import type { PaneResizeContextValue } from './shell-resize.js';
@@ -49,6 +50,19 @@ export type ResizableOptions = {
  */
 const clampTo = (value: number, min: number | undefined, max: number | undefined) => Math.max(min ?? value, Math.min(max ?? value, value));
 
+/**
+ * The pane's starting size for the first render, so the server HTML already has it and the first
+ * paint is right. Only a number can be known before the pane exists (a percentage needs the
+ * Shell's width); the effects below still own the size after mount.
+ */
+export function useInitialPaneSize(size: number | string | undefined, defaultSize: number | string | undefined, minSize: number, maxSize: number) {
+  const [initial] = React.useState(() => {
+    const value = size ?? defaultSize;
+    return typeof value === 'number' && Number.isFinite(value) ? `${clampTo(value, minSize, maxSize)}px` : undefined;
+  });
+  return initial;
+}
+
 /** Everything a resizable pane shares: size props, persistence, and the handle's context. */
 export function useResizablePane(options: ResizableOptions): PaneResizeContextValue {
   const { name, elementRef, cssVarName, orientation, minSize, maxSize, resizable, size, defaultSize, paneId, persistence } = options;
@@ -57,7 +71,7 @@ export function useResizablePane(options: ResizableOptions): PaneResizeContextVa
   // consumer passes an inline function. A controlled `size` is reported again
   // only when the size, the minimum or the maximum changes.
   const latest = React.useRef(options);
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     latest.current = options;
   });
 
@@ -102,7 +116,7 @@ export function useResizablePane(options: ResizableOptions): PaneResizeContextVa
       const el = elementRef.current;
       if (!el) return;
       el.style.setProperty(cssVarName, `${value}px`);
-      for (const handle of el.querySelectorAll(':scope > .rt-ShellResizer')) handle.setAttribute('aria-valuenow', String(Math.round(value)));
+      for (const handle of el.querySelectorAll(':scope > .kui-ShellResizer')) handle.setAttribute('aria-valuenow', String(Math.round(value)));
       if (own) ownedRef.current = true;
     },
     [elementRef, cssVarName],
@@ -110,12 +124,12 @@ export function useResizablePane(options: ResizableOptions): PaneResizeContextVa
 
   // expandedSize: the size until something else sets one. Declared first, so
   // the effects below win on mount.
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (!ownedRef.current) writeSize(options.expandedSize, false);
   }, [options.expandedSize, writeSize]);
 
   // defaultSize: applied once, on mount.
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (size !== undefined || defaultSize === undefined) return;
     const px = toPx(defaultSize);
     if (typeof px !== 'number' || !Number.isFinite(px)) return;
@@ -131,7 +145,7 @@ export function useResizablePane(options: ResizableOptions): PaneResizeContextVa
   // an app's frame-sized limits (a maximum taken from the window) would
   // otherwise squeeze the drawer and report the squeezed size back. The size
   // is applied again when the pane returns to the frame.
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (size === undefined || latest.current.overlayingNow()) return;
     const px = toPx(size);
     if (typeof px !== 'number' || !Number.isFinite(px)) return;
@@ -140,9 +154,17 @@ export function useResizablePane(options: ResizableOptions): PaneResizeContextVa
     emitSizeChange(clamped, { reason: 'controlled' });
   }, [size, minSize, maxSize, options.overlaying, toPx, writeSize, emitSizeChange]);
 
-  // A persistence adapter from `paneId` when none is given.
+  // A persistence adapter from `paneId` when none is given. A given one is read through
+  // `latest`, so an inline object (the documented shape) does not reload the size every render.
+  const hasPersistence = persistence !== undefined;
   const adapter = React.useMemo<PaneSizePersistence | undefined>(() => {
-    if (!paneId || persistence) return persistence;
+    if (hasPersistence) {
+      return {
+        load: () => latest.current.persistence?.load?.(),
+        save: (value: number) => latest.current.persistence?.save?.(value),
+      };
+    }
+    if (!paneId) return undefined;
     const key = `kookie-ui:shell:${name}:${paneId}`;
     return {
       load: () => {
@@ -164,12 +186,12 @@ export function useResizablePane(options: ResizableOptions): PaneResizeContextVa
         }
       },
     };
-  }, [name, paneId, persistence]);
+  }, [name, paneId, hasPersistence]);
 
   // Persisted size, loaded in a layout effect and clamped, so a reload does
   // not paint the default and then jump. Only where the pane is in the frame:
   // an overlay keeps its designed size.
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (!resizable || !adapter?.load || latest.current.overlayingNow()) return undefined;
     let mounted = true;
     const apply = (value: number | undefined) => {

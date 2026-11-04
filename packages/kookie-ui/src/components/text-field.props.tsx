@@ -5,37 +5,44 @@ import { flexPropDefs } from './flex.props.js';
 
 import type { PropDef } from '../props/prop-def.js';
 
-const sizes = ['1', '2', '3'] as const;
-const variants = ['classic', 'surface', 'soft', 'ghost', 'outline'] as const;
-const panelBackgrounds = ['solid', 'translucent'] as const;
-const materials = ['solid', 'translucent'] as const;
+const sizes = ['1', '2', '3', '4'] as const;
+const variants = ['raised', 'surface', 'soft', 'ghost', 'outline'] as const;
 
 const textFieldRootPropDefs = {
-  size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '2', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'surface' },
+  size: { type: 'enum', className: 'kui-r-size', values: sizes, default: '2', responsive: true },
+  variant: { type: 'enum', className: 'kui-variant', values: variants, default: 'raised' },
   // Error and validation props
   error: { type: 'boolean', default: false },
   errorMessage: { type: 'string', default: undefined },
-  isInvalid: { type: 'boolean', default: false },
   required: { type: 'boolean', default: false },
   // Accessibility props
   'aria-describedby': { type: 'string', default: undefined },
   'aria-labelledby': { type: 'string', default: undefined },
   ...colorPropDef,
   ...radiusPropDef,
-  panelBackground: { type: 'enum', values: panelBackgrounds, default: undefined },
-  material: { type: 'enum', values: materials, default: undefined },
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;
   variant: PropDef<(typeof variants)[number]>;
   error: PropDef<boolean>;
   errorMessage: PropDef<string | undefined>;
-  isInvalid: PropDef<boolean>;
   required: PropDef<boolean>;
   'aria-describedby': PropDef<string | undefined>;
   'aria-labelledby': PropDef<string | undefined>;
-  panelBackground: PropDef<(typeof panelBackgrounds)[number] | undefined>;
-  material: PropDef<(typeof materials)[number] | undefined>;
+};
+
+// Ghost is the dividers alone: no fill, no edge.
+const groupVariants = ['raised', 'surface', 'soft', 'outline', 'ghost'] as const;
+
+const textFieldGroupPropDefs = {
+  size: { type: 'enum', className: 'kui-r-size', values: sizes, default: '2', responsive: true },
+  variant: { type: 'enum', className: 'kui-variant', values: groupVariants, default: 'raised' },
+  disabled: { type: 'boolean', default: false },
+  ...colorPropDef,
+  ...radiusPropDef,
+} satisfies {
+  size: PropDef<(typeof sizes)[number]>;
+  variant: PropDef<(typeof groupVariants)[number]>;
+  disabled: PropDef<boolean>;
 };
 
 const sides = ['left', 'right'] as const;
@@ -57,7 +64,10 @@ const textFieldSlotPropDefs = {
 
 /** Scrubbing props for TextField.Slot - handled separately from PropDef system */
 interface TextFieldSlotScrubProps {
-  /** Enable scrubbing behavior on this slot */
+  /**
+   * Drag the slot to change the value; Up and Down on the input step it once. Ignored while the
+   * field is disabled or read-only.
+   */
   scrub?: boolean;
   /** Current value (required for min/max clamping to work correctly) */
   scrubValue?: number;
@@ -83,4 +93,4 @@ interface TextFieldSlotScrubProps {
 
 export type { TextFieldSlotScrubProps };
 
-export { textFieldRootPropDefs, textFieldSlotPropDefs };
+export { textFieldRootPropDefs, textFieldGroupPropDefs, textFieldSlotPropDefs };

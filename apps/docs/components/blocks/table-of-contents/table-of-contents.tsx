@@ -108,7 +108,7 @@ export const TableOfContents = React.memo(function TableOfContents({
   if (toc.length === 0) return null;
 
   const content = (
-    <Flex direction="column" gap="3" className={className}>
+    <Flex direction="column" gap="4" className={className}>
       <Text size="2" emphasis="medium">
         {title}
       </Text>

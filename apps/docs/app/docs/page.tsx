@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { ComponentsIndex } from '@/components/components-index';
 
 const DESCRIPTION =
-  'Every component in the package. Each page covers what the component is, which props it takes and how to use it.';
+  'This index shows every component in the package, grouped by the job a person is doing. Each page covers what the component is, which props it takes and how to use it.';
 
 export const metadata: Metadata = {
   title: 'Components',

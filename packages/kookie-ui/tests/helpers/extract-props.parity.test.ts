@@ -4,7 +4,7 @@ import { extractProps } from '../../src/helpers/extract-props.js';
 import { legacyExtractProps } from './legacy/extract-props.js';
 
 import { baseButtonPropDefs } from '../../src/components/_internal/base-button.props.js';
-import { badgePropDefs } from '../../src/components/badge.props.js';
+import { chipPropDefs } from '../../src/components/chip.props.js';
 import { boxPropDefs } from '../../src/components/box.props.js';
 import { flexPropDefs } from '../../src/components/flex.props.js';
 import { gridPropDefs } from '../../src/components/grid.props.js';
@@ -18,13 +18,13 @@ import type { PropDef } from '../../src/props/prop-def.js';
 type PropDefs = Record<string, PropDef>;
 
 const DEF_SETS: Array<[string, PropDefs[]]> = [
-  ['button', [baseButtonPropDefs as PropDefs, marginPropDefs as PropDefs]],
-  ['badge', [badgePropDefs as PropDefs, marginPropDefs as PropDefs]],
+  ['button', [baseButtonPropDefs as PropDefs]],
+  ['chip', [chipPropDefs as PropDefs]],
   ['box', [boxPropDefs as PropDefs, layoutPropDefs as PropDefs, marginPropDefs as PropDefs]],
   ['flex', [flexPropDefs as PropDefs, layoutPropDefs as PropDefs, marginPropDefs as PropDefs]],
   ['grid', [gridPropDefs as PropDefs, layoutPropDefs as PropDefs, marginPropDefs as PropDefs]],
-  ['heading', [headingPropDefs as PropDefs, marginPropDefs as PropDefs]],
-  ['text', [textPropDefs as PropDefs, marginPropDefs as PropDefs]],
+  ['heading', [headingPropDefs as PropDefs]],
+  ['text', [textPropDefs as PropDefs]],
 ];
 
 const BREAKPOINTS = ['initial', 'xs', 'sm', 'md', 'lg', 'xl'] as const;

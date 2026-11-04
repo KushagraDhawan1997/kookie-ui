@@ -6,9 +6,10 @@ import { useComposedRefs } from 'radix-ui/internal';
 import { PaneResizeContext } from './shell-resize.js';
 import { InspectorHandle, PaneHandle } from './shell-handles.js';
 import { usePane, paneAttributes, usePresentationTable } from './shell-pane.js';
-import { splitHandles, useResizablePane, type SizeChangeMeta } from './shell-resizable.js';
-import { useInsetRegistration, warnOnce } from './shell-store.js';
+import { splitHandles, useInitialPaneSize, useResizablePane, type SizeChangeMeta } from './shell-resizable.js';
+import { useFrameRegistration, warnOnce } from './shell-store.js';
 import { detailRest, endAnchoredGrowth, toPaneValue, withoutRemovedPaneProps } from './shell-rest.js';
+import { PageScope } from './page-scope.js';
 import { readBreakpoint } from '../../hooks/use-breakpoint.js';
 import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps } from '../shell.types.js';
 
@@ -23,8 +24,13 @@ type InspectorPublicProps = PaneBaseProps &
     onSizeChange?: (size: number, meta: SizeChangeMeta) => void;
     sizeUpdate?: 'throttle' | 'debounce';
     sizeUpdateMs?: number;
-    /** When true, adds margin and triggers the gray backdrop on the Shell. */
-    inset?: boolean;
+    /**
+     * Sets whether this pane joins the app frame. The default is `true`: the pane sits against its
+     * neighbours with one hairline between them. Set `flush={false}` to pull it off the frame as a
+     * card. It then floats over the content if the content is flush, and otherwise sits on the
+     * Shell's background beside a card content.
+     */
+    flush?: boolean;
   };
 
 type InspectorComponent = React.ForwardRefExoticComponent<InspectorPublicProps & React.RefAttributes<HTMLDivElement>> & { Handle: typeof InspectorHandle };
@@ -63,7 +69,7 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
     sizeUpdateMs = 50,
     size,
     defaultSize,
-    inset,
+    flush = true,
     id,
     ...domProps
   } = props;
@@ -83,7 +89,7 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
     onCollapse,
     size: expandedSize,
   });
-  useInsetRegistration('inspector', inset);
+  useFrameRegistration('inspector', flush);
 
   React.useEffect(() => {
     if (snapPoints !== undefined || collapseThreshold !== undefined || paneId !== undefined || persistence !== undefined) {
@@ -129,25 +135,30 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
   const { handles, content } = splitHandles(children, InspectorHandle);
   const handle = resizable && pane.shown !== false && !pane.overlaying ? <PaneResizeContext.Provider value={resize}>{handles.length > 0 ? handles : <PaneHandle />}</PaneResizeContext.Provider> : null;
 
+  const initialSize = useInitialPaneSize(size, defaultSize, minSize, maxSize);
   return (
     <div
       {...withoutRemovedPaneProps(domProps)}
+      role={domProps.role ?? 'complementary'}
       id={pane.id}
       ref={composedRef}
-      className={classNames('rt-ShellPane', 'rt-ShellInspector', className)}
+      className={classNames('kui-ShellPane', 'kui-ShellInspector', className)}
       {...paneAttributes(pane, attributes)}
-      data-inset={inset || undefined}
+      data-flush={flush || undefined}
       tabIndex={pane.overlaying ? -1 : domProps.tabIndex}
       style={
         {
           ...style,
           '--inspector-expanded-size': `${expandedSize}px`,
+          ...(initialSize ? { '--inspector-size': initialSize } : {}),
           '--inspector-min-size': `${minSize}px`,
           '--inspector-max-size': `${maxSize}px`,
         } as CSSPropertiesWithVars
       }
     >
-      <div className="rt-ShellInspectorContent">{content}</div>
+      <div className="kui-ShellInspectorContent">
+        <PageScope>{content}</PageScope>
+      </div>
       {handle}
     </div>
   );
@@ -155,3 +166,5 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
 
 Inspector.displayName = 'Shell.Inspector';
 Inspector.Handle = InspectorHandle;
+
+export type { InspectorPublicProps };

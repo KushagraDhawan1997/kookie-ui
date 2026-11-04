@@ -1,425 +1,143 @@
 ---
 title: Image
-description: Display images with enhanced loading states, accessibility features, and flexible layout options. Image provides skeleton placeholders, fade-in animations, and caption support.
+description: Image shows a picture that loads lazily, fills its box and takes the theme's corner.
 source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/image.tsx
 ---
 
-Display images with enhanced loading states, accessibility features, and flexible layout options. Image provides skeleton placeholders, fade-in animations, and caption support.
+Image renders one `img` element with no wrapper. It loads lazily, fills the box you give it and rests on a quiet neutral fill until the picture arrives. A person's photo or initials is an [Avatar](/docs/avatar).
 
-## Installation
+## Playground
 
-```bash
-npm install @kushagradhawan/kookie-ui
-```
+import ImagePlayground from '../../playground/image-playground';
+
+<ImagePlayground />
 
 ## Usage
 
-```tsx
-import { Image } from '@kushagradhawan/kookie-ui';
+```tsx showLineNumbers
+import { Card, Flex, Image, Text } from '@kushagradhawan/kookie-ui';
 
-export function MyComponent() {
-  return <Image src="/photo.jpg" alt="Team photo" />;
-}
-```
-
-## Props
-
-| Prop              | Type                                                      | Description                                                                                     |
-| ----------------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `src`             | `string`                                                  | Image source URL (required)                                                                     |
-| `alt`             | `string`                                                  | Alternative text for accessibility (required)                                                   |
-| `fit`             | `'cover' \| 'contain' \| 'fill' \| 'scale-down' \| 'none'`| Controls how the image scales to fit its container. Supports responsive objects                |
-| `radius`          | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'`      | Corner radius for rounded images                                                                |
-| `loading`         | `'eager' \| 'lazy'`                                       | Native loading behavior. Defaults to lazy                                                       |
-| `placeholder`     | `string`                                                  | Low-quality placeholder image URL (LQIP pattern)                                                |
-| `showSkeleton`    | `boolean`                                                 | Shows a skeleton placeholder while loading                                                      |
-| `fadeIn`          | `boolean`                                                 | Whether the image should fade in when loaded. Defaults to true                                  |
-| `caption`         | `string`                                                  | Optional caption text displayed below the image                                                 |
-| `loadingAriaLabel`| `string`                                                  | ARIA label for loading state. Defaults to "Loading image..."                                    |
-| `errorAriaLabel`  | `string`                                                  | ARIA label for error state. Defaults to "Failed to load image"                                  |
-| `onLoad`          | `(event) => void`                                         | Callback fired when the image successfully loads                                                |
-| `onError`         | `(event) => void`                                         | Callback fired when the image fails to load                                                     |
-| `as`              | `ElementType`                                             | Renders as different component (e.g., Next.js Image)                                            |
-
-## Object Fit
-
-Use the `fit` prop to control how the image scales to fit its container.
-
-### Cover
-
-Scales image to cover the entire container. May crop edges but ensures no empty space. Best for hero images, thumbnails, and card backgrounds.
-
-```tsx
-<Image src="/hero.jpg" alt="Hero banner" fit="cover" />
-```
-
-### Contain
-
-Scales image to fit entirely within the container. May leave empty space but shows the complete image. Best for product images, logos, and artwork.
-
-```tsx
-<Image src="/logo.png" alt="Company logo" fit="contain" />
-```
-
-### Fill
-
-Stretches image to fill the container exactly. May distort aspect ratio. Use with caution.
-
-```tsx
-<Image src="/banner.jpg" alt="Banner" fit="fill" />
-```
-
-### Scale Down
-
-Acts like contain but never scales up beyond the original size. Prevents small images from becoming pixelated. Best for user-uploaded content.
-
-```tsx
-<Image src="/user-photo.jpg" alt="User photo" fit="scale-down" />
-```
-
-### None
-
-Image keeps its original size. May overflow container or leave empty space. Best for pixel-perfect images.
-
-```tsx
-<Image src="/icon.png" alt="Icon" fit="none" />
-```
-
-## Radius
-
-Use the `radius` prop to apply rounded corners to images.
-
-```tsx
-<Image src="/avatar.jpg" alt="User avatar" radius="full" />
-<Image src="/card.jpg" alt="Card image" radius="medium" />
-<Image src="/screenshot.png" alt="Screenshot" radius="small" />
-```
-
-## Loading States
-
-### Skeleton Placeholder
-
-Use `showSkeleton` to display a skeleton animation while the image loads.
-
-```tsx
-<Image
-  src="/high-res-photo.jpg"
-  alt="Product showcase"
-  showSkeleton
-/>
-```
-
-### LQIP Placeholder
-
-Use the `placeholder` prop with a low-quality image placeholder (LQIP) for a blurred preview while the main image loads.
-
-```tsx
-<Image
-  src="/high-res.jpg"
-  placeholder="/low-res-blur.jpg"
-  alt="Product image"
-/>
-```
-
-### Combined
-
-Combine skeleton and placeholder for the best loading experience.
-
-```tsx
-<Image
-  src="/high-res.jpg"
-  placeholder="/low-res.jpg"
-  showSkeleton
-  alt="Product showcase"
-/>
-```
-
-## Fade In
-
-By default, images fade in when loaded. Disable this with `fadeIn={false}`.
-
-```tsx
-// With fade-in (default)
-<Image src="/photo.jpg" alt="Photo" fadeIn />
-
-// Without fade-in
-<Image src="/photo.jpg" alt="Photo" fadeIn={false} />
-```
-
-## Captions
-
-Use the `caption` prop to add descriptive text below the image.
-
-```tsx
-<Image
-  src="/chart.png"
-  alt="Q3 sales performance showing 25% growth"
-  caption="Data source: Internal sales tracking system"
-/>
-```
-
-```tsx
-<Image
-  src="/team-photo.jpg"
-  alt="Engineering team at the annual retreat"
-  caption="Photo: 2024 Engineering Retreat, Lake Tahoe"
-/>
-```
-
-## Lazy Loading
-
-Images use `loading="lazy"` by default for performance. Use `loading="eager"` for above-the-fold images.
-
-```tsx
-// Lazy loading (default)
-<Image src="/below-fold.jpg" alt="Content image" />
-
-// Eager loading for hero images
-<Image src="/hero.jpg" alt="Hero banner" loading="eager" />
-```
-
-## Event Handlers
-
-Handle load and error events for custom behavior.
-
-```tsx
-import React from 'react';
-
-export function ImageWithCallbacks() {
-  const handleLoad = (event) => {
-    console.log('Image loaded successfully');
-  };
-
-  const handleError = (event) => {
-    console.log('Image failed to load');
-  };
-
+export function ListingCard() {
   return (
-    <Image
-      src="/photo.jpg"
-      alt="Photo"
-      onLoad={handleLoad}
-      onError={handleError}
-    />
+    <Card size="2">
+      <Flex direction="column" gap="3">
+        <Image
+          src="/listings/loft.jpg"
+          alt="A bright loft with a sofa under tall windows"
+          width="100%"
+          height="200px"
+        />
+        <Flex direction="column" gap="1">
+          <Text size="2" weight="medium">Riverside loft</Text>
+          <Text size="2" emphasis="medium">2 beds, from $180 a night</Text>
+        </Flex>
+      </Flex>
+    </Card>
   );
 }
 ```
 
-## With Next.js Image
+## Best practices
 
-Use the `as` prop to render with Next.js Image for automatic optimization.
+**Write `alt` for what the picture shows.** Describe what someone would miss without it, such as "A bright loft with a sofa under tall windows". The types require `alt`.
 
-```tsx
-import NextImage from 'next/image';
-import { Image } from '@kushagradhawan/kookie-ui';
+**Pass an empty `alt` for decoration.** When a picture adds nothing the text doesn't already say, set `alt=""`. A screen reader then skips it.
 
-<Image
-  as={NextImage}
-  src="/photo.jpg"
-  alt="Optimized photo"
-  width={800}
-  height={600}
-/>
-```
+**Set a width and a height.** With both set, the box holds its place while the picture loads, so the content below doesn't jump. For a picture that shrinks with its container, pass the pixel size as numbers, such as `width={1200} height={800}`. These become the native attributes, and the box keeps that shape at any width. The neutral fill shows in that box until the picture arrives.
 
-## Layout Props
+**Load the first picture on the screen eagerly.** Image sets `loading="lazy"` by default. Set `loading="eager"` on a hero picture that is visible when the page opens, so it doesn't wait.
 
-Image supports margin, width, and height props for layout control.
+**Don't use it for icons.** An icon belongs in a HugeIcons component, which follows the text colour and size of the control around it.
 
-```tsx
-<Image
-  src="/photo.jpg"
-  alt="Photo"
-  width="300px"
-  height="200px"
-  mx="auto"
-/>
-```
+## Fit
 
-## Responsive Fit
+`fit` sets how the picture fills its box, as CSS `object-fit`. It matters only when the box has a different shape from the picture.
 
-Use responsive objects to change fit behavior across breakpoints.
+| Fit | Behaviour | Use it for |
+| --- | --- | --- |
+| `cover` | Fills the box and crops the edges | Photos in cards and grids. This is the default |
+| `contain` | Shows the whole picture, with space around it | Logos, screenshots and product shots |
+| `fill` | Stretches to the box | Pictures already cut to the box's shape |
+| `scale-down` | Like `contain`, but never larger than the picture | Small pictures in a large box |
+| `none` | Keeps the picture's own size and crops it | Pixel art and fixed-size assets |
 
-```tsx
-<Image
-  src="/banner.jpg"
-  alt="Responsive banner"
-  fit={{ initial: 'cover', md: 'contain', lg: 'cover' }}
-/>
-```
+## Size and corner
 
-## Practical Examples
+`width` and `height` as strings set the CSS size of the `img` itself, as any CSS length, and accept responsive objects. As numbers they are the picture's pixel size, written as the native `width` and `height` attributes. `minWidth`, `maxWidth`, `minHeight` and `maxHeight` work the same way. Without a width, the picture shows at its own size and never grows wider than its container.
 
-### Product Card Image
+`radius` sets the corner. With no `radius`, Image takes the theme's corner. `radius="none"` squares it.
+
+## Examples
+
+### Grid of photos
+
+Give every Image the same height and leave `fit` at `cover`, so photos of different shapes line up.
 
 ```tsx
-<Image
-  src="/product.jpg"
-  alt="Wireless headphones in black"
-  fit="cover"
-  radius="medium"
-  showSkeleton
-/>
+<Grid columns="3" gap="2">
+  {photos.map((photo) => (
+    <Image
+      key={photo.id}
+      src={photo.url}
+      alt={photo.description}
+      width="100%"
+      height="160px"
+    />
+  ))}
+</Grid>
 ```
 
-### Avatar
+### Logo on a card
+
+`fit="contain"` shows the whole logo without cropping it.
 
 ```tsx
 <Image
-  src="/avatar.jpg"
-  alt="John Doe"
-  width="48px"
-  height="48px"
-  radius="full"
-  fit="cover"
+  src="/logos/northwind.svg"
+  alt="Northwind"
+  width="120px"
+  height="40px"
+  fit="contain"
 />
 ```
 
-### Hero Image
+### Picture that fails to load
+
+If the address is broken, the neutral fill stays in the box, so the layout doesn't change. Pass `onError` to replace the picture or report the failure. Image calls your `onLoad` and `onError` as usual.
+
+### Hero picture
+
+The picture at the top of a page is visible straight away, so skip lazy loading.
 
 ```tsx
 <Image
   src="/hero.jpg"
-  alt="Mountain landscape at sunset"
+  alt="The dashboard on a laptop"
+  width="100%"
+  height={{ initial: '240px', md: '420px' }}
   loading="eager"
-  fit="cover"
-  fadeIn
 />
 ```
 
-### Chart with Caption
+## Props
 
-```tsx
-<Image
-  src="/sales-chart.png"
-  alt="Bar chart showing quarterly sales growth of 25%"
-  caption="Q3 2024 Sales Performance - Data updated weekly"
-  radius="small"
-/>
-```
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `src` | `string` | | The picture's address. Required |
+| `alt` | `string` | | The text alternative. Required. Pass `""` for decoration |
+| `fit` | `'cover' \| 'contain' \| 'fill' \| 'scale-down' \| 'none'` | `'cover'` | How the picture fills its box |
+| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Theme radius | The corner |
+| `width` | `string`, responsive, or `number` | | A string sets the CSS width of the `img`. A number is the native `width` attribute |
+| `height` | `string`, responsive, or `number` | | A string sets the CSS height of the `img`. A number is the native `height` attribute |
+| `minWidth`, `maxWidth` | `string`, responsive | | The CSS minimum and maximum width |
+| `minHeight`, `maxHeight` | `string`, responsive | | The CSS minimum and maximum height |
+| `loading` | `'lazy' \| 'eager'` | `'lazy'` | When the browser loads the picture |
+| `decoding` | `'async' \| 'sync' \| 'auto'` | `'async'` | How the browser decodes the picture |
 
-### Gallery Image
-
-```tsx
-<Image
-  src="/gallery-photo.jpg"
-  placeholder="/gallery-photo-thumb.jpg"
-  alt="Abstract art piece"
-  showSkeleton
-  fadeIn
-  radius="medium"
-/>
-```
+Image also accepts every other attribute of the HTML `img` element. `className`, `style` and the ref all go to the `img`.
 
 ## Accessibility
 
-Image provides comprehensive accessibility support.
-
-### Required Alt Text
-
-The `alt` prop is required. Provide meaningful descriptions for screen readers.
-
-```tsx
-// Good: Descriptive alt text
-<Image src="/chart.png" alt="Bar chart showing 25% revenue growth in Q3" />
-
-// Decorative images: Use empty alt
-<Image src="/decorative-pattern.png" alt="" />
-```
-
-### Loading Announcements
-
-Screen readers announce loading state via `loadingAriaLabel`.
-
-```tsx
-<Image
-  src="/photo.jpg"
-  alt="Team photo"
-  loadingAriaLabel="Loading team photo..."
-/>
-```
-
-### Error Announcements
-
-Screen readers announce errors via `errorAriaLabel`.
-
-```tsx
-<Image
-  src="/photo.jpg"
-  alt="Team photo"
-  errorAriaLabel="Team photo failed to load. Please refresh."
-/>
-```
-
-### ARIA Attributes
-
-Image automatically sets:
-- `aria-busy="true"` during loading
-- `aria-invalid="true"` on error
-- `aria-describedby` linking to error message
-
-### Reduced Motion
-
-Fade-in animations are disabled when the user prefers reduced motion.
-
-### High Contrast Mode
-
-Images receive a visible border in Windows High Contrast mode for visibility.
-
-## Enhancements
-
-### Built-in Loading States
-
-Native support for skeleton placeholders and LQIP patterns without additional wrapper components.
-
-### Automatic Caching Detection
-
-Image detects already-cached images and skips the loading state for instant display.
-
-### Caption Support
-
-Built-in caption styling with proper typography and spacing, eliminating the need for custom figure/figcaption markup.
-
-### Polymorphic Rendering
-
-Use the `as` prop for seamless integration with Next.js Image or other optimized image components.
-
-## Changelog
-
-### 0.1.95
-
-Simplified component architecture and improved Next.js compatibility.
-
-#### Added
-
-- Polymorphic `as` prop for Next.js Image and custom component support
-- Comprehensive test suite (35 tests)
-
-#### Changed
-
-- Flattened DOM structure (nested divs only when caption is present)
-- Reduced component from ~430 to ~280 lines
-
-#### Fixed
-
-- `loadingAriaLabel` now properly renders screen reader announcements
-
-#### Removed
-
-- Unused `variant` prop
-
-### Created
-
-New component for Kookie UI (not part of Radix Themes).
-
-- Enhanced image component with loading states and accessibility features
-- Skeleton placeholder support via `showSkeleton` prop
-- LQIP placeholder support via `placeholder` prop
-- Fade-in animation with `fadeIn` prop (enabled by default)
-- Caption support with `caption` prop
-- Comprehensive accessibility with `aria-busy`, `aria-invalid`, and live announcements
-- Object-fit variants (`cover`, `contain`, `fill`, `scale-down`, `none`) with responsive support
-- Lazy loading by default for performance
-- Automatic cached image detection for instant display
-- Windows High Contrast mode support
-- Reduced motion support
+- **Name:** A screen reader announces the `alt` text as an image. The types require `alt`, so a picture can't be left without one by mistake.
+- **Decoration:** With `alt=""`, the picture has the presentation role and a screen reader skips it.
+- **Text in pictures:** Don't put words that people need inside a picture. If you must, repeat them in `alt` or in the text nearby.

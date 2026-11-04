@@ -1,12 +1,527 @@
+## [0.34.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.33.0...v0.34.0) (2026-11-03)
+
+### Features
+
+* **command:** `Command`, from Kookie UI v2: a command palette in a dialog. `Command` takes `items`, `open`, `onOpenChange` and `size`; `CommandContent` holds a `CommandInput` (with a `leading` slot) over a `CommandList`, whose children turn each item into a `CommandItem`. `CommandGroup`, `CommandGroupLabel` and `CommandCollection` build labelled groups from items that carry their own `items`, and `CommandEmpty` shows inside the results when nothing matches.
+* **command:** the field and the results are two panes in a column anchored to the top, so the field never moves as results change. The palette opens with the caret in the field and a row highlighted. Typing narrows the rows without reordering them, and Enter or a press runs a row and closes the palette (`onOpenChange(false, { reason: 'item-press' })`). Pass `filter={null}` to narrow and rank `items` yourself, with `onQueryChange` for the query. A row with `asChild` around a link follows it on Enter.
+* **command:** built on cmdk, where v2 uses Base UI's Autocomplete. Rows are one size step above the palette, as in v2.
+
+## [0.33.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.32.0...v0.33.0) (2026-11-03)
+
+### Breaking
+
+* **shell:** `inset` is removed from `Shell.Rail`, `Shell.Panel`, `Shell.Sidebar`, `Shell.Content`, `Shell.Inspector` and `Shell.Bottom`. Every pane, and `Shell.Header`, takes `flush` instead, from Kookie UI v2. It defaults to `true`. `inset` becomes `flush={false}`.
+* **shell:** a flush pane now draws one hairline on its inner edge in `--color-border`: under the header, on the trailing edge of the Rail, Panel and Sidebar, on the leading edge of the Inspector and above the Bottom. The content draws none. Apps that drew their own seams should remove them.
+* **shell:** `--shell-inset-gap` is renamed `--shell-gap`, and the Root's `data-has-inset` attribute is gone.
+
+### Features
+
+* **shell:** a pane with `flush={false}` is a card with its own margin, corner and shadow. With the content flush, it floats over the content, and the content's area runs underneath it. With `Shell.Content flush={false}`, nothing floats: the Shell paints its background, the content is a card, and flush panes draw no hairline toward it. Two cards side by side share one gap.
+* **tokens:** `--color-border`, the rule between two regions, the same role as in v2 (`--neutral-6`).
+
+### Migrating swan-frontend
+
+* Replace every `inset` on a Shell pane or `Shell.Content` with `flush={false}`, and remove `inset={false}`.
+* Rename any `--shell-inset-gap` override to `--shell-gap`.
+* Remove hand-drawn borders between Shell panes (a sidebar's `border-right`, an inspector's `border-left`, a header's `border-bottom`). The panes draw their own now.
+* Where a pane must have no hairline at all, set `flush={false}` on the content, or pass `style={{ borderWidth: 0 }}` on that pane.
+* Anything that selected `[data-inset]` or `[data-has-inset]` selects `:not([data-flush])` instead.
+
+## [0.32.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.31.0...v0.32.0) (2026-11-03)
+
+### Breaking
+
+* **link:** a link is always underlined, and the `underline` prop is removed. Colour alone doesn't tell everyone which words are a link, and a hover-only underline can't be found on a touch screen. Remove `underline="…"` from your links.
+
+### Look
+
+* **link:** the underline rests in the link's own colour at `--accent-a6` and darkens to the ink (`currentcolor`) on hover. It sits `0.2em` below the text, so the gap scales with the type. The focus ring takes `--focus-ring-width` and `--focus-ring-offset`, and a link that wraps rings each line whole.
+
+## [0.31.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.30.0...v0.31.0) (2026-11-03)
+
+### Fixes
+
+* **navigator:** in a Dialog or Sheet, only the top screen names the panel. Every screen wrapped its title in the dialog's title part, so after a push the hidden screens shared its id and the dialog kept the root screen's name.
+
+### Features
+
+* **page:** `Page`, from Kookie UI v2: the screen you navigated to, with its title as the document's one `h1` at step 9, an optional `description` at step 4, and an optional `mark` above the title. It takes no width, level, size or actions. It adds air above its title; a floating band's reach is already cleared by `Shell.Scroll`.
+* **toolbar:** a `Toolbar.Title` with no children mirrors the `Page` in its Shell pane. It keeps its room but stays invisible while the page's large title is on screen, and shows the page's title once that title passes behind the band, floating or pinned. Outside a pane with a page it renders nothing, as before.
+* **shell:** each pane (`Shell.Content`, Sidebar, Panel, Inspector, Bottom) holds its own page, so two panes can each have a titled page. Popovers, dialogs, sheets and menus cut the scope, so a page inside one never takes the pane's band.
+* **navigator:** in `Shell.Content` each screen is a `Page`, and the band shows Back with the mirrored title. A side pane keeps the screen's title in its band from the start. `NavigatorTitle` in a pane is the mirroring title.
+
+## [0.30.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.29.2...v0.30.0) (2026-11-03)
+
+### Features
+
+* **navigator:** `Navigator`, from Kookie UI v2: a stack of screens of any depth. `root` is the first screen, `path` (or `defaultPath`) lists the values above it, and `screen` turns each value into a `NavigatorScreen`. `NavigatorLink` opens the next screen, `NavigatorBack` closes the top one, and `useNavigator` gives `push`, `pop` and `popTo`. Screens underneath stay mounted, hidden, so they keep their scroll and drafts. A pushed screen takes focus at its top; on pop, focus returns to the control that opened it.
+* **navigator:** in a Shell pane (Sidebar, Panel, Inspector, Bottom), the pane's band holds Back and the top screen's title. Elsewhere each screen draws its own band: Back, the title, and in a Dialog, Sheet or Popover the overlay's close, with the title naming the panel. Pass children with `NavigatorOutlet`, `NavigatorBack` and `NavigatorTitle` for a band of your own.
+* No motion between screens, unlike v2: v1 has none.
+
+## [0.29.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.28.1...v0.29.2) (2026-10-30)
+
+Ships 0.29.0 and 0.29.1 too, which were never released on their own here.
+
+### Fixes
+
+* **select:** an item with rich content on one line (an icon and a label) centres its check mark. Only content taller than one and a half lines pins the mark to the first line; before, any non-string content did, which put the mark about 5px high on a one-line row.
+* **text-field:** a scrub slot does nothing while its field is disabled or read-only.
+* **text-field:** scrubbing captures the pointer in every browser. Chrome took the pointer lock, and showed its "Press Esc to show your cursor" banner on every drag.
+
+### Features
+
+* **text-field:** with a scrub slot, Up and Down on the input step the value at once by `scrubStep`, Shift ×10 and Option ×0.1, clamped to `scrubMin`/`scrubMax`. Each press reports `onScrub(delta, false)`, a finished change. An `onKeyDown` that calls `preventDefault` keeps the keys for itself.
+* **text-field:** a scrub slot tints on hover, so the whole slot reads as the grab area.
+
+## 0.29.1 (2026-10-29)
+
+### Look
+
+* **fields:** raised fields wear `--field-chrome`, a new shadow role: the control's edge and its 1px drop, without the 14px blur. TextField, TextField.Group, TextArea, the Select trigger and a raised SegmentedControl take it. Buttons keep `--control-chrome`. In a panel of fields the blur under every row read as too heavy.
+
+## 0.29.0 (2026-10-29)
+
+### Features
+
+* **text-field:** `TextField.Group` joins two or more fields into one control, such as X, Y and Z. It takes `variant` (`raised`, `surface`, `soft`, `outline`, and `ghost`, which is the dividers alone), `size`, `radius`, `color` and `disabled`, and passes them to its fields. The group draws the edge once, the inner corners are square, and a hairline divides the fields; the hairlines next to a focused field step back. A field can still take its own `color`, `disabled` and `error`.
+* **segmented-control:** `variant` on `SegmentedControl.Root`: `soft` (the default, unchanged), `raised` and `outline`. Raised and outline wear the edge of a TextField of the same variant, with a soft indicator inset 2px from it, so a panel of raised or outlined fields has no filled track left in it.
+
+## [0.28.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.27.0...v0.28.1) (2026-10-28)
+
+Ships 0.27.1 and 0.28.0 too, which were never released on their own here.
+
+### Breaking changes
+
+* **button, icon-button, toggles:** `solid` is the default variant again (`emphasis="loud"`), as in Womp's copy since 0.14.5. `raised` stays available by name or as `emphasis="medium"`.
+
+### Look
+
+* **shell:** a pane's header, footer and list pad by the panel padding, `--panel-p-N` (8/12/16px at Shell sizes 1 to 3), not the surface padding (16/24/32). Floating rows and the list's inset under them follow. Rows still start on the header's inset.
+* **shell:** a pane header or footer next to the pane's `Shell.Scroll` drops its padding on that side, so the gap to the list is one inset, not two.
+
+## 0.28.0 (2026-10-27)
+
+Rounder surfaces and nested corners. See MIGRATION.md and docs/LOG.md (2026-10-27).
+
+### Look
+
+* **radius:** at `large` and `full`, `--radius-surface-1..4` is 16/20/24/28px (was 8/12/16/20) and `--radius-overlay-1..4` is 20/24/28/32px (was 12/16/20/24). `medium`, `small` and `none` take v2's own sets, and `--radius-surface-factor` is gone.
+* **nesting:** a Card or surface inside another is no longer square. Its corner is the outer corner less the outer padding, at least 8px and at most its own.
+* **menus:** DropdownMenu, ContextMenu, Select and Combobox panels take `--radius-panel-N`, their row's corner plus their padding, so the pill rows are concentric with the panel.
+
+## 0.27.1 (2026-10-26)
+
+### Fixes
+
+* **shell:** `Shell.Scroll pane` keeps a pane's list (menu rows, sizes, active row) when React puts it under `Shell.Content`, as when an app renders a pane's content in its page and portals it into `Shell.Panel`. Since 0.24 such a Scroll became the page scroller and its rows lost their styling.
+* **message-scroller:** the jump button is one control wide. Centred by `left` and `right` at 0, an icon-only button, square by aspect-ratio since 0.18, stretched across the transcript.
+
+## [0.27.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.26.3...v0.27.0) (2026-10-26)
+
+On a phone the page scrolls, as in v2. See MIGRATION.md.
+
+### Breaking changes
+
+* **shell:** on a window narrower than 768px with a coarse pointer, a `Shell.Root` with no `height` and no `contained` lets the document scroll instead of the content pane, so a mobile browser can hide its toolbars. The frame grows with its content. `Shell.Header`, a floating `Shell.PaneHeader` or `PaneFooter` in the content, and the content's pinned rows stick; overlay drawers and the scrim are fixed to the screen. Content that cannot wrap is clipped at the screen's edge. Code that read or set the content's `scrollTop` there reads `window.scrollY` instead.
+
+### Features
+
+* **shell:** `Shell.Root contained` fills its parent instead of the window and always scrolls inside itself. An explicit `height` implies it, as before.
+* **shell:** when the window crosses the boundary (a phone rotating, an iPad entering Split View), the reading position moves to the new scroller.
+* **shell:** while the page scrolls, the content's `Shell.Scroll` is out of the tab order. A `tabIndex` you pass still wins.
+
+## [0.26.3](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.26.2...v0.26.3) (2026-10-26)
+
+### Fixes
+
+* **text-field, text-area:** an `errorMessage` that comes or goes no longer remounts the input, so focus, the caret, an uncontrolled value and the ref survive. The wrapper is always rendered and is `display: contents` without a message. A regression in 0.26.2.
+* **spinner:** a Spinner with children no longer remounts them when `loading` starts or stops. The host is `display: contents` at rest.
+* **toolbar:** a Toolbar inside a nested `Theme asChild` in a pane header or footer keeps the band size. Only the Theme at the root of a portalled surface (Popover, Dialog, Sheet, menus, Select, Combobox, Tooltip) resets it.
+
+## [0.26.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.26.1...v0.26.2) (2026-10-25)
+
+### Fixes
+
+* **text-field, text-area, select:** in dark mode a raised field's fill changes on hover. The hover fill was the same neutral 2 as the dark surface; it is neutral 3 now.
+* **color:** `--field-edge` is removed. No component read it: a field's edge and shadow come from `--control-chrome`.
+* **shell:** in a floating `Shell.PaneHeader` or `PaneFooter`, every interactive element in the Toolbar takes clicks, including a plain button, Switch, Checkbox and controls inside a layout box. The empty stretch still passes clicks through.
+* **shell:** `Shell.Panel` and `Shell.Bottom` put a numeric `defaultSize` or `size` in the server HTML, so they no longer jump on load.
+* **toolbar:** in a Popover, Dialog, Sheet or menu opened from a Shell, a Toolbar with no `size` takes the Theme size, not the Shell's step.
+* **button:** a button that mounts with `done` keeps a label that is a component; only an svg at the start is swapped for the tick.
+* **text-field, text-area:** with `errorMessage`, the field and message sit in one wrapper that takes `className` and `style`, so a grid or row treats them as one box.
+* **text-field:** a slot holding a control, such as a show-password button, no longer describes the input.
+* **slider:** with `snapToTicks`, a key press commits the snapped value.
+* **scroll-area:** content wider than a vertical-only scroll area no longer adds a fade or a tab stop on the hidden axis.
+* **popover:** the toolbar no longer measures itself or writes an offset nothing reads.
+* **package:** the `/props` entry is server-safe again. Component prop definitions no longer ship with `"use client"`.
+* **docs:** the 0.18 to 0.26 notes and MIGRATION.md list changes they left out: shadow moves per component, the button spinner size, `Chatbar.Textarea` `className`, Shell landmarks, `Shell.Scroll`'s ref, `MessageScroller.Button`'s jump, raw Radix tooltips and `data-os`.
+
+## [0.26.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.26.0...v0.26.1) (2026-10-25)
+
+### Fixes
+
+* **button:** a pressed soft or ghost button no longer shows a dark inset well; it darkens its fill and casts nothing.
+* **docs:** the 0.26.0 notes named a `--shadow-2-active` token that was never released. They now say raised and solid buttons moved to `--control-chrome` and `--control-chrome-active`.
+
+## [0.26.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.25.2...v0.26.0) (2026-10-25)
+
+Shadows by role, as in v2, and one look for each mark. See MIGRATION.md.
+
+### Breaking changes
+
+* **switch, slider, checkbox, checkbox-group, radio, radio-group:** no `variant` prop. Each has one soft look: a well for the track or box, the accent when on, and a thumb that casts `--grip-chrome`.
+* **shadow:** components read role tokens (`--surface-chrome`, `--control-chrome`, `--control-chrome-active`, `--grip-chrome`, `--floating-chrome`, `--dialog-chrome`). `--shadow-1..6` stay as a palette for app code, with v2's values and no hairline ring. Raised buttons moved from `--shadow-2` to `--control-chrome`. Solid buttons had no shadow at rest and now cast `--control-chrome`. Both press to `--control-chrome-active`. Cards, panes, menus, popovers, dialogs and the chatbar lost their hairline ring and cast their role's shadow; see MIGRATION.md.
+* **text-field, text-area, select:** the default field is white with a hairline edge and a small soft shadow, the same as a raised button.
+
+### Features
+
+* **color:** `--color-track`, `--color-thumb`, `--color-mark` and the `--field-*` tokens.
+* **checkbox, radio:** an invalid look under `aria-invalid`.
+
+## [0.25.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.25.1...v0.25.2) (2026-10-24)
+
+### Fixes
+
+* **shell:** a Toolbar in `Shell.PaneHeader` or `Shell.PaneFooter` fills the row, so its leading and trailing groups sit at the two ends. In a floating row, only the Toolbar's controls and groups take clicks; the empty stretch passes them to the content.
+
+## [0.25.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.25.0...v0.25.1) (2026-10-24)
+
+### Fixes
+
+* **helpers:** the theme-size context lives in a client module, so `/helpers` imports in a Server Component. The ESM build has one context. The CommonJS build still bundles a copy into each entry, so a CommonJS `/helpers` hook does not see the root Theme's size.
+* **sheet:** the 90vw default width applies again on side sheets.
+* **popover:** a toolbar's Left and Right sections stay in their columns.
+* **button:** `asChild` with `loading` keeps the child's class, state, ref and click guard.
+* **sidebar:** arrow keys in the rail search no longer skip results; a bare `MenuButton` in a sub-menu is wrapped in a list item.
+* **toolbar:** a control moved into the More menu keeps its handlers and ARIA, so a menu trigger still opens.
+* **shell:** a numeric `defaultSize` is in the server HTML, so panes paint at the right width before hydration.
+
+### Features
+
+* **color:** `--color-ground`, a background token for app pages (neutral 1). No component reads it.
+
+## [0.25.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.24.0...v0.25.0) (2026-10-24)
+
+The fixes from a full audit of every component, each with a test, and four breaking changes that match v2. See MIGRATION.md.
+
+### Breaking changes
+
+* **heading:** defaults to `h2`, like v2. Dialog, AlertDialog and Sheet titles are `h2`.
+* **dropdown-menu, context-menu:** `DropdownMenu.Virtual` and `ContextMenu.Virtual` are gone; import `VirtualMenu`. Each menu bundle is about 40KB smaller.
+* **theme:** no longer bundles Radix Tooltip; a new `TooltipProvider` shares the open delay. Theme alone is 18KB instead of 74KB minified.
+* **package:** React 19 only. **sheet:** `align` is gone.
+* **separator:** announced to screen readers unless `decorative`.
+* **theme:** the root Theme no longer sets `data-os`.
+
+### Fixes
+
+* Slider snapping and disabled ticks, TextField and TextArea error layout, the Rail sub-menu crash, Popover.Anchor, vertical Separator, Avatar props, Accordion keys, VirtualMenu keyboard and styling, and about 130 more.
+* High-contrast (forced colors) outlines on every control, and right-to-left fixes across the library.
+* **performance:** the scroll fade no longer restyles every row on every frame (about 850ms down to 115ms per 60 frames on 1,500 rows).
+* **package:** every built client file starts with `"use client"`, so components import from React Server Components.
+
+## [0.24.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.23.0...v0.24.0) (2026-10-24)
+
+About 50 component fixes, the toolbar parts v2's docs use, and a docs page for every component. See MIGRATION.md.
+
+### Breaking changes
+
+* **avatar:** `ref` goes on the outer span, with `className` and `style`.
+* **checkbox-group:** one tab stop per box; `orientation` and `loop` do nothing.
+* **blockquote:** Text-only props no longer apply.
+
+### Features
+
+* **button:** `done`.
+* **shell:** `Shell.Trigger asChild`; `Shell.PaneHeader float` and `Shell.Scroll` in `Shell.Content`.
+* **toolbar:** `ToolbarButton asChild`, `ToolbarOverflow`, `useToolbarOverflow`, `ToolbarSlot`, `ToolbarFill`, layout props.
+* **accordion:** a built-in chevron. **avatar:** `statusLabel`. **segmented-control:** disabled items. **scroll-area:** `width` and `height`.
+
+### Fixes
+
+* **dialog, alert-dialog, sheet:** focus returns to the trigger; the description is announced; the extra focus traps and unused live regions are gone.
+* **tabs, accordion, toggle:** no more extra screen-reader announcements.
+* **text-field, text-area:** `required` reaches the element.
+* **select:** `readOnly` and `loading` keep the list closed.
+* **slider:** names, live values, ticks and handles behave correctly.
+* **sidebar:** arrow keys move past sub-menu triggers; sub-menu rows are in a list.
+* **virtual-menu, spinner, chip, code:** see MIGRATION.md.
+* **message-scroller, chatbar, navbar, table, separator, notice, progress:** fixes that need no change in an app.
+
+## [0.23.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.22.1...v0.23.0) (2026-10-23)
+
+Fewer Chrome layers, less inline CSS, less memory. See MIGRATION.md.
+
+### Breaking changes
+
+* **color:** 21 unused `--focus-*` aliases are gone from every coloured element (`--focus-1..7`, `--focus-9..12`, `--focus-a1`, `--focus-a3`, `--focus-a4`, `--focus-a6..a12`). A coloured Chip declares 52 custom properties instead of 73.
+
+### Features
+
+* **image:** `Image` is back as one img element: `fit`, `radius`, lazy loading, a neutral fill while loading, and `data-status`.
+
+### Performance
+
+* **spinner:** an inner wheel rotates inside a paint-contained root, so a page of loading rows no longer promotes every row after it. 50 loading rows: 106 layers before, 5 after.
+* **accordion:** content no longer keeps `will-change`. 20 open items: 24 layers and 12.5 MB before, 4 layers and 8.7 MB after.
+* **shell, combobox:** scrollers whose content fits are no longer composited in Chrome.
+* **slider, button:** live regions, ticks and the loading state use classes, not inline styles. A 5-tick slider writes 212 B of inline style (was 435 B); a loading button writes none (was 217 B).
+* **select:** a closed Select builds a bare item list and starts no observers. Heap per closed Select 93 KB (was 111 KB).
+
+## [0.22.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.22.0...v0.22.1) (2026-10-23)
+
+### Look
+
+* **radius:** surfaces are less rounded and controls stay pills, which is v1's look. At the default full radius, `--radius-surface-1..4` is 8/12/16/20px (was 10/16/22/28) and `--radius-overlay-1..4` is 12/16/20/24px (was 14/20/24/28).
+
+## [0.22.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.21.0...v0.22.0) (2026-10-23)
+
+v2's names. Release 5b, the last of the core plan. See MIGRATION.md.
+
+### Breaking changes
+
+* **classes:** `rt-` becomes `kui-` on every class and private variable, and the root class `radix-themes` becomes `kui-theme`.
+* **colour tokens:** the neutral scale is `--neutral-N` (was `--gray-N`). The page is `--color-page` and every surface is `--color-surface`, replacing `--color-background`, `--color-panel(-solid)`, `--color-surface-solid` and `--color-dialog(-solid)`.
+* **codemod:** `codemods/names-0.22.py` rewrites an app.
+
+### Fixes (ultracode audit of 0.17–0.22, 38 confirmed defects)
+
+* **bleed:** `m="bleed"` works in Dialog, AlertDialog, Sheet, Popover and Notice, not only Card.
+* **dark root:** `--color-page` and `--color-surface` resolve on a bare `.dark` root outside a Theme.
+* **button:** a disabled link-button does not navigate; a loading icon-only button keeps its name (`aria-busy`); only an svg or a library icon counts as an icon edge.
+* **select and combobox:** Select's trigger honours `disabled` and `aria-invalid`; a size-4 combobox opens a size-4 list.
+* **avatar:** an Avatar with no `size` follows Theme size and rests at 2.
+* **focus:** a button in a TextField slot keeps its whole focus ring.
+* **schemas:** the published JSON schemas match the Zod source again.
+* **codemods:** position props take 10–12 so the space codemod's output is valid; the type codemod reads tags with arrow functions; the components codemod renames only code, not text; nothing is skipped for containing `/build/`.
+* **tokens:** three undefined variables are gone, and a law now fails on any `var()` naming an undefined property.
+* **docs:** chapter examples renumbered for 0.17, redirects for every removed page, and stale pages corrected.
+
+### Features
+
+* **card:** a Card holding a checked Checkbox or Radio reads as chosen (an accent tint and ring), so a Card with a choice inside replaces CheckboxCards and RadioCards fully.
+
+## [0.21.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.20.0...v0.21.0) (2026-10-23)
+
+The component list and composition rules become v2's. Release 5a. See MIGRATION.md.
+
+### Breaking changes
+
+* **button:** IconButton is removed; use `Button iconOnly` (it needs an `aria-label`).
+* **toggle:** ToggleButton and ToggleIconButton become one `Toggle`, with `iconOnly` for an icon.
+* **chip:** Badge is renamed Chip (`rt-Badge` → `rt-Chip`).
+* **removed:** CheckboxCards, RadioCards, HoverCard, DataList, Section, Container, TabNav, Skeleton, AspectRatio, Image, ThemePanel, Quote, Em and Strong.
+* **composition:** only Box, Flex and Grid take margin props. A component's parts space themselves with gap, and Accordion loses `flush`.
+* **codemod:** `codemods/components-0.21.py` renames IconButton, ToggleButton, ToggleIconButton and Badge in an app.
+
+## [0.20.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.19.0...v0.20.0) (2026-10-23)
+
+Type and rows take v2's scale. Release 4 of 5. See MIGRATION.md.
+
+### Breaking changes
+
+* **type:** nine sizes (12 to 64px) and three weights (regular, medium, semibold). Text, Heading, Link, Code, Kbd and Blockquote take sizes 1 to 9; size 0 and 10 to 12, and the thin, light, bold and extrabold weights are gone. Heading rests at medium and shares Text's line heights. `codemods/type-0.20.py` rewrites an app.
+* **rows:** menus, Select and Combobox lists take sizes 1 to 4. A panel pads `--panel-p-N`; a row hugs its line (30px at size 2) with pill padding at radius full. Sidebar rows stay at control height. Table cells pad 8 by 12 at size 2 and Table takes size 4.
+* **notice:** Notice pads and rounds like a Card of the same size (24px at size 2).
+
+### Fixes
+
+* **bench:** timing checks allow one frame (16ms) above 1.5 times the baseline, so CI no longer fails on sub-frame noise.
+
+## [0.19.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.18.0...v0.19.0) (2026-10-23)
+
+Surfaces and corners take v2's structure. Release 3 of 5. See MIGRATION.md.
+
+### Breaking changes
+
+* **radius:** the palette is steps 0 to 10 plus full; `--radius-11`, `--radius-12` and `--radius-pill-N` are gone. Corners come in three roles of four steps: `--radius-control-N`, `--radius-surface-N` and `--radius-overlay-N`. v1 keeps its own roundness per step. A surface inside a surface takes the outer corner less the outer padding.
+* **card:** sizes 1 to 4, resting at 2 and following Theme size; padding is `--surface-p-N` (24px at size 2). `flush`, `inset` and size 5 are gone. CheckboxCards and RadioCards follow the same ladder.
+* **inset:** the Inset component is removed. Margin props take `"bleed"`, which pulls a child out to the edge of the surface around it.
+* **overlays:** Dialog, AlertDialog and Sheet rest at size 2, pad one step above their size (32px at 2), take `--radius-overlay-N` corners and `--overlay-w-N` widths. The 600px default `maxWidth` is gone.
+* **popover and notice:** Popover and HoverCard pad like a card (24px at 2); Notice pads like a panel (12px at 2). All take sizes 1 to 4.
+
+## [0.18.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.17.0...v0.18.0) (2026-10-23)
+
+Controls take v2's ladder. Release 2 of 5. See MIGRATION.md.
+
+### Breaking changes
+
+* **theme:** `Theme size` (1 to 4, default 2) sizes every control that sets no `size` of its own.
+* **controls:** Button, IconButton, the Toggles, TextField, TextArea, Select, Combobox, SegmentedControl and Tabs share one ladder: heights 28/32/40/48 as a minimum, side padding 8/10/13/16, 12/14/17/20 on a bare edge at radius `full`, gap 4/8/8/12, icons 16/16/20/24. Icon-only buttons are square. A button in a TextField slot is the field's height less the slot inset.
+* **marks:** Checkbox and Radio are 16/20/24/26px at sizes 1 to 4; Switch and Slider follow v2's tracks. Checkbox, Radio, RadioGroup and Table accept size 4.
+* **sizes:** Spinner, ScrollArea, Separator and Progress take no `size`. Separator fills its container. Badge rests at size 2. Avatar follows v2's 1 to 9 ladder.
+* **states:** disabled is colour only, with the arrow cursor; loading buttons stay focusable with `aria-disabled`; invalid fields key on `aria-invalid`; every button variant has one focus ring.
+
+## [0.17.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.16.0...v0.17.0) (2026-10-23)
+
+v1's scale becomes v2's. The first of five releases that make v1's core match v2. See MIGRATION.md.
+
+### Breaking changes
+
+* **space:** the palette has v2's twelve steps (2 to 128px). Every old step N is now N+1; 80px and 112px move to 64px and 96px. Layout props and `var(--space-N)` shift by one. `codemods/space-0.17.py` rewrites an app.
+* **scale:** `Theme scaling` is removed and `--scaling` is `--scale`, fixed at 1.
+* **material:** `material` and `panelBackground` are removed from every component and from `Theme`. Everything is solid. The `--opacity-N` and `--blur-N` tokens and the Materials page are gone.
+* **controls:** `--control-height-1` is 28px (was 24).
+* **shell:** Shell panes and their header, footer and scroll region pad by `--surface-p-N`, 24px at size 2 (was 12). A Toolbar in a pane row rests one size above the Shell unless it states its own.
+
+### Features
+
+* **tokens:** `--layout-space-N`, `--surface-p-N`, `--panel-p-N`, `--control-px-N`, `--control-px-pill-N`, `--control-gap-N`, `--icon-size-N`, `--row-inset-N`, `--slot-inset-N` and `--overlay-w-N`.
+
+## [0.16.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.15.1...v0.16.0) (2026-10-22)
+
+A pane's header and footer can float over its list, as in v2.
+
+### Features
+
+* **shell:** `float` on `Shell.PaneHeader` and `Shell.PaneFooter` puts the row over `Shell.Scroll`. The list runs the pane's full height, starts and ends clear of the rows, and keeps its scrollbar between them. The row lets clicks through between its controls.
+* **shell:** `fade` on `Shell.Scroll` fades the list toward an edge with more past it, and across a floating row.
+* **toolbar:** `backdrop` gives each control a surface of its own for a row that content passes behind. Buttons rest `raised` and a group's well is raised.
+
+## [0.15.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.15.0...v0.15.1) (2026-10-22)
+
+### Bug Fixes
+
+* **scroll-area:** the scrollbar thumb follows the scroll in production builds. Next's minifier removed the loop Radix moves the thumb with, so the thumb moved once per scroll and jumped at the next one. ScrollArea and Select now move it on every scroll.
+
+## [0.15.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.14.4...v0.15.0) (2026-10-18)
+
+The breaking release. Everything 0.14 deprecated is removed, and so is motion. There is one way to do each thing.
+
+### Breaking changes
+
+* **variants:** `variant="classic"` and the `--classic-*` tokens are gone; use `raised`. Button's `variant="override"` and `overrideStyles` are gone; style it with `className`, `style` or its CSS variables.
+* **menus:** `variant` is gone from DropdownMenu, ContextMenu, Select and Combobox content, and from SegmentedControl. Menus use the soft highlight, and the solid one under `prefers-contrast: more`.
+* **material:** `panelBackground` is gone everywhere, including `Theme` and `ThemePanel`; use `material`. Stylesheets read `data-material` only. Checkbox, Radio, Switch, Badge and Avatar take no `material`.
+* **fields:** `isInvalid` is gone from TextField and TextArea; use `error`.
+* **button:** an icon-only button ignores `fullWidth`, and IconButton's type has no `fullWidth`.
+* **components:** `Callout` (use `Notice`), `AppBar` (use `Toolbar`, in `Shell.Header` for an app header) and the `UserCard` export (copy the User Card docs block) are deleted.
+* **sidebar:** `Sidebar.Root`, `Sidebar.Content`, `Sidebar.Header`, `Sidebar.Footer`, `menuVariant` and thin mode are deleted. Put the rows in `Shell.Sidebar` between `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter`, or in `Shell.Rail` for tiles. `Shell.Sidebar` has no thin state, `thinSize` or `toggleModes`; its toggle goes between collapsed and expanded.
+* **motion:** every transition, entry and exit animation, and press and hover scale is gone, with the `--duration-*`, `--ease-*`, `--motion-*` and `--transition-*` tokens and the `motion` dependency. State changes are instant. Spinner, Skeleton, the indeterminate Progress bar and Select's loading spinner still move; the Spinner slows under reduced motion instead of stopping. Image has no `fadeIn`; it shows once loaded.
+* **tokens:** 38 internal tokens nothing read are removed: the progress shine, timing and gradient steps, progress and slider heights and radii 5–9, the raised shadow factors, size multipliers, surface opacities, `--opacity-disabled`, `--opacity-soft-variant`, `--position-zero`, `--position-negative-full` and `--color-transparent`.
+* **sizes:** every declared size is styled. Checkbox offers 1–3, Avatar 1–9, CheckboxCards and RadioCards 1–5. Code, Kbd, Link and Blockquote take Text's sizes 0–12 at Text's font steps, so a Kbd is one step larger at the same `size`.
+
+### How to adopt
+
+Fix every 0.14 deprecation warning first. Then search your code for what never warned: `material` on Checkbox, Radio, Switch, Badge or Avatar; Avatar sizes 10–12, Checkbox sizes 4 and up, CheckboxCards and RadioCards sizes 6 and up; `fadeIn` on Image; `transition` and `--motion-`, `--duration-`, `--ease-` tokens; and any `Kbd size`.
+
+## [0.14.4](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.14.3...v0.14.4) (2026-10-19)
+
+Two fixes from the 0.15.0 audit, for apps still on 0.14.
+
+### Bug Fixes
+
+* **button:** `emphasis` and `variant` are mutually exclusive on every button type: ToggleButton, ToggleIconButton, IconButton, Toolbar.Button, MessageScroller.Button and Chatbar.Send. Passing both is a type error instead of a render-time crash, and ToggleButton no longer accepts any prop. MessageScroller.Button and Chatbar.Send take `emphasis` without throwing.
+* **sidebar:** under `prefers-contrast: more`, the active, highlighted or hovered Rail tile is solid with solid ink. Before, its icon took the solid ink on a pale tile and nearly vanished.
+
+## [0.14.3](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.14.2...v0.14.3) (2026-10-18)
+
+### Features
+
+* **button:** `emphasis` on Button, IconButton, ToggleButton, ToggleIconButton and Toolbar.Button states a button's rank: `loud` is `solid`, `medium` is `raised` (the default) and `quiet` is `ghost`. `variant` keeps all its values, so `outline` and `surface` stay available. Passing both is a type error and throws.
+
+## [0.14.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.14.1...v0.14.2) (2026-10-18)
+
+### Visual changes
+
+* **notice:** Notice takes Callout's look: an even inset on every side (12, 16 or 24px by size), wider gaps, the icon and actions on the first line so a long message wraps under itself, and a tinted alpha fill. Notices above the Chatbar are taller.
+
+## [0.14.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.14.0...v0.14.1) (2026-10-18)
+
+Sidebar rows live in the Shell. Nothing that worked before changes; the old Sidebar frame and thin mode warn once in development and are removed in 0.15.0.
+
+### Features
+
+* **shell:** `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter` hold a pane's chrome. `Shell.Root size` (1–3) sets their index.
+* **sidebar:** Sidebar's menu parts work directly inside `Shell.Sidebar` and `Shell.Panel`, sized by the Shell, with no `Sidebar.Root`. In `Shell.Rail` the same rows draw as tiles: an icon with a small label, sub-menus as dropdowns. This replaces thin mode.
+* **sidebar:** rows use the soft highlight, and the solid one under `prefers-contrast: more`.
+
+### Deprecated (removed in 0.15.0)
+
+* `Sidebar.Root`, `Sidebar.Content`, `Sidebar.Header`, `Sidebar.Footer`: use `Shell.Sidebar` with `Shell.PaneHeader`, `Shell.Scroll` and `Shell.PaneFooter`.
+* `menuVariant` on Sidebar.
+* Sidebar thin mode (`presentation="thin"`, `layout="rail"`) and Shell.Sidebar's thin state and `thinSize`: put the rows in `Shell.Rail`.
+
+### How to adopt
+
+Replace `Sidebar.Root` with `Shell.Sidebar`, `Sidebar.Header` with `Shell.PaneHeader`, `Sidebar.Content` with `Shell.Scroll role="navigation" aria-label="…"`, and `Sidebar.Footer` with `Shell.PaneFooter`. Move `size` to `Shell.Root`. A `variant="soft"` sidebar's gray fill is not drawn by the pane; set `style={{ backgroundColor: 'var(--gray-2)' }}` on `Shell.Sidebar` to keep it.
+
+## [0.14.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.13.3...v0.14.0) (2026-10-18)
+
+New defaults and new names. Everything that is going away still works, warns once in development, and is removed in 0.15.0.
+
+### Visual changes
+
+* **variants:** `raised` (renamed from `classic`) is the default wherever it exists: Button, IconButton, the toggle buttons, Checkbox, Radio, RadioGroup, Avatar, Badge, Card, CheckboxCards, RadioCards, Accordion, Callout, TextField, TextArea, the Select and Combobox triggers, UserCard and the Chatbar box. Kbd was already raised.
+* **colour:** Badge, Avatar, Code, Callout and UserCard rest gray. `color` picks a category when it means something. Button and Link keep the accent.
+* **theme:** `Theme` defaults to a gray accent, gray grays and solid material. Radius is unchanged.
+* **menus:** DropdownMenu, ContextMenu, Select and Combobox lists use the soft highlight, and the solid one under `prefers-contrast: more`.
+
+### Features
+
+* **button:** `iconOnly` on Button and ToggleButton draws the square icon button and requires an accessible name. IconButton and ToggleIconButton are those two with `iconOnly` set.
+* **sizes:** TextField, TextArea, Select and the Combobox field take size 4, the same height as Button size 4. Tabs and TabNav take 1–4, and Navbar 1–4. A Combobox list stops at size 3.
+* **material:** Tabs, TabNav, Popover, SegmentedControl, the Select trigger, CheckboxCards and RadioCards take `material`.
+* **menus:** `DropdownMenu.Virtual` and `ContextMenu.Virtual`, a virtualised list that keeps its menu's size, highlight and material.
+* **variants:** RadioGroup takes Radio's variants, UserCard's `avatarVariant` takes Avatar's, and CheckboxCards and RadioCards take Card's.
+* **tokens:** `--heading-font-weight` (bold by default) sets every Heading's weight. `--raised-*` replaces `--classic-*`.
+
+### Bug Fixes
+
+* **segmented control:** `panelBackground` reaches the stylesheet. Before, it set a class nothing read.
+* **fields:** error messages drop `aria-live`, which conflicted with `role="alert"`.
+
+### Deprecated (removed in 0.15.0)
+
+* `variant="classic"`: use `variant="raised"`. `--classic-*` tokens: use `--raised-*`.
+* `variant="override"` on Button: style it with `className`, `style` or its CSS variables.
+* `variant` on DropdownMenu, ContextMenu, Select and Combobox content, and on SegmentedControl.
+* `panelBackground`: use `material`.
+* `isInvalid` on TextField and TextArea: use `error`.
+* `fullWidth` on IconButton.
+* `Callout`: use `Notice`.
+* `AppBar`: use `Toolbar`, in `Shell.Header` for an app header.
+* The `UserCard` export: the pattern moves to a docs block.
+
+### How to adopt
+
+Search for `classic`, `panelBackground`, `isInvalid`, `Callout`, `AppBar` and `UserCard`, and replace each as listed above. To keep the old look while you do, set `accentColor`, `grayColor` and `material` on your root `Theme`, and `color` or `variant` where a component should not rest gray or raised.
+
+## [0.13.3](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.13.2...v0.13.3) (2026-10-18)
+
+Fixes only. Nothing to change in your code. The one visible difference: disabled tabs and accordion triggers now look disabled.
+
+### Bug Fixes
+
+* **touch:** hover effects apply only where the pointer can hover. On touch screens, Accordion, Sidebar, the Button and Card press scale, the Shell resizer and Slider ticks no longer stay hovered after a tap.
+* **disabled:** a disabled Tabs trigger or Accordion trigger reads like a disabled menu item: `--gray-a8` text, a default cursor and no hover fill. A disabled interactive Card stops reacting to the pointer.
+* **theme:** the root `Theme` inherits text direction from a Radix `DirectionProvider` above it instead of forcing left-to-right. Left-to-right stays the default.
+* **peer dependencies:** React `^18.0 || ^19.0`. The package already needed React 18 (`useId`, `useSyncExternalStore`); the range now says so.
+
+### Internal
+
+* **tokens:** `--radius-pill-1`…`--radius-pill-12`, the radius step or a pill when the theme radius is `full`, replace 54 copies of `max(var(--radius-N), var(--radius-full))`. Same computed values.
+* **css:** blur, opacity and transition tokens are imported once, and styles for sizes no prop offers (Callout 4–5, Table 4–5, Progress 5–9) are gone.
+* **release:** publishing requires a git tag, a matching `package.json` and CHANGELOG entry, and a version above npm's latest, and runs the tests first.
+
 ## [0.13.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.13.1...v0.13.2) (2026-10-17)
 
 ### Bug Fixes
 
 * **sidebar:** in thin mode, the icon tile behind each item and the search trigger takes `--radius-full`, so it is a pill when the theme's `radius` is `full`, as buttons are. Size 3 uses `--radius-3` instead of `--radius-2`.
 
+## [0.13.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.13.0...v0.13.1) (2026-10-17)
+
+### Changes
+
+* **tokens:** one control height ladder, `--control-height-1`…`--control-height-4`. Button, the menus, TextField, Select, SegmentedControl, Toolbar and Tabs read it, so a size means the same height on each of them.
+* **sidebar:** drops its own size ladder, which ran one step taller, and takes the menus'. Sidebar rows are one step shorter.
+* **tabs:** one step shorter, to match the ladder.
+* **select:** items at size 3 are 40px tall.
+
 ## [0.13.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.12.0...v0.13.0) (2026-10-16)
 
-Light and dark mode are decided before the first paint and kept on `<html>`, as in Kookie UI v2.
+Light and dark mode are decided before the first paint and kept on `<html>`.
 
 ### Features
 
@@ -32,7 +547,9 @@ The composer can show what a message refers to, not only the files it carries.
 
 ## [0.11.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.10.0...v0.11.0) (2026-10-16)
 
-`Toolbar` now means what it means in Kookie UI v2: a row of controls with one tab stop. The band it used to name is `AppBar`.
+Not published on its own. These changes shipped in 0.12.0.
+
+`Toolbar` is now a row of controls with one tab stop. The band it used to name is `AppBar`.
 
 ### ⚠ BREAKING CHANGES
 
@@ -41,14 +558,13 @@ The composer can show what a message refers to, not only the files it carries.
 
 ### Features
 
-* **toolbar:** new `Toolbar`, `ToolbarGroup`, `ToolbarButton`, `ToolbarSeparator` and `ToolbarTitle`, also reachable as `Toolbar.Root`, `Toolbar.Group`, `Toolbar.Button`, `Toolbar.Separator` and `Toolbar.Title`. Built on Radix Toolbar, with v2's contract:
+* **toolbar:** new `Toolbar`, `ToolbarGroup`, `ToolbarButton`, `ToolbarSeparator` and `ToolbarTitle`, also reachable as `Toolbar.Root`, `Toolbar.Group`, `Toolbar.Button`, `Toolbar.Separator` and `Toolbar.Title`. Built on Radix Toolbar:
   * `Toolbar` is `role="toolbar"` with one tab stop; the arrow keys move focus between its controls and wrap at the ends. `orientation` is `horizontal` (Left/Right) or `vertical` (Up/Down, the row stacks). `size` `1`–`4` (default `2`) sets the row's height and the size of every control inside it that does not set its own. `aria-label` / `aria-labelledby` pass through. The row paints nothing and spaces its clusters with `space-between`; cluster controls with a `Flex`.
   * `ToolbarButton` takes every `Button` prop and joins the toolbar's keyboard. `iconOnly` renders an `IconButton` and requires an `aria-label`. `aria-pressed` announces a toggle and wears Button's pressed look. It rests as a gray `soft` button (gray `ghost` inside a group); a stated `size`, `variant` or `color` wins. It throws outside a `Toolbar`.
   * `ToolbarGroup` is a `role="group"` drawn as a quiet gray well, level with a button beside it, hosting its buttons inside it with a concentric corner. `disabled` turns every control in it off.
   * `ToolbarSeparator` is a gray hairline across the row's direction, in the gray `Separator` draws, at half the row's height.
   * `ToolbarTitle` is one truncating line at the row's leading edge, one text step above a button label at the same size, with more air beside it than between two controls. With no children it renders nothing.
-* v2's `backdrop` prop (glass) and `ToolbarOverflow` are not ported.
-* **tokens:** v2's names for the page, its text and its neutral scale resolve in v1: `--color-page` (`--color-background`), `--color-text` (`--gray-12`) and `--neutral-1`…`--neutral-12` (`--gray-N`). Aliases only, following the appearance, so code written against v2's names (such as Kookie Flow's sticky notes) paints correctly on v1.
+* **tokens:** `--color-page` (`--color-background`), `--color-text` (`--gray-12`) and `--neutral-1`…`--neutral-12` (`--gray-N`) resolve as aliases that follow the appearance.
 
 ### Tests
 
@@ -71,6 +587,8 @@ The composer can show what a message refers to, not only the files it carries.
 No runtime code changed.
 
 ## [0.9.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.8.1...v0.9.0) (2026-10-15)
+
+Not published on its own. These changes shipped in 0.9.1.
 
 The pieces a chat screen needs around its input: a transcript that follows the conversation, messages that wait above the input, and a send button that can stop a reply.
 
@@ -97,7 +615,7 @@ The pieces a chat screen needs around its input: a transcript that follows the c
 
 ## [0.8.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.7.0...v0.8.0) (2026-10-14)
 
-The Shell is rebuilt on kookie-ui-v2's model, behind 0.7's API. Every prop and export from 0.7 still exists. What changes is behaviour, listed in full below, because each item is something an app could have depended on.
+The Shell is rebuilt behind 0.7's API. Every prop and export from 0.7 still exists. What changes is behaviour, listed in full below, because each item is something an app could have depended on.
 
 ### ⚠ BREAKING CHANGES
 
@@ -196,6 +714,10 @@ No API change and no behaviour a consumer relied on changes; each item is someth
 | `<DataList.Label highContrast>` | `<DataList.Label emphasis="loud">` |
 | `highContrastPropDef` import | Delete it; use `emphasisPropDef` for text-first components |
 | `var(--opacity-high-contrast)` | `var(--opacity-8)` |
+
+## Note on 1.0.0–1.0.3
+
+These four releases were tagged in git in January 2026 and never published to npm. The package continued from 0.7.0, and every release since then goes up from there. The 1.0.x entries below are kept as history.
 
 ## [1.0.3](https://github.com/KushagraDhawan1997/kookie-ui/compare/v1.0.2...v1.0.3) (2026-01-12)
 

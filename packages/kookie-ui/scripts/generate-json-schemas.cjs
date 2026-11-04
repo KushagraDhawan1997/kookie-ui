@@ -27,9 +27,7 @@ mkdirSync(schemasDir, { recursive: true });
 const {
   BaseButtonSchema,
   ButtonSchema,
-  IconButtonSchema,
-  ToggleButtonSchema,
-  ToggleIconButtonSchema,
+  ToggleSchema,
   ShellRootSchema,
   ShellHeaderSchema,
   ShellRailSchema,
@@ -46,9 +44,7 @@ const {
 const schemas = {
   'base-button': BaseButtonSchema,
   button: ButtonSchema,
-  'icon-button': IconButtonSchema,
-  'toggle-button': ToggleButtonSchema,
-  'toggle-icon-button': ToggleIconButtonSchema,
+  toggle: ToggleSchema,
   'shell-root': ShellRootSchema,
   'shell-header': ShellHeaderSchema,
   'shell-rail': ShellRailSchema,
@@ -172,16 +168,12 @@ export interface BaseButtonJsonSchema {
 }
 
 export interface ButtonJsonSchema extends BaseButtonJsonSchema {}
-export interface IconButtonJsonSchema extends BaseButtonJsonSchema {}
-export interface ToggleButtonJsonSchema extends BaseButtonJsonSchema {}
-export interface ToggleIconButtonJsonSchema extends BaseButtonJsonSchema {}
+export interface ToggleJsonSchema extends BaseButtonJsonSchema {}
 
 export interface KookieUIButtonSchemas {
   'base-button': BaseButtonJsonSchema;
   'button': ButtonJsonSchema;
-  'icon-button': IconButtonJsonSchema;
-  'toggle-button': ToggleButtonJsonSchema;
-  'toggle-icon-button': ToggleIconButtonJsonSchema;
+  'toggle': ToggleJsonSchema;
 }
 
 export type ButtonComponentName = keyof KookieUIButtonSchemas;

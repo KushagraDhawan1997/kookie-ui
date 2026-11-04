@@ -26,7 +26,7 @@ function ControlledFixture() {
 describe('Panel controlled open', () => {
   it('user action -> onOpenChange fired; UI updates only when parent re-renders', async () => {
     renderWithProviders(<ControlledFixture />);
-    const panel = () => screen.getByText('panel').closest('.rt-ShellPanel') as HTMLElement;
+    const panel = () => screen.getByText('panel').closest('.kui-ShellPanel') as HTMLElement;
     // Initially closed
     expect(panel()).toHaveAttribute('data-mode', 'collapsed');
     // Click toggle -> should call onOpenChange with true, parent updates state -> UI expands

@@ -37,11 +37,29 @@ describe('Notice', () => {
     expect(screen.getByRole('button', { name: 'Add credits' })).toBeInTheDocument();
   });
 
+  it('sizes an action that sets no size of its own', () => {
+    renderWithProviders(
+      <Notice size="3" action={<Button>Add credits</Button>}>
+        You are out of credits
+      </Notice>,
+    );
+    expect(screen.getByRole('button', { name: 'Add credits' }).className).toContain('kui-r-size-3');
+  });
+
+  it('keeps the size an action sets', () => {
+    renderWithProviders(
+      <Notice size="3" action={<Button size="1">Add credits</Button>}>
+        You are out of credits
+      </Notice>,
+    );
+    expect(screen.getByRole('button', { name: 'Add credits' }).className).toContain('kui-r-size-1');
+  });
+
   it('defaults to gray and size 2', () => {
     renderWithProviders(<Notice>Hello</Notice>);
     const notice = screen.getByRole('status');
     expect(notice).toHaveAttribute('data-accent-color', 'gray');
-    expect(notice.className).toContain('rt-r-size-2');
+    expect(notice.className).toContain('kui-r-size-2');
   });
 });
 
@@ -106,11 +124,11 @@ describe('Notices in a Chatbar', () => {
 
   it('stand outside the box and take the chatbar’s size', () => {
     renderWithProviders(<Fixture onSubmit={() => {}} />);
-    const notice = screen.getByText('This chat last worked in Desk set').closest('.rt-NoticeRoot');
+    const notice = screen.getByText('This chat last worked in Desk set').closest('.kui-NoticeRoot');
     expect(notice).not.toBeNull();
-    expect(notice?.closest('.rt-ChatbarBox')).toBeNull();
-    expect(notice?.closest('.rt-ChatbarRoot')).not.toBeNull();
-    expect(notice?.className).toContain('rt-r-size-3');
+    expect(notice?.closest('.kui-ChatbarBox')).toBeNull();
+    expect(notice?.closest('.kui-ChatbarRoot')).not.toBeNull();
+    expect(notice?.className).toContain('kui-r-size-3');
   });
 
   it('never submit the message when their button is pressed', async () => {
@@ -123,8 +141,8 @@ describe('Notices in a Chatbar', () => {
   it('shows the context below the box', () => {
     renderWithProviders(<Fixture onSubmit={() => {}} />);
     const context = screen.getByText('Standard · 640 of 2,000 credits');
-    expect(context).toHaveClass('rt-ChatbarContext');
-    const box = document.querySelector('.rt-ChatbarBox');
+    expect(context).toHaveClass('kui-ChatbarContext');
+    const box = document.querySelector('.kui-ChatbarBox');
     expect(box?.compareDocumentPosition(context) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });

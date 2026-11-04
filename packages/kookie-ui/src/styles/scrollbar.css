@@ -4,7 +4,7 @@
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--gray-a5) transparent;
+  scrollbar-color: var(--neutral-a5) transparent;
 }
 
 /* WebKit browsers (Chrome, Safari, Edge) */
@@ -18,12 +18,14 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--gray-a5);
+  background: var(--neutral-a5);
   border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--gray-a7);
+@media (hover: hover) {
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--neutral-a7);
+  }
 }
 
 ::-webkit-scrollbar-corner {

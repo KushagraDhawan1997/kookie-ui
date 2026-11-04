@@ -1,21 +1,26 @@
 'use client';
 
 import * as React from 'react';
+import { useComposedRefs, useLayoutEffect } from 'radix-ui/internal';
 import classNames from 'classnames';
 import { Toolbar as ToolbarPrimitive } from 'radix-ui';
 
 import { toolbarRootPropDefs } from './toolbar.props.js';
 import { Button } from './button.js';
-import { IconButton } from './icon-button.js';
+import * as DropdownMenu from './dropdown-menu.js';
 import { Text } from './text.js';
 import { extractProps } from '../helpers/extract-props.js';
-import { marginPropDefs } from '../props/margin.props.js';
+import { useThemeSize } from '../hooks/theme-size.js';
+import { layoutPropDefs } from '../props/layout.props.js';
+import { usePaneBandSize } from './_internal/pane-chrome.js';
+import { usePageMirror, usePageScope, usePageTitle } from './_internal/page-scope.js';
 
 import type { ButtonProps } from './button.js';
+import type { LayoutProps } from '../props/layout.props.js';
 import type { TextProps } from './text.js';
-import type { MarginProps } from '../props/margin.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
+import type { ButtonRankProps } from './button.js';
 
 /*
  * Toolbar takes Kookie UI v2's contract (v2: components/toolbar), built on Radix instead of
@@ -26,9 +31,6 @@ import type { GetPropDefTypes } from '../props/prop-def.js';
  * nothing; a `ToolbarGroup` draws a quiet well around controls that belong together, and a
  * `ToolbarSeparator` draws a gray hairline between clusters. Use a `Flex` to cluster controls
  * without a well: the row spaces the clusters with `space-between`.
- *
- * The band anchored to a pane's edge (Left / Center / Right / Title) that this name used to
- * mean is `AppBar` since 0.11.0.
  */
 
 type ToolbarSize = NonNullable<GetPropDefTypes<typeof toolbarRootPropDefs>['size']>;
@@ -37,6 +39,7 @@ type ToolbarOrientation = NonNullable<GetPropDefTypes<typeof toolbarRootPropDefs
 interface ToolbarContextValue {
   size: ToolbarSize;
   orientation: ToolbarOrientation;
+  backdrop: boolean;
 }
 
 const ToolbarContext = React.createContext<ToolbarContextValue | null>(null);
@@ -44,12 +47,21 @@ const ToolbarContext = React.createContext<ToolbarContextValue | null>(null);
 /** Set by a `ToolbarGroup`: its children rest quiet, and `disabled` turns them all off. */
 const ToolbarGroupContext = React.createContext<{ disabled: boolean } | null>(null);
 
-function useToolbarContext(consumer: string): ToolbarContextValue {
-  const context = React.useContext(ToolbarContext);
-  if (!context) {
-    throw new Error(`${consumer} must be rendered inside a Toolbar.`);
-  }
-  return context;
+/**
+ * True while a subtree is drawn into a `ToolbarOverflow`'s menu instead of into the row (v2
+ * `InOverflow`). The parts answer it themselves: a `ToolbarButton` renders a menu item, a
+ * `ToolbarGroup` a menu group, a `ToolbarSeparator` a menu separator.
+ */
+const InOverflowContext = React.createContext(false);
+
+/**
+ * True while this subtree is drawn into a `ToolbarOverflow`'s "More" menu instead of the row.
+ *
+ * The toolbar's own parts handle this already. Use it in your own component inside a
+ * `ToolbarOverflow` to render a different form in the menu.
+ */
+function useToolbarOverflow(): boolean {
+  return React.useContext(InOverflowContext);
 }
 
 // ============================================================================
@@ -61,7 +73,14 @@ type ToolbarOwnProps = GetPropDefTypes<typeof toolbarRootPropDefs>;
 interface ToolbarProps
   extends ComponentPropsWithout<typeof ToolbarPrimitive.Root, RemovedProps | 'orientation'>,
     ToolbarOwnProps,
-    MarginProps {}
+    LayoutProps {
+  /**
+   * Gives every control a surface of its own, for a row that content passes behind, such as
+   * `Shell.PaneHeader float`. Buttons rest `raised` instead of `soft`, and a group's well is
+   * solid and raised.
+   */
+  backdrop?: boolean;
+}
 
 /**
  * A row of controls with one keyboard tab stop. The arrow keys move focus between the controls.
@@ -82,22 +101,27 @@ interface ToolbarProps
  * ```
  */
 const ToolbarRoot = React.forwardRef<HTMLDivElement, ToolbarProps>((props, forwardedRef) => {
-  const size: ToolbarSize = props.size ?? toolbarRootPropDefs.size.default;
+  // Inside a Shell (a pane's header or footer, or the content area), a toolbar with no size
+  // rests one step above the Shell's. A pane's scrolling list has no band.
+  const band = usePaneBandSize();
+  // Elsewhere it takes the nearest Theme's size.
+  const size: ToolbarSize = useThemeSize(props.size ?? band ?? undefined, toolbarRootPropDefs.size);
   const orientation: ToolbarOrientation = props.orientation ?? toolbarRootPropDefs.orientation.default;
-  const { className, orientation: _orientation, children, ...rootProps } = extractProps(
-    props,
+  const { className, orientation: _orientation, backdrop = false, children, ...rootProps } = extractProps(
+    { ...props, size },
     toolbarRootPropDefs,
-    marginPropDefs,
+    layoutPropDefs,
   );
 
-  const context = React.useMemo(() => ({ size, orientation }), [size, orientation]);
+  const context = React.useMemo(() => ({ size, orientation, backdrop }), [size, orientation, backdrop]);
 
   return (
     <ToolbarPrimitive.Root
       {...rootProps}
       ref={forwardedRef}
       orientation={orientation}
-      className={classNames('rt-Toolbar', className)}
+      data-backdrop={backdrop || undefined}
+      className={classNames('kui-Toolbar', className)}
     >
       <ToolbarContext.Provider value={context}>{children}</ToolbarContext.Provider>
     </ToolbarPrimitive.Root>
@@ -118,19 +142,32 @@ interface ToolbarGroupProps extends ComponentPropsWithout<'div', RemovedProps> {
  * Controls that belong together, drawn as one quiet well that stands level with a button
  * beside it. Buttons inside it rest as `ghost` unless they state a `variant`.
  * To cluster controls without a well, use a `Flex`.
+ *
+ * In a `ToolbarOverflow`'s menu it is a menu group. Outside a `Toolbar` (rendered through a
+ * portal, for example) it still draws its well, as a horizontal group.
  */
 const ToolbarGroup = React.forwardRef<HTMLDivElement, ToolbarGroupProps>(
   ({ className, disabled = false, children, ...props }, forwardedRef) => {
-    const { orientation } = useToolbarContext('ToolbarGroup');
+    const toolbar = React.useContext(ToolbarContext);
+    const overflow = React.useContext(InOverflowContext);
     const group = React.useMemo(() => ({ disabled }), [disabled]);
+
+    if (overflow) {
+      return (
+        <DropdownMenu.Group {...props} ref={forwardedRef} className={className}>
+          <ToolbarGroupContext.Provider value={group}>{children}</ToolbarGroupContext.Provider>
+        </DropdownMenu.Group>
+      );
+    }
+
     return (
       <div
         role="group"
-        data-orientation={orientation}
+        data-orientation={toolbar?.orientation ?? 'horizontal'}
         data-disabled={disabled || undefined}
         {...props}
         ref={forwardedRef}
-        className={classNames('rt-ToolbarGroup', className)}
+        className={classNames('kui-ToolbarGroup', className)}
       >
         <ToolbarGroupContext.Provider value={group}>{children}</ToolbarGroupContext.Provider>
       </div>
@@ -143,15 +180,17 @@ ToolbarGroup.displayName = 'Toolbar.Group';
 // ToolbarButton
 // ============================================================================
 
-type ToolbarButtonBaseProps = Omit<ButtonProps, 'as' | 'asChild'>;
+type ToolbarButtonBaseProps = Omit<ButtonProps, 'as' | 'variant' | 'emphasis'>;
 
 /** A labelled button: takes every `Button` prop. */
-type ToolbarTextButtonProps = ToolbarButtonBaseProps & {
+type ToolbarTextButtonProps = ToolbarButtonBaseProps &
+  ButtonRankProps & {
   iconOnly?: false;
 };
 
-/** An icon-only button: renders an `IconButton`, and the type requires an `aria-label`. */
-type ToolbarIconButtonProps = Omit<ToolbarButtonBaseProps, 'aria-label' | 'aria-labelledby' | 'overrideStyles'> & {
+/** An icon-only button: renders `Button iconOnly`, and the type requires an `aria-label`. */
+type ToolbarIconButtonProps = Omit<ToolbarButtonBaseProps, 'aria-label' | 'aria-labelledby' | 'fullWidth'> &
+  ButtonRankProps & {
   iconOnly: true;
   /** The control's accessible name. An icon has no words of its own, so this is required. */
   'aria-label': string;
@@ -159,49 +198,433 @@ type ToolbarIconButtonProps = Omit<ToolbarButtonBaseProps, 'aria-label' | 'aria-
 
 type ToolbarButtonProps = ToolbarTextButtonProps | ToolbarIconButtonProps;
 
+/** The plain DOM props, besides handlers, ARIA and data attributes, a menu row takes from a ToolbarButton. */
+const OVERFLOW_ITEM_KEYS = new Set(['id', 'className', 'style', 'title']);
+
 function isPressed(value: React.AriaAttributes['aria-pressed']) {
   return value === true || value === 'true';
+}
+
+/** Does an `asChild` child render a native `<button>`? Only then is it a Radix Toolbar.Button. */
+function isButtonElement(children: React.ReactNode) {
+  return React.isValidElement(children) && children.type === 'button';
 }
 
 /**
  * A `Button` that joins the toolbar's keyboard navigation, so a row of them is one tab stop.
  *
  * Set `iconOnly` (with an `aria-label`) for a symbol-only control. Set `aria-pressed` for a
- * control that toggles; a pressed button wears Button's pressed look.
+ * control that toggles; a pressed button wears Button's pressed look. Set `asChild` to render
+ * your own element, such as a link: `<ToolbarButton asChild><a href="/docs">Docs</a></ToolbarButton>`.
+ * A link stays in the arrow-key row and gets no `type` attribute.
  *
- * It takes the toolbar's `size`, and rests as a gray `soft` button (gray `ghost` inside a
- * `ToolbarGroup`). A stated `size`, `variant` or `color` wins; a stated `variant` without a
- * `color` takes Button's own default colour. It throws outside a `Toolbar`.
+ * It takes the toolbar's `size`, and rests as a gray `soft` button (`raised` in a toolbar with
+ * `backdrop`, gray `ghost` inside a `ToolbarGroup`). A stated `size`, `variant` or `color` wins; a
+ * stated `variant` without a `color` takes Button's own default colour.
+ *
+ * In a `ToolbarOverflow`'s menu it renders a menu item; an icon-only button uses its
+ * `aria-label` as the item's text. Outside a `Toolbar` (rendered through a React portal, for
+ * example) it renders a plain Button with the same rest look, as its own tab stop. Use
+ * `ToolbarSlot` and `ToolbarFill` for a control that should join the row's arrow keys.
  */
 const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>((props, forwardedRef) => {
-  const toolbar = useToolbarContext('ToolbarButton');
+  const toolbar = React.useContext(ToolbarContext);
   const group = React.useContext(ToolbarGroupContext);
-  const { iconOnly, size, variant, color, disabled, ...rest } = props;
+  const overflow = React.useContext(InOverflowContext);
+  const { iconOnly, size, variant, emphasis, color, disabled, asChild, onKeyDown, ...rest } = props;
+  const off = disabled || group?.disabled || undefined;
+
+  if (overflow) {
+    // Only what a menu row means comes across: handlers, ARIA, data attributes, id, class and
+    // style. Button's box props (size, loading, tooltip, fullWidth and the rest) would land on the
+    // DOM as unknown attributes. A wrapping menu trigger hands its open handlers (onPointerDown,
+    // onKeyDown), aria-expanded/haspopup/controls and data-state in through these, so it still
+    // opens from the row.
+    const passed: Record<string, unknown> = {};
+    for (const key of Object.keys(rest)) {
+      if (/^on[A-Z]/.test(key) || key.startsWith('aria-') || key.startsWith('data-') || OVERFLOW_ITEM_KEYS.has(key)) {
+        passed[key] = (rest as Record<string, unknown>)[key];
+      }
+    }
+    if (onKeyDown) passed.onKeyDown = onKeyDown;
+    return (
+      <ToolbarOverflowItem
+        {...(passed as React.ComponentPropsWithoutRef<'div'>)}
+        ref={forwardedRef as unknown as React.Ref<HTMLDivElement>}
+        asChild={asChild}
+        iconOnly={iconOnly}
+        disabled={off}
+        color={color}
+        pressed={props['aria-pressed'] === undefined ? undefined : isPressed(props['aria-pressed'])}
+      >
+        {rest.children}
+      </ToolbarOverflowItem>
+    );
+  }
+
+  // In a vertical toolbar, Up and Down belong to the toolbar. A menu trigger rendering this
+  // hands its open-on-arrow handler in through `onKeyDown`; those two keys skip it (v2).
+  const handleKeyDown =
+    toolbar?.orientation === 'vertical' && onKeyDown
+      ? (event: React.KeyboardEvent<HTMLButtonElement>) => {
+          if (event.key === 'ArrowDown' || event.key === 'ArrowUp') return;
+          onKeyDown(event);
+        }
+      : onKeyDown;
 
   const pressed = isPressed(props['aria-pressed']);
   const stateProps =
     'data-state' in props || props['aria-pressed'] === undefined ? {} : { 'data-state': pressed ? 'on' : 'off' };
 
   const shared = {
-    size: size ?? toolbar.size,
-    variant: variant ?? (group ? 'ghost' : 'soft'),
-    // The gray rest is a pair with the default variant: a caller who states a variant gets
-    // Button's own colour for it unless they state a colour too.
-    color: color ?? (variant ? undefined : 'gray'),
+    size: size ?? toolbar?.size,
+    // A caller states the look by `variant` or the rank by `emphasis`, never both.
+    ...(emphasis !== undefined
+      ? { emphasis }
+      : { variant: variant ?? (group ? 'ghost' : toolbar?.backdrop ? 'raised' : 'soft') }),
+    // The gray rest is a pair with the default variant: a caller who states a variant or an
+    // emphasis gets Button's own colour for it unless they state a colour too.
+    color: color ?? (variant || emphasis ? undefined : 'gray'),
     ...stateProps,
   } as const;
 
+  // The text and icon-only branches share every prop but the name; one Button renders both.
+  const buttonProps = {
+    ...rest,
+    ...(iconOnly ? { iconOnly: true } : {}),
+    ...(asChild ? { asChild: true } : {}),
+    ...(handleKeyDown ? { onKeyDown: handleKeyDown } : {}),
+    ...shared,
+  } as ButtonProps;
+
+  // Outside a toolbar there is no row to join: a plain Button, not a throw.
+  if (!toolbar) {
+    return <Button {...buttonProps} ref={forwardedRef} disabled={off} />;
+  }
+
+  // A link (or any non-button child) joins the row as a Radix Toolbar.Link, which sets no
+  // `type`. Toolbar.Button would stamp `type="button"` on it.
+  if (asChild && !isButtonElement(rest.children)) {
+    return (
+      <ToolbarPrimitive.Link asChild ref={forwardedRef as unknown as React.Ref<HTMLAnchorElement>}>
+        <Button {...buttonProps} disabled={off} />
+      </ToolbarPrimitive.Link>
+    );
+  }
+
   return (
-    <ToolbarPrimitive.Button asChild ref={forwardedRef} disabled={disabled || group?.disabled || undefined}>
-      {iconOnly ? (
-        <IconButton {...(rest as Omit<ToolbarIconButtonProps, 'iconOnly'>)} {...shared} />
-      ) : (
-        <Button {...(rest as Omit<ToolbarTextButtonProps, 'iconOnly'>)} {...shared} />
-      )}
+    <ToolbarPrimitive.Button asChild ref={forwardedRef} disabled={off}>
+      <Button {...buttonProps} />
     </ToolbarPrimitive.Button>
   );
 });
 ToolbarButton.displayName = 'Toolbar.Button';
+
+interface ToolbarOverflowItemProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onSelect' | 'color'> {
+  asChild?: boolean;
+  iconOnly?: boolean;
+  disabled?: boolean;
+  color?: ButtonProps['color'];
+  /** A toggle's pressed state. A toggle becomes a checkbox item, so the menu still says whether it is on. */
+  pressed?: boolean;
+}
+
+/**
+ * A ToolbarButton drawn into the overflow menu: the same element, as a menu item. An icon-only
+ * button's `aria-label` becomes the item's text beside its icon, since a menu row has room for
+ * words. What prices a box (size, variant, emphasis, iconOnly) does not come across.
+ */
+const ToolbarOverflowItem = React.forwardRef<HTMLDivElement, ToolbarOverflowItemProps>(
+  ({ asChild, iconOnly, disabled, color, pressed, children, 'aria-label': label, ...props }, forwardedRef) => {
+    const words = iconOnly ? label : undefined;
+    const itemProps = {
+      ...props,
+      ...(iconOnly ? {} : label ? { 'aria-label': label } : {}),
+      disabled,
+      ...(color ? { color: color as DropdownMenu.ItemProps['color'] } : {}),
+    };
+    if (asChild && React.isValidElement<{ children?: React.ReactNode }>(children)) {
+      const child = words
+        ? React.cloneElement(children, undefined, children.props.children, <span>{words}</span>)
+        : children;
+      return (
+        <DropdownMenu.Item {...itemProps} ref={forwardedRef} asChild>
+          {child}
+        </DropdownMenu.Item>
+      );
+    }
+    if (pressed !== undefined) {
+      return (
+        <DropdownMenu.CheckboxItem {...itemProps} ref={forwardedRef} checked={pressed}>
+          {children}
+          {words}
+        </DropdownMenu.CheckboxItem>
+      );
+    }
+    return (
+      <DropdownMenu.Item {...itemProps} ref={forwardedRef}>
+        {children}
+        {words}
+      </DropdownMenu.Item>
+    );
+  },
+);
+ToolbarOverflowItem.displayName = 'Toolbar.OverflowItem';
+
+// ============================================================================
+// ToolbarOverflow
+// ============================================================================
+
+interface ToolbarOverflowProps extends ComponentPropsWithout<'div', RemovedProps> {
+  /** The accessible name of the "More" button. Defaults to `More`. */
+  label?: string;
+  /** The controls in the cluster, in order. The ones that don't fit move into the "More" menu. */
+  children?: React.ReactNode;
+}
+
+/** Three filled dots for the "More" button. Internal, so the library carries no icon set. */
+function MoreIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentcolor" aria-hidden xmlns="http://www.w3.org/2000/svg">
+      <circle cx="3.25" cy="8" r="1.25" />
+      <circle cx="8" cy="8" r="1.25" />
+      <circle cx="12.75" cy="8" r="1.25" />
+    </svg>
+  );
+}
+
+/**
+ * A cluster of controls that collapses into a "More" menu when the row runs out of room.
+ *
+ * It takes the room the row leaves, and when its controls don't fit, they move into the menu
+ * from the end of the cluster. A `ToolbarButton` shows as a menu item there, and a
+ * `ToolbarGroup` as a menu group. Use `useToolbarOverflow()` in your own components to render a
+ * different form in the menu.
+ *
+ * It measures on mount and on resize (v2 ToolbarOverflow): each control's width is cached while
+ * it is in the row, since a hidden control has no width to measure.
+ */
+const ToolbarOverflow = React.forwardRef<HTMLDivElement, ToolbarOverflowProps>(
+  ({ label = 'More', className, children, ...props }, forwardedRef) => {
+    const items = React.Children.toArray(children);
+    const count = items.length;
+
+    const rootRef = React.useRef<HTMLDivElement | null>(null);
+    const widths = React.useRef<number[]>([]);
+    const triggerWidth = React.useRef(0);
+    const [shown, setShown] = React.useState(count);
+    const [tick, setTick] = React.useState(0);
+
+    // A different set of children is a different set of widths: show them all and measure again.
+    const [measuredCount, setMeasuredCount] = React.useState(count);
+    if (measuredCount !== count) {
+      setMeasuredCount(count);
+      setShown(count);
+    }
+    useLayoutEffect(() => {
+      widths.current = [];
+    }, [count]);
+
+    useLayoutEffect(() => {
+      const root = rootRef.current;
+      if (!root) return;
+
+      // The root's children are one seat per visible child, then the trigger.
+      const kids = Array.from(root.children) as HTMLElement[];
+      const visible = Math.min(shown, count);
+      for (let i = 0; i < visible; i++) {
+        const el = kids[i];
+        if (el) widths.current[i] = el.offsetWidth;
+      }
+      const trigger = kids[visible];
+      if (trigger) triggerWidth.current = trigger.offsetWidth;
+
+      const gap = Number.parseFloat(getComputedStyle(root).columnGap) || 0;
+      const available = root.clientWidth;
+
+      let total = 0;
+      let counted = 0;
+      for (let i = 0; i < count; i++) {
+        const width = widths.current[i];
+        // Never seen in the row, so there is nothing to decide with yet.
+        if (width === undefined) return;
+        // An empty seat leaves the layout, so it spends no gap.
+        if (width === 0) continue;
+        total += width + (counted > 0 ? gap : 0);
+        counted += 1;
+      }
+
+      let next = count;
+      if (total > available) {
+        // Before the trigger exists, the row's height stands in for its width: an icon-only
+        // button is square. The next pass, before paint, corrects it.
+        const budget = available - (triggerWidth.current || root.clientHeight) - gap;
+        let used = 0;
+        let drawn = 0;
+        next = 0;
+        for (let i = 0; i < count; i++) {
+          const own = widths.current[i]!;
+          if (own > 0) {
+            const width = own + (drawn > 0 ? gap : 0);
+            if (used + width > budget) break;
+            used += width;
+            drawn += 1;
+          }
+          next += 1;
+        }
+      }
+      if (next !== shown) setShown(next);
+    }, [shown, count, tick]);
+
+    // Watch the row and every seat in it: a control whose content changes (a page's actions
+    // arriving after navigation) changes its width without the row's width changing.
+    React.useEffect(() => {
+      const root = rootRef.current;
+      if (!root || typeof ResizeObserver === 'undefined') return;
+      const observer = new ResizeObserver(() => setTick((n) => n + 1));
+      observer.observe(root);
+      for (const seat of Array.from(root.children)) observer.observe(seat);
+      return () => observer.disconnect();
+    }, [shown, count]);
+
+    const attach = React.useCallback(
+      (node: HTMLDivElement | null) => {
+        rootRef.current = node;
+        if (typeof forwardedRef === 'function') forwardedRef(node);
+        else if (forwardedRef) forwardedRef.current = node;
+      },
+      [forwardedRef],
+    );
+
+    return (
+      <div {...props} ref={attach} className={classNames('kui-ToolbarOverflow', className)}>
+        {items.slice(0, shown).map((item, i) => (
+          // The seat is a position in the row, so its key is the index.
+          <div key={i} className="kui-ToolbarOverflowSeat">
+            {item}
+          </div>
+        ))}
+        {shown < count ? (
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger>
+              <ToolbarButton iconOnly aria-label={label}>
+                <MoreIcon />
+              </ToolbarButton>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content align="end">
+              <InOverflowContext.Provider value>{items.slice(shown)}</InOverflowContext.Provider>
+            </DropdownMenu.Content>
+          </DropdownMenu.Root>
+        ) : null}
+      </div>
+    );
+  },
+);
+ToolbarOverflow.displayName = 'Toolbar.Overflow';
+
+// ============================================================================
+// ToolbarSlot and ToolbarFill
+// ============================================================================
+
+type SlotEntry = { id: string; node: React.ReactNode };
+
+const EMPTY_ENTRIES: readonly SlotEntry[] = [];
+const slotEntries = new Map<string, readonly SlotEntry[]>();
+const slotListeners = new Set<() => void>();
+/** How many ToolbarSlots of each name are mounted, to warn when one Fill would render twice. */
+const mountedSlots = new Map<string, number>();
+
+function subscribeSlots(listener: () => void) {
+  slotListeners.add(listener);
+  return () => {
+    slotListeners.delete(listener);
+  };
+}
+
+function setSlotEntry(name: string, id: string, node: React.ReactNode) {
+  const list = slotEntries.get(name) ?? EMPTY_ENTRIES;
+  const index = list.findIndex((entry) => entry.id === id);
+  const next = index === -1 ? [...list, { id, node }] : list.map((entry) => (entry.id === id ? { id, node } : entry));
+  slotEntries.set(name, next);
+  slotListeners.forEach((listener) => listener());
+}
+
+function removeSlotEntry(name: string, id: string) {
+  const list = slotEntries.get(name);
+  if (!list) return;
+  const next = list.filter((entry) => entry.id !== id);
+  if (next.length === 0) slotEntries.delete(name);
+  else slotEntries.set(name, next);
+  slotListeners.forEach((listener) => listener());
+}
+
+interface ToolbarSlotProps {
+  /**
+   * Which `ToolbarFill` renders here. Defaults to `default`. Names are global to the page: mount one
+   * slot per name, or the fill renders in each of them (development builds warn).
+   */
+  name?: string;
+}
+
+/**
+ * A place in a toolbar that content elsewhere in the app fills, such as a page adding its own
+ * actions to a header toolbar the layout owns.
+ *
+ * It renders whatever the `ToolbarFill` with the same `name` holds, as if it were written here:
+ * the controls take the toolbar's size and join its arrow-key row. It adds no element.
+ */
+function ToolbarSlot({ name = 'default' }: ToolbarSlotProps) {
+  useLayoutEffect(() => {
+    const count = (mountedSlots.get(name) ?? 0) + 1;
+    mountedSlots.set(name, count);
+    if (count > 1 && process.env.NODE_ENV !== 'production') {
+      console.warn(`[kookie-ui] ToolbarSlot: ${count} slots named "${name}" are mounted. Each renders the ToolbarFill's controls, so they appear more than once. Give each slot its own name.`);
+    }
+    return () => {
+      const left = (mountedSlots.get(name) ?? 1) - 1;
+      if (left > 0) mountedSlots.set(name, left);
+      else mountedSlots.delete(name);
+    };
+  }, [name]);
+  const entries = React.useSyncExternalStore(
+    subscribeSlots,
+    () => slotEntries.get(name) ?? EMPTY_ENTRIES,
+    () => EMPTY_ENTRIES,
+  );
+  return (
+    <>
+      {entries.map((entry) => (
+        <React.Fragment key={entry.id}>{entry.node}</React.Fragment>
+      ))}
+    </>
+  );
+}
+ToolbarSlot.displayName = 'Toolbar.Slot';
+
+interface ToolbarFillProps {
+  /** The `ToolbarSlot` to render into. Defaults to `default`. */
+  name?: string;
+  /** The controls to show in the slot, such as `ToolbarButton`s. */
+  children?: React.ReactNode;
+}
+
+/**
+ * Sends its children to the `ToolbarSlot` with the same `name`, and renders nothing where it
+ * is written. Use it instead of a React portal: a portal keeps the page's React tree, so a
+ * ToolbarButton in it can't join the toolbar's arrow keys.
+ *
+ * The children render inside the toolbar, so they read the toolbar's context, not the page's.
+ * They appear after the page mounts on the client, not in server-rendered HTML.
+ */
+function ToolbarFill({ name = 'default', children }: ToolbarFillProps) {
+  const id = React.useId();
+  useLayoutEffect(() => {
+    setSlotEntry(name, id, children);
+  }, [name, id, children]);
+  useLayoutEffect(() => () => removeSlotEntry(name, id), [name, id]);
+  return null;
+}
+ToolbarFill.displayName = 'Toolbar.Fill';
 
 // ============================================================================
 // ToolbarSeparator
@@ -211,16 +634,30 @@ type ToolbarSeparatorProps = ComponentPropsWithout<typeof ToolbarPrimitive.Separ
 
 /**
  * A gray hairline between two clusters, announced as a separator. Its direction is always
- * opposite to the toolbar's.
+ * opposite to the toolbar's. In a `ToolbarOverflow`'s menu it is a menu separator.
  */
 const ToolbarSeparator = React.forwardRef<HTMLDivElement, ToolbarSeparatorProps>(
   ({ className, ...props }, forwardedRef) => {
-    useToolbarContext('ToolbarSeparator');
+    const toolbar = React.useContext(ToolbarContext);
+    const overflow = React.useContext(InOverflowContext);
+    if (overflow) return <DropdownMenu.Separator {...props} ref={forwardedRef} className={className} />;
+    if (!toolbar) {
+      return (
+        <div
+          role="separator"
+          aria-orientation="vertical"
+          data-orientation="vertical"
+          {...props}
+          ref={forwardedRef}
+          className={classNames('kui-ToolbarSeparator', className)}
+        />
+      );
+    }
     return (
       <ToolbarPrimitive.Separator
         {...props}
         ref={forwardedRef}
-        className={classNames('rt-ToolbarSeparator', className)}
+        className={classNames('kui-ToolbarSeparator', className)}
       />
     );
   },
@@ -235,7 +672,11 @@ ToolbarSeparator.displayName = 'Toolbar.Separator';
 const TITLE_SIZE = { '1': '2', '2': '3', '3': '4', '4': '5' } as const satisfies Record<ToolbarSize, TextProps['size']>;
 
 interface ToolbarTitleProps {
-  /** The title text. With none, the title renders nothing. */
+  /**
+   * The title text. With none, the title mirrors the page in this Shell pane: it shows the
+   * `Page`'s title once that title has scrolled behind the band. Outside a pane with a page, it
+   * renders nothing.
+   */
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
@@ -250,20 +691,29 @@ interface ToolbarTitleProps {
  */
 const ToolbarTitle = React.forwardRef<HTMLSpanElement, ToolbarTitleProps>(
   ({ className, children, style, id }, forwardedRef) => {
-    const { size } = useToolbarContext('ToolbarTitle');
-    if (children === undefined || children === null || children === false) return null;
+    const toolbar = React.useContext(ToolbarContext);
+    const themeSize = useThemeSize<ToolbarSize>(undefined, toolbarRootPropDefs.size);
+    const size = toolbar?.size ?? themeSize;
+    const store = usePageScope();
+    const pageTitle = usePageTitle(store);
+    const mirrorRef = usePageMirror(store);
+    const mirroring = children === undefined || children === null || children === false;
+    const words = mirroring ? pageTitle : children;
+    const ref = useComposedRefs(forwardedRef, mirroring ? mirrorRef : undefined);
+    if (words === undefined || words === null) return null;
     return (
       <Text
-        ref={forwardedRef}
+        ref={ref}
         as="span"
         size={TITLE_SIZE[size]}
         weight="medium"
         truncate
         id={id}
         style={style}
-        className={classNames('rt-ToolbarTitle', className)}
+        className={classNames('kui-ToolbarTitle', className)}
+        data-mirror={mirroring || undefined}
       >
-        {children}
+        {words}
       </Text>
     );
   },
@@ -280,6 +730,9 @@ const Toolbar = Object.assign(ToolbarRoot, {
   Button: ToolbarButton,
   Separator: ToolbarSeparator,
   Title: ToolbarTitle,
+  Overflow: ToolbarOverflow,
+  Slot: ToolbarSlot,
+  Fill: ToolbarFill,
 });
 
 export {
@@ -288,11 +741,18 @@ export {
   ToolbarButton,
   ToolbarSeparator,
   ToolbarTitle,
+  ToolbarOverflow,
+  ToolbarSlot,
+  ToolbarFill,
+  useToolbarOverflow,
   ToolbarRoot as Root,
   ToolbarGroup as Group,
   ToolbarButton as Button,
   ToolbarSeparator as Separator,
   ToolbarTitle as Title,
+  ToolbarOverflow as Overflow,
+  ToolbarSlot as Slot,
+  ToolbarFill as Fill,
 };
 export type {
   ToolbarProps,
@@ -300,9 +760,15 @@ export type {
   ToolbarButtonProps,
   ToolbarSeparatorProps,
   ToolbarTitleProps,
+  ToolbarOverflowProps,
+  ToolbarSlotProps,
+  ToolbarFillProps,
   ToolbarProps as RootProps,
   ToolbarGroupProps as GroupProps,
   ToolbarButtonProps as ButtonProps,
   ToolbarSeparatorProps as SeparatorProps,
   ToolbarTitleProps as TitleProps,
+  ToolbarOverflowProps as OverflowProps,
+  ToolbarSlotProps as SlotProps,
+  ToolbarFillProps as FillProps,
 };

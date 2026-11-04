@@ -1,4 +1,4 @@
-.rt-BaseRadioRoot {
+.kui-BaseRadioRoot {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -7,37 +7,14 @@
   flex-shrink: 0;
   cursor: var(--cursor-radio);
 
-  /* Unless in a skeleton, align with text line height when possible and fall back to own height */
-  height: var(--skeleton-height, var(--line-height, var(--radio-size)));
-  --skeleton-height-override: var(--radio-size);
+  /* Align with text line height when possible and fall back to own height */
+  height: var(--line-height, var(--radio-size));
 
-  /* Set root radius when in a skeleton */
-  border-radius: var(--skeleton-radius);
-  --skeleton-radius-override: 100%;
-
-
-  /* Theme-level translucent override */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
-
-  /* Prevent backdrop-filter stacking with parents */
   isolation: isolate;
 
-  /* Component-level overrides */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-  
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
-
+  /* Disabled is a colour remap (below), never opacity; the cursor stays default. */
   &:where(:disabled, [data-disabled]) {
-    cursor: var(--cursor-disabled);
+    cursor: default;
   }
 
   &::before {
@@ -46,7 +23,6 @@
     height: var(--radio-size);
     width: var(--radio-size);
     border-radius: 100%;
-    transition: var(--transition-radio);
   }
 
   &::after {
@@ -57,7 +33,6 @@
     border-radius: 100%;
     /* Scale via transform to achieve perfect sub-pixel positioning */
     transform: scale(0.4);
-    transition: var(--transition-radio);
   }
 
   &:where(:checked, [data-state='checked']) {
@@ -67,8 +42,8 @@
   }
 
   &:where(:focus-visible)::before {
-    outline: 2px solid var(--focus-8);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width, 2px) solid var(--focus-8);
+    outline-offset: var(--focus-ring-offset, 2px);
   }
 }
 
@@ -78,282 +53,107 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
+/* The box is v2's mark ladder (16/20/24/26), the same box Checkbox has at each size. */
 @breakpoints {
-  .rt-BaseRadioRoot {
-    &:where(.rt-r-size-1) {
-      --radio-size: calc(var(--space-4) * 0.875);
+  .kui-BaseRadioRoot {
+    &:where(.kui-r-size-1) {
+      --radio-size: var(--mark-1, calc(16px * var(--scale)));
     }
-    &:where(.rt-r-size-2) {
-      --radio-size: var(--space-4);
+    &:where(.kui-r-size-2) {
+      --radio-size: var(--mark-2, calc(20px * var(--scale)));
     }
-    &:where(.rt-r-size-3) {
-      --radio-size: calc(var(--space-4) * 1.25);
+    &:where(.kui-r-size-3) {
+      --radio-size: var(--mark-3, calc(24px * var(--scale)));
+    }
+    &:where(.kui-r-size-4) {
+      --radio-size: var(--mark-4, calc(26px * var(--scale)));
     }
   }
 }
 
 /***************************************************************************************************
  *                                                                                                 *
- * VARIANTS                                                                                        *
+ * THE LOOK                                                                                        *
+ *                                                                                                 *
+ * One look, as in v2, and the same as Checkbox. Unchecked, the circle is a soft fill with a       *
+ * hairline edge. Checked, it is the accent solid, the edge melts into the fill, and the dot takes *
+ * the solid's contrast colour. Hover is one step darker, press two. Disabled marks take neither.  *
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* solid */
+.kui-BaseRadioRoot {
+  --radio-fill: var(--color-mark);
+  --radio-fill-hover: var(--color-mark-hover);
+  --radio-fill-active: var(--color-mark-active);
+  --radio-edge: var(--color-mark-edge);
+  --radio-dot: var(--accent-solid-contrast);
 
-.rt-BaseRadioRoot:where(.rt-variant-solid) {
-  &:where(:not(:checked), [data-state='unchecked'])::before {
-    background-color: transparent;
-    box-shadow: inset 0 0 0 1px var(--accent-9);
-  }
-  &:where(:checked, [data-state='checked'])::before {
-    background-color: var(--accent-solid);
-    box-shadow: inset 0 0 0 1px var(--accent-solid);
-  }
-  &::after {
-    background-color: var(--accent-solid-contrast);
-  }
-
-  &:where(:disabled, [data-disabled])::before {
-    box-shadow: inset 0 0 0 1px var(--gray-a6);
-    background-color: var(--gray-a3);
-  }
-  &:where(:disabled, [data-disabled])::after {
-    background-color: var(--gray-a8);
-  }
-}
-
-/* classic */
-
-.rt-BaseRadioRoot:where(.rt-variant-classic) {
-  position: relative;
-  top: var(--classic-elevation-offset);
-  
-  &:where(:not(:checked), [data-state='unchecked'])::before {
-    color: var(--accent-ink);
-    background-color: var(--color-surface-solid);
-    box-shadow: var(--shadow-2);
-
-    /* Theme-level translucent override */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: var(--color-surface-translucent);
-    }
-
-    /* Component-level overrides (higher specificity) */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--color-surface-solid);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: var(--color-surface-translucent);
-    }
-  }
-  
-  &:where(:checked, [data-state='checked'])::before {
-    background-color: var(--accent-3);
-
-    /* Theme-level translucent override */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
-
-    /* Component-level overrides (higher specificity) */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--accent-3);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
-  }
-  &::after {
-    background-color: var(--accent-ink);
+  &:where(:checked, [data-state='checked']) {
+    --radio-fill: var(--accent-solid);
+    --radio-fill-hover: var(--accent-solid-hover);
+    --radio-fill-active: var(--accent-solid-active);
+    --radio-edge: transparent;
   }
 
-  &:where(:active:not(:disabled, [data-disabled])) {
-    top: calc(var(--classic-elevation-offset) + var(--classic-active-padding-offset-1));
-    
-    &::before {
-      background-color: var(--accent-3);
-
-      /* Theme-level translucent override for active */
-      :where([data-panel-background='translucent'], [data-material='translucent']) & {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      }
-
-      /* Component-level overrides for active */
-      &:where([data-panel-background='solid'], [data-material='solid']) {
-        background-color: var(--accent-3);
-      }
-
-      &:where([data-panel-background='translucent'], [data-material='translucent']) {
-        background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      }
-    }
+  /* Invalid, keyed on aria-invalid: unchecked, only the edge turns red; checked, the circle takes
+   * the red wash and the dot the red ink, rather than a red solid. */
+  &:where([aria-invalid='true']) {
+    --radio-edge: var(--red-8);
+  }
+  &:where([aria-invalid='true']):where(:checked, [data-state='checked']) {
+    --radio-fill: var(--red-3);
+    --radio-fill-hover: var(--red-4);
+    --radio-fill-active: var(--red-5);
+    --radio-edge: var(--red-8);
+    --radio-dot: var(--red-11);
   }
 
-  &:where(:disabled, [data-disabled])::before {
-    background-color: var(--gray-a3);
-    box-shadow: none;
-    background-image: none;
-  }
-  &:where(:disabled, [data-disabled])::after {
-    background-color: var(--gray-a8);
-  }
+  /* Disabled is a colour remap, never opacity. Dead outranks wrong, so this comes last. */
   &:where(:disabled, [data-disabled]) {
-    top: 0;
+    --radio-fill: var(--neutral-a3);
+    --radio-fill-hover: var(--neutral-a3);
+    --radio-fill-active: var(--neutral-a3);
+    --radio-edge: var(--neutral-a6);
+    --radio-dot: var(--neutral-a8);
   }
-}
 
-/* soft */
-
-.rt-BaseRadioRoot:where(.rt-variant-soft) {
   &::before {
-    background-color: var(--accent-3);
-
-    /* Theme-level translucent override */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
-
-    /* Component-level overrides (higher specificity) */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--accent-3);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-    }
+    background-color: var(--radio-fill);
+    box-shadow: inset 0 0 0 1px var(--radio-edge);
   }
+
   &::after {
-    background-color: var(--accent-ink);
+    background-color: var(--radio-dot);
   }
 
-  &:where(:focus-visible)::before {
-    /* Use gray outline when component color is gray */
-    outline-color: var(--accent-a8);
+  @media (hover: hover) {
+    &:where(:hover:not(:disabled, [data-disabled]))::before {
+      background-color: var(--radio-fill-hover);
+    }
   }
-
-  &:where(:disabled, [data-disabled])::before {
-    background-color: var(--gray-a3);
-  }
-  &:where(:disabled, [data-disabled])::after {
-    background-color: var(--gray-a8);
+  &:where(:active:not(:disabled, [data-disabled]))::before {
+    background-color: var(--radio-fill-active);
   }
 }
 
-
-
-/* outline */
-
-.rt-BaseRadioRoot:where(.rt-variant-outline) {
-  &:where(:not(:checked), [data-state='unchecked'])::before {
-    box-shadow: inset 0 0 0 1px var(--accent-6);
-    color: var(--accent-ink);
-
-    /* Theme-level translucent override */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      box-shadow: inset 0 0 0 1px var(--accent-a6);
-    }
-
-    /* Component-level overrides (higher specificity) */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      box-shadow: inset 0 0 0 1px var(--accent-6);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      box-shadow: inset 0 0 0 1px var(--accent-a6);
-    }
+/* Windows High Contrast drops box shadows and background colours, so the ring takes a real
+ * border and the dot a system colour. */
+@media (forced-colors: active) {
+  .kui-BaseRadioRoot::before {
+    box-sizing: border-box;
+    border: 1px solid CanvasText;
   }
-
-  &:where(:checked, [data-state='checked'])::before {
-    background-color: var(--accent-2);
-    box-shadow: inset 0 0 0 1px var(--accent-7);
-
-    /* Theme-level translucent override */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a7);
-    }
-
-    /* Component-level overrides (higher specificity) */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--accent-2);
-      box-shadow: inset 0 0 0 1px var(--accent-7);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a7);
-    }
+  .kui-BaseRadioRoot:where(:checked, [data-state='checked'])::before {
+    border-color: Highlight;
+    background-color: Canvas;
   }
-  &::after {
-    background-color: var(--accent-ink);
+  .kui-BaseRadioRoot::after {
+    background-color: Highlight;
   }
-
-  &:where(:disabled, [data-disabled])::before {
-    box-shadow: inset 0 0 0 1px var(--gray-a7);
-    background-color: transparent;
+  .kui-BaseRadioRoot:where(:disabled, [data-disabled])::before {
+    border-color: GrayText;
   }
-  &:where(:disabled, [data-disabled])::after {
-    background-color: var(--gray-a8);
-  }
-}
-
-/* surface */
-
-.rt-BaseRadioRoot:where(.rt-variant-surface) {
-  &:where(:not(:checked), [data-state='unchecked'])::before {
-    background-color: var(--accent-2);
-    box-shadow: inset 0 0 0 1px var(--accent-6);
-
-    /* Theme-level translucent override */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a6);
-    }
-
-    /* Component-level overrides (higher specificity) */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--accent-2);
-      box-shadow: inset 0 0 0 1px var(--accent-6);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a2), var(--accent-2) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a6);
-    }
-  }
-
-  &:where(:checked, [data-state='checked'])::before {
-    background-color: var(--accent-3);
-    box-shadow: inset 0 0 0 1px var(--accent-8);
-
-    /* Theme-level translucent override */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a8);
-    }
-
-    /* Component-level overrides (higher specificity) */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--accent-3);
-      box-shadow: inset 0 0 0 1px var(--accent-8);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--accent-a3), var(--accent-3) 60%);
-      box-shadow: inset 0 0 0 1px var(--accent-a8);
-    }
-  }
-  &::after {
-    background-color: var(--accent-ink);
-  }
-
-  &:where(:disabled, [data-disabled])::before {
-    box-shadow: inset 0 0 0 1px var(--gray-a6);
-    background-color: var(--gray-a2);
-  }
-  &:where(:disabled, [data-disabled])::after {
-    background-color: var(--gray-a8);
+  .kui-BaseRadioRoot:where(:disabled, [data-disabled])::after {
+    background-color: GrayText;
   }
 }

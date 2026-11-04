@@ -1,32 +1,30 @@
 import { asChildPropDef } from '../props/as-child.prop.js';
-import { accentColorPropDef, accentColors } from '../props/color.prop.js';
+import { grayAccentColorPropDef, accentColors } from '../props/color.prop.js';
 import { radiusPropDef } from '../props/radius.prop.js';
 
 import type { PropDef } from '../props/prop-def.js';
 
-const sizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] as const;
-const variants = ['classic', 'solid', 'soft', 'surface', 'outline'] as const;
-const panelBackgrounds = ['solid', 'translucent'] as const;
-const materials = ['solid', 'translucent'] as const;
+const sizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
+const variants = ['raised', 'solid', 'soft', 'surface', 'outline'] as const;
 const objectFitValues = ['cover', 'contain', 'fill', 'scale-down', 'none'] as const;
 
 const avatarPropDefs = {
   ...asChildPropDef,
-  size: { type: 'enum', className: 'rt-r-size', values: sizes, default: '3', responsive: true },
-  variant: { type: 'enum', className: 'rt-variant', values: variants, default: 'soft' },
-  ...accentColorPropDef,
+  size: { type: 'enum', className: 'kui-r-size', values: sizes, default: '2', responsive: true },
+  variant: { type: 'enum', className: 'kui-variant', values: variants, default: 'raised' },
+  ...grayAccentColorPropDef,
   ...radiusPropDef,
   fallback: { type: 'ReactNode', required: true },
-  material: { type: 'enum', values: materials, default: undefined },
-  /**
-   * @deprecated Use `material` prop instead. This prop will be removed in a future version.
-   */
-  panelBackground: { type: 'enum', values: panelBackgrounds, default: undefined },
   /**
    * Status indicator color. Renders a small colored dot at the bottom-right corner.
    * Cannot be used together with `badge`.
    */
   status: { type: 'enum', values: accentColors, default: undefined },
+  /**
+   * The words the status dot stands for, such as "Online". A screen reader reads them with the
+   * avatar. Without it the dot is hidden from screen readers.
+   */
+  statusLabel: { type: 'string', default: undefined },
   /**
    * Custom badge content. Renders at the bottom-right corner.
    * Cannot be used together with `status`.
@@ -37,14 +35,13 @@ const avatarPropDefs = {
    * Defaults to 'cover' which crops the image to fill the avatar.
    * Use 'contain' to show the full image without cropping.
    */
-  fit: { type: 'enum', className: 'rt-r-fit', values: objectFitValues, default: 'cover', responsive: true },
+  fit: { type: 'enum', className: 'kui-r-fit', values: objectFitValues, default: 'cover', responsive: true },
 } satisfies {
   size: PropDef<(typeof sizes)[number]>;
   variant: PropDef<(typeof variants)[number]>;
   fallback: PropDef<React.ReactNode>;
-  material: PropDef<(typeof materials)[number] | undefined>;
-  panelBackground: PropDef<(typeof panelBackgrounds)[number] | undefined>;
   status: PropDef<(typeof accentColors)[number] | undefined>;
+  statusLabel: PropDef<string | undefined>;
   badge: PropDef<React.ReactNode>;
   fit: PropDef<(typeof objectFitValues)[number]>;
 };

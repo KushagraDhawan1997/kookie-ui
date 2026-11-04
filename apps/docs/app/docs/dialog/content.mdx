@@ -1,0 +1,173 @@
+---
+title: Dialog
+description: A dialog opens a focused task over the page, such as editing a record or filling in a short form.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/dialog.tsx
+---
+
+A dialog opens over the page, dims everything behind it and holds focus until it closes. Use it for a short task that people finish or cancel before they go back, such as renaming a project. A question that confirms a destructive action is an [Alert Dialog](/docs/alert-dialog), and a panel that slides in from an edge is a [Sheet](/docs/sheet).
+
+## Playground
+
+import DialogPlayground from '../../playground/dialog-playground';
+
+<DialogPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Button, Dialog, Flex, Text, TextField } from '@kushagradhawan/kookie-ui';
+
+export function RenameProject({ name }: { name: string }) {
+  return (
+    <Dialog.Root>
+      <Dialog.Trigger>
+        <Button>Rename</Button>
+      </Dialog.Trigger>
+      <Dialog.Content>
+        <Dialog.Title>Rename project</Dialog.Title>
+        <Dialog.Description>People in the project see the new name.</Dialog.Description>
+        <Flex direction="column" gap="2" mt="4">
+          <Text as="label" htmlFor="project-name" size="2" weight="medium">
+            Project name
+          </Text>
+          <TextField.Root id="project-name" defaultValue={name} />
+        </Flex>
+        <Flex gap="2" justify="end" mt="5">
+          <Dialog.Close>
+            <Button emphasis="quiet" color="gray">Cancel</Button>
+          </Dialog.Close>
+          <Button emphasis="loud">Save</Button>
+        </Flex>
+      </Dialog.Content>
+    </Dialog.Root>
+  );
+}
+```
+
+## Anatomy
+
+```tsx
+<Dialog.Root>
+  <Dialog.Trigger />
+  <Dialog.Content>
+    <Dialog.Title />
+    <Dialog.Description />
+    <Dialog.Close />
+  </Dialog.Content>
+</Dialog.Root>
+```
+
+- **Root:** Holds the open state. A dialog is always modal.
+- **Trigger:** The element that opens the dialog. It takes one child element, usually a Button.
+- **Content:** The panel, rendered in a portal with a dimmed overlay behind it.
+- **Title:** The dialog's name. It renders a Heading at size 5.
+- **Description:** A sentence that explains the task. It renders a `p` Text at size 3.
+- **Close:** Closes the dialog when its child is pressed. It takes one child element.
+
+## Best practices
+
+**Keep it to one task.** A dialog interrupts the page. If the content needs scrolling sections or tabs of its own, it belongs on a page.
+
+**Name the task in the title.** "Rename project" tells people what they are about to do. "Settings" or "Are you sure?" makes them read the body to find out.
+
+**Give it one loud button and a way out.** Put the action that finishes the task on `emphasis="loud"` and pair it with a quiet Cancel in `Dialog.Close`. Label the loud button with the verb from the title.
+
+**Don't open a dialog from a dialog.** A stack of overlays hides where people came from. Change the content of the open dialog instead, or move the flow to a page.
+
+**Use an Alert Dialog to confirm something that can't be undone.** A dialog closes when people press outside it, which is wrong for a question that must be answered. [Alert Dialog](/docs/alert-dialog) doesn't.
+
+## Size
+
+`size` sets the padding, the corner and the largest width the panel takes. Size 2 is the default, and an unset size follows the Theme size.
+
+| Size | Max width | Use it for |
+| --- | --- | --- |
+| `1` | 360px | A single field or a short message |
+| `2` | 440px | Most forms. This is the default |
+| `3` | 560px | Forms with two columns or longer text |
+| `4` | 720px | Previews and wide tables |
+
+The panel fills its width up to that cap, minus the space kept around it. Set `maxWidth` to go wider than the size allows, or `width` for a fixed width.
+
+## Align
+
+`align="center"` places the panel in the middle of the window. `align="start"` places it near the top, so the panel doesn't jump when its content grows, such as search results that load in.
+
+## Examples
+
+### Controlled
+
+Hold the open state yourself to close the dialog after a request succeeds, rather than when the button is pressed.
+
+```tsx
+const [open, setOpen] = React.useState(false);
+
+async function save() {
+  await updateProject();
+  setOpen(false);
+}
+
+<Dialog.Root open={open} onOpenChange={setOpen}>
+  {/* trigger and content */}
+</Dialog.Root>
+```
+
+### Content that bleeds to the edge
+
+The panel publishes its padding, so a child with `m="bleed"` reaches the panel's edges. Use it for an image or a full-width list at the top of the dialog.
+
+### Long content
+
+When the panel is taller than the window, the overlay scrolls and the panel moves with it. Keep the title and the actions in the content so they scroll into view together.
+
+## Props
+
+### Root
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `open` | `boolean` | | The open state. Controlled |
+| `defaultOpen` | `boolean` | `false` | The open state on first render |
+| `onOpenChange` | `(open: boolean) => void` | | Called when the dialog opens or closes |
+
+### Content
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | Theme size | Padding, corner and maximum width |
+| `align` | `'start' \| 'center'`, responsive | `'center'` | Where the panel sits in the window |
+| `width` | `string`, responsive | | A fixed width |
+| `minWidth` | `string`, responsive | | The narrowest width |
+| `maxWidth` | `string`, responsive | The size's width | The widest width. Overrides the size's cap |
+| `height` | `string`, responsive | | A fixed height |
+| `minHeight` | `string`, responsive | | The shortest height |
+| `maxHeight` | `string`, responsive | | The tallest height |
+| `container` | `HTMLElement` | `document.body` | Where the portal renders |
+| `forceMount` | `boolean` | | Keeps the dialog in the DOM while closed |
+| `onEscapeKeyDown` | `(event) => void` | | Called on Escape. Call `preventDefault()` to keep it open |
+| `onPointerDownOutside` | `(event) => void` | | Called on a press outside. Call `preventDefault()` to keep it open |
+| `onOpenAutoFocus` | `(event) => void` | | Called when focus moves into the dialog |
+| `onCloseAutoFocus` | `(event) => void` | | Called when focus returns to the trigger. Call `preventDefault()` to move it yourself |
+
+Content also accepts every attribute of the HTML `div` element.
+
+### Title and Description
+
+Title takes every Heading prop and Description every Text prop. Set `size` on either to change its step.
+
+### Trigger and Close
+
+Both take one child element and pass their behaviour to it. They accept every attribute of the HTML `button` element.
+
+## Accessibility
+
+| Key | Action |
+| --- | --- |
+| Escape | Closes the dialog |
+| Tab | Moves focus to the next control in the dialog |
+| Shift + Tab | Moves focus to the previous control in the dialog |
+
+- **Name:** The dialog is named by `Dialog.Title` and described by `Dialog.Description`. Always include a title. Wrap it in [`VisuallyHidden`](/docs/utilities#visuallyhidden) if the design has no visible heading.
+- **Role:** A screen reader announces a modal dialog, and content behind it is hidden from assistive technology.
+- **Focus:** Focus moves to the first control in the dialog when it opens, and Tab cycles inside it. Focus returns to the trigger when it closes. Call `preventDefault()` in `onCloseAutoFocus` to move it somewhere else.
+- **Dismissal:** Escape and a press on the overlay both close the dialog.

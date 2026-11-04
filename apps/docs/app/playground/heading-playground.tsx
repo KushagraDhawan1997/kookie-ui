@@ -33,9 +33,9 @@ const accentColors = [
   'sky',
 ] as const;
 
-const sizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] as const;
+const sizes = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
 const fonts = ['sans', 'mono', 'serif'] as const;
-const weights = ['light', 'regular', 'medium', 'semibold', 'bold'] as const;
+const weights = ['regular', 'medium', 'semibold'] as const;
 const aligns = ['left', 'center', 'right'] as const;
 const emphases = ['loud', 'medium', 'quiet'] as const;
 
@@ -50,7 +50,7 @@ export default function HeadingPlayground({
   showToolbar = true,
   height,
 }: HeadingPlaygroundProps = {}) {
-  const [size, setSize] = React.useState<string>('8');
+  const [size, setSize] = React.useState<string>('7');
   const [font, setFont] = React.useState<string>('theme');
   const [weight, setWeight] = React.useState<string>('semibold');
   const [color, setColor] = React.useState<string>('theme');

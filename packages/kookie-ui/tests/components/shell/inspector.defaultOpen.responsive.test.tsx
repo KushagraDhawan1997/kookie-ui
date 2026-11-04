@@ -17,13 +17,13 @@ function App({ defaultOpen }: { defaultOpen: { initial?: boolean; xs?: boolean; 
 describe('Inspector defaultOpen (responsive initial-only)', () => {
   it('resolves responsive map at initial breakpoint (initial: true → expanded)', () => {
     renderWithProviders(<App defaultOpen={{ initial: true, lg: false }} />);
-    const el = screen.getByText('inspector').closest('.rt-ShellInspector') as HTMLElement;
+    const el = screen.getByText('inspector').closest('.kui-ShellInspector') as HTMLElement;
     expect(el).toHaveAttribute('data-mode', 'expanded');
   });
 
   it('resolves responsive map at initial breakpoint (initial: false → collapsed)', () => {
     renderWithProviders(<App defaultOpen={{ initial: false, lg: true }} />);
-    const el = screen.getByText('inspector').closest('.rt-ShellInspector') as HTMLElement;
+    const el = screen.getByText('inspector').closest('.kui-ShellInspector') as HTMLElement;
     expect(el).toHaveAttribute('data-mode', 'collapsed');
   });
 });

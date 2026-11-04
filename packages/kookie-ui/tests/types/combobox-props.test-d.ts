@@ -16,7 +16,8 @@ expectAssignable<RootProps>({ size: { initial: '1', md: '3' } });
 expectAssignable<TriggerProps>({ variant: 'soft', 'aria-label': 'Country' });
 expectNotAssignable<TriggerProps>({ variant: 'solid' });
 
-expectAssignable<ContentProps>({ variant: 'soft', size: '2' });
+expectAssignable<ContentProps>({ size: '2' });
+expectNotAssignable<ContentProps>({ variant: 'soft' });
 expectAssignable<InputProps>({ placeholder: 'Search' });
 
 expectAssignable<ItemProps>({ value: 'uk', label: 'United Kingdom', keywords: ['britain'] });

@@ -5,10 +5,9 @@ import classNames from 'classnames';
 import { composeEventHandlers } from 'radix-ui/internal';
 
 import { radioPropDefs } from './radio.props.js';
-import { marginPropDefs } from '../props/margin.props.js';
 import { extractProps } from '../helpers/extract-props.js';
+import { useThemeSizeProps } from '../hooks/theme-size.js';
 
-import type { MarginProps } from '../props/margin.props.js';
 import type { ComponentPropsWithout } from '../helpers/component-props.js';
 import type { NotInputRadioAttributes } from '../helpers/input-attributes.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
@@ -22,25 +21,24 @@ type RadioInputProps = ComponentPropsWithout<
   'input',
   NotInputRadioAttributes | 'color' | 'defaultValue' | 'value'
 >;
-interface RadioProps extends RadioInputProps, MarginProps, RadioOwnProps {}
+interface RadioProps extends RadioInputProps, RadioOwnProps {}
 
-const Radio = React.forwardRef<RadioElement, RadioProps>((props, forwardedRef) => {
-  const { className, color, material, onChange, onValueChange, ...radioProps } = extractProps(
+const Radio = React.forwardRef<RadioElement, RadioProps>((ownProps, forwardedRef) => {
+  const props = useThemeSizeProps(ownProps, radioPropDefs.size);
+  const { className, color, onChange, onValueChange, ...radioProps } = extractProps(
     props,
     radioPropDefs,
-    marginPropDefs,
   );
   return (
     <input
       type="radio"
       data-accent-color={color}
-      data-material={material}
       {...radioProps}
       onChange={composeEventHandlers(onChange, (event) =>
         onValueChange?.(event.currentTarget.value),
       )}
       ref={forwardedRef}
-      className={classNames('rt-reset', 'rt-BaseRadioRoot', 'rt-RadioRoot', className)}
+      className={classNames('kui-reset', 'kui-BaseRadioRoot', 'kui-RadioRoot', className)}
     />
   );
 });

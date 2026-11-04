@@ -10,7 +10,7 @@ interface ResetProps extends ComponentPropsWithout<typeof Slot.Root, RemovedProp
 const Reset = React.forwardRef<HTMLElement, ResetProps>(
   ({ className, children, ...props }, forwardedRef) => {
     return (
-      <Slot.Root {...props} ref={forwardedRef} className={classNames('rt-reset', className)}>
+      <Slot.Root {...props} ref={forwardedRef} className={classNames('kui-reset', className)}>
         {requireReactElement(children)}
       </Slot.Root>
     );

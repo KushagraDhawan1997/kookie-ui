@@ -1,0 +1,110 @@
+---
+title: Chip
+description: A chip labels an item with a short status, category or count, such as "Draft" or "3 new".
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/chip.tsx
+---
+
+A chip is a short label that sits next to the thing it describes: a status on a row, a category on a card, a count on a tab. It is not a control and does nothing when pressed. A label that someone turns on and off, such as a filter, is a [Toggle](/docs/toggle).
+
+## Playground
+
+import ChipPlayground from '../../playground/chip-playground';
+
+<ChipPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Chip, Flex, Text } from '@kushagradhawan/kookie-ui';
+
+const statusColor = { live: 'green', draft: 'gray', failed: 'red' } as const;
+
+export function DeployRow({ name, status }: { name: string; status: keyof typeof statusColor }) {
+  return (
+    <Flex gap="3" align="center" justify="between">
+      <Text size="2" weight="medium">{name}</Text>
+      <Chip color={statusColor[status]} variant="soft">
+        {status === 'live' ? 'Live' : status === 'draft' ? 'Draft' : 'Failed'}
+      </Chip>
+    </Flex>
+  );
+}
+```
+
+## Best practices
+
+**Keep the label to one or two words.** A chip doesn't wrap, so a long label pushes the layout. Put a longer explanation in the `tooltip` or in text nearby.
+
+**Let the words carry the meaning.** "Failed" in a red chip reads to everyone. A red chip with no text, or with a word that only makes sense in red, doesn't reach people who can't see the colour.
+
+**Use colour for a category, not for decoration.** A chip rests gray. Give it a colour only when the colour adds a fact, and use the same colour for the same status everywhere in the app.
+
+**Don't make a chip clickable.** A chip is a `span` and has no hover or press state. Use a [Button](/docs/button) for an action, a [Toggle](/docs/toggle) for a filter and a [Link](/docs/link) to go somewhere.
+
+**Use few chips in one place.** Five chips on one row compete with each other and with the content. Show the one status that matters, and move the rest into a detail view.
+
+## Variant
+
+`variant` sets how much the chip stands out from the row around it.
+
+| Variant | Look | Use it for |
+| --- | --- | --- |
+| `raised` | A surface with a shadow | Most chips. This is the default |
+| `soft` | A tinted fill | Statuses in a table or a list |
+| `solid` | A strong fill | One chip that must stand out, such as a count of unread items |
+| `surface` | A light fill and a border | Chips on a tinted background |
+| `outline` | A border only | Quiet tags, such as categories |
+| `ghost` | Coloured text and no fill | Inline labels that should read as text |
+
+## Size
+
+`size` picks one of four steps. Size 2 is the default and is 24 pixels tall, with 12-pixel text. Size 1 is 20 pixels for dense rows, and sizes 3 and 4 are 28 and 32 pixels, with 14 and 16-pixel text. A chip doesn't follow the Theme size. `size` accepts a responsive object.
+
+An icon in a chip is sized to one line of its text: 16 pixels at sizes 1 and 2, 20 at size 3 and 24 at size 4. Don't set a size on the icon.
+
+## Examples
+
+### Explaining a status
+
+`tooltip` shows more detail on hover and on keyboard focus. A chip with a tooltip joins the tab order, so keyboard users can reach it. Touch users can't open it, so don't put anything there that people need.
+
+```tsx
+<Chip color="amber" variant="soft" tooltip="Waiting for a reviewer">
+  In review
+</Chip>
+```
+
+### Count on a tab
+
+A size 1 solid chip suits a count beside a label, such as unread messages on a [Tabs](/docs/tabs) trigger.
+
+```tsx
+<Tabs.Trigger value="inbox">
+  Inbox
+  <Chip size="1" variant="solid">12</Chip>
+</Tabs.Trigger>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'raised' \| 'solid' \| 'soft' \| 'surface' \| 'outline' \| 'ghost'` | `'raised'` | How much the chip stands out |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | `'2'` | The size step |
+| `color` | `AccentColor` | `'gray'` | The category. Gray fills with step 12 |
+| `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Theme radius | The corner |
+| `tooltip` | `ReactNode` | | Shows on hover and focus. The chip becomes focusable |
+| `tooltipSide` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | Where the tooltip opens |
+| `tooltipAlign` | `'start' \| 'center' \| 'end'` | `'center'` | How the tooltip lines up with the chip |
+| `tooltipDelayDuration` | `number` | | Milliseconds before the tooltip opens |
+| `tooltipDisableHoverableContent` | `boolean` | `false` | Closes the tooltip when the pointer leaves the chip |
+| `asChild` | `boolean` | `false` | Renders the child element with the chip's look |
+
+Chip also accepts every attribute of the HTML `span` element.
+
+## Accessibility
+
+- **Name:** A screen reader reads the chip's text as part of the surrounding content. It adds no role.
+- **Colour:** The colour is not announced. The label must say the status in words.
+- **Tooltip:** A chip with a tooltip is in the tab order and opens the tooltip on focus. A chip without one is not focusable. Keep the tooltip as extra detail only.
+- **Forced colours:** In Windows high contrast mode the chip draws a border in the system text colour.

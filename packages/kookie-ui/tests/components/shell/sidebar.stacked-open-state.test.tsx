@@ -15,7 +15,7 @@ describe('Sidebar (stacked) data-open', () => {
       </Shell.Root>,
     );
 
-    const sb = document.querySelector('.rt-ShellSidebar') as HTMLElement;
+    const sb = document.querySelector('.kui-ShellSidebar') as HTMLElement;
     expect(sb).toBeTruthy();
     expect(sb.hasAttribute('data-open')).toBe(true);
   });
@@ -30,7 +30,7 @@ describe('Sidebar (stacked) data-open', () => {
       </Shell.Root>,
     );
 
-    const sb = document.querySelector('.rt-ShellSidebar') as HTMLElement;
+    const sb = document.querySelector('.kui-ShellSidebar') as HTMLElement;
     expect(sb).toBeTruthy();
 
     await waitFor(

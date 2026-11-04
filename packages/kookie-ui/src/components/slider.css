@@ -1,6 +1,6 @@
-.rt-SliderRoot {
-  --slider-thumb-width: var(--space-3);
-  --slider-thumb-height: var(--space-2);
+.kui-SliderRoot {
+  --slider-thumb-width: var(--space-4);
+  --slider-thumb-height: var(--space-3);
 
   position: relative;
   display: flex;
@@ -14,31 +14,7 @@
   /* disable browser handling of all panning and zooming gestures on touch devices */
   touch-action: none;
 
-  /* 
-   * Theme-level translucent override
-   * Applies backdrop filter for elevated visual effects
-   */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
-
-  /* Prevent backdrop-filter stacking with parent elements */
   isolation: isolate;
-
-  /* 
-   * Component-level material overrides
-   * These ensure proper rendering based on material setting
-   */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-  
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 
   &:where([data-orientation='horizontal']) {
     width: stretch;
@@ -51,7 +27,7 @@
   }
 }
 
-.rt-SliderTrack {
+.kui-SliderTrack {
   overflow: hidden;
   position: relative;
   flex-grow: 1;
@@ -66,7 +42,7 @@
   }
 }
 
-.rt-SliderRange {
+.kui-SliderRange {
   position: absolute;
   border-radius: inherit;
 
@@ -79,7 +55,7 @@
   }
 }
 
-.rt-SliderThumb {
+.kui-SliderThumb {
   display: block;
   width: var(--slider-thumb-width);
   height: var(--slider-thumb-height);
@@ -102,15 +78,16 @@
   &::after {
     content: '';
     position: absolute;
-    inset: calc(var(--slider-thumb-inset-factor) * var(--slider-track-size) * -1);
+    inset: calc(var(--slider-thumb-inset-factor) * var(--slider-thumb-overshoot-base, var(--slider-track-size)) * -1);
     background-color: var(--accent-solid-thumb);
     border-radius: var(--slider-thumb-radius);
-    box-shadow: var(--shadow-2);
+    box-shadow: var(--slider-thumb-box-shadow, var(--grip-chrome));
     cursor: pointer;
   }
 
   &:where(:focus-visible)::after {
-    box-shadow: var(--shadow-3), 0 0 0 var(--slider-focus-ring-inner) var(--accent-3), 0 0 0 var(--slider-focus-ring-outer) var(--focus-8);
+    outline: var(--focus-ring-width, 2px) solid var(--focus-8);
+    outline-offset: var(--focus-ring-offset, 2px);
   }
 
   &:where(:active) {
@@ -124,34 +101,40 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
+/* Track thickness is v2's slider ladder (4/5/6/7). The thumb keeps v1's shape: its overshoot
+ * still reads v1's track thickness, so a thinner track does not shrink it. */
 @breakpoints {
-  .rt-SliderRoot {
-    &:where(.rt-r-size-1) {
-      --slider-track-size: var(--progress-slider-height-1);
+  .kui-SliderRoot {
+    &:where(.kui-r-size-1) {
+      --slider-track-size: var(--slider-track-1, calc(4px * var(--scale)));
+      --slider-thumb-overshoot-base: var(--progress-slider-height-1);
       --slider-radius: var(--progress-slider-radius-1);
-      --slider-thumb-width: var(--space-3);
-      --slider-thumb-height: var(--space-2);
-      --slider-thumb-radius: calc(var(--radius-1) * 0.75);
-    }
-    &:where(.rt-r-size-2) {
-      --slider-track-size: var(--progress-slider-height-2);
-      --slider-radius: var(--progress-slider-radius-2);
-      --slider-thumb-width: var(--space-4);
-      --slider-thumb-height: calc(var(--space-2) + var(--space-1));
-      --slider-thumb-radius: calc(var(--radius-2) * 0.75);
-    }
-    &:where(.rt-r-size-3) {
-      --slider-track-size: var(--progress-slider-height-3);
-      --slider-radius: var(--progress-slider-radius-3);
       --slider-thumb-width: var(--space-4);
       --slider-thumb-height: var(--space-3);
+      --slider-thumb-radius: calc(var(--radius-1) * 0.75);
+    }
+    &:where(.kui-r-size-2) {
+      --slider-track-size: var(--slider-track-2, calc(5px * var(--scale)));
+      --slider-thumb-overshoot-base: var(--progress-slider-height-2);
+      --slider-radius: var(--progress-slider-radius-2);
+      --slider-thumb-width: var(--space-5);
+      --slider-thumb-height: calc(var(--space-3) + var(--space-2));
+      --slider-thumb-radius: calc(var(--radius-2) * 0.75);
+    }
+    &:where(.kui-r-size-3) {
+      --slider-track-size: var(--slider-track-3, calc(6px * var(--scale)));
+      --slider-thumb-overshoot-base: var(--progress-slider-height-3);
+      --slider-radius: var(--progress-slider-radius-3);
+      --slider-thumb-width: var(--space-5);
+      --slider-thumb-height: var(--space-4);
       --slider-thumb-radius: calc(var(--radius-3) * 0.75);
     }
-    &:where(.rt-r-size-4) {
-      --slider-track-size: var(--progress-slider-height-4);
+    &:where(.kui-r-size-4) {
+      --slider-track-size: var(--slider-track-4, calc(7px * var(--scale)));
+      --slider-thumb-overshoot-base: var(--progress-slider-height-4);
       --slider-radius: var(--progress-slider-radius-4);
-      --slider-thumb-width: calc(var(--space-4) + var(--space-1));
-      --slider-thumb-height: calc(var(--space-3) + var(--space-1));
+      --slider-thumb-width: calc(var(--space-5) + var(--space-2));
+      --slider-thumb-height: calc(var(--space-4) + var(--space-2));
       --slider-thumb-radius: calc(var(--radius-4) * 0.75);
     }
   }
@@ -159,126 +142,42 @@
 
 /***************************************************************************************************
  *                                                                                                 *
- * VARIANTS                                                                                        *
+ * THE LOOK                                                                                        *
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* surface */
+/* One look, as in v2. The track is the switch's well, a soft fill with no edge; the range is the
+ * accent solid; the thumb is the switch's grip. */
 
-.rt-SliderRoot:where(.rt-variant-surface) {
-  & :where(.rt-SliderTrack) {
-    background-color: var(--gray-2);
-    box-shadow: inset 0 0 0 1px var(--gray-6);
-
-    /* Theme-level translucent override */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--gray-a2), var(--gray-2) 60%);
-      box-shadow: inset 0 0 0 1px var(--gray-a6);
-    }
-
-    /* Component-level overrides */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--gray-2);
-      box-shadow: inset 0 0 0 1px var(--gray-6);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--gray-a2), var(--gray-2) 60%);
-      box-shadow: inset 0 0 0 1px var(--gray-a6);
-    }
-
-    &:where([data-disabled]) {
-      box-shadow: inset 0 0 0 1px var(--gray-5);
-    }
-  }
-
-  & :where(.rt-SliderRange) {
-    background-color: var(--accent-solid);
-  }
-
-
+.kui-SliderTrack {
+  background-color: var(--color-track);
 }
 
-/* soft */
-
-.rt-SliderRoot:where(.rt-variant-soft) {
-  & :where(.rt-SliderTrack) {
-    background-color: var(--gray-3);
-
-    /* Theme-level translucent override */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--gray-a3), var(--gray-3) 60%);
-    }
-
-    /* Component-level overrides */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--gray-3);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--gray-a3), var(--gray-3) 60%);
-    }
-  }
-
-  & :where(.rt-SliderRange) {
-    background-color: var(--accent-solid);
-  }
-
-  & :where(.rt-SliderThumb) {
-    --slider-thumb-box-shadow: var(--shadow-3);
-  }
+.kui-SliderRange {
+  background-color: var(--accent-solid);
 }
 
-/* outline */
-
-.rt-SliderRoot:where(.rt-variant-outline) {
-  & :where(.rt-SliderTrack) {
-    /* Base state: no background, just border */
-    box-shadow: inset 0 0 0 1px var(--gray-6);
-
-    /* Theme-level translucent override */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      box-shadow: inset 0 0 0 1px var(--gray-a6);
-    }
-
-    /* Component-level overrides */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      box-shadow: inset 0 0 0 1px var(--gray-6);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      box-shadow: inset 0 0 0 1px var(--gray-a6);
-    }
-  }
-
-  & :where(.rt-SliderRange) {
-    background-color: var(--accent-solid);
-  }
-
-  & :where(.rt-SliderThumb) {
-    --slider-thumb-box-shadow: var(--shadow-3);
-  }
-}
-
-/* all disabled Sliders */
+/* all disabled Sliders: a colour remap, never opacity, and a default cursor.
+ * These come after the look at the same specificity, so they win by order. */
 
 [data-disabled] {
-  .rt-SliderRoot:where(&) {
-    cursor: var(--cursor-disabled);
+  .kui-SliderRoot:where(&) {
+    cursor: default;
   }
-  .rt-SliderTrack:where(&) {
-    background-color: var(--gray-a3) !important;
-    box-shadow: none !important;
+  .kui-SliderTrack:where(&) {
+    background-color: var(--neutral-a3);
+    box-shadow: none;
   }
-  .rt-SliderRange:where(&) {
-    background-color: var(--accent-a3) !important;
+  .kui-SliderRange:where(&) {
+    background-color: var(--accent-a3);
   }
-  .rt-SliderThumb:where(&) {
-    cursor: var(--cursor-disabled);
+  .kui-SliderThumb:where(&) {
+    cursor: default;
   }
-  .rt-SliderThumb:where(&)::after {
-    background-color: var(--gray-3) !important;
-    box-shadow: none !important;
+  .kui-SliderThumb:where(&)::after {
+    cursor: default;
+    background-color: var(--neutral-3);
+    box-shadow: none;
   }
 }
 
@@ -288,83 +187,158 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-SliderContainer {
+.kui-SliderContainer {
+  --slider-ticks-size: 44px;
   position: relative;
+
+  /* A vertical slider fills the caller's height, so the wrapper has to as well. */
+  &:where([data-orientation='vertical']) {
+    display: flex;
+    width: fit-content;
+    height: stretch;
+  }
+
+  /* The ticks sit outside the track, so the wrapper keeps room for them. */
+  &:where([data-has-ticks][data-orientation='horizontal']) {
+    padding-bottom: calc(var(--space-3) + var(--slider-ticks-size));
+  }
+  &:where([data-has-ticks][data-orientation='vertical']) {
+    padding-right: calc(var(--space-3) + var(--slider-ticks-size));
+  }
 }
 
-.rt-SliderTicks {
+.kui-SliderTicks {
   position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  margin-top: var(--space-2);
   pointer-events: auto;
-  height: 44px;
+
+  &:where([data-orientation='horizontal']) {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--slider-ticks-size);
+  }
+  &:where([data-orientation='vertical']) {
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: var(--slider-ticks-size);
+  }
 }
 
-.rt-SliderTick {
+.kui-SliderTick {
   position: absolute;
   top: 0;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-2);
   background: none;
   border: none;
-  padding: var(--space-2);
+  padding: var(--space-3);
   cursor: pointer;
   min-height: 44px;
   min-width: 44px;
   border-radius: var(--radius-2);
-  transition: background-color var(--transition-standard);
   z-index: 1;
   pointer-events: auto;
+
+  /* A vertical tick points left at the track, with its label after the mark. */
+  :where(.kui-SliderTicks[data-orientation='vertical']) & {
+    left: 0;
+    transform: translateY(-50%);
+    flex-direction: row;
+  }
+
+  &:where(:disabled) {
+    cursor: default;
+  }
 }
 
-.rt-SliderTick:where(:hover) {
-  :where(.rt-SliderTickMark) {
-    background-color: var(--gray-12) !important;
+@media (hover: hover) {
+  .kui-SliderTick:where(:hover:not(:disabled)) {
+    :where(.kui-SliderTickMark) {
+      background-color: var(--neutral-12) !important;
+    }
+
+    :where(.kui-SliderTickLabel) {
+      color: var(--neutral-12) !important;
+      font-weight: var(--font-weight-medium);
+    }
   }
-  
-  :where(.rt-SliderTickLabel) {
-    color: var(--gray-12) !important;
+}
+
+.kui-SliderTick:where(:active:not(:disabled)) {
+  :where(.kui-SliderTickMark) {
+    background-color: var(--neutral-12) !important;
+  }
+
+  :where(.kui-SliderTickLabel) {
+    color: var(--neutral-12) !important;
     font-weight: var(--font-weight-medium);
   }
 }
 
-.rt-SliderTick:where(:active) {
-  :where(.rt-SliderTickMark) {
-    background-color: var(--gray-12) !important;
-  }
-  
-  :where(.rt-SliderTickLabel) {
-    color: var(--gray-12) !important;
-    font-weight: var(--font-weight-medium);
-  }
+.kui-SliderTick:where(:focus-visible) {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-8);
+  outline-offset: var(--focus-ring-offset, 2px);
 }
 
-.rt-SliderTick:where(:focus-visible) {
-  outline: 2px solid var(--focus-8);
-  outline-offset: 2px;
-}
-
-.rt-SliderTickMark {
+.kui-SliderTickMark {
   width: 1px;
-  height: var(--space-2);
-  background-color: var(--gray-6);
+  height: var(--space-3);
+  background-color: var(--neutral-6);
   border-radius: 1px;
-  transition: background-color var(--transition-standard);
+
+  :where(.kui-SliderTicks[data-orientation='vertical']) & {
+    width: var(--space-3);
+    height: 1px;
+  }
 }
 
-.rt-SliderTickLabel {
-  font-size: var(--font-size-0);
-  line-height: var(--line-height-0);
-  color: var(--gray-11);
+.kui-SliderTickLabel {
+  font-size: var(--font-size-1);
+  line-height: var(--line-height-1);
+  color: var(--neutral-11);
   font-weight: var(--font-weight-regular);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 60px;
   text-align: center;
-  transition: color var(--transition-standard), font-weight var(--transition-standard);
+}
+
+/* Windows High Contrast drops box shadows and background colours, so the track, range and
+ * handle take system colours and a real border. */
+@media (forced-colors: active) {
+  .kui-SliderTrack {
+    box-sizing: border-box;
+    border: 1px solid CanvasText;
+  }
+  .kui-SliderRange {
+    background-color: Highlight;
+  }
+  .kui-SliderThumb::after {
+    border: 1px solid CanvasText;
+    background-color: Highlight;
+  }
+  .kui-SliderTickMark {
+    background-color: CanvasText;
+  }
+
+  [data-disabled] {
+    .kui-SliderTrack:where(&) {
+      border-color: GrayText;
+    }
+    .kui-SliderRange:where(&) {
+      background-color: GrayText;
+    }
+    .kui-SliderThumb:where(&)::after {
+      border-color: GrayText;
+      background-color: GrayText;
+    }
+  }
+  .kui-SliderTick:where(:disabled) :where(.kui-SliderTickMark) {
+    background-color: GrayText;
+  }
 }

@@ -3,9 +3,9 @@ import classNames from 'classnames';
 
 import { textAreaPropDefs } from './text-area.props.js';
 import { extractProps } from '../helpers/extract-props.js';
-import { marginPropDefs } from '../props/margin.props.js';
+import { mergeStyles } from '../helpers/merge-styles.js';
+import { useThemeSizeProps } from '../hooks/theme-size.js';
 
-import type { MarginProps } from '../props/margin.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
@@ -16,21 +16,23 @@ type TextAreaOwnProps = GetPropDefTypes<typeof textAreaPropDefs> & {
 };
 interface TextAreaProps
   extends ComponentPropsWithout<'textarea', RemovedProps | 'size' | 'value'>,
-    MarginProps,
     TextAreaOwnProps {}
 
-const TextArea = React.forwardRef<TextAreaElement, TextAreaProps>((props, forwardedRef) => {
-  const { className, color, radius, panelBackground, material, style, ...textAreaProps } =
-    extractProps(props, textAreaPropDefs, marginPropDefs);
-  const effectiveMaterial = material || panelBackground;
+const TextArea = React.forwardRef<TextAreaElement, TextAreaProps>((ownProps, forwardedRef) => {
+  // The caller's className and style are kept apart from the size and variant classes: with an
+  // error message they go on the wrapper, which is then the one box the parent lays out.
+  const { className: ownClassName, style: ownStyle, ...themedProps } = useThemeSizeProps(ownProps, textAreaPropDefs.size);
+  const { className, color, radius, style, ...textAreaProps } =
+    extractProps(themedProps, textAreaPropDefs);
+  const wrapped = Boolean(textAreaProps.errorMessage);
 
   // Generate unique IDs for accessibility
   const errorId = React.useId();
 
-  const { 'aria-describedby': ariaDescribedby, 'aria-labelledby': ariaLabelledby } = textAreaProps;
+  const { 'aria-describedby': ariaDescribedby, 'aria-labelledby': ariaLabelledby, 'aria-invalid': ariaInvalid } = textAreaProps;
 
-  // Determine invalid state
-  const isInvalid = textAreaProps.error || textAreaProps.isInvalid;
+  // Invalid when `error` is set or the caller passes aria-invalid; the CSS keys on aria-invalid only.
+  const isInvalid = Boolean(textAreaProps.error) || ariaInvalid === true || ariaInvalid === 'true';
 
   // Build aria-describedby string
   const describedBy = React.useMemo(() => {
@@ -43,46 +45,54 @@ const TextArea = React.forwardRef<TextAreaElement, TextAreaProps>((props, forwar
   // Build aria attributes
   const ariaProps = React.useMemo(
     () => ({
-      'aria-invalid': isInvalid,
+      'aria-invalid': isInvalid ? true : ariaInvalid,
       'aria-describedby': describedBy,
       'aria-labelledby': ariaLabelledby,
     }),
-    [isInvalid, describedBy, ariaLabelledby],
+    [isInvalid, ariaInvalid, describedBy, ariaLabelledby],
   );
 
   // Filter out our custom props to avoid DOM warnings
   const {
     error,
     errorMessage,
-    isInvalid: _isInvalid,
     required,
     'aria-describedby': _ariaDescribedby,
     'aria-labelledby': _ariaLabelledby,
     ...nativeTextAreaProps
   } = textAreaProps;
 
-  return (
+  const field = (
     <div
       data-accent-color={color}
       data-radius={radius}
-      data-panel-background={effectiveMaterial}
-      data-material={effectiveMaterial}
-      className={classNames('rt-TextAreaRoot', className, {
-        'rt-error': isInvalid,
+      className={classNames('kui-TextAreaRoot', className, !wrapped && ownClassName, {
+        // Not used by the library's CSS (invalid styling keys on aria-invalid); kept as a hook for app styles.
+        'kui-error': isInvalid,
       })}
-      style={style}
+      style={wrapped ? style : mergeStyles(style, ownStyle)}
     >
       <textarea
-        className="rt-reset rt-TextAreaInput"
+        className="kui-reset kui-TextAreaInput"
         ref={forwardedRef}
         {...nativeTextAreaProps}
+        required={required || undefined}
         {...ariaProps}
       />
-      {textAreaProps.errorMessage && (
-        <div id={errorId} className="rt-TextAreaErrorMessage" role="alert" aria-live="polite">
+    </div>
+  );
+  // The wrapper is always there, so a message coming or going never moves the field in the tree:
+  // moving it would remount the input, dropping focus, the caret and an uncontrolled value. With
+  // no message it is `display: contents` and the field is the box the parent lays out; with one
+  // it holds the field and the message below it, and the caller's className and style size the pair.
+  return (
+    <div className={classNames('kui-TextAreaWrapper', wrapped && ownClassName)} style={wrapped ? ownStyle : undefined} data-message={wrapped || undefined}>
+      {field}
+      {wrapped ? (
+        <div id={errorId} className="kui-TextAreaErrorMessage" role="alert">
           {textAreaProps.errorMessage}
         </div>
-      )}
+      ) : null}
     </div>
   );
 });

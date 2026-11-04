@@ -47,8 +47,8 @@ export function StreamingDemo() {
   const hasStarted = length > 0;
 
   return (
-    <Flex direction="column" gap="3" width="100%" maxWidth="32rem">
-      <Card variant="classic" size="2">
+    <Flex direction="column" gap="4" width="100%" maxWidth="32rem">
+      <Card variant="raised" size="2">
         <Box minHeight="12rem">
           <StreamingMarkdown id="demo" content={RESPONSE.slice(0, length)} options={{ spacing: 'compact' }} />
         </Box>

@@ -1,8 +1,6 @@
-Kookie UI rounds corners on two independent channels. **Controls and marks** — buttons, inputs, checkboxes, badges, switches — scale aggressively with the theme and can become pills. **Surfaces** — cards, dialogs, popovers, menus, tables — damp as the theme grows and never go pill.
+Kookie UI rounds corners from one palette and three roles. A component reads a role, never a palette step. Controls (buttons, inputs, chips) climb with the theme and become capsules at `full`. Surfaces and overlays (cards, popovers, dialogs) have their own corners per theme and never go pill.
 
-The gap between the channels is the point. Round controls read as touchable; restrained surfaces read as architectural. Widening the theme widens that contrast instead of inflating everything at once.
-
-The radius infrastructure (5-step scale, factor system) is from [Radix Themes](https://www.radix-ui.com/themes), but Kookie UI uses custom radius values and adds the surface channel.
+The factor system is from [Radix Themes](https://www.radix-ui.com/themes). The roles and nesting rule follow Kookie UI v2.
 
 ## Installation
 
@@ -12,7 +10,7 @@ npm install @kushagradhawan/kookie-ui
 
 ## Usage
 
-Set `radius` on the Theme component to control corner rounding across the app. Both channels move together from this one prop.
+Set `radius` on the Theme component. Every role moves from this one prop.
 
 ```tsx
 import { Theme } from '@kushagradhawan/kookie-ui';
@@ -20,96 +18,66 @@ import { Theme } from '@kushagradhawan/kookie-ui';
 <Theme radius="medium"><YourApp /></Theme>
 ```
 
-## Channels
+## Palette
 
-### Controls And Marks
-
-`--radius-*` drives anything a person clicks, types into, or toggles. These opt into `--radius-full`, so at `radius="full"` a Button becomes a pill.
+Raw corners, times `--radius-factor`. `--radius-full` is 9999px at `full` and 0px below it.
 
 ```css
+var(--radius-0)  /* 0px */
 var(--radius-1)  /* 6px */
 var(--radius-2)  /* 8px */
 var(--radius-3)  /* 10px */
 var(--radius-4)  /* 12px */
-
 var(--radius-5)  /* 16px */
 var(--radius-6)  /* 20px */
 var(--radius-7)  /* 24px */
 var(--radius-8)  /* 28px */
-
 var(--radius-9)  /* 32px */
 var(--radius-10) /* 40px */
-var(--radius-11) /* 48px */
-var(--radius-12) /* 56px */
+var(--radius-full)
 ```
 
-Used by Button, IconButton, TextField, TextArea, Select trigger, Checkbox, Radio, Switch, Slider, Progress, Badge, Kbd, SegmentedControl, Tabs, Avatar, menu items, and the item shells of CheckboxCards and RadioCards.
+## Roles
 
-CheckboxCards and RadioCards are the one place where the two channels disagree with the markup. Their items are built on Card, but they are selection controls that happen to be card-shaped — a row of choices, each one a large target — so they override `--base-card-border-radius` back onto the control channel and stay round alongside the rest of the form.
-
-### Surfaces
-
-`--radius-surface-*` drives panels that hold content. Same base ramp, damped factor, no pill.
+Each role has four steps, one per size.
 
 ```css
-var(--radius-surface-1)  /* 6px */
-var(--radius-surface-2)  /* 8px */
-var(--radius-surface-3)  /* 10px */
-var(--radius-surface-4)  /* 12px */
-
-var(--radius-surface-5)  /* 16px */
-var(--radius-surface-6)  /* 20px */
-var(--radius-surface-7)  /* 24px */
-var(--radius-surface-8)  /* 28px */
-
-var(--radius-surface-9)  /* 32px */
-var(--radius-surface-10) /* 40px */
-var(--radius-surface-11) /* 48px */
-var(--radius-surface-12) /* 56px */
+var(--radius-control-1..4) /* palette 1 to 4; half the control height at full */
+var(--radius-row-1..4)     /* a row in a menu; half the row's height at full */
+var(--radius-panel-1..4)   /* a menu, Select or Combobox panel: its row's corner plus its padding */
+var(--radius-surface-1..4) /* 16, 20, 24, 28px: cards, popovers, tables, panes */
+var(--radius-overlay-1..4) /* 20, 24, 28, 32px: dialogs and sheets */
 ```
 
-Used by Card, Dialog, AlertDialog, Popover, HoverCard, Tooltip, DropdownMenu, ContextMenu, Combobox, Select content, Sidebar content, Table, Callout, Accordion, Chatbar, and inset Shell panes. Toolbar and Inset follow Card automatically.
+The px are what `large` and `full` draw. A menu panel is its row's corner plus its padding, so the rows sit concentric inside it.
 
-Sheet is exempt — it sets `border-radius: 0` regardless of theme. A menu's *content* damps while the rows inside it stay on the control channel, which is the contrast the split exists for.
+## Nesting
 
-## Factors
+A surface inside a surface is concentric. Its corner is the outer corner minus the outer padding, at least 8px and never more than its own corner. Card does this for you. The floor matters because the padding is about as large as the corner, so the plain rule would square every nested Card.
 
-Each theme sets both factors. The surface factor is capped at `1`, which is what keeps panels calm at the top of the scale.
+## Per Theme
 
-```css
-[data-radius='none']   { --radius-factor: 0;    --radius-surface-factor: 0;    }
-[data-radius='small']  { --radius-factor: 0.75; --radius-surface-factor: 0.5;  }
-[data-radius='medium'] { --radius-factor: 1;    --radius-surface-factor: 0.75; }
-[data-radius='large']  { --radius-factor: 1.5;  --radius-surface-factor: 0.9;  }
-[data-radius='full']   { --radius-factor: 2;    --radius-surface-factor: 1;    }
-```
+Controls scale by `--radius-factor`. Surfaces and overlays are set directly for each Theme radius.
 
-A surface at `full` is exactly as round as a surface at `medium`. Controls keep climbing past it.
+| Radius | Control factor | Surfaces 1–4 | Overlays 1–4 |
+| --- | --- | --- | --- |
+| `none` | 0 | 0 | 0 |
+| `small` | 0.75 | 5, 6, 8, 10px | 6, 8, 10, 12px |
+| `medium` | 1 | 12, 18, 24, 30px | 18, 24, 30, 36px |
+| `large` | 1.5 | 16, 20, 24, 28px | 20, 24, 28, 32px |
+| `full` | 2, plus pill | 16, 20, 24, 28px | 20, 24, 28, 32px |
+
+`large` and `full` share one surface band, so turning the dial up never squares a card. Controls keep climbing past it.
 
 ## Mark Ceiling
 
-Marks are small and do not grow with the theme, so the radius ramp can outrun the box. Checkbox is the one case where it did: at `full` its corner reached half its own box and the mark rendered as a perfect circle — visually identical to Radio, which is `border-radius: 100%`. That collapses the distinction between choosing many and choosing one.
-
-Checkbox now clamps its corner to 40% of its own box:
-
-```css
---checkbox-radius-ratio-max: 0.4;
---checkbox-radius-max: calc(var(--checkbox-size) * var(--checkbox-radius-ratio-max));
---checkbox-border-radius: min(
-  calc(var(--radius-1) * var(--spacing-multiplier-medium)),
-  var(--checkbox-radius-max)
-);
-```
-
-The ceiling only binds at the top of the scale. `none` through `medium` are unchanged at every size, `large` moves by 0.35px at size 2 alone, and `full` drops from a circle to a clearly square mark.
-
-Switch and Radio are deliberately exempt — a pill and a circle are their correct shapes at every theme.
+Checkbox caps its corner at 40% of its own box, so at `full` it stays square and never reads as a Radio. Switch and Radio keep their pill and circle at every theme.
 
 ## Scale
 
 ### None
 
-Sharp corners on both channels. Geometric, technical interfaces.
+Sharp corners everywhere. Geometric, technical interfaces.
 
 ```tsx
 <Theme radius="none"><YourApp /></Theme>
@@ -117,7 +85,7 @@ Sharp corners on both channels. Geometric, technical interfaces.
 
 ### Small
 
-Tight rounding. Controls at 0.75x, surfaces at 0.5x.
+Tight rounding. Controls at 0.75x, surfaces 5 to 10px.
 
 ```tsx
 <Theme radius="small"><YourApp /></Theme>
@@ -125,7 +93,7 @@ Tight rounding. Controls at 0.75x, surfaces at 0.5x.
 
 ### Medium
 
-Standard rounding. Controls at 1x, surfaces at 0.75x.
+Standard rounding. Controls at 1x, surfaces 12 to 30px.
 
 ```tsx
 <Theme radius="medium"><YourApp /></Theme>
@@ -133,7 +101,7 @@ Standard rounding. Controls at 1x, surfaces at 0.75x.
 
 ### Large
 
-Prominent controls against steady surfaces. Controls at 1.5x, surfaces at 0.9x.
+Prominent controls against steady surfaces. Controls at 1.5x, surfaces 16 to 28px.
 
 ```tsx
 <Theme radius="large"><YourApp /></Theme>
@@ -141,7 +109,7 @@ Prominent controls against steady surfaces. Controls at 1.5x, surfaces at 0.9x.
 
 ### Full
 
-Pill-shaped controls inside near-square panels — the widest contrast the system offers, and the default. Controls at 2x plus pill, surfaces capped at 1x.
+Pill-shaped controls on rounded surfaces, and the default. Controls at 2x plus pill, surfaces 16 to 28px.
 
 ```tsx
 <Theme radius="full"><YourApp /></Theme>
@@ -149,7 +117,7 @@ Pill-shaped controls inside near-square panels — the widest contrast the syste
 
 ## Overrides
 
-Components that accept a `radius` prop re-declare both factors for their subtree, so an override keeps the control/surface relationship intact.
+Components that accept a `radius` prop re-declare the radius for their subtree.
 
 ```tsx
 <Theme radius="medium">
@@ -158,18 +126,18 @@ Components that accept a `radius` prop re-declare both factors for their subtree
 </Theme>
 ```
 
-To reach for a channel directly in custom CSS, pick the one that matches what you are drawing:
+In custom CSS, read the role that matches what you are drawing:
 
 ```css
 .my-panel {
-  border-radius: var(--radius-surface-4);
+  border-radius: var(--radius-surface-2);
 }
 
 .my-control {
-  border-radius: max(var(--radius-2), var(--radius-full));
+  border-radius: var(--radius-control-2);
 }
 ```
 
 ## Credits
 
-The radius infrastructure (5-step scale system and factor-based multiplier approach) is from [Radix Themes](https://www.radix-ui.com/themes) by [WorkOS](https://workos.com/). Kookie UI's radius values and the surface channel are custom.
+The factor-based palette is from [Radix Themes](https://www.radix-ui.com/themes) by [WorkOS](https://workos.com/). The roles, surface corners and nesting rule follow Kookie UI v2.

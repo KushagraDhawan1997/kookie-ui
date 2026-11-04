@@ -27,8 +27,8 @@
   white-space: nowrap;
 }
 
-/* Kookie sets --font-heading on .radix-themes, so the override has to live there too. */
-.radix-themes {
+/* Kookie sets --font-heading on .kui-theme, so the override has to live there too. */
+.kui-theme {
   --font-heading: 'Inter Tight', var(--font-sans);
 }
 
@@ -57,7 +57,7 @@ body {
 
 * {
   box-sizing: border-box;
-  /* outline: solid 0.1px var(--gray-a6); */
+  /* outline: solid 0.1px var(--neutral-a6); */
   /* box-sizing: border-box !important; */
 }
 
@@ -65,44 +65,44 @@ body {
 [data-highlighted-line] {
   background-color: var(--accent-a3);
   border-left: 2px solid var(--accent-9);
-  padding-left: calc(var(--space-4) - 2px);
-  margin-left: calc(-1 * var(--space-4));
-  margin-right: calc(-1 * var(--space-4));
-  padding-right: var(--space-4);
+  padding-left: calc(var(--space-5) - 2px);
+  margin-left: calc(-1 * var(--space-5));
+  margin-right: calc(-1 * var(--space-5));
+  padding-right: var(--space-5);
 }
 
 [data-highlighted-chars] {
   background-color: var(--accent-a4);
-  padding: 0 var(--space-1);
+  padding: 0 var(--space-2);
   border-radius: var(--radius-1);
 }
 
 [data-highlighted-word] {
   background-color: var(--accent-a4);
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-2);
   border: 1px solid var(--accent-a6);
 }
 
 [data-rehype-pretty-code-title] {
-  background-color: var(--gray-a4);
-  color: var(--gray-12);
-  padding: var(--space-2) var(--space-4);
+  background-color: var(--neutral-a4);
+  color: var(--neutral-12);
+  padding: var(--space-3) var(--space-5);
   font-size: var(--font-size-2);
   font-weight: 500;
-  border-bottom: 1px solid var(--gray-a6);
+  border-bottom: 1px solid var(--neutral-a6);
   border-radius: var(--radius-3) var(--radius-3) 0 0;
 }
 
 pre + figcaption {
-  background-color: var(--gray-a2);
-  padding: var(--space-2) var(--space-4);
-  margin: 0 0 var(--space-4);
-  border: 1px solid var(--gray-a6);
+  background-color: var(--neutral-a2);
+  padding: var(--space-3) var(--space-5);
+  margin: 0 0 var(--space-5);
+  border: 1px solid var(--neutral-a6);
   border-top: none;
   border-radius: 0 0 var(--radius-3) var(--radius-3);
   font-size: var(--font-size-2);
-  color: var(--gray-11);
+  color: var(--neutral-11);
 }
 
 /* Scroll offset for headings when using anchor links */
@@ -119,3 +119,134 @@ h6 {
 .playground-container {
   position: relative;
 }
+
+/* THE FRONT PAGE'S HERO (2026-10-22). A real builder made with this system, in a laptop lid on a
+   grey gradient, edge to edge across the content pane's top and cropped by the band's bottom edge.
+   The same figure is on kushagradhawan.com's Womp's Design System page. The art direction is
+   kushagradhawan-v3/FIGURES.md: since 2026-11-02 the device says "this is a picture", so there is
+   no grid. The band is 44 steps of 12px tall and the lid is 4 steps down. Hairlines close the band
+   at the top and the bottom, drawn over the lid that runs off it. */
+.kd-hero {
+  position: relative;
+  height: calc(44 * var(--space-4));
+  overflow: clip;
+  /* The surface at the top deepening to a soft neutral at the bottom, from the theme's own steps
+     so it turns over with the mode. */
+  background-color: var(--neutral-6);
+  /* A dot grid that comes through toward the cut (kushagradhawan-v3/FIGURES.md, 2026-11-03): 12px
+     dots on the soft neutral, under a wash of the surface from solid at the top to clear at the
+     bottom, which is the same gradient as before. */
+  background-image:
+    linear-gradient(to bottom, var(--color-surface), transparent),
+    radial-gradient(circle, var(--neutral-a6) 1px, transparent 1.5px);
+  background-size: auto, var(--space-4) var(--space-4);
+  background-position: 0 0, calc(var(--space-4) / 2) calc(var(--space-4) / 2);
+}
+
+.kd-hero::before,
+.kd-hero::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset-inline: 0;
+  height: 1px;
+  background-color: var(--neutral-a4);
+}
+
+.kd-hero::before {
+  top: 0;
+}
+
+.kd-hero::after {
+  bottom: 0;
+}
+
+.kd-hero-stage {
+  position: absolute;
+  inset-inline: 0;
+  top: var(--space-9);
+  display: grid;
+  justify-items: center;
+}
+
+.kd-hero-window {
+  box-sizing: border-box;
+  width: calc(30 * var(--space-7));
+  background-color: var(--color-ground);
+  border: 1px solid var(--neutral-a5);
+  border-radius: var(--radius-surface-4);
+  overflow: clip;
+}
+
+/* A LAPTOP LID FOR THE WINDOW (FIGURES.md): a surface-coloured rim with a hairline outside it, 8px
+   at the sides and the bottom, 24px at the top with a camera centred in it. The base is below the
+   band's cut, so only the lid shows. The corners stay concentric with the window's: the outer
+   radius is the window's plus the gap (the rim and the window's hairline). The top corners take
+   the top gap vertically. */
+.kd-device {
+  --kd-device-rim: var(--space-3);
+  --kd-device-top: var(--space-6);
+  --kd-device-gap: calc(var(--kd-device-rim) + 1px);
+  --kd-device-gap-top: calc(var(--kd-device-top) + 1px);
+  position: relative;
+  box-sizing: border-box;
+  padding: var(--kd-device-top) var(--kd-device-rim) var(--kd-device-rim);
+  background-color: var(--color-surface);
+  border: 1px solid var(--neutral-a5);
+  border-radius:
+    calc(var(--radius-surface-4) + var(--kd-device-gap)) calc(var(--radius-surface-4) + var(--kd-device-gap))
+    calc(var(--radius-surface-4) + var(--kd-device-gap)) calc(var(--radius-surface-4) + var(--kd-device-gap)) /
+    calc(var(--radius-surface-4) + var(--kd-device-gap-top)) calc(var(--radius-surface-4) + var(--kd-device-gap-top))
+    calc(var(--radius-surface-4) + var(--kd-device-gap)) calc(var(--radius-surface-4) + var(--kd-device-gap));
+}
+
+/* The camera: a dot centred in the top rim, in the hairline's colour. */
+.kd-device::before {
+  content: '';
+  position: absolute;
+  top: calc((var(--kd-device-top) - 6px) / 2);
+  left: 50%;
+  translate: -50% 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--neutral-a5);
+}
+
+/* The sign-in card sits under the floating toolbar, the same distance down as in the v2 figure. */
+.kd-hero-canvas {
+  padding-top: calc(var(--space-11) + var(--space-5));
+}
+
+.kd-hero-composition {
+  width: calc(12 * var(--space-7));
+}
+
+.kd-hero-selected {
+  border-radius: var(--radius-full);
+  outline: 1px solid var(--neutral-12);
+  outline-offset: 4px;
+}
+
+/* On a phone the window is wider than the screen, so it starts at the reading column's edge and
+   runs off the right, instead of off both edges. */
+@media (max-width: 768px) {
+  .kd-hero-stage {
+    justify-items: start;
+    padding-inline-start: var(--space-6);
+  }
+
+}
+
+/* The hero breaks out of the reading column to the content pane's edges. The pane is the query
+   container and the column is centred in it, so half the column less half the pane is the
+   distance to each edge. */
+.kd-shell-content {
+  container-type: inline-size;
+}
+
+.kd-hero {
+  margin-inline: calc(50% - 50cqi);
+}
+
+

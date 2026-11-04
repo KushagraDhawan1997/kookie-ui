@@ -1,15 +1,46 @@
-.radix-themes {
-  --scrollarea-scrollbar-horizontal-margin-top: var(--space-1);
-  --scrollarea-scrollbar-horizontal-margin-bottom: var(--space-1);
-  --scrollarea-scrollbar-horizontal-margin-left: var(--space-1);
-  --scrollarea-scrollbar-horizontal-margin-right: var(--space-1);
-  --scrollarea-scrollbar-vertical-margin-top: var(--space-1);
-  --scrollarea-scrollbar-vertical-margin-bottom: var(--space-1);
-  --scrollarea-scrollbar-vertical-margin-left: var(--space-1);
-  --scrollarea-scrollbar-vertical-margin-right: var(--space-1);
+/*
+ * The scroll-edges hook writes these on the viewport every scroll frame. Registered as
+ * non-inherited so a write restyles the viewport only, not every row inside it. Only the
+ * viewport's own mask reads them.
+ */
+@property --scroll-overflow-start {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
 }
 
-.rt-ScrollAreaRoot {
+@property --scroll-overflow-end {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --scroll-overflow-x-start {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --scroll-overflow-x-end {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+.kui-theme {
+  --scrollarea-scrollbar-horizontal-margin-top: var(--space-2);
+  --scrollarea-scrollbar-horizontal-margin-bottom: var(--space-2);
+  --scrollarea-scrollbar-horizontal-margin-left: var(--space-2);
+  --scrollarea-scrollbar-horizontal-margin-right: var(--space-2);
+  --scrollarea-scrollbar-vertical-margin-top: var(--space-2);
+  --scrollarea-scrollbar-vertical-margin-bottom: var(--space-2);
+  --scrollarea-scrollbar-vertical-margin-left: var(--space-2);
+  --scrollarea-scrollbar-vertical-margin-right: var(--space-2);
+  --scrollarea-scrollbar-size: var(--space-2);
+  --scrollarea-scrollbar-border-radius: var(--radius-control-1);
+}
+
+.kui-ScrollAreaRoot {
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -17,7 +48,7 @@
   height: 100%;
 }
 
-.rt-ScrollAreaViewport {
+.kui-ScrollAreaViewport {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -25,27 +56,28 @@
   /* iOS momentum scrolling */
   -webkit-overflow-scrolling: touch;
 
-  &:where(:focus-visible) + :where(.rt-ScrollAreaViewportFocusRing) {
+  &:where(:focus-visible) + :where(.kui-ScrollAreaViewportFocusRing) {
     position: absolute;
     inset: 0;
     pointer-events: none;
     outline: 2px solid var(--focus-8);
     outline-offset: -2px;
   }
-
-  /* Stop Chrome back/forward two-finger swipe when there is a horizontal scrollbar */
-  &:where(:has(.rt-ScrollAreaScrollbar[data-orientation='horizontal'])) {
-    overscroll-behavior-x: contain;
-  }
 }
 
-.rt-ScrollAreaViewport > * {
+/* Stop Chrome back/forward two-finger swipe when there is a horizontal scrollbar. The scrollbar is
+   the viewport's sibling, and the child combinator keeps a nested area's scrollbar out of it. */
+:where(.kui-ScrollAreaRoot:has(> .kui-ScrollAreaScrollbar[data-orientation='horizontal'])) > .kui-ScrollAreaViewport {
+  overscroll-behavior-x: contain;
+}
+
+.kui-ScrollAreaViewport > * {
   display: block !important;
   min-width: 0;
   flex-grow: 1;
 }
 
-.rt-ScrollAreaScrollbar {
+.kui-ScrollAreaScrollbar {
   display: flex;
   /* Ensures no selection */
   user-select: none;
@@ -62,7 +94,7 @@
   }
 }
 
-.rt-ScrollAreaThumb {
+.kui-ScrollAreaThumb {
   position: relative;
 
   &::before {
@@ -73,31 +105,8 @@
     transform: translate(-50%, -50%);
     width: 100%;
     height: 100%;
-    min-width: var(--space-4);
-    min-height: var(--space-4);
-  }
-}
-
-/***************************************************************************************************
- *                                                                                                 *
- * SIZES                                                                                           *
- *                                                                                                 *
- ***************************************************************************************************/
-
-@breakpoints {
-  .rt-ScrollAreaScrollbar {
-    &:where(.rt-r-size-1) {
-      --scrollarea-scrollbar-size: var(--space-1);
-      --scrollarea-scrollbar-border-radius: max(var(--radius-1), var(--radius-full));
-    }
-    &:where(.rt-r-size-2) {
-      --scrollarea-scrollbar-size: var(--space-2);
-      --scrollarea-scrollbar-border-radius: max(var(--radius-1), var(--radius-full));
-    }
-    &:where(.rt-r-size-3) {
-      --scrollarea-scrollbar-size: var(--space-3);
-      --scrollarea-scrollbar-border-radius: max(var(--radius-1), var(--radius-full));
-    }
+    min-width: var(--space-5);
+    min-height: var(--space-5);
   }
 }
 
@@ -107,18 +116,8 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-ScrollAreaScrollbar {
+.kui-ScrollAreaScrollbar {
   border-radius: var(--scrollarea-scrollbar-border-radius);
-
-  animation-duration: var(--motion-duration-micro);
-  animation-timing-function: var(--motion-ease-standard);
-
-  &:where([data-state='visible']) {
-    animation-name: rt-fade-in;
-  }
-  &:where([data-state='hidden']) {
-    animation-name: rt-fade-out;
-  }
   &:where([data-orientation='horizontal']) {
     margin-top: var(--scrollarea-scrollbar-horizontal-margin-top);
     margin-bottom: var(--scrollarea-scrollbar-horizontal-margin-bottom);
@@ -133,14 +132,13 @@
   }
 }
 
-.rt-ScrollAreaThumb {
-  background-color: var(--gray-a6);
+.kui-ScrollAreaThumb {
+  background-color: var(--neutral-a6);
   border-radius: inherit;
-  transition: background-color var(--motion-duration-micro) var(--motion-ease-standard);
 
   @media (hover: hover) {
     &:where(:hover) {
-      background-color: var(--gray-a8);
+      background-color: var(--neutral-a8);
     }
   }
 }
@@ -161,11 +159,10 @@
  * with nothing past it fades over 0px, and the fade ramps in over the first pixels of scrolling.
  * A floating band over an edge sets `--scroll-fade-start` or `--scroll-fade-end` to its height.
  *
- * Shared by ScrollArea (on its viewport) and MessageScroller (on its viewport). Scrollbars are
+ * Shared by ScrollArea (on its viewport, both axes) and MessageScroller (on its viewport, block axis only). Scrollbars are
  * siblings of the viewport, outside the mask, so the thumb stays crisp.
  */
-:where(.rt-ScrollAreaRoot[data-fade]) > .rt-ScrollAreaViewport,
-.rt-MessageScrollerViewport:where([data-fade]) {
+.kui-MessageScrollerViewport:where([data-fade]) {
   mask-image: linear-gradient(
     to bottom,
     transparent 0%,
@@ -175,16 +172,43 @@
   );
 }
 
+/* ScrollArea scrolls both ways, so it fades on both axes: one layer each, intersected, so a corner
+   with content hidden both ways fades both ways. The inline layer runs from the inline start, so
+   right-to-left flips its direction. */
+:where(.kui-ScrollAreaRoot[data-fade]) > .kui-ScrollAreaViewport {
+  --scroll-fade-x-direction: to right;
+  mask-image:
+    linear-gradient(
+      var(--scroll-fade-x-direction),
+      transparent 0%,
+      black min(var(--scroll-overflow-x-start, 0px), var(--scroll-fade-size)),
+      black calc(100% - min(var(--scroll-overflow-x-end, 0px), var(--scroll-fade-size))),
+      transparent 100%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      black min(var(--scroll-overflow-start, 0px), var(--scroll-fade-start, var(--scroll-fade-size))),
+      black calc(100% - min(var(--scroll-overflow-end, 0px), var(--scroll-fade-end, var(--scroll-fade-size)))),
+      transparent 100%
+    );
+  mask-composite: intersect;
+
+  &:where(:dir(rtl)) {
+    --scroll-fade-x-direction: to left;
+  }
+}
+
 :root,
-.radix-themes {
-  --scroll-fade-size: var(--space-6);
+.kui-theme {
+  --scroll-fade-size: var(--space-7);
 }
 
 /*
  * A band is above the scroller it floats over and above nothing else. The reach hooks inherit,
  * so a scroller nested inside another takes the designed length, not its ancestor's band.
  */
-:where(.rt-ScrollAreaViewport, .rt-MessageScrollerViewport) :where(.rt-ScrollAreaRoot, .rt-MessageScrollerViewport) {
+:where(.kui-ScrollAreaViewport, .kui-MessageScrollerViewport) :where(.kui-ScrollAreaRoot, .kui-MessageScrollerViewport) {
   --scroll-fade-start: initial;
   --scroll-fade-end: initial;
 }

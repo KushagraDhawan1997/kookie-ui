@@ -28,7 +28,7 @@ const boxPropDefs = {
    */
   display: {
     type: 'enum',
-    className: 'rt-r-display',
+    className: 'kui-r-display',
     values: displayValues,
     responsive: true,
   },

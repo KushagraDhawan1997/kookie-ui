@@ -1,6 +1,4 @@
-/* Disabled state uses simple opacity instead of complex blend modes */
-
-.rt-SwitchRoot {
+.kui-SwitchRoot {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -9,36 +7,12 @@
   height: var(--switch-height);
   border-radius: 9999px;
 
-  --switch-width: calc(var(--switch-height) * 1.75);
-  --switch-thumb-inset: 1px;
+  /* The thumb is the track minus one designed inset on every side (v2's --switch-inset). */
+  --switch-thumb-inset: var(--switch-inset, calc(2px * var(--scale)));
   --switch-thumb-size: calc(var(--switch-height) - var(--switch-thumb-inset) * 2);
   --switch-thumb-translate-x: calc(var(--switch-width) - var(--switch-height));
 
-  /* 
-   * Theme-level translucent override
-   * Applies backdrop filter for elevated visual effects
-   */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
-
-  /* Prevent backdrop-filter stacking with parent elements */
   isolation: isolate;
-
-  /* 
-   * Component-level material overrides
-   * These ensure proper rendering based on material setting
-   */
-  &:where([data-panel-background='solid'], [data-material='solid']) {
-    backdrop-filter: none;
-    --backdrop-filter-components: none;
-  }
-  
-  &:where([data-panel-background='translucent'], [data-material='translucent']) {
-    backdrop-filter: var(--backdrop-filter-components);
-    --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-  }
 
   &::before {
     content: '';
@@ -46,33 +20,33 @@
     width: var(--switch-width);
     height: var(--switch-height);
     border-radius: 9999px;
-    transition: background-color var(--transition-standard), box-shadow var(--transition-standard);
     cursor: var(--cursor-switch);
   }
 
   &:where(:focus-visible)::before {
-    outline: 2px solid var(--focus-8);
-    outline-offset: 2px;
-  }
-
-  &:where([data-disabled])::before {
-    cursor: var(--cursor-disabled);
+    outline: var(--focus-ring-width, 2px) solid var(--focus-8);
+    outline-offset: var(--focus-ring-offset, 2px);
   }
 }
 
-.rt-SwitchThumb {
-  background-color: white;
+.kui-SwitchThumb {
+  /* The grip: the surface colour, near-white in dark. */
+  background-color: var(--color-thumb);
   position: absolute;
-  left: var(--switch-thumb-inset);
+  inset-inline-start: var(--switch-thumb-inset);
   width: var(--switch-thumb-size);
   height: var(--switch-thumb-size);
   border-radius: 9999px;
-  box-shadow: var(--shadow-2);
-  transition: transform var(--transition-standard), box-shadow var(--transition-standard);
+  box-shadow: var(--grip-chrome);
 
   &:where([data-state='checked']) {
     background-color: var(--accent-solid-thumb);
     transform: translateX(var(--switch-thumb-translate-x));
+  }
+
+  /* Right to left, "on" is the left end. */
+  &:where(:dir(rtl)) {
+    --switch-thumb-translate-x: calc((var(--switch-width) - var(--switch-height)) * -1);
   }
 }
 
@@ -82,141 +56,113 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
+/*
+ * The track is v2's mark one index up (size N is --mark-(N+1): 20/24/26/28), so a switch stands
+ * one step taller than the checkbox beside it. Its width is v2's own ladder (34/40/44/48).
+ */
 @breakpoints {
-  .rt-SwitchRoot {
-    &:where(.rt-r-size-1) {
-      --switch-height: var(--space-4);
+  .kui-SwitchRoot {
+    &:where(.kui-r-size-1) {
+      --switch-height: var(--mark-2, calc(20px * var(--scale)));
+      --switch-width: var(--switch-w-1, calc(34px * var(--scale)));
     }
-    &:where(.rt-r-size-2) {
-      --switch-height: calc(var(--space-5));
+    &:where(.kui-r-size-2) {
+      --switch-height: var(--mark-3, calc(24px * var(--scale)));
+      --switch-width: var(--switch-w-2, calc(40px * var(--scale)));
     }
-    &:where(.rt-r-size-3) {
-      --switch-height: var(--space-6);
+    &:where(.kui-r-size-3) {
+      --switch-height: var(--mark-4, calc(26px * var(--scale)));
+      --switch-width: var(--switch-w-3, calc(44px * var(--scale)));
     }
-    &:where(.rt-r-size-4) {
-      --switch-height: var(--space-7);
+    &:where(.kui-r-size-4) {
+      --switch-height: var(--mark-5, calc(28px * var(--scale)));
+      --switch-width: var(--switch-w-4, calc(48px * var(--scale)));
     }
   }
 }
 
 /***************************************************************************************************
  *                                                                                                 *
- * VARIANTS                                                                                        *
+ * THE LOOK                                                                                        *
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* surface */
+/* One look, as in v2. Off, the track is a well: a soft fill with no edge. On, it is the accent
+ * solid. Hover is one step darker, press two. Disabled switches take neither. */
 
-.rt-SwitchRoot:where(.rt-variant-surface) {
+.kui-SwitchRoot {
   &::before {
-    background-color: var(--gray-2);
-    box-shadow: inset 0 0 0 1px var(--gray-6);
-
-    /* Theme-level translucent override */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--gray-a2), var(--gray-2) 60%);
-      box-shadow: inset 0 0 0 1px var(--gray-a6);
-    }
-
-    /* Component-level overrides */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--gray-2);
-      box-shadow: inset 0 0 0 1px var(--gray-6);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--gray-a2), var(--gray-2) 60%);
-      box-shadow: inset 0 0 0 1px var(--gray-a6);
-    }
-  }
-  
-  &:where([data-state='checked'])::before {
-    background-color: var(--accent-solid);
+    background-color: var(--color-track);
     box-shadow: none;
   }
-  
 
-
-
-}
-
-/* soft */
-
-.rt-SwitchRoot:where(.rt-variant-soft) {
-  &::before {
-    background-color: var(--gray-3);
-
-    /* Theme-level translucent override */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      background-color: color-mix(in srgb, var(--gray-a3), var(--gray-3) 60%);
-    }
-
-    /* Component-level overrides */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      background-color: var(--gray-3);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      background-color: color-mix(in srgb, var(--gray-a3), var(--gray-3) 60%);
-    }
-  }
-  
   &:where([data-state='checked'])::before {
     background-color: var(--accent-solid);
   }
-}
 
-/* outline */
-
-.rt-SwitchRoot:where(.rt-variant-outline) {
-  &::before {
-    /* Base state: no background, just border */
-    box-shadow: inset 0 0 0 1px var(--gray-6);
-
-    /* Theme-level translucent override */
-    :where([data-panel-background='translucent'], [data-material='translucent']) & {
-      box-shadow: inset 0 0 0 1px var(--gray-a6);
+  @media (hover: hover) {
+    &:where(:hover:not([data-disabled]))::before {
+      background-color: var(--color-track-hover);
     }
-
-    /* Component-level overrides */
-    &:where([data-panel-background='solid'], [data-material='solid']) {
-      box-shadow: inset 0 0 0 1px var(--gray-6);
-    }
-
-    &:where([data-panel-background='translucent'], [data-material='translucent']) {
-      box-shadow: inset 0 0 0 1px var(--gray-a6);
+    &:where(:hover:not([data-disabled]):is([data-state='checked']))::before {
+      background-color: var(--accent-solid-hover);
     }
   }
-  
-  &:where([data-state='checked'])::before {
-    background-color: var(--accent-solid);
-    box-shadow: none;
+  &:where(:active:not([data-disabled]))::before {
+    background-color: var(--color-track-active);
   }
-  
-
-
-
+  &:where(:active:not([data-disabled]):is([data-state='checked']))::before {
+    background-color: var(--accent-solid-active);
+  }
 }
 
-/* all disabled Switches */
+/* all disabled Switches: a colour remap, never opacity, and a default cursor.
+ * These come after the look at the same specificity, so they win by order. */
 
 [data-disabled] {
-  .rt-SwitchRoot:where(&) {
-    cursor: var(--cursor-disabled);
+  .kui-SwitchRoot:where(&) {
+    cursor: default;
   }
-  .rt-SwitchRoot:where(&)::before {
-    background-color: var(--gray-a3) !important;
-    box-shadow: none !important;
-    outline: none !important;
+  .kui-SwitchRoot:where(&)::before {
+    cursor: default;
+    background-color: var(--neutral-a3);
+    box-shadow: none;
+    outline: none;
   }
-  .rt-SwitchThumb:where(&) {
-    cursor: var(--cursor-disabled);
-    box-shadow: none !important;
-    outline: none !important;
+  .kui-SwitchThumb:where(&) {
+    cursor: default;
+    box-shadow: none;
+    outline: none;
   }
 }
 
 /* Disabled checked state - lighter accent color */
-.rt-SwitchRoot:where([data-disabled][data-state='checked'])::before {
-  background-color: var(--accent-a3) !important;
+.kui-SwitchRoot:where([data-disabled][data-state='checked'])::before {
+  background-color: var(--accent-a3);
+}
+
+/* Windows High Contrast drops box shadows and background colours, so the track and thumb take
+ * system colours and a real border. */
+@media (forced-colors: active) {
+  .kui-SwitchRoot::before {
+    box-sizing: border-box;
+    border: 1px solid CanvasText;
+  }
+  .kui-SwitchThumb {
+    background-color: CanvasText;
+  }
+  .kui-SwitchRoot:where([data-state='checked'])::before {
+    border-color: Highlight;
+    background-color: Highlight;
+  }
+  .kui-SwitchThumb:where([data-state='checked']) {
+    background-color: HighlightText;
+  }
+  .kui-SwitchRoot:where([data-disabled])::before {
+    border-color: GrayText;
+    background-color: Canvas;
+  }
+  .kui-SwitchThumb:where([data-disabled]) {
+    background-color: GrayText;
+  }
 }

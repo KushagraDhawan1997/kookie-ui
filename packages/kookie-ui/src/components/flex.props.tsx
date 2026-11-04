@@ -33,7 +33,7 @@ const flexPropDefs = {
    */
   display: {
     type: 'enum',
-    className: 'rt-r-display',
+    className: 'kui-r-display',
     values: displayValues,
     responsive: true,
   },
@@ -50,7 +50,7 @@ const flexPropDefs = {
    */
   direction: {
     type: 'enum',
-    className: 'rt-r-fd',
+    className: 'kui-r-fd',
     values: directionValues,
     responsive: true,
   },
@@ -67,7 +67,7 @@ const flexPropDefs = {
    */
   align: {
     type: 'enum',
-    className: 'rt-r-ai',
+    className: 'kui-r-ai',
     values: alignValues,
     responsive: true,
   },
@@ -84,7 +84,7 @@ const flexPropDefs = {
    */
   justify: {
     type: 'enum',
-    className: 'rt-r-jc',
+    className: 'kui-r-jc',
     values: justifyValues,
     parseValue: parseJustifyValue,
     responsive: true,
@@ -102,7 +102,7 @@ const flexPropDefs = {
    */
   wrap: {
     type: 'enum',
-    className: 'rt-r-fw',
+    className: 'kui-r-fw',
     values: wrapValues,
     responsive: true,
   },

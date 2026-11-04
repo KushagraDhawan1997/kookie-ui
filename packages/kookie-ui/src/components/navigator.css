@@ -1,0 +1,85 @@
+/* Navigator (from v2, 2026-11-03): a stack of screens. It paints nothing; the host is the region.
+ * No motion: v1 has none, so a screen changes at once. */
+.kui-Navigator,
+.kui-NavigatorLevel,
+.kui-NavigatorScreen {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 0;
+}
+
+/* A screen outside a pane: the band, holding Back, the title and Close, then the body. The band
+   sits one step closer to the panel's edge than the content, stated against the panel's own
+   padding so it moves with the panel's size; the body starts a section's distance under it. */
+.kui-NavigatorBar {
+  margin-block-start: calc(-1 * var(--layout-space-2));
+  margin-inline: calc(-1 * var(--layout-space-2));
+  margin-block-end: var(--layout-space-6);
+}
+
+/* The title stays beside Back at the leading edge, and Close goes to the far end. This sheet
+   loads after the toolbar's, so the same specificity wins. */
+.kui-NavigatorBarTitle {
+  margin-inline-end: auto;
+  min-inline-size: 0;
+}
+
+/* With no Back before it, the title lines up with the content under it. */
+.kui-NavigatorBarTitle:where(:first-child) {
+  padding-inline-start: var(--layout-space-2);
+}
+
+.kui-NavigatorBackGlyph,
+.kui-NavigatorLinkGlyph {
+  inline-size: 1em;
+  block-size: 1em;
+}
+
+.kui-NavigatorBackGlyph:where(:dir(rtl)),
+.kui-NavigatorLinkGlyph:where(:dir(rtl)) {
+  transform: scaleX(-1);
+}
+
+/* A row that opens the next screen: its label, and a quiet chevron at the end. */
+.kui-NavigatorLink {
+  display: flex;
+  align-items: center;
+  gap: var(--layout-space-3);
+  inline-size: 100%;
+  min-block-size: var(--control-height-3);
+  padding-inline: var(--layout-space-3);
+  border-radius: var(--radius-control-3);
+  color: var(--gray-12);
+  font-size: var(--font-size-3);
+  line-height: var(--line-height-3);
+  text-align: start;
+  cursor: var(--cursor-button);
+}
+
+.kui-NavigatorLinkLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--layout-space-3);
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.kui-NavigatorLinkGlyph {
+  flex-shrink: 0;
+  color: var(--gray-a10);
+}
+
+@media (hover: hover) {
+  .kui-NavigatorLink:where(:hover) {
+    background-color: var(--gray-a3);
+  }
+}
+
+.kui-NavigatorLink:where(:active) {
+  background-color: var(--gray-a4);
+}
+
+.kui-NavigatorLink:where(:focus-visible) {
+  outline: 2px solid var(--focus-8);
+  outline-offset: -2px;
+}

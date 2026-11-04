@@ -41,7 +41,7 @@ const PageHeaderRoot = React.forwardRef<HTMLDivElement, PageHeaderRootProps>(
       <PageHeaderContext.Provider value={context}>
         <Flex ref={ref} direction={direction} gap={gap} {...props}>
           {children}
-          {separator && <Separator size="4" />}
+          {separator && <Separator />}
         </Flex>
       </PageHeaderContext.Provider>
     );
@@ -115,7 +115,7 @@ type PageHeaderMediaProps = Omit<AvatarProps, 'radius'> & {
   overlap?: boolean;
 };
 
-const PageHeaderMedia = React.forwardRef<HTMLImageElement, PageHeaderMediaProps>(
+const PageHeaderMedia = React.forwardRef<HTMLSpanElement, PageHeaderMediaProps>(
   ({ type = 'avatar', overlap = false, size = '6', style, ...props }, ref) => {
     const { hasBanner } = React.useContext(PageHeaderContext);
     const shouldOverlap = overlap && hasBanner && type === 'avatar';
@@ -127,8 +127,8 @@ const PageHeaderMedia = React.forwardRef<HTMLImageElement, PageHeaderMediaProps>
         size={size}
         style={{
           ...(shouldOverlap && {
-            marginTop: 'calc(var(--space-9) * -1)',
-            border: '4px solid var(--color-background)',
+            marginTop: 'calc(var(--space-10) * -1)',
+            border: '4px solid var(--color-page)',
           }),
           ...style,
         }}

@@ -6,47 +6,13 @@ import { Tooltip } from './tooltip.js';
 import { useTooltipWrapper } from '../hooks/use-tooltip-wrapper.js';
 import type { BaseButtonProps } from './_internal/base-button.js';
 
-/**
- * Styles that can be overridden for a particular interaction state
- */
-interface ButtonOverrideStateStyles {
-  color?: string;
-  background?: string;
-  backgroundColor?: string;
-  boxShadow?: string;
-  filter?: string;
-  outline?: string;
-  outlineOffset?: string;
-  opacity?: string | number;
-}
-
-/**
- * Full set of override styles keyed by interaction state
- */
-interface ButtonOverrideStyles {
-  /** Default/idle state styles */
-  normal?: ButtonOverrideStateStyles;
-  /** Hover state styles */
-  hover?: ButtonOverrideStateStyles;
-  /** Active (mouse down) state styles */
-  active?: ButtonOverrideStateStyles;
-  /** Toggle pressed state styles (data-state="on") */
-  pressed?: ButtonOverrideStateStyles;
-  /** Open state styles (e.g., when used as a trigger) */
-  open?: ButtonOverrideStateStyles;
-  /** Disabled state styles */
-  disabled?: ButtonOverrideStateStyles;
-  /** Focus-visible outline styles */
-  focus?: Pick<ButtonOverrideStateStyles, 'outline' | 'outlineOffset'>;
-}
-
 type ButtonElement = React.ElementRef<typeof BaseButton>;
 
 /**
  * Tooltip configuration props that can be passed to Button
  * These props are forwarded to the underlying Tooltip component
  */
-interface ButtonTooltipProps {
+export interface ButtonTooltipProps {
   /** Content to display in the tooltip on hover/focus */
   tooltip?: React.ReactNode;
   /** Side of the button where the tooltip should appear */
@@ -63,14 +29,48 @@ interface ButtonTooltipProps {
  * Core Button props excluding the 'as' prop for polymorphic behavior
  * Combines BaseButton props with tooltip functionality
  */
-type ButtonOwnProps = Omit<BaseButtonProps, 'as'> &
-  ButtonTooltipProps & {
-    /**
-     * When using variant="override", provide token-based styles per state.
-     * We propagate these into CSS variables consumed by the override variant.
-     */
-    overrideStyles?: ButtonOverrideStyles;
-  };
+type ButtonEmphasis = 'loud' | 'medium' | 'quiet';
+
+/** `emphasis` is a button's rank: loud is `solid`, medium is `raised`, quiet is `ghost`. */
+const EMPHASIS_VARIANT = { loud: 'solid', medium: 'raised', quiet: 'ghost' } as const;
+
+/**
+ * A button states its rank with `emphasis` or its look with `variant`, never both.
+ */
+type ButtonRankProps =
+  | {
+      /** The button's look. `outline` and `surface` have no emphasis of their own. */
+      variant?: BaseButtonProps['variant'];
+      emphasis?: never;
+    }
+  | {
+      /** The button's rank: `loud` (solid, the default), `medium` (raised) or `quiet` (ghost). */
+      emphasis?: ButtonEmphasis;
+      variant?: never;
+    };
+
+/**
+ * An icon-only button is square and holds only its icon, so it has no visible text: the type
+ * requires `aria-label` or `aria-labelledby`. It never takes the full width.
+ */
+type ButtonIconOnlyProps =
+  | {
+      /** Makes the button square and shows only the icon in `children`. Requires `aria-label` or `aria-labelledby`. */
+      iconOnly: true;
+      /** The button's name for screen readers. Required with `iconOnly` unless `aria-labelledby` is set. */
+      'aria-label': string;
+      fullWidth?: never;
+    }
+  | {
+      /** Makes the button square and shows only the icon in `children`. Requires `aria-label` or `aria-labelledby`. */
+      iconOnly: true;
+      /** The id of an element that names this button. Use it instead of `aria-label`. */
+      'aria-labelledby': string;
+      fullWidth?: never;
+    }
+  | { iconOnly?: false };
+
+type ButtonOwnProps = Omit<BaseButtonProps, 'as' | 'variant'> & ButtonRankProps & ButtonTooltipProps & ButtonIconOnlyProps;
 
 /**
  * Polymorphic Button props that support rendering as different HTML elements
@@ -86,6 +86,18 @@ type ButtonProps<C extends React.ElementType = 'button'> = ButtonOwnProps & {
  * @template C - The element type to render as
  */
 type ButtonComponent = <C extends React.ElementType = 'button'>(props: ButtonProps<C> & { ref?: React.ForwardedRef<ButtonElement> }) => React.ReactElement | null;
+
+/**
+ * An icon-only button must have an accessible name. Logs an error, never throws: a name that is
+ * still loading (an empty `aria-label` while a translation loads) must not crash the tree.
+ */
+function validateIconButtonName(props: Record<string, unknown>) {
+  if (props['aria-label'] || props['aria-labelledby']) return;
+  const errorMessage =
+    'Button: an `iconOnly` button must have an accessible name. Pass `aria-label`, or ' +
+    '`aria-labelledby` referencing a label element.';
+  console.error(errorMessage);
+}
 
 /**
  * Button component for triggering actions throughout your interface
@@ -108,55 +120,60 @@ type ButtonComponent = <C extends React.ElementType = 'button'>(props: ButtonPro
  *
  * // Polymorphic button as link
  * <Button as="a" href="/dashboard">Go to Dashboard</Button>
+ *
+ * // Square, icon-only button: needs an accessible name
+ * <Button iconOnly aria-label="Settings"><Settings /></Button>
  * ```
  */
 const Button = React.forwardRef(
   (
-    { className, style, tooltip, tooltipSide = 'top', tooltipAlign = 'center', tooltipDelayDuration, tooltipDisableHoverableContent, overrideStyles, ...props }: ButtonProps,
+    {
+      className,
+      style,
+      tooltip,
+      tooltipSide = 'top',
+      tooltipAlign = 'center',
+      tooltipDelayDuration,
+      tooltipDisableHoverableContent,
+      iconOnly = false,
+      emphasis,
+      variant,
+      ...props
+    }: ButtonProps,
     forwardedRef: React.ForwardedRef<ButtonElement>,
   ) => {
     // Use shared tooltip wrapper hook for accessibility props
     const { tooltipId, hasTooltip, accessibilityProps: tooltipAccessibilityProps } = useTooltipWrapper(tooltip);
 
-    // Create the base button element with tooltip accessibility props
-    // Map overrideStyles to CSS variables consumed by the override variant rules
-    const overrideVars = React.useMemo(() => {
-      if (!overrideStyles) return undefined;
-      const vars: Record<string, string | number> = {};
-      const setVar = (key: string, value: string | number | undefined) => {
-        if (value !== undefined) vars[key] = value;
-      };
-      const apply = (prefix: string, s?: ButtonOverrideStateStyles) => {
-        if (!s) return;
-        setVar(`--button-override-${prefix}color`, s.color);
-        setVar(`--button-override-${prefix}background`, s.background);
-        setVar(`--button-override-${prefix}background-color`, s.backgroundColor);
-        setVar(`--button-override-${prefix}box-shadow`, s.boxShadow);
-        setVar(`--button-override-${prefix}filter`, s.filter);
-        setVar(`--button-override-${prefix}outline`, s.outline);
-        setVar(`--button-override-${prefix}outline-offset`, s.outlineOffset);
-        setVar(`--button-override-${prefix}opacity`, s.opacity);
-      };
+    // An icon-only button is square, so it never takes the full width.
+    if (iconOnly) {
+      validateIconButtonName(props as Record<string, unknown>);
+      (props as { fullWidth?: boolean }).fullWidth = false;
+    }
 
-      apply('', overrideStyles.normal);
-      apply('hover-', overrideStyles.hover);
-      apply('active-', overrideStyles.active);
-      apply('pressed-', overrideStyles.pressed);
-      apply('open-', overrideStyles.open);
-      apply('disabled-', overrideStyles.disabled);
+    // Both set the same thing. The types forbid it; an untyped spread that sets both logs and
+    // `emphasis` wins, rather than crashing the tree.
+    if (emphasis !== undefined && variant !== undefined && process.env.NODE_ENV !== 'production') {
+      console.error('Button: pass `emphasis` or `variant`, not both. They set the same thing; `emphasis` wins.');
+    }
+    const resolvedVariant = emphasis !== undefined ? EMPHASIS_VARIANT[emphasis] : variant;
 
-      if (overrideStyles.focus) {
-        setVar('--button-override-focus-outline', overrideStyles.focus.outline);
-        setVar('--button-override-focus-outline-offset', overrideStyles.focus.outlineOffset);
-      }
+    // The tooltip's description joins the caller's aria-describedby rather than replacing it.
+    const callerDescribedBy = (props as { 'aria-describedby'?: string })['aria-describedby'];
+    const tooltipDescribedBy = (tooltipAccessibilityProps as { 'aria-describedby'?: string })['aria-describedby'];
+    const ariaDescribedBy = [callerDescribedBy, tooltipDescribedBy].filter(Boolean).join(' ') || undefined;
 
-      return vars as React.CSSProperties;
-    }, [overrideStyles]);
-
-    // Combine override styles with user-provided styles
-    const combinedStyle = React.useMemo(() => (overrideVars ? { ...overrideVars, ...style } : style), [overrideVars, style]);
-
-    const button = <BaseButton {...props} {...tooltipAccessibilityProps} ref={forwardedRef} className={classNames('rt-Button', className)} style={combinedStyle} />;
+    const button = (
+      <BaseButton
+        {...props}
+        variant={resolvedVariant}
+        aria-describedby={ariaDescribedBy}
+        ref={forwardedRef}
+        data-icon-only={iconOnly || undefined}
+        className={classNames('kui-Button', className)}
+        style={style}
+      />
+    );
 
     // If no tooltip is provided, return the button as-is for better performance
     if (!hasTooltip) {
@@ -176,4 +193,4 @@ const Button = React.forwardRef(
 Button.displayName = 'Button';
 
 export { Button };
-export type { ButtonProps, ButtonOverrideStyles, ButtonOverrideStateStyles };
+export type { ButtonProps, ButtonEmphasis, ButtonRankProps, ButtonIconOnlyProps };

@@ -26,7 +26,7 @@ const Box = React.forwardRef<BoxElement, BoxProps>((props, forwardedRef) => {
     ...boxProps
   } = extractProps(props, boxPropDefs, layoutPropDefs, marginPropDefs);
   const Comp = asChild ? Slot : Tag;
-  return <Comp {...boxProps} ref={forwardedRef} className={classNames('rt-Box', className)} />;
+  return <Comp {...boxProps} ref={forwardedRef} className={classNames('kui-Box', className)} />;
 });
 Box.displayName = 'Box';
 

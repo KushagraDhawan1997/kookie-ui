@@ -26,7 +26,7 @@ describe('a resize stays inside the frame', () => {
   it('measures the room from where the pane starts, for the keys as well as the drag', () => {
     // A 700px frame, a 64px Rail, and a Panel that starts after it. The
     // Panel's own maxSize (800) would take its handle off the frame.
-    mockBoxes({ 'rt-ShellRoot': { left: 0, right: 700 }, 'rt-ShellPanel': { left: 64, right: 264 }, 'rt-ShellResizer': { left: 258, right: 270 } });
+    mockBoxes({ 'kui-ShellRoot': { left: 0, right: 700 }, 'kui-ShellPanel': { left: 64, right: 264 }, 'kui-ShellResizer': { left: 258, right: 270 } });
     renderWithProviders(
       <Shell.Root>
         <Shell.Rail presentation="fixed" />
@@ -40,7 +40,7 @@ describe('a resize stays inside the frame', () => {
 
     fireEvent.keyDown(handle, { key: 'End' });
     // 700 - 64 of room, less the 12px the handle takes.
-    expect(sizeOf('.rt-ShellPanel', '--panel-size')).toBe(624);
+    expect(sizeOf('.kui-ShellPanel', '--panel-size')).toBe(624);
 
     fireEvent.focus(handle);
     expect(handle.getAttribute('aria-valuemax')).toBe('624');
@@ -90,8 +90,8 @@ describe('a controlled size on an overlay', () => {
         </Shell.Inspector>
       </Shell.Root>,
     );
-    expect(q('.rt-ShellInspector').getAttribute('data-presentation')).toBe('overlay');
-    expect(sizeOf('.rt-ShellInspector', '--inspector-size')).toBe(500);
+    expect(q('.kui-ShellInspector').getAttribute('data-presentation')).toBe('overlay');
+    expect(sizeOf('.kui-ShellInspector', '--inspector-size')).toBe(500);
     expect(onSizeChange).not.toHaveBeenCalled();
   });
 
@@ -104,7 +104,7 @@ describe('a controlled size on an overlay', () => {
         </Shell.Inspector>
       </Shell.Root>,
     );
-    expect(sizeOf('.rt-ShellInspector', '--inspector-size')).toBe(400);
+    expect(sizeOf('.kui-ShellInspector', '--inspector-size')).toBe(400);
   });
 });
 
@@ -123,9 +123,9 @@ describe('expandedSize is the size only until something else sets one', () => {
 
   it('moves an untouched pane', () => {
     const { rerender } = renderWithProviders(<App expandedSize={200} />);
-    expect(sizeOf('.rt-ShellPanel', '--panel-size')).toBe(200);
+    expect(sizeOf('.kui-ShellPanel', '--panel-size')).toBe(200);
     rerender(<App expandedSize={210} />);
-    expect(sizeOf('.rt-ShellPanel', '--panel-size')).toBe(210);
+    expect(sizeOf('.kui-ShellPanel', '--panel-size')).toBe(210);
   });
 
   it('leaves a size the user dragged', () => {
@@ -134,10 +134,10 @@ describe('expandedSize is the size only until something else sets one', () => {
     fireEvent.pointerDown(handle, { pointerId: 1, clientX: 100 });
     fireEvent.pointerMove(window, { clientX: 150 });
     fireEvent.pointerUp(window);
-    expect(sizeOf('.rt-ShellPanel', '--panel-size')).toBe(250);
+    expect(sizeOf('.kui-ShellPanel', '--panel-size')).toBe(250);
 
     rerender(<App expandedSize={210} />);
-    expect(sizeOf('.rt-ShellPanel', '--panel-size')).toBe(250);
+    expect(sizeOf('.kui-ShellPanel', '--panel-size')).toBe(250);
   });
 });
 

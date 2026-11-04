@@ -7,21 +7,19 @@ import type { MarginProps } from '../props/margin.props.js';
 const marginValues = marginPropDefs.m.values;
 const marginValueSet: ReadonlySet<string> = new Set(marginValues);
 
-// Static table so the common case — a component with no margin props at all —
+// Built once from the prop defs, so the custom properties are the ones the
+// stylesheet reads. The common case, a component with no margin props at all,
 // is seven property reads and nothing else.
+const MARGIN_KEYS = ['m', 'mx', 'my', 'mt', 'mr', 'mb', 'ml'] as const;
 const MARGIN_PROPS: ReadonlyArray<{
   key: keyof MarginProps;
   className: string;
   customProperties: `--${string}`[];
-}> = [
-  { key: 'm', className: 'rt-r-m', customProperties: ['--margin'] },
-  { key: 'mx', className: 'rt-r-mx', customProperties: ['--margin-left', '--margin-right'] },
-  { key: 'my', className: 'rt-r-my', customProperties: ['--margin-top', '--margin-bottom'] },
-  { key: 'mt', className: 'rt-r-mt', customProperties: ['--margin-top'] },
-  { key: 'mr', className: 'rt-r-mr', customProperties: ['--margin-right'] },
-  { key: 'mb', className: 'rt-r-mb', customProperties: ['--margin-bottom'] },
-  { key: 'ml', className: 'rt-r-ml', customProperties: ['--margin-left'] },
-];
+}> = MARGIN_KEYS.map((key) => ({
+  key,
+  className: marginPropDefs[key].className,
+  customProperties: [...marginPropDefs[key].customProperties] as `--${string}`[],
+}));
 
 export function getMarginStyles(props: MarginProps) {
   let classes: string[] | undefined;

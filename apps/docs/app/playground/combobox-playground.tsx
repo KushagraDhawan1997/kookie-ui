@@ -19,9 +19,8 @@ const iconNameMap = new Map([
   [Tree01Icon, 'Tree01Icon'],
 ]);
 
-const variants = ['classic', 'surface', 'soft', 'outline', 'ghost'] as const;
-const contentVariants = ['solid', 'soft'] as const;
-const inputVariants = ['classic', 'surface', 'soft', 'outline', 'ghost'] as const;
+const variants = ['raised', 'surface', 'soft', 'outline', 'ghost'] as const;
+const inputVariants = ['raised', 'surface', 'soft', 'outline', 'ghost'] as const;
 const sizes = ['1', '2', '3'] as const;
 const triggerWidths = ['fit-content', '200px', '240px', '320px', '100%'] as const;
 const accentColors = ['theme', 'gray', 'iris', 'crimson', 'jade', 'gold'] as const;
@@ -86,7 +85,6 @@ export default function ComboBoxPlayground({
 }: ComboBoxPlaygroundProps = {}) {
   const [size, setSize] = React.useState<(typeof sizes)[number]>('2');
   const [variant, setVariant] = React.useState<(typeof variants)[number]>('soft');
-  const [contentVariant, setContentVariant] = React.useState<(typeof contentVariants)[number]>('soft');
   const [inputVariant, setInputVariant] = React.useState<(typeof inputVariants)[number]>('soft');
   const [color, setColor] = React.useState<(typeof accentColors)[number]>('theme');
   const [disabled, setDisabled] = React.useState(false);
@@ -113,7 +111,7 @@ ${group.countries
     (country) => {
       const iconName = iconNameMap.get(country.icon) || 'Location01Icon';
       return `            <Combobox.Item value="${country.value}">
-              <Flex gap="2" align="center">
+              <Flex gap="3" align="center">
                 <HugeiconsIcon icon={${iconName}} strokeWidth={1.75} />
                 ${country.label}
               </Flex>
@@ -193,7 +191,7 @@ export function CountryPicker() {
       >
         <Combobox.Value placeholder="Select a country" />
       </Combobox.Trigger>
-      <Combobox.Content width="${resolvedContentWidth}" variant="${contentVariant}">
+      <Combobox.Content width="${resolvedContentWidth}">
         <Combobox.Input${inputVariant !== 'surface' ? ` variant="${inputVariant}"` : ''} placeholder="Search countries..." />
         <Combobox.List>
 ${listMarkup}
@@ -225,7 +223,7 @@ ${listMarkup}
       >
         <Combobox.Value placeholder="Select a country" />
       </Combobox.Trigger>
-      <Combobox.Content width={resolvedContentWidth} variant={contentVariant}>
+      <Combobox.Content width={resolvedContentWidth}>
         <Combobox.Input variant={inputVariant} placeholder="Search countries..." />
         <Combobox.List>
           {countriesByContinent.map((group) => (
@@ -235,7 +233,7 @@ ${listMarkup}
                 const Icon = country.icon;
                 return (
                   <Combobox.Item key={country.value} value={country.value}>
-                    <Flex gap="2" align="center">
+                    <Flex gap="3" align="center">
                       <HugeiconsIcon icon={Icon} strokeWidth={1.75} />
                       {country.label}
                     </Flex>
@@ -267,15 +265,6 @@ ${listMarkup}
       value: variant,
       onChange: (next: string) => setVariant(next as (typeof variants)[number]),
       options: variants.map((option) => ({ label: option, value: option })),
-      placeholder: 'Select variant',
-    },
-    {
-      id: 'contentVariant',
-      label: 'Content Variant',
-      type: 'select' as const,
-      value: contentVariant,
-      onChange: (next: string) => setContentVariant(next as (typeof contentVariants)[number]),
-      options: contentVariants.map((option) => ({ label: option, value: option })),
       placeholder: 'Select variant',
     },
     {

@@ -6,7 +6,7 @@ source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/comp
 
 import { BlockInstallation } from '@/components/block-doc-page';
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
-import { Badge, Button, Card, Flex, Text } from '@kushagradhawan/kookie-ui';
+import { Chip, Button, Card, Flex, Text } from '@kushagradhawan/kookie-ui';
 import { previewSources } from './snippets';
 
 Preview Block frames a live demo: a toolbar with a light/dark switch, a padded stage, and optionally the demo's source attached underneath, all in one outline. Every example on this site is one. The stage has its own `Theme`, so switching a preview to dark leaves the page alone.
@@ -20,8 +20,8 @@ Preview Block frames a live demo: a toolbar with a light/dark switch, a padded s
 ```tsx
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
 
-<PreviewBlock code={`<Button variant="classic">Save</Button>`}>
-  <Button variant="classic">Save</Button>
+<PreviewBlock code={`<Button variant="raised">Save</Button>`}>
+  <Button variant="raised">Save</Button>
 </PreviewBlock>
 ```
 
@@ -36,7 +36,7 @@ In MDX you can also follow a `PreviewBlock` with a code fence. [Markdown](/docs/
 | `codeProps` | `CodeBlockProps` | - | Extra [Code Block](/docs/blocks/code-block) options for `code`, such as `file`. |
 | `background` | `'none' \| 'dots' \| 'grid' \| CSSProperties` | `'dots'` | A preset pattern, or your own styles for the stage. |
 | `patternSize` | `number` | `20` | Spacing of the dots or grid lines, in pixels. |
-| `patternColor` | `string` | `--gray-a5` (dots), `--gray-a3` (grid) | Pattern color. |
+| `patternColor` | `string` | `--neutral-a5` (dots), `--neutral-a3` (grid) | Pattern color. |
 | `height` | `string` | - | Fixed stage height, for demos that fill their container. Without it the stage fits its content, at least `10rem` tall. |
 | `appearance` | `'light' \| 'dark'` | Page's | Starting appearance of the stage. |
 | `showThemeToggle` | `boolean` | `true` | Show the light/dark switch. |
@@ -50,9 +50,9 @@ The toolbar only renders when there is a switch or a label.
 
 | Property | Default |
 | -------- | ------- |
-| `--preview-block-radius` | `var(--radius-surface-4)` |
-| `--preview-block-border` | `var(--gray-a4)` |
-| `--preview-block-padding` | `var(--space-6)`, `var(--space-4)` on small screens |
+| `--preview-block-radius` | `var(--radius-surface-1)` |
+| `--preview-block-border` | `var(--neutral-a4)` |
+| `--preview-block-padding` | `var(--space-7)`, `var(--space-5)` on small screens |
 | `--preview-block-min-height` | `10rem` |
 
 ## Examples
@@ -62,8 +62,8 @@ The toolbar only renders when there is a switch or a label.
 A grid suits layout demos, where alignment matters.
 
 <PreviewBlock background="grid" label="Storage card" code={previewSources.grid}>
-  <Card variant="classic" size="2">
-    <Flex direction="column" gap="1" width="240px">
+  <Card variant="raised" size="2">
+    <Flex direction="column" gap="2" width="240px">
       <Text size="2" weight="medium">Storage</Text>
       <Text size="2" emphasis="medium">18.4 GB of 50 GB used</Text>
     </Flex>
@@ -75,8 +75,8 @@ A grid suits layout demos, where alignment matters.
 Pin the stage to dark and hide the switch when a demo only makes sense one way.
 
 <PreviewBlock appearance="dark" showThemeToggle={false} code={previewSources.dark}>
-  <Flex gap="2" align="center">
-    <Badge color="green" variant="soft">Live</Badge>
+  <Flex gap="3" align="center">
+    <Chip color="green" variant="soft">Live</Chip>
     <Text size="2">Deployed 2 minutes ago</Text>
   </Flex>
 </PreviewBlock>
@@ -90,7 +90,7 @@ Pass styles instead of a preset for gradients or images.
   background={{ backgroundImage: 'linear-gradient(135deg, var(--iris-4), var(--pink-4))' }}
   code={previewSources.gradient}
 >
-  <Button variant="soft" material="translucent">Action</Button>
+  <Button variant="soft">Action</Button>
 </PreviewBlock>
 
 ## Accessibility

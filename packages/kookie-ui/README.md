@@ -52,9 +52,9 @@ Kookie UI is a fork of [Radix Themes](https://radix-ui.com/themes) that extends 
 ### Key Features
 
 - **Systematic Design Tokens** - 12-point progressions for spacing, radius, and shadows with predictable steps
-- **Universal Material System** - Every component understands translucency vs. solidity with theme-level defaults and per-component overrides
-- **Consistent Sizing** - Cards, buttons, dropdowns, selects, and avatars all follow the same scale
-- **Unified Motion** - Transition patterns work consistently across all components
+- **Solid surfaces** - Every surface is solid; there is no translucency or backdrop blur
+- **Shared Size Steps** - Controls share one set of size steps
+- **No motion** - State changes are instant; only busy indicators move
 - **Enhanced Accessibility** - Native tooltip support, stricter aria-label enforcement, and improved keyboard navigation
 - **Layout Patterns** - Shells, sidebars, panels, and toolbars that work together predictably
 
@@ -203,15 +203,15 @@ import '@kushagradhawan/kookie-ui/layout.css'; // Layout utilities
 
 ## Requirements
 
-- React 16.8+ through React 19
+- React 19
 - Node.js 16+ (for development)
 - TypeScript support built-in
 
 ```json
 {
   "peerDependencies": {
-    "react": "16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc",
-    "react-dom": "16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc"
+    "react": "^19.0",
+    "react-dom": "^19.0"
   }
 }
 ```
@@ -224,30 +224,23 @@ import '@kushagradhawan/kookie-ui/layout.css'; // Layout utilities
 - `Sidebar` - Collapsible sidebar navigation
 - `Flex` - Flexible container with gap support
 - `Grid` - CSS Grid container
-- `Container` - Responsive container with max-width
-- `Section` - Semantic section wrapper
 
 ### Navigation
 
 - `Tabs` - Tab navigation component
 - `SegmentedControl` - Segmented control for mutually exclusive options
-- `TabNav` - Tab navigation for page-level navigation
 
 ### Data Entry
 
 - `Button` - Primary action button
-- `IconButton` - Icon-only button
-- `ToggleButton` - Toggle state button
-- `ToggleIconButton` - Toggle state icon button
+- `Toggle` - Pressed or not; `iconOnly` for an icon
 - `TextField` - Text input field
 - `TextArea` - Multi-line text input
 - `Select` - Dropdown selection
 - `Checkbox` - Checkbox input
 - `CheckboxGroup` - Group of checkboxes
-- `CheckboxCards` - Card-based checkbox selection
 - `Radio` - Radio button input
 - `RadioGroup` - Group of radio buttons
-- `RadioCards` - Card-based radio selection
 - `Switch` - Toggle switch
 - `Slider` - Range slider input
 - `Progress` - Progress indicator
@@ -256,11 +249,8 @@ import '@kushagradhawan/kookie-ui/layout.css'; // Layout utilities
 
 - `Card` - Content card container
 - `Avatar` - User avatar image
-- `Badge` - Status badge
-- `Image` - Responsive image component
+- `Chip` - A short label
 - `Table` - Data table
-- `DataList` - List of data items
-- `Skeleton` - Loading skeleton placeholder
 
 ### Feedback
 
@@ -268,9 +258,8 @@ import '@kushagradhawan/kookie-ui/layout.css'; // Layout utilities
 - `Dialog` - Modal dialog
 - `Sheet` - Slide-out panel
 - `Popover` - Floating content panel
-- `HoverCard` - Hover-triggered card
 - `Tooltip` - Contextual tooltip
-- `Callout` - Callout message
+- `Notice` - A message about a condition that is true now
 - `Spinner` - Loading spinner
 
 ### Overlays
@@ -286,14 +275,9 @@ import '@kushagradhawan/kookie-ui/layout.css'; // Layout utilities
 - `Code` - Inline code
 - `Kbd` - Keyboard key display
 - `Blockquote` - Block quote
-- `Quote` - Inline quote
-- `Em` - Emphasis
-- `Strong` - Strong emphasis
 
 ### Layout Utilities
 
-- `AspectRatio` - Maintain aspect ratio
-- `Inset` - Inset spacing
 - `Separator` - Visual separator
 - `ScrollArea` - Custom scrollable area
 
@@ -303,7 +287,6 @@ Kookie UI uses a comprehensive theming system with:
 
 - **Accent Colors** - Primary brand colors (blue, green, orange, etc.)
 - **Gray Colors** - Neutral color scales (gray, mauve, slate, etc.)
-- **Material System** - Translucent vs. solid surfaces
 - **Size Scales** - Consistent sizing across components
 - **Spacing System** - 12-point spacing progression
 - **Typography** - Font scales and weights

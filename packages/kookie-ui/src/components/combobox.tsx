@@ -17,6 +17,7 @@
  * items are never lit at once and Enter always picks the lit item.
  */
 
+import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import classNames from 'classnames';
 import { Popover as PopoverPrimitive } from 'radix-ui';
@@ -24,18 +25,18 @@ import { useCallbackRef, useComposedRefs, useControllableState, useLayoutEffect 
 import { Command as CommandPrimitive, useCommandState } from 'cmdk';
 
 import { extractProps } from '../helpers/extract-props.js';
-import { useDeprecatedPanelBackgroundWarning } from '../helpers/use-deprecation-warning.js';
+import { useThemeSize } from '../hooks/theme-size.js';
 import { comboboxRootPropDefs, comboboxTriggerPropDefs, comboboxContentPropDefs } from './combobox.props.js';
-import { marginPropDefs } from '../props/margin.props.js';
 import { ChevronDownIcon, ThickCheckIcon } from './icons.js';
-import { Theme, useThemeContext } from './theme.js';
+import { Spinner } from './spinner.js';
+import { useThemeContext } from './theme.js';
+import { PortalTheme } from './_internal/portal-theme.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
 import * as Popover from './popover.js';
 import { Slottable } from './slot.js';
 import { VisuallyHidden } from './visually-hidden.js';
 
 import type { textFieldRootPropDefs } from './text-field.props.js';
-import type { MarginProps } from '../props/margin.props.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
@@ -131,10 +132,8 @@ const ComboboxItemContext = React.createContext<ComboboxItemContextValue | null>
 
 /** Values resolved by Content and read by Input and List. */
 interface ComboboxContentContextValue {
-  variant: 'solid' | 'soft';
   sizeClassName?: string;
   color?: string;
-  material?: string;
   label?: string;
 }
 
@@ -208,7 +207,7 @@ function readElementLabel(el: HTMLElement): string | undefined {
 const ComboboxRoot: React.FC<ComboboxRootProps> = (props) => {
   const {
     children,
-    size = comboboxRootPropDefs.size.default,
+    size: sizeProp,
     value: valueProp,
     defaultValue = null,
     onValueChange,
@@ -230,6 +229,7 @@ const ComboboxRoot: React.FC<ComboboxRootProps> = (props) => {
     displayValue: displayValueProp,
     ...rootProps
   } = props;
+  const size = useThemeSize(sizeProp, comboboxRootPropDefs.size);
 
   const [open, setOpen] = useControllableState({
     prop: openProp,
@@ -319,7 +319,7 @@ ComboboxRoot.displayName = 'Combobox.Root';
 type ComboboxTriggerElement = HTMLButtonElement;
 type ComboboxTriggerOwnProps = GetPropDefTypes<typeof comboboxTriggerPropDefs>;
 type NativeTriggerProps = Omit<React.ComponentPropsWithoutRef<'button'>, 'color'>;
-interface ComboboxTriggerProps extends NativeTriggerProps, MarginProps, ComboboxTriggerOwnProps {}
+interface ComboboxTriggerProps extends NativeTriggerProps, ComboboxTriggerOwnProps {}
 
 const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTriggerProps>((props, forwardedRef) => {
   const ctx = useComboboxContext('Trigger');
@@ -334,16 +334,12 @@ const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTrigger
     loading,
     color,
     radius,
-    material,
     onClick,
     onKeyDown,
     type: buttonType,
     ...triggerProps
-  } = extractProps({ size: ctx.size, ...props }, triggerSizingPropDefs, comboboxTriggerPropDefs, marginPropDefs);
+  } = extractProps({ size: ctx.size, ...props }, triggerSizingPropDefs, comboboxTriggerPropDefs);
 
-  // `panelBackground` has a className prop def, so extractProps strips it.
-  const { panelBackground } = props;
-  const resolvedMaterial = material ?? panelBackground;
   const isDisabled = disabled ?? ctx.disabled;
   const resolvedColor = color ?? ctx.color;
   // Read-only and loading triggers stay focusable but do not open.
@@ -371,36 +367,25 @@ const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTrigger
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     onKeyDown?.(event);
     if (event.defaultPrevented || isBlocked || isDisabled) return;
-    if (event.key === 'ArrowDown') {
+    // Both arrows open the list, as on Select (APG select-only combobox).
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
       ctx.setOpen(true);
     }
   };
 
+  const loadingIcon = (
+    <span className="kui-SelectIcon kui-SelectLoadingIcon" aria-hidden="true">
+      <Spinner />
+    </span>
+  );
+
   const defaultContent = (
     <>
-      <span className="rt-SelectTriggerInner">
-        <span className="rt-ComboboxValue">{ctx.displayValue ?? ctx.value ?? placeholder ?? ctx.placeholder}</span>
+      <span className="kui-SelectTriggerInner">
+        <span className="kui-ComboboxValue">{ctx.displayValue ?? ctx.value ?? placeholder ?? ctx.placeholder}</span>
       </span>
-      {loading ? (
-        <div className="rt-SelectIcon rt-SelectLoadingIcon" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <circle
-              cx="8"
-              cy="8"
-              r="7"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeDasharray="32"
-              strokeDashoffset="32"
-              className="rt-SelectLoadingIconCircle"
-            />
-          </svg>
-        </div>
-      ) : (
-        <ChevronDownIcon className="rt-SelectIcon" />
-      )}
+      {loading ? loadingIcon : <ChevronDownIcon className="kui-SelectIcon" />}
     </>
   );
 
@@ -411,8 +396,6 @@ const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTrigger
       <button
         data-accent-color={resolvedColor}
         data-radius={radius}
-        data-panel-background={resolvedMaterial}
-        data-material={resolvedMaterial}
         data-error={error}
         data-loading={loading}
         data-disabled={isDisabled || undefined}
@@ -421,18 +404,27 @@ const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTrigger
         {...triggerProps}
         // eslint-disable-next-line jsx-a11y/role-has-required-aria-props -- Popover.Trigger (Slot) adds aria-expanded and aria-controls
         role="combobox"
-        aria-disabled={isDisabled || undefined}
-        aria-readonly={readOnly || undefined}
-        aria-invalid={error || undefined}
-        aria-busy={loading || undefined}
+        // The props win when set; otherwise a caller's own aria-* (a form library's aria-invalid) stays, as on Select.
+        aria-disabled={isDisabled || triggerProps['aria-disabled']}
+        aria-readonly={readOnly || triggerProps['aria-readonly']}
+        aria-invalid={error || triggerProps['aria-invalid']}
+        aria-busy={loading || triggerProps['aria-busy']}
         type={buttonType ?? 'button'}
         disabled={isDisabled}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         ref={composedRef}
-        className={classNames('rt-reset', 'rt-SelectTrigger', 'rt-ComboboxTrigger', className)}
+        className={classNames('kui-reset', 'kui-SelectTrigger', 'kui-ComboboxTrigger', className)}
       >
-        {children ? requireReactElement(children) : defaultContent}
+        {/* Custom children replace the value and chevron; the spinner still shows while loading. */}
+        {children ? (
+          <>
+            {requireReactElement(children)}
+            {loading ? loadingIcon : null}
+          </>
+        ) : (
+          defaultContent
+        )}
       </button>
     </Popover.Trigger>
   );
@@ -452,7 +444,7 @@ const ComboboxValue = React.forwardRef<ComboboxValueElement, ComboboxValueProps>
   const ctx = useComboboxContext('Value');
   const display = ctx.displayValue ?? ctx.value ?? undefined;
   return (
-    <span {...valueProps} ref={forwardedRef} className={classNames('rt-ComboboxValue', className)}>
+    <span {...valueProps} ref={forwardedRef} className={classNames('kui-ComboboxValue', className)}>
       {display ?? children ?? placeholder ?? ctx.placeholder}
     </span>
   );
@@ -492,11 +484,8 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
   const ctx = useComboboxContext('Content');
   const themeContext = useThemeContext();
 
-  useDeprecatedPanelBackgroundWarning(props.panelBackground);
-
-  const material = props.material ?? props.panelBackground ?? themeContext.material ?? themeContext.panelBackground;
+  // The list takes the field's size.
   const size = props.size ?? ctx.size ?? comboboxContentPropDefs.size.default;
-  const variant = props.variant ?? comboboxContentPropDefs.variant.default;
 
   const {
     className,
@@ -504,13 +493,11 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
     color,
     forceMount,
     container,
-    material: _material,
-    panelBackground: _panelBackground,
     onOpenAutoFocus,
     'aria-label': _ariaLabel,
     'aria-labelledby': ariaLabelledByProp,
     ...contentProps
-  } = extractProps({ ...props, size, variant }, comboboxContentPropDefs);
+  } = extractProps({ ...props, size }, comboboxContentPropDefs);
 
   const resolvedColor = color || ctx.color || themeContext.accentColor;
 
@@ -530,14 +517,12 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
 
   const contentContextValue = React.useMemo<ComboboxContentContextValue>(
     () => ({
-      variant,
       // Responsive-aware size class for the search field (never String() a responsive object).
       sizeClassName: extractProps({ size }, contentSizePropDefs).className || undefined,
       color: resolvedColor,
-      material,
       label,
     }),
-    [variant, size, resolvedColor, material, label],
+    [size, resolvedColor, label],
   );
 
   const commandRef = React.useRef<HTMLDivElement>(null);
@@ -559,11 +544,9 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
 
   return (
     <PopoverPrimitive.Portal container={container} forceMount={forceMount ? true : undefined}>
-      <Theme asChild>
+      <PortalTheme asChild>
         <PopoverPrimitive.Content
           data-accent-color={resolvedColor}
-          data-material={material}
-          data-panel-background={material}
           align="start"
           sideOffset={4}
           collisionPadding={10}
@@ -573,7 +556,8 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
           forceMount={forceMount ? true : undefined}
           onOpenAutoFocus={handleOpenAutoFocus}
           ref={forwardedRef}
-          className={classNames('rt-PopperContent', 'rt-BaseMenuContent', 'rt-ComboboxContent', className)}
+          className={classNames('kui-PopperContent', 'kui-BaseMenuContent',
+          'kui-variant-soft', 'kui-ComboboxContent', className)}
         >
           <ComboboxContentContext.Provider value={contentContextValue}>
             <CommandPrimitive
@@ -583,14 +567,14 @@ const ComboboxContent = React.forwardRef<ComboboxContentElement, ComboboxContent
               filter={ctx.filter}
               label={label}
               defaultValue={initialHighlight}
-              className="rt-ComboboxCommand"
+              className="kui-ComboboxCommand"
             >
               {children}
               <ComboboxAnnouncer />
             </CommandPrimitive>
           </ComboboxContentContext.Provider>
         </PopoverPrimitive.Content>
-      </Theme>
+      </PortalTheme>
     </PopoverPrimitive.Portal>
   );
 });
@@ -615,8 +599,7 @@ const ComboboxInput = React.forwardRef<ComboboxInputElement, ComboboxInputProps>
     const search = React.useContext(ComboboxSearchContext);
     const contentContext = useComboboxContentContext();
 
-    const contentVariant = contentContext?.variant ?? 'solid';
-    const textFieldVariant = inputVariant ?? (contentVariant === 'solid' ? 'surface' : 'soft');
+    const textFieldVariant = inputVariant ?? 'soft';
 
     // The search text lives in Root; only this component subscribes to it.
     const searchValue = value ?? search?.value ?? '';
@@ -624,29 +607,27 @@ const ComboboxInput = React.forwardRef<ComboboxInputElement, ComboboxInputProps>
 
     const inputField = (
       <div
-        className={classNames('rt-TextFieldRoot', 'rt-ComboboxInputRoot', contentContext?.sizeClassName, `rt-variant-${textFieldVariant}`)}
+        className={classNames('kui-TextFieldRoot', 'kui-ComboboxInputRoot', contentContext?.sizeClassName, `kui-variant-${textFieldVariant}`)}
         data-accent-color={contentContext?.color}
-        data-material={contentContext?.material}
-        data-panel-background={contentContext?.material}
       >
-        {startAdornment ? <div className="rt-TextFieldSlot">{startAdornment}</div> : null}
+        {startAdornment ? <div className="kui-TextFieldSlot">{startAdornment}</div> : null}
         <CommandPrimitive.Input
           {...inputProps}
           ref={forwardedRef}
           value={searchValue}
           onValueChange={handleSearchChange}
           placeholder={placeholder ?? ctx.searchPlaceholder}
-          className={classNames('rt-reset', 'rt-TextFieldInput', className)}
+          className={classNames('kui-reset', 'kui-TextFieldInput', className)}
         />
         {endAdornment ? (
-          <div className="rt-TextFieldSlot" data-side="right">
+          <div className="kui-TextFieldSlot" data-side="right">
             {endAdornment}
           </div>
         ) : null}
       </div>
     );
 
-    return contentContext ? <div className="rt-ComboboxSearch">{inputField}</div> : inputField;
+    return contentContext ? <div className="kui-ComboboxSearch">{inputField}</div> : inputField;
   },
 );
 ComboboxInput.displayName = 'Combobox.Input';
@@ -663,9 +644,9 @@ interface ComboboxListProps extends React.ComponentPropsWithoutRef<typeof Comman
 const ComboboxList = React.forwardRef<ComboboxListElement, ComboboxListProps>(({ className, children, label, ...listProps }, forwardedRef) => {
   const contentContext = useComboboxContentContext();
   return (
-    <div className="rt-ComboboxScrollArea">
-      <div className={classNames('rt-BaseMenuViewport', 'rt-ComboboxViewport')}>
-        <CommandPrimitive.List {...listProps} label={label ?? contentContext?.label} ref={forwardedRef} className={classNames('rt-ComboboxList', className)}>
+    <div className="kui-ComboboxScrollArea">
+      <div className={classNames('kui-BaseMenuViewport', 'kui-ComboboxViewport')}>
+        <CommandPrimitive.List {...listProps} label={label ?? contentContext?.label} ref={forwardedRef} className={classNames('kui-ComboboxList', className)}>
           {children}
         </CommandPrimitive.List>
       </div>
@@ -682,7 +663,7 @@ type ComboboxEmptyElement = React.ElementRef<typeof CommandPrimitive.Empty>;
 interface ComboboxEmptyProps extends React.ComponentPropsWithoutRef<typeof CommandPrimitive.Empty> {}
 
 const ComboboxEmpty = React.forwardRef<ComboboxEmptyElement, ComboboxEmptyProps>(({ className, ...emptyProps }, forwardedRef) => (
-  <CommandPrimitive.Empty {...emptyProps} ref={forwardedRef} className={classNames('rt-ComboboxEmpty', className)} />
+  <CommandPrimitive.Empty {...emptyProps} ref={forwardedRef} className={classNames('kui-ComboboxEmpty', className)} />
 ));
 ComboboxEmpty.displayName = 'Combobox.Empty';
 
@@ -694,7 +675,7 @@ type ComboboxGroupElement = React.ElementRef<typeof CommandPrimitive.Group>;
 interface ComboboxGroupProps extends React.ComponentPropsWithoutRef<typeof CommandPrimitive.Group> {}
 
 const ComboboxGroup = React.forwardRef<ComboboxGroupElement, ComboboxGroupProps>(({ className, ...groupProps }, forwardedRef) => (
-  <CommandPrimitive.Group {...groupProps} ref={forwardedRef} className={classNames('rt-BaseMenuGroup', 'rt-ComboboxGroup', className)} />
+  <CommandPrimitive.Group {...groupProps} ref={forwardedRef} className={classNames('kui-BaseMenuGroup', 'kui-ComboboxGroup', className)} />
 ));
 ComboboxGroup.displayName = 'Combobox.Group';
 
@@ -722,7 +703,7 @@ const ComboboxLabel = React.forwardRef<ComboboxLabelElement, ComboboxLabelProps>
     };
   }, [id]);
 
-  return <div {...labelProps} id={id} ref={composedRef} className={classNames('rt-BaseMenuLabel', 'rt-ComboboxLabel', className)} />;
+  return <div {...labelProps} id={id} ref={composedRef} className={classNames('kui-BaseMenuLabel', 'kui-ComboboxLabel', className)} />;
 });
 ComboboxLabel.displayName = 'Combobox.Label';
 
@@ -734,7 +715,7 @@ type ComboboxSeparatorElement = React.ElementRef<typeof CommandPrimitive.Separat
 interface ComboboxSeparatorProps extends React.ComponentPropsWithoutRef<typeof CommandPrimitive.Separator> {}
 
 const ComboboxSeparator = React.forwardRef<ComboboxSeparatorElement, ComboboxSeparatorProps>(({ className, ...separatorProps }, forwardedRef) => (
-  <CommandPrimitive.Separator {...separatorProps} ref={forwardedRef} className={classNames('rt-BaseMenuSeparator', 'rt-ComboboxSeparator', className)} />
+  <CommandPrimitive.Separator {...separatorProps} ref={forwardedRef} className={classNames('kui-BaseMenuSeparator', 'kui-ComboboxSeparator', className)} />
 ));
 ComboboxSeparator.displayName = 'Combobox.Separator';
 
@@ -793,7 +774,7 @@ const ComboboxItem = React.forwardRef<ComboboxItemElement, ComboboxItemProps>(
     const searchKeywords = text ? (keywords ? [text, ...keywords] : [text]) : keywords;
     // cmdk stores keywords only when `value` changes. Remount the cmdk item when
     // they change so a new label or keyword list is picked up.
-    const keywordsKey = searchKeywords ? searchKeywords.join(' ') : '';
+    const keywordsKey = searchKeywords ? searchKeywords.join('\u0000') : '';
 
     const isDisabled = disabled ?? rootDisabled ?? false;
 
@@ -808,11 +789,11 @@ const ComboboxItem = React.forwardRef<ComboboxItemElement, ComboboxItemProps>(
         disabled={isDisabled || undefined}
         ref={forwardedRef}
         onSelect={handleSelect}
-        className={classNames('rt-reset', 'rt-BaseMenuItem', 'rt-ComboboxItem', className)}
+        className={classNames('kui-reset', 'kui-BaseMenuItem', 'kui-ComboboxItem', className)}
       >
         {isSelected ? (
-          <span className={classNames('rt-BaseMenuItemIndicator', 'rt-ComboboxItemIndicator')}>
-            <ThickCheckIcon className={classNames('rt-BaseMenuItemIndicatorIcon', 'rt-ComboboxItemIndicatorIcon')} />
+          <span className={classNames('kui-BaseMenuItemIndicator', 'kui-ComboboxItemIndicator')}>
+            <ThickCheckIcon className={classNames('kui-BaseMenuItemIndicatorIcon', 'kui-ComboboxItemIndicatorIcon')} />
           </span>
         ) : null}
         <Slottable>{children}</Slottable>

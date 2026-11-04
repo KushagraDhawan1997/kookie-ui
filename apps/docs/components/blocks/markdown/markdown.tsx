@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { Components } from 'react-markdown';
-import { Blockquote, Code, Em, Heading, Link, Separator, Table, Text } from '@kushagradhawan/kookie-ui';
+import { Blockquote, Code, Heading, Link, Separator, Table, Text } from '@kushagradhawan/kookie-ui';
 import { CodeBlock, useCodeBlockContext } from '../code-block/code-block';
 import './markdown.css';
 
@@ -116,14 +116,14 @@ export function createMarkdownComponents(options: MarkdownComponentOptions = {})
     const isInternal = href.startsWith('/') || href.startsWith('#');
     if (isInternal && RouterLink) {
       return (
-        <Link asChild underline="always">
+        <Link asChild>
           <RouterLink href={href}>{children}</RouterLink>
         </Link>
       );
     }
     const external = /^https?:\/\//.test(href);
     return (
-      <Link href={href} underline="always" {...(external && { target: '_blank', rel: 'noreferrer' })}>
+      <Link href={href} {...(external && { target: '_blank', rel: 'noreferrer' })}>
         {children}
       </Link>
     );
@@ -141,7 +141,7 @@ export function createMarkdownComponents(options: MarkdownComponentOptions = {})
     a: MarkdownLink,
     // Medium, not bold: bold reads too heavy next to body text.
     strong: ({ children }: ChildrenProps) => <Text weight="medium">{children}</Text>,
-    em: ({ children }: ChildrenProps) => <Em>{children}</Em>,
+    em: ({ children }: ChildrenProps) => <em>{children}</em>,
 
     code: MarkdownCode,
     pre: MarkdownPre,
@@ -154,7 +154,7 @@ export function createMarkdownComponents(options: MarkdownComponentOptions = {})
     li: ({ children }: ChildrenProps) => <li>{children}</li>,
 
     blockquote: ({ children }: ChildrenProps) => <Blockquote>{children}</Blockquote>,
-    hr: () => <Separator size="4" />,
+    hr: () => <Separator />,
 
     table: ({ children }: ChildrenProps) => (
       <Table.Root size="2" variant="ghost" className="markdown-table">

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import * as Label from '@radix-ui/react-label';
-import { Card, Flex, Text, DropdownMenu, Switch, Box, Button } from '@kushagradhawan/kookie-ui';
+import { Flex, Text, DropdownMenu, Switch, Box, Button } from '@kushagradhawan/kookie-ui';
 
 interface RootProps {
   width?: string | number;
@@ -12,11 +12,9 @@ interface RootProps {
 
 function Root({ width, style, children }: RootProps) {
   return (
-    <Card size="2" variant="ghost" style={{ width: width || 'fit-content', height: 'fit-content', ...style }}>
-      <Flex direction="column" gap="4">
-        {children}
-      </Flex>
-    </Card>
+    <Flex direction="column" gap="5" style={{ width: width || 'fit-content', height: 'fit-content', ...style }}>
+      {children}
+    </Flex>
   );
 }
 
@@ -26,7 +24,7 @@ interface FieldProps {
 
 function Field({ children }: FieldProps) {
   return (
-    <Flex align="center" justify="between" gap="4" style={{ minHeight: 'var(--space-5)' }}>
+    <Flex align="center" justify="between" gap="5" style={{ minHeight: 'var(--space-6)' }}>
       {children}
     </Flex>
   );
@@ -84,8 +82,8 @@ function Swatch({ value }: { value: string }) {
   return (
     <Box
       as="span"
-      width="var(--space-3)"
-      height="var(--space-3)"
+      width="var(--space-4)"
+      height="var(--space-4)"
       style={{
         borderRadius: '9999px',
         background: getSwatchVar(value),
@@ -97,7 +95,7 @@ function Swatch({ value }: { value: string }) {
 function Group({ width, items, style }: { width?: string | number; items: Item[]; style?: React.CSSProperties }) {
   return (
     <Root width={width} style={style}>
-      <Flex direction="column" gap="1">
+      <Flex direction="column" gap="2">
         {items.map((item) => (
           <Field key={item.id}>
             <PropertyLabel htmlFor={item.id}>{item.label}</PropertyLabel>
@@ -110,12 +108,12 @@ function Group({ width, items, style }: { width?: string | number; items: Item[]
                       <span style={{ textTransform: 'capitalize' }}>{item.options.find((o) => o.value === item.value)?.label || item.placeholder || 'Select'}</span>
                     </Button>
                   </DropdownMenu.Trigger>
-                  <DropdownMenu.Content variant="soft">
+                  <DropdownMenu.Content>
                     <DropdownMenu.RadioGroup value={item.value} onValueChange={item.onChange}>
                       {item.options.map((opt) => (
                         <DropdownMenu.RadioItem key={opt.value} value={opt.value}>
                           {item.appearance === 'swatch' ? (
-                            <Flex align="center" gap="2">
+                            <Flex align="center" gap="3">
                               <Swatch value={opt.value} />
                               <Text size="2" style={{ textTransform: 'capitalize' }}>
                                 {opt.label}

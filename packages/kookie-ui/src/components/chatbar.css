@@ -1,37 +1,24 @@
 /* stylelint-disable selector-max-specificity */
 /* Container */
-.rt-ChatbarField {
+.kui-ChatbarField {
   position: relative;
   width: 100%;
   min-width: 0;
 }
 
 /* Defaults */
-.rt-ChatbarRoot {
-  --chatbar-item-lead: var(--space-5);
+.kui-ChatbarRoot {
+  --chatbar-item-lead: var(--space-6);
   --chatbar-item-lead-radius: var(--radius-2);
-  --chatbar-item-padding: var(--space-1);
+  --chatbar-item-padding: var(--space-2);
   /* A column: notices, then the box (which fills any height the consumer gives the root), then context. */
   display: flex;
   flex-direction: column;
-
-  /*
-   * Component-level material override
-   * When component has explicit material prop, override the inherited theme values.
-   */
-  &:where([data-material='solid'], [data-panel-background='solid']) {
-    --material-blend: 100%;
-    --material-alpha: 0;
-  }
-
-  &:where([data-material='translucent'], [data-panel-background='translucent']) {
-    --material-blend: 60%;
-    --material-alpha: 1;
-  }
+  gap: var(--space-3);
 }
 
 /* Unstyled textarea (reset) */
-.rt-ChatbarInput {
+.kui-ChatbarInput {
   display: block;
   width: 100%;
   min-width: 0;
@@ -45,109 +32,105 @@
   font: inherit;
   line-height: inherit;
   text-align: start;
-  transition: height var(--motion-duration-small) ease-out;
 }
-.rt-ChatbarInput:focus,
-.rt-ChatbarInput:focus-visible {
+.kui-ChatbarInput:focus,
+.kui-ChatbarInput:focus-visible {
   outline: none;
 }
-.rt-ChatbarInput::selection {
+.kui-ChatbarInput::selection {
   background-color: var(--v-selection-color, var(--focus-a5));
 }
 
 /* Main container - flex layout */
-.rt-ChatbarBox :where(.rt-ChatbarGrid) {
+.kui-ChatbarBox :where(.kui-ChatbarGrid) {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-5);
   width: 100%;
 }
 
 /* Compact state - horizontal flex */
-.rt-ChatbarRoot:where([data-state='closed']) :where(.rt-ChatbarGrid) {
+.kui-ChatbarRoot:where([data-state='closed']) :where(.kui-ChatbarGrid) {
   flex-direction: row;
   align-items: center;
   flex-wrap: wrap;
 }
 
 /* In compact mode, keep attachments on a dedicated row above inline content */
-.rt-ChatbarRoot:where([data-state='closed']) :where(.rt-ChatbarAttachmentsRow) {
+.kui-ChatbarRoot:where([data-state='closed']) :where(.kui-ChatbarAttachmentsRow) {
   flex-basis: 100%;
   order: -1;
 }
 
 /* Textarea flex behavior */
-.rt-ChatbarTextarea {
+.kui-ChatbarTextarea {
   flex: 1;
   min-width: 0;
 }
 
 /* Send button - extend button transition with opacity for visibility fade */
-.rt-ChatbarSend {
-  transition: var(--transition-button), opacity var(--motion-duration-small) var(--motion-ease-standard);
-}
 
 /* Hidden send button stays invisible even when disabled styling applies */
-.rt-ChatbarSend[aria-hidden='true'] {
+.kui-ChatbarSend[aria-hidden='true'] {
   opacity: 0;
   pointer-events: none;
 }
 
 /* Row visibility and layout */
-.rt-ChatbarRoot:where([data-state='closed']) :where(.rt-ChatbarRow) {
+.kui-ChatbarRoot:where([data-state='closed']) :where(.kui-ChatbarRow) {
   display: none;
 }
-.rt-ChatbarRoot:where([data-state='open']) :where(.rt-ChatbarRow) {
+.kui-ChatbarRoot:where([data-state='open']) :where(.kui-ChatbarRow) {
   display: block;
   width: 100%;
 }
 
 /* Attachments row */
-.rt-ChatbarAttachmentsRow {
+.kui-ChatbarAttachmentsRow {
   /* ScrollArea needs a defined width to enable scrolling */
   width: 100%;
 }
 
-/* ScrollArea radius scaling */
-.rt-ChatbarScrollArea {
+/* ScrollArea follows the attachments radius */
+.kui-ChatbarScrollArea {
   border-radius: var(--chatbar-attachments-radius);
 }
 
 /* Thin scrollbar (shown on hover) so overflowed attachments stay reachable with a mouse */
-.rt-ChatbarScrollArea :where(.rt-ScrollAreaScrollbar[data-orientation='horizontal']) {
+.kui-ChatbarScrollArea :where(.kui-ScrollAreaScrollbar[data-orientation='horizontal']) {
   --scrollarea-scrollbar-size: 3px;
 }
 
 /*
  * Attachments and items are one pill: a lead tile (thumbnail or tinted icon),
  * a label and a remove button. A custom `renderAttachment` keeps only the
- * plain .rt-ChatbarAttachment hook.
+ * plain .kui-ChatbarAttachment hook.
  */
-.rt-ChatbarAttachment {
+.kui-ChatbarAttachment {
   position: relative;
 }
 
-.rt-ChatbarItem {
+.kui-ChatbarItem {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
   flex-shrink: 0;
   box-sizing: border-box;
   max-width: 240px;
   padding: var(--chatbar-item-padding);
-  padding-right: calc(var(--chatbar-item-padding) + var(--space-1));
-  border: 1px solid var(--gray-a5);
+  padding-inline-end: calc(var(--chatbar-item-padding) + var(--space-2));
+  border: 1px solid var(--neutral-a5);
   border-radius: calc(var(--chatbar-item-lead-radius) + var(--chatbar-item-padding));
-  background-color: var(--color-panel-solid);
-  box-shadow: 0 1px 2px var(--gray-a3);
-  color: var(--gray-12);
+  background-color: var(--color-surface);
+  box-shadow: 0 1px 2px var(--neutral-a3);
+  color: var(--neutral-12);
 }
 
-.rt-ChatbarItem:where([data-status='error']) {
+.kui-ChatbarItem:where([data-status='error']) {
   border-color: var(--red-a7);
 }
 
-.rt-ChatbarItemLead {
+.kui-ChatbarItemLead {
   height: var(--chatbar-item-lead);
   width: var(--chatbar-item-lead);
   flex-shrink: 0;
@@ -166,48 +149,50 @@
   }
 
   &:where([data-kind='image']) {
-    background: var(--gray-a3);
+    background: var(--neutral-a3);
   }
 }
 
 /* An attachment's file icon and spinner stay neutral */
-.rt-ChatbarAttachment .rt-ChatbarItemLead:where([data-kind='icon']) {
-  background: var(--gray-a3);
-  color: var(--gray-11);
+.kui-ChatbarAttachment .kui-ChatbarItemLead:where([data-kind='icon']) {
+  background: var(--neutral-a3);
+  color: var(--neutral-11);
 }
 
-.rt-ChatbarAttachmentImage {
+.kui-ChatbarAttachmentImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
   max-width: none;
 }
 
-.rt-ChatbarItemLabel {
+.kui-ChatbarItemLabel {
   min-width: 0;
 }
 
-.rt-ChatbarItemRemove {
+.kui-ChatbarItemRemove {
+  /* A hosted control: as tall as the lead tile, so a pill with × is as tall as one without. */
+  --base-button-height: var(--chatbar-item-lead);
   flex-shrink: 0;
-  margin-left: calc(var(--space-1) * -1);
+  margin-inline-start: calc(var(--space-2) * -1);
 }
 
 @breakpoints {
-  .rt-ChatbarRoot {
-    &:where(.rt-r-size-1) {
-      --chatbar-item-lead: var(--space-4);
-      --chatbar-item-lead-radius: var(--radius-1);
-      --chatbar-item-padding: var(--space-1);
-    }
-    &:where(.rt-r-size-2) {
+  .kui-ChatbarRoot {
+    &:where(.kui-r-size-1) {
       --chatbar-item-lead: var(--space-5);
-      --chatbar-item-lead-radius: var(--radius-2);
-      --chatbar-item-padding: var(--space-1);
+      --chatbar-item-lead-radius: var(--radius-1);
+      --chatbar-item-padding: var(--space-2);
     }
-    &:where(.rt-r-size-3) {
-      --chatbar-item-lead: calc(var(--space-5) + var(--space-1));
+    &:where(.kui-r-size-2) {
+      --chatbar-item-lead: var(--space-6);
       --chatbar-item-lead-radius: var(--radius-2);
-      --chatbar-item-padding: calc(var(--space-1) * 1.5);
+      --chatbar-item-padding: var(--space-2);
+    }
+    &:where(.kui-r-size-3) {
+      --chatbar-item-lead: calc(var(--space-6) + var(--space-2));
+      --chatbar-item-lead-radius: var(--radius-2);
+      --chatbar-item-padding: calc(var(--space-2) * 1.5);
     }
   }
 }
@@ -215,52 +200,41 @@
 /* Text components handle styling, no custom classes needed */
 
 /* Chatbar visual shell mirrors TextAreaRoot */
-.rt-ChatbarBox {
+.kui-ChatbarBox {
   box-sizing: border-box;
   width: 100%;
-  transition: var(--transition-text-field);
   /* Padding is applied per size below to match Card spacing */
   isolation: isolate;
 }
 
-/* Theme-level translucent override for the visual shell (matches any ancestor) */
-:where([data-panel-background='translucent'], [data-material='translucent']) .rt-ChatbarBox {
-  backdrop-filter: var(--backdrop-filter-components);
-  --backdrop-filter-components: var(--backdrop-filter-components-enabled);
-}
-.rt-ChatbarRoot:where([data-panel-background='solid'], [data-material='solid']) .rt-ChatbarBox {
-  backdrop-filter: none;
-  --backdrop-filter-components: none;
-}
-
 /* Sizes (padding and radius via tokens) */
 @breakpoints {
-  .rt-ChatbarRoot:where(.rt-r-size-1) .rt-ChatbarBox {
+  .kui-ChatbarRoot:where(.kui-r-size-1) .kui-ChatbarBox {
     /* Map Chatbar size 1 to Card size 2 */
-    border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-2) + var(--space-2)));
-    padding: var(--space-3);
+    border-radius: var(--radius-surface-2);
+    padding: var(--space-4);
   }
-  .rt-ChatbarRoot:where(.rt-r-size-1) .rt-ChatbarInput {
+  .kui-ChatbarRoot:where(.kui-r-size-1) .kui-ChatbarInput {
     font-size: var(--font-size-1);
     line-height: var(--line-height-1);
     letter-spacing: var(--letter-spacing-1);
   }
-  .rt-ChatbarRoot:where(.rt-r-size-2) .rt-ChatbarBox {
+  .kui-ChatbarRoot:where(.kui-r-size-2) .kui-ChatbarBox {
     /* Map Chatbar size 2 to Card size 3 */
-    border-radius: min(var(--radius-surface-7), calc(var(--radius-surface-3) + var(--space-3)));
-    padding: var(--space-4);
+    border-radius: var(--radius-surface-3);
+    padding: var(--space-5);
   }
-  .rt-ChatbarRoot:where(.rt-r-size-2) .rt-ChatbarInput {
+  .kui-ChatbarRoot:where(.kui-r-size-2) .kui-ChatbarInput {
     font-size: var(--font-size-2);
     line-height: var(--line-height-2);
     letter-spacing: var(--letter-spacing-2);
   }
-  .rt-ChatbarRoot:where(.rt-r-size-3) .rt-ChatbarBox {
+  .kui-ChatbarRoot:where(.kui-r-size-3) .kui-ChatbarBox {
     /* Custom Chatbar size 3, different to Card size 4 */
-    border-radius: min(var(--radius-surface-7), calc(var(--radius-surface-3) + var(--space-3)));
-    padding: var(--space-4);
+    border-radius: var(--radius-surface-3);
+    padding: var(--space-5);
   }
-  .rt-ChatbarRoot:where(.rt-r-size-3) .rt-ChatbarInput {
+  .kui-ChatbarRoot:where(.kui-r-size-3) .kui-ChatbarInput {
     font-size: var(--font-size-3);
     line-height: var(--line-height-3);
     letter-spacing: var(--letter-spacing-3);
@@ -269,27 +243,27 @@
 
 /* Only enforce min-height when expanded */
 @breakpoints {
-  .rt-ChatbarRoot:where([data-state='open'].rt-r-size-1) .rt-ChatbarBox {
-    min-height: var(--space-8);
-  }
-  .rt-ChatbarRoot:where([data-state='open'].rt-r-size-2) .rt-ChatbarBox {
+  .kui-ChatbarRoot:where([data-state='open'].kui-r-size-1) .kui-ChatbarBox {
     min-height: var(--space-9);
   }
-  .rt-ChatbarRoot:where([data-state='open'].rt-r-size-3) .rt-ChatbarBox {
+  .kui-ChatbarRoot:where([data-state='open'].kui-r-size-2) .kui-ChatbarBox {
+    min-height: var(--space-10);
+  }
+  .kui-ChatbarRoot:where([data-state='open'].kui-r-size-3) .kui-ChatbarBox {
     min-height: 80px;
   }
 }
 
 /* Reduced radius when collapsed (scale down by 1) */
 @breakpoints {
-  .rt-ChatbarRoot:where([data-state='closed'].rt-r-size-1) .rt-ChatbarBox {
-    border-radius: min(var(--radius-surface-5), calc(var(--radius-surface-1) + var(--space-1)));
+  .kui-ChatbarRoot:where([data-state='closed'].kui-r-size-1) .kui-ChatbarBox {
+    border-radius: var(--radius-surface-1);
   }
-  .rt-ChatbarRoot:where([data-state='closed'].rt-r-size-2) .rt-ChatbarBox {
-    border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-2) + var(--space-2)));
+  .kui-ChatbarRoot:where([data-state='closed'].kui-r-size-2) .kui-ChatbarBox {
+    border-radius: var(--radius-surface-2);
   }
-  .rt-ChatbarRoot:where([data-state='closed'].rt-r-size-3) .rt-ChatbarBox {
-    border-radius: min(var(--radius-surface-6), calc(var(--radius-surface-2) + var(--space-2)));
+  .kui-ChatbarRoot:where([data-state='closed'].kui-r-size-3) .kui-ChatbarBox {
+    border-radius: var(--radius-surface-2);
   }
 }
 
@@ -303,63 +277,47 @@
  ***************************************************************************************************/
 
 /* Soft variant palette */
-.rt-ChatbarBox:where(.rt-variant-soft) {
+.kui-ChatbarBox:where(.kui-variant-soft) {
   --text-area-border-width: 0px;
   --v-selection-color: var(--accent-a5);
   --v-focus-color: var(--accent-8);
   --v-bg: var(--accent-3);
-  --v-bg-a: var(--accent-a3);
   --v-bg-hover: var(--accent-4);
-  --v-bg-hover-a: var(--accent-a4);
 }
 
 /* Ghost variant palette */
-.rt-ChatbarBox:where(.rt-variant-ghost) {
+.kui-ChatbarBox:where(.kui-variant-ghost) {
   --text-area-border-width: 0px;
   --v-selection-color: var(--accent-a5);
   --v-focus-color: var(--accent-8);
   --v-bg: transparent;
-  --v-bg-a: transparent;
   --v-bg-hover: var(--accent-3);
-  --v-bg-hover-a: var(--accent-a3);
   --v-bg-focus: var(--accent-2);
-  --v-bg-focus-a: var(--accent-a2);
 }
 
 /* Outline variant palette */
-.rt-ChatbarBox:where(.rt-variant-outline) {
+.kui-ChatbarBox:where(.kui-variant-outline) {
   --text-area-border-width: 1px;
   --v-selection-color: var(--focus-a5);
   --v-focus-color: var(--focus-8);
   --v-bg: transparent;
-  --v-bg-a: transparent;
   --v-bg-hover: var(--accent-2);
-  --v-bg-hover-a: var(--accent-a2);
   --v-border: var(--accent-6);
-  --v-border-a: var(--accent-a6);
   --v-border-hover: var(--accent-7);
-  --v-border-hover-a: var(--accent-a7);
   --v-border-focus: var(--accent-8);
-  --v-border-focus-a: var(--accent-a8);
 }
 
 /* Surface variant palette */
-.rt-ChatbarBox:where(.rt-variant-surface) {
+.kui-ChatbarBox:where(.kui-variant-surface) {
   --text-area-border-width: 1px;
   --v-selection-color: var(--accent-a5);
   --v-focus-color: var(--accent-8);
   --v-bg: var(--accent-2);
-  --v-bg-a: var(--accent-a2);
   --v-bg-hover: var(--accent-3);
-  --v-bg-hover-a: var(--accent-a3);
   --v-bg-focus: var(--accent-2);
-  --v-bg-focus-a: var(--accent-a2);
   --v-border: var(--accent-6);
-  --v-border-a: var(--accent-a6);
   --v-border-hover: var(--accent-7);
-  --v-border-hover-a: var(--accent-a7);
   --v-border-focus: var(--accent-8);
-  --v-border-focus-a: var(--accent-a8);
 }
 
 /***************************************************************************************************
@@ -371,26 +329,18 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-ChatbarBox:where(.rt-variant-soft, .rt-variant-ghost, .rt-variant-outline, .rt-variant-surface) {
+.kui-ChatbarBox:where(.kui-variant-soft, .kui-variant-ghost, .kui-variant-outline, .kui-variant-surface) {
   /* Rest state */
-  background-color: color-mix(
-    in srgb,
-    var(--v-bg-a) calc(var(--material-alpha) * 100%),
-    var(--v-bg) var(--material-blend)
-  );
+  background-color: var(--v-bg);
 
   /* Hover state */
   @media (hover: hover) {
-    &:where(:hover:not(:focus-within)):where(:not(.rt-ChatbarRoot:is([data-disabled], [data-readonly]) *)) {
-      background-color: color-mix(
-        in srgb,
-        var(--v-bg-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-bg-hover) var(--material-blend)
-      );
+    &:where(:hover:not(:focus-within)):where(:not(.kui-ChatbarRoot:is([data-disabled], [data-readonly]) *)) {
+      background-color: var(--v-bg-hover);
     }
   }
 
-  /* Focus state - outline ring (classic has its own box-shadow ring) */
+  /* Focus state - outline ring (raised has its own box-shadow ring) */
   &:where(:focus-within) {
     outline: 2px solid var(--v-focus-color, var(--focus-8));
     outline-offset: -1px;
@@ -398,54 +348,34 @@
 }
 
 /* Border variants: outline and surface */
-.rt-ChatbarBox:where(.rt-variant-outline, .rt-variant-surface) {
+.kui-ChatbarBox:where(.kui-variant-outline, .kui-variant-surface) {
   /* Rest state border */
-  box-shadow: inset 0 0 0 1px color-mix(
-    in srgb,
-    var(--v-border-a) calc(var(--material-alpha) * 100%),
-    var(--v-border) var(--material-blend)
-  );
+  box-shadow: inset 0 0 0 1px var(--v-border);
 
   /* Hover state border */
   @media (hover: hover) {
-    &:where(:hover:not(:focus-within)):where(:not(.rt-ChatbarRoot:is([data-disabled], [data-readonly]) *)) {
-      box-shadow: inset 0 0 0 1px color-mix(
-        in srgb,
-        var(--v-border-hover-a) calc(var(--material-alpha) * 100%),
-        var(--v-border-hover) var(--material-blend)
-      );
+    &:where(:hover:not(:focus-within)):where(:not(.kui-ChatbarRoot:is([data-disabled], [data-readonly]) *)) {
+      box-shadow: inset 0 0 0 1px var(--v-border-hover);
     }
   }
 
   /* Focus state border */
   &:where(:focus-within) {
-    box-shadow: inset 0 0 0 var(--text-area-border-width) color-mix(
-      in srgb,
-      var(--v-border-focus-a) calc(var(--material-alpha) * 100%),
-      var(--v-border-focus) var(--material-blend)
-    );
+    box-shadow: inset 0 0 0 var(--text-area-border-width) var(--v-border-focus);
   }
 }
 
 /* Ghost focus state - needs background on focus */
-.rt-ChatbarBox:where(.rt-variant-ghost) {
+.kui-ChatbarBox:where(.kui-variant-ghost) {
   &:where(:focus-within) {
-    background-color: color-mix(
-      in srgb,
-      var(--v-bg-focus-a, var(--v-bg-a)) calc(var(--material-alpha) * 100%),
-      var(--v-bg-focus, var(--v-bg)) var(--material-blend)
-    );
+    background-color: var(--v-bg-focus, var(--v-bg));
   }
 }
 
 /* Surface focus state - background changes on focus */
-.rt-ChatbarBox:where(.rt-variant-surface) {
+.kui-ChatbarBox:where(.kui-variant-surface) {
   &:where(:focus-within) {
-    background-color: color-mix(
-      in srgb,
-      var(--v-bg-focus-a, var(--v-bg-a)) calc(var(--material-alpha) * 100%),
-      var(--v-bg-focus, var(--v-bg)) var(--material-blend)
-    );
+    background-color: var(--v-bg-focus, var(--v-bg));
   }
 }
 
@@ -457,41 +387,42 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* Classic variant - uses --color-surface and shadow */
-.rt-ChatbarBox:where(.rt-variant-classic) {
+/* Raised variant: a surface, as v2's composer is. It casts the surface role. */
+.kui-ChatbarBox:where(.kui-variant-raised) {
   --text-area-border-width: 0px;
   --v-selection-color: var(--focus-a5);
   --v-focus-color: var(--focus-8);
 
-  background-color: var(--color-surface-solid);
-  box-shadow: var(--shadow-2);
-  transition: var(--transition-text-field);
-
-  /* Translucent theme override (ancestor match, zero added specificity so hover still wins) */
-  :where([data-panel-background='translucent'], [data-material='translucent']) & {
-    background-color: var(--color-surface-translucent);
-  }
-
-  /* Explicit solid material on the component beats an inherited translucent theme */
-  :where(.rt-ChatbarRoot[data-panel-background='solid'], .rt-ChatbarRoot[data-material='solid']) & {
-    background-color: var(--color-surface-solid);
-  }
+  background-color: var(--color-surface);
+  box-shadow: var(--surface-chrome);
 
   /* Hover effects */
   @media (hover: hover) {
-    &:where(:hover:not(:focus-within)):where(:not(.rt-ChatbarRoot:is([data-disabled], [data-readonly]) *)) {
-      background-color: color-mix(
-        in srgb,
-        var(--accent-a2) calc(var(--material-alpha) * 100%),
-        var(--accent-2) var(--material-blend)
-      );
-      box-shadow: var(--shadow-3);
+    &:where(:hover:not(:focus-within)):where(:not(.kui-ChatbarRoot:is([data-disabled], [data-readonly]) *)) {
+      background-color: var(--accent-2);
     }
   }
 
   /* Focus state - accent ring */
   &:where(:focus-within) {
-    box-shadow: var(--shadow-2), 0 0 0 2px var(--v-focus-color, var(--focus-8));
+    box-shadow: var(--surface-chrome), 0 0 0 2px var(--v-focus-color, var(--focus-8));
+  }
+}
+
+/*
+ * Forced colors drop box-shadows, which draw the box's boundary in every variant and the raised
+ * focus ring, so the box gets a real border and the raised variant a real focus outline there.
+ */
+@media (forced-colors: active) {
+  .kui-ChatbarBox {
+    border: 1px solid CanvasText;
+  }
+  .kui-ChatbarBox:where(.kui-variant-raised):where(:focus-within) {
+    outline: 2px solid Highlight;
+    outline-offset: -1px;
+  }
+  .kui-ChatbarRoot:where([data-disabled]) .kui-ChatbarBox {
+    border-color: GrayText;
   }
 }
 
@@ -503,32 +434,32 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-.rt-ChatbarRoot:where([data-disabled], [data-readonly]) {
-  & .rt-ChatbarBox {
-    --v-selection-color: var(--gray-a5);
-    --v-focus-color: var(--gray-8);
+.kui-ChatbarRoot:where([data-disabled], [data-readonly]) {
+  & .kui-ChatbarBox {
+    --v-selection-color: var(--neutral-a5);
+    --v-focus-color: var(--neutral-8);
   }
 
-  & .rt-ChatbarBox:where(.rt-variant-ghost, .rt-variant-outline, .rt-variant-surface) {
-    background-color: var(--gray-a2);
+  & .kui-ChatbarBox:where(.kui-variant-ghost, .kui-variant-outline, .kui-variant-surface) {
+    background-color: var(--neutral-a2);
   }
 
-  & .rt-ChatbarBox:where(.rt-variant-soft) {
-    background-color: var(--gray-a3);
+  & .kui-ChatbarBox:where(.kui-variant-soft) {
+    background-color: var(--neutral-a3);
   }
 
-  & .rt-ChatbarBox:where(.rt-variant-outline, .rt-variant-surface) {
-    box-shadow: inset 0 0 0 var(--text-area-border-width) var(--gray-a6);
+  & .kui-ChatbarBox:where(.kui-variant-outline, .kui-variant-surface) {
+    box-shadow: inset 0 0 0 var(--text-area-border-width) var(--neutral-a6);
   }
 
-  & .rt-ChatbarBox:where(.rt-variant-classic) {
-    background-image: linear-gradient(var(--gray-a2), var(--gray-a2));
+  & .kui-ChatbarBox:where(.kui-variant-raised) {
+    background-image: linear-gradient(var(--neutral-a2), var(--neutral-a2));
   }
 
-  & .rt-ChatbarInput {
-    color: var(--gray-a11);
+  & .kui-ChatbarInput {
+    color: var(--neutral-a11);
     /* Safari */
-    -webkit-text-fill-color: var(--gray-a11);
+    -webkit-text-fill-color: var(--neutral-a11);
 
     &::placeholder {
       opacity: 0.5;
@@ -536,99 +467,87 @@
   }
 }
 
-.rt-ChatbarRoot:where([data-disabled]) {
-  & .rt-ChatbarBox,
-  & .rt-ChatbarInput {
+.kui-ChatbarRoot:where([data-disabled]) {
+  & .kui-ChatbarBox,
+  & .kui-ChatbarInput {
     cursor: not-allowed;
   }
 }
 
 /* Dropzone states */
-.rt-ChatbarRoot:where([data-drop-active]) .rt-ChatbarBox {
+.kui-ChatbarRoot:where([data-drop-active]) .kui-ChatbarBox {
   outline: 2px dashed var(--accent-8);
   outline-offset: -1px;
 }
 
 /* Drop overlay */
-.rt-ChatbarDropOverlay {
+.kui-ChatbarDropOverlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--gray-a3);
+  background: var(--neutral-a3);
   border-radius: inherit;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10;
-  animation: rt-fade-in var(--motion-duration-small) var(--motion-spring-snappy);
 }
 
-.rt-ChatbarDropContent {
+.kui-ChatbarDropContent {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 /* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .rt-ChatbarInput,
-  .rt-ChatbarBox,
-  .rt-ChatbarSend {
-    transition: none;
-  }
-
-  .rt-ChatbarDropOverlay {
-    animation: none;
-  }
-}
 
 /* Inline slot positioning */
-.rt-ChatbarInlineStart,
-.rt-ChatbarInlineEnd {
+.kui-ChatbarInlineStart,
+.kui-ChatbarInlineEnd {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 /* Row slot positioning */
-.rt-ChatbarRowStart {
+.kui-ChatbarRowStart {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
   flex-shrink: 0;
 }
 
-.rt-ChatbarRowEnd {
+.kui-ChatbarRowEnd {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
   flex-shrink: 0;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 /* Size-based font sizing for chatbar */
 @breakpoints {
-  .rt-ChatbarRoot {
-    &:where(.rt-r-size-1) {
+  .kui-ChatbarRoot {
+    &:where(.kui-r-size-1) {
       font-size: var(--font-size-1);
       line-height: var(--line-height-1);
-      /* --chatbar-attachments-radius: min(var(--radius-5), calc(var(--radius-1) + var(--space-1))); */
+      /* --chatbar-attachments-radius: min(var(--radius-5), calc(var(--radius-1) + var(--space-2))); */
       --chatbar-attachments-radius: var(--radius-1);
     }
-    &:where(.rt-r-size-2) {
+    &:where(.kui-r-size-2) {
       font-size: var(--font-size-2);
       line-height: var(--line-height-2);
-      /* --chatbar-attachments-radius: min(var(--radius-6), calc(var(--radius-2) + var(--space-2))); */
+      /* --chatbar-attachments-radius: min(var(--radius-6), calc(var(--radius-2) + var(--space-3))); */
       --chatbar-attachments-radius: var(--radius-2);
     }
-    &:where(.rt-r-size-3) {
+    &:where(.kui-r-size-3) {
       font-size: var(--font-size-3);
       line-height: var(--line-height-3);
-      /* --chatbar-attachments-radius: min(var(--radius-7), calc(var(--radius-3) + var(--space-3))); */
+      /* --chatbar-attachments-radius: min(var(--radius-7), calc(var(--radius-3) + var(--space-4))); */
       --chatbar-attachments-radius: var(--radius-3);
     }
   }
@@ -641,16 +560,15 @@
  ***************************************************************************************************/
 
 /* Notices stand above the box, in a column; the last one is nearest the text. */
-.rt-ChatbarNotices {
+.kui-ChatbarNotices {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  margin-bottom: var(--space-2);
+  gap: var(--space-3);
 }
 
 /* Context is quiet text below the box, inset to line up with the text inside it. */
-.rt-ChatbarContext {
-  padding: var(--space-2) var(--space-3) 0;
+.kui-ChatbarContext {
+  padding: 0 var(--space-4);
   min-width: 0;
   overflow-wrap: anywhere;
 }

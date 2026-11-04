@@ -1,24 +1,22 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { LazyMotion, MotionConfig, domAnimation, m } from 'motion/react';
-import { useComposedRefs } from 'radix-ui/internal';
+import { useComposedRefs, useLayoutEffect } from 'radix-ui/internal';
 import { useDropzone } from 'react-dropzone';
 
-import { IconButton, type IconButtonProps } from './icon-button.js';
-import { CloseIcon, FileTextIcon } from './icons.js';
+import { Button } from './button.js';
+import { CloseIcon, FileTextIcon, PaperclipIcon } from './icons.js';
 import { Flex } from './flex.js';
 import { ScrollArea } from './scroll-area.js';
 import { Slot } from './slot.js';
 import { NoticeSizeContext } from './notice.js';
+import { useThemeSize } from '../hooks/theme-size.js';
 import { Spinner } from './spinner.js';
 import { Text } from './text.js';
 import { VisuallyHidden } from './visually-hidden.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { accentColors } from '../props/color.prop.js';
 import type { radii } from '../props/radius.prop.js';
-
-// Avoid SSR warnings by using an isomorphic layout effect
-const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
+import type { ButtonProps, ButtonRankProps } from './button.js';
 
 /**
  * Runs `measure` with the placeholder taken out of layout, so a height read
@@ -51,9 +49,6 @@ function withoutPlaceholder(el: HTMLTextAreaElement, measure: () => void): void 
     el.placeholder = placeholder;
   }
 }
-
-// Shared layout spring; hoisted so every motion node receives the same object
-const LAYOUT_TRANSITION = { layout: { type: 'spring', visualDuration: 0.15, bounce: 0.1 } } as const;
 
 type ExpandOn = 'none' | 'focus' | 'overflow' | 'both';
 type SendMode = 'always' | 'whenDirty' | 'never';
@@ -127,6 +122,9 @@ interface ChatbarContextValue {
   /** Guards blur-collapse between pointerdown on a picker trigger and its click */
   beginFilePickerPress(): void;
 }
+
+/** Chatbar's own range; a Theme size of 4 maps to 3. */
+const chatbarSizePropDef = { values: ['1', '2', '3'] as const };
 
 const ChatbarContext = React.createContext<ChatbarContextValue | null>(null);
 // Value lives in its own context so keystrokes only re-render parts that read it
@@ -213,14 +211,11 @@ interface ChatbarRootBaseProps {
   onSubmit?: (payload: ChatbarSubmitPayload) => void;
 
   size?: '1' | '2' | '3';
-  variant?: 'surface' | 'outline' | 'classic' | 'ghost' | 'soft';
+  variant?: 'raised' | 'surface' | 'outline' | 'ghost' | 'soft';
   /** Accent color for the control (matches TextArea) */
   color?: (typeof accentColors)[number];
   /** Optional radius override (matches TextArea) */
   radius?: (typeof radii)[number];
-  /** Panel/material translucency flags (matches TextArea) */
-  panelBackground?: 'solid' | 'translucent';
-  material?: 'solid' | 'translucent';
 
   width?: React.CSSProperties['width'];
   maxWidth?: React.CSSProperties['maxWidth'];
@@ -321,12 +316,10 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
     disabled,
     readOnly,
     onSubmit,
-    size = '2',
+    size: sizeProp,
     variant,
     color,
     radius,
-    panelBackground,
-    material,
     width,
     maxWidth,
     attachments: attachmentsProp,
@@ -347,7 +340,7 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
     context,
     ...divProps
   } = props;
-  const effectiveMaterial = material || panelBackground;
+  const size = useThemeSize(sizeProp, chatbarSizePropDef);
 
   const isValueControlled = valueProp != null;
   const [valueUncontrolled, setValueUncontrolled] = React.useState<string>(defaultValue);
@@ -696,12 +689,11 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
   return (
     <ChatbarContext.Provider value={contextValue}>
       <ChatbarValueContext.Provider value={value}>
-        <LazyMotion features={domAnimation}>
-          <MotionConfig reducedMotion="user">
+        <>
             <div
               {...divProps}
               ref={composedRootRef}
-              className={classNames('rt-ChatbarRoot', `rt-r-size-${size}`, className)}
+              className={classNames('kui-ChatbarRoot', `kui-r-size-${size}`, className)}
               style={{ position: 'relative', width, maxWidth, ...style }}
               data-state={open ? 'open' : 'closed'}
               data-disabled={disabled ? '' : undefined}
@@ -709,8 +701,6 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
               data-drop-active={dragActive ? '' : undefined}
               data-accent-color={color}
               data-radius={radius}
-              data-panel-background={effectiveMaterial}
-              data-material={effectiveMaterial}
               onBlurCapture={handleBlurCapture}
             >
               <input
@@ -722,37 +712,33 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
                 onChange={handleFileInputChange}
               />
               {notices ? (
-                <div className="rt-ChatbarNotices">
+                <div className="kui-ChatbarNotices">
                   <NoticeSizeContext.Provider value={size}>{notices}</NoticeSizeContext.Provider>
                 </div>
               ) : null}
               <div {...(dropzone ? getRootProps() : {})} style={{ width: '100%', flex: '1 1 auto', minHeight: 0 }} onPointerDown={handleContainerPointerDown}>
-                <m.div
-                  className={classNames('rt-ChatbarBox', `rt-variant-${variant ?? 'surface'}`)}
+                <div
+                  className={classNames('kui-ChatbarBox', `kui-variant-${variant ?? 'raised'}`)}
                   style={{ position: 'relative' }}
                   data-accent-color={color}
                   data-radius={radius}
-                  data-panel-background={effectiveMaterial}
-                  data-material={effectiveMaterial}
-                  layout
-                  transition={LAYOUT_TRANSITION}
                 >
-                  <m.div className="rt-ChatbarGrid" layout="position" transition={LAYOUT_TRANSITION}>
+                  <div className="kui-ChatbarGrid">
                     {children}
-                  </m.div>
+                  </div>
                   {dragActive && (
-                    <div className="rt-ChatbarDropOverlay" aria-hidden>
-                      <div className="rt-ChatbarDropContent">
+                    <div className="kui-ChatbarDropOverlay" aria-hidden>
+                      <div className="kui-ChatbarDropContent">
                         <Text emphasis="medium" size={size} weight="medium">
                           Drop files here to attach
                         </Text>
                       </div>
                     </div>
                   )}
-                </m.div>
+                </div>
               </div>
               {context ? (
-                <Text as="div" size={size === '3' ? '2' : '1'} emphasis="medium" className="rt-ChatbarContext">
+                <Text as="div" size={size === '3' ? '2' : '1'} emphasis="medium" className="kui-ChatbarContext">
                   {context}
                 </Text>
               ) : null}
@@ -760,8 +746,7 @@ const Root = React.forwardRef<RootElement, RootProps>((props, forwardedRef) => {
                 {dragActive ? 'Drop files here to attach.' : <span key={announcement.id}>{announcement.text}</span>}
               </VisuallyHidden>
             </div>
-          </MotionConfig>
-        </LazyMotion>
+        </>
       </ChatbarValueContext.Provider>
     </ChatbarContext.Provider>
   );
@@ -826,7 +811,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>((props, fo
 
   const sizingRef = React.useRef({ open, minLines, maxLines });
   // Declared before the sizing effect so it runs first in the same commit
-  useIsomorphicLayoutEffect(() => {
+  useLayoutEffect(() => {
     sizingRef.current = { open, minLines, maxLines };
   }, [open, minLines, maxLines]);
 
@@ -853,12 +838,12 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>((props, fo
   }, []);
 
   // Typography depends on size
-  useIsomorphicLayoutEffect(() => {
+  useLayoutEffect(() => {
     recomputeMetrics();
   }, [recomputeMetrics, size]);
 
   // Single place for sizing and overflow auto-open: one height reset, one scrollHeight read
-  useIsomorphicLayoutEffect(() => {
+  useLayoutEffect(() => {
     const el = textareaRef.current;
     if (!el) return;
     if (lineHeightRef.current === 0) recomputeMetrics();
@@ -900,9 +885,14 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>((props, fo
   // Dev-only warning if no accessible name is provided
   React.useEffect(() => {
     if (process.env.NODE_ENV === 'production') return;
-    const hasLabel = textareaProps['aria-label'] != null || textareaProps['aria-labelledby'] != null;
+    // Read the DOM, not the props: a `<label htmlFor>` or an asChild child's own label counts too.
+    const el = textareaRef.current;
+    const hasLabel =
+      textareaProps['aria-label'] != null ||
+      textareaProps['aria-labelledby'] != null ||
+      Boolean(el?.getAttribute('aria-label') || el?.getAttribute('aria-labelledby') || el?.labels?.length);
     if (!hasLabel) {
-      console.warn('[Chatbar.Textarea] Provide aria-label or aria-labelledby to ensure the control has an accessible name.');
+      console.warn('[Chatbar.Textarea] Provide aria-label, aria-labelledby or a <label htmlFor> to ensure the control has an accessible name.');
     }
     // warn only on mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -972,11 +962,12 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>((props, fo
 
   const Comp = asChild ? Slot : 'textarea';
   return (
-    <m.div className={classNames('rt-ChatbarField', 'rt-ChatbarTextarea', className)} layout="position" transition={LAYOUT_TRANSITION}>
+    // className and style both reach the textarea, like every other textarea attribute.
+    <div className="kui-ChatbarField kui-ChatbarTextarea">
       <Comp
         {...textareaProps}
         ref={composedRef}
-        className="rt-ChatbarInput"
+        className={classNames('kui-ChatbarInput', className)}
         value={value}
         onChange={handleChange}
         onFocus={handleFocus}
@@ -991,7 +982,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>((props, fo
         autoCorrect={textareaProps.autoCorrect ?? 'on'}
         style={style}
       />
-    </m.div>
+    </div>
   );
 });
 Textarea.displayName = 'Chatbar.Textarea';
@@ -1007,7 +998,7 @@ const InlineStart = React.forwardRef<HTMLDivElement, InlineSlotProps>((props, fo
   if (ctx.open) return null;
   const Comp = asChild ? Slot : 'div';
   return (
-    <Comp {...divProps} ref={forwardedRef} className={classNames('rt-ChatbarInlineStart', className)}>
+    <Comp {...divProps} ref={forwardedRef} className={classNames('kui-ChatbarInlineStart', className)}>
       {children}
     </Comp>
   );
@@ -1020,7 +1011,7 @@ const InlineEnd = React.forwardRef<HTMLDivElement, InlineSlotProps>((props, forw
   if (ctx.open) return null;
   const Comp = asChild ? Slot : 'div';
   return (
-    <Comp {...divProps} ref={forwardedRef} className={classNames('rt-ChatbarInlineEnd', className)}>
+    <Comp {...divProps} ref={forwardedRef} className={classNames('kui-ChatbarInlineEnd', className)}>
       {children}
     </Comp>
   );
@@ -1048,10 +1039,10 @@ const AttachmentsRow = React.forwardRef<HTMLDivElement, AttachmentsRowProps>((pr
   if (ctx.attachments.length === 0 && !hasItems && !forceMount) return null;
   const Comp = asChild ? Slot : 'div';
   return (
-    <m.div layout="position" transition={LAYOUT_TRANSITION}>
-      <Comp {...divProps} ref={forwardedRef} className={classNames('rt-ChatbarAttachmentsRow', className)} role="list" aria-label={divProps['aria-label'] ?? 'Attachments'}>
-        <ScrollArea className="rt-ChatbarScrollArea" scrollbars="horizontal" size="1">
-          <Flex align="center" gap="2" minWidth="fit-content">
+    <div>
+      <Comp {...divProps} ref={forwardedRef} className={classNames('kui-ChatbarAttachmentsRow', className)} role="list" aria-label={divProps['aria-label'] ?? 'Attachments'}>
+        <ScrollArea className="kui-ChatbarScrollArea" scrollbars="horizontal">
+          <Flex align="center" gap="3" minWidth="fit-content">
             {ctx.attachments.map((att) => (
               <Attachment key={att.id} attachment={att} asChild={!!renderAttachment}>
                 {renderAttachment?.(att)}
@@ -1061,7 +1052,7 @@ const AttachmentsRow = React.forwardRef<HTMLDivElement, AttachmentsRowProps>((pr
           </Flex>
         </ScrollArea>
       </Comp>
-    </m.div>
+    </div>
   );
 });
 AttachmentsRow.displayName = 'Chatbar.AttachmentsRow';
@@ -1076,7 +1067,7 @@ function moveFocusOffPill(button: HTMLButtonElement, textareaRef: React.RefObjec
   const pills = pill?.parentElement ? Array.from(pill.parentElement.children) : [];
   const index = pill ? pills.indexOf(pill) : -1;
   const neighbour = pills[index + 1] ?? pills[index - 1];
-  const nextButton = neighbour?.querySelector<HTMLButtonElement>('.rt-ChatbarItemRemove');
+  const nextButton = neighbour?.querySelector<HTMLButtonElement>('.kui-ChatbarItemRemove');
   if (nextButton) nextButton.focus();
   else textareaRef.current?.focus({ preventScroll: true });
 }
@@ -1094,17 +1085,17 @@ const Pill: React.FC<{
   const ctx = useChatbarContext();
   return (
     <>
-      <span className="rt-ChatbarItemLead" data-kind={leadKind} aria-hidden>
+      <span className="kui-ChatbarItemLead" data-kind={leadKind} aria-hidden>
         {lead}
       </span>
-      <Text className="rt-ChatbarItemLabel" size={ctx.size} truncate>
+      <Text className="kui-ChatbarItemLabel" size={ctx.size} truncate>
         {label}
         {detail ? <VisuallyHidden>, {detail}</VisuallyHidden> : null}
       </Text>
       {onRemove && (
-        <IconButton className="rt-ChatbarItemRemove" aria-label={removeLabel} size="1" variant="ghost" color="gray" onClick={onRemove}>
+        <Button iconOnly className="kui-ChatbarItemRemove" aria-label={removeLabel} size="1" variant="ghost" color="gray" onClick={onRemove}>
           <CloseIcon />
-        </IconButton>
+        </Button>
       )}
     </>
   );
@@ -1134,9 +1125,9 @@ const Attachment = React.forwardRef<HTMLDivElement, AttachmentProps>((props, for
 
   const lead =
     attachment.status === 'uploading' ? (
-      <Spinner size="1" />
+      <Spinner />
     ) : isImage ? (
-      <img className="rt-ChatbarAttachmentImage" src={attachment.url} alt="" />
+      <img className="kui-ChatbarAttachmentImage" src={attachment.url} alt="" />
     ) : (
       <FileTextIcon />
     );
@@ -1145,7 +1136,7 @@ const Attachment = React.forwardRef<HTMLDivElement, AttachmentProps>((props, for
     <Comp
       {...divProps}
       ref={forwardedRef}
-      className={classNames(children ? 'rt-ChatbarAttachment' : 'rt-ChatbarAttachment rt-ChatbarItem', className)}
+      className={classNames(children ? 'kui-ChatbarAttachment' : 'kui-ChatbarAttachment kui-ChatbarItem', className)}
       role="listitem"
       data-kind={isImage ? 'image' : 'file'}
       data-status={attachment.status}
@@ -1203,13 +1194,13 @@ const Item = React.forwardRef<HTMLDivElement, ItemProps>((props, forwardedRef) =
     <div
       {...divProps}
       ref={forwardedRef}
-      className={classNames('rt-ChatbarItem', className)}
+      className={classNames('kui-ChatbarItem', className)}
       role="listitem"
       data-accent-color={image ? undefined : (color ?? 'gray')}
       title={children}
     >
       <Pill
-        lead={image ? <img className="rt-ChatbarAttachmentImage" src={image} alt="" /> : icon}
+        lead={image ? <img className="kui-ChatbarAttachmentImage" src={image} alt="" /> : icon}
         leadKind={image ? 'image' : 'icon'}
         label={children}
         removeLabel={removeLabel ?? `Remove ${children}`}
@@ -1228,28 +1219,35 @@ interface AttachTriggerProps extends React.ComponentPropsWithoutRef<'button'> {
 }
 
 const AttachTrigger = React.forwardRef<HTMLButtonElement, AttachTriggerProps>((props, forwardedRef) => {
-  const { asChild, accept, multiple, disabled: disabledProp, onPointerDown, onClick, ...buttonProps } = props;
+  // The HTML `color` attribute is dropped: Button reads `color` as an accent colour.
+  const { asChild, accept, multiple, disabled: disabledProp, onPointerDown, onClick, children, color: _color, ...buttonProps } = props;
   const ctx = useChatbarContext();
   const disabled = disabledProp || ctx.disabled || ctx.readOnly;
-  const Comp = asChild ? Slot : 'button';
+  const triggerProps = {
+    ...buttonProps,
+    ref: forwardedRef,
+    className: classNames('kui-ChatbarAttachTrigger', buttonProps.className),
+    type: buttonProps.type ?? 'button',
+    'aria-label': buttonProps['aria-label'] ?? 'Add attachments',
+    disabled,
+    onPointerDown: (event: React.PointerEvent<HTMLButtonElement>) => {
+      onPointerDown?.(event);
+      if (!disabled && !event.defaultPrevented) ctx.beginFilePickerPress();
+    },
+    onClick: (event: React.MouseEvent<HTMLButtonElement>) => {
+      onClick?.(event);
+      if (disabled || event.defaultPrevented) return;
+      ctx.openFilePicker({ accept, multiple });
+    },
+  } as const;
+
+  if (asChild) return <Slot {...triggerProps}>{children}</Slot>;
+
+  // Without asChild, the trigger is a quiet icon-only Button at the Chatbar's size.
   return (
-    <Comp
-      {...buttonProps}
-      ref={forwardedRef}
-      className={classNames('rt-ChatbarAttachTrigger', buttonProps.className)}
-      type={buttonProps.type ?? 'button'}
-      aria-label={buttonProps['aria-label'] ?? 'Add attachments'}
-      disabled={disabled}
-      onPointerDown={(event: React.PointerEvent<HTMLButtonElement>) => {
-        onPointerDown?.(event);
-        if (!disabled && !event.defaultPrevented) ctx.beginFilePickerPress();
-      }}
-      onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-        onClick?.(event);
-        if (disabled || event.defaultPrevented) return;
-        ctx.openFilePicker({ accept, multiple });
-      }}
-    />
+    <Button iconOnly emphasis="quiet" color="gray" size={ctx.size} {...triggerProps}>
+      {children ?? <PaperclipIcon aria-hidden />}
+    </Button>
   );
 });
 AttachTrigger.displayName = 'Chatbar.AttachTrigger';
@@ -1265,13 +1263,13 @@ const Row = React.forwardRef<HTMLDivElement, RowProps>((props, forwardedRef) => 
   if (!ctx.open) return null;
   const Comp = asChild ? Slot : 'div';
   return (
-    <m.div layout="position" transition={LAYOUT_TRANSITION}>
-      <Comp {...divProps} ref={forwardedRef} className={classNames('rt-ChatbarRow', className)}>
+    <div>
+      <Comp {...divProps} ref={forwardedRef} className={classNames('kui-ChatbarRow', className)}>
         <Flex align="center" justify="between" width="100%">
           {children}
         </Flex>
       </Comp>
-    </m.div>
+    </div>
   );
 });
 Row.displayName = 'Chatbar.Row';
@@ -1280,19 +1278,20 @@ type RowSlotProps = React.ComponentPropsWithoutRef<'div'>;
 
 const RowStart = React.forwardRef<HTMLDivElement, RowSlotProps>((props, forwardedRef) => {
   const { className, ...divProps } = props;
-  return <div {...divProps} ref={forwardedRef} className={classNames('rt-ChatbarRowStart', className)} />;
+  return <div {...divProps} ref={forwardedRef} className={classNames('kui-ChatbarRowStart', className)} />;
 });
 RowStart.displayName = 'Chatbar.RowStart';
 
 const RowEnd = React.forwardRef<HTMLDivElement, RowSlotProps>((props, forwardedRef) => {
   const { className, ...divProps } = props;
-  return <div {...divProps} ref={forwardedRef} className={classNames('rt-ChatbarRowEnd', className)} />;
+  return <div {...divProps} ref={forwardedRef} className={classNames('kui-ChatbarRowEnd', className)} />;
 });
 RowEnd.displayName = 'Chatbar.RowEnd';
 
 type SendStatus = 'ready' | 'submitted' | 'streaming' | 'error';
 
-type SendProps = Omit<IconButtonProps, 'aria-label' | 'aria-labelledby'> & {
+type SendProps = Omit<ButtonProps, 'aria-label' | 'aria-labelledby' | 'variant' | 'emphasis' | 'iconOnly' | 'fullWidth'> &
+  ButtonRankProps & {
   /** Optional override for accessible name. Defaults to "Send". */
   'aria-label'?: string;
   'aria-labelledby'?: string;
@@ -1329,7 +1328,7 @@ const Send = React.forwardRef<HTMLButtonElement, SendProps>((props, forwardedRef
     style,
     className,
     size: sizeProp,
-    variant: variantProp,
+    variant: variantProp, emphasis,
     tabIndex,
     onClick,
     status = 'ready',
@@ -1377,7 +1376,7 @@ const Send = React.forwardRef<HTMLButtonElement, SendProps>((props, forwardedRef
 
   const glyph =
     mode === 'stop' ? (
-      stopIcon ?? (status === 'submitted' ? <Spinner size={ctx.size} /> : (
+      stopIcon ?? (status === 'submitted' ? <Spinner /> : (
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
           <rect x="7" y="7" width="10" height="10" rx="2" />
         </svg>
@@ -1399,13 +1398,14 @@ const Send = React.forwardRef<HTMLButtonElement, SendProps>((props, forwardedRef
     );
 
   return (
-    <IconButton
+    <Button
+      iconOnly
       {...buttonProps}
       ref={forwardedRef}
       size={sizeProp ?? ctx.size}
-      variant={variantProp ?? (ctx.open || mode !== 'send' ? 'solid' : 'ghost')}
+      {...(emphasis ? { emphasis } : { variant: variantProp ?? (ctx.open || mode !== 'send' ? 'solid' : 'ghost') })}
       disabled={inactive}
-      className={classNames('rt-ChatbarSend', className)}
+      className={classNames('kui-ChatbarSend', className)}
       style={{ opacity: visible ? 1 : 0, pointerEvents: visible ? undefined : 'none', ...style }}
       // Hidden Send must not be reachable by keyboard or announced
       aria-hidden={visible ? undefined : true}
@@ -1417,7 +1417,7 @@ const Send = React.forwardRef<HTMLButtonElement, SendProps>((props, forwardedRef
       {...labelProps}
     >
       {glyph}
-    </IconButton>
+    </Button>
   );
 });
 Send.displayName = 'Chatbar.Send';

@@ -1,6 +1,4 @@
-Typography system with 10-step scale (0-9), font weights, and formatting components. The typography infrastructure (scale system, token structure) is from [Radix Themes](https://www.radix-ui.com/themes), but **Kookie UI uses custom typography values** that differ from Radix Themes.
-
-For complete typography documentation and advanced customization, visit the [Radix Themes Typography documentation](https://www.radix-ui.com/themes/docs/theme/typography). Note that Kookie UI's typography values are customized and may not match Radix Themes exactly.
+Typography system with a nine-step scale (1-9) and three font weights. The token structure is from [Radix Themes](https://www.radix-ui.com/themes); the values are Kookie UI's own.
 
 ## Installation
 
@@ -15,126 +13,47 @@ Use Text and Heading components to render titles and body copy. These components
 ```tsx
 import { Text, Heading } from '@kushagradhawan/kookie-ui';
 
-<Heading size="4">Page Title</Heading>
+<Heading as="h1" size="4">Page Title</Heading>
 <Text size="3">Body text content</Text>
 ```
 
 ## Type Scale
 
-10-step size scale (0-9) with corresponding font size, line height, and letter spacing values:
+Each step sets a font size, line height and letter spacing. `Text`, `Heading`, `Link`, `Code`, `Kbd` and `Blockquote` take sizes 1-9.
+
+| Size | Font size | Line height | Letter spacing |
+| ---- | --------- | ----------- | -------------- |
+| 1 | 12px | 16px | 0 |
+| 2 | 14px | 20px | 0 |
+| 3 | 16px | 24px | 0 |
+| 4 | 18px | 26px | -0.005em |
+| 5 | 20px | 28px | -0.0075em |
+| 6 | 24px | 32px | -0.01em |
+| 7 | 32px | 40px | -0.015em |
+| 8 | 44px | 52px | -0.02em |
+| 9 | 64px | 70px | -0.025em |
 
 ```css
-/* Type scale tokens */
-var(--font-size-0)  /* 10px - Extra small text */
-var(--font-size-1)  /* 12px - Small text */
-var(--font-size-2)  /* 14px - Body text */
-var(--font-size-3)  /* 16px - Standard text */
-var(--font-size-4)  /* 18px - Large text */
-var(--font-size-5)  /* 20px - Heading text */
-var(--font-size-6)  /* 24px - Large heading */
-var(--font-size-7)  /* 28px - Display text */
-var(--font-size-8)  /* 35px - Hero text */
-var(--font-size-9)  /* 60px - Massive text */
+var(--font-size-3)       /* 16px */
+var(--line-height-3)     /* 24px */
+var(--letter-spacing-3)  /* 0 */
 ```
 
-## Size Scale
-
-### Size 0
-
-Extra small text for fine print and micro labels.
-
-```tsx
-<Text size="0">Extra small text for fine print</Text>
-```
-
-### Size 1
-
-Small text for captions and labels.
-
-```tsx
-<Text size="1">Small text for captions</Text>
-```
-
-### Size 2
-
-Body text for secondary content.
-
-```tsx
-<Text size="2">Body text for secondary content</Text>
-```
-
-### Size 3
-
-Standard text for main content.
-
-```tsx
-<Text size="3">Standard text for main content</Text>
-```
-
-### Size 4
-
-Large text for important content.
-
-```tsx
-<Text size="4">Large text for important content</Text>
-```
-
-### Size 5
-
-Heading text for section titles.
-
-```tsx
-<Heading size="5">Heading text for section titles</Heading>
-```
-
-### Size 6
-
-Large heading for page titles.
-
-```tsx
-<Heading size="6">Large heading for page titles</Heading>
-```
-
-### Size 7
-
-Display text for hero sections.
-
-```tsx
-<Heading size="7">Display text for hero sections</Heading>
-```
-
-### Size 8
-
-Hero text for main headlines.
-
-```tsx
-<Heading size="8">Hero text for main headlines</Heading>
-```
-
-### Size 9
-
-Massive text for impact headlines.
-
-```tsx
-<Heading size="9">Massive text for impact headlines</Heading>
-```
+Heading uses the same line heights as Text.
 
 ## Font Weight
 
-Use `weight` prop to control text emphasis and hierarchy:
+Three weights: `regular` (400), `medium` (500) and `semibold` (600). Heading defaults to `medium`.
 
 ```tsx
-<Text weight="light">Light text</Text>
 <Text weight="regular">Regular text</Text>
 <Text weight="medium">Medium text</Text>
-<Text weight="bold">Bold text</Text>
+<Text weight="semibold">Semibold text</Text>
 ```
-
-Available weights: `thin`, `extralight`, `light`, `regular`, `medium`, `semibold`, `bold`, `extrabold`.
 
 ## Emphasis
 
-Use `emphasis` to rank text by colour. `Text`, `Heading`, `Blockquote`, `Code` and `DataList.Label` take it.
+Use `emphasis` to rank text by colour. `Text`, `Heading`, `Blockquote` and `Code` take it.
 
 - `loud` is the strong ink, and the default once a colour is set.
 - `medium` is for secondary copy.
@@ -148,14 +67,14 @@ Use `emphasis` to rank text by colour. `Text`, `Heading`, `Blockquote`, `Code` a
 
 With no `color`, emphasis uses the gray scale. With a `color`, it fades that colour. Text with neither inherits its colour from its parent.
 
-## Formatting Components
+## Formatting
 
-Compose formatting components to add emphasis and structure:
+Use the native `<em>` and `<strong>` inside `Text` for emphasis:
 
 ```tsx
 <Text>
-  The <Em>most</Em> important thing to remember is,{' '}
-  <Strong>stay positive</Strong>.
+  The <em>most</em> important thing to remember is,{' '}
+  <strong>stay positive</strong>.
 </Text>
 ```
 
@@ -174,23 +93,20 @@ Every typeface decision lives in two tiers, and nowhere else.
 ```css
 --font-sans   /* backs font="sans", and body text by default */
 --font-mono   /* backs font="mono" and Code */
---font-serif  /* backs font="serif", Em and Quote */
+--font-serif  /* backs font="serif" */
 ```
 
-**Roles** — which stack each kind of text uses. Declared on `.radix-themes`:
+**Roles** — which stack each kind of text uses. Declared on `.kui-theme`:
 
 ```css
 --font-body     /* Text, inputs, buttons, and anything that does not opt out */
 --font-heading  /* Heading — follows --font-body unless you set it */
 --font-code     /* Code */
---font-strong   /* Strong */
---font-em       /* Em */
---font-quote    /* Quote */
 ```
 
 Change a stack and every role using it moves with it. Change a role and only that role moves.
 
-The Radix Themes names (`--default-font-family`, `--heading-font-family`, `--code-font-family`, `--strong-font-family`, `--em-font-family`, `--quote-font-family`) are aliases of the roles above, kept so Radix documentation still applies. Overriding either spelling works.
+The Radix Themes names (`--default-font-family`, `--heading-font-family`, `--code-font-family`) are aliases of the roles above, kept so Radix documentation still applies. Overriding either spelling works.
 
 ## Loading Fonts
 
@@ -237,16 +153,16 @@ Swap a typeface everywhere it is used by overriding a stack at `:root`:
 }
 ```
 
-Give a single role its own typeface by overriding it at `.radix-themes`:
+Give a single role its own typeface by overriding it at `.kui-theme`:
 
 ```css showLineNumbers
 /* Serif headings over a sans body */
-.radix-themes {
+.kui-theme {
   --font-heading: var(--font-serif);
 }
 ```
 
-Roles are declared on `.radix-themes` rather than `:root` because `<Theme>` switches them per subtree — an override at `:root` sits on an ancestor and would be overruled. Stacks are the opposite: declare those at `:root`.
+Roles are declared on `.kui-theme` rather than `:root` because `<Theme>` switches them per subtree — an override at `:root` sits on an ancestor and would be overruled. Stacks are the opposite: declare those at `:root`.
 
 ## Theme Props
 
@@ -283,12 +199,9 @@ Individual pieces of text opt out with the `font` prop, which reads the stacks d
 | `--font-body` | `var(--font-sans)` |
 | `--font-heading` | `var(--font-body)` |
 | `--font-code` | `var(--font-mono)` |
-| `--font-strong` | `var(--font-body)` |
-| `--font-em` | `var(--font-serif)` |
-| `--font-quote` | `var(--font-serif)` |
 
 With `@kushagradhawan/kookie-ui/fonts.css` imported, the three stacks become Inter, JetBrains Mono and Playfair Display.
 
 ## Credits
 
-The typography infrastructure (10-step scale system and token structure) is from [Radix Themes](https://www.radix-ui.com/themes) by [WorkOS](https://workos.com/). However, Kookie UI uses custom typography values that have been modified from the original Radix Themes values. The typography system structure and approach credit goes to Radix Themes, while the specific typography values are custom to Kookie UI.
+The typography token structure is from [Radix Themes](https://www.radix-ui.com/themes) by [WorkOS](https://workos.com/). However, Kookie UI uses custom typography values that have been modified from the original Radix Themes values. The typography system structure and approach credit goes to Radix Themes, while the specific typography values are custom to Kookie UI.

@@ -5,12 +5,14 @@ import Link from 'next/link';
 import { DocsShell } from '@/components/blocks/docs-shell/docs-shell';
 import { docsNavigation } from '../navigation-config';
 import { DarkModeToggle } from './dark-mode';
-import { IconButton, Flex, Badge } from '@kushagradhawan/kookie-ui';
-import { HugeiconsIcon } from '@hugeicons/react';
-import { GithubIcon } from '@hugeicons/core-free-icons';
+import { Chip } from '@kushagradhawan/kookie-ui';
+import { PageToolbar } from './page-toolbar/page-toolbar';
 
 export function DocsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+
+  // Full-screen tools draw their own Shell, so the docs chrome steps aside.
+  if (pathname?.startsWith('/playground/')) return <>{children}</>;
 
   return (
     <DocsShell
@@ -22,19 +24,14 @@ export function DocsLayout({ children }: { children: React.ReactNode }) {
       }}
       pathname={pathname}
       linkComponent={Link}
-      sidebarFooter={
-        <Flex gap="2" align="center">
-          <DarkModeToggle />
-          <IconButton asChild variant="ghost" aria-label="GitHub">
-            <Link href="https://github.com/KushagraDhawan1997/kookie-ui" target="_blank" rel="noopener noreferrer">
-              <HugeiconsIcon icon={GithubIcon} strokeWidth={1.75} />
-            </Link>
-          </IconButton>
-          <Badge variant="classic" color="gray" size="2">
-            v{process.env.KOOKIE_UI_VERSION}
-          </Badge>
-        </Flex>
+      headerActions={
+        <Chip variant="raised" color="gray" size="2">
+          v{process.env.KOOKIE_UI_VERSION}
+        </Chip>
       }
+      // The repository moved to the page's top bar, as in v2.
+      sidebarFooter={<DarkModeToggle />}
+      toolbar={<PageToolbar />}
     >
       {children}
     </DocsShell>

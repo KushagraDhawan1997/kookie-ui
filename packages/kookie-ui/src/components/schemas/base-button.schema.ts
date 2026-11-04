@@ -3,8 +3,8 @@ import { z } from 'zod';
 /**
  * BaseButton Zod schema - Single source of truth for all button component props
  *
- * This schema defines the core button functionality used by Button, IconButton,
- * ToggleButton, and ToggleIconButton components. It ensures consistency across
+ * This schema defines the core button functionality used by the Button and Toggle
+ * components. It ensures consistency across
  * the design system and provides machine-readable validation.
  *
  * @example
@@ -60,7 +60,7 @@ export const BaseButtonSchema = z
      * @default 'solid'
      */
     variant: z
-      .enum(['classic', 'solid', 'soft', 'surface', 'outline', 'ghost', 'override'])
+      .enum(['raised', 'solid', 'soft', 'surface', 'outline', 'ghost'])
       .default('solid')
       .describe("Visual variant that determines the button's appearance and context"),
 
@@ -117,46 +117,6 @@ export const BaseButtonSchema = z
       .optional()
       .default(false)
       .describe('Loading state that shows a spinner and disables interaction'),
-
-    /**
-     * Full width mode that expands the button to fill its container
-     * Useful for mobile layouts and form submissions
-     * @default false
-     */
-    fullWidth: z
-      .boolean()
-      .optional()
-      .default(false)
-      .describe('Full width mode that expands the button to fill its container'),
-
-    /**
-     * Material type for visual rendering and depth effects
-     * Controls how the button renders its visual elements
-     */
-    material: z
-      .enum(['solid', 'translucent'])
-      .optional()
-      .describe('Material type for visual rendering and depth effects'),
-
-    /**
-     * Panel background type (deprecated)
-     * @deprecated Use `material` prop instead. This prop will be removed in a future version.
-     */
-    panelBackground: z
-      .enum(['solid', 'translucent'])
-      .optional()
-      .describe('Panel background type (deprecated - use material instead)'),
-
-    /**
-     * Flush mode that removes visual padding for seamless text integration
-     * Only effective with ghost variant
-     * @default false
-     */
-    flush: z
-      .boolean()
-      .optional()
-      .default(false)
-      .describe('Flush mode that removes visual padding for seamless text integration'),
 
     /**
      * Disabled state

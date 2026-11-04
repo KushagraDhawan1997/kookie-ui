@@ -3,8 +3,8 @@
 /**
  * The Shell's state model (0.8.0), ported from kookie-ui-v2's Shell.
  *
- * - State lives on the pane. Each pane holds `auto | open | closed` (the
- *   Sidebar adds `thin`). `auto` means untouched: the stylesheet decides what
+ * - State lives on the pane. Each pane holds `auto | open | closed`.
+ *   `auto` means untouched: the stylesheet decides what
  *   it shows at each breakpoint, so first paint is right with no script, the
  *   server and the client render the same markup, and no open-state callback
  *   can fire on mount or on a resize.
@@ -19,6 +19,7 @@
  *   construction.
  */
 import * as React from 'react';
+import { useLayoutEffect } from 'radix-ui/internal';
 import { SHELL_BREAKPOINTS } from '../shell.types.js';
 import type { Breakpoint, PaneName, PresentationValue } from '../shell.types.js';
 
@@ -26,8 +27,8 @@ import type { Breakpoint, PaneName, PresentationValue } from '../shell.types.js'
 
 export type Table<T> = Record<Breakpoint, T>;
 
-/** What a pane shows: open, open at its thin width (Sidebar only), or closed. */
-export type PaneValue = 'open' | 'thin' | 'closed';
+/** What a pane shows: open or closed. */
+export type PaneValue = 'open' | 'closed';
 
 type ResponsiveInput<T> = T | Partial<Record<Breakpoint, T>> | undefined;
 
@@ -170,25 +171,25 @@ export function usePeeking(store: ShellStore, name: PaneName): boolean {
   );
 }
 
-/* ── Inset ─────────────────────────────────────────────────────────────────── */
+/* ── Off the frame ─────────────────────────────────────────────────────────── */
 
-export type InsetPaneId = 'rail' | 'panel' | 'sidebar' | 'content' | 'inspector' | 'bottom';
+export type FramePaneId = 'rail' | 'panel' | 'sidebar' | 'content' | 'inspector' | 'bottom';
 
-export const ShellInsetContext = React.createContext<{
-  registerInset: (id: InsetPaneId) => void;
-  unregisterInset: (id: InsetPaneId) => void;
+export const ShellFrameContext = React.createContext<{
+  registerOffFrame: (id: FramePaneId) => void;
+  unregisterOffFrame: (id: FramePaneId) => void;
 } | null>(null);
 
-/** Registers a pane's `inset` with the Root, which paints the backdrop while any pane is inset. */
-export function useInsetRegistration(id: InsetPaneId, inset: boolean | undefined) {
-  const ctx = React.useContext(ShellInsetContext);
+/** Tells the Root a pane is off the frame (`flush={false}`); the Rail's card moves a floating Panel over. */
+export function useFrameRegistration(id: FramePaneId, flush: boolean) {
+  const ctx = React.useContext(ShellFrameContext);
   if (!ctx) throw new Error('Shell panes must be used within <Shell.Root>');
-  const { registerInset, unregisterInset } = ctx;
-  React.useLayoutEffect(() => {
-    if (!inset) return;
-    registerInset(id);
-    return () => unregisterInset(id);
-  }, [id, inset, registerInset, unregisterInset]);
+  const { registerOffFrame, unregisterOffFrame } = ctx;
+  useLayoutEffect(() => {
+    if (flush) return;
+    registerOffFrame(id);
+    return () => unregisterOffFrame(id);
+  }, [id, flush, registerOffFrame, unregisterOffFrame]);
 }
 
 /* ── Development warnings ──────────────────────────────────────────────────── */

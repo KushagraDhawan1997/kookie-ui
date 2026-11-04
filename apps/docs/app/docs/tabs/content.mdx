@@ -1,0 +1,175 @@
+---
+title: Tabs
+description: Tabs switch between views of the same content, such as the overview, activity and settings of a project.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/tabs.tsx
+---
+
+Tabs show one panel at a time and let people switch between panels that belong to the same thing, such as the sections of a project. Every panel stays on the same page. A control that changes a value or a filter, rather than the view, is a [Segmented Control](/docs/segmented-control). Links that go to other pages belong in a [Navbar](/docs/navbar) or a [Sidebar](/docs/sidebar).
+
+## Playground
+
+import TabsPlayground from '../../playground/tabs-playground';
+
+<TabsPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Box, Tabs, Text } from '@kushagradhawan/kookie-ui';
+
+export function ProjectTabs() {
+  return (
+    <Tabs.Root defaultValue="overview">
+      <Tabs.List>
+        <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+        <Tabs.Trigger value="activity">Activity</Tabs.Trigger>
+        <Tabs.Trigger value="settings">Settings</Tabs.Trigger>
+      </Tabs.List>
+      <Box pt="4">
+        <Tabs.Content value="overview"><Text size="2">Project summary.</Text></Tabs.Content>
+        <Tabs.Content value="activity"><Text size="2">Recent changes.</Text></Tabs.Content>
+        <Tabs.Content value="settings"><Text size="2">Project settings.</Text></Tabs.Content>
+      </Box>
+    </Tabs.Root>
+  );
+}
+```
+
+## Anatomy
+
+```tsx
+<Tabs.Root>
+  <Tabs.List>
+    <Tabs.Trigger />
+  </Tabs.List>
+  <Tabs.Content />
+</Tabs.Root>
+```
+
+- **Root:** Holds the state. It knows which tab is active.
+- **List:** The row of tabs. It sets the size and the colour of the active line.
+- **Trigger:** One tab. Its `value` links it to a panel.
+- **Content:** One panel. It shows when the trigger with the same `value` is active.
+
+## Best practices
+
+**Use tabs for views of one thing.** "Overview", "Activity" and "Settings" of one project belong in tabs. Steps that people must finish in order belong in a form with a Next button, because tabs let people skip ahead.
+
+**Keep labels short and parallel.** One or two words per tab, all nouns or all verbs. A long label pushes the other tabs out of view.
+
+**Use few tabs.** The list scrolls sideways when it is wider than its container, and tabs that scroll out of view are easy to miss. If you have more than five or six, group the content another way.
+
+**Don't nest tabs.** A row of tabs inside a panel of another row makes people track two states at once. Split the content into sections with headings instead.
+
+## Size
+
+`size` on `Tabs.List` sets the height of each tab and the text inside it. Sizes 1 to 4 are 28, 32, 40 and 48 pixels, the same heights as a [Button](/docs/button) of that size. When you leave it unset, the list follows the nearest Theme size. Use size 1 inside a dense panel. `size` accepts a responsive object.
+
+## Examples
+
+### Showing the active tab in the URL
+
+Control the value with `value` and `onValueChange`, and keep it in the URL so a link or a reload opens the same tab.
+
+```tsx
+<Tabs.Root value={tab} onValueChange={(next) => setSearchParam('tab', next)}>
+  {/* ... */}
+</Tabs.Root>
+```
+
+### Icon and label
+
+Put the icon before the label, inside the trigger. The list sizes the icon and sets the gap.
+
+```tsx
+<Tabs.Trigger value="activity">
+  <HugeiconsIcon icon={Activity01Icon} strokeWidth={1.75} />
+  Activity
+</Tabs.Trigger>
+```
+
+### Tab that isn't ready
+
+`disabled` on a trigger greys it out and skips it with the arrow keys. Add a reason nearby, because a disabled tab doesn't say why.
+
+### Vertical tabs
+
+`orientation="vertical"` stacks the tabs in a column beside the panels, with the active line on the edge next to them. Arrow Up and Arrow Down move between tabs.
+
+```tsx
+<Tabs.Root defaultValue="general" orientation="vertical">
+  <Tabs.List aria-label="Settings">
+    <Tabs.Trigger value="general">General</Tabs.Trigger>
+    <Tabs.Trigger value="billing">Billing</Tabs.Trigger>
+  </Tabs.List>
+  <Box pl="5">
+    <Tabs.Content value="general">General settings.</Tabs.Content>
+    <Tabs.Content value="billing">Billing settings.</Tabs.Content>
+  </Box>
+</Tabs.Root>
+```
+
+### Panels that keep their state
+
+A panel unmounts when its tab is inactive, so a half-filled form in it loses its input. Set `forceMount` on the panel to keep it mounted, and hide the inactive one with its `data-state="inactive"` attribute.
+
+## Props
+
+### Root
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `defaultValue` | `string` | | The tab that is active at first, when you don't control it |
+| `value` | `string` | | The active tab, when you control it |
+| `onValueChange` | `(value: string) => void` | | Called when the active tab changes |
+| `activationMode` | `'automatic' \| 'manual'` | `'automatic'` | `automatic` opens a tab when it gets focus. `manual` waits for Enter or Space |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | The direction of the list and the arrow keys that move between tabs |
+| `dir` | `'ltr' \| 'rtl'` | | The reading direction for the arrow keys |
+| `asChild` | `boolean` | `false` | Renders the child element with the root's behaviour |
+
+Root also accepts every attribute of the HTML `div` element.
+
+### List
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'1' \| '2' \| '3' \| '4'`, responsive | Theme size | The tab height step |
+| `color` | `AccentColor` | Theme accent | The colour of the active line |
+| `justify` | `'start' \| 'center' \| 'end'`, responsive | | Where the tabs sit in the row |
+| `wrap` | `'nowrap' \| 'wrap' \| 'wrap-reverse'`, responsive | | Lets tabs wrap onto a second row instead of scrolling |
+| `loop` | `boolean` | `true` | Moves focus from the last tab to the first with the arrow keys |
+
+List also accepts every attribute of the HTML `div` element.
+
+### Trigger
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` | | Required. Links the tab to the panel with the same `value` |
+| `disabled` | `boolean` | `false` | Blocks the tab and skips it with the arrow keys |
+
+Trigger also accepts every attribute of the HTML `button` element.
+
+### Content
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` | | Required. Links the panel to the tab with the same `value` |
+| `forceMount` | `boolean` | | Keeps the panel mounted when it is inactive |
+| `asChild` | `boolean` | `false` | Renders the child element as the panel |
+
+Content also accepts every attribute of the HTML `div` element.
+
+## Accessibility
+
+| Key | Action |
+| --- | --- |
+| Tab | Moves focus to the active tab, then into the open panel |
+| Arrow Left or Arrow Right | Moves focus to the previous or next tab, and opens it in automatic mode. Arrow Up or Arrow Down in a vertical list |
+| Home or End | Moves focus to the first or last tab |
+| Enter or Space | Opens the focused tab in manual mode |
+
+- **Roles:** The list has `role="tablist"`, each trigger has `role="tab"` and each panel has `role="tabpanel"`. A screen reader announces the tab's label, its position, such as "2 of 3", and whether it is selected.
+- **Name:** Each panel is named by its tab. Give the list an `aria-label` when the page has more than one set of tabs.
+- **Panel:** The open panel is in the tab order, so keyboard users can reach a panel with no controls in it.
+- **Focus:** The focus ring shows inside the tab for the keyboard only, and the list scrolls to keep the focused tab in view.

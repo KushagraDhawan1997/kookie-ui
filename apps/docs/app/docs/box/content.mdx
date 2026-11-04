@@ -1,0 +1,132 @@
+---
+title: Box
+description: Box wraps content in a plain block so you can give it spacing, size and position with props.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/box.tsx
+---
+
+Box is a `div` or `span` that takes layout props: padding, margin, width, height, position and overflow. It has no look of its own. To lay out several children in a row or column, use [Flex](/docs/flex). For rows and columns at once, use [Grid](/docs/grid).
+
+## Playground
+
+import BoxPlayground from '../../playground/box-playground';
+
+<BoxPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Box, Heading, Text } from '@kushagradhawan/kookie-ui';
+
+export function ArticleHeader() {
+  return (
+    <Box
+      maxWidth="640px"
+      mx="auto"
+      px={{ initial: '4', md: '6' }}
+      py="6"
+    >
+      <Heading size="7">Release notes</Heading>
+      <Box mt="3">
+        <Text size="3" emphasis="medium">
+          Changes to the API, the CLI and the dashboard, newest first.
+        </Text>
+      </Box>
+    </Box>
+  );
+}
+```
+
+## Spacing
+
+Padding and margin props take a step from the space scale, a CSS string such as `"20px"` or `"auto"`, or a responsive object.
+
+| Step | Size | Step | Size |
+| --- | --- | --- | --- |
+| `1` | 2px | `7` | 32px |
+| `2` | 4px | `8` | 40px |
+| `3` | 8px | `9` | 48px |
+| `4` | 12px | `10` | 64px |
+| `5` | 16px | `11` | 96px |
+| `6` | 24px | `12` | 128px |
+
+Margins also take negative steps, `"-1"` to `"-12"`, and `"bleed"`.
+
+Only Box, [Flex](/docs/flex) and [Grid](/docs/grid) take margin props. Text, Button and the other components don't, so wrap one in a Box when it needs space around it, or set `gap` on the parent.
+
+### Bleed
+
+`m="bleed"` pulls an element out to the edges of the surface it sits in, by the surface's own padding. [Card](/docs/card), [Popover](/docs/popover), [Dialog](/docs/dialog), [Alert Dialog](/docs/alert-dialog) and [Notice](/docs/notice) publish their padding, so an image or a table inside one can run edge to edge. Outside a surface, `bleed` is zero. `mx="bleed"` and `mt="bleed"` bleed one axis or one side.
+
+```tsx
+<Card>
+  <Box mx="bleed" mt="bleed">
+    <Image src="/cover.jpg" alt="" />
+  </Box>
+  <Text>Cover photo</Text>
+</Card>
+```
+
+## Responsive values
+
+Every layout prop accepts an object keyed by breakpoint. A key applies from that width up, and `initial` applies at every width.
+
+| Key | From |
+| --- | --- |
+| `initial` | 0px |
+| `xs` | 520px |
+| `sm` | 768px |
+| `md` | 1024px |
+| `lg` | 1280px |
+| `xl` | 1640px |
+
+```tsx
+<Box display={{ initial: 'none', md: 'block' }} width={{ initial: '100%', md: '320px' }} />
+```
+
+## Examples
+
+### Sticky header
+
+`position`, `top` and the other edge props place the box. Edges take space steps, negative steps or CSS strings.
+
+```tsx
+<Box position="sticky" top="0" py="3">
+  <Toolbar />
+</Box>
+```
+
+### Inline wrapper
+
+`as="span"` keeps the box inline, for space around a word or icon inside a line of text.
+
+### Rendering another element
+
+`asChild` puts the box's layout props on its only child, such as a `section` or a link, and renders no `div` of its own.
+
+```tsx
+<Box asChild p="4">
+  <section aria-labelledby="billing">…</section>
+</Box>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `as` | `'div' \| 'span'` | `'div'` | The element to render |
+| `asChild` | `boolean` | `false` | Renders the child element with the box's props |
+| `display` | `'none' \| 'inline' \| 'inline-block' \| 'block' \| 'contents'`, responsive | `'block'` | The CSS display |
+| `p`, `px`, `py`, `pt`, `pr`, `pb`, `pl` | `'0'`–`'12'` or `string`, responsive | | Padding |
+| `m`, `mx`, `my`, `mt`, `mr`, `mb`, `ml` | `'0'`–`'12'`, `'-1'`–`'-12'`, `'bleed'` or `string`, responsive | | Margin |
+| `width`, `minWidth`, `maxWidth` | `string`, responsive | | Width, as a CSS value |
+| `height`, `minHeight`, `maxHeight` | `string`, responsive | | Height, as a CSS value |
+| `position` | `'static' \| 'relative' \| 'absolute' \| 'fixed' \| 'sticky'`, responsive | | The CSS position |
+| `inset`, `top`, `right`, `bottom`, `left` | `'0'`–`'12'`, `'-1'`–`'-9'` or `string`, responsive | | Offsets for a positioned box |
+| `overflow`, `overflowX`, `overflowY` | `'visible' \| 'hidden' \| 'clip' \| 'scroll' \| 'auto'`, responsive | | What happens to content that doesn't fit |
+| `flexBasis` | `string`, responsive | | Size inside a Flex parent |
+| `flexGrow`, `flexShrink` | `'0' \| '1'` or `string`, responsive | | Grow and shrink inside a Flex parent |
+| `gridArea`, `gridColumn`, `gridColumnStart`, `gridColumnEnd`, `gridRow`, `gridRowStart`, `gridRowEnd` | `string`, responsive | | Placement inside a Grid parent |
+| `alignSelf` | `'start' \| 'center' \| 'end' \| 'baseline' \| 'stretch'`, responsive | | Cross-axis alignment inside a Flex or Grid parent |
+| `justifySelf` | `'start' \| 'center' \| 'end' \| 'baseline' \| 'stretch'`, responsive | | Inline alignment inside a Grid parent |
+
+Box also accepts every attribute of the HTML `div` element, or `span` with `as="span"`.

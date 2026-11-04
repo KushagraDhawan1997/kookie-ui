@@ -7,26 +7,26 @@
 
 .kd-toc-link {
   display: block;
-  padding-block: var(--space-2);
-  padding-inline-start: var(--space-4);
-  border-inline-start: 1px solid var(--gray-a5);
-  color: var(--gray-11);
+  padding-block: var(--space-3);
+  padding-inline-start: var(--space-5);
+  border-inline-start: 1px solid var(--neutral-a5);
+  color: var(--neutral-11);
   text-decoration: none;
   transition: color 120ms, border-color 120ms;
 }
 
 .kd-toc-link[data-level='3'] {
-  padding-inline-start: var(--space-6);
+  padding-inline-start: var(--space-7);
 }
 
 .kd-toc-link[aria-current] {
-  color: var(--gray-12);
+  color: var(--neutral-12);
   border-inline-start-color: var(--accent-9);
 }
 
 @media (hover: hover) {
   .kd-toc-link:hover {
-    color: var(--gray-12);
+    color: var(--neutral-12);
   }
 }
 

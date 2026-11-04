@@ -1,17 +1,32 @@
-.radix-themes {
+.kui-theme {
   --spinner-animation-duration: 800ms;
   --spinner-opacity: 0.65;
 }
 
-.rt-Spinner {
+.kui-Spinner {
   display: block;
   position: relative;
-  opacity: var(--spinner-opacity);
-  /* Single GPU-composited rotation instead of 8 opacity animations */
-  animation: rt-spinner-rotate var(--spinner-animation-duration) steps(8, end) infinite;
+  /* A host (a loading Button) can set --spinner-size to fit its icon box. */
+  width: var(--spinner-size, var(--space-5));
+  height: var(--spinner-size, var(--space-5));
+  /* The rotation runs on the inner wheel, clipped here. Unclipped, a running transform animation
+     makes Chrome give its own layer to everything painted after it that it might overlap. The
+     leaves stay inside this box at every step; the margin keeps their anti-aliased edges on the
+     diagonal steps, which a clip at the box itself shaves. */
+  contain: paint;
+  overflow-clip-margin: 4px;
 }
 
-.rt-SpinnerLeaf {
+.kui-SpinnerWheel {
+  position: absolute;
+  inset: 0;
+  /* On the wheel, not the root: opacity on the clipping root costs Chrome a second layer per spinner. */
+  opacity: var(--spinner-opacity);
+  /* Single GPU-composited rotation instead of 8 opacity animations */
+  animation: kui-spinner-rotate var(--spinner-animation-duration) steps(8, end) infinite;
+}
+
+.kui-SpinnerLeaf {
   position: absolute;
   top: 0;
   left: calc(50% - 12.5% / 2);
@@ -63,38 +78,43 @@
   }
 }
 
-@keyframes rt-spinner-rotate {
+@keyframes kui-spinner-rotate {
   to {
     transform: rotate(360deg);
   }
 }
 
-/* Enhanced reduced motion support */
+/* A busy indicator keeps moving when motion is reduced, more slowly. */
 @media (prefers-reduced-motion: reduce) {
-  .rt-Spinner {
-    animation: none;
+  .kui-SpinnerWheel {
+    animation-duration: calc(var(--spinner-animation-duration) * 3);
   }
 }
 
-/***************************************************************************************************
- *                                                                                                 *
- * SIZES                                                                                           *
- *                                                                                                 *
- ***************************************************************************************************/
-
-@breakpoints {
-  .rt-Spinner {
-    &:where(.rt-r-size-1) {
-      width: var(--space-3);
-      height: var(--space-3);
-    }
-    &:where(.rt-r-size-2) {
-      width: var(--space-4);
-      height: var(--space-4);
-    }
-    &:where(.rt-r-size-3) {
-      width: calc(1.25 * var(--space-4));
-      height: calc(1.25 * var(--space-4));
-    }
+/* Forced colors repaint backgrounds as Canvas, which would erase the leaves. */
+@media (forced-colors: active) {
+  .kui-SpinnerLeaf::before {
+    background-color: CanvasText;
   }
+}
+
+/* A Spinner with children is one tree, loading or not. At rest it steps out of layout. */
+.kui-SpinnerHost:where(:not([data-loading])) {
+  display: contents;
+}
+
+.kui-SpinnerHost:where([data-loading]) {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kui-SpinnerChildren {
+  display: contents;
+}
+
+/* Children of a Spinner keep their space but are not shown while it spins. A class, not an inline style. */
+.kui-SpinnerHiddenChildren {
+  visibility: hidden;
 }

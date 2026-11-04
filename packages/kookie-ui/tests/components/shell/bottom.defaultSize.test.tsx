@@ -15,7 +15,7 @@ function App({ defaultSize }: { defaultSize: string | number }) {
 }
 
 function getEl() {
-  return screen.getByText('bottom').closest('.rt-ShellBottom') as HTMLElement;
+  return screen.getByText('bottom').closest('.kui-ShellBottom') as HTMLElement;
 }
 
 describe('Bottom defaultSize normalization', () => {

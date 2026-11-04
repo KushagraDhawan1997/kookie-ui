@@ -1,0 +1,38 @@
+/* Page (from v2, 2026-11-03): the screen you navigated to. Three distances and a marker; the
+ * width is the frame's to state. */
+.kui-Page {
+  display: flex;
+  flex-direction: column;
+  /* From the title block to whatever the page begins with: two steps clear of the title-to-
+     description interval, so a section does not read as a third line of the description. */
+  gap: var(--layout-space-8);
+  /* Air above the title. A floating band's reach is already cleared by `Shell.Scroll`, which
+     pads its content by it, so only the air is left to add. */
+  padding-block-start: var(--layout-space-7);
+}
+
+/* The title and its description are one block, and the marker is placed against it. */
+.kui-PageHeader {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--layout-space-6);
+}
+
+/* The mark and the title are a lockup, so they sit closer than the title and description. */
+.kui-PageMark {
+  margin-block-end: calc(var(--layout-space-4) - var(--layout-space-6));
+}
+
+/* Where the title stops being visible. The band floats over the scroller, so the marker sits the
+   band's reach above the end of the title block, and crosses the scroller's top edge at the
+   moment the title passes behind the band. A hairline tall, since a zero-area box is not
+   reliably reported as intersecting; out of flow, and it paints nothing. */
+.kui-PageMarker {
+  position: absolute;
+  inset-block-end: var(--kui-pane-inset-start, 0px);
+  inset-inline-start: 0;
+  block-size: 1px;
+  inline-size: 100%;
+  pointer-events: none;
+}

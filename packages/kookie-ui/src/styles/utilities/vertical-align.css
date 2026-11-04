@@ -1,17 +1,17 @@
 @breakpoints {
-  .rt-r-va-baseline {
+  .kui-r-va-baseline {
     vertical-align: baseline;
   }
 
-  .rt-r-va-top {
+  .kui-r-va-top {
     vertical-align: top;
   }
 
-  .rt-r-va-middle {
+  .kui-r-va-middle {
     vertical-align: middle;
   }
 
-  .rt-r-va-bottom {
+  .kui-r-va-bottom {
     vertical-align: bottom;
   }
 }

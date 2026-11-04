@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { act, render, screen } from '@testing-library/react';
-import { describe, expect, test, vi } from 'vitest';
+import { describe, expect, test } from 'vitest';
+import { Direction } from 'radix-ui';
 
 import { Theme, useThemeContext } from '../../../src/components/theme';
 
@@ -15,13 +16,14 @@ function readContext() {
 
 describe('Theme attributes', () => {
   test('the root theme carries the resolved values', () => {
-    const { container } = render(<Theme appearance="dark" accentColor="crimson" radius="large" scaling="105%" />);
-    const root = container.querySelector('.radix-themes') as HTMLElement;
+    const { container } = render(<Theme appearance="dark" accentColor="crimson" radius="large" />);
+    const root = container.querySelector('.kui-theme') as HTMLElement;
 
     expect(root.dataset.isRootTheme).toBe('true');
     expect(root.dataset.accentColor).toBe('crimson');
     expect(root.dataset.radius).toBe('large');
-    expect(root.dataset.scaling).toBe('105%');
+    // The scale is fixed, so nothing is written for it.
+    expect(root.dataset.scaling).toBeUndefined();
     expect(root.classList.contains('dark')).toBe(true);
   });
 
@@ -31,7 +33,7 @@ describe('Theme attributes', () => {
         <Theme appearance="dark" data-testid="nested" />
       </Theme>,
     );
-    const themes = container.querySelectorAll('.radix-themes');
+    const themes = container.querySelectorAll('.kui-theme');
 
     expect(themes).toHaveLength(2);
     expect((themes[0] as HTMLElement).dataset.isRootTheme).toBe('true');
@@ -40,7 +42,7 @@ describe('Theme attributes', () => {
 
   test('grayColor="auto" resolves against the accent colour', () => {
     const { container } = render(<Theme accentColor="crimson" grayColor="auto" />);
-    const root = container.querySelector('.radix-themes') as HTMLElement;
+    const root = container.querySelector('.kui-theme') as HTMLElement;
 
     expect(root.dataset.grayColor).toBeTruthy();
     expect(root.dataset.grayColor).not.toBe('auto');
@@ -48,108 +50,30 @@ describe('Theme attributes', () => {
 });
 
 /**
- * `data-os` cannot be resolved on the server, so it is written to the DOM in a
- * layout effect rather than rendered. That keeps it out of the server markup —
- * so hydration still matches — without costing the root an extra render pass,
- * but it also means React is no longer managing the attribute.
+ * Nothing in the library reads an OS attribute, so the root does not sniff the
+ * user agent to write one.
  */
 describe('Theme data-os', () => {
-  /**
-   * jsdom reports a user agent with no recognisable platform, so the OS has to
-   * be supplied for these to mean anything.
-   */
-  function withUserAgent(userAgent: string) {
+  test('is not stamped on the root, even when the platform is resolvable', () => {
     const original = Object.getOwnPropertyDescriptor(window.navigator, 'userAgent');
-    Object.defineProperty(window.navigator, 'userAgent', { value: userAgent, configurable: true });
-    return () => {
+    Object.defineProperty(window.navigator, 'userAgent', {
+      value: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+      configurable: true,
+    });
+    try {
+      const { container } = render(<Theme />);
+      const root = container.querySelector('.kui-theme') as HTMLElement;
+      expect(root.hasAttribute('data-os')).toBe(false);
+    } finally {
       if (original) Object.defineProperty(window.navigator, 'userAgent', original);
       else delete (window.navigator as unknown as Record<string, unknown>).userAgent;
-    };
-  }
-
-  test.each([
-    ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)', 'macos'],
-    ['Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'windows'],
-    ['Mozilla/5.0 (X11; Linux x86_64)', 'linux'],
-  ])('%s resolves to %s', (userAgent, expected) => {
-    const restore = withUserAgent(userAgent);
-    try {
-      const { container } = render(<Theme />);
-      const root = container.querySelector('.radix-themes') as HTMLElement;
-      expect(root.dataset.os).toBe(expected);
-    } finally {
-      restore();
     }
   });
 
-  test('an unrecognised platform leaves the attribute off entirely', () => {
-    const restore = withUserAgent('Mozilla/5.0 (something else)');
-    try {
-      const { container } = render(<Theme />);
-      const root = container.querySelector('.radix-themes') as HTMLElement;
-      expect(root.hasAttribute('data-os')).toBe(false);
-    } finally {
-      restore();
-    }
-  });
-
-  test('is not applied to a nested theme', () => {
-    const restore = withUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)');
-    try {
-      const { container } = render(
-        <Theme>
-          <Theme appearance="dark" />
-        </Theme>,
-      );
-      const themes = container.querySelectorAll('.radix-themes');
-
-      expect((themes[0] as HTMLElement).dataset.os).toBe('macos');
-      expect((themes[1] as HTMLElement).hasAttribute('data-os')).toBe(false);
-    } finally {
-      restore();
-    }
-  });
-
-  test('survives a re-render', () => {
-    // React does not own the attribute any more, so a reconcile must not drop it.
-    const restore = withUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)');
-    try {
-      const { container, rerender } = render(<Theme accentColor="blue" />);
-      const root = container.querySelector('.radix-themes') as HTMLElement;
-
-      rerender(<Theme accentColor="crimson" />);
-
-      expect(root.dataset.accentColor).toBe('crimson');
-      expect(root.dataset.os).toBe('macos');
-    } finally {
-      restore();
-    }
-  });
-
-  test('a caller-supplied data-os is left alone', () => {
-    const restore = withUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)');
-    try {
-      const { container } = render(<Theme data-os="windows" />);
-      const root = container.querySelector('.radix-themes') as HTMLElement;
-      expect(root.dataset.os).toBe('windows');
-    } finally {
-      restore();
-    }
-  });
-
-  test('is cleaned up on unmount', () => {
-    const restore = withUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)');
-    try {
-      const { container, unmount } = render(<Theme />);
-      const root = container.querySelector('.radix-themes') as HTMLElement;
-      expect(root.dataset.os).toBe('macos');
-
-      unmount();
-
-      expect(root.hasAttribute('data-os')).toBe(false);
-    } finally {
-      restore();
-    }
+  test('a caller-supplied data-os is passed through', () => {
+    const { container } = render(<Theme data-os="windows" />);
+    const root = container.querySelector('.kui-theme') as HTMLElement;
+    expect(root.dataset.os).toBe('windows');
   });
 });
 
@@ -208,6 +132,25 @@ describe('Theme values follow their props', () => {
     expect(seen.at(-1)?.accentColor).toBe('jade');
   });
 
+  test('a change made inside a nested Theme reaches the root', () => {
+    // Dialog, Popover and the menus wrap their content in a nested Theme, so a
+    // switcher inside one calls the nested context's setter.
+    const { seen, Probe } = readContext();
+    render(
+      <Theme accentColor="blue">
+        <Theme>
+          <Probe />
+        </Theme>
+      </Theme>,
+    );
+
+    act(() => seen.at(-1)!.onAccentColorChange('red'));
+    act(() => seen.at(-1)!.onAppearanceChange('dark'));
+
+    expect(seen.at(-1)?.accentColor).toBe('red');
+    expect(seen.at(-1)?.appearance).toBe('dark');
+  });
+
   test('a runtime change is overridden by a later prop change', () => {
     const { seen, Probe } = readContext();
     const { rerender } = render(
@@ -226,24 +169,11 @@ describe('Theme values follow their props', () => {
     expect(seen.at(-1)?.accentColor).toBe('crimson');
   });
 
-  test('panelBackground tracks material for backwards compatibility', () => {
-    const { seen, Probe } = readContext();
-    render(
-      <Theme material="solid">
-        <Probe />
-      </Theme>,
-    );
+  test('solid is the only material, so no material attribute is written', () => {
+    const { container } = render(<Theme />);
+    const root = container.querySelector('.kui-theme') as HTMLElement;
 
-    expect(seen.at(-1)?.material).toBe('solid');
-    expect(seen.at(-1)?.panelBackground).toBe('solid');
-  });
-
-  test('material is settled on the first commit, not corrected afterwards', () => {
-    const { container } = render(<Theme material="solid" />);
-    const root = container.querySelector('.radix-themes') as HTMLElement;
-
-    expect(root.dataset.material).toBe('solid');
-    expect(root.dataset.panelBackground).toBe('solid');
+    expect(root.dataset.material).toBeUndefined();
   });
 });
 
@@ -260,5 +190,31 @@ describe('useThemeContext outside a provider', () => {
     expect(screen.getByTestId('ok')).toBeTruthy();
     expect(value?.accentColor).toBeTruthy();
     expect(() => value?.onAccentColorChange('jade')).not.toThrow();
+  });
+});
+
+describe('Theme direction', () => {
+  function DirProbe() {
+    return <span data-testid="dir">{Direction.useDirection()}</span>;
+  }
+
+  test('defaults to left-to-right', () => {
+    render(
+      <Theme>
+        <DirProbe />
+      </Theme>,
+    );
+    expect(screen.getByTestId('dir').textContent).toBe('ltr');
+  });
+
+  test('inherits a direction set above it', () => {
+    render(
+      <Direction.Provider dir="rtl">
+        <Theme>
+          <DirProbe />
+        </Theme>
+      </Direction.Provider>,
+    );
+    expect(screen.getByTestId('dir').textContent).toBe('rtl');
   });
 });

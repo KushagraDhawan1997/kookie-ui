@@ -32,6 +32,8 @@ const withMDX = nextMDX({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // A phone on the same Wi-Fi opens the dev server by the Mac's address while testing touch pages.
+  allowedDevOrigins: ['192.168.*.*', '10.*.*.*', '*.local'],
   // Configure `pageExtensions` to include markdown and MDX files
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   // Transpile the local kookie-ui package
@@ -40,17 +42,27 @@ const nextConfig = {
   env: {
     KOOKIE_UI_VERSION: packageJson.version,
   },
-  // The theme pages became chapters on 2026-09-19 (docs/LOG.md). Old links keep working.
+  // Old links keep working: every removed or renamed page points to its nearest page.
   async redirects() {
     return [
+      // The theme pages became chapters on 2026-09-19 (docs/LOG.md).
       ['/docs/installation', '/start/installation'],
       ['/docs/theme', '/start/theming'],
       ['/docs/colors', '/foundations/color'],
       ['/docs/typography', '/foundations/typography'],
       ['/docs/radius', '/foundations/radius'],
-      ['/docs/material', '/foundations/materials'],
       ['/docs/shadows', '/foundations/depth'],
       ['/docs/constants', '/foundations/constants'],
+      // Surfaces are solid since 0.17; material is gone.
+      ['/docs/material', '/start/theming'],
+      ['/foundations/materials', '/start/theming'],
+      // Components merged or removed in 0.15 to 0.22.
+      ['/docs/app-bar', '/docs/toolbar'],
+      ['/docs/callout', '/docs/notice'],
+      ['/docs/badge', '/docs/chip'],
+      ['/docs/icon-button', '/docs/button'],
+      ['/docs/toggle-button', '/docs/toggle'],
+      ['/docs/toggle-icon-button', '/docs/toggle'],
     ].map(([source, destination]) => ({ source, destination, permanent: true }));
   },
   images: {

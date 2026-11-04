@@ -18,7 +18,7 @@ function App({ onResize, onResizeEnd }: { onResize?: (size: number) => void; onR
   );
 }
 
-const panelSize = () => Number.parseFloat((document.querySelector('.rt-ShellPanel') as HTMLElement).style.getPropertyValue('--panel-size'));
+const panelSize = () => Number.parseFloat((document.querySelector('.kui-ShellPanel') as HTMLElement).style.getPropertyValue('--panel-size'));
 
 /**
  * Dragging a resize handle is the most latency-sensitive interaction the

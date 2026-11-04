@@ -4,7 +4,7 @@ import { hydrateRoot } from 'react-dom/client';
 import { act } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { Badge, Box, Button, Card, Flex, Heading, Text, Theme } from '../../src/components/index';
+import { Box, Button, Card, Chip, Flex, Heading, Text, Theme } from '../../src/components/index';
 import { Shell } from '../../src/components/index';
 
 function Screen() {
@@ -18,9 +18,9 @@ function Screen() {
               Body
             </Text>
           </Card>
-          <Badge variant="soft" color="gray">
+          <Chip variant="soft" color="gray">
             Active
-          </Badge>
+          </Chip>
           <Button size="2" variant="classic">
             Save
           </Button>
@@ -33,10 +33,8 @@ function Screen() {
 const HYDRATION_NOISE = /hydrat|did not match|server (html|rendered)|mismatch/i;
 
 /**
- * jsdom's default user agent names no platform it recognises, which would make
- * `data-os` absent from the server markup whether or not it is rendered through
- * React — the assertions below would then pass for the wrong reason. Pin a user
- * agent that does resolve, so anything rendering `data-os` shows up.
+ * Pin a user agent that names a platform, so anything that sniffs it and
+ * renders a platform attribute shows up as a mismatch below.
  */
 const MAC_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)';
 let restoreUserAgent: (() => void) | undefined;
@@ -56,9 +54,8 @@ afterEach(() => {
 });
 
 /**
- * `data-os` is resolved from the user agent, which the server cannot know. It
- * is written to the DOM in a layout effect precisely so it stays out of the
- * server markup — if it ever renders, hydration mismatches.
+ * The user agent is something the server cannot know, so nothing derived from
+ * it may render. If it ever does, hydration mismatches.
  */
 describe('server markup', () => {
   test('does not contain data-os, even when the platform is resolvable', () => {
@@ -71,16 +68,16 @@ describe('server markup', () => {
 
     expect(html).toContain('data-is-root-theme="true"');
     expect(html).toContain('data-accent-color=');
-    expect(html).toContain('radix-themes');
+    expect(html).toContain('kui-theme');
   });
 
   test('contains the class names generated from props', () => {
     const html = renderToString(<Screen />);
 
-    expect(html).toContain('rt-r-p-4');
-    expect(html).toContain('rt-r-gap-3');
-    expect(html).toContain('rt-r-fd-column');
-    expect(html).toContain('md:rt-r-fd-row');
+    expect(html).toContain('kui-r-p-4');
+    expect(html).toContain('kui-r-gap-3');
+    expect(html).toContain('kui-r-fd-column');
+    expect(html).toContain('md:kui-r-fd-row');
   });
 
   test('renders the shell at the initial breakpoint', () => {
@@ -142,11 +139,11 @@ describe('hydration', () => {
     }
   });
 
-  test('data-os is added after hydration, not before', () => {
+  test('data-os is not added after hydration either', () => {
     const { container, messages, cleanup } = hydrate(<Screen />);
     try {
-      const root = container.querySelector('.radix-themes') as HTMLElement;
-      expect(root.dataset.os).toBe('macos');
+      const root = container.querySelector('.kui-theme') as HTMLElement;
+      expect(root.hasAttribute('data-os')).toBe(false);
       expect(messages.filter((m) => HYDRATION_NOISE.test(m))).toEqual([]);
     } finally {
       cleanup();

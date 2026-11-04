@@ -1,75 +1,25 @@
 /* * * * * * * * * * * * * * * * * * * */
-/*                                     */
-/*        Design System Constants      */
-/*                                     */
-/* * * * * * * * * * * * * * * * * * * */
 
-:where(.radix-themes) {
-  /* Backdrop blur constants - using new blur tokens */
-  --backdrop-blur-components: var(--blur-4);
-  --backdrop-blur-panel: var(--blur-5);
-  --backdrop-blur-dialog: var(--blur-6);
-
-  /*
-   * The filter a translucent surface uses when blur is enabled. Everything that
-   * opts into a backdrop filter reads one of these rather than writing
-   * `blur(...)` itself, so `[data-blur='none']` and
-   * `prefers-reduced-transparency` can switch the property off entirely — see
-   * tokens/blur.css.
-   */
-  --backdrop-filter-components-enabled: blur(var(--backdrop-blur-components));
-  --backdrop-filter-panel-enabled: blur(var(--backdrop-blur-panel));
-  --backdrop-filter-dialog-enabled: blur(var(--backdrop-blur-dialog));
-
-  /* Surface background opacity constants - using new opacity tokens */
-  --surface-opacity-light: var(--opacity-5);
-  --surface-opacity-heavy: var(--opacity-6);
-  --surface-opacity-dark: var(--opacity-7);
-
-  /* Dialog background opacity constants (stronger than panel) */
-  --dialog-opacity: var(--opacity-9);
-  --dialog-opacity-percentage: calc(var(--dialog-opacity) * 100%);
-
-  /* Panel background opacity constants */
-  --panel-opacity: var(--opacity-8);
-  --panel-opacity-percentage: calc(var(--panel-opacity) * 100%);
-
-  /* Surface background opacity constants */
-  --surface-opacity: var(--opacity-7);
-  --surface-opacity-percentage: calc(var(--surface-opacity) * 100%);
-
+:where(.kui-theme) {
   /* Standard border width constants */
   --border-width-standard: 1px;
 
-  /* Classic variant 3D effect constants - simplified for button-like components */
-  --classic-elevation-offset: -0.02em;
-  --classic-active-padding-offset-1: 0.5px;
-  --classic-active-padding-offset-2: 1px;
-  --classic-shadow-blur-small: 0.15em;
-  --classic-border-width: 0.03em;
-  --classic-border-width-thick: 0.05em;
-  --classic-shadow-offset-y: 0.04em;
-  --classic-word-spacing: -0.1em;
+  /* One focus ring: outline var(--focus-ring-width) solid var(--focus-8), offset var(--focus-ring-offset) */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
 
-  /* Classic variant division factors for form components and inset effects */
-  --classic-elevation-factor-subtle: 3;
-  --classic-shadow-factor-light: 1.5;
-  --classic-border-multiplier-double: 2;
+  /* Raised variant 3D effect constants - simplified for button-like components */
+  --raised-elevation-offset: -0.02em;
+  --raised-active-padding-offset-1: 0.5px;
+  --raised-active-padding-offset-2: 1px;
+  --raised-shadow-blur-small: 0.15em;
+  --raised-border-width: 0.03em;
+  --raised-border-width-thick: 0.05em;
+  --raised-shadow-offset-y: 0.04em;
+  --raised-word-spacing: -0.1em;
 
   /* Complex shadow tokens for form components and inset effects */
-  --classic-shadow-blur-medium: 0.2em;
-  --classic-shadow-blur-large: 0.4em;
-  --classic-shadow-medium-factor-third: 3;
-
-  /* Classic inset shadow tokens - based on text field pattern for consistent 3D effects */
-  --classic-inset-shadow-dark:
-    inset 0 var(--classic-border-width)
-      calc(var(--classic-shadow-blur-small) / var(--classic-shadow-factor-light)) var(--gray-a4),
-    inset 0 calc(-1 * var(--classic-border-width)) var(--gray-a2),
-    inset 0 calc(var(--classic-border-width) * var(--classic-border-multiplier-double))
-      calc(var(--classic-shadow-blur-medium) / var(--classic-shadow-medium-factor-third))
-      var(--gray-a3),
-    0 0 0 var(--classic-border-width) var(--gray-a5);
+  --raised-shadow-blur-large: 0.4em;
 
   /* Trigger icon size constants (for dropdowns, selects) */
   --trigger-icon-size-default: 9px;
@@ -79,20 +29,21 @@
   --trigger-icon-size-4: 12px;
 
   /* Content icon size constants (for buttons, menu items) */
-  --content-icon-size-1: calc(var(--space-5) * 0.55);
-  --content-icon-size-2: calc(var(--space-6) * 0.525);
-  --content-icon-size-3: calc(var(--space-7) * 0.5125);
-  --content-icon-size-4: calc(var(--space-8) * 0.5);
+  --content-icon-size-1: calc(var(--space-6) * 0.55);
+  --content-icon-size-2: calc(var(--space-7) * 0.525);
+  --content-icon-size-3: calc(var(--space-8) * 0.5125);
+  --content-icon-size-4: calc(var(--space-9) * 0.5);
 
   /* Indicator icon size constants (for checkboxes, radio, sub-triggers) */
-  --indicator-icon-size-1: calc(9px * var(--scaling));
-  --indicator-icon-size-2: calc(10px * var(--scaling));
-  --indicator-icon-size-3: calc(12px * var(--scaling));
+  --indicator-icon-size-1: calc(9px * var(--scale));
+  --indicator-icon-size-2: calc(10px * var(--scale));
+  --indicator-icon-size-3: calc(12px * var(--scale));
 
   /* Select-specific indicator icon sizes */
-  --select-indicator-icon-size-1: calc(8px * var(--scaling));
-  --select-indicator-icon-size-2: calc(10px * var(--scaling));
-  --select-indicator-icon-size-3: calc(10px * var(--scaling));
+  --select-indicator-icon-size-1: calc(8px * var(--scale));
+  --select-indicator-icon-size-2: calc(10px * var(--scale));
+  --select-indicator-icon-size-3: calc(10px * var(--scale));
+  --select-indicator-icon-size-4: calc(12px * var(--scale));
 
   /* Select component specific constants */
   --select-item-indicator-width-factor: 1.2;
@@ -102,13 +53,6 @@
 
   /* Progress and Slider component constants */
   --progress-default-duration: 5s;
-  --progress-animation-delay-start: 5s;
-  --progress-animation-delay-shine: 7.5s;
-  --progress-animation-duration-fade: 2.5s;
-  --progress-animation-duration-pulse: 5s;
-  --progress-shine-width-multiplier: 4;
-  --progress-gradient-stop-start: 25%;
-  --progress-gradient-stop-end: 75%;
 
   /* Progress animation scale values */
   --progress-scale-initial: 0.01;
@@ -117,31 +61,17 @@
   --progress-scale-step-3: 0.9;
   --progress-scale-final: 1;
 
-  /* Progress animation timing percentages */
-  --progress-timing-step-1: 20%;
-  --progress-timing-step-2: 30%;
-  --progress-timing-step-3: 40%;
-  --progress-timing-step-4: 50%;
-
   /* Slider component constants */
   --slider-thumb-hit-area-multiplier: 2;
   --slider-thumb-inset-factor: 0.25;
   --slider-focus-ring-inner: 3px;
   --slider-focus-ring-outer: 5px;
-  --slider-classic-inset-offset: 1.5px;
 
   /* Shared Progress and Slider sizing tokens */
-  --progress-slider-height-1: var(--space-1);
-  --progress-slider-height-2: calc(var(--space-1) * 1.5);
-  --progress-slider-height-3: var(--space-2);
-  --progress-slider-height-4: calc(var(--space-2) * 1.25);
-
-  /* Outlier sizing for size 5 to 9. */
-  /* --progress-slider-height-5: var(--space-5); */
-  /* --progress-slider-height-6: var(--space-6); */
-  /* --progress-slider-height-7: var(--space-7); */
-  /* --progress-slider-height-8: var(--space-8); */
-  /* --progress-slider-height-9: var(--space-9); */
+  --progress-slider-height-1: var(--space-2);
+  --progress-slider-height-2: calc(var(--space-2) * 1.5);
+  --progress-slider-height-3: var(--space-3);
+  --progress-slider-height-4: calc(var(--space-3) * 1.25);
 
   /* Shared Progress and Slider radius tokens */
   --progress-slider-radius-1: var(--radius-1);
@@ -149,34 +79,9 @@
   --progress-slider-radius-3: var(--radius-3);
   --progress-slider-radius-4: var(--radius-4);
 
-  /* Outlier radius for size 5 to 9. */
-  /* --progress-slider-radius-5: max(var(--radius-1), var(--radius-full)); */
-  /* --progress-slider-radius-6: max(var(--radius-2), var(--radius-full)); */
-  /* --progress-slider-radius-7: max(var(--radius-3), var(--radius-full)); */
-  /* --progress-slider-radius-8: max(var(--radius-4), var(--radius-full)); */
-  /* --progress-slider-radius-9: max(var(--radius-5), var(--radius-full)); */
-
-  /* Size multipliers */
-  --size-multiplier-small: 0.75;
-  --size-multiplier-large: 1.25;
-
-  /* Opacity constants - using new opacity tokens */
-  --opacity-disabled: var(--opacity-5);
-  --opacity-soft-variant: var(--opacity-8);
-
   /* Positioning constants */
   --position-center: 50%;
   --position-full: 100%;
-  --position-negative-full: -100%;
-  --position-zero: 0%;
-
-  /* Transition constants */
-  --transition-background-blur:
-    background-color var(--duration-2) var(--ease-1),
-    scale var(--motion-duration-small) var(--motion-ease-standard);
-
-  /* Sheet animation constants */
-  --sheet-slide-distance: 50%;
 
   /* Spacing multipliers for component sizing */
   --spacing-multiplier-small: 0.5;
@@ -184,16 +89,16 @@
   --spacing-multiplier-large: 1.25;
 
   /* Component gap spacing constants (shared between Button, Select, etc.) */
-  --component-gap-1: var(--space-1);
-  --component-gap-2: var(--space-1);
-  --component-gap-3: calc(var(--space-1) * 1.5);
-  --component-gap-4: var(--space-2);
+  --component-gap-1: var(--space-2);
+  --component-gap-2: var(--space-2);
+  --component-gap-3: calc(var(--space-2) * 1.5);
+  --component-gap-4: var(--space-3);
 
   /* Ghost variant gap constants */
-  --component-gap-ghost-1: var(--space-1);
-  --component-gap-ghost-2: calc(var(--space-1) * 1.5);
-  --component-gap-ghost-3: calc(var(--space-1) * 1.5);
-  --component-gap-ghost-4: var(--space-2);
+  --component-gap-ghost-1: var(--space-2);
+  --component-gap-ghost-2: calc(var(--space-2) * 1.5);
+  --component-gap-ghost-3: calc(var(--space-2) * 1.5);
+  --component-gap-ghost-4: var(--space-3);
 
   /* Focus outline constants */
   --focus-outline-width: 2px;

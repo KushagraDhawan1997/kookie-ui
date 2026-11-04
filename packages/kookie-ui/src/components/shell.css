@@ -13,7 +13,7 @@
     untouched pane writes `data-auto` (or `data-auto-<bp>`), what it shows at
     each breakpoint. Closed is `display: none` in every posture.
   - Posture. `data-presentation` (or `data-presentation-<bp>`) is `fixed`,
-    `overlay` or `stacked`. Posture is written into private `--rt-shell-*`
+    `overlay` or `stacked`. Posture is written into private `--kui-shell-*`
     properties, which each pane reads with its own fallbacks for the frame.
 
   The breakpoint blocks follow `_BREAKPOINTS` in shell.types.ts, smallest
@@ -25,11 +25,13 @@
 
 /* ── Frame ─────────────────────────────────────────────────────────────────── */
 
-.rt-ShellRoot {
-  /* Read by inset panes. Declared here, so the documented override on the Root works. */
-  --shell-inset-gap: var(--space-2);
+.kui-ShellRoot {
+  /* The air around a pane pulled off the frame (`flush={false}`). Declared here, so the documented override on the Root works. */
+  --shell-gap: var(--space-3);
   /* Written inline by the Root while a Rail shows; stated here so a nested Shell never inherits its parent's. */
   --shell-rail-offset: 0px;
+  /* How far the stuck header reaches down the screen while the page scrolls. Stated here so a nested Shell never inherits its parent's. */
+  --kui-shell-page-top: 0px;
 
   display: grid;
   grid-template-areas:
@@ -53,17 +55,25 @@
  * is written inline and wins.
  */
 @supports (height: 100dvh) {
-  .rt-ShellRoot {
+  .kui-ShellRoot {
     height: 100dvh;
   }
 }
 
+/*
+ * A contained Shell fills its parent instead of the window. An explicit `height` is written
+ * inline and wins over this.
+ */
+.kui-ShellRoot[data-contained] {
+  height: 100%;
+}
+
 /* While an overlay is live the page holds still. Counted across Shells by the Root. */
-:root[data-rt-shell-lock] {
+:root[data-kui-shell-lock] {
   overflow: hidden;
 }
 
-.rt-ShellHeader {
+.kui-ShellHeader {
   grid-area: header;
   display: flex;
   align-items: center;
@@ -73,7 +83,7 @@
   z-index: 2;
 }
 
-.rt-ShellContent {
+.kui-ShellContent {
   grid-area: content;
   min-width: 0;
   min-height: 0;
@@ -88,6 +98,18 @@
   isolation: isolate;
 }
 
+/*
+ * Chromium (the only engine with -webkit-app-region) gives a scroller whose overscroll-behavior is
+ * not auto two composited layers even when its content fits: about 3 MB for a 1280x800 pane. There
+ * the Root's own overscroll-behavior already stops the chain, so the content does not need one.
+ * WebKit ignores an ancestor that is not user-scrollable, so it keeps `contain` above.
+ */
+@supports (-webkit-app-region: drag) {
+  .kui-ShellContent {
+    overscroll-behavior: auto;
+  }
+}
+
 /* ── Panes ─────────────────────────────────────────────────────────────────── */
 
 /*
@@ -95,18 +117,25 @@
  * (a nested Shell) never inherits its ancestor's posture. `initial` makes the
  * property guaranteed-invalid, so the readers below fall back to the frame.
  */
-.rt-ShellPane {
-  --rt-shell-position: initial;
-  --rt-shell-z: initial;
-  --rt-shell-row: initial;
-  --rt-shell-col: initial;
-  --rt-shell-surface: initial;
-  --rt-shell-shadow: initial;
-  --rt-shell-cap: initial;
-  --rt-shell-offset: initial;
-  --rt-shell-handle: initial;
-  --rt-shell-start: initial;
-  --rt-shell-thin: initial;
+.kui-ShellPane {
+  /* A pane nested in a Shell.Scroll measures its own floating rows, not the outer ones. */
+  --kui-pane-inset-start: initial;
+  --kui-pane-inset-end: initial;
+  --kui-pane-band-start: initial;
+  --kui-pane-band-end: initial;
+  --kui-shell-position: initial;
+  --kui-shell-z: initial;
+  --kui-shell-pin: initial;
+  --kui-shell-pin-top: initial;
+  --kui-shell-row: initial;
+  --kui-shell-col: initial;
+  --kui-shell-surface: initial;
+  --kui-shell-shadow: initial;
+  --kui-shell-edge: 0px;
+  --kui-shell-cap: initial;
+  --kui-shell-offset: initial;
+  --kui-shell-handle: initial;
+  --kui-shell-start: initial;
 
   display: flex;
   flex-direction: column;
@@ -114,87 +143,82 @@
   min-height: 0;
   /* The resize handle straddles the pane's edge. */
   overflow: visible;
-  position: var(--rt-shell-position, relative);
+  position: var(--kui-shell-position, relative);
   /* Above the content, so a handle straddling the boundary can be grabbed from either side. */
-  z-index: var(--rt-shell-z, 1);
-  background-color: var(--rt-shell-surface);
-  box-shadow: var(--rt-shell-shadow, none);
+  z-index: var(--kui-shell-z, 1);
+  background-color: var(--kui-shell-surface);
+  box-shadow: var(--kui-shell-shadow, none);
 }
 
-.rt-ShellPane:has(> .rt-ShellResizer) {
+.kui-ShellPane:has(> .kui-ShellResizer) {
   /* Above the pane beside it too, so the half of the handle that straddles into it can be grabbed. */
-  z-index: var(--rt-shell-z, 2);
+  z-index: var(--kui-shell-z, 2);
 }
 
-.rt-ShellPane:focus {
+.kui-ShellPane:focus {
   /* A pane takes focus only programmatically, when it opens as an overlay. */
   outline: none;
 }
 
-.rt-ShellRail {
-  grid-row: var(--rt-shell-row, rail);
-  grid-column: var(--rt-shell-col, rail);
+.kui-ShellRail {
+  grid-row: var(--kui-shell-row, rail);
+  grid-column: var(--kui-shell-col, rail);
   inset-block: 0;
   inset-inline-start: 0;
   inline-size: var(--rail-size, 64px);
-  max-inline-size: var(--rt-shell-cap, none);
+  max-inline-size: var(--kui-shell-cap, none);
 }
 
-.rt-ShellPanel,
-.rt-ShellSidebar {
+.kui-ShellPanel,
+.kui-ShellSidebar {
   /* Where a floating Panel or Sidebar starts: beside the Rail. The cap subtracts it. */
-  --rt-shell-start: var(--rt-shell-offset, 0px);
+  --kui-shell-start: var(--kui-shell-offset, 0px);
 }
 
-.rt-ShellPanel {
-  grid-row: var(--rt-shell-row, panel);
-  grid-column: var(--rt-shell-col, panel);
+.kui-ShellPanel {
+  grid-row: var(--kui-shell-row, panel);
+  grid-column: var(--kui-shell-col, panel);
   inset-block: 0;
   /* Beside the Rail when floating; zero in the frame. */
-  inset-inline-start: var(--rt-shell-offset, 0px);
+  inset-inline-start: var(--kui-shell-offset, 0px);
   inline-size: var(--panel-size, var(--panel-expanded-size, 288px));
-  max-inline-size: var(--rt-shell-cap, none);
+  max-inline-size: var(--kui-shell-cap, none);
 }
 
-.rt-ShellSidebar {
-  grid-row: var(--rt-shell-row, sidebar);
-  grid-column: var(--rt-shell-col, sidebar);
+.kui-ShellSidebar {
+  grid-row: var(--kui-shell-row, sidebar);
+  grid-column: var(--kui-shell-col, sidebar);
   inset-block: 0;
   /* Beside the Rail when floating; zero in the frame. */
-  inset-inline-start: var(--rt-shell-offset, 0px);
+  inset-inline-start: var(--kui-shell-offset, 0px);
   inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
-  max-inline-size: var(--rt-shell-cap, none);
+  max-inline-size: var(--kui-shell-cap, none);
 }
 
-.rt-ShellSidebar[data-thin] {
-  inline-size: var(--sidebar-thin-size, 64px);
-  --rt-shell-thin: none;
-}
-
-.rt-ShellInspector {
-  grid-row: var(--rt-shell-row, inspector);
-  grid-column: var(--rt-shell-col, inspector);
+.kui-ShellInspector {
+  grid-row: var(--kui-shell-row, inspector);
+  grid-column: var(--kui-shell-col, inspector);
   inset-block: 0;
   inset-inline-end: 0;
   inline-size: var(--inspector-size, var(--inspector-expanded-size, 320px));
-  max-inline-size: var(--rt-shell-cap, none);
+  max-inline-size: var(--kui-shell-cap, none);
 }
 
-.rt-ShellBottom {
-  grid-row: var(--rt-shell-row, bottom);
-  grid-column: var(--rt-shell-col, bottom);
+.kui-ShellBottom {
+  grid-row: var(--kui-shell-row, bottom);
+  grid-column: var(--kui-shell-col, bottom);
   inset-inline: 0;
   inset-block-end: 0;
   block-size: var(--bottom-size, var(--bottom-expanded-size, 200px));
-  max-block-size: var(--rt-shell-cap, none);
+  max-block-size: var(--kui-shell-cap, none);
 }
 
 /* A pane's content fills it. Kept as its own element so stylesheets written against 0.7 still find it. */
-.rt-ShellRailContent,
-.rt-ShellPanelContent,
-.rt-ShellSidebarContent,
-.rt-ShellInspectorContent,
-.rt-ShellBottomContent {
+.kui-ShellRailContent,
+.kui-ShellPanelContent,
+.kui-ShellSidebarContent,
+.kui-ShellInspectorContent,
+.kui-ShellBottomContent {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -203,409 +227,661 @@
   overflow: hidden;
 }
 
-.rt-ShellRailContent {
-  gap: var(--space-2);
+.kui-ShellRailContent {
+  gap: var(--space-3);
+}
+
+/* Shell.Scroll takes the room a pane's header and footer leave, and scrolls inside it. */
+.kui-ShellScroll {
+  flex: 1;
+  min-height: 0;
+}
+
+/*
+ * In the content it is the page's scroller. The content becomes a column that does not scroll
+ * itself, so a floating header beside the Scroll stays pinned while the page scrolls under it.
+ */
+.kui-ShellContent:has(> .kui-ShellScroll) {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Floating header and footer ───────────────────────────────────────────── */
+
+/*
+ * A floating row sits over the scroller instead of above or below it, so the list runs the
+ * pane's full height and scrolls behind the row. The row paints nothing, so it catches no
+ * clicks either: each control in it takes the pointer back.
+ */
+.kui-ShellPaneHeader[data-float],
+.kui-ShellPaneFooter[data-float] {
+  position: absolute;
+  inset-inline: 0;
+  z-index: 1;
+  pointer-events: none;
+
+  & > :where(*) {
+    pointer-events: auto;
+  }
+  /* A Toolbar spans the row, and so may a cluster inside it. pointer-events inherits, so the
+     Toolbar and its layout boxes pass clicks through, and every interactive element in it takes
+     them back, with whatever it holds: the empty stretch between them lets clicks reach the
+     content. A group and a text field are painted boxes, so they keep their clicks too. */
+  & > :where(.kui-Toolbar) {
+    pointer-events: none;
+  }
+  /* The native controls are named by tag: any of them may sit in a Toolbar. */
+  /* stylelint-disable-next-line selector-max-type */
+  & > :where(.kui-Toolbar) :where(
+      button, a[href], input, select, textarea, label, summary, [tabindex], [contenteditable]:not([contenteditable='false']),
+      [role='button'], [role='link'], [role='checkbox'], [role='switch'], [role='radio'], [role='radiogroup'],
+      [role='slider'], [role='combobox'], [role='tab'], [role='tablist'], [role='menuitem'], [aria-haspopup],
+      .kui-ToolbarGroup, .kui-TextFieldRoot
+    ) {
+    pointer-events: auto;
+  }
+}
+.kui-ShellPaneHeader[data-float] {
+  top: 0;
+}
+.kui-ShellPaneFooter[data-float] {
+  bottom: 0;
+}
+
+/*
+ * The pane content holding a floating row is the subject of these rules, named by class so the
+ * browser tries them only on those elements (a bare `:has()` is tried on every element).
+ */
+/* The row's containing block is the pane content around it. */
+:where(.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float], > .kui-ShellPaneFooter[data-float])),
+:where(.kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float], > .kui-ShellPaneFooter[data-float])),
+:where(.kui-ShellSidebarContent:has(> .kui-ShellPaneHeader[data-float], > .kui-ShellPaneFooter[data-float])),
+:where(.kui-ShellInspectorContent:has(> .kui-ShellPaneHeader[data-float], > .kui-ShellPaneFooter[data-float])),
+:where(.kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float], > .kui-ShellPaneFooter[data-float])),
+:where(.kui-ShellContent:has(> .kui-ShellPaneHeader[data-float], > .kui-ShellPaneFooter[data-float])) {
+  position: relative;
+}
+
+/*
+ * How tall the floating row is: one control row plus the row's padding on both sides, worked
+ * out in CSS so the first paint is right. The padding is the pane's panel padding at the
+ * Shell's index, the same the row itself pads by. A Toolbar in the row publishes its own control
+ * height as the band (one step above the Shell's when it states no size).
+ */
+.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-1)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-1)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-1)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-1)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-1)),
+.kui-ShellContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-1)) {
+  --kui-pane-row-start: var(--control-height-1);
+  --kui-pane-pad-start: var(--panel-p-1);
+}
+.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-2)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-2)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-2)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-2)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-2)),
+.kui-ShellContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-2)) {
+  --kui-pane-row-start: var(--control-height-2);
+  --kui-pane-pad-start: var(--panel-p-2);
+}
+.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-3)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-3)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-3)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-3)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-3)),
+.kui-ShellContent:has(> .kui-ShellPaneHeader[data-float]:where(.kui-r-size-3)) {
+  --kui-pane-row-start: var(--control-height-3);
+  --kui-pane-pad-start: var(--panel-p-3);
+}
+.kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-1)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-1)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-1)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-1)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-1)),
+.kui-ShellContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-1)) {
+  --kui-pane-row-end: var(--control-height-1);
+  --kui-pane-pad-end: var(--panel-p-1);
+}
+.kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-2)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-2)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-2)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-2)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-2)),
+.kui-ShellContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-2)) {
+  --kui-pane-row-end: var(--control-height-2);
+  --kui-pane-pad-end: var(--panel-p-2);
+}
+.kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-3)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-3)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-3)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-3)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-3)),
+.kui-ShellContent:has(> .kui-ShellPaneFooter[data-float]:where(.kui-r-size-3)) {
+  --kui-pane-row-end: var(--control-height-3);
+  --kui-pane-pad-end: var(--panel-p-3);
+}
+.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-1)) {
+  --kui-pane-band-start: var(--control-height-1);
+}
+.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-2)) {
+  --kui-pane-band-start: var(--control-height-2);
+}
+.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-3)) {
+  --kui-pane-band-start: var(--control-height-3);
+}
+.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellContent:has(> .kui-ShellPaneHeader[data-float] > .kui-Toolbar:where(.kui-r-size-4)) {
+  --kui-pane-band-start: var(--control-height-4);
+}
+.kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-1)),
+.kui-ShellContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-1)) {
+  --kui-pane-band-end: var(--control-height-1);
+}
+.kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-2)),
+.kui-ShellContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-2)) {
+  --kui-pane-band-end: var(--control-height-2);
+}
+.kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-3)),
+.kui-ShellContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-3)) {
+  --kui-pane-band-end: var(--control-height-3);
+}
+.kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellPanelContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellSidebarContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellInspectorContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellBottomContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-4)),
+.kui-ShellContent:has(> .kui-ShellPaneFooter[data-float] > .kui-Toolbar:where(.kui-r-size-4)) {
+  --kui-pane-band-end: var(--control-height-4);
+}
+
+/* A Rail's rows are tiles, and its chrome keeps their tight padding (sidebar.css). */
+.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float]) {
+  --kui-pane-pad-start: var(--space-3);
+}
+.kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float]) {
+  --kui-pane-pad-end: var(--space-3);
+}
+
+/*
+ * The scroller spends that height three ways: the list starts and ends clear of the rows, the
+ * scrollbar stays between them, and the fade (with `fade`) runs across them.
+ */
+.kui-ShellRailContent:has(> .kui-ShellPaneHeader[data-float]) > .kui-ShellScroll,
+.kui-ShellPanelContent:has(> .kui-ShellPaneHeader[data-float]) > .kui-ShellScroll,
+.kui-ShellSidebarContent:has(> .kui-ShellPaneHeader[data-float]) > .kui-ShellScroll,
+.kui-ShellInspectorContent:has(> .kui-ShellPaneHeader[data-float]) > .kui-ShellScroll,
+.kui-ShellBottomContent:has(> .kui-ShellPaneHeader[data-float]) > .kui-ShellScroll,
+.kui-ShellContent:has(> .kui-ShellPaneHeader[data-float]) > .kui-ShellScroll {
+  /* The taller of the pane's control row and a Toolbar's own: the row never shrinks below the first. */
+  --kui-pane-inset-start: calc(max(var(--kui-pane-row-start), var(--kui-pane-band-start, 0px)) + 2 * var(--kui-pane-pad-start));
+  --scroll-fade-start: var(--kui-pane-inset-start);
+  --scrollarea-scrollbar-vertical-margin-top: calc(var(--space-2) + var(--kui-pane-inset-start));
+}
+.kui-ShellRailContent:has(> .kui-ShellPaneFooter[data-float]) > .kui-ShellScroll,
+.kui-ShellPanelContent:has(> .kui-ShellPaneFooter[data-float]) > .kui-ShellScroll,
+.kui-ShellSidebarContent:has(> .kui-ShellPaneFooter[data-float]) > .kui-ShellScroll,
+.kui-ShellInspectorContent:has(> .kui-ShellPaneFooter[data-float]) > .kui-ShellScroll,
+.kui-ShellBottomContent:has(> .kui-ShellPaneFooter[data-float]) > .kui-ShellScroll,
+.kui-ShellContent:has(> .kui-ShellPaneFooter[data-float]) > .kui-ShellScroll {
+  --kui-pane-inset-end: calc(max(var(--kui-pane-row-end), var(--kui-pane-band-end, 0px)) + 2 * var(--kui-pane-pad-end));
+  --scroll-fade-end: var(--kui-pane-inset-end);
+  --scrollarea-scrollbar-vertical-margin-bottom: calc(var(--space-2) + var(--kui-pane-inset-end));
+}
+/* A link target or a focused control scrolls into view clear of the floating rows, not under them. */
+.kui-ShellScroll > .kui-ScrollAreaViewport {
+  scroll-padding-block: var(--kui-pane-inset-start, 0px) var(--kui-pane-inset-end, 0px);
+}
+.kui-ShellScroll > .kui-ScrollAreaViewport > * {
+  padding-top: var(--kui-pane-inset-start, 0px);
+  padding-bottom: var(--kui-pane-inset-end, 0px);
 }
 
 /* Closed is closed, in every posture: out of the layout, the tab order and the accessibility tree. */
-.rt-ShellPane[data-state='closed'] {
+.kui-ShellPane[data-state='closed'] {
   display: none;
 }
 
 /* ── Visibility and posture, per breakpoint ────────────────────────────────── */
 
 /* Plain attributes: a pane whose presentation is one value, and the JS mirror. */
-.rt-ShellPane[data-presentation='overlay'],
-.rt-ShellRail[data-presentation='overlay'] ~ .rt-ShellPanel[data-presentation-follows] {
-  --rt-shell-position: absolute;
-  --rt-shell-z: 6;
-  --rt-shell-row: 1 / -1;
-  --rt-shell-col: 1 / -1;
-  --rt-shell-surface: var(--color-panel-solid);
-  --rt-shell-shadow: var(--shadow-5);
-  --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
-  --rt-shell-offset: var(--shell-rail-offset, 0px);
-  --rt-shell-handle: none;
+.kui-ShellPane[data-presentation='overlay'],
+.kui-ShellRail[data-presentation='overlay'] ~ .kui-ShellPanel[data-presentation-follows] {
+  --kui-shell-position: absolute;
+  --kui-shell-z: 6;
+  --kui-shell-pin: fixed;
+  --kui-shell-pin-top: 0px;
+  --kui-shell-row: 1 / -1;
+  --kui-shell-col: 1 / -1;
+  --kui-shell-surface: var(--color-surface);
+  --kui-shell-shadow: var(--dialog-chrome);
+  --kui-shell-edge: 1px;
+  --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
+  --kui-shell-offset: var(--shell-rail-offset, 0px);
+  --kui-shell-handle: none;
 }
 
-.rt-ShellPane[data-presentation='stacked'],
-.rt-ShellRail[data-presentation='stacked'] ~ .rt-ShellPanel[data-presentation-follows] {
-  --rt-shell-position: absolute;
-  --rt-shell-z: 3;
-  --rt-shell-row: 2 / 3;
-  --rt-shell-col: 1 / -1;
-  --rt-shell-surface: var(--color-panel-solid);
-  --rt-shell-shadow: var(--shadow-4);
-  --rt-shell-cap: initial;
-  --rt-shell-offset: var(--shell-rail-offset, 0px);
-  --rt-shell-handle: initial;
+.kui-ShellPane[data-presentation='stacked'],
+.kui-ShellRail[data-presentation='stacked'] ~ .kui-ShellPanel[data-presentation-follows] {
+  --kui-shell-position: absolute;
+  --kui-shell-z: 3;
+  --kui-shell-pin: fixed;
+  --kui-shell-pin-top: initial;
+  --kui-shell-row: 2 / 3;
+  --kui-shell-col: 1 / -1;
+  --kui-shell-surface: var(--color-surface);
+  --kui-shell-shadow: var(--surface-chrome);
+  --kui-shell-edge: 1px;
+  --kui-shell-cap: initial;
+  --kui-shell-offset: var(--shell-rail-offset, 0px);
+  --kui-shell-handle: initial;
 }
 
-.rt-ShellPane[data-state='auto'][data-auto='closed'] {
+.kui-ShellPane[data-state='auto'][data-auto='closed'] {
   display: none;
-}
-
-.rt-ShellSidebar[data-state='auto'][data-auto='thin'] {
-  inline-size: var(--sidebar-thin-size, 64px);
-  --rt-shell-thin: none;
 }
 
 /* initial: below 520px, and the base every larger breakpoint overrides. */
-.rt-ShellPane[data-presentation-initial='fixed'],
-.rt-ShellRail[data-presentation-initial='fixed'] ~ .rt-ShellPanel[data-presentation-follows] {
-  --rt-shell-position: initial;
-  --rt-shell-z: initial;
-  --rt-shell-row: initial;
-  --rt-shell-col: initial;
-  --rt-shell-surface: initial;
-  --rt-shell-shadow: initial;
-  --rt-shell-cap: initial;
-  --rt-shell-offset: initial;
-  --rt-shell-handle: initial;
+.kui-ShellPane[data-presentation-initial='fixed'],
+.kui-ShellRail[data-presentation-initial='fixed'] ~ .kui-ShellPanel[data-presentation-follows] {
+  --kui-shell-position: initial;
+  --kui-shell-z: initial;
+  --kui-shell-pin: initial;
+  --kui-shell-pin-top: initial;
+  --kui-shell-row: initial;
+  --kui-shell-col: initial;
+  --kui-shell-surface: initial;
+  --kui-shell-shadow: initial;
+  --kui-shell-edge: 0px;
+  --kui-shell-cap: initial;
+  --kui-shell-offset: initial;
+  --kui-shell-handle: initial;
 }
 
-.rt-ShellPane[data-presentation-initial='overlay'],
-.rt-ShellRail[data-presentation-initial='overlay'] ~ .rt-ShellPanel[data-presentation-follows] {
-  --rt-shell-position: absolute;
-  --rt-shell-z: 6;
-  --rt-shell-row: 1 / -1;
-  --rt-shell-col: 1 / -1;
-  --rt-shell-surface: var(--color-panel-solid);
-  --rt-shell-shadow: var(--shadow-5);
-  --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
-  --rt-shell-offset: var(--shell-rail-offset, 0px);
-  --rt-shell-handle: none;
+.kui-ShellPane[data-presentation-initial='overlay'],
+.kui-ShellRail[data-presentation-initial='overlay'] ~ .kui-ShellPanel[data-presentation-follows] {
+  --kui-shell-position: absolute;
+  --kui-shell-z: 6;
+  --kui-shell-pin: fixed;
+  --kui-shell-pin-top: 0px;
+  --kui-shell-row: 1 / -1;
+  --kui-shell-col: 1 / -1;
+  --kui-shell-surface: var(--color-surface);
+  --kui-shell-shadow: var(--dialog-chrome);
+  --kui-shell-edge: 1px;
+  --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
+  --kui-shell-offset: var(--shell-rail-offset, 0px);
+  --kui-shell-handle: none;
 }
 
-.rt-ShellPane[data-presentation-initial='stacked'],
-.rt-ShellRail[data-presentation-initial='stacked'] ~ .rt-ShellPanel[data-presentation-follows] {
-  --rt-shell-position: absolute;
-  --rt-shell-z: 3;
-  --rt-shell-row: 2 / 3;
-  --rt-shell-col: 1 / -1;
-  --rt-shell-surface: var(--color-panel-solid);
-  --rt-shell-shadow: var(--shadow-4);
-  --rt-shell-cap: initial;
-  --rt-shell-offset: var(--shell-rail-offset, 0px);
-  --rt-shell-handle: initial;
+.kui-ShellPane[data-presentation-initial='stacked'],
+.kui-ShellRail[data-presentation-initial='stacked'] ~ .kui-ShellPanel[data-presentation-follows] {
+  --kui-shell-position: absolute;
+  --kui-shell-z: 3;
+  --kui-shell-pin: fixed;
+  --kui-shell-pin-top: initial;
+  --kui-shell-row: 2 / 3;
+  --kui-shell-col: 1 / -1;
+  --kui-shell-surface: var(--color-surface);
+  --kui-shell-shadow: var(--surface-chrome);
+  --kui-shell-edge: 1px;
+  --kui-shell-cap: initial;
+  --kui-shell-offset: var(--shell-rail-offset, 0px);
+  --kui-shell-handle: initial;
 }
 
-.rt-ShellPane[data-state='auto'][data-auto-initial='closed'] {
+.kui-ShellPane[data-state='auto'][data-auto-initial='closed'] {
   display: none;
 }
 
-.rt-ShellPane[data-state='auto'][data-auto-initial='open'],
-.rt-ShellPane[data-state='auto'][data-auto-initial='thin'] {
+.kui-ShellPane[data-state='auto'][data-auto-initial='open'] {
   display: flex;
 }
 
-.rt-ShellSidebar[data-state='auto'][data-auto-initial='open'] {
+.kui-ShellSidebar[data-state='auto'][data-auto-initial='open'] {
   inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
-  --rt-shell-thin: initial;
-}
-
-.rt-ShellSidebar[data-state='auto'][data-auto-initial='thin'] {
-  inline-size: var(--sidebar-thin-size, 64px);
-  --rt-shell-thin: none;
 }
 
 @media (min-width: 520px) {
-  .rt-ShellPane[data-presentation-xs='fixed'],
-  .rt-ShellRail[data-presentation-xs='fixed'] ~ .rt-ShellPanel[data-presentation-follows] {
-    --rt-shell-position: initial;
-    --rt-shell-z: initial;
-    --rt-shell-row: initial;
-    --rt-shell-col: initial;
-    --rt-shell-surface: initial;
-    --rt-shell-shadow: initial;
-    --rt-shell-cap: initial;
-    --rt-shell-offset: initial;
-    --rt-shell-handle: initial;
+  .kui-ShellPane[data-presentation-xs='fixed'],
+  .kui-ShellRail[data-presentation-xs='fixed'] ~ .kui-ShellPanel[data-presentation-follows] {
+    --kui-shell-position: initial;
+    --kui-shell-z: initial;
+    --kui-shell-pin: initial;
+    --kui-shell-pin-top: initial;
+    --kui-shell-row: initial;
+    --kui-shell-col: initial;
+    --kui-shell-surface: initial;
+    --kui-shell-shadow: initial;
+    --kui-shell-edge: 0px;
+    --kui-shell-cap: initial;
+    --kui-shell-offset: initial;
+    --kui-shell-handle: initial;
   }
 
-  .rt-ShellPane[data-presentation-xs='overlay'],
-  .rt-ShellRail[data-presentation-xs='overlay'] ~ .rt-ShellPanel[data-presentation-follows] {
-    --rt-shell-position: absolute;
-    --rt-shell-z: 6;
-    --rt-shell-row: 1 / -1;
-    --rt-shell-col: 1 / -1;
-    --rt-shell-surface: var(--color-panel-solid);
-    --rt-shell-shadow: var(--shadow-5);
-    --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
-    --rt-shell-offset: var(--shell-rail-offset, 0px);
-    --rt-shell-handle: none;
+  .kui-ShellPane[data-presentation-xs='overlay'],
+  .kui-ShellRail[data-presentation-xs='overlay'] ~ .kui-ShellPanel[data-presentation-follows] {
+    --kui-shell-position: absolute;
+    --kui-shell-z: 6;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: 0px;
+    --kui-shell-row: 1 / -1;
+    --kui-shell-col: 1 / -1;
+    --kui-shell-surface: var(--color-surface);
+    --kui-shell-shadow: var(--dialog-chrome);
+    --kui-shell-edge: 1px;
+    --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
+    --kui-shell-offset: var(--shell-rail-offset, 0px);
+    --kui-shell-handle: none;
   }
 
-  .rt-ShellPane[data-presentation-xs='stacked'],
-  .rt-ShellRail[data-presentation-xs='stacked'] ~ .rt-ShellPanel[data-presentation-follows] {
-    --rt-shell-position: absolute;
-    --rt-shell-z: 3;
-    --rt-shell-row: 2 / 3;
-    --rt-shell-col: 1 / -1;
-    --rt-shell-surface: var(--color-panel-solid);
-    --rt-shell-shadow: var(--shadow-4);
-    --rt-shell-cap: initial;
-    --rt-shell-offset: var(--shell-rail-offset, 0px);
-    --rt-shell-handle: initial;
+  .kui-ShellPane[data-presentation-xs='stacked'],
+  .kui-ShellRail[data-presentation-xs='stacked'] ~ .kui-ShellPanel[data-presentation-follows] {
+    --kui-shell-position: absolute;
+    --kui-shell-z: 3;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: initial;
+    --kui-shell-row: 2 / 3;
+    --kui-shell-col: 1 / -1;
+    --kui-shell-surface: var(--color-surface);
+    --kui-shell-shadow: var(--surface-chrome);
+    --kui-shell-edge: 1px;
+    --kui-shell-cap: initial;
+    --kui-shell-offset: var(--shell-rail-offset, 0px);
+    --kui-shell-handle: initial;
   }
 
-  .rt-ShellPane[data-state='auto'][data-auto-xs='closed'] {
+  .kui-ShellPane[data-state='auto'][data-auto-xs='closed'] {
     display: none;
   }
 
-  .rt-ShellPane[data-state='auto'][data-auto-xs='open'],
-  .rt-ShellPane[data-state='auto'][data-auto-xs='thin'] {
+  .kui-ShellPane[data-state='auto'][data-auto-xs='open'] {
     display: flex;
   }
 
-  .rt-ShellSidebar[data-state='auto'][data-auto-xs='open'] {
+  .kui-ShellSidebar[data-state='auto'][data-auto-xs='open'] {
     inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
-    --rt-shell-thin: initial;
-  }
-
-  .rt-ShellSidebar[data-state='auto'][data-auto-xs='thin'] {
-    inline-size: var(--sidebar-thin-size, 64px);
-    --rt-shell-thin: none;
   }
 }
 
 @media (min-width: 768px) {
-  .rt-ShellPane[data-presentation-sm='fixed'],
-  .rt-ShellRail[data-presentation-sm='fixed'] ~ .rt-ShellPanel[data-presentation-follows] {
-    --rt-shell-position: initial;
-    --rt-shell-z: initial;
-    --rt-shell-row: initial;
-    --rt-shell-col: initial;
-    --rt-shell-surface: initial;
-    --rt-shell-shadow: initial;
-    --rt-shell-cap: initial;
-    --rt-shell-offset: initial;
-    --rt-shell-handle: initial;
+  .kui-ShellPane[data-presentation-sm='fixed'],
+  .kui-ShellRail[data-presentation-sm='fixed'] ~ .kui-ShellPanel[data-presentation-follows] {
+    --kui-shell-position: initial;
+    --kui-shell-z: initial;
+    --kui-shell-pin: initial;
+    --kui-shell-pin-top: initial;
+    --kui-shell-row: initial;
+    --kui-shell-col: initial;
+    --kui-shell-surface: initial;
+    --kui-shell-shadow: initial;
+    --kui-shell-edge: 0px;
+    --kui-shell-cap: initial;
+    --kui-shell-offset: initial;
+    --kui-shell-handle: initial;
   }
 
-  .rt-ShellPane[data-presentation-sm='overlay'],
-  .rt-ShellRail[data-presentation-sm='overlay'] ~ .rt-ShellPanel[data-presentation-follows] {
-    --rt-shell-position: absolute;
-    --rt-shell-z: 6;
-    --rt-shell-row: 1 / -1;
-    --rt-shell-col: 1 / -1;
-    --rt-shell-surface: var(--color-panel-solid);
-    --rt-shell-shadow: var(--shadow-5);
-    --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
-    --rt-shell-offset: var(--shell-rail-offset, 0px);
-    --rt-shell-handle: none;
+  .kui-ShellPane[data-presentation-sm='overlay'],
+  .kui-ShellRail[data-presentation-sm='overlay'] ~ .kui-ShellPanel[data-presentation-follows] {
+    --kui-shell-position: absolute;
+    --kui-shell-z: 6;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: 0px;
+    --kui-shell-row: 1 / -1;
+    --kui-shell-col: 1 / -1;
+    --kui-shell-surface: var(--color-surface);
+    --kui-shell-shadow: var(--dialog-chrome);
+    --kui-shell-edge: 1px;
+    --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
+    --kui-shell-offset: var(--shell-rail-offset, 0px);
+    --kui-shell-handle: none;
   }
 
-  .rt-ShellPane[data-presentation-sm='stacked'],
-  .rt-ShellRail[data-presentation-sm='stacked'] ~ .rt-ShellPanel[data-presentation-follows] {
-    --rt-shell-position: absolute;
-    --rt-shell-z: 3;
-    --rt-shell-row: 2 / 3;
-    --rt-shell-col: 1 / -1;
-    --rt-shell-surface: var(--color-panel-solid);
-    --rt-shell-shadow: var(--shadow-4);
-    --rt-shell-cap: initial;
-    --rt-shell-offset: var(--shell-rail-offset, 0px);
-    --rt-shell-handle: initial;
+  .kui-ShellPane[data-presentation-sm='stacked'],
+  .kui-ShellRail[data-presentation-sm='stacked'] ~ .kui-ShellPanel[data-presentation-follows] {
+    --kui-shell-position: absolute;
+    --kui-shell-z: 3;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: initial;
+    --kui-shell-row: 2 / 3;
+    --kui-shell-col: 1 / -1;
+    --kui-shell-surface: var(--color-surface);
+    --kui-shell-shadow: var(--surface-chrome);
+    --kui-shell-edge: 1px;
+    --kui-shell-cap: initial;
+    --kui-shell-offset: var(--shell-rail-offset, 0px);
+    --kui-shell-handle: initial;
   }
 
-  .rt-ShellPane[data-state='auto'][data-auto-sm='closed'] {
+  .kui-ShellPane[data-state='auto'][data-auto-sm='closed'] {
     display: none;
   }
 
-  .rt-ShellPane[data-state='auto'][data-auto-sm='open'],
-  .rt-ShellPane[data-state='auto'][data-auto-sm='thin'] {
+  .kui-ShellPane[data-state='auto'][data-auto-sm='open'] {
     display: flex;
   }
 
-  .rt-ShellSidebar[data-state='auto'][data-auto-sm='open'] {
+  .kui-ShellSidebar[data-state='auto'][data-auto-sm='open'] {
     inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
-    --rt-shell-thin: initial;
-  }
-
-  .rt-ShellSidebar[data-state='auto'][data-auto-sm='thin'] {
-    inline-size: var(--sidebar-thin-size, 64px);
-    --rt-shell-thin: none;
   }
 }
 
 @media (min-width: 1024px) {
-  .rt-ShellPane[data-presentation-md='fixed'],
-  .rt-ShellRail[data-presentation-md='fixed'] ~ .rt-ShellPanel[data-presentation-follows] {
-    --rt-shell-position: initial;
-    --rt-shell-z: initial;
-    --rt-shell-row: initial;
-    --rt-shell-col: initial;
-    --rt-shell-surface: initial;
-    --rt-shell-shadow: initial;
-    --rt-shell-cap: initial;
-    --rt-shell-offset: initial;
-    --rt-shell-handle: initial;
+  .kui-ShellPane[data-presentation-md='fixed'],
+  .kui-ShellRail[data-presentation-md='fixed'] ~ .kui-ShellPanel[data-presentation-follows] {
+    --kui-shell-position: initial;
+    --kui-shell-z: initial;
+    --kui-shell-pin: initial;
+    --kui-shell-pin-top: initial;
+    --kui-shell-row: initial;
+    --kui-shell-col: initial;
+    --kui-shell-surface: initial;
+    --kui-shell-shadow: initial;
+    --kui-shell-edge: 0px;
+    --kui-shell-cap: initial;
+    --kui-shell-offset: initial;
+    --kui-shell-handle: initial;
   }
 
-  .rt-ShellPane[data-presentation-md='overlay'],
-  .rt-ShellRail[data-presentation-md='overlay'] ~ .rt-ShellPanel[data-presentation-follows] {
-    --rt-shell-position: absolute;
-    --rt-shell-z: 6;
-    --rt-shell-row: 1 / -1;
-    --rt-shell-col: 1 / -1;
-    --rt-shell-surface: var(--color-panel-solid);
-    --rt-shell-shadow: var(--shadow-5);
-    --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
-    --rt-shell-offset: var(--shell-rail-offset, 0px);
-    --rt-shell-handle: none;
+  .kui-ShellPane[data-presentation-md='overlay'],
+  .kui-ShellRail[data-presentation-md='overlay'] ~ .kui-ShellPanel[data-presentation-follows] {
+    --kui-shell-position: absolute;
+    --kui-shell-z: 6;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: 0px;
+    --kui-shell-row: 1 / -1;
+    --kui-shell-col: 1 / -1;
+    --kui-shell-surface: var(--color-surface);
+    --kui-shell-shadow: var(--dialog-chrome);
+    --kui-shell-edge: 1px;
+    --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
+    --kui-shell-offset: var(--shell-rail-offset, 0px);
+    --kui-shell-handle: none;
   }
 
-  .rt-ShellPane[data-presentation-md='stacked'],
-  .rt-ShellRail[data-presentation-md='stacked'] ~ .rt-ShellPanel[data-presentation-follows] {
-    --rt-shell-position: absolute;
-    --rt-shell-z: 3;
-    --rt-shell-row: 2 / 3;
-    --rt-shell-col: 1 / -1;
-    --rt-shell-surface: var(--color-panel-solid);
-    --rt-shell-shadow: var(--shadow-4);
-    --rt-shell-cap: initial;
-    --rt-shell-offset: var(--shell-rail-offset, 0px);
-    --rt-shell-handle: initial;
+  .kui-ShellPane[data-presentation-md='stacked'],
+  .kui-ShellRail[data-presentation-md='stacked'] ~ .kui-ShellPanel[data-presentation-follows] {
+    --kui-shell-position: absolute;
+    --kui-shell-z: 3;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: initial;
+    --kui-shell-row: 2 / 3;
+    --kui-shell-col: 1 / -1;
+    --kui-shell-surface: var(--color-surface);
+    --kui-shell-shadow: var(--surface-chrome);
+    --kui-shell-edge: 1px;
+    --kui-shell-cap: initial;
+    --kui-shell-offset: var(--shell-rail-offset, 0px);
+    --kui-shell-handle: initial;
   }
 
-  .rt-ShellPane[data-state='auto'][data-auto-md='closed'] {
+  .kui-ShellPane[data-state='auto'][data-auto-md='closed'] {
     display: none;
   }
 
-  .rt-ShellPane[data-state='auto'][data-auto-md='open'],
-  .rt-ShellPane[data-state='auto'][data-auto-md='thin'] {
+  .kui-ShellPane[data-state='auto'][data-auto-md='open'] {
     display: flex;
   }
 
-  .rt-ShellSidebar[data-state='auto'][data-auto-md='open'] {
+  .kui-ShellSidebar[data-state='auto'][data-auto-md='open'] {
     inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
-    --rt-shell-thin: initial;
-  }
-
-  .rt-ShellSidebar[data-state='auto'][data-auto-md='thin'] {
-    inline-size: var(--sidebar-thin-size, 64px);
-    --rt-shell-thin: none;
   }
 }
 
 @media (min-width: 1280px) {
-  .rt-ShellPane[data-presentation-lg='fixed'],
-  .rt-ShellRail[data-presentation-lg='fixed'] ~ .rt-ShellPanel[data-presentation-follows] {
-    --rt-shell-position: initial;
-    --rt-shell-z: initial;
-    --rt-shell-row: initial;
-    --rt-shell-col: initial;
-    --rt-shell-surface: initial;
-    --rt-shell-shadow: initial;
-    --rt-shell-cap: initial;
-    --rt-shell-offset: initial;
-    --rt-shell-handle: initial;
+  .kui-ShellPane[data-presentation-lg='fixed'],
+  .kui-ShellRail[data-presentation-lg='fixed'] ~ .kui-ShellPanel[data-presentation-follows] {
+    --kui-shell-position: initial;
+    --kui-shell-z: initial;
+    --kui-shell-pin: initial;
+    --kui-shell-pin-top: initial;
+    --kui-shell-row: initial;
+    --kui-shell-col: initial;
+    --kui-shell-surface: initial;
+    --kui-shell-shadow: initial;
+    --kui-shell-edge: 0px;
+    --kui-shell-cap: initial;
+    --kui-shell-offset: initial;
+    --kui-shell-handle: initial;
   }
 
-  .rt-ShellPane[data-presentation-lg='overlay'],
-  .rt-ShellRail[data-presentation-lg='overlay'] ~ .rt-ShellPanel[data-presentation-follows] {
-    --rt-shell-position: absolute;
-    --rt-shell-z: 6;
-    --rt-shell-row: 1 / -1;
-    --rt-shell-col: 1 / -1;
-    --rt-shell-surface: var(--color-panel-solid);
-    --rt-shell-shadow: var(--shadow-5);
-    --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
-    --rt-shell-offset: var(--shell-rail-offset, 0px);
-    --rt-shell-handle: none;
+  .kui-ShellPane[data-presentation-lg='overlay'],
+  .kui-ShellRail[data-presentation-lg='overlay'] ~ .kui-ShellPanel[data-presentation-follows] {
+    --kui-shell-position: absolute;
+    --kui-shell-z: 6;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: 0px;
+    --kui-shell-row: 1 / -1;
+    --kui-shell-col: 1 / -1;
+    --kui-shell-surface: var(--color-surface);
+    --kui-shell-shadow: var(--dialog-chrome);
+    --kui-shell-edge: 1px;
+    --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
+    --kui-shell-offset: var(--shell-rail-offset, 0px);
+    --kui-shell-handle: none;
   }
 
-  .rt-ShellPane[data-presentation-lg='stacked'],
-  .rt-ShellRail[data-presentation-lg='stacked'] ~ .rt-ShellPanel[data-presentation-follows] {
-    --rt-shell-position: absolute;
-    --rt-shell-z: 3;
-    --rt-shell-row: 2 / 3;
-    --rt-shell-col: 1 / -1;
-    --rt-shell-surface: var(--color-panel-solid);
-    --rt-shell-shadow: var(--shadow-4);
-    --rt-shell-cap: initial;
-    --rt-shell-offset: var(--shell-rail-offset, 0px);
-    --rt-shell-handle: initial;
+  .kui-ShellPane[data-presentation-lg='stacked'],
+  .kui-ShellRail[data-presentation-lg='stacked'] ~ .kui-ShellPanel[data-presentation-follows] {
+    --kui-shell-position: absolute;
+    --kui-shell-z: 3;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: initial;
+    --kui-shell-row: 2 / 3;
+    --kui-shell-col: 1 / -1;
+    --kui-shell-surface: var(--color-surface);
+    --kui-shell-shadow: var(--surface-chrome);
+    --kui-shell-edge: 1px;
+    --kui-shell-cap: initial;
+    --kui-shell-offset: var(--shell-rail-offset, 0px);
+    --kui-shell-handle: initial;
   }
 
-  .rt-ShellPane[data-state='auto'][data-auto-lg='closed'] {
+  .kui-ShellPane[data-state='auto'][data-auto-lg='closed'] {
     display: none;
   }
 
-  .rt-ShellPane[data-state='auto'][data-auto-lg='open'],
-  .rt-ShellPane[data-state='auto'][data-auto-lg='thin'] {
+  .kui-ShellPane[data-state='auto'][data-auto-lg='open'] {
     display: flex;
   }
 
-  .rt-ShellSidebar[data-state='auto'][data-auto-lg='open'] {
+  .kui-ShellSidebar[data-state='auto'][data-auto-lg='open'] {
     inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
-    --rt-shell-thin: initial;
-  }
-
-  .rt-ShellSidebar[data-state='auto'][data-auto-lg='thin'] {
-    inline-size: var(--sidebar-thin-size, 64px);
-    --rt-shell-thin: none;
   }
 }
 
 @media (min-width: 1640px) {
-  .rt-ShellPane[data-presentation-xl='fixed'],
-  .rt-ShellRail[data-presentation-xl='fixed'] ~ .rt-ShellPanel[data-presentation-follows] {
-    --rt-shell-position: initial;
-    --rt-shell-z: initial;
-    --rt-shell-row: initial;
-    --rt-shell-col: initial;
-    --rt-shell-surface: initial;
-    --rt-shell-shadow: initial;
-    --rt-shell-cap: initial;
-    --rt-shell-offset: initial;
-    --rt-shell-handle: initial;
+  .kui-ShellPane[data-presentation-xl='fixed'],
+  .kui-ShellRail[data-presentation-xl='fixed'] ~ .kui-ShellPanel[data-presentation-follows] {
+    --kui-shell-position: initial;
+    --kui-shell-z: initial;
+    --kui-shell-pin: initial;
+    --kui-shell-pin-top: initial;
+    --kui-shell-row: initial;
+    --kui-shell-col: initial;
+    --kui-shell-surface: initial;
+    --kui-shell-shadow: initial;
+    --kui-shell-edge: 0px;
+    --kui-shell-cap: initial;
+    --kui-shell-offset: initial;
+    --kui-shell-handle: initial;
   }
 
-  .rt-ShellPane[data-presentation-xl='overlay'],
-  .rt-ShellRail[data-presentation-xl='overlay'] ~ .rt-ShellPanel[data-presentation-follows] {
-    --rt-shell-position: absolute;
-    --rt-shell-z: 6;
-    --rt-shell-row: 1 / -1;
-    --rt-shell-col: 1 / -1;
-    --rt-shell-surface: var(--color-panel-solid);
-    --rt-shell-shadow: var(--shadow-5);
-    --rt-shell-cap: calc(100% - var(--space-8) - var(--rt-shell-start, 0px));
-    --rt-shell-offset: var(--shell-rail-offset, 0px);
-    --rt-shell-handle: none;
+  .kui-ShellPane[data-presentation-xl='overlay'],
+  .kui-ShellRail[data-presentation-xl='overlay'] ~ .kui-ShellPanel[data-presentation-follows] {
+    --kui-shell-position: absolute;
+    --kui-shell-z: 6;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: 0px;
+    --kui-shell-row: 1 / -1;
+    --kui-shell-col: 1 / -1;
+    --kui-shell-surface: var(--color-surface);
+    --kui-shell-shadow: var(--dialog-chrome);
+    --kui-shell-edge: 1px;
+    --kui-shell-cap: calc(100% - var(--space-9) - var(--kui-shell-start, 0px));
+    --kui-shell-offset: var(--shell-rail-offset, 0px);
+    --kui-shell-handle: none;
   }
 
-  .rt-ShellPane[data-presentation-xl='stacked'],
-  .rt-ShellRail[data-presentation-xl='stacked'] ~ .rt-ShellPanel[data-presentation-follows] {
-    --rt-shell-position: absolute;
-    --rt-shell-z: 3;
-    --rt-shell-row: 2 / 3;
-    --rt-shell-col: 1 / -1;
-    --rt-shell-surface: var(--color-panel-solid);
-    --rt-shell-shadow: var(--shadow-4);
-    --rt-shell-cap: initial;
-    --rt-shell-offset: var(--shell-rail-offset, 0px);
-    --rt-shell-handle: initial;
+  .kui-ShellPane[data-presentation-xl='stacked'],
+  .kui-ShellRail[data-presentation-xl='stacked'] ~ .kui-ShellPanel[data-presentation-follows] {
+    --kui-shell-position: absolute;
+    --kui-shell-z: 3;
+    --kui-shell-pin: fixed;
+    --kui-shell-pin-top: initial;
+    --kui-shell-row: 2 / 3;
+    --kui-shell-col: 1 / -1;
+    --kui-shell-surface: var(--color-surface);
+    --kui-shell-shadow: var(--surface-chrome);
+    --kui-shell-edge: 1px;
+    --kui-shell-cap: initial;
+    --kui-shell-offset: var(--shell-rail-offset, 0px);
+    --kui-shell-handle: initial;
   }
 
-  .rt-ShellPane[data-state='auto'][data-auto-xl='closed'] {
+  .kui-ShellPane[data-state='auto'][data-auto-xl='closed'] {
     display: none;
   }
 
-  .rt-ShellPane[data-state='auto'][data-auto-xl='open'],
-  .rt-ShellPane[data-state='auto'][data-auto-xl='thin'] {
+  .kui-ShellPane[data-state='auto'][data-auto-xl='open'] {
     display: flex;
   }
 
-  .rt-ShellSidebar[data-state='auto'][data-auto-xl='open'] {
+  .kui-ShellSidebar[data-state='auto'][data-auto-xl='open'] {
     inline-size: var(--sidebar-size, var(--sidebar-expanded-size, 288px));
-    --rt-shell-thin: initial;
-  }
-
-  .rt-ShellSidebar[data-state='auto'][data-auto-xl='thin'] {
-    inline-size: var(--sidebar-thin-size, 64px);
-    --rt-shell-thin: none;
   }
 }
 
@@ -616,28 +892,31 @@
  * it. The pane shows, floating above the content at its edge. After every
  * breakpoint block, so it wins over a closed state at any width.
  */
-.rt-ShellPane[data-peek][data-state],
-.rt-ShellRail ~ .rt-ShellPanel[data-presentation-follows][data-peek][data-state] {
-  --rt-shell-position: absolute;
-  --rt-shell-z: 4;
-  --rt-shell-row: 2 / 3;
-  --rt-shell-col: 1 / -1;
-  --rt-shell-surface: var(--color-panel-solid);
-  --rt-shell-shadow: var(--shadow-4);
-  --rt-shell-offset: var(--shell-rail-offset, 0px);
-  --rt-shell-handle: none;
+.kui-ShellPane[data-peek][data-state],
+.kui-ShellRail ~ .kui-ShellPanel[data-presentation-follows][data-peek][data-state] {
+  --kui-shell-position: absolute;
+  --kui-shell-z: 4;
+  --kui-shell-pin: fixed;
+  --kui-shell-pin-top: initial;
+  --kui-shell-row: 2 / 3;
+  --kui-shell-col: 1 / -1;
+  --kui-shell-surface: var(--color-surface);
+  --kui-shell-shadow: var(--surface-chrome);
+  --kui-shell-edge: 1px;
+  --kui-shell-offset: var(--shell-rail-offset, 0px);
+  --kui-shell-handle: none;
 
   display: flex;
 }
 
-.rt-ShellSidebar[data-peek][data-state] {
+.kui-ShellSidebar[data-peek][data-state] {
   inline-size: var(--peek-sidebar-width, var(--sidebar-size, var(--sidebar-expanded-size, 288px)));
 }
 
 /* ── Scrim ─────────────────────────────────────────────────────────────────── */
 
 /* Root-owned and always mounted; shown while an overlay is live. Under the overlay panes, over everything else. */
-.rt-ShellScrim {
+.kui-ShellScrim {
   display: none;
   position: absolute;
   inset: 0;
@@ -645,7 +924,7 @@
   background-color: var(--color-overlay);
 }
 
-.rt-ShellRoot[data-overlay-live] > .rt-ShellScrim {
+.kui-ShellRoot[data-overlay-live] > .kui-ShellScrim {
   display: block;
 }
 
@@ -654,90 +933,323 @@
  * frame can be taller than the window. Its overlays and scrim are placed on
  * the window, so an open drawer is on screen wherever the page is scrolled.
  */
-.rt-ShellRoot[data-height='auto'] > .rt-ShellScrim,
-.rt-ShellRoot[data-height='auto'] > .rt-ShellPane[data-presentation='overlay'] {
+.kui-ShellRoot[data-height='auto'] > .kui-ShellScrim,
+.kui-ShellRoot[data-height='auto'] > .kui-ShellPane[data-presentation='overlay'] {
   position: fixed;
 }
 
-/* ── Inset ─────────────────────────────────────────────────────────────────── */
+/* ── Flush and off the frame (from v2, 0.33.0) ─────────────────────────────── */
 
 /*
- * The backdrop behind the middle row while any pane is inset. A grid item of
- * its own, so the header and the bottom row keep the page. `:has()` paints it
- * from the server markup, before any script; `data-has-inset` is the Root's
- * own record, which also covers a pane wrapped in another element.
+ * Every pane says one thing about itself: whether it joins the app frame (`flush`, the default)
+ * or is pulled off it as a card (`flush={false}`). Whether a card floats or sits on the Shell's
+ * background is not stated anywhere; it falls out of the content's own answer, here, so it is
+ * right at first paint:
+ *
+ * - A flush pane is level with the page: square, no fill, no shadow, and one hairline in
+ *   `--color-border` on its inner edge. Each seam is drawn by exactly one pane, and the content
+ *   draws none, so two neighbours never double a line.
+ * - With the content flush, a card floats over it: the content's grid area grows underneath.
+ * - With the content off the frame, nothing floats. The Shell paints its background and every
+ *   pane, flush or not, sits on it; the content is a card, and a flush pane draws no hairline
+ *   toward it, because a line beside a card's own edge is a second boundary.
  */
-.rt-ShellRoot:has(> [data-inset])::before,
-.rt-ShellRoot[data-has-inset]::before {
-  content: '';
-  grid-row: 2;
-  grid-column: 1 / -1;
-  background: var(--gray-2);
+
+.kui-ShellHeader[data-flush],
+.kui-ShellPane[data-flush],
+.kui-ShellContent[data-flush] {
+  border: 0 solid var(--color-border);
+  border-radius: 0;
 }
 
-.rt-ShellPane[data-inset],
-.rt-ShellContent[data-inset] {
-  margin: var(--shell-inset-gap);
-  border-radius: var(--radius-surface-3);
-  background: var(--color-background);
-  box-shadow: var(--shadow-2);
+.kui-ShellHeader[data-flush] {
+  border-block-end-width: 1px;
+}
+
+.kui-ShellRail[data-flush],
+.kui-ShellPanel[data-flush],
+.kui-ShellSidebar[data-flush] {
+  border-inline-end-width: 1px;
+}
+
+.kui-ShellInspector[data-flush] {
+  border-inline-start-width: 1px;
+}
+
+.kui-ShellBottom[data-flush] {
+  border-block-start-width: 1px;
+}
+
+/* A seam needs something on the other side. Against a card content there is only the gap. The
+   Panel and the Rail face the content only when no flush pane stands between them. */
+.kui-ShellRoot:has(> .kui-ShellContent:not([data-flush])) > .kui-ShellHeader[data-flush] {
+  border-block-end-width: 0;
+}
+
+.kui-ShellRoot:has(> .kui-ShellContent:not([data-flush])) > .kui-ShellSidebar[data-flush],
+.kui-ShellRoot:has(> .kui-ShellContent:not([data-flush])):not(:has(> .kui-ShellSidebar[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))) > .kui-ShellPanel[data-flush],
+.kui-ShellRoot:has(> .kui-ShellContent:not([data-flush])):not(:has(> .kui-ShellPanel[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']), > .kui-ShellSidebar[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))) > .kui-ShellRail[data-flush] {
+  border-inline-end-width: 0;
+}
+
+.kui-ShellRoot:has(> .kui-ShellContent:not([data-flush])) > .kui-ShellInspector[data-flush] {
+  border-inline-start-width: 0;
+}
+
+.kui-ShellRoot:has(> .kui-ShellContent:not([data-flush])) > .kui-ShellBottom[data-flush] {
+  border-block-start-width: 0;
+}
+
+/* Off the frame: a card, with its own air on every side. */
+.kui-ShellHeader:not([data-flush]),
+.kui-ShellPane:not([data-flush]),
+.kui-ShellContent:not([data-flush]) {
+  margin: var(--shell-gap);
+  border-radius: var(--radius-surface-1);
+  background-color: var(--color-page);
+  box-shadow: var(--surface-chrome);
+}
+
+/* A header card rests level with the panes below it, so its shadow falls behind them, not on them. */
+.kui-ShellHeader:not([data-flush]) {
+  z-index: 1;
+}
+
+/* With the content off the frame, the Shell paints the background the cards sit on. */
+.kui-ShellRoot:has(> .kui-ShellContent:not([data-flush])) {
+  background-color: var(--neutral-2);
 }
 
 /*
- * Two inset panes side by side share one gap rather than doubling it: the
- * later pane in the row drops the margin on the side that meets the earlier
- * one. Only the pane right beside it counts, and only while it is shown in
- * the frame (the JS mirror's data-presentation and data-mode), so a closed,
- * hidden or floating pane never takes the gap away. Before hydration the
- * gap is doubled.
+ * Two cards side by side share one gap rather than doubling it: the later card in the row drops
+ * its margin on the side that meets the earlier one, so card to card and card to edge come out
+ * equal. Only a pane shown in the frame counts.
  */
-.rt-ShellRoot:has(> .rt-ShellRail[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .rt-ShellPanel[data-inset][data-presentation='fixed'],
-.rt-ShellRoot:has(> .rt-ShellPanel[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .rt-ShellSidebar[data-inset][data-presentation='fixed'],
-.rt-ShellRoot:has(> .rt-ShellRail[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])):not(
-    :has(> .rt-ShellPanel[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))
-  )
-  > .rt-ShellSidebar[data-inset][data-presentation='fixed'],
-.rt-ShellRoot:has(> .rt-ShellSidebar[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .rt-ShellContent[data-inset],
-.rt-ShellRoot:has(> .rt-ShellPanel[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])):not(
-    :has(> .rt-ShellSidebar[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))
-  )
-  > .rt-ShellContent[data-inset],
-.rt-ShellRoot:has(> .rt-ShellRail[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])):not(
-    :has(> .rt-ShellPanel[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']), > .rt-ShellSidebar[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))
-  )
-  > .rt-ShellContent[data-inset],
-.rt-ShellRoot:has(> .rt-ShellContent[data-inset]) > .rt-ShellInspector[data-inset][data-presentation='fixed'] {
+.kui-ShellRoot:has(> .kui-ShellRail:not([data-flush])[data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .kui-ShellPanel:not([data-flush])[data-presentation='fixed'],
+.kui-ShellRoot:has(> .kui-ShellPanel:not([data-flush])[data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .kui-ShellSidebar:not([data-flush])[data-presentation='fixed'],
+.kui-ShellRoot:has(> .kui-ShellRail:not([data-flush])[data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])):not(:has(> .kui-ShellPanel[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))) > .kui-ShellSidebar:not([data-flush])[data-presentation='fixed'],
+.kui-ShellRoot:has(> .kui-ShellSidebar:not([data-flush])[data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .kui-ShellContent:not([data-flush]),
+.kui-ShellRoot:has(> .kui-ShellPanel:not([data-flush])[data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])):not(:has(> .kui-ShellSidebar[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))) > .kui-ShellContent:not([data-flush]),
+.kui-ShellRoot:has(> .kui-ShellRail:not([data-flush])[data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])):not(:has(> .kui-ShellPanel[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']), > .kui-ShellSidebar[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))) > .kui-ShellContent:not([data-flush]),
+.kui-ShellRoot:has(> .kui-ShellContent:not([data-flush])) > .kui-ShellInspector:not([data-flush])[data-presentation='fixed'] {
   margin-inline-start: 0;
 }
 
-.rt-ShellRoot:has(
-    > .rt-ShellRail[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed']),
-    > .rt-ShellPanel[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed']),
-    > .rt-ShellSidebar[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed']),
-    > .rt-ShellContent[data-inset],
-    > .rt-ShellInspector[data-inset][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])
-  )
-  > .rt-ShellBottom[data-inset] {
+.kui-ShellRoot:has(> .kui-ShellHeader:not([data-flush])) > :is(.kui-ShellPane:not(.kui-ShellBottom), .kui-ShellContent):not([data-flush]),
+.kui-ShellRoot:has(> :is(.kui-ShellRail, .kui-ShellPanel, .kui-ShellSidebar, .kui-ShellInspector):not([data-flush])[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']), > .kui-ShellContent:not([data-flush])) > .kui-ShellBottom:not([data-flush]) {
   margin-block-start: 0;
+}
+
+/* A card content pays no air toward a flush side pane in the frame: the pane's padding is the
+   air. Toward a flush header it keeps its gap, since a header's row has no padding below it. */
+.kui-ShellRoot:has(> .kui-ShellSidebar[data-flush][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .kui-ShellContent:not([data-flush]),
+.kui-ShellRoot:has(> .kui-ShellPanel[data-flush][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])):not(:has(> .kui-ShellSidebar[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))) > .kui-ShellContent:not([data-flush]),
+.kui-ShellRoot:has(> .kui-ShellRail[data-flush][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])):not(:has(> .kui-ShellPanel[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']), > .kui-ShellSidebar[data-presentation='fixed'][data-mode]:not([data-mode='collapsed']))) > .kui-ShellContent:not([data-flush]) {
+  margin-inline-start: 0;
+}
+
+.kui-ShellRoot:has(> .kui-ShellInspector[data-flush][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .kui-ShellContent:not([data-flush]) {
+  margin-inline-end: 0;
+}
+
+.kui-ShellRoot:has(> .kui-ShellBottom[data-flush][data-presentation='fixed'][data-mode]:not([data-mode='collapsed'])) > .kui-ShellContent:not([data-flush]) {
+  margin-block-end: 0;
+}
+
+/*
+ * Floating: with the content flush, a card is over it, and the content's grid area grows to the
+ * card's own line so the content runs underneath. It grows only on the sides something floats
+ * on. The Rail and the Panel float over the content only when no flush pane stands between.
+ * The panes already sit above the content (`z-index` 1 against the content's isolated layer).
+ */
+.kui-ShellRoot:has(> .kui-ShellSidebar:not([data-flush])) > .kui-ShellContent[data-flush] {
+  grid-column-start: sidebar-start;
+}
+
+.kui-ShellRoot:has(> .kui-ShellPanel:not([data-flush])):not(:has(> .kui-ShellSidebar[data-flush])) > .kui-ShellContent[data-flush] {
+  grid-column-start: panel-start;
+}
+
+.kui-ShellRoot:has(> .kui-ShellRail:not([data-flush])):not(:has(> .kui-ShellPanel[data-flush], > .kui-ShellSidebar[data-flush])) > .kui-ShellContent[data-flush] {
+  grid-column-start: rail-start;
+}
+
+.kui-ShellRoot:has(> .kui-ShellInspector:not([data-flush])) > .kui-ShellContent[data-flush] {
+  grid-column-end: inspector-end;
+}
+
+.kui-ShellRoot:has(> .kui-ShellHeader:not([data-flush])) > .kui-ShellContent[data-flush] {
+  grid-row-start: header-start;
+}
+
+.kui-ShellRoot:has(> .kui-ShellBottom:not([data-flush])) > .kui-ShellContent[data-flush] {
+  grid-row-end: bottom-end;
+}
+
+/* ── On a phone, the page scrolls (0.27.0) ────────────────────────────────── */
+
+/*
+ * Ported from kookie-ui-v2's Shell. A mobile browser hides its toolbars only when the document
+ * scrolls; no scroller inside the page reaches them. So on a narrow window with a coarse pointer
+ * a window Shell (`data-window`: no `contained`, no `height`) grows with its content and the
+ * document scrolls instead of the content pane. Everything that stayed put while the pane
+ * scrolled stays put while the page scrolls: the header and the content's pinned rows stick, and
+ * the drawers and the scrim attach to the screen.
+ *
+ * Narrow is below the `sm` breakpoint, where v1's panes leave the overlay posture by default.
+ * `_internal/shell-page-scroll.ts` holds the same query for the few things only script can do,
+ * and a test holds the two equal.
+ *
+ * Content that cannot wrap is clipped at the screen's edge rather than widening the page: it
+ * needs its own horizontal scroller, as a code block has.
+ */
+@media (max-width: 767.98px) and (pointer: coarse) {
+  /* `clip`, not `hidden`: a hidden box is a scroll container, and it would catch every sticky row. */
+  .kui-ShellRoot[data-window] {
+    height: auto;
+    min-height: 100vh;
+    overflow: clip;
+  }
+
+  @supports (height: 100dvh) {
+    .kui-ShellRoot[data-window] {
+      min-height: 100dvh;
+    }
+  }
+
+  /* The header's height, for the rows that stick beneath it. The Root writes `--kui-shell-header-h`
+     when a Shell.Header is not the default 64px. */
+  .kui-ShellRoot[data-window]:has(> .kui-ShellHeader) {
+    --kui-shell-page-top: var(--kui-shell-header-h, 64px);
+  }
+
+  .kui-ShellRoot[data-window] > .kui-ShellHeader {
+    position: sticky;
+    top: 0;
+  }
+
+  /*
+   * The content stops scrolling. Isolated, so nothing the app layers inside it climbs over a
+   * sticky row and takes its taps. A focused control or a linked heading scrolls into view
+   * beneath the stuck rows rather than under them.
+   */
+  .kui-ShellRoot[data-window] > .kui-ShellContent {
+    overflow: clip;
+    isolation: isolate;
+  }
+
+  .kui-ShellRoot[data-window] > .kui-ShellContent :where(*) {
+    scroll-margin-block: calc(var(--kui-shell-page-top) + var(--kui-content-float-start, 0px)) var(--kui-content-float-end, 0px);
+  }
+
+  /* The floating rows' reach, as the content's Shell.Scroll works it out above. */
+  .kui-ShellRoot[data-window] > .kui-ShellContent:has(> .kui-ShellPaneHeader[data-float]) {
+    --kui-content-float-start: calc(max(var(--kui-pane-row-start), var(--kui-pane-band-start, 0px)) + 2 * var(--kui-pane-pad-start));
+  }
+
+  .kui-ShellRoot[data-window] > .kui-ShellContent:has(> .kui-ShellPaneFooter[data-float]) {
+    --kui-content-float-end: calc(max(var(--kui-pane-row-end), var(--kui-pane-band-end, 0px)) + 2 * var(--kui-pane-pad-end));
+  }
+
+  /*
+   * Shell.Scroll in the content stops scrolling too and grows with what it holds. The viewport's
+   * overflow is written inline by Radix, hence `!important`. Its scrollbar and fade go: the
+   * document's own scrollbar is the one a phone shows, and a mask with nothing to scroll could
+   * only cut the page's edge.
+   */
+  .kui-ShellRoot[data-window] > .kui-ShellContent > .kui-ShellScroll {
+    flex: none;
+    height: auto;
+    overflow: clip;
+  }
+
+  .kui-ShellRoot[data-window] > .kui-ShellContent > .kui-ShellScroll > .kui-ScrollAreaViewport {
+    height: auto;
+    overflow: visible !important;
+    mask-image: none;
+  }
+
+  .kui-ShellRoot[data-window] > .kui-ShellContent > .kui-ShellScroll > .kui-ScrollAreaScrollbar {
+    display: none;
+  }
+
+  /*
+   * The floating rows stick, and still float. Sticky is in flow, so a negative margin gives back
+   * the room the row takes and the page starts where it starts in the frame. `order` because a
+   * row sticks where it sits, and a footer must sit after the page.
+   */
+  .kui-ShellRoot[data-window] > .kui-ShellContent:has(> .kui-ShellScroll) > .kui-ShellPaneHeader[data-float] {
+    position: sticky;
+    top: var(--kui-shell-page-top);
+    order: -1;
+    margin-bottom: calc(-1 * var(--kui-content-float-start, 0px));
+  }
+
+  .kui-ShellRoot[data-window] > .kui-ShellContent:has(> .kui-ShellScroll) > .kui-ShellPaneFooter[data-float] {
+    position: sticky;
+    bottom: 0;
+    order: 1;
+    margin-top: calc(-1 * var(--kui-content-float-end, 0px));
+  }
+
+  /* A pinned sibling of the Scroll pins to the screen: one before it to the top, beneath the
+     header, one after it to the bottom. */
+  .kui-ShellRoot[data-window] > .kui-ShellContent > :not(.kui-ShellScroll, [data-float]):has(~ .kui-ShellScroll) {
+    position: sticky;
+    top: var(--kui-shell-page-top);
+    z-index: 1;
+  }
+
+  .kui-ShellRoot[data-window] > .kui-ShellContent > .kui-ShellScroll ~ :not([data-float]) {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+  }
+
+  /*
+   * The panes. A pane over the page (overlay, stacked, peek) attaches to the screen: its posture
+   * writes `--kui-shell-pin: fixed`. A pane in flow sticks beneath the header, a screen tall, and
+   * the bottom pane sticks to the screen's bottom. An overlay covers the header
+   * (`--kui-shell-pin-top: 0px`); the rest start beneath it.
+   */
+  .kui-ShellRoot[data-window] > :is(.kui-ShellRail, .kui-ShellPanel, .kui-ShellSidebar, .kui-ShellInspector) {
+    position: var(--kui-shell-pin, sticky);
+    top: var(--kui-shell-pin-top, var(--kui-shell-page-top));
+    block-size: calc(100vh - var(--kui-shell-pin-top, var(--kui-shell-page-top)));
+  }
+
+  @supports (height: 100dvh) {
+    .kui-ShellRoot[data-window] > :is(.kui-ShellRail, .kui-ShellPanel, .kui-ShellSidebar, .kui-ShellInspector) {
+      block-size: calc(100dvh - var(--kui-shell-pin-top, var(--kui-shell-page-top)));
+    }
+  }
+
+  .kui-ShellRoot[data-window] > .kui-ShellBottom {
+    position: var(--kui-shell-pin, sticky);
+  }
+
+  .kui-ShellRoot[data-window] > .kui-ShellScrim {
+    position: fixed;
+  }
 }
 
 /* ── Resize handle ─────────────────────────────────────────────────────────── */
 
 /* A transparent hit area straddling the pane's edge. */
-.rt-ShellResizer {
+.kui-ShellResizer {
   position: absolute;
   z-index: 1;
   background: transparent;
   /* hit target size, adjustable per media */
-  --resizer-hit: var(--space-3);
-  display: var(--rt-shell-thin, var(--rt-shell-handle, flex));
+  --resizer-hit: var(--space-4);
+  display: var(--kui-shell-handle, flex);
   align-items: center;
   justify-content: center;
   overflow: visible;
   touch-action: none;
 }
 
-.rt-ShellResizer[data-orientation='vertical'][data-edge='end'] {
+.kui-ShellResizer[data-orientation='vertical'][data-edge='end'] {
   inset-block: 0;
   inset-inline-end: 0;
   inline-size: var(--resizer-hit);
@@ -746,11 +1258,11 @@
   transform: translateX(50%);
 }
 
-.rt-ShellResizer[data-orientation='vertical'][data-edge='end']:dir(rtl) {
+.kui-ShellResizer[data-orientation='vertical'][data-edge='end']:dir(rtl) {
   transform: translateX(-50%);
 }
 
-.rt-ShellResizer[data-orientation='vertical'][data-edge='start'] {
+.kui-ShellResizer[data-orientation='vertical'][data-edge='start'] {
   inset-block: 0;
   inset-inline-start: 0;
   inline-size: var(--resizer-hit);
@@ -759,11 +1271,11 @@
   transform: translateX(-50%);
 }
 
-.rt-ShellResizer[data-orientation='vertical'][data-edge='start']:dir(rtl) {
+.kui-ShellResizer[data-orientation='vertical'][data-edge='start']:dir(rtl) {
   transform: translateX(50%);
 }
 
-.rt-ShellResizer[data-orientation='horizontal'][data-edge='start'] {
+.kui-ShellResizer[data-orientation='horizontal'][data-edge='start'] {
   inset-inline: 0;
   inset-block-start: 0;
   inline-size: 100%;
@@ -773,8 +1285,8 @@
 }
 
 @media (pointer: coarse) {
-  .rt-ShellResizer {
-    --resizer-hit: var(--space-6);
+  .kui-ShellResizer {
+    --resizer-hit: var(--space-7);
   }
 }
 
@@ -783,39 +1295,58 @@
  * focus and while dragging, so the handle is visible when it matters and the
  * frame carries no rule otherwise.
  */
-.rt-ShellResizer::before {
+.kui-ShellResizer::before {
   content: '';
   position: absolute;
   background-color: transparent;
   pointer-events: none;
 }
 
-.rt-ShellResizer[data-orientation='vertical']::before {
+.kui-ShellResizer[data-orientation='vertical']::before {
   inset-block: 0;
   inset-inline-start: calc(50% - 1px);
   inline-size: 2px;
 }
 
-.rt-ShellResizer[data-orientation='horizontal']::before {
+.kui-ShellResizer[data-orientation='horizontal']::before {
   inset-inline: 0;
   inset-block-start: calc(50% - 1px);
   block-size: 2px;
 }
 
-.rt-ShellResizer:hover::before,
-.rt-ShellResizer[data-dragging]::before {
-  background-color: var(--gray-a6);
+.kui-ShellResizer[data-dragging]::before {
+  background-color: var(--neutral-a6);
 }
 
-.rt-ShellResizer:focus-visible {
+@media (hover: hover) {
+  .kui-ShellResizer:hover::before {
+    background-color: var(--neutral-a6);
+  }
+}
+
+.kui-ShellResizer:focus-visible {
   outline: none;
 }
 
-.rt-ShellResizer:focus-visible::before {
+.kui-ShellResizer:focus-visible::before {
   background-color: var(--focus-8);
 }
 
-/* Hide the handle while its pane is a thin sidebar. */
-.rt-ShellSidebar[data-thin] .rt-ShellResizer {
-  display: none;
+/*
+ * Forced colors drop backgrounds and shadows. The focused handle keeps its line in the
+ * system highlight, and a pane floating over the page (overlay or stacked) gets an edge
+ * in place of its shadow.
+ */
+@media (forced-colors: active) {
+  .kui-ShellResizer:focus-visible::before {
+    background-color: Highlight;
+    forced-color-adjust: none;
+  }
+
+  .kui-ShellPane,
+  .kui-ShellPane:focus {
+    outline: var(--kui-shell-edge, 0px) solid CanvasText;
+    outline-offset: calc(-1 * var(--kui-shell-edge, 0px));
+  }
 }
+

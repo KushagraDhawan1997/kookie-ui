@@ -16,7 +16,7 @@ function App({ defaultSize }: { defaultSize: string | number }) {
 }
 
 function getPanelEl() {
-  return screen.getByText('panel').closest('.rt-ShellPanel') as HTMLElement;
+  return screen.getByText('panel').closest('.kui-ShellPanel') as HTMLElement;
 }
 
 describe('Panel defaultSize normalization', () => {

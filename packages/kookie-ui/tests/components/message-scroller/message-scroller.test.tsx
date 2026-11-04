@@ -23,27 +23,27 @@ describe('MessageScroller', () => {
   it('renders the transcript in a named scroll region', () => {
     renderWithProviders(<Transcript label="Conversation" />);
     const region = screen.getByRole('region', { name: 'Conversation' });
-    expect(region).toHaveClass('rt-MessageScrollerViewport');
+    expect(region).toHaveClass('kui-MessageScrollerViewport');
     expect(region).toHaveTextContent('Hello');
     expect(region).toHaveTextContent('Hi there');
   });
 
   it('says no English word when the app names nothing', () => {
     renderWithProviders(<Transcript />);
-    const viewport = document.querySelector('.rt-MessageScrollerViewport');
+    const viewport = document.querySelector('.kui-MessageScrollerViewport');
     expect(viewport?.getAttribute('aria-label')).toBe('');
   });
 
   it('wears Kookie class names on every part', () => {
     renderWithProviders(<Transcript label="Conversation" />);
-    expect(document.querySelector('.rt-MessageScrollerRoot')).not.toBeNull();
-    expect(document.querySelector('.rt-MessageScrollerContent')).not.toBeNull();
-    expect(document.querySelectorAll('.rt-MessageScrollerItem')).toHaveLength(2);
+    expect(document.querySelector('.kui-MessageScrollerRoot')).not.toBeNull();
+    expect(document.querySelector('.kui-MessageScrollerContent')).not.toBeNull();
+    expect(document.querySelectorAll('.kui-MessageScrollerItem')).toHaveLength(2);
   });
 
   it('puts the jump button to sleep while the reader is at the end', () => {
     renderWithProviders(<Transcript label="Conversation" />);
-    const button = document.querySelector('.rt-MessageScrollerButton');
+    const button = document.querySelector('.kui-MessageScrollerButton');
     expect(button).toHaveAttribute('data-active', 'false');
     expect(button).toHaveAttribute('inert');
     expect(button).toHaveAttribute('tabindex', '-1');

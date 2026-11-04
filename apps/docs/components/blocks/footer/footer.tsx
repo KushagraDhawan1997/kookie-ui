@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Flex, Heading, IconButton, Link, Text } from '@kushagradhawan/kookie-ui';
-import type { FlexProps, IconButtonProps, LinkProps, TextProps } from '@kushagradhawan/kookie-ui';
+import { Flex, Heading, Button, Link, Text } from '@kushagradhawan/kookie-ui';
+import type { FlexProps, ButtonProps, LinkProps, TextProps } from '@kushagradhawan/kookie-ui';
 
 type FooterRootProps = Omit<FlexProps, 'align'> & {
   /** @default "left" */
@@ -37,7 +37,7 @@ const FooterBrand = React.forwardRef<HTMLDivElement, FlexProps>(({ direction = '
 ));
 FooterBrand.displayName = 'Footer.Brand';
 
-const FooterBrandName = React.forwardRef<HTMLSpanElement, TextProps>(({ size = '4', weight = 'bold', ...props }, ref) => (
+const FooterBrandName = React.forwardRef<HTMLSpanElement, TextProps>(({ size = '4', weight = 'semibold', ...props }, ref) => (
   <Text ref={ref} size={size} weight={weight} {...props} />
 ));
 FooterBrandName.displayName = 'Footer.BrandName';
@@ -61,7 +61,7 @@ const FooterLinkGroup = React.forwardRef<HTMLDivElement, FooterLinkGroupProps>(
       <Heading as="h3" size="2" weight="medium">
         {title}
       </Heading>
-      <Flex direction="column" gap="2">
+      <Flex direction="column" gap="3">
         {children}
       </Flex>
     </Flex>
@@ -97,7 +97,7 @@ const FooterSocial = React.forwardRef<HTMLDivElement, FlexProps>(({ gap = '4', a
 ));
 FooterSocial.displayName = 'Footer.Social';
 
-type FooterSocialLinkProps = Omit<IconButtonProps, 'children' | 'aria-label' | 'aria-labelledby' | 'asChild'> & {
+type FooterSocialLinkProps = Omit<ButtonProps, 'children' | 'aria-label' | 'aria-labelledby' | 'asChild' | 'iconOnly' | 'fullWidth'> & {
   /** The icon to render, e.g. an SVG component. */
   icon: React.ComponentType;
   /** Accessible name, e.g. "GitHub". */
@@ -106,12 +106,12 @@ type FooterSocialLinkProps = Omit<IconButtonProps, 'children' | 'aria-label' | '
 };
 
 const FooterSocialLink = React.forwardRef<HTMLButtonElement, FooterSocialLinkProps>(
-  ({ icon: Icon, label, href, variant = 'ghost', color = 'gray', size = '2', ...props }, ref) => (
-    <IconButton ref={ref} asChild variant={variant} color={color} size={size} aria-label={label} {...props}>
+  ({ icon: Icon, label, href, variant = 'ghost', emphasis, color = 'gray', size = '2', ...props }, ref) => (
+    <Button iconOnly ref={ref} asChild {...(emphasis ? { emphasis } : { variant })} color={color} size={size} aria-label={label} {...props}>
       <a href={href} target="_blank" rel="noopener noreferrer">
         <Icon />
       </a>
-    </IconButton>
+    </Button>
   ),
 );
 FooterSocialLink.displayName = 'Footer.SocialLink';

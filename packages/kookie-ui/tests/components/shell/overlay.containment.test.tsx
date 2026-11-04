@@ -69,44 +69,44 @@ describe('an open overlay contains the frame', () => {
     renderWithProviders(<App />);
     openInspector();
 
-    expect(q('.rt-ShellInspector').getAttribute('data-presentation')).toBe('overlay');
-    expect(q('.rt-ShellRoot').hasAttribute('data-overlay-live')).toBe(true);
-    expect(isInert(q('.rt-ShellHeader'))).toBe(true);
-    expect(isInert(q('.rt-ShellSidebar'))).toBe(true);
-    expect(isInert(q('.rt-ShellContent'))).toBe(true);
-    expect(isInert(q('.rt-ShellInspector'))).toBe(false);
-    expect(isInert(q('.rt-ShellScrim'))).toBe(false);
+    expect(q('.kui-ShellInspector').getAttribute('data-presentation')).toBe('overlay');
+    expect(q('.kui-ShellRoot').hasAttribute('data-overlay-live')).toBe(true);
+    expect(isInert(q('.kui-ShellHeader'))).toBe(true);
+    expect(isInert(q('.kui-ShellSidebar'))).toBe(true);
+    expect(isInert(q('.kui-ShellContent'))).toBe(true);
+    expect(isInert(q('.kui-ShellInspector'))).toBe(false);
+    expect(isInert(q('.kui-ShellScrim'))).toBe(false);
   });
 
   it('moves focus into the overlay and returns it to the trigger when it closes', () => {
     renderWithProviders(<App />);
     const trigger = openInspector();
 
-    expect(document.activeElement).toBe(q('.rt-ShellInspector'));
+    expect(document.activeElement).toBe(q('.kui-ShellInspector'));
 
-    fireEvent.keyDown(q('.rt-ShellInspector'), { key: 'Escape' });
+    fireEvent.keyDown(q('.kui-ShellInspector'), { key: 'Escape' });
     expect(document.activeElement).toBe(trigger);
   });
 
   it('locks the page while open and releases it after', () => {
     renderWithProviders(<App />);
     openInspector();
-    expect(document.documentElement.hasAttribute('data-rt-shell-lock')).toBe(true);
+    expect(document.documentElement.hasAttribute('data-kui-shell-lock')).toBe(true);
 
-    fireEvent.click(q('.rt-ShellScrim'));
-    expect(document.documentElement.hasAttribute('data-rt-shell-lock')).toBe(false);
+    fireEvent.click(q('.kui-ShellScrim'));
+    expect(document.documentElement.hasAttribute('data-kui-shell-lock')).toBe(false);
   });
 
   it('restores what it inerted, including inert the app had set itself', () => {
     renderWithProviders(<App inertContent />);
-    expect(isInert(q('.rt-ShellContent'))).toBe(true);
+    expect(isInert(q('.kui-ShellContent'))).toBe(true);
     openInspector();
 
-    fireEvent.keyDown(q('.rt-ShellInspector'), { key: 'Escape' });
+    fireEvent.keyDown(q('.kui-ShellInspector'), { key: 'Escape' });
 
-    expect(isInert(q('.rt-ShellHeader'))).toBe(false);
-    expect(isInert(q('.rt-ShellSidebar'))).toBe(false);
-    expect(isInert(q('.rt-ShellContent'))).toBe(true);
+    expect(isInert(q('.kui-ShellHeader'))).toBe(false);
+    expect(isInert(q('.kui-ShellSidebar'))).toBe(false);
+    expect(isInert(q('.kui-ShellContent'))).toBe(true);
   });
 
   it('leaves the wrapper of a wrapped overlay alone', () => {
@@ -124,7 +124,7 @@ describe('an open overlay contains the frame', () => {
     openInspector();
 
     expect(isInert(q('.wrapper'))).toBe(false);
-    expect(isInert(q('.rt-ShellContent'))).toBe(true);
+    expect(isInert(q('.kui-ShellContent'))).toBe(true);
   });
 });
 
@@ -135,12 +135,12 @@ describe('dismissing an overlay', () => {
     openInspector();
     onInspector.mockClear();
 
-    fireEvent.keyDown(q('.rt-ShellInspector'), { key: 'Escape' });
+    fireEvent.keyDown(q('.kui-ShellInspector'), { key: 'Escape' });
 
     expect(onInspector).toHaveBeenCalledTimes(1);
     expect(onInspector).toHaveBeenLastCalledWith(false, { reason: 'dismiss' });
-    expect(q('.rt-ShellInspector').getAttribute('data-state')).toBe('closed');
-    expect(q('.rt-ShellRoot').hasAttribute('data-overlay-live')).toBe(false);
+    expect(q('.kui-ShellInspector').getAttribute('data-state')).toBe('closed');
+    expect(q('.kui-ShellRoot').hasAttribute('data-overlay-live')).toBe(false);
   });
 
   it('a press on the scrim closes it with reason dismiss', () => {
@@ -149,10 +149,10 @@ describe('dismissing an overlay', () => {
     openInspector();
     onInspector.mockClear();
 
-    fireEvent.click(q('.rt-ShellScrim'));
+    fireEvent.click(q('.kui-ShellScrim'));
 
     expect(onInspector).toHaveBeenLastCalledWith(false, { reason: 'dismiss' });
-    expect(q('.rt-ShellInspector').getAttribute('data-state')).toBe('closed');
+    expect(q('.kui-ShellInspector').getAttribute('data-state')).toBe('closed');
   });
 
   it('closes every live overlay at once, and neither inerts the other', () => {
@@ -162,10 +162,10 @@ describe('dismissing an overlay', () => {
     fireEvent.click(screen.getByRole('button', { name: 'sidebar' }));
     openInspector();
 
-    expect(isInert(q('.rt-ShellSidebar'))).toBe(false);
-    expect(isInert(q('.rt-ShellInspector'))).toBe(false);
+    expect(isInert(q('.kui-ShellSidebar'))).toBe(false);
+    expect(isInert(q('.kui-ShellInspector'))).toBe(false);
 
-    fireEvent.keyDown(q('.rt-ShellInspector'), { key: 'Escape' });
+    fireEvent.keyDown(q('.kui-ShellInspector'), { key: 'Escape' });
 
     expect(onInspector).toHaveBeenLastCalledWith(false, { reason: 'dismiss' });
     expect(onSidebar).toHaveBeenLastCalledWith('collapsed', { reason: 'dismiss' });
@@ -179,11 +179,11 @@ describe('dismissing an overlay', () => {
       </div>,
     );
 
-    fireEvent.keyDown(q('.rt-ShellContent'), { key: 'Escape' });
+    fireEvent.keyDown(q('.kui-ShellContent'), { key: 'Escape' });
     expect(outer).toHaveBeenCalledTimes(1);
 
     openInspector();
-    fireEvent.keyDown(q('.rt-ShellInspector'), { key: 'Escape' });
+    fireEvent.keyDown(q('.kui-ShellInspector'), { key: 'Escape' });
     expect(outer).toHaveBeenCalledTimes(1);
   });
 });

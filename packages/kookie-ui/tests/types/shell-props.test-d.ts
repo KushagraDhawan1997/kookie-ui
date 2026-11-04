@@ -27,9 +27,9 @@ const invalidRailBoth: RailProps = { open: true, defaultOpen: true };
 
 // Sidebar XOR
 expectAssignable<SidebarProps>({ defaultState: 'expanded' });
-expectAssignable<SidebarProps>({ state: 'thin' });
+expectAssignable<SidebarProps>({ state: 'collapsed' });
 // @ts-expect-error
-const invalidSidebarBoth: SidebarProps = { state: 'thin', defaultState: 'expanded' };
+const invalidSidebarBoth: SidebarProps = { state: 'collapsed', defaultState: 'expanded' };
 
 // Inspector XOR
 expectAssignable<InspectorProps>({ defaultOpen: true });
@@ -44,3 +44,23 @@ expectAssignable<RootProps>({ children: null, height: 'full' });
 expectAssignable<RootProps>({ children: null, height: 480 });
 expectNotAssignable<RootProps>({ children: null, defaultOpen: true });
 expectNotAssignable<RootProps>({ children: null, onSizeChange: () => {} });
+
+// Every part's props are exported under a stable name, matching what the part takes.
+expectAssignable<Shell.RailProps>({ defaultOpen: true });
+expectAssignable<Shell.PanelProps>({ open: true });
+expectAssignable<Shell.SidebarProps>({ defaultState: 'expanded' });
+expectAssignable<Shell.InspectorProps>({ defaultOpen: true });
+expectAssignable<Shell.BottomProps>({ defaultOpen: true });
+expectAssignable<Shell.TriggerProps>({ target: 'sidebar' });
+expectAssignable<Shell.RootProps>({ children: null, height: 'full' });
+expectAssignable<Shell.HeaderProps>({});
+expectAssignable<Shell.ContentProps>({ flush: false });
+expectAssignable<Shell.HeaderProps>({ flush: false });
+expectNotAssignable<Shell.ContentProps>({ inset: true });
+expectAssignable<Shell.PaneHeaderProps>({ float: true });
+expectAssignable<Shell.PaneFooterProps>({ float: true });
+expectAssignable<Shell.ScrollProps>({ fade: true });
+expectAssignable<RailProps>({} as Shell.RailProps);
+expectAssignable<PanelProps>({} as Shell.PanelProps);
+expectAssignable<SidebarProps>({} as Shell.SidebarProps);
+expectAssignable<InspectorProps>({} as Shell.InspectorProps);

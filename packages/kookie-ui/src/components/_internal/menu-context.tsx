@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
+import { useLayoutEffect } from 'radix-ui/internal';
 
-import { useThemeContext } from '../theme.js';
 import { useResolvedResponsiveValue } from './base-menu.utils.js';
 
 import type { Responsive } from '../../props/prop-def.js';
@@ -15,7 +15,7 @@ import type { Responsive } from '../../props/prop-def.js';
  * - Use the correct item height based on menu size
  */
 
-export type MenuSize = '1' | '2';
+export type MenuSize = '1' | '2' | '3' | '4';
 
 interface MenuContextValue {
   /** Whether we're inside a menu that owns the menu role */
@@ -28,35 +28,82 @@ interface MenuContextValue {
 
 const MenuContext = React.createContext<MenuContextValue>({ isInsideMenu: false });
 
+/** The register function of the menu Group a Label sits in (see useMenuGroupLabelId). */
+const MenuGroupLabelContext = React.createContext<((id: string | null) => void) | null>(null);
+
 interface MenuProviderProps {
   children: React.ReactNode;
   /** Menu size passed from parent (DropdownMenu.Content, ContextMenu.Content, etc.) */
   size?: Responsive<MenuSize>;
 }
 
-/** Map menu size to item height in pixels at 100% scaling */
+/**
+ * Menu row height in pixels per size: the line height plus --row-inset-N above and below
+ * (base-menu.css), never under the 24px target floor.
+ */
 export const menuSizeToItemHeight: Record<MenuSize, number> = {
-  '1': 24, // --space-5
-  '2': 32, // --space-6
+  '1': 24,
+  '2': 30,
+  '3': 34,
+  '4': 38,
 };
 
-/** Item height in px for a size at the given theme scaling ("100%", "110%"…). */
-export function getMenuItemHeight(size: MenuSize, scaling: string | undefined): number {
-  const scale = scaling ? parseFloat(scaling) / 100 : 1;
-  return menuSizeToItemHeight[size] * (Number.isFinite(scale) ? scale : 1);
+export function getMenuItemHeight(size: MenuSize): number {
+  return menuSizeToItemHeight[size];
 }
 
 export function MenuProvider({ children, size }: MenuProviderProps) {
   const resolvedSize = useResolvedResponsiveValue<MenuSize | undefined>(size, undefined);
-  const { scaling } = useThemeContext();
-  const itemHeight = resolvedSize ? getMenuItemHeight(resolvedSize, scaling) : undefined;
+  const itemHeight = resolvedSize ? getMenuItemHeight(resolvedSize) : undefined;
   const value = React.useMemo(
     () => ({ isInsideMenu: true, size: resolvedSize, itemHeight }),
     [resolvedSize, itemHeight],
   );
-  return <MenuContext.Provider value={value}>{children}</MenuContext.Provider>;
+  // A submenu is its own surface, so its labels never name a group of the parent menu.
+  return (
+    <MenuContext.Provider value={value}>
+      <MenuGroupLabelContext.Provider value={null}>{children}</MenuGroupLabelContext.Provider>
+    </MenuContext.Provider>
+  );
 }
 
 export function useMenuContext() {
   return React.useContext(MenuContext);
+}
+
+/**
+ * Closes the whole menu from inside it. DropdownMenu.Root and ContextMenu.Root provide it,
+ * so a VirtualMenu row can close the menu on select the way a menu item does.
+ */
+const MenuCloseContext = React.createContext<(() => void) | undefined>(undefined);
+export const MenuCloseProvider = MenuCloseContext.Provider;
+
+export function useMenuClose() {
+  return React.useContext(MenuCloseContext);
+}
+
+/**
+ * Names a menu group by its label, the way v2's MenuGroup does. A Group holds the id of
+ * the Label inside it and points aria-labelledby at it, so a screen reader announces the
+ * section name when focus enters the group.
+ */
+export const MenuGroupLabelProvider = MenuGroupLabelContext.Provider;
+
+/** For a Group: the id its aria-labelledby points to, and the setter a nested Label calls. */
+export function useMenuGroupLabelledBy(ariaLabelledBy: string | undefined) {
+  const [labelId, setLabelId] = React.useState<string | null>(null);
+  return [ariaLabelledBy ?? labelId ?? undefined, setLabelId] as const;
+}
+
+/** For a Label: its id, registered with the Group it sits in while the label is rendered. */
+export function useMenuGroupLabelId(idProp: string | undefined, rendered = true) {
+  const register = React.useContext(MenuGroupLabelContext);
+  const generatedId = React.useId();
+  const id = idProp ?? generatedId;
+  useLayoutEffect(() => {
+    if (!register || !rendered) return;
+    register(id);
+    return () => register(null);
+  }, [register, id, rendered]);
+  return register ? id : idProp;
 }

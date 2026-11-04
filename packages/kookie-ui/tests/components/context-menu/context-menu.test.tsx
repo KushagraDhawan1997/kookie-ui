@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { afterEach, describe, it, expect, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
-import { renderWithProviders, render, screen, fireEvent } from '../../test-utils';
+import { renderWithProviders, screen, fireEvent } from '../../test-utils';
 import * as ContextMenu from '../../../src/components/context-menu';
-import { Theme } from '../../../src/components/theme';
 import { VirtualMenu } from '../../../src/components/virtual-menu';
 
 function renderContextMenu(content: React.ReactNode, contentProps: Partial<ContextMenu.ContentProps> = {}) {
@@ -53,35 +52,17 @@ describe('ContextMenu', () => {
       size: '1',
       variant: 'soft',
       color: 'red',
-      material: 'solid',
     });
 
     const menu = await openAt();
-    expect(menu).toHaveClass('rt-r-size-1', 'rt-variant-soft');
+    expect(menu).toHaveClass('kui-r-size-1', 'kui-variant-soft');
     expect(menu).toHaveAttribute('data-accent-color', 'red');
-    expect(menu).toHaveAttribute('data-material', 'solid');
+    expect(menu).not.toHaveAttribute('data-material');
     expect(menu).not.toHaveAttribute('submenubehavior');
     expect(menu).not.toHaveAttribute('color');
     expect(propWarnings(error)).toEqual([]);
   });
 
-  it('follows the nearest Theme material', async () => {
-    render(
-      <Theme material="translucent">
-        <Theme material="solid">
-          <ContextMenu.Root>
-            <ContextMenu.Trigger>
-              <div data-testid="area">Area</div>
-            </ContextMenu.Trigger>
-            <ContextMenu.Content>
-              <ContextMenu.Item>One</ContextMenu.Item>
-            </ContextMenu.Content>
-          </ContextMenu.Root>
-        </Theme>
-      </Theme>,
-    );
-    expect(await openAt()).toHaveAttribute('data-material', 'solid');
-  });
 
   it('never produces a NaN offset for a responsive size', async () => {
     renderContextMenu(<ContextMenu.Item>One</ContextMenu.Item>, { size: { initial: '1', md: '2' } });
@@ -101,7 +82,7 @@ describe('ContextMenu', () => {
     await openAt();
     const item = screen.getByRole('menuitem', { name: 'Command palette' });
     expect(item).toHaveAttribute('aria-keyshortcuts', 'Meta+Shift+P');
-    expect(item.querySelector('.rt-BaseMenuShortcut')).toHaveAttribute('aria-hidden', 'true');
+    expect(item.querySelector('.kui-BaseMenuShortcut')).toHaveAttribute('aria-hidden', 'true');
     expect(screen.getByRole('menuitemcheckbox', { name: 'Grid' })).toHaveAttribute('aria-keyshortcuts', 'Alt+G');
   });
 
@@ -123,10 +104,10 @@ describe('ContextMenu', () => {
 
     const checkbox = screen.getByRole('menuitemcheckbox', { name: 'Show rulers' });
     expect(checkbox).toHaveAttribute('aria-checked', 'true');
-    expect(checkbox.querySelector('.rt-BaseMenuItemIndicatorIcon')).not.toBeNull();
+    expect(checkbox.querySelector('.kui-BaseMenuItemIndicatorIcon')).not.toBeNull();
     const fit = screen.getByRole('menuitemradio', { name: 'Fit' });
     expect(fit).toHaveAttribute('aria-checked', 'true');
-    expect(fit.querySelector('.rt-BaseMenuItemIndicatorIcon')).not.toBeNull();
+    expect(fit.querySelector('.kui-BaseMenuItemIndicatorIcon')).not.toBeNull();
 
     await user.click(screen.getByRole('menuitemradio', { name: 'Fill' }));
     expect(onValueChange).toHaveBeenCalledWith('fill');
@@ -147,7 +128,7 @@ describe('ContextMenu', () => {
     screen.getByRole('menuitem', { name: 'Arrange' }).focus();
     await user.keyboard('{ArrowRight}');
     const sub = await screen.findByTestId('sub');
-    expect(sub).toHaveClass('rt-r-size-1', 'rt-variant-soft');
+    expect(sub).toHaveClass('kui-r-size-1', 'kui-variant-soft');
     expect(sub).toHaveAttribute('data-accent-color', 'red');
     expect(sub).not.toHaveAttribute('color');
     expect(screen.getByRole('menuitem', { name: 'Bring to front' })).toBeInTheDocument();
@@ -160,8 +141,8 @@ describe('ContextMenu', () => {
     });
 
     const menu = await openAt();
-    expect(menu.querySelector('.rt-ScrollAreaRoot')).toBeNull();
-    expect(menu.querySelector('.rt-virtualized')).not.toBeNull();
+    expect(menu.querySelector('.kui-ScrollAreaRoot')).toBeNull();
+    expect(menu.querySelector('.kui-virtualized')).not.toBeNull();
     expect(screen.getAllByRole('menu')).toHaveLength(1);
     expect(propWarnings(error)).toEqual([]);
   });
@@ -172,5 +153,25 @@ describe('ContextMenu', () => {
     const menu = await openAt();
     expect(menu).not.toHaveAttribute('submenubehavior');
     expect(propWarnings(error)).toEqual([]);
+  });
+
+  it('names a group by the label inside it, but not by a submenu label', async () => {
+    renderContextMenu(
+      <ContextMenu.Group>
+        <ContextMenu.Label>Recent</ContextMenu.Label>
+        <ContextMenu.Item>Report.pdf</ContextMenu.Item>
+        <ContextMenu.Sub open>
+          <ContextMenu.SubTrigger>More</ContextMenu.SubTrigger>
+          <ContextMenu.SubContent>
+            <ContextMenu.Label>Inner</ContextMenu.Label>
+            <ContextMenu.Item>Archive</ContextMenu.Item>
+          </ContextMenu.SubContent>
+        </ContextMenu.Sub>
+      </ContextMenu.Group>,
+    );
+    fireEvent.contextMenu(screen.getByTestId('area'), { clientX: 100, clientY: 100 });
+    expect(await screen.findByRole('menuitem', { name: 'Archive' })).toBeInTheDocument();
+    const group = screen.getByRole('group', { name: 'Recent' });
+    expect(group.getAttribute('aria-labelledby')).toBe(screen.getByText('Recent').id);
   });
 });

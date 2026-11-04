@@ -1,0 +1,113 @@
+---
+title: Code
+description: Code marks a short piece of code, such as a command, a file name or a value, inside a line of text.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/code.tsx
+---
+
+Code renders a `code` element in the theme's monospace font, on a light tint by default. Use it for something people type or read exactly: a command, a prop, a file name or an ID. A keyboard shortcut is a [Kbd](/docs/kbd).
+
+## Playground
+
+import CodePlayground from '../../playground/code-playground';
+
+<CodePlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Code, Flex, Text } from '@kushagradhawan/kookie-ui';
+
+export function InstallStep() {
+  return (
+    <Flex direction="column" gap="2">
+      <Text as="p" size="2">
+        Run <Code>npm install @kushagradhawan/kookie-ui</Code> in your project.
+      </Text>
+      <Text as="p" size="2" emphasis="medium">
+        Then import the styles once in <Code>app/layout.tsx</Code>.
+      </Text>
+    </Flex>
+  );
+}
+```
+
+## Best practices
+
+**Use it for exact text.** A command, a prop name, a path or an error code goes in Code, so people know to copy it as written. Don't use it to make a word stand out.
+
+**Let it take the size of the line.** With no `size`, Code is slightly smaller than the text around it, so it sits in a sentence without looking larger. Set `size` only when Code stands on its own.
+
+**Keep it short.** Code is an inline element for one line. For a listing of several lines, put the code in a `pre` element, so its line breaks and spaces stay.
+
+**Leave it gray unless the colour means something.** Code rests on gray. Set `color` when it marks a category, such as a green status or a red error code.
+
+**Don't use it for keys.** A key or a shortcut, such as Cmd K, is a [Kbd](/docs/kbd).
+
+## Variant
+
+`variant` sets the look. Soft is the default.
+
+| Variant | Look | Use it for |
+| --- | --- | --- |
+| `soft` | A light tint | Code in body copy. This is the default |
+| `outline` | A thin border, no fill | Code on a tinted surface, where a tint would blend in |
+| `solid` | A strong fill | A value that must stand out, such as a status in a table |
+| `ghost` | No fill and no padding. With no `color`, it takes the colour of the text around it | Code in a dense line, where the font is enough |
+
+`emphasis` fades the text of `soft`, `outline` and `ghost` along the ink ladder. The fill and the border stay. `solid` ignores `emphasis`, because its text sits on a fill.
+
+## Size
+
+With no `size`, Code is 0.925 times the surrounding font size, so it follows the Text or Heading it sits in. `size` picks a step from 1 to 9 on the same scale as Text, also at 0.925 times. `size` accepts a responsive object.
+
+## Examples
+
+### Prop names in a description
+
+Code inside a sentence follows the sentence's size.
+
+```tsx
+<Text as="p" size="2">
+  Set <Code>emphasis</Code> to <Code>medium</Code> for secondary copy.
+</Text>
+```
+
+### Status in a table cell
+
+A coloured `solid` Code works as a short, fixed label next to plain text.
+
+```tsx
+<Code variant="solid" color="green">
+  200 OK
+</Code>
+```
+
+### Code that is a link
+
+Put Code inside a [Link](/docs/link). The link hides its underline when Code is its only child, and the tint changes on hover instead.
+
+```tsx
+<Link href="/docs/button">
+  <Code>Button</Code>
+</Link>
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'soft' \| 'outline' \| 'solid' \| 'ghost'` | `'soft'` | The look |
+| `size` | `'1'` to `'9'`, responsive | | The type step. Follows the surrounding text when unset |
+| `weight` | `'regular' \| 'medium' \| 'semibold'`, responsive | | The font weight |
+| `color` | `AccentColor` | `'gray'` | The colour. A ghost Code with no `color` takes the surrounding text colour |
+| `emphasis` | `'loud' \| 'medium' \| 'quiet'` | | How strongly the text reads. Not with `solid` |
+| `truncate` | `boolean` | | Keeps one line and ends it with an ellipsis. Stops at the width of its container |
+| `wrap` | `'wrap' \| 'nowrap' \| 'pretty' \| 'balance'`, responsive | | How lines break |
+| `asChild` | `boolean` | `false` | Renders the child element with Code's styles |
+
+Code also accepts every attribute of the HTML `code` element.
+
+## Accessibility
+
+- **Element:** The `code` element marks the text as code. Most screen readers read it as ordinary text, so the sentence around it needs to make sense when read aloud.
+- **Colour:** Don't rely on the colour of Code alone to carry a meaning. A red error code still needs words such as "Failed".

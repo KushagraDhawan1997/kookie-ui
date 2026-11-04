@@ -21,19 +21,19 @@ export interface DocsPageProps {
   headerActions?: React.ReactNode;
   /** Tabs under the header, e.g. Documentation and Examples. */
   headerTabs?: React.ReactNode;
-  /** Show the header's "Copy page" button. Off for pages that are an index, not a document. @default true */
+  /** @deprecated Copying moved to the docs toolbar, shown on every page with a Markdown twin. Ignored. */
   showCopyButton?: boolean;
   /** Rendered in a sticky column from the `lg` breakpoint. Without it, the column is centred. */
   tableOfContents?: React.ReactNode;
   /** Maximum width of the reading column. @default "44rem" */
   maxWidth?: string;
-  /** Copyright line under the content. */
-  footer?: { name: string; url?: string; githubUrl?: string; links?: { label: string; href: string }[] };
+  /** Copyright line under the content, or your own footer element to render there instead. */
+  footer?: { name: string; url?: string; githubUrl?: string; links?: { label: string; href: string }[] } | React.ReactElement;
 }
 
 /**
  * A documentation page: header, a reading column and an optional table of contents. The column
- * carries `data-content-area`, which the table of contents and "Copy page" read from.
+ * carries `data-content-area`, which the table of contents reads from.
  */
 export function DocsPage({
   children,
@@ -50,49 +50,53 @@ export function DocsPage({
     <Flex
       justify="center"
       align="start"
-      gap="9"
-      px={{ initial: '5', sm: '7', md: '9' }}
-      pt={{ initial: '6', sm: '7' }}
-      pb="9"
+      gap="10"
+      px={{ initial: '6', sm: '8', md: '10' }}
+      pt={{ initial: '7', sm: '8' }}
+      pb="10"
     >
       <Box flexGrow="1" minWidth="0" maxWidth={maxWidth}>
-        <Flex direction="column" gap={{ initial: '6', sm: '7' }} minWidth="0">
+        <Flex direction="column" gap={{ initial: '7', sm: '8' }} minWidth="0">
           {header ?? (meta && <DocsPageHeader meta={meta} actions={headerActions} tabs={headerTabs} showCopyButton={showCopyButton} />)}
 
           <Box minWidth="0" data-content-area>
             {children}
           </Box>
 
-          {footer && (
-            <Text as="p" size="2" emphasis="medium" mt="9">
-              © {new Date().getFullYear()}{' '}
-              {footer.url ? (
-                <Link href={footer.url} target="_blank" rel="noreferrer" color="gray">
-                  {footer.name}
-                </Link>
-              ) : (
-                footer.name
-              )}
-              . Licensed under MIT.
-              {footer.githubUrl && (
-                <>
-                  {' '}
-                  <Link href={footer.githubUrl} target="_blank" rel="noreferrer" color="gray">
-                    GitHub
+          {React.isValidElement(footer) ? (
+            <Box mt="10">{footer}</Box>
+          ) : footer && (
+            <Box mt="10">
+              <Text as="p" size="2" emphasis="medium">
+                © {new Date().getFullYear()}{' '}
+                {footer.url ? (
+                  <Link href={footer.url} target="_blank" rel="noreferrer" color="gray">
+                    {footer.name}
                   </Link>
-                  .
-                </>
-              )}
-              {footer.links?.map((link) => (
-                <React.Fragment key={link.href}>
-                  {' '}
-                  <Link href={link.href} color="gray">
-                    {link.label}
-                  </Link>
-                  .
-                </React.Fragment>
-              ))}
-            </Text>
+                ) : (
+                  footer.name
+                )}
+                . Licensed under MIT.
+                {footer.githubUrl && (
+                  <>
+                    {' '}
+                    <Link href={footer.githubUrl} target="_blank" rel="noreferrer" color="gray">
+                      GitHub
+                    </Link>
+                    .
+                  </>
+                )}
+                {footer.links?.map((link) => (
+                  <React.Fragment key={link.href}>
+                    {' '}
+                    <Link href={link.href} color="gray">
+                      {link.label}
+                    </Link>
+                    .
+                  </React.Fragment>
+                ))}
+              </Text>
+            </Box>
           )}
         </Flex>
       </Box>
@@ -105,7 +109,8 @@ export function DocsPage({
           width="13rem"
           flexShrink="0"
           position="sticky"
-          top="6"
+          // Clears a floating toolbar over the page, as in Docs Shell.
+          top="var(--kui-pane-inset-start, var(--space-7))"
         >
           {tableOfContents}
         </Box>

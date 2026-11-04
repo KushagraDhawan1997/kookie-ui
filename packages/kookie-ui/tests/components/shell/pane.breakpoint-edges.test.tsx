@@ -32,8 +32,8 @@ describe('focus when an open pane crosses a breakpoint', () => {
 
     viewport.setWidth(1100);
 
-    expect(q('.rt-ShellInspector').getAttribute('data-presentation')).toBe('fixed');
-    expect(q('.rt-ShellInspector').getAttribute('data-state')).toBe('open');
+    expect(q('.kui-ShellInspector').getAttribute('data-presentation')).toBe('fixed');
+    expect(q('.kui-ShellInspector').getAttribute('data-state')).toBe('open');
     expect(document.activeElement).toBe(input);
   });
 
@@ -54,10 +54,10 @@ describe('focus when an open pane crosses a breakpoint', () => {
     input.focus();
 
     viewport.setWidth(500);
-    expect(q('.rt-ShellRoot').hasAttribute('data-overlay-live')).toBe(true);
+    expect(q('.kui-ShellRoot').hasAttribute('data-overlay-live')).toBe(true);
     fireEvent.keyDown(input, { key: 'Escape' });
 
-    expect(q('.rt-ShellInspector').getAttribute('data-state')).toBe('closed');
+    expect(q('.kui-ShellInspector').getAttribute('data-state')).toBe('closed');
     expect(document.activeElement).toBe(screen.getByRole('button', { name: 'inspector' }));
   });
 });
@@ -79,7 +79,7 @@ describe('a responsive controlled open', () => {
         </Shell.Inspector>
       </Shell.Root>,
     );
-    const inspector = q('.rt-ShellInspector');
+    const inspector = q('.kui-ShellInspector');
 
     for (const width of [1400, 600, 1400, 0]) viewport.setWidth(width);
     viewport.setWidth(1400);
@@ -112,7 +112,7 @@ describe('a single-mode Sidebar toggles back to the default at the current break
         <Shell.Header>
           <Shell.Trigger target="sidebar">sidebar</Shell.Trigger>
         </Shell.Header>
-        <Shell.Sidebar presentation="fixed" toggleModes="single" defaultState={{ initial: 'collapsed', md: 'thin' }} onStateChange={onStateChange}>
+        <Shell.Sidebar presentation="fixed" defaultState={{ initial: 'collapsed', md: 'expanded' }} onStateChange={onStateChange}>
           sidebar
         </Shell.Sidebar>
         <Shell.Content>content</Shell.Content>
@@ -123,6 +123,6 @@ describe('a single-mode Sidebar toggles back to the default at the current break
     fireEvent.click(trigger);
     expect(onStateChange).toHaveBeenLastCalledWith('collapsed', { reason: 'toggle' });
     fireEvent.click(trigger);
-    expect(onStateChange).toHaveBeenLastCalledWith('thin', { reason: 'toggle' });
+    expect(onStateChange).toHaveBeenLastCalledWith('expanded', { reason: 'toggle' });
   });
 });

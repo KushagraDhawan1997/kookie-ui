@@ -32,14 +32,14 @@ function App({ defaultOpen }: { defaultOpen?: boolean }) {
 describe('Inspector defaultOpen (uncontrolled)', () => {
   it('is closed by default when defaultOpen not provided', () => {
     renderWithProviders(<App />);
-    const el = screen.getByText('inspector').closest('.rt-ShellInspector') as HTMLElement;
+    const el = screen.getByText('inspector').closest('.kui-ShellInspector') as HTMLElement;
     expect(el).toHaveAttribute('data-mode', 'collapsed');
   });
 
   it('is open on mount when defaultOpen is true', async () => {
     renderWithProviders(<App defaultOpen />);
     await waitFor(() => {
-      const el = screen.getByText('inspector').closest('.rt-ShellInspector') as HTMLElement;
+      const el = screen.getByText('inspector').closest('.kui-ShellInspector') as HTMLElement;
       expect(el).toHaveAttribute('data-mode', 'expanded');
     });
   });
@@ -47,7 +47,7 @@ describe('Inspector defaultOpen (uncontrolled)', () => {
   it('toggles internally via shell.togglePane("inspector") without props', async () => {
     renderWithProviders(<App />);
     const btn = screen.getByRole('button', { name: /toggle inspector/i });
-    const el = () => screen.getByText('inspector').closest('.rt-ShellInspector') as HTMLElement;
+    const el = () => screen.getByText('inspector').closest('.kui-ShellInspector') as HTMLElement;
     expect(el()).toHaveAttribute('data-mode', 'collapsed');
     await userEvent.click(btn);
     expect(el()).toHaveAttribute('data-mode', 'expanded');

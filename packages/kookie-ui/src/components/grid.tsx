@@ -26,7 +26,7 @@ const Grid = React.forwardRef<GridElement, GridProps>((props, forwardedRef) => {
     ...gridProps
   } = extractProps(props, gridPropDefs, layoutPropDefs, marginPropDefs);
   const Comp = asChild ? Slot : Tag;
-  return <Comp {...gridProps} ref={forwardedRef} className={classNames('rt-Grid', className)} />;
+  return <Comp {...gridProps} ref={forwardedRef} className={classNames('kui-Grid', className)} />;
 });
 Grid.displayName = 'Grid';
 
