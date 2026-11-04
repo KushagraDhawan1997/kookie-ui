@@ -1,10 +1,10 @@
-# Womp's Design System
+# Womp UI
 
 [![Alpha](https://img.shields.io/badge/alpha-blue)](https://github.com/KushagraDhawan1997/kookie-ui)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm version](https://img.shields.io/npm/v/@kushagradhawan/kookie-ui)](https://www.npmjs.com/package/@kushagradhawan/kookie-ui)
 
-Womp's Design System is the component package for the Womp 3D interface, and I maintain it. Every
+Womp UI is the component package for the Womp 3D interface, and I maintain it. Every
 screen in Womp comes from it. When the interface must change, I change the package and release a
 new version, and the app then moves to that version. Because of this, consistency is in the
 package and not in the memory of each engineer. The documentation is at
@@ -14,7 +14,7 @@ It started as a fork of Radix Themes, and it now moves to Base UI one component 
 
 ## What's Different from Radix Themes
 
-Womp's Design System extends Radix Themes with:
+Womp UI extends Radix Themes with:
 
 - **Universal material system** — Theme-level `material` prop for translucent/solid surfaces with backdrop blur, replacing the limited `panelBackground`
 - **Shell architecture** — Complete layout engine with 7 slots (Header, Rail, Panel, Sidebar, Content, Inspector, Bottom), responsive presentation modes, and resize handles
@@ -27,7 +27,7 @@ All Radix Themes components and APIs remain fully compatible.
 
 ## Philosophy
 
-Womp's Design System is intentionally boring. It doesn't try to reinvent interface design or compete with design trends. Instead, it codifies the non-negotiables: spacing systems, semantic colors, accessible defaults, predictable motion, and interaction rules that behave consistently.
+Womp UI is intentionally boring. It doesn't try to reinvent interface design or compete with design trends. Instead, it codifies the non-negotiables: spacing systems, semantic colors, accessible defaults, predictable motion, and interaction rules that behave consistently.
 
 The idea is simple: once the basics are solid, teams can focus on the parts of the product that actually make it unique. Patterns handle the baseline, components enforce the patterns, and the rest of your product can grow without carrying that overhead.
 
@@ -35,7 +35,7 @@ The result isn't magic or perfection. It's a foundation you can trust just enoug
 
 ## What's Included
 
-Womp's Design System includes the same foundations you'd expect — spacing tokens, color tokens, motion tokens — but rebuilt systematically. On top of that, it ships with components that apply those rules consistently, so teams don't have to remember them case by case.
+Womp UI includes the same foundations you'd expect — spacing tokens, color tokens, motion tokens — but rebuilt systematically. On top of that, it ships with components that apply those rules consistently, so teams don't have to remember them case by case.
 
 - **Density system** that adapts from compact SaaS layouts to touch-friendly mobile flows with four predictable size scales
 - **Shell architecture** with structural patterns for sidebars, panels, and toolbars that actually work together
@@ -74,7 +74,7 @@ export default function App() {
     <Theme accentColor="blue" grayColor="gray">
       <Card size="3" variant="soft">
         <Flex direction="column" gap="3" p="4">
-          <Text size="3">Welcome to Womp's Design System</Text>
+          <Text size="3">Welcome to Womp UI</Text>
           <Button size="3" variant="solid">
             Get Started
           </Button>
@@ -119,4 +119,4 @@ MIT © [Kushagra Dhawan](https://github.com/KushagraDhawan1997)
 
 ## Status
 
-⚠️ **Alpha** - Womp's Design System is in alpha. Components and APIs are still evolving, and breaking changes may happen. Check changelogs carefully before upgrading.
+⚠️ **Alpha** - Womp UI is in alpha. Components and APIs are still evolving, and breaking changes may happen. Check changelogs carefully before upgrading.
