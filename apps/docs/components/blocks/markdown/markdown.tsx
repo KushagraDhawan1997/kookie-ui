@@ -116,14 +116,14 @@ export function createMarkdownComponents(options: MarkdownComponentOptions = {})
     const isInternal = href.startsWith('/') || href.startsWith('#');
     if (isInternal && RouterLink) {
       return (
-        <Link asChild underline="always">
+        <Link asChild>
           <RouterLink href={href}>{children}</RouterLink>
         </Link>
       );
     }
     const external = /^https?:\/\//.test(href);
     return (
-      <Link href={href} underline="always" {...(external && { target: '_blank', rel: 'noreferrer' })}>
+      <Link href={href} {...(external && { target: '_blank', rel: 'noreferrer' })}>
         {children}
       </Link>
     );

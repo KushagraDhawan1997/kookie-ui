@@ -64,7 +64,7 @@ export function BlockInstallation() {
           {requiredBlocks.map((block, index) => (
             <React.Fragment key={block.slug}>
               {index > 0 && (index === requiredBlocks.length - 1 ? ' and ' : ', ')}
-              <Link asChild underline="always">
+              <Link asChild>
                 <NextLink href={`/docs/blocks/${block.slug}`}>{block.title}</NextLink>
               </Link>
             </React.Fragment>
