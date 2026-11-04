@@ -21,7 +21,7 @@ import { ToolbarLinkButton } from './toolbar-link';
 
 /** The one sentence each chat destination is handed. It names the twin and says nothing else. */
 export const askAbout = (markdownUrl: string) =>
-  encodeURIComponent(`Read ${markdownUrl} so I can ask you questions about it. It is a page of the Womp Design documentation.`);
+  encodeURIComponent(`Read ${markdownUrl} so I can ask you questions about it. It is a page of the Womp UI documentation.`);
 
 export const DESTINATIONS: { label: string; icon: IconSvgElement; href: (markdownUrl: string) => string }[] = [
   { label: 'View as Markdown', icon: DocumentCodeIcon, href: (url) => url },
