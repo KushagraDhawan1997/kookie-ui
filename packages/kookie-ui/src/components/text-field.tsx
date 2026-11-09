@@ -37,6 +37,14 @@ const TextFieldContext = React.createContext<TextFieldContextValue | null>(null)
 // list, not a tag list. `[tabindex]` catches role-based widgets; `label` already redirects a click.
 const FOCUSABLE_IN_SLOT = 'button, a, input, select, textarea, label, [tabindex], [contenteditable]';
 
+/** Is the target a control inside `container`? Ancestors outside it, such as a panel or dialog
+ * with a tabindex, don't count: matching them turned scrubbing and click-to-focus off. */
+function isControlWithin(target: EventTarget | null, container: HTMLElement | null) {
+  if (!(target instanceof Element) || !container) return false;
+  const hit = target.closest(FOCUSABLE_IN_SLOT);
+  return Boolean(hit && hit !== container && container.contains(hit));
+}
+
 // A Group decides the look of its fields: their size, variant and radius come from it. A field
 // can still take its own color, and is disabled when either it or the group is.
 type TextFieldGroupContextValue = Pick<TextFieldGroupOwnProps, 'size' | 'variant' | 'radius' | 'color' | 'disabled'>;
@@ -120,8 +128,8 @@ const TextFieldRoot = React.forwardRef<TextFieldRootElement, TextFieldRootProps>
   // Clicking the padding or a passive slot focuses the input. preventDefault stops the browser
   // from moving focus to the root first, so the input is focused once, synchronously.
   const handleMouseDown = React.useCallback((event: React.MouseEvent) => {
+    if (isControlWithin(event.target, event.currentTarget as HTMLElement)) return;
     const target = event.target as HTMLElement;
-    if (target.closest(FOCUSABLE_IN_SLOT)) return;
 
     const input = inputRef.current;
     if (!input) return;
@@ -289,9 +297,8 @@ const TextFieldSlot = React.forwardRef<TextFieldSlotElement, TextFieldSlotProps>
     (event: React.PointerEvent) => {
       if (!scrub) return;
 
-      // Don't start scrubbing if clicking on interactive elements
-      const target = event.target as HTMLElement;
-      if (target.closest(FOCUSABLE_IN_SLOT)) return;
+      // Don't start scrubbing if clicking on a control inside the slot
+      if (isControlWithin(event.target, slotRef.current)) return;
 
       event.preventDefault();
       accumulatedMovement.current = 0;
