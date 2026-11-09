@@ -297,6 +297,37 @@ describe('TextField.Slot scrubbing props', () => {
     expect(slot).not.toHaveAttribute('data-scrubbing');
   });
 
+  it('starts scrubbing inside a focusable container', () => {
+    // A panel or dialog with a tabindex around the field must not count as a control in the slot.
+    renderWithProviders(
+      <div tabIndex={-1}>
+        <TextField.Root>
+          <TextField.Slot scrub scrubValue={0} data-testid="scrub-slot">
+            X
+          </TextField.Slot>
+        </TextField.Root>
+      </div>,
+    );
+    const slot = screen.getByTestId('scrub-slot');
+    slot.setPointerCapture = vi.fn();
+    fireEvent.pointerDown(slot, { pointerId: 1, clientX: 10, clientY: 10 });
+    expect(slot).toHaveAttribute('data-scrubbing');
+  });
+
+  it('does not scrub from a control inside the slot', () => {
+    renderWithProviders(
+      <TextField.Root>
+        <TextField.Slot scrub scrubValue={0} data-testid="scrub-slot">
+          <button type="button">Reset</button>
+        </TextField.Slot>
+      </TextField.Root>,
+    );
+    const slot = screen.getByTestId('scrub-slot');
+    slot.setPointerCapture = vi.fn();
+    fireEvent.pointerDown(screen.getByRole('button'), { pointerId: 1 });
+    expect(slot).not.toHaveAttribute('data-scrubbing');
+  });
+
   it('accepts all scrub props without errors', () => {
     const handleScrub = vi.fn();
     expect(() => {

@@ -1,3 +1,9 @@
+## [0.34.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.34.0...v0.34.1) (2026-11-09)
+
+### Fixes
+
+* **text-field:** a scrub slot scrubs, and a press on the field's padding or a passive slot focuses the input, when the field sits inside a focusable container such as a panel or dialog with a `tabindex`. Only a control inside the slot or field stops them now; before, the focusable ancestor did, which turned both off.
+
 ## [0.34.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.33.0...v0.34.0) (2026-11-03)
 
 ### Features
