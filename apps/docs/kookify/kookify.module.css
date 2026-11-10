@@ -1,0 +1,56 @@
+.button {
+  position: fixed;
+  inset-inline-end: max(16px, env(safe-area-inset-right));
+  inset-block-end: max(16px, env(safe-area-inset-bottom));
+  z-index: 2147483001;
+  inline-size: 56px;
+  block-size: 56px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.12)) drop-shadow(0 4px 10px rgb(0 0 0 / 0.18));
+  transition: transform 180ms cubic-bezier(0.2, 0.9, 0.3, 1.35);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.button img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.button:hover {
+  transform: scale(1.08) rotate(-6deg);
+}
+
+.button:active {
+  transform: scale(0.92);
+  transition-duration: 80ms;
+}
+
+.button[aria-pressed="true"] {
+  transform: rotate(8deg);
+}
+
+.button[aria-pressed="true"]:hover {
+  transform: scale(1.08) rotate(12deg);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--color-focus, Highlight);
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .button:hover,
+  .button[aria-pressed="true"],
+  .button[aria-pressed="true"]:hover {
+    transition: none;
+    transform: none;
+  }
+}
