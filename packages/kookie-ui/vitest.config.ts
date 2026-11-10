@@ -17,7 +17,7 @@ function browserProject({ name, include, exclude = [] }: { name: string; include
     extends: true,
     // Pre-bundled up front: a dependency discovered mid-run makes Vite reload the page.
     optimizeDeps: {
-      include: ['react', 'react-dom', 'react-dom/client', 'react/jsx-dev-runtime', 'radix-ui', 'motion/react', 'react-dropzone', '@shadcn/react/message-scroller', 'classnames'],
+      include: ['react', 'react-dom', 'react-dom/client', 'react/jsx-dev-runtime', 'radix-ui', 'react-dropzone', '@shadcn/react/message-scroller', 'classnames'],
     },
     test: {
       name,
