@@ -79,7 +79,7 @@ const PaneBaseShape = {
   id: z.string().optional().describe('The pane id. A Trigger points `aria-controls` at it.'),
   presentation: ResponsivePresentationSchema.optional(),
   expandedSize: z.number().optional(),
-  inset: z.boolean().optional().describe('Lifts the pane off the frame and paints the backdrop behind it'),
+  flush: z.boolean().optional().describe('Whether the pane joins the app frame. Defaults to true. `false` pulls it off the frame as a card.'),
   onExpand: z.function({ output: z.void() }).optional().describe('Deprecated: use `onOpenChange`'),
   onCollapse: z.function({ output: z.void() }).optional().describe('Deprecated: use `onOpenChange`'),
   className: z.string().optional().describe('Additional CSS class name'),
@@ -139,6 +139,7 @@ export const ShellRootSchema = z
 export const ShellHeaderSchema = z
   .object({
     height: z.number().default(64).describe('Height of the header, in pixels'),
+    flush: z.boolean().optional().describe('Whether the header joins the app frame. Defaults to true. `false` makes it a card off the frame.'),
     className: z.string().optional().describe('Additional CSS class name'),
     style: StyleSchema,
     children: z.any().optional().describe('Header content'),
@@ -202,7 +203,7 @@ export const ShellSidebarSchema = z
  */
 export const ShellContentSchema = z
   .object({
-    inset: z.boolean().optional().describe('Lifts the pane off the frame and paints the backdrop behind it'),
+    flush: z.boolean().optional().describe('Whether the work area joins the app frame. Defaults to true. `false` makes it a card on the Shell background.'),
     className: z.string().optional().describe('Additional CSS class name'),
     style: StyleSchema,
     children: z.any().optional().describe('Main content'),

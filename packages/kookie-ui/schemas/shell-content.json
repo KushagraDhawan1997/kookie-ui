@@ -4,8 +4,8 @@
     "Shell-contentSchema": {
       "type": "object",
       "properties": {
-        "inset": {
-          "description": "Lifts the pane off the frame and paints the backdrop behind it",
+        "flush": {
+          "description": "Whether the work area joins the app frame. Defaults to true. `false` makes it a card on the Shell background.",
           "type": "boolean"
         },
         "className": {

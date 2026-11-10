@@ -9,6 +9,10 @@
           "description": "Height of the header, in pixels",
           "type": "number"
         },
+        "flush": {
+          "description": "Whether the header joins the app frame. Defaults to true. `false` makes it a card off the frame.",
+          "type": "boolean"
+        },
         "className": {
           "description": "Additional CSS class name",
           "type": "string"

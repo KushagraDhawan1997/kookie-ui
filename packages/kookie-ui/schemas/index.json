@@ -44,6 +44,15 @@
                         "4"
                       ]
                     },
+                    "xs": {
+                      "type": "string",
+                      "enum": [
+                        "1",
+                        "2",
+                        "3",
+                        "4"
+                      ]
+                    },
                     "sm": {
                       "type": "string",
                       "enum": [
@@ -149,6 +158,10 @@
             "disabled": {
               "default": false,
               "description": "Disabled state",
+              "type": "boolean"
+            },
+            "done": {
+              "description": "Shows a tick in place of the icon to say the action finished",
               "type": "boolean"
             },
             "type": {
@@ -301,6 +314,15 @@
                         "4"
                       ]
                     },
+                    "xs": {
+                      "type": "string",
+                      "enum": [
+                        "1",
+                        "2",
+                        "3",
+                        "4"
+                      ]
+                    },
                     "sm": {
                       "type": "string",
                       "enum": [
@@ -406,6 +428,10 @@
             "disabled": {
               "default": false,
               "description": "Disabled state",
+              "type": "boolean"
+            },
+            "done": {
+              "description": "Shows a tick in place of the icon to say the action finished",
               "type": "boolean"
             },
             "type": {
@@ -603,6 +629,15 @@
                   "type": "object",
                   "properties": {
                     "initial": {
+                      "type": "string",
+                      "enum": [
+                        "1",
+                        "2",
+                        "3",
+                        "4"
+                      ]
+                    },
+                    "xs": {
                       "type": "string",
                       "enum": [
                         "1",
@@ -972,6 +1007,10 @@
               "description": "Height of the header, in pixels",
               "type": "number"
             },
+            "flush": {
+              "description": "Whether the header joins the app frame. Defaults to true. `false` makes it a card off the frame.",
+              "type": "boolean"
+            },
             "className": {
               "description": "Additional CSS class name",
               "type": "string"
@@ -1092,8 +1131,8 @@
               "description": "Width in pixels",
               "type": "number"
             },
-            "inset": {
-              "description": "Lifts the pane off the frame and paints the backdrop behind it",
+            "flush": {
+              "description": "Whether the pane joins the app frame. Defaults to true. `false` pulls it off the frame as a card.",
               "type": "boolean"
             },
             "className": {
@@ -1296,8 +1335,8 @@
               "description": "Open width in pixels",
               "type": "number"
             },
-            "inset": {
-              "description": "Lifts the pane off the frame and paints the backdrop behind it",
+            "flush": {
+              "description": "Whether the pane joins the app frame. Defaults to true. `false` pulls it off the frame as a card.",
               "type": "boolean"
             },
             "className": {
@@ -1571,8 +1610,8 @@
               "description": "Open width in pixels",
               "type": "number"
             },
-            "inset": {
-              "description": "Lifts the pane off the frame and paints the backdrop behind it",
+            "flush": {
+              "description": "Whether the pane joins the app frame. Defaults to true. `false` pulls it off the frame as a card.",
               "type": "boolean"
             },
             "className": {
@@ -1826,8 +1865,8 @@
         "Shell-contentSchema": {
           "type": "object",
           "properties": {
-            "inset": {
-              "description": "Lifts the pane off the frame and paints the backdrop behind it",
+            "flush": {
+              "description": "Whether the work area joins the app frame. Defaults to true. `false` makes it a card on the Shell background.",
               "type": "boolean"
             },
             "className": {
@@ -1953,8 +1992,8 @@
               "description": "Open width in pixels",
               "type": "number"
             },
-            "inset": {
-              "description": "Lifts the pane off the frame and paints the backdrop behind it",
+            "flush": {
+              "description": "Whether the pane joins the app frame. Defaults to true. `false` pulls it off the frame as a card.",
               "type": "boolean"
             },
             "className": {
@@ -2225,8 +2264,8 @@
               "description": "Open height in pixels",
               "type": "number"
             },
-            "inset": {
-              "description": "Lifts the pane off the frame and paints the backdrop behind it",
+            "flush": {
+              "description": "Whether the pane joins the app frame. Defaults to true. `false` pulls it off the frame as a card.",
               "type": "boolean"
             },
             "className": {
