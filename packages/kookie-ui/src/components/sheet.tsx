@@ -5,7 +5,7 @@
  *
  * A side-placed overlay built on top of Radix Dialog. It inherits accessibility,
  * focus management, overlay behavior, and sizing scales from the base dialog, and
- * adds side placement and slide motion suited for navigation panels and drawers.
+ * adds side placement, suited for navigation panels and drawers.
  *
  * Structure mirrors Dialog:
  * - Root, Trigger, Content, Title, Description, Close
@@ -58,7 +58,7 @@ type SheetSide = 'start' | 'end' | 'top' | 'bottom' | 'left' | 'right';
 
 /**
  * Sheet is a side-placed overlay built on the Dialog primitive.
- * It reuses Dialog's accessibility, focus, overlay, and size scales, while adding side placement and slide motion.
+ * It reuses Dialog's accessibility, focus, overlay, and size scales, while adding side placement.
  */
 
 // Root

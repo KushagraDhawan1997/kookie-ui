@@ -1,7 +1,7 @@
 .kui-BaseDialogOverlay {
   position: fixed;
   inset: 0;
-  z-index: 100; /* Above shell header (50) and shell stacked panes (30-40) */
+  z-index: 100; /* Above the Shell's own layers, which stay under 10 */
 
   &::before {
     position: fixed;
