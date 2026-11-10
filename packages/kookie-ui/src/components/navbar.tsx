@@ -41,13 +41,12 @@ interface NavbarRootProps
 const NavbarRoot = React.forwardRef<NavbarRootElement, NavbarRootProps>(
   (ownProps, forwardedRef) => {
     const props = useThemeSizeProps(ownProps, navbarRootPropDefs.size);
-    const { children, className, ...rootProps } = extractProps(
+    // `position` and `size` are written as data attributes below. They are taken out here so the
+    // spread does not also write them on the <header> as attributes it does not have.
+    const { children, className, position = 'fixed', size = '2', ...rootProps } = extractProps(
       props,
       navbarRootPropDefs,
     );
-
-    const position = props.position ?? 'fixed';
-    const size = props.size ?? '2';
 
     return (
       <header
