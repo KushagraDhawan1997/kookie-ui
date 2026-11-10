@@ -1114,7 +1114,8 @@ const Attachment = React.forwardRef<HTMLDivElement, AttachmentProps>((props, for
   const ctx = useChatbarContext();
   const Comp = asChild ? Slot : 'div';
   const isImage = !!attachment.url && isImageLike(attachment.name, attachment.type);
-  const sizeLabel = `${Math.ceil(attachment.size / 1024)} KB`;
+  const kilobytes = Math.ceil(attachment.size / 1024);
+  const sizeLabel = kilobytes >= 1024 ? `${Math.round((kilobytes / 1024) * 10) / 10} MB` : `${kilobytes} KB`;
   const statusLabel = attachment.status ? STATUS_LABEL[attachment.status] : undefined;
   const locked = ctx.disabled || ctx.readOnly;
 
