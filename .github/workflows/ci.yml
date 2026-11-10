@@ -47,6 +47,10 @@ jobs:
       - name: Test
         run: pnpm --filter @kushagradhawan/kookie-ui test
 
+      # The codemods are plain Python with their own tests. Nothing else runs them.
+      - name: Codemod tests
+        run: python3 packages/kookie-ui/codemods/test_codemods.py
+
       # The publish workflow builds before publishing, so a build that fails
       # here would otherwise fail during a release, after the tag is cut.
       - name: Build
