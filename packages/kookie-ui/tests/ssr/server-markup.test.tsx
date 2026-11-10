@@ -2,7 +2,7 @@ import * as React from 'react';
 import { renderToString } from 'react-dom/server';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 
-import { Avatar, Combobox, Navbar, Select, Shell, Theme, VirtualMenu } from '../../src/components/index';
+import { Avatar, Combobox, Navbar, SegmentedControl, Select, Shell, Theme, VirtualMenu } from '../../src/components/index';
 
 /**
  * What the server HTML says before any effect runs. Each of these was wrong once: the markup was
@@ -80,6 +80,22 @@ describe('server markup', () => {
     expect(html).not.toMatch(/\sitem="/);
     expect(html).toContain('data-index="3"');
     expect(error).not.toHaveBeenCalled();
+  });
+
+  test('a segment holding an element renders it once', () => {
+    const html = renderToString(
+      <Theme>
+        <SegmentedControl.Root defaultValue="a">
+          <SegmentedControl.Item value="a">
+            <span id="only-once">A</span>
+          </SegmentedControl.Item>
+          <SegmentedControl.Item value="b">Plain</SegmentedControl.Item>
+        </SegmentedControl.Root>
+      </Theme>,
+    );
+    expect(html.split('id="only-once"').length - 1).toBe(1);
+    // Plain text is still drawn at both weights, so its width never changes.
+    expect(html.split('>Plain<').length - 1).toBe(2);
   });
 
   test('a resize handle states its value', () => {

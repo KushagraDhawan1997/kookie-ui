@@ -118,6 +118,19 @@
   }
 }
 
+/* A segment that holds more than text draws one label: always shown, at its state's weight. */
+.kui-SegmentedControlItemLabelActive:where([data-single]) {
+  opacity: 1;
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--tab-inactive-letter-spacing);
+  word-spacing: var(--tab-inactive-word-spacing);
+  :where(.kui-SegmentedControlItem[data-state='on']) & {
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--tab-active-letter-spacing);
+    word-spacing: var(--tab-active-word-spacing);
+  }
+}
+
 .kui-SegmentedControlItemSeparator {
   /*
    * Place the separator below the indicator.
