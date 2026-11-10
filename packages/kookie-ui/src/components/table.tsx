@@ -10,6 +10,10 @@ import { ScrollArea } from './scroll-area.js';
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
 import type { GetPropDefTypes } from '../props/prop-def.js';
 
+// Built once: `extractProps` caches its compiled prop defs on the identity of this object, so
+// making it inside the component would recompile them on every render.
+const { layout: _layoutPropDef, ...rootPropDefs } = tableRootPropDefs;
+
 type TableRootElement = React.ElementRef<'div'>;
 type TableRootOwnProps = GetPropDefTypes<typeof tableRootPropDefs>;
 interface TableRootProps
@@ -17,7 +21,6 @@ interface TableRootProps
     TableRootOwnProps {}
 const TableRoot = React.forwardRef<TableRootElement, TableRootProps>((ownProps, forwardedRef) => {
   const props = useThemeSizeProps(ownProps, tableRootPropDefs.size);
-  const { layout: layoutPropDef, ...rootPropDefs } = tableRootPropDefs;
   const {
     className,
     children,
