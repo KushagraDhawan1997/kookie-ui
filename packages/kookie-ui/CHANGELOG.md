@@ -1,3 +1,26 @@
+## [0.34.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.34.1...v0.34.2) (2026-11-10)
+
+### Fixes
+
+* **shell:** a resize handle states `aria-valuenow` from the first render. It was written by an effect, so the server HTML had a focusable separator with no value.
+* **avatar:** an avatar with no `src` renders its fallback on the server. It rendered an empty box until hydration.
+* **select, combobox:** `error={false}` and `loading={false}` no longer write `data-error="false"` and `data-loading="false"` on the trigger. An off state removes the attribute, as everywhere else.
+* **layout:** negative offsets work. `top="-2"`, and the other negative steps of `inset`, `top`, `right`, `bottom` and `left`, wrote a class with no rule.
+* **segmented-control:** a segment that holds an element renders it once. Each item drew its children twice, so an `id` appeared twice and a component mounted twice. Plain text is still drawn at both weights, so its width does not change when selected.
+* **virtual-menu:** `VirtualMenu.Item` keeps `isHighlighted`, `index` and `item` off the element. A `renderItem` that spreads its props wrote `index` on the row and logged a React warning.
+* **navbar:** `position` and `size` no longer land on the `<header>` as attributes.
+* **navigator:** rows follow the Theme's `grayColor`. The stylesheet read `--gray-*` where every other component reads `--neutral-*`.
+* **chatbar:** a large attachment's size is read in MB.
+* **button:** the missing-name check for an `iconOnly` button runs in development only.
+* **table:** `Table.Root` builds its prop definitions once, not on every render.
+* **schemas:** the Shell schemas take `flush` (they still described `inset`), and the Button schema takes `done` and the `xs` width.
+* **props:** the `/props` entry exports the Accordion, Combobox, Image, Navbar and Toolbar prop definitions, and the font family prop.
+
+### Dependencies
+
+* `@radix-ui/react-accordion` is gone: the Sidebar takes the accordion from `radix-ui`, as Accordion does.
+* `zod` is at 4.6.7.
+
 ## [0.34.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.34.0...v0.34.1) (2026-11-09)
 
 ### Fixes
