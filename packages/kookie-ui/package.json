@@ -17,7 +17,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=16"
+    "node": ">=22"
   },
   "type": "commonjs",
   "main": "./dist/cjs/index.js",

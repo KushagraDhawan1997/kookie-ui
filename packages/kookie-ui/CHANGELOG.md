@@ -20,6 +20,7 @@
 
 * `@radix-ui/react-accordion` is gone: the Sidebar takes the accordion from `radix-ui`, as Accordion does.
 * `zod` is at 4.6.7.
+* The package's Node range is 22 or later, the version the repo builds and tests on. It said 16.
 
 ## [0.34.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.34.0...v0.34.1) (2026-11-09)
 

@@ -204,7 +204,7 @@ import '@kushagradhawan/kookie-ui/layout.css'; // Layout utilities
 ## Requirements
 
 - React 19
-- Node.js 16+ (for development)
+- Node.js 22+ (for development)
 - TypeScript support built-in
 
 ```json
