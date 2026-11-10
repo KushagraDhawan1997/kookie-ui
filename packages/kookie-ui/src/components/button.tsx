@@ -92,7 +92,7 @@ type ButtonComponent = <C extends React.ElementType = 'button'>(props: ButtonPro
  * still loading (an empty `aria-label` while a translation loads) must not crash the tree.
  */
 function validateIconButtonName(props: Record<string, unknown>) {
-  if (props['aria-label'] || props['aria-labelledby']) return;
+  if (process.env.NODE_ENV === 'production' || props['aria-label'] || props['aria-labelledby']) return;
   const errorMessage =
     'Button: an `iconOnly` button must have an accessible name. Pass `aria-label`, or ' +
     '`aria-labelledby` referencing a label element.';
