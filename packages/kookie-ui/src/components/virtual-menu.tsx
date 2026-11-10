@@ -569,7 +569,14 @@ interface VirtualMenuItemProps extends React.ComponentPropsWithoutRef<'div'> {
 }
 
 const VirtualMenuItemInner = React.forwardRef<HTMLDivElement, VirtualMenuItemProps>(
-  ({ className, children, ...props }, forwardedRef) => {
+  ({ className, children, ...allProps }, forwardedRef) => {
+    // A `renderItem` component usually spreads everything it is given onto this row. These three
+    // are for the component, not the element, so they stop here.
+    const { isHighlighted: _isHighlighted, index: _index, item: _item, ...props } = allProps as typeof allProps & {
+      isHighlighted?: boolean;
+      index?: number;
+      item?: unknown;
+    };
     return (
       <div
         ref={forwardedRef}
