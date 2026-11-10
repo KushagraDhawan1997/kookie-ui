@@ -59,7 +59,7 @@
   flex-wrap: wrap;
 
   & :where(.kui-NoticeActions) {
-    margin-left: auto;
+    margin-inline-start: auto;
   }
 }
 
