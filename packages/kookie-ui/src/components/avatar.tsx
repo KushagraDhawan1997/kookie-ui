@@ -107,7 +107,9 @@ type AvatarImageProps = Pick<
 >;
 
 const AvatarImpl = React.memo(({ fallback, onLoadingStatusChange, ...imageProps }: AvatarImageProps) => {
-  const [status, setStatus] = React.useState<'idle' | 'loading' | 'loaded' | 'error'>('idle');
+  // With no picture to wait for, the fallback is the avatar from the first render, so it is in
+  // the server HTML. With one, the box stays empty until the picture loads or fails.
+  const [status, setStatus] = React.useState<'idle' | 'loading' | 'loaded' | 'error'>(() => (imageProps.src ? 'idle' : 'error'));
 
   const handleLoadingStatusChange = React.useCallback(
     (newStatus: 'idle' | 'loading' | 'loaded' | 'error') => {

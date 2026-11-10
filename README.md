@@ -81,7 +81,7 @@ Visit [womp-ui.kookie.design](https://womp-ui.kookie.design) for full documentat
 ## Requirements
 
 - React 19
-- Node.js 16+ (for development)
+- Node.js 22+ (for development)
 - TypeScript support built-in
 
 ## Development

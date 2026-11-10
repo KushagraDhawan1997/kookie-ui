@@ -46,6 +46,7 @@ export const BaseButtonSchema = z
         z.enum(['1', '2', '3', '4']),
         z.object({
           initial: z.enum(['1', '2', '3', '4']).optional(),
+          xs: z.enum(['1', '2', '3', '4']).optional(),
           sm: z.enum(['1', '2', '3', '4']).optional(),
           md: z.enum(['1', '2', '3', '4']).optional(),
           lg: z.enum(['1', '2', '3', '4']).optional(),
@@ -123,6 +124,12 @@ export const BaseButtonSchema = z
      * @default false
      */
     disabled: z.boolean().optional().default(false).describe('Disabled state'),
+
+    /**
+     * Shows a tick in place of the icon to say the action finished
+     * @default false
+     */
+    done: z.boolean().optional().describe('Shows a tick in place of the icon to say the action finished'),
 
     /**
      * Type attribute for form buttons

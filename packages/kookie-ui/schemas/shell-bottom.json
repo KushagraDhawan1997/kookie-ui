@@ -88,8 +88,8 @@
           "description": "Open height in pixels",
           "type": "number"
         },
-        "inset": {
-          "description": "Lifts the pane off the frame and paints the backdrop behind it",
+        "flush": {
+          "description": "Whether the pane joins the app frame. Defaults to true. `false` pulls it off the frame as a card.",
           "type": "boolean"
         },
         "className": {

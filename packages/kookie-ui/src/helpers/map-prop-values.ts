@@ -1,4 +1,3 @@
-import type { textPropDefs } from '../components/text.props.js';
 import type { Responsive } from '../props/prop-def.js';
 
 function mapResponsiveProp<Input extends string, Output>(

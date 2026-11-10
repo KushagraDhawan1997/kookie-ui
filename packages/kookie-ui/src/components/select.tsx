@@ -143,8 +143,8 @@ const SelectTrigger = React.forwardRef<SelectTriggerElement, SelectTriggerProps>
         <button
           data-accent-color={color}
           data-radius={radius}
-          data-error={error}
-          data-loading={loading}
+          data-error={error || undefined}
+          data-loading={loading || undefined}
           {...triggerProps}
           {...ariaProps}
           ref={forwardedRef}

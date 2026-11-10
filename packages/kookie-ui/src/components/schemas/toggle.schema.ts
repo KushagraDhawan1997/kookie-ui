@@ -14,7 +14,8 @@ import { ButtonObjectSchema } from './button.schema.js';
  * const iconProps = ToggleSchema.parse({ iconOnly: true, 'aria-label': 'Bold' });
  * ```
  */
-export const ToggleSchema = ButtonObjectSchema.extend({
+// A toggle's state is `pressed`, so it does not take Button's `done`.
+export const ToggleSchema = ButtonObjectSchema.omit({ done: true }).extend({
   /**
    * Controlled pressed state
    * When provided, the component is controlled and the pressed state is managed externally

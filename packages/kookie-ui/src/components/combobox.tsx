@@ -17,7 +17,6 @@
  * items are never lit at once and Enter always picks the lit item.
  */
 
-import { warnDeprecated } from '../helpers/warn-deprecated.js';
 import * as React from 'react';
 import classNames from 'classnames';
 import { Popover as PopoverPrimitive } from 'radix-ui';
@@ -396,8 +395,8 @@ const ComboboxTrigger = React.forwardRef<ComboboxTriggerElement, ComboboxTrigger
       <button
         data-accent-color={resolvedColor}
         data-radius={radius}
-        data-error={error}
-        data-loading={loading}
+        data-error={error || undefined}
+        data-loading={loading || undefined}
         data-disabled={isDisabled || undefined}
         data-read-only={readOnly || undefined}
         data-placeholder={isPlaceholder ? '' : undefined}

@@ -2,6 +2,10 @@
 
 Each release groups its changes as Major, Minor or Quiet. Major is a new product or a change to what it is. Minor is a change you notice when you use it. Quiet is a small touch, a fix, a rename or a removal, or how the work is made. Breaking lists the changes that need an edit in your app.
 
+## 0.34.2 (November 10)
+
+1. `Quiet` **Fixes from a full read of the library.** Avatars with no picture show their initials at once, negative offsets such as `top="-2"` work, a resize handle states its value, and a segment holding an icon renders it once.
+
 ## 0.34.1 (November 9)
 
 1. `Quiet` **Label drag inside panels.** Dragging a text field's label to change its number, and clicking the label to focus the field, work again when the field sits inside a panel or dialog.

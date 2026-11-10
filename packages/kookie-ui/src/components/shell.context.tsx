@@ -2,7 +2,7 @@
 
 /**
  * Since 0.8.0 the Shell has two contexts: the pane registry (the store) and
- * the inset set. They live in `_internal/shell-store.tsx`. This module keeps
+ * the set of panes off the frame. They live in `_internal/shell-store.tsx`. This module keeps
  * the two hooks consumers can reach: `useSidebarMode`, and the deprecated
  * `useShell`.
  */

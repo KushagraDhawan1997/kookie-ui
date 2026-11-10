@@ -37,6 +37,15 @@
                     "4"
                   ]
                 },
+                "xs": {
+                  "type": "string",
+                  "enum": [
+                    "1",
+                    "2",
+                    "3",
+                    "4"
+                  ]
+                },
                 "sm": {
                   "type": "string",
                   "enum": [
@@ -142,6 +151,10 @@
         "disabled": {
           "default": false,
           "description": "Disabled state",
+          "type": "boolean"
+        },
+        "done": {
+          "description": "Shows a tick in place of the icon to say the action finished",
           "type": "boolean"
         },
         "type": {

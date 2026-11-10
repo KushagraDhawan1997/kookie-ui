@@ -135,6 +135,10 @@ interface SegmentedControlItemProps extends ComponentPropsWithout<typeof ToggleG
 
 const SegmentedControlItem = React.forwardRef<HTMLButtonElement, SegmentedControlItemProps>(({ children, className, iconOnly, onFocus, ...props }, forwardedRef) => {
   const context = React.useContext(SegmentedControlContext);
+  // The label is drawn twice, at both weights, so selecting a segment never changes its width.
+  // Only plain text is copied, as in Tabs: copying an element would duplicate its id and mount
+  // it twice. A segment holding an icon draws once and takes the weight of its state.
+  const isText = React.Children.toArray(children).every((child) => typeof child === 'string' || typeof child === 'number');
   return (
     <ToggleGroupPrimitive.Item
       ref={forwardedRef}
@@ -149,10 +153,14 @@ const SegmentedControlItem = React.forwardRef<HTMLButtonElement, SegmentedContro
     >
       <span className="kui-SegmentedControlItemSeparator" />
       <span className="kui-SegmentedControlItemLabel">
-        <span className="kui-SegmentedControlItemLabelActive">{children}</span>
-        <span className="kui-SegmentedControlItemLabelInactive" aria-hidden>
+        <span className="kui-SegmentedControlItemLabelActive" data-single={isText ? undefined : ''}>
           {children}
         </span>
+        {isText ? (
+          <span className="kui-SegmentedControlItemLabelInactive" aria-hidden>
+            {children}
+          </span>
+        ) : null}
       </span>
     </ToggleGroupPrimitive.Item>
   );

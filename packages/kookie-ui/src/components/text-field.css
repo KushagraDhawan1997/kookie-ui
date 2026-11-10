@@ -347,7 +347,7 @@
  *                                                                                                 *
  ***************************************************************************************************/
 
-/* surface */
+/* outline */
 
 .kui-TextFieldRoot:where(.kui-variant-outline) {
   --text-field-selection-color: var(--focus-a5);
@@ -531,7 +531,7 @@
   }
 }
 
-/* outline */
+/* surface */
 
 .kui-TextFieldRoot:where(.kui-variant-surface) {
   --text-field-selection-color: var(--accent-a5);

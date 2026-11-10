@@ -5,8 +5,7 @@
  *
  * Shell.Sidebar and Shell.Panel render these as `Shell.PaneHeader`, `Shell.Scroll` and
  * `Shell.PaneFooter`. The pane renders anything; with these parts it is the presentation, so
- * Sidebar's menu parts work inside it with no `Sidebar.Root`. The index comes from the nearest
- * Shell (`Shell.Root size`), or from a deprecated `Sidebar.Root` that still wraps them.
+ * Sidebar's menu parts work inside it. The index comes from the nearest Shell (`Shell.Root size`).
  */
 
 import * as React from 'react';
@@ -166,7 +165,7 @@ interface ScrollProps extends React.ComponentPropsWithoutRef<'div'> {
  */
 const Scroll = React.forwardRef<HTMLDivElement, ScrollProps>(({ className, style, dir, children, fade = false, pane = false, ...props }, forwardedRef) => {
   const chrome = useChromeClasses();
-  // A Sidebar.Root inside the content still gets a menu.
+  // Pane chrome nested inside the content (a pane portalled into it) still gets a menu.
   const contentPane = React.useContext(ShellContentContext);
   const visual = useSidebarVisual();
   const inContent = contentPane && visual === null && !pane;
