@@ -213,6 +213,13 @@ export function useResizablePane(options: ResizableOptions): PaneResizeContextVa
     };
   }, [resizable, adapter, options.overlaying, writeSize, minSize, maxSize, name]);
 
+  // What the handle announces before any effect has run: the same starting size the pane's
+  // first render uses, so the server HTML already states a value.
+  const [startSize] = React.useState(() => {
+    const value = size ?? defaultSize;
+    return typeof value === 'number' && Number.isFinite(value) ? clampTo(value, minSize, maxSize) : options.expandedSize;
+  });
+
   const onResize = React.useCallback((value: number) => latest.current.onResize?.(value), []);
   const onResizeStart = React.useCallback((value: number) => {
     // A resize makes the size the user's: a new expandedSize no longer moves it.
@@ -238,6 +245,7 @@ export function useResizablePane(options: ResizableOptions): PaneResizeContextVa
       minSize,
       maxSize,
       defaultSize: options.expandedSize,
+      startSize,
       orientation,
       edge: options.edge,
       growth: options.growth,
@@ -259,6 +267,7 @@ export function useResizablePane(options: ResizableOptions): PaneResizeContextVa
       minSize,
       maxSize,
       options.expandedSize,
+      startSize,
       orientation,
       options.edge,
       options.growth,

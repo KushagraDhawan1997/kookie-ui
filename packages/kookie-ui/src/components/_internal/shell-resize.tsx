@@ -9,6 +9,8 @@ export interface PaneResizeContextValue {
   minSize: number;
   maxSize: number;
   defaultSize: number;
+  /** The size the pane starts at, for the handle's first `aria-valuenow`. */
+  startSize: number;
   orientation: 'vertical' | 'horizontal';
   edge: 'start' | 'end';
   /**

@@ -20,6 +20,7 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
     minSize,
     maxSize,
     defaultSize,
+    startSize,
     orientation,
     edge,
     growth,
@@ -118,6 +119,8 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
       aria-label={`Resize ${targetLabel} pane`}
       aria-controls={controls}
       aria-orientation={orientation}
+      // A focusable separator must state its value. The effects keep it current after mount.
+      aria-valuenow={Math.round(startSize)}
       aria-valuemin={minSize}
       aria-valuemax={maxSize}
       {...props}
