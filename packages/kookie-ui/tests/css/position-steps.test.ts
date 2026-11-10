@@ -26,3 +26,20 @@ describe('position props take every space step', () => {
     });
   }
 });
+
+/**
+ * The types offer negative steps too (`top="-2"`), and the prop writes the class `-kui-r-top-2`.
+ * With no rule of that name the offset did nothing. Every negative value a prop accepts has one.
+ */
+describe('position props take every negative step they offer', () => {
+  for (const edge of ['inset', 'top', 'right', 'bottom', 'left'] as const) {
+    it(edge, () => {
+      const negatives = (layoutPropDefs[edge].values as readonly string[]).filter((value) => value.startsWith('-'));
+      expect(negatives.length).toBeGreaterThan(0);
+      for (const value of negatives) {
+        const step = value.slice(1);
+        expect(INSET).toContain(`.-kui-r-${edge}-${step} {\n    ${edge}: calc(-1 * var(--space-${step}));`);
+      }
+    });
+  }
+});
