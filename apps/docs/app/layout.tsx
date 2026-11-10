@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Providers } from '../components/providers';
 import { DocsLayout } from '../components/docs-layout';
+import { KookifyGate } from '../components/kookify-gate';
+import { listStickers } from '../kookify/stickers';
 import './globals.css';
 import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
@@ -91,6 +93,7 @@ export default function RootLayout({
         <Providers>
           <DocsLayout>{children}</DocsLayout>
         </Providers>
+        <KookifyGate stickers={listStickers()} words={listStickers('words')} />
         <Script id="ld-json-graph" type="application/ld+json" strategy="afterInteractive">
           {JSON.stringify({
             '@context': 'https://schema.org',
