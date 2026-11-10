@@ -68,7 +68,6 @@
   min-width: 0;
 }
 
-/* Send button - extend button transition with opacity for visibility fade */
 
 /* Hidden send button stays invisible even when disabled styling applies */
 .kui-ChatbarSend[aria-hidden='true'] {
@@ -502,7 +501,6 @@
   gap: var(--space-3);
 }
 
-/* Reduced motion */
 
 /* Inline slot positioning */
 .kui-ChatbarInlineStart,

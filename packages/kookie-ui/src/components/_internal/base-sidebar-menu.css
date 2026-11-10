@@ -47,7 +47,6 @@
   text-align: start;
   /* No default border radius - inherited from size-specific rules */
 
-  /* Step 3: restrict to paint-only transitions to avoid Chrome compositing nudge */
 
   /* Fix sticky text highlighting after selection in Firefox */
   user-select: none;
@@ -96,7 +95,6 @@
     }
   }
 
-  /* Reduced motion support */
 }
 
 /* Sidebar Menu Sub Components - Radix Accordion */
@@ -120,7 +118,6 @@
     overflow: visible;
   }
 
-  /* Radix Accordion animation support */
 }
 
 .kui-SidebarMenuSubList {

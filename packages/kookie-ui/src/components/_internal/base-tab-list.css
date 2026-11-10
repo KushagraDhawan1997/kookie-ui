@@ -49,7 +49,6 @@
     font-weight: var(--font-weight-medium);
     letter-spacing: var(--tab-active-letter-spacing);
     word-spacing: var(--tab-active-word-spacing);
- /* Immediate transition for active state */
   }
 }
 

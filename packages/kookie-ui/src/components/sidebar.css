@@ -392,14 +392,13 @@
   background: none;
   border: none;
   width: 100%;
-  text-align: left;
+  text-align: start;
   cursor: var(--cursor-menu-item);
   user-select: none;
 
   /* Header/Footer-specific styling */
   justify-content: flex-start;
 
-  /* Transitions */
 
   /* Focus state */
   &:where(:focus-visible) {
@@ -407,7 +406,6 @@
     outline-offset: 2px;
   }
 
-  /* Reduced motion support */
 }
 
 /***************************************************************************************************
@@ -419,7 +417,7 @@
 /* A sub-trigger's chevron sits at the row's end; its size comes from the size ladder below */
 .kui-SidebarMenuSubTriggerIcon {
   flex-shrink: 0;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 @breakpoints {
@@ -539,14 +537,12 @@
 .kui-SidebarHeader:where(.kui-menu-variant-soft),
 .kui-SidebarContent:where(.kui-menu-variant-soft),
 .kui-SidebarFooter:where(.kui-menu-variant-soft) {
-  /* Sub-trigger transitions - match base menu */
 
   /* Sub-trigger open state - match base menu */
   & :where(.kui-SidebarMenuSubTrigger[data-state='open']) {
     background-color: var(--accent-3);
   }
 
-  /* Menu item transitions - match base menu */
 
   /* Hover/highlighted state for soft variant - EXACT match to base menu */
   & :where(.kui-SidebarMenuButton:where([data-highlighted]):not([data-disabled])) {
@@ -671,7 +667,6 @@
     }
 }
 
-/* Removed old icon-only collapsed mode rules in favor of Shell rail mode */
 
 /* ===== Sidebar Search ===== */
 
