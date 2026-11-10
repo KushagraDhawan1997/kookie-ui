@@ -49,7 +49,7 @@
   min-block-size: var(--control-height-3);
   padding-inline: var(--layout-space-3);
   border-radius: var(--radius-control-3);
-  color: var(--gray-12);
+  color: var(--neutral-12);
   font-size: var(--font-size-3);
   line-height: var(--line-height-3);
   text-align: start;
@@ -66,17 +66,17 @@
 
 .kui-NavigatorLinkGlyph {
   flex-shrink: 0;
-  color: var(--gray-a10);
+  color: var(--neutral-a10);
 }
 
 @media (hover: hover) {
   .kui-NavigatorLink:where(:hover) {
-    background-color: var(--gray-a3);
+    background-color: var(--neutral-a3);
   }
 }
 
 .kui-NavigatorLink:where(:active) {
-  background-color: var(--gray-a4);
+  background-color: var(--neutral-a4);
 }
 
 .kui-NavigatorLink:where(:focus-visible) {
