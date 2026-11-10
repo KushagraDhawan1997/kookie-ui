@@ -157,7 +157,6 @@
   },
   "dependencies": {
     "@radix-ui/colors": "^3.0.0",
-    "@radix-ui/react-accordion": "^1.2.20",
     "@shadcn/react": "0.3.1",
     "@tanstack/react-virtual": "^3.14.13",
     "classnames": "^2.5.1",

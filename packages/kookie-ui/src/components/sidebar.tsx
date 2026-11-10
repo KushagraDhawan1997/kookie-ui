@@ -3,7 +3,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { Slot } from './slot.js';
-import * as Accordion from '@radix-ui/react-accordion';
+import { Accordion } from 'radix-ui';
 import * as DropdownMenu from './dropdown-menu.js';
 import * as Popover from './popover.js';
 
