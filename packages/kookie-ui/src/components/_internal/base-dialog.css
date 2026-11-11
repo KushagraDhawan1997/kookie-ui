@@ -113,3 +113,18 @@
   white-space: nowrap;
   border: 0;
 }
+
+/* A panel's top row: a Toolbar first in the content holds the title and the Close X. It sits one
+   step closer to the panel's edge than the content, stated against the panel's own padding so it
+   moves with the size, and the body starts a section's distance under it. Same as a Navigator's
+   band. The title takes the free space, so Close goes to the far end. */
+.kui-Toolbar:where(.kui-BaseDialogContent > :first-child) {
+  margin-block-start: calc(-1 * var(--layout-space-2));
+  margin-inline: calc(-1 * var(--layout-space-2));
+  margin-block-end: var(--layout-space-6);
+}
+
+.kui-ToolbarTitle:where(.kui-BaseDialogContent > .kui-Toolbar:first-child > *) {
+  margin-inline-end: auto;
+  min-inline-size: 0;
+}

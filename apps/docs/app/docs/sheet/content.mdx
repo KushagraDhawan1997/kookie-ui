@@ -15,7 +15,9 @@ import SheetPlayground from '../../playground/sheet-playground';
 ## Usage
 
 ```tsx showLineNumbers
-import { Button, Flex, Sheet, Text } from '@kushagradhawan/kookie-ui';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Cancel01Icon } from '@hugeicons/core-free-icons';
+import { Button, Flex, Sheet, Text, Toolbar } from '@kushagradhawan/kookie-ui';
 
 export function OrderDetails({ order }: { order: { id: string; status: string; total: string } }) {
   return (
@@ -24,16 +26,20 @@ export function OrderDetails({ order }: { order: { id: string; status: string; t
         <Button>View order</Button>
       </Sheet.Trigger>
       <Sheet.Content side="end">
-        <Flex direction="column" gap="5" height="100%">
-          <Flex direction="column" gap="1">
+        <Toolbar>
+          <Toolbar.Title>
             <Sheet.Title>Order {order.id}</Sheet.Title>
-            <Sheet.Description>{order.status}</Sheet.Description>
-          </Flex>
+          </Toolbar.Title>
+          <Sheet.Close>
+            <Toolbar.Button iconOnly aria-label="Close">
+              <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
+            </Toolbar.Button>
+          </Sheet.Close>
+        </Toolbar>
+        <Flex direction="column" gap="5">
+          <Sheet.Description>{order.status}</Sheet.Description>
           <Text size="2">Total: {order.total}</Text>
-          <Flex gap="2" justify="end" mt="auto">
-            <Sheet.Close>
-              <Button emphasis="quiet" color="gray">Close</Button>
-            </Sheet.Close>
+          <Flex justify="end">
             <Button emphasis="loud">Refund order</Button>
           </Flex>
         </Flex>
@@ -49,9 +55,13 @@ export function OrderDetails({ order }: { order: { id: string; status: string; t
 <Sheet.Root>
   <Sheet.Trigger />
   <Sheet.Content>
-    <Sheet.Title />
+    <Toolbar>
+      <Toolbar.Title>
+        <Sheet.Title />
+      </Toolbar.Title>
+      <Sheet.Close />
+    </Toolbar>
     <Sheet.Description />
-    <Sheet.Close />
   </Sheet.Content>
 </Sheet.Root>
 ```
@@ -59,6 +69,7 @@ export function OrderDetails({ order }: { order: { id: string; status: string; t
 - **Root:** Holds the open state. A sheet is always modal.
 - **Trigger:** The element that opens the sheet. It takes one child element, usually a Button.
 - **Content:** The panel, rendered in a portal against one edge, with a dimmed overlay behind it.
+- **Toolbar:** The top row, first in Content. It holds the title and the Close X, and sits one step closer to the panel's edge than the content.
 - **Title:** The sheet's name. It renders a Heading at size 4, medium weight.
 - **Description:** A line under the title. It renders Text at size 2 with `emphasis="medium"`.
 - **Close:** Closes the sheet when its child is pressed. It takes one child element.
@@ -71,7 +82,9 @@ export function OrderDetails({ order }: { order: { id: string; status: string; t
 
 **Give it a title, even a hidden one.** The title names the panel for screen readers. Use `Sheet.Title` inside [`VisuallyHidden`](/docs/utilities#visuallyhidden) when the design has no visible heading.
 
-**Put the main action at the end of the panel.** One loud button, with a quiet Close beside it. Two loud buttons in a narrow panel give people no answer to "which one do I press?"
+**Always show a Close X.** A titled sheet has an X at the end of its top row. In development, a titled sheet without one logs a warning. A Navigator draws the row and the X for you.
+
+**Put the main action at the end of the panel.** One loud button. Two loud buttons in a narrow panel give people no answer to "which one do I press?"
 
 **Don't use a sheet for a quick question.** A confirmation that slides in from the side moves people's eyes away from what they pressed. Use an [Alert Dialog](/docs/alert-dialog).
 

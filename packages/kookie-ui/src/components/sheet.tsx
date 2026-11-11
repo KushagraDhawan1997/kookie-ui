@@ -15,6 +15,7 @@
  * - Sizing: reuses Dialog content prop defs (width/min/max/height/size). Size follows the
  *   Theme size; start/end sheets cap at the size's overlay width unless maxWidth is set.
  * - A11y: provide an accessible name via `Sheet.Title` or `aria-label` on `Sheet.Content`.
+ *   A titled sheet has a Close X at the end of a Toolbar in its top row; dev warns without one.
  *   Radix owns the focus trap, initial focus and the return of focus to the trigger.
  *
  * Example
@@ -23,11 +24,13 @@
  *     <Button>Open</Button>
  *   </Sheet.Trigger>
  *   <Sheet.Content side="end" width={{ initial: '280px', md: '360px' }}>
- *     <Sheet.Title>Details</Sheet.Title>
+ *     <Toolbar>
+ *       <Toolbar.Title><Sheet.Title>Details</Sheet.Title></Toolbar.Title>
+ *       <Sheet.Close>
+ *         <Toolbar.Button iconOnly aria-label="Close">…</Toolbar.Button>
+ *       </Sheet.Close>
+ *     </Toolbar>
  *     ...
- *     <Sheet.Close>
- *       <Button>Close</Button>
- *     </Sheet.Close>
  *   </Sheet.Content>
  * </Sheet.Root>
  */
@@ -40,6 +43,7 @@ import { dialogContentPropDefs } from './dialog.props.js';
 import type { DialogContentOwnProps } from './dialog.props.js';
 import { PortalTheme } from './_internal/portal-theme.js';
 import { NavigatorHostContext, type NavigatorHost } from './_internal/navigator-host.js';
+import { useCloseWarning } from './_internal/use-close-warning.js';
 import { Heading } from './heading.js';
 import { Text } from './text.js';
 import { extractProps } from '../helpers/extract-props.js';
@@ -132,6 +136,7 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>((allPro
   // Dev-only a11y guard: the panel needs a name. A Sheet.Title anywhere inside counts it
   // in a layout effect, which runs before this ref is attached, so nesting doesn't matter.
   const titleCountRef = React.useRef(0);
+  const closeWarningRef = useCloseWarning('Sheet');
   const combinedRef = React.useCallback(
     (node: HTMLDivElement | null) => {
       if (typeof forwardedRef === 'function') {
@@ -145,8 +150,9 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>((allPro
           console.warn('Sheet.Content: Missing accessible name. Include Sheet.Title inside it or provide aria-label.');
         }
       }
+      closeWarningRef(node);
     },
-    [forwardedRef],
+    [forwardedRef, closeWarningRef],
   );
 
   useBodyPointerEventsCleanup();
