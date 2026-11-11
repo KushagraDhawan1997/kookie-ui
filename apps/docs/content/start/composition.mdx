@@ -1,0 +1,41 @@
+The components keep each part of a screen consistent. Every gap comes from a spacing step and every size from a size step. They can't make the parts work together. You can still put nine components on one screen at nine sizes. This page covers the rules for putting them together. Most of them are judgments, not measurements.
+
+## Use the component that owns the job
+
+When a component draws a band, a title or a close button, use it. A top row built by hand from a `Flex` of buttons misses the inset and the spacing the real one carries. If no component does the job, that's a gap in the system, not something to build in one screen.
+
+## Close every titled panel with an X
+
+Every Dialog and Sheet with a title has a Close X at the end of its top row, even when it also has Cancel. Put a `Toolbar` first in the panel, with the title at its start and the X at its end, and it sits one step closer to the panel's edge than the content. A Navigator draws the row and the X for you. In development, a titled panel without the X logs a warning.
+
+## One loud button per pane
+
+Give each pane one loud button: the action the pane exists for. A dialog is a pane of its own. A plain `Button` is loud, because it renders solid, so give every other button `emphasis="medium"` or `emphasis="quiet"`. When two buttons are loud, neither stands out.
+
+## Let space do the grouping
+
+Put related things closer together than unrelated things. The gap inside a group is at least two steps smaller than the gap around it: label to field 3, group to group 5, section to section 6. A heading sits closer to what follows it than to what comes before. Add a border only when space can't do the job, and never put a card inside a card. In development, a card inside a card logs a warning.
+
+## Keep one edge
+
+Start the text of every part of a pane on one left edge: the title, the labels, the rows and the lines between them. A row's hover or selected fill hangs outside that edge, so the text never moves in. Every icon and badge belongs to a row or a control.
+
+## Same job, same size
+
+Controls doing one job on one surface are one size, and they match the surface. A size 3 dialog holds size 3 fields and buttons. A control with no `size` takes the Theme's, so leave it unset unless the surface differs. To rank text, move at least two steps on the type scale.
+
+## Pick the smallest control that fits
+
+Two to five short options: SegmentedControl. More: Select. On or off at once: Switch, which never waits for Save. A radio needs at least two siblings.
+
+## In a flow
+
+When one panel holds several screens, the main action is full width at the bottom of every screen, the first one included. Back keeps what was typed, and a finished flow has no Back.
+
+## Lists
+
+A list has lines between its rows or a hover fill on them, never both. Give each fact its own place; never join two with a dot.
+
+## Write the real words
+
+Every element has one job: a label, a value, an action or a note. Cut the rest. Helper text says what happens or what the limit is, never what the control is. A button says what it does, as a verb and its object, and keeps that name through the flow. A placeholder is never a label, and an error says how to fix it. An icon-only button has an `aria-label`.

@@ -57,6 +57,12 @@ export const CHAPTERS: readonly Chapter[] = [
       "These are the words the system uses for the kinds of component. Once you know a component's kind, you know which of its options your product should decide.",
   },
   {
+    slug: 'start/composition',
+    title: 'Composition',
+    section: 'start',
+    blurb: 'These are the rules for putting components together into a screen that works.',
+  },
+  {
     slug: 'start/installation',
     title: 'Installation',
     section: 'start',

@@ -11,6 +11,7 @@ import type { ComponentType } from 'react';
 export const CHAPTER_CONTENT: Record<string, ComponentType> = {
   'start/principles': dynamic(() => import('@/content/start/principles.mdx')),
   'start/vocabulary': dynamic(() => import('@/content/start/vocabulary.mdx')),
+  'start/composition': dynamic(() => import('@/content/start/composition.mdx')),
   'start/installation': dynamic(() => import('@/content/start/installation.mdx')),
   'start/theming': dynamic(() => import('@/content/start/theming.mdx')),
   'foundations/color': dynamic(() => import('@/content/foundations/color.mdx')),
