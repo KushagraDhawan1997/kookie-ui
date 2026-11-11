@@ -10,9 +10,9 @@ export function generateDocPageMetadata(metadata: DocMetadata): Metadata {
   const url = `${BASE_URL}${metadata.pathname}`;
   const title = metadata.title;
   const description =
-    metadata.description || `${metadata.title} — Kookie UI React component documentation.`;
+    metadata.description || `${metadata.title} — Womp UI React component documentation.`;
 
-  const baseKeywords = ['Kookie UI', 'React', metadata.title];
+  const baseKeywords = ['Womp UI', 'React', metadata.title];
   const keywords = metadata.keywords
     ? [...baseKeywords, ...metadata.keywords]
     : [...baseKeywords, metadata.category, 'UI component', 'design system'];
@@ -23,16 +23,16 @@ export function generateDocPageMetadata(metadata: DocMetadata): Metadata {
     keywords,
     alternates: { canonical: metadata.pathname },
     openGraph: {
-      title: `${title} – Kookie UI`,
+      title: `${title} – Womp UI`,
       description,
       url,
-      siteName: 'Kookie UI',
+      siteName: 'Womp UI',
       locale: 'en_US',
       type: 'article',
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${title} – Kookie UI`,
+      title: `${title} – Womp UI`,
       description,
       site: '@kookieui',
       creator: '@kushagradhawan',

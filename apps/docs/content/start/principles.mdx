@@ -1,5 +1,5 @@
-Kookie organises its components by what they do. It does not organise them by how they look.
-Two components can look almost the same and do different jobs. When that happens, Kookie keeps
+Womp UI organises its components by what they do. It does not organise them by how they look.
+Two components can look almost the same and do different jobs. When that happens, Womp UI keeps
 them separate. Each one gets its own name and its own props. Tabs and SegmentedControl are the
 clearest example.
 
@@ -9,7 +9,7 @@ A pattern is a structure that occurs again and again. It has a context, a proble
 of the solution. A component is a pattern in a package that you can use again. A name is the
 label on the package.
 
-Kookie decides in that order. It chooses the pattern first, then the component, then the name.
+Womp UI decides in that order. It chooses the pattern first, then the component, then the name.
 Some components start from a name and a picture. Those components get their behaviour last, one
 prop at a time.
 
@@ -61,7 +61,7 @@ Keep the two kinds apart. A measured limit is a floor, and no design choice goes
 judgment is written down as one value, in one place, so you can change it with a one-line edit.
 Never present a judgment as if it were a measurement.
 
-Kookie doesn't enforce the measured limits for you. A prop can set a tap target below 44 points or
+Womp UI doesn't enforce the measured limits for you. A prop can set a tap target below 44 points or
 put text on a background it can't be read against. Check these limits in your product.
 
 ## Consistency
@@ -73,7 +73,7 @@ places. No screen can see what the other screens decided.
 The fix is to make each decision one time. Each decision is in one place, and every screen reads
 it from there.
 
-## Why Kookie has options
+## Why Womp UI has options
 
 Many components take a `variant`, a `color` and a `size`. You
 can't decide on the right answer before you have seen the choices in a real product. The options

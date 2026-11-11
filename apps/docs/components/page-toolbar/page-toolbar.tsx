@@ -8,7 +8,7 @@ import { ToolbarLinkButton } from './toolbar-link';
 
 const GITHUB = {
   label: 'GitHub',
-  name: 'Kookie UI on GitHub',
+  name: 'Womp UI on GitHub',
   href: 'https://github.com/KushagraDhawan1997/kookie-ui',
 } as const;
 

@@ -64,7 +64,7 @@ Each release groups its changes as Major, Minor or Quiet. Major is a new product
 
 ## 0.34.0 (November 3)
 
-1. `Minor` **Command.** A command palette from Kookie UI v2: a field over a list of rows, in a dialog. Enter runs the highlighted row and closes it. The docs search in the sidebar now opens it, and so does ⌘K.
+1. `Minor` **Command.** A command palette: a field over a list of rows, in a dialog. Enter runs the highlighted row and closes it. The docs search in the sidebar now opens it, and so does ⌘K.
 
 ## 0.33.0 (November 3)
 
@@ -76,12 +76,12 @@ Each release groups its changes as Major, Minor or Quiet. Major is a new product
 
 ## 0.31.0 (November 3)
 
-1. `Minor` **Page.** A page's large title and description, from Kookie UI v2. When the title scrolls behind the pane's band, the band's title takes its place. A Navigator in the main content now shows each screen as a page.
+1. `Minor` **Page.** A page's large title and description. When the title scrolls behind the pane's band, the band's title takes its place. A Navigator in the main content now shows each screen as a page.
 2. `Quiet` **Dialog names follow the Navigator.** In a dialog or sheet, the panel is named by the screen you're on, not the first one.
 
 ## 0.30.0 (November 3)
 
-1. `Minor` **Navigator.** A stack of screens of any depth, from Kookie UI v2. A row opens the next screen, Back returns to the one before, and screens underneath keep their scroll and drafts. In a Shell pane the pane's band carries Back and the title; in a dialog, sheet or popover each screen has its own band with Back, the title and Close.
+1. `Minor` **Navigator.** A stack of screens of any depth. A row opens the next screen, Back returns to the one before, and screens underneath keep their scroll and drafts. In a Shell pane the pane's band carries Back and the title; in a dialog, sheet or popover each screen has its own band with Back, the title and Close.
 
 ## 0.29.2 (October 30)
 
@@ -162,7 +162,7 @@ This release also brings 0.27.1 and 0.28.0.
 
 - **A docs page for every component.** Each one has a playground, examples and an accessibility section.
 - **About 50 fixes.** Dialogs return focus, forms validate, and screen readers stop repeating themselves.
-- **Toolbar parts from v2.** Links, an overflow menu, slots, and a pinned page toolbar.
+- **More toolbar parts.** Links, an overflow menu, slots, and a pinned page toolbar.
 
 ### Breaking
 
@@ -193,25 +193,25 @@ This release also brings 0.27.1 and 0.28.0.
 
 ### Breaking
 
-- **v2's names.** Classes start with `kui-`, the neutral scale is `--neutral-N`, and surfaces read `--color-surface`. Nothing moves on screen; a codemod renames an app.
+- **New names.** Classes start with `kui-`, the neutral scale is `--neutral-N`, and surfaces read `--color-surface`. Nothing moves on screen; a codemod renames an app.
 
 ## 0.21.0 (October 23)
 
 ### Breaking
 
-- **v2's component list.** IconButton is `Button iconOnly`, the two toggles are one `Toggle`, and Badge is Chip. Fourteen components with no v2 match are gone.
+- **A shorter component list.** IconButton is `Button iconOnly`, the two toggles are one `Toggle`, and Badge is Chip. Fourteen components are gone.
 - **Parents own spacing.** Only Box, Flex and Grid take margins.
 
 ## 0.20.0 (October 23)
 
 ### Minor
 
-- **Rows that hug their text.** Menu, select and combobox rows are 30px at the default size, with v2's padding.
+- **Rows that hug their text.** Menu, select and combobox rows are 30px at the default size, with tighter padding.
 - **Notices like cards.** A notice pads and rounds like a card of the same size.
 
 ### Breaking
 
-- **v2's type.** Nine sizes and three weights. Headings rest at medium. A codemod in the package rewrites an app.
+- **New type scale.** Nine sizes and three weights. Headings rest at medium. A codemod in the package rewrites an app.
 
 ## 0.19.0 (October 23)
 
@@ -221,7 +221,7 @@ This release also brings 0.27.1 and 0.28.0.
 
 ### Breaking
 
-- **Surfaces breathe.** Cards and popovers pad 24px and dialogs 32px at the default size, and dialogs take v2's widths.
+- **Surfaces breathe.** Cards and popovers pad 24px and dialogs 32px at the default size, and dialogs take new widths.
 - **Bleed replaces Inset.** `m="bleed"` pulls a child to the edge of its card or dialog.
 
 ## 0.18.0 (October 23)
@@ -232,7 +232,7 @@ This release also brings 0.27.1 and 0.28.0.
 
 ### Breaking
 
-- **One control ladder.** Buttons, fields, selects, tabs and segmented controls share v2's heights, padding, gaps and icon sizes. Icon-only buttons are square.
+- **One control ladder.** Buttons, fields, selects, tabs and segmented controls share one set of heights, padding, gaps and icon sizes. Icon-only buttons are square.
 - **Plainer states.** Disabled is colour only, loading buttons stay focusable, and every button has the same focus ring.
 
 ## 0.17.0 (October 23)
@@ -243,7 +243,7 @@ This release also brings 0.27.1 and 0.28.0.
 
 ### Breaking
 
-- **v2's scale.** Spacing has v2's twelve steps, so every layout number moves up by one. A codemod in the package rewrites an app; MIGRATION.md has the details.
+- **A new scale.** Spacing has twelve steps, so every layout number moves up by one. A codemod in the package rewrites an app; MIGRATION.md has the details.
 - **Solid only.** `material` and `Theme scaling` are gone.
 
 ## 0.16.0 (October 22)

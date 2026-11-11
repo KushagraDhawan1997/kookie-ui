@@ -30,7 +30,7 @@ async function loadGoogleFont(
 
 // Light-mode only — OG images are static assets and cannot adapt to user theme preferences.
 export async function generateOgImage(title: string, category: string) {
-  const allText = `Kookie UI${title}${category}${SITE_HOST}`;
+  const allText = `Womp UI${title}${category}${SITE_HOST}`;
   const interMedium = await loadGoogleFont('Inter', 500, allText);
   const interRegular = await loadGoogleFont('Inter', 400, allText);
 
@@ -92,7 +92,7 @@ export async function generateOgImage(title: string, category: string) {
               color: '#a3a3a3',
             }}
           >
-            Kookie UI
+            Womp UI
           </div>
           <div
             style={{
