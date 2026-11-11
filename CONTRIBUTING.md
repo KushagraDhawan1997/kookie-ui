@@ -31,7 +31,7 @@ The commit type determines how the version number is incremented:
 #### **MAJOR** Release (Breaking Changes)
 - Any commit with `!` after the type or `BREAKING CHANGE:` in the footer
 - Examples:
-  - `feat!: remove deprecated panelBackground prop`
+  - `feat!: remove the deprecated inset prop`
   - `refactor!: rename Button size values`
   - With footer:
     ```
@@ -79,11 +79,10 @@ Add responsive submenu navigation that switches between cascade and drill-down
 modes based on screen size. Includes smooth slide animations."
 
 # Major release - breaking change
-git commit -m "feat!: redesign Theme API
+git commit -m "feat!: flush panes replace inset
 
-BREAKING CHANGE: The Theme component now uses material prop instead of 
-panelBackground. Update all instances of panelBackground='solid' to 
-material='solid'."
+BREAKING CHANGE: Shell panes take flush instead of inset. Replace
+inset with flush={false}."
 
 # Documentation change (no release)
 git commit -m "docs(readme): update installation instructions"
@@ -138,7 +137,7 @@ BREAKING CHANGE: describe what breaks and how to migrate"
 git push origin feat/your-feature-name
 ```
 
-Create a pull request on GitHub. Once merged to `main`, the package will be automatically published to npm with a patch version bump.
+Create a pull request on GitHub. Nothing publishes on a merge. A release is a version bump and a changelog entry in the pull request, then a `v<version>` tag pushed after the merge; the publish workflow does the rest.
 
 ## Commit Message Tips
 
