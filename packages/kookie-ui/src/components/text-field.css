@@ -358,7 +358,7 @@
 
   /* Hover effects */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.kui-TextFieldInput:where(:focus, :disabled)))) {
+    &:where(:hover:not(:has(.kui-TextFieldInput:where(:focus, :disabled, :read-only)))) {
       background-color: var(--accent-2);
       box-shadow: inset 0 0 0 1px var(--accent-7);
     }
@@ -385,7 +385,7 @@
     box-shadow: inset 0 0 0 1px var(--focus-a5);
   }
 
-  &:where(:has(.kui-TextFieldInput:where(:disabled, :read-only))) {
+  &:where(:has(.kui-TextFieldInput:disabled)) {
     /* Blend with grey */
     background-image: linear-gradient(var(--neutral-a2), var(--neutral-a2));
     box-shadow: inset 0 0 0 var(--text-field-border-width) var(--neutral-a6);
@@ -452,7 +452,7 @@
 
   /* Hover effects */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.kui-TextFieldInput:where(:focus, :disabled)))) {
+    &:where(:hover:not(:has(.kui-TextFieldInput:where(:focus, :disabled, :read-only)))) {
       background-color: var(--accent-4);
     }
   }
@@ -478,7 +478,7 @@
     box-shadow: inset 0 0 0 1px var(--accent-a5), inset 0 0 0 1px var(--neutral-a4);
   }
 
-  &:where(:has(.kui-TextFieldInput:where(:disabled, :read-only))) {
+  &:where(:has(.kui-TextFieldInput:disabled)) {
     background-color: var(--neutral-a3);
   }
 }
@@ -509,7 +509,7 @@
 
   /* Hover effects */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.kui-TextFieldInput:where(:focus, :disabled)))) {
+    &:where(:hover:not(:has(.kui-TextFieldInput:where(:focus, :disabled, :read-only)))) {
       background-color: var(--accent-3);
     }
   }
@@ -525,7 +525,7 @@
     box-shadow: inset 0 0 0 1px var(--accent-a5), inset 0 0 0 1px var(--neutral-a4);
   }
 
-  &:where(:has(.kui-TextFieldInput:where(:disabled, :read-only))) {
+  &:where(:has(.kui-TextFieldInput:disabled)) {
     background-color: var(--neutral-a2);
     color: var(--neutral-a8);
   }
@@ -557,7 +557,7 @@
 
   /* Hover effects */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.kui-TextFieldInput:where(:focus, :disabled)))) {
+    &:where(:hover:not(:has(.kui-TextFieldInput:where(:focus, :disabled, :read-only)))) {
       background-color: var(--accent-3);
       box-shadow: inset 0 0 0 1px var(--accent-7);
     }
@@ -575,11 +575,17 @@
     box-shadow: inset 0 0 0 1px var(--accent-a5), inset 0 0 0 1px var(--neutral-a4);
   }
 
-  &:where(:has(.kui-TextFieldInput:where(:disabled, :read-only))) {
+  &:where(:has(.kui-TextFieldInput:disabled)) {
     background-color: var(--neutral-a2);
     box-shadow: inset 0 0 0 var(--text-field-border-width) var(--neutral-a6);
     color: var(--neutral-a8);
   }
+}
+
+/* Read-only drops the fill in every variant and keeps the edge and the value: nothing here
+   takes input, but the value is still there to select and copy. */
+.kui-TextFieldRoot:where(:has(.kui-TextFieldInput:read-only:not(:disabled))) {
+  background-color: transparent;
 }
 
 /* Read-only text fields: the value stays selectable, so the caret cursor stays. */

@@ -1,3 +1,9 @@
+## [0.35.5](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.35.4...v0.35.5) (2026-11-11)
+
+### Fixes
+
+* **text-field, text-area:** a read-only field no longer looks disabled in the `soft`, `ghost`, `outline` and `surface` variants. They styled `:disabled` and `:read-only` with one rule. Read-only now drops the fill, keeps the variant's edge and keeps the value in the read-only ink, as `raised` does and as v2 does. A read-only field also has no hover fill.
+
 ## [0.35.4](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.35.3...v0.35.4) (2026-11-11)
 
 ### Fixes
