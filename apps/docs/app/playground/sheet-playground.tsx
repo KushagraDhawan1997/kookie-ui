@@ -1,7 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Sheet, Button, Flex, Text } from '@kushagradhawan/kookie-ui';
+import { Sheet, Button, Flex, Text, Toolbar } from '@kushagradhawan/kookie-ui';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Cancel01Icon } from '@hugeicons/core-free-icons';
 import Playground from '@/components/playground';
 
 const sides = ['start', 'end', 'top', 'bottom'] as const;
@@ -85,13 +87,19 @@ export default function SheetPlayground({
     <Button variant="soft">Open Sheet</Button>
   </Sheet.Trigger>
   <Sheet.Content${contentPropsString}>
-    <Sheet.Title>Sheet Title</Sheet.Title>
+    <Toolbar>
+      <Toolbar.Title>
+        <Sheet.Title>Sheet Title</Sheet.Title>
+      </Toolbar.Title>
+      <Sheet.Close>
+        <Toolbar.Button iconOnly aria-label="Close">
+          <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
+        </Toolbar.Button>
+      </Sheet.Close>
+    </Toolbar>
     <Sheet.Description>
       Sheet content goes here.
     </Sheet.Description>
-    <Sheet.Close>
-      <Button variant="soft">Close</Button>
-    </Sheet.Close>
   </Sheet.Content>
 </Sheet.Root>`;
   };
@@ -109,13 +117,20 @@ export default function SheetPlayground({
             width={isHorizontal ? width : undefined}
             height={!isHorizontal ? height : undefined}
           >
-            <Flex direction="column" gap="5">
-              <Flex direction="column" gap="2">
+            <Toolbar>
+              <Toolbar.Title>
                 <Sheet.Title>Sheet Title</Sheet.Title>
-                <Sheet.Description>
-                  This is a sheet panel that slides in from the {side} side.
-                </Sheet.Description>
-              </Flex>
+              </Toolbar.Title>
+              <Sheet.Close>
+                <Toolbar.Button iconOnly aria-label="Close">
+                  <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
+                </Toolbar.Button>
+              </Sheet.Close>
+            </Toolbar>
+            <Flex direction="column" gap="5">
+              <Sheet.Description>
+                This is a sheet panel that slides in from the {side} side.
+              </Sheet.Description>
               <Flex
                 direction="column"
                 gap="3"

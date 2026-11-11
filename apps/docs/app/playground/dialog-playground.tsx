@@ -1,7 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Button, Dialog, Flex, Text, TextField } from '@kushagradhawan/kookie-ui';
+import { Button, Dialog, Flex, Text, TextField, Toolbar } from '@kushagradhawan/kookie-ui';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Cancel01Icon } from '@hugeicons/core-free-icons';
 import Playground from '@/components/playground';
 
 const sizes = ['1', '2', '3', '4'] as const;
@@ -34,7 +36,9 @@ export default function DialogPlayground({
       ? `\n        <Dialog.Description>People in the project see the new name.</Dialog.Description>`
       : '';
 
-    return `import { Button, Dialog, Flex, Text, TextField } from '@kushagradhawan/kookie-ui';
+    return `import { HugeiconsIcon } from '@hugeicons/react';
+import { Cancel01Icon } from '@hugeicons/core-free-icons';
+import { Button, Dialog, Flex, Text, TextField, Toolbar } from '@kushagradhawan/kookie-ui';
 
 export function RenameProject() {
   return (
@@ -43,7 +47,16 @@ export function RenameProject() {
         <Button>Rename</Button>
       </Dialog.Trigger>
       ${contentOpen}
-        <Dialog.Title>Rename project</Dialog.Title>${description}
+        <Toolbar>
+          <Toolbar.Title>
+            <Dialog.Title>Rename project</Dialog.Title>
+          </Toolbar.Title>
+          <Dialog.Close>
+            <Toolbar.Button iconOnly aria-label="Close">
+              <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
+            </Toolbar.Button>
+          </Dialog.Close>
+        </Toolbar>${description}
         <Flex direction="column" gap="2" mt="4">
           <Text as="label" htmlFor="project-name" size="2" weight="medium">
             Project name
@@ -70,7 +83,16 @@ export function RenameProject() {
         <Button>Rename</Button>
       </Dialog.Trigger>
       <Dialog.Content size={size} align={align} maxWidth={maxWidth === 'default' ? undefined : maxWidth}>
-        <Dialog.Title>Rename project</Dialog.Title>
+        <Toolbar>
+          <Toolbar.Title>
+            <Dialog.Title>Rename project</Dialog.Title>
+          </Toolbar.Title>
+          <Dialog.Close>
+            <Toolbar.Button iconOnly aria-label="Close">
+              <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
+            </Toolbar.Button>
+          </Dialog.Close>
+        </Toolbar>
         {showDescription ? <Dialog.Description>People in the project see the new name.</Dialog.Description> : null}
         <Flex direction="column" gap="2" mt="4">
           <Text as="label" htmlFor="playground-project-name" size="2" weight="medium">

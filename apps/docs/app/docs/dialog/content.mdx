@@ -15,7 +15,9 @@ import DialogPlayground from '../../playground/dialog-playground';
 ## Usage
 
 ```tsx showLineNumbers
-import { Button, Dialog, Flex, Text, TextField } from '@kushagradhawan/kookie-ui';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Cancel01Icon } from '@hugeicons/core-free-icons';
+import { Button, Dialog, Flex, Text, TextField, Toolbar } from '@kushagradhawan/kookie-ui';
 
 export function RenameProject({ name }: { name: string }) {
   return (
@@ -24,7 +26,16 @@ export function RenameProject({ name }: { name: string }) {
         <Button>Rename</Button>
       </Dialog.Trigger>
       <Dialog.Content>
-        <Dialog.Title>Rename project</Dialog.Title>
+        <Toolbar>
+          <Toolbar.Title>
+            <Dialog.Title>Rename project</Dialog.Title>
+          </Toolbar.Title>
+          <Dialog.Close>
+            <Toolbar.Button iconOnly aria-label="Close">
+              <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.75} />
+            </Toolbar.Button>
+          </Dialog.Close>
+        </Toolbar>
         <Dialog.Description>People in the project see the new name.</Dialog.Description>
         <Flex direction="column" gap="2" mt="4">
           <Text as="label" htmlFor="project-name" size="2" weight="medium">
@@ -50,9 +61,13 @@ export function RenameProject({ name }: { name: string }) {
 <Dialog.Root>
   <Dialog.Trigger />
   <Dialog.Content>
-    <Dialog.Title />
+    <Toolbar>
+      <Toolbar.Title>
+        <Dialog.Title />
+      </Toolbar.Title>
+      <Dialog.Close />
+    </Toolbar>
     <Dialog.Description />
-    <Dialog.Close />
   </Dialog.Content>
 </Dialog.Root>
 ```
@@ -60,6 +75,7 @@ export function RenameProject({ name }: { name: string }) {
 - **Root:** Holds the open state. A dialog is always modal.
 - **Trigger:** The element that opens the dialog. It takes one child element, usually a Button.
 - **Content:** The panel, rendered in a portal with a dimmed overlay behind it.
+- **Toolbar:** The top row, first in Content. It holds the title and the Close X, and sits one step closer to the panel's edge than the content.
 - **Title:** The dialog's name. It renders a Heading at size 5.
 - **Description:** A sentence that explains the task. It renders a `p` Text at size 3.
 - **Close:** Closes the dialog when its child is pressed. It takes one child element.
@@ -69,6 +85,8 @@ export function RenameProject({ name }: { name: string }) {
 **Keep it to one task.** A dialog interrupts the page. If the content needs scrolling sections or tabs of its own, it belongs on a page.
 
 **Name the task in the title.** "Rename project" tells people what they are about to do. "Settings" or "Are you sure?" makes them read the body to find out.
+
+**Always show a Close X.** A titled dialog has an X at the end of its top row, even when it also has Cancel. In development, a titled dialog without one logs a warning. A Navigator draws the row and the X for you.
 
 **Give it one loud button and a way out.** Put the action that finishes the task on `emphasis="loud"` and pair it with a quiet Cancel in `Dialog.Close`. Label the loud button with the verb from the title.
 

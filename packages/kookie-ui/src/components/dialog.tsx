@@ -1,12 +1,14 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { Dialog as DialogPrimitive } from 'radix-ui';
+import { useComposedRefs } from 'radix-ui/internal';
 
 import { dialogContentPropDefs } from './dialog.props.js';
 import { Heading } from './heading.js';
 import { Text } from './text.js';
 import { PortalTheme } from './_internal/portal-theme.js';
 import { NavigatorHostContext, type NavigatorHost } from './_internal/navigator-host.js';
+import { useCloseWarning } from './_internal/use-close-warning.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../hooks/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
@@ -50,6 +52,9 @@ const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>
 
   const { className, forceMount, container, onCloseAutoFocus, ...contentProps } = extractProps(props, contentPropDefs);
 
+  const closeWarningRef = useCloseWarning('Dialog');
+  const ref = useComposedRefs(forwardedRef, closeWarningRef);
+
   // Cleanup stuck pointer-events on body
   useBodyPointerEventsCleanup();
 
@@ -61,7 +66,7 @@ const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>
             <div className={`kui-BaseDialogScrollPadding kui-DialogScrollPadding ${alignClassName}`}>
               <DialogPrimitive.Content
                 {...contentProps}
-                ref={forwardedRef}
+                ref={ref}
                 className={classNames('kui-BaseDialogContent', 'kui-DialogContent', className)}
                 children={<NavigatorHostContext.Provider value={dialogNavigatorHost}>{contentProps.children}</NavigatorHostContext.Provider>}
                 aria-modal="true"

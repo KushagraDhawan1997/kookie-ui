@@ -2,6 +2,10 @@
 
 Each release groups its changes as Major, Minor or Quiet. Major is a new product or a change to what it is. Minor is a change you notice when you use it. Quiet is a small touch, a fix, a rename or a removal, or how the work is made. Breaking lists the changes that need an edit in your app.
 
+## 0.36.0 (November 11)
+
+1. `Minor` **Every titled Dialog and Sheet has a Close X.** Put a Toolbar first in the panel, with the title at its start and the X at its end, and it lands in the right place on its own. While you develop, a titled Dialog or Sheet without the X logs a warning in the console. A Navigator already draws the X.
+
 ## 0.35.7 (November 11)
 
 1. `Quiet` **A Credits page.** The docs site has a Credits page, linked from the footer. It is the same text as `CREDITS.md`.

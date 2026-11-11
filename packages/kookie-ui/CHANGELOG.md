@@ -1,3 +1,11 @@
+## [0.36.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.35.7...v0.36.0) (2026-11-11)
+
+### Features
+
+* **dialog, sheet:** a titled Dialog or Sheet logs a development warning when its top row has no Close X, as v2 does. Titled means `Dialog.Title` or `Sheet.Title` names the panel; one named only by `aria-label` is left alone. The X is a `Toolbar.Button` whose name starts with Close, Dismiss or Done, inside a `Toolbar`. A `Navigator` screen already draws it. Production builds drop the check.
+* **dialog, sheet:** a `Toolbar` placed first in `Dialog.Content` or `Sheet.Content` is the panel's top row. It sits one step closer to the panel's edge than the content, the title takes the free space and the X goes to the far end, the same place as a `Navigator`'s band at every size.
+* **docs:** `RULES.md` gains the Close X as rule 1. The Dialog and Sheet pages and playgrounds show the top row.
+
 ## [0.35.7](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.35.6...v0.35.7) (2026-11-11)
 
 ### Fixes
