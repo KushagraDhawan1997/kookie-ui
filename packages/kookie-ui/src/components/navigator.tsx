@@ -85,7 +85,12 @@ function Level({ visible, children }: { visible: boolean; children: React.ReactN
 }
 
 interface NavigatorProps<T> {
-  /** The screens above the root, as values. Use it with `onPathChange` to control the path. */
+  /**
+   * The screens above the root, as values. Use it with `onPathChange` to control the path. Each
+   * value is a string or a number: a screen is told apart by its value, and every object reads the
+   * same, so an object here would hand one screen's state to the next. Keep an id in the path and
+   * look the record up in `screen`.
+   */
   path?: readonly T[];
   /** The path to start with when the navigator controls its own path. */
   defaultPath?: readonly T[];
@@ -125,6 +130,14 @@ function Navigator<T>({ path: pathProp, defaultPath, onPathChange, screen, root,
     direction = path.length < before.length ? 'pop' : path.length > before.length || !Object.is(path[path.length - 1], before[before.length - 1]) ? 'push' : seen.direction;
     setSeen({ path, direction });
   }
+  // A screen's key is its depth and its value as text, and every object is the same text.
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === 'production') return;
+    if (path.some((value) => value !== null && typeof value === 'object')) {
+      console.error('Navigator: a value in `path` is an object. Path values must be strings or numbers; keep an id in the path and look the record up in `screen`.');
+    }
+  }, [path]);
+
   const titles = React.useRef<(string | undefined)[]>([]);
   const openers = React.useRef<(HTMLElement | null)[]>([]);
   const [version, setVersion] = React.useState(0);
