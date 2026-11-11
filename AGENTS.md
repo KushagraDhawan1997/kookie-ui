@@ -43,6 +43,8 @@ docs/LOG.md             decisions
 
 ## Using the components (docs, examples, playgrounds)
 
+Read `RULES.md` before you build or change a screen. It holds the composition rules.
+
 - **Props over inline styles.** `<Flex p="4" mt="2">`, not `style={{ padding: 16 }}`. Use `style` only where no prop exists (`cursor`, `transform`, `objectFit`).
 - **Primitives over raw HTML.** `Flex`, `Box`, `Grid`, `Text`, `Heading` in place of `div`, `p` and `h3`.
 - **Let the component size its content.** No `size` on an icon inside a Button or a menu item, and no `Text` around a Button's label.
