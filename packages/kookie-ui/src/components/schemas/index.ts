@@ -74,7 +74,6 @@ export type {
   ResponsiveMode,
   ResponsiveSidebarMode,
   ResponsivePresentation,
-  PaneSizePersistence,
 } from './shell.schema.js';
 
 /**

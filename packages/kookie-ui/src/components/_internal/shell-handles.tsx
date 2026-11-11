@@ -27,12 +27,8 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
     onResize,
     onResizeStart,
     onResizeEnd,
-    snapPoints,
-    snapTolerance,
-    collapseThreshold,
     collapsible,
     target,
-    requestCollapse,
     requestToggle,
   } = usePaneResize();
 
@@ -158,9 +154,6 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
         onResizeStart?.(startSize);
 
         let current = startSize;
-        // The unclamped size, so `collapseThreshold` is compared before the
-        // clamp: a threshold below `minSize` can then still collapse the pane.
-        let raw = startSize;
         let frame = 0;
         let pending: number | null = null;
         const flush = () => {
@@ -189,8 +182,7 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
           if (ev === lastHandledMove) return;
           lastHandledMove = ev;
           const client = orientation === 'vertical' ? ev.clientX : ev.clientY;
-          raw = startSize + (client - startClient) * sign;
-          current = clamp(raw);
+          current = clamp(startSize + (client - startClient) * sign);
           write(container, current);
           pending = current;
           if (!frame) frame = requestAnimationFrame(flush);
@@ -232,29 +224,7 @@ export const PaneHandle = React.forwardRef<HTMLDivElement, React.ComponentPropsW
           if (frame) cancelAnimationFrame(frame);
           flush();
 
-          if (collapsible && typeof collapseThreshold === 'number' && raw <= collapseThreshold) {
-            // A drag past the threshold closes the pane and keeps no size: the
-            // pane opens again at the size it had before the drag. The drag
-            // still ends, at that size, so a consumer that started something
-            // in onResizeStart can stop it.
-            write(container, startSize);
-            onResize?.(startSize);
-            cleanup();
-            requestCollapse?.();
-            onResizeEnd?.(startSize);
-            return;
-          }
-
-          let settled = current;
-          if (snapPoints && snapPoints.length) {
-            const nearest = snapPoints.reduce((acc, p) => (Math.abs(p - current) < Math.abs(acc - current) ? p : acc), snapPoints[0]);
-            if (Math.abs(nearest - current) <= snapTolerance) {
-              settled = clamp(nearest);
-              write(container, settled);
-              onResize?.(settled);
-            }
-          }
-          onResizeEnd?.(settled);
+          onResizeEnd?.(current);
           cleanup();
         };
 

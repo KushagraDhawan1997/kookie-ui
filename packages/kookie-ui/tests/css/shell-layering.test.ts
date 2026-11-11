@@ -49,10 +49,6 @@ describe('Shell layering and placement', () => {
     expect(css).toContain(".kui-ShellResizer[data-orientation='vertical'][data-edge='end']:dir(rtl)");
   });
 
-  it('a peeking Panel that follows the Rail outranks the follower placement', () => {
-    expect(() => rule('.kui-ShellRail ~ .kui-ShellPanel[data-presentation-follows][data-peek][data-state]')).not.toThrow();
-  });
-
   it('the shared inset gap counts only a neighbour shown in the frame', () => {
     const shared = css.match(/[^{}]+\{\s*margin-inline-start:\s*0;\s*\}/)?.[0] ?? '';
     expect(shared).toContain("[data-presentation='fixed']");

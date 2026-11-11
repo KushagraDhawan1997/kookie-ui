@@ -23,12 +23,12 @@ function App({ renders }: { renders: Renders }) {
     <Shell.Root>
       <Shell.Header>
         <React.Profiler id="trigger-panel" onRender={onRender}>
-          <Shell.Trigger target="panel" peekOnHover>
+          <Shell.Trigger target="panel">
             panel
           </Shell.Trigger>
         </React.Profiler>
         <React.Profiler id="trigger-inspector" onRender={onRender}>
-          <Shell.Trigger target="inspector" peekOnHover>
+          <Shell.Trigger target="inspector">
             inspector
           </Shell.Trigger>
         </React.Profiler>
@@ -84,17 +84,6 @@ describe('Shell registry render isolation', () => {
     fireEvent.click(screen.getByRole('button', { name: 'panel' }));
 
     expect(changed(before, renders)).toEqual(['panel', 'trigger-panel']);
-  });
-
-  it('a peek re-renders only the pane being previewed', () => {
-    const renders: Renders = {};
-    renderWithProviders(<App renders={renders} />);
-    const before = snapshot(renders);
-
-    fireEvent.mouseEnter(screen.getByRole('button', { name: 'inspector' }));
-    fireEvent.mouseLeave(screen.getByRole('button', { name: 'inspector' }));
-
-    expect(changed(before, renders)).toEqual(['inspector']);
   });
 
   it('the content never re-renders for a pane change', () => {

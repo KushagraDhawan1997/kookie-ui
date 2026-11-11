@@ -96,20 +96,3 @@ describe('Shell.Root contained', () => {
     expect(plain.style.getPropertyValue('--kui-shell-header-h')).toBe('');
   });
 });
-
-describe('pane height prop', () => {
-  // PaneBaseProps declares `height`, no pane reads it, and it used to reach
-  // the DOM as an invalid attribute on the pane's div.
-  it('does not reach the DOM', () => {
-    const { container } = renderWithProviders(
-      <Shell.Root>
-        <Shell.Content>content</Shell.Content>
-        <Shell.Inspector presentation="fixed" defaultOpen height={300}>
-          inspector
-        </Shell.Inspector>
-      </Shell.Root>,
-    );
-    const inspector = container.querySelector('.kui-ShellInspector') as HTMLElement;
-    expect(inspector.hasAttribute('height')).toBe(false);
-  });
-});

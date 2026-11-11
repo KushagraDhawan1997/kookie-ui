@@ -3,14 +3,12 @@ import { describe, it, expect, vi } from 'vitest';
 import { renderWithProviders, screen } from '../../test-utils';
 import userEvent from '@testing-library/user-event';
 import { Shell } from '../../../src/components/index';
-import { useShell } from '../../../src/components/shell.context';
 
 function ToggleBottom() {
-  const shell = useShell();
   return (
-    <button aria-label="toggle bottom" onClick={() => shell.togglePane('bottom')}>
+    <Shell.Trigger target="bottom" aria-label="toggle bottom">
       toggle bottom
-    </button>
+    </Shell.Trigger>
   );
 }
 

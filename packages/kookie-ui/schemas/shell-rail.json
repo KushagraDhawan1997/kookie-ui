@@ -111,44 +111,8 @@
         },
         "children": {},
         "open": {
-          "description": "The open state, when controlled. A responsive object is deprecated.",
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "initial": {
-                      "type": "boolean"
-                    },
-                    "xs": {
-                      "type": "boolean"
-                    },
-                    "sm": {
-                      "type": "boolean"
-                    },
-                    "md": {
-                      "type": "boolean"
-                    },
-                    "lg": {
-                      "type": "boolean"
-                    },
-                    "xl": {
-                      "type": "boolean"
-                    }
-                  },
-                  "additionalProperties": false
-                }
-              ],
-              "description": "Responsive open state"
-            }
-          ]
+          "description": "The open state, when controlled",
+          "type": "boolean"
         },
         "defaultOpen": {
           "description": "The starting state. A responsive object leaves the pane untouched, with that object as the answer at each breakpoint.",

@@ -24,10 +24,6 @@ export interface PaneResizeContextValue {
   onResizeEnd?: (size: number) => void;
   target: PaneName;
   collapsible: boolean;
-  snapPoints?: number[];
-  snapTolerance: number;
-  collapseThreshold?: number;
-  requestCollapse?: () => void;
   requestToggle?: () => void;
 }
 

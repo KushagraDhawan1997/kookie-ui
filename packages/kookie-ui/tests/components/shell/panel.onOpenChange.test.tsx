@@ -2,15 +2,13 @@ import * as React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { renderWithProviders, screen } from '../../test-utils';
 import { Shell } from '../../../src/components/index';
-import { useShell } from '../../../src/components/shell.context';
 import userEvent from '@testing-library/user-event';
 
 function ToggleButton() {
-  const shell = useShell();
   return (
-    <button aria-label="toggle panel" onClick={() => shell.togglePane('panel')}>
+    <Shell.Trigger target="panel" aria-label="toggle panel">
       toggle panel
-    </button>
+    </Shell.Trigger>
   );
 }
 
