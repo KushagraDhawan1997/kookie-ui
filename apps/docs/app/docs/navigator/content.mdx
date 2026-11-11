@@ -1,0 +1,186 @@
+---
+title: Navigator
+description: A navigator is a stack of screens in one place, with a way back.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/navigator.tsx
+---
+
+A navigator shows one screen at a time in a fixed place. A row opens the next screen on top, and Back returns to the one below. Use it for settings that go a few levels deep, or a list and its detail in a narrow pane. The first screen is the root and never closes. To switch between sibling views, use [Tabs](/docs/tabs).
+
+## Playground
+
+import NavigatorPlayground from '../../playground/navigator-playground';
+
+<NavigatorPlayground />
+
+The playground puts the navigator in a `Shell.Sidebar`, so the pane's band shows Back and the title.
+
+## Usage
+
+```tsx showLineNumbers
+import { Navigator, NavigatorLink, NavigatorScreen } from '@kushagradhawan/kookie-ui';
+
+type ScreenId = 'notifications' | 'email';
+
+function screen(id: ScreenId) {
+  if (id === 'notifications') {
+    return (
+      <NavigatorScreen title="Notifications">
+        <NavigatorLink value="email">Email</NavigatorLink>
+      </NavigatorScreen>
+    );
+  }
+  return <NavigatorScreen title="Email">…</NavigatorScreen>;
+}
+
+export function Settings() {
+  return (
+    <Navigator
+      root={
+        <NavigatorScreen title="Settings">
+          <NavigatorLink value="notifications">Notifications</NavigatorLink>
+        </NavigatorScreen>
+      }
+      screen={screen}
+    />
+  );
+}
+```
+
+## How it works
+
+**The path is data.** The screens above the root are a list of values. `screen` turns each value into its screen. Your app can keep the path in the URL, restore it after a reload, or open three levels deep from a link.
+
+**The host draws the title.** A navigator has no frame of its own. Where it sits decides who shows Back and the title:
+
+| Where it sits | Who shows Back and the title |
+| --- | --- |
+| `Shell.Content` | Each screen is a [Page](/docs/page). Its large title collapses into the pane's band, beside Back |
+| A side pane: `Shell.Sidebar`, `Shell.Panel`, `Shell.Inspector`, `Shell.Bottom` | The pane's band, from the start |
+| A [Dialog](/docs/dialog), [Sheet](/docs/sheet) or [Popover](/docs/popover), or anywhere outside a Shell | Each screen draws its own row: Back, the title, and the overlay's close button |
+
+**Screens under the top stay mounted.** They are hidden, so a list keeps its scroll position and a field keeps what was typed.
+
+## Best practices
+
+**Put an id in the path, not a record.** A path value is a string or a number. Look the record up inside `screen`. An object in the path logs an error in development.
+
+**Give every screen a short title.** Back reads "Back to" and the title of the screen below, so the title is also the name of the way back.
+
+**Stop at three or four levels.** Each level hides where the person came from. If people need to compare two levels, show them side by side instead.
+
+**Don't bind Escape to Back.** Escape belongs to the dialog or sheet that holds the navigator.
+
+**Don't put a navigator in a card inside a Shell pane.** Inside a pane the navigator uses the pane's band, so a navigator in a card would take over the title of the page around it. Put it in the pane itself, or in a dialog.
+
+## Examples
+
+### In a dialog
+
+Each screen draws Back, its title and the dialog's close button. The top screen's title names the dialog, so leave out `Dialog.Title`.
+
+```tsx
+<Dialog.Root>
+  <Dialog.Trigger>
+    <Button variant="soft" color="gray">Settings</Button>
+  </Dialog.Trigger>
+  <Dialog.Content>
+    <Navigator root={<SettingsHome />} screen={screen} />
+  </Dialog.Content>
+</Dialog.Root>
+```
+
+### Keeping the path in the URL
+
+Control the path to store it. This example keeps it in a search parameter.
+
+```tsx
+const path = searchParams.get('screen')?.split('/').filter(Boolean) ?? [];
+
+<Navigator
+  path={path}
+  onPathChange={(next) => router.replace(next.length ? `?screen=${next.join('/')}` : '?')}
+  root={<SettingsHome />}
+  screen={screen}
+/>
+```
+
+### Opening a screen from your own control
+
+`useNavigator` gives any component inside a navigator the path and `push`, `pop` and `popTo`.
+
+```tsx
+function UpgradeButton() {
+  const navigator = useNavigator<ScreenId>();
+  return <Button onClick={() => navigator.push('plans')}>See plans</Button>;
+}
+```
+
+### A pane band with its own actions
+
+In a Shell pane the navigator draws the band for you. Pass children when the band needs more than Back and the title. Keep `NavigatorBack` and `NavigatorTitle` together in a `Flex`, and put the screens in `NavigatorOutlet`.
+
+```tsx
+<Shell.Inspector>
+  <Navigator root={<LayerList />} screen={screen}>
+    <Shell.PaneHeader>
+      <Toolbar>
+        <Flex align="center">
+          <NavigatorBack />
+          <NavigatorTitle />
+        </Flex>
+        <ToolbarButton iconOnly aria-label="Add layer" onClick={addLayer}>
+          <HugeiconsIcon icon={Add01Icon} strokeWidth={1.75} />
+        </ToolbarButton>
+      </Toolbar>
+    </Shell.PaneHeader>
+    <Shell.Scroll>
+      <NavigatorOutlet />
+    </Shell.Scroll>
+  </Navigator>
+</Shell.Inspector>
+```
+
+## Props
+
+### Navigator
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `root` | `ReactNode` | | Required. The first screen, usually a `NavigatorScreen`. It never closes |
+| `screen` | `(value: T) => ReactNode` | | Required. Turns a value from the path into its screen |
+| `path` | `readonly T[]` | | The screens above the root, when your app controls the path. Each value is a string or a number |
+| `defaultPath` | `readonly T[]` | `[]` | The path to start with, when the navigator controls it |
+| `onPathChange` | `(path: T[]) => void` | | Called with the new path when a screen opens or closes |
+| `children` | `ReactNode` | | A frame of your own, holding a `NavigatorOutlet` |
+
+### NavigatorScreen
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` | `string` | | Required. The screen's title |
+| `children` | `ReactNode` | | The screen's content |
+
+### NavigatorLink
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `T` | | Required. The value pushed onto the path when the row is pressed |
+
+It also accepts the attributes of the HTML `button` element.
+
+### Other parts
+
+| Part | What it is |
+| --- | --- |
+| `NavigatorOutlet` | Where the screens go, inside a frame of your own |
+| `NavigatorBack` | Back, for a toolbar. It is absent at the root. `aria-label` replaces its name |
+| `NavigatorTitle` | The top screen's title, for a toolbar |
+| `useNavigator()` | Returns `path`, `push`, `pop`, `popTo` and `canGoBack` |
+
+## Accessibility
+
+- **Focus:** A screen that opens takes focus at its title, so a screen reader starts at the top of it. Going back returns focus to the row that opened the screen.
+- **Back:** Back is named for where it goes, such as "Back to Settings". At the root it is not rendered.
+- **Hidden screens:** Screens under the top are hidden from everyone, so Tab and a screen reader reach only the top screen.
+- **Overlays:** In a Dialog, Sheet or Popover the top screen's title is the panel's accessible name.
+- **Rows:** `NavigatorLink` is a `button`. Its chevron is decorative and hidden from assistive technology.

@@ -1,0 +1,98 @@
+---
+title: Page
+description: A page is the screen you navigated to, with its title at the top.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/page.tsx
+---
+
+A page is the content of one screen and its large title. Put it inside `Shell.Scroll` in a [Shell](/docs/shell) pane. When the title scrolls away, the pane's band shows it, so people always know which screen they are on. The band, with Back and the tools, belongs to the pane and stays while people move from page to page.
+
+## Playground
+
+import PagePlayground from '../../playground/page-playground';
+
+<PagePlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import { Page, Shell, Toolbar } from '@kushagradhawan/kookie-ui';
+
+export function BillingScreen() {
+  return (
+    <Shell.Content>
+      <Shell.PaneHeader>
+        <Toolbar>
+          <Toolbar.Title />
+        </Toolbar>
+      </Shell.PaneHeader>
+      <Shell.Scroll>
+        <Page title="Billing" description="How and when your workspace is charged.">
+          …
+        </Page>
+      </Shell.Scroll>
+    </Shell.Content>
+  );
+}
+```
+
+A `Toolbar.Title` with no children mirrors the page's title. It is hidden while the large title shows, and appears when the large title has scrolled behind the band.
+
+## Best practices
+
+**Use one page per screen.** The title is the document's only `h1`. Start the sections inside it at `h2`.
+
+**Put actions in the band's toolbar.** A page takes no buttons. The band stays in view while the page scrolls, so its actions are always in reach.
+
+**Set the width outside the page.** A page fills the space it is given. Wrap its content in a [Box](/docs/box) with a `maxWidth` for long text.
+
+**Keep the title to a few words.** It also shows in the band, in one line.
+
+## Examples
+
+### With a floating band
+
+A band with `float` sits over the content. `Shell.Scroll` already clears room for it, so the title starts below the band.
+
+```tsx
+<Shell.PaneHeader float>
+  <Toolbar>
+    <Toolbar.Title />
+  </Toolbar>
+</Shell.PaneHeader>
+<Shell.Scroll>
+  <Page title="Activity">…</Page>
+</Shell.Scroll>
+```
+
+### A home page with a logo
+
+`mark` puts a logo above the title. Most pages don't need one.
+
+```tsx
+<Page mark={<Logo />} title="Acme" description="Everything your team shipped this week.">
+  …
+</Page>
+```
+
+### In a navigator
+
+A `NavigatorScreen` in `Shell.Content` is a page already. Give the screen a `title` and don't add a `Page` inside it. See [Navigator](/docs/navigator).
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` | `string` | | Required. The page's title. It is a string because it also shows in the band |
+| `description` | `ReactNode` | | A sentence under the title |
+| `mark` | `ReactNode` | | A logo or mark above the title |
+| `children` | `ReactNode` | | The page's content |
+
+It also accepts every attribute of the HTML `div` element.
+
+Page has no `size`, no heading level and no width. An app has one page title style, a page is always the `h1`, and the frame around the page sets the width.
+
+## Accessibility
+
+- **Heading:** The title is an `h1`. Use one `Page` per screen so the document has one.
+- **Band title:** The mirrored title in the band repeats the `h1` for sighted people who have scrolled. It adds no second heading.
+- **Description:** The description is a paragraph directly after the heading, so a screen reader reads it next.

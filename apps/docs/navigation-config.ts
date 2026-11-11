@@ -61,6 +61,10 @@ export const docsNavigation: DocsNavigationConfig = {
           title: 'Combobox',
         },
         {
+          href: '/docs/command',
+          title: 'Command',
+        },
+        {
           href: '/docs/context-menu',
           title: 'Context Menu',
         },
@@ -105,8 +109,16 @@ export const docsNavigation: DocsNavigationConfig = {
           title: 'Navbar',
         },
         {
+          href: '/docs/navigator',
+          title: 'Navigator',
+        },
+        {
           href: '/docs/notice',
           title: 'Notice',
+        },
+        {
+          href: '/docs/page',
+          title: 'Page',
         },
         {
           href: '/docs/popover',
