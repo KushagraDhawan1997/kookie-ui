@@ -1,3 +1,9 @@
+## [0.38.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.37.1...v0.38.0) (2026-11-11)
+
+### Features
+
+* **card:** a Card that renders inside another Card logs a development warning, once per card. It reads the DOM, so a Card in a Dialog or Popover opened from a card is left alone: the portal starts a fresh plane. Production builds drop the check. The Card page's "Card inside a card" example is gone and a best practice says not to; `RULES.md` rule 8 notes the warning.
+
 ## [0.37.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.37.0...v0.37.1) (2026-11-11)
 
 ### Fixes

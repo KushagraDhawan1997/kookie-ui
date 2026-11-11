@@ -40,6 +40,8 @@ export function PlanCard({ onUpgrade }: { onUpgrade: () => void }) {
 
 **Use a card only when the content belongs together.** A card tells people that what is inside it is one thing. Wrapping every section of a page in a card adds borders and padding without telling them anything new.
 
+**Don't put a card inside a card.** Group things inside one card with space, a `Flex` with a gap. Put several cards side by side in a `Flex` or `Grid` on the page, not in another card. In development, a card inside a card logs a warning.
+
 **Put the layout inside the card.** A Card has no gap or direction of its own. Place a `Flex` or `Grid` inside it and set the spacing there.
 
 **Make the whole card the link, or nothing.** When a card opens a page, render the link with `asChild` so the full surface is one target. A card that holds a link and two buttons should stay a plain `div`, because nested targets are hard to press.
@@ -110,10 +112,6 @@ Set a margin of `bleed` on a `Box` to pull it out by the card's padding, so an i
   <Text size="2">Lake Louise</Text>
 </Card>
 ```
-
-### Card inside a card
-
-A card inside another card draws its corner as the outer corner minus the outer padding, so the two corners stay parallel. You don't need to set a radius.
 
 ## Props
 
