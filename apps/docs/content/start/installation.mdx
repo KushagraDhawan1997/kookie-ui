@@ -42,8 +42,8 @@ import '@kushagradhawan/kookie-ui/styles.css';
 `styles.css` loads no webfonts — it defaults to system stacks, so installing Kookie costs zero font requests. Choose one of:
 
 ```tsx
-// Kookie's own typefaces: Inter, JetBrains Mono, Playfair Display.
-// Three requests to Google Fonts.
+// Kookie's own typefaces: Inter, Inter Tight, JetBrains Mono, Playfair Display.
+// Four requests to Google Fonts.
 import '@kushagradhawan/kookie-ui/fonts.css';
 ```
 
@@ -74,7 +74,7 @@ import { Theme } from '@kushagradhawan/kookie-ui';
 
 ### Next.js App Router
 
-For Next.js 13+ with the App Router, import the CSS in your root layout and wrap your app with the Theme provider:
+For Next.js 15 or later with the App Router, import the CSS in your root layout and wrap your app with the Theme provider. Next.js 15 is the first version that supports React 19. `Theme` is already a Client Component, so the layout can stay a Server Component:
 
 ```tsx
 import '@kushagradhawan/kookie-ui/styles.css';
@@ -131,28 +131,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 );
 ```
 
-### Create React App
-
-For Create React App projects, import the CSS in your `index.tsx`:
-
-```tsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import '@kushagradhawan/kookie-ui/styles.css';
-import { Theme } from '@kushagradhawan/kookie-ui';
-import App from './App';
-
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-
-root.render(
-  <React.StrictMode>
-    <Theme accentColor="blue" grayColor="gray"><App /></Theme>
-  </React.StrictMode>
-);
-```
-
 ### Remix
 
 For Remix projects, import the CSS using the `links` export in your root component:
@@ -185,15 +163,11 @@ export default function App() {
 
 ### Gatsby
 
-For Gatsby projects, import the CSS in `gatsby-browser.js`, then wrap your app in the Theme provider:
-
-```js
-// gatsby-browser.js
-import '@kushagradhawan/kookie-ui/styles.css';
-```
+For Gatsby projects, import the CSS and wrap the root element in the Theme provider. Export the same `wrapRootElement` from `gatsby-ssr.js`, so the server and the browser render the same tree:
 
 ```tsx
-// gatsby-browser.js or src/pages/_app.tsx
+// gatsby-browser.js and gatsby-ssr.js
+import '@kushagradhawan/kookie-ui/styles.css';
 import { Theme } from '@kushagradhawan/kookie-ui';
 
 export const wrapRootElement = ({ element }) => (
