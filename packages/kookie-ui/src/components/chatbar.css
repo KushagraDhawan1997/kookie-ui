@@ -341,7 +341,7 @@
 
   /* Focus state - outline ring (raised has its own box-shadow ring) */
   &:where(:focus-within) {
-    outline: 2px solid var(--v-focus-color, var(--focus-8));
+    outline: var(--focus-ring-width) solid var(--v-focus-color, var(--focus-8));
     outline-offset: -1px;
   }
 }
@@ -417,7 +417,7 @@
     border: 1px solid CanvasText;
   }
   .kui-ChatbarBox:where(.kui-variant-raised):where(:focus-within) {
-    outline: 2px solid Highlight;
+    outline: var(--focus-ring-width) solid Highlight;
     outline-offset: -1px;
   }
   .kui-ChatbarRoot:where([data-disabled]) .kui-ChatbarBox {

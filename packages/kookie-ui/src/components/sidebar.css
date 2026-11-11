@@ -402,7 +402,7 @@
 
   /* Focus state */
   &:where(:focus-visible) {
-    outline: 2px solid var(--focus-8);
+    outline: var(--focus-ring-width) solid var(--focus-8);
     outline-offset: 2px;
   }
 
@@ -860,7 +860,7 @@
 /* Popover menu button focus (arrow-key navigation) */
 /* stylelint-disable-next-line selector-max-specificity */
 .kui-SidebarSearchPopover .kui-SidebarMenuButton:where(:focus-visible) {
-  outline: 2px solid var(--focus-8);
+  outline: var(--focus-ring-width) solid var(--focus-8);
   outline-offset: -2px;
 }
 

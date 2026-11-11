@@ -100,9 +100,9 @@
   --component-gap-ghost-3: calc(var(--space-2) * 1.5);
   --component-gap-ghost-4: var(--space-3);
 
-  /* Focus outline constants */
-  --focus-outline-width: 2px;
-  --focus-outline-offset: 2px;
+  /* Older names for the focus ring, kept for apps that read them */
+  --focus-outline-width: var(--focus-ring-width);
+  --focus-outline-offset: var(--focus-ring-offset);
   --focus-outline-offset-inset: -1px;
 
   /* Component padding relationships */

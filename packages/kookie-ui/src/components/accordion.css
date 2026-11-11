@@ -190,7 +190,7 @@
 
 /* Trigger focus states */
 :where(.kui-AccordionTrigger:focus-visible) {
-  outline: var(--focus-outline-width) solid var(--focus-8);
+  outline: var(--focus-ring-width) solid var(--focus-8);
   outline-offset: var(--focus-outline-offset-inset);
 }
 
@@ -246,7 +246,7 @@
   }
 
   :where(.kui-AccordionTrigger:focus-visible) {
-    outline: 2px solid CanvasText;
+    outline: var(--focus-ring-width) solid CanvasText;
     outline-offset: 2px;
   }
 

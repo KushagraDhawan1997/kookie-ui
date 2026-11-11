@@ -21,7 +21,7 @@
   }
 
   &:where(:focus-visible) {
-    outline: var(--focus-outline-width) solid var(--focus-8);
+    outline: var(--focus-ring-width) solid var(--focus-8);
     outline-offset: var(--focus-outline-offset-inset);
   }
 }
@@ -203,7 +203,7 @@
   box-shadow: var(--field-chrome);
 
   &:where(:focus-visible) {
-    outline: 2px solid var(--focus-8);
+    outline: var(--focus-ring-width) solid var(--focus-8);
     outline-offset: 2px;
   }
 
@@ -240,7 +240,7 @@
   color: var(--accent-ink);
 
   &:where(:focus-visible) {
-    outline: 2px solid var(--accent-8);
+    outline: var(--focus-ring-width) solid var(--accent-8);
     outline-offset: -1px;
   }
 
@@ -293,7 +293,7 @@
   }
 
   &:where(:focus-visible) {
-    outline: 2px solid var(--focus-8);
+    outline: var(--focus-ring-width) solid var(--focus-8);
     outline-offset: -1px;
   }
 
@@ -336,7 +336,7 @@
   }
 
   &:where(:focus-visible) {
-    outline: 2px solid var(--focus-8);
+    outline: var(--focus-ring-width) solid var(--focus-8);
     outline-offset: -1px;
   }
 
@@ -380,7 +380,7 @@
   }
 
   &:where(:focus-visible) {
-    outline: 2px solid var(--focus-8);
+    outline: var(--focus-ring-width) solid var(--focus-8);
     outline-offset: -1px;
   }
 

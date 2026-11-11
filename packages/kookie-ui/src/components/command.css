@@ -187,7 +187,7 @@
 
 @media (forced-colors: active) {
   .kui-CommandItem:where([data-selected='true']) {
-    outline: 2px solid Highlight;
+    outline: var(--focus-ring-width) solid Highlight;
     outline-offset: -2px;
   }
 

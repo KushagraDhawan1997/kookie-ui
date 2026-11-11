@@ -12,13 +12,13 @@
 
   @supports selector(:has(*)) {
     &:where(:has(.kui-TextFieldInput:focus)) {
-      outline: 2px solid var(--text-field-focus-color);
+      outline: var(--focus-ring-width) solid var(--text-field-focus-color);
       outline-offset: -1px;
     }
   }
   @supports not selector(:has(*)) {
     &:where(:focus-within) {
-      outline: 2px solid var(--text-field-focus-color);
+      outline: var(--focus-ring-width) solid var(--text-field-focus-color);
       outline-offset: -1px;
     }
   }
@@ -88,7 +88,7 @@
     }
   }
   &::-webkit-calendar-picker-indicator:where(:focus-visible) {
-    outline: 2px solid var(--text-field-focus-color);
+    outline: var(--focus-ring-width) solid var(--text-field-focus-color);
   }
 
   /* Remove focus ring from date fields and use the selection color */

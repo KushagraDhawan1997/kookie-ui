@@ -163,7 +163,7 @@
 
   /* Focus */
   &:where(:focus-visible) {
-    outline: 2px solid var(--v-focus-color);
+    outline: var(--focus-ring-width) solid var(--v-focus-color);
     outline-offset: var(--v-focus-offset);
 
     &::after {
@@ -273,7 +273,7 @@
 
   /* Focus */
   &:where(:focus-visible) {
-    outline: 2px solid var(--v-focus-color);
+    outline: var(--focus-ring-width) solid var(--v-focus-color);
     outline-offset: var(--v-focus-offset);
   }
 
@@ -338,7 +338,7 @@
   }
 
   &:where(:focus-visible) {
-    outline: 2px solid var(--focus-8);
+    outline: var(--focus-ring-width) solid var(--focus-8);
     outline-offset: 2px;
   }
 

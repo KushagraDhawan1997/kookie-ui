@@ -1,3 +1,9 @@
+## [0.35.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.35.1...v0.35.2) (2026-11-11)
+
+### Fixes
+
+* **focus ring:** every focus ring takes its thickness from `--focus-ring-width`. 24 rings wrote `2px` by hand and 3 read `--focus-outline-width`, so a change to the token reached only some. `--focus-outline-width` and `--focus-outline-offset` stay as aliases of `--focus-ring-width` and `--focus-ring-offset`. No ring changes.
+
 ## [0.35.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.35.0...v0.35.1) (2026-11-11)
 
 ### Fixes

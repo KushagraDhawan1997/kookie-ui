@@ -38,8 +38,8 @@
   cursor: pointer;
 
   &:where(:focus-visible) {
-    outline: var(--focus-outline-width) solid var(--focus-8);
-    outline-offset: var(--focus-outline-offset);
+    outline: var(--focus-ring-width) solid var(--focus-8);
+    outline-offset: var(--focus-ring-offset);
   }
 
   /* Disabled is a colour remap: the element still hit-tests, so the cursor stops promising a press. */
