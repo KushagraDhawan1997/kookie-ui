@@ -1,0 +1,92 @@
+---
+title: Credits
+---
+
+Womp UI stands on other people's work, named here. The licence for Womp UI itself is in `LICENSE`.
+
+## Code in this package
+
+### Radix Themes
+
+Womp UI began as a fork of [Radix Themes](https://github.com/radix-ui/themes) by WorkOS. The prop system, the layout components, the colour and token structure, and six small icons (the check, the dot, the divider and the chevrons in `src/components/icons.tsx`) come from it.
+
+MIT License. Copyright (c) 2023 WorkOS. The full text is in `LICENSE`.
+
+### Lucide and Feather
+
+Four icons in `src/components/icons.tsx` are drawings from [Lucide](https://lucide.dev): `CloseIcon` (Lucide's `x`), `PaperclipIcon` (`paperclip`), `FileIcon` (`file`) and `FileTextIcon` (`file-text`). Lucide's `x` is derived from [Feather](https://feathericons.com) by Cole Bemis.
+
+Lucide:
+
+```
+ISC License
+
+Copyright (c) 2026 Lucide Icons and Contributors
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+```
+
+Feather, for the `x` icon:
+
+```
+The MIT License (MIT)
+
+Copyright (c) 2013-present Cole Bemis
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+## Libraries it is built on
+
+These are installed as dependencies, not copied. Each keeps its own licence in its own package.
+
+| Library | What Womp UI uses it for | By | Licence |
+| --- | --- | --- | --- |
+| [Radix Primitives](https://www.radix-ui.com/primitives) (`radix-ui`) | The behaviour under dialogs, menus, popovers, selects, tabs and most other components | WorkOS | MIT |
+| [Radix Colors](https://www.radix-ui.com/colors) (`@radix-ui/colors`) | The colour scales | Radix (WorkOS) | MIT |
+| [shadcn/ui](https://ui.shadcn.com) (`@shadcn/react`) | `MessageScroller`: following a streamed reply, anchoring a turn and keeping the reader's place are shadcn's Message Scroller | shadcn | MIT |
+| [cmdk](https://github.com/pacocoursey/cmdk) | `Command` and `Combobox`: filtering and keyboard handling | Paco Coursey | MIT |
+| [TanStack Virtual](https://tanstack.com/virtual) (`@tanstack/react-virtual`) | `VirtualMenu`: drawing only the rows in view | Tanner Linsley | MIT |
+| [react-dropzone](https://github.com/react-dropzone/react-dropzone) | `Chatbar`: dropping and picking files | Param Aggarwal | MIT |
+| [classnames](https://github.com/JedWatson/classnames) | Joining class names | Jed Watson | MIT |
+| [Zod](https://zod.dev) | The component schemas | Colin McDonnell | MIT |
+
+## Typefaces
+
+`fonts.css` loads these from Google Fonts. None is bundled in the package.
+
+- [Inter](https://rsms.me/inter/) and [Inter Tight](https://fonts.google.com/specimen/Inter+Tight) by Rasmus Andersson. SIL Open Font License 1.1.
+- [JetBrains Mono](https://www.jetbrains.com/lp/mono/) by JetBrains. SIL Open Font License 1.1.
+- [Playfair Display](https://fonts.google.com/specimen/Playfair+Display) by Claus Eggers Sørensen. SIL Open Font License 1.1.
+
+## The docs site
+
+The icons in the docs and examples are [Hugeicons](https://hugeicons.com), from its free set.
+
+If your work is here without credit, or credited wrongly, please open an issue.

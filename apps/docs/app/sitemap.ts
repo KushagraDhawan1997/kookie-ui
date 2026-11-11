@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: BASE_URL, lastModified: now, changeFrequency: 'weekly' as const, priority: 1.0 },
     { url: `${BASE_URL}/docs`, lastModified: now, changeFrequency: 'weekly' as const, priority: 0.9 },
     { url: `${BASE_URL}/whats-new`, lastModified: now, changeFrequency: 'weekly' as const, priority: 0.6 },
+    { url: `${BASE_URL}/credits`, lastModified: now, changeFrequency: 'monthly' as const, priority: 0.4 },
   ];
 
   const docPages: MetadataRoute.Sitemap = docsNavigation.groups.flatMap((group) =>
