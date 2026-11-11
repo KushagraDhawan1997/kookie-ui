@@ -76,27 +76,27 @@
     --notice-radius: var(--radius-surface-1);
     --notice-line: var(--line-height-1);
     --notice-control: var(--control-height-1);
-    --notice-icon-size: var(--content-icon-size-1);
+    --notice-icon-size: var(--icon-size-1);
   }
   &:where(.kui-r-size-2) {
     --notice-padding: var(--surface-p-2);
     --notice-radius: var(--radius-surface-2);
     --notice-line: var(--line-height-2);
     --notice-control: var(--control-height-2);
-    --notice-icon-size: var(--content-icon-size-2);
+    --notice-icon-size: var(--icon-size-2);
   }
   &:where(.kui-r-size-3) {
     --notice-padding: var(--surface-p-3);
     --notice-radius: var(--radius-surface-3);
     --notice-line: var(--line-height-3);
     --notice-control: var(--control-height-3);
-    --notice-icon-size: var(--content-icon-size-3);
+    --notice-icon-size: var(--icon-size-3);
   }
   &:where(.kui-r-size-4) {
     --notice-padding: var(--surface-p-4);
     --notice-radius: var(--radius-surface-4);
     --notice-line: var(--line-height-4);
     --notice-control: var(--control-height-4);
-    --notice-icon-size: var(--content-icon-size-4);
+    --notice-icon-size: var(--icon-size-4);
   }
 }
