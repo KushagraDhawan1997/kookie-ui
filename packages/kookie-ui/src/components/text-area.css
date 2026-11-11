@@ -253,7 +253,7 @@
 
   /* Hover state */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.kui-TextAreaInput:where(:focus, :disabled)))) {
+    &:where(:hover:not(:has(.kui-TextAreaInput:where(:focus, :disabled, :read-only)))) {
       background-color: var(--v-bg-hover);
     }
   }
@@ -265,8 +265,8 @@
     box-shadow: inset 0 0 0 1px var(--focus-a5);
   }
 
-  /* Disabled/read-only state */
-  &:where(:has(.kui-TextAreaInput:where(:disabled, :read-only))) {
+  /* Disabled state */
+  &:where(:has(.kui-TextAreaInput:disabled)) {
     background-color: var(--neutral-a2);
     background-image: linear-gradient(var(--neutral-a2), var(--neutral-a2));
   }
@@ -279,13 +279,13 @@
 
   /* Hover state border */
   @media (hover: hover) {
-    &:where(:hover:not(:has(.kui-TextAreaInput:where(:focus, :disabled)))) {
+    &:where(:hover:not(:has(.kui-TextAreaInput:where(:focus, :disabled, :read-only)))) {
       box-shadow: inset 0 0 0 1px var(--v-border-hover);
     }
   }
 
   /* Disabled state border */
-  &:where(:has(.kui-TextAreaInput:where(:disabled, :read-only))) {
+  &:where(:has(.kui-TextAreaInput:disabled)) {
     box-shadow: inset 0 0 0 var(--text-area-border-width) var(--neutral-a6);
   }
 }
@@ -313,7 +313,7 @@
     background-image: none;
   }
 
-  &:where(:has(.kui-TextAreaInput:where(:disabled, :read-only))) {
+  &:where(:has(.kui-TextAreaInput:disabled)) {
     background-color: var(--neutral-a3);
     background-image: none;
   }
@@ -321,7 +321,7 @@
 
 /* Ghost disabled - specific color */
 .kui-TextAreaRoot:where(.kui-variant-ghost) {
-  &:where(:has(.kui-TextAreaInput:where(:disabled, :read-only))) {
+  &:where(:has(.kui-TextAreaInput:disabled)) {
     color: var(--neutral-a8);
   }
 
@@ -334,7 +334,7 @@
 
 /* Surface disabled - specific color */
 .kui-TextAreaRoot:where(.kui-variant-surface) {
-  &:where(:has(.kui-TextAreaInput:where(:disabled, :read-only))) {
+  &:where(:has(.kui-TextAreaInput:disabled)) {
     color: var(--neutral-a8);
   }
 
@@ -390,6 +390,12 @@
     background-color: var(--field-fill-disabled);
     box-shadow: inset 0 0 0 1px var(--field-edge-disabled);
   }
+}
+
+/* Read-only drops the fill in every variant and keeps the edge and the value: nothing here
+   takes input, but the value is still there to select and copy. */
+.kui-TextAreaRoot:where(:has(.kui-TextAreaInput:read-only:not(:disabled))) {
+  background-color: transparent;
 }
 
 /***************************************************************************************************

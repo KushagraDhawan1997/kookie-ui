@@ -2,6 +2,10 @@
 
 Each release groups its changes as Major, Minor or Quiet. Major is a new product or a change to what it is. Minor is a change you notice when you use it. Quiet is a small touch, a fix, a rename or a removal, or how the work is made. Breaking lists the changes that need an edit in your app.
 
+## 0.35.5 (November 11)
+
+1. `Minor` **Read-only fields no longer look disabled.** In the soft, ghost, outline and surface styles a read-only TextField or TextArea went grey like a disabled one. Now it drops its fill, keeps its edge and keeps its text readable, as the default style already did.
+
 ## 0.35.4 (November 11)
 
 1. `Minor` **Sharper icons in three places.** The icon in a Notice, the icons in a rail and the magnifier in the Sidebar's search now use the same sizes as every other icon: 16, 16, 20 and 24 pixels. They were 13.2, 16.8 and 20.5, which drew soft. The smallest ones grow by about 3 pixels.
