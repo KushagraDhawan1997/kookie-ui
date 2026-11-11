@@ -16,14 +16,9 @@ const SWEEP = [600, 900, 1100, 1400, 1700, 1100, 700, 300, 0];
 function spies() {
   return {
     rail: vi.fn(),
-    railExpand: vi.fn(),
-    railCollapse: vi.fn(),
     panel: vi.fn(),
     sidebar: vi.fn(),
-    sidebarExpand: vi.fn(),
     inspector: vi.fn(),
-    inspectorExpand: vi.fn(),
-    inspectorCollapse: vi.fn(),
     bottom: vi.fn(),
   };
 }
@@ -35,14 +30,14 @@ function Frame({ on }: { on: ReturnType<typeof spies> }) {
         <Shell.Trigger target="rail">rail</Shell.Trigger>
         <Shell.Trigger target="inspector">inspector</Shell.Trigger>
       </Shell.Header>
-      <Shell.Rail presentation={{ initial: 'overlay', md: 'fixed' }} onOpenChange={on.rail} onExpand={on.railExpand} onCollapse={on.railCollapse}>
+      <Shell.Rail presentation={{ initial: 'overlay', md: 'fixed' }} onOpenChange={on.rail}>
         rail
       </Shell.Rail>
       <Shell.Panel defaultOpen={{ initial: false, lg: true }} onOpenChange={on.panel}>
         panel
       </Shell.Panel>
       <Shell.Content>content</Shell.Content>
-      <Shell.Inspector defaultOpen={{ initial: false, lg: true }} onOpenChange={on.inspector} onExpand={on.inspectorExpand} onCollapse={on.inspectorCollapse}>
+      <Shell.Inspector defaultOpen={{ initial: false, lg: true }} onOpenChange={on.inspector}>
         inspector
       </Shell.Inspector>
       <Shell.Bottom presentation={{ initial: 'overlay', sm: 'fixed' }} defaultOpen={{ initial: false, md: true }} onOpenChange={on.bottom}>
@@ -55,7 +50,7 @@ function Frame({ on }: { on: ReturnType<typeof spies> }) {
 function SidebarFrame({ on }: { on: ReturnType<typeof spies> }) {
   return (
     <Shell.Root>
-      <Shell.Sidebar defaultState={{ initial: 'collapsed', md: 'thin', lg: 'expanded' }} onStateChange={on.sidebar} onExpand={on.sidebarExpand}>
+      <Shell.Sidebar defaultState={{ initial: 'collapsed', md: 'thin', lg: 'expanded' }} onStateChange={on.sidebar}>
         sidebar
       </Shell.Sidebar>
       <Shell.Content>content</Shell.Content>
@@ -133,8 +128,6 @@ describe('Shell callbacks are quiet until a user acts', () => {
 
     expect(on.inspector).toHaveBeenCalledTimes(1);
     expect(on.inspector).toHaveBeenLastCalledWith(true, { reason: 'toggle' });
-    expect(on.inspectorExpand).toHaveBeenCalledTimes(1);
-    expect(on.inspectorCollapse).not.toHaveBeenCalled();
   });
 
   it('a pane the user has set stays set across a resize, and reports nothing for it', () => {
@@ -144,13 +137,10 @@ describe('Shell callbacks are quiet until a user acts', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'inspector' }));
     on.inspector.mockClear();
-    on.inspectorExpand.mockClear();
 
     for (const width of SWEEP) viewport.setWidth(width);
 
     expect(inspector.getAttribute('data-state')).toBe('open');
     expect(on.inspector).not.toHaveBeenCalled();
-    expect(on.inspectorExpand).not.toHaveBeenCalled();
-    expect(on.inspectorCollapse).not.toHaveBeenCalled();
   });
 });

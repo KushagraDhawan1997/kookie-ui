@@ -1,3 +1,18 @@
+## [0.37.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.36.0...v0.37.0) (2026-11-11)
+
+### Breaking
+
+* **shell:** the options kept from 0.7 and deprecated since 0.8.0 are removed. `MIGRATION.md` lists a replacement for each.
+  * `Shell.Left`, `Shell.useShell` and `Shell.useResponsivePresentation`.
+  * `target="left"` and `peekOnHover` on `Shell.Trigger`, with the peek styles and the `data-peek` attribute.
+  * `onExpand` and `onCollapse` on every pane. `onOpenChange` reports a user's toggle.
+  * A responsive object as a controlled `open` or `state`. `defaultOpen` and `defaultState` still take one.
+  * `snapPoints`, `snapTolerance`, `collapseThreshold`, `paneId` and `persistence`, and the `PaneSizePersistence` type. A drag ends at the size it reached; nothing is read from or written to `localStorage`.
+  * The `data-open` attribute on a stacked pane, and the guard that dropped `height` and `resizer` passed to a pane.
+  * The reasons `init`, `responsive`, `panel` and `left` in the `onOpenChange` types. They were never sent.
+* **context-menu:** `ContextMenu.Content` no longer takes `submenuBehavior`, which had no effect.
+* **checkbox-group:** `CheckboxGroup.Root` no longer takes `orientation` or `loop`, which had no effect.
+
 ## [0.36.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.35.7...v0.36.0) (2026-11-11)
 
 ### Features

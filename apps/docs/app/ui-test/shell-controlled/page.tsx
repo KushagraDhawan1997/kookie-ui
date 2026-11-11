@@ -87,19 +87,11 @@ export default function ShellControlledTest() {
 
   const clearLogs = React.useCallback(() => setLogs([]), []);
 
-  const handleRailExpand = React.useCallback(() => addLog('Rail', 'onExpand'), [addLog]);
-  const handleRailCollapse = React.useCallback(() => addLog('Rail', 'onCollapse'), [addLog]);
-  const handlePanelExpand = React.useCallback(() => addLog('Panel', 'onExpand'), [addLog]);
-  const handlePanelCollapse = React.useCallback(() => addLog('Panel', 'onCollapse'), [addLog]);
   const handlePanelResize = React.useCallback((size: number) => addLog('Panel', 'onResize', `size=${size}px`), [addLog]);
   const handlePanelResizeStart = React.useCallback((size: number) => addLog('Panel', 'onResizeStart', `size=${size}px`), [addLog]);
   const handlePanelResizeEnd = React.useCallback((size: number) => addLog('Panel', 'onResizeEnd', `size=${size}px`), [addLog]);
-  const handleInspectorExpand = React.useCallback(() => addLog('Inspector', 'onExpand'), [addLog]);
-  const handleInspectorCollapse = React.useCallback(() => addLog('Inspector', 'onCollapse'), [addLog]);
   const handleInspectorResize = React.useCallback((size: number) => addLog('Inspector', 'onResize', `size=${size}px`), [addLog]);
   const handleInspectorResizeEnd = React.useCallback((size: number) => addLog('Inspector', 'onResizeEnd', `size=${size}px`), [addLog]);
-  const handleBottomExpand = React.useCallback(() => addLog('Bottom', 'onExpand'), [addLog]);
-  const handleBottomCollapse = React.useCallback(() => addLog('Bottom', 'onCollapse'), [addLog]);
   const handleBottomResize = React.useCallback((size: number) => addLog('Bottom', 'onResize', `size=${size}px`), [addLog]);
   const handleBottomResizeEnd = React.useCallback((size: number) => addLog('Bottom', 'onResizeEnd', `size=${size}px`), [addLog]);
 
@@ -131,8 +123,6 @@ export default function ShellControlledTest() {
         onOpenChange={handleRailOpenChange}
         expandedSize={56}
         presentation={{ initial: 'overlay', md: 'fixed' }}
-        onExpand={handleRailExpand}
-        onCollapse={handleRailCollapse}
       >
         <Flex direction="column" gap="2" p="3" align="center" height="100%">
           <Button iconOnly aria-label="Toggle panel" variant="ghost" size="2" color="gray" asChild>
@@ -166,8 +156,6 @@ export default function ShellControlledTest() {
         resizable
         minSize={200}
         maxSize={400}
-        onExpand={handlePanelExpand}
-        onCollapse={handlePanelCollapse}
         onResize={handlePanelResize}
         onResizeStart={handlePanelResizeStart}
         onResizeEnd={handlePanelResizeEnd}
@@ -477,8 +465,6 @@ export default function ShellControlledTest() {
         resizable
         minSize={200}
         maxSize={450}
-        onExpand={handleInspectorExpand}
-        onCollapse={handleInspectorCollapse}
         onResize={handleInspectorResize}
         onResizeEnd={handleInspectorResizeEnd}
       >
@@ -524,8 +510,6 @@ export default function ShellControlledTest() {
         resizable
         minSize={100}
         maxSize={350}
-        onExpand={handleBottomExpand}
-        onCollapse={handleBottomCollapse}
         onResize={handleBottomResize}
         onResizeEnd={handleBottomResizeEnd}
       >

@@ -4,14 +4,12 @@ import { renderWithProviders, screen } from '../../test-utils';
 import userEvent from '@testing-library/user-event';
 import { waitFor } from '@testing-library/react';
 import { Shell } from '../../../src/components/index';
-import { useShell } from '../../../src/components/shell.context';
 
 function ToggleButton() {
-  const shell = useShell();
   return (
-    <button onClick={() => shell.togglePane('panel')} aria-label="toggle panel">
+    <Shell.Trigger target="panel" aria-label="toggle panel">
       toggle panel
-    </button>
+    </Shell.Trigger>
   );
 }
 

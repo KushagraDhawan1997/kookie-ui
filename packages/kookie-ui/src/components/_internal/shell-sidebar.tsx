@@ -7,15 +7,15 @@ import { PaneResizeContext } from './shell-resize.js';
 import { PaneHandle, SidebarHandle } from './shell-handles.js';
 import { usePane, paneAttributes, usePresentationTable } from './shell-pane.js';
 import { splitHandles, useInitialPaneSize, useResizablePane, type SizeChangeMeta } from './shell-resizable.js';
-import { useFrameRegistration, warnOnce, type PaneValue } from './shell-store.js';
-import { navigationRest, startAnchoredGrowth, withoutRemovedPaneProps } from './shell-rest.js';
+import { useFrameRegistration, type PaneValue } from './shell-store.js';
+import { navigationRest, startAnchoredGrowth } from './shell-rest.js';
 import { readBreakpoint } from '../../hooks/use-breakpoint.js';
 import { PaneChromeScope } from './pane-chrome.js';
 import { PageScope } from './page-scope.js';
-import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, Responsive, SidebarMode } from '../shell.types.js';
+import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, PaneOpenChangeReason, Responsive, SidebarMode } from '../shell.types.js';
 
-type SidebarStateChangeMeta = { reason: 'init' | 'toggle' | 'responsive' | 'dismiss' };
-type SidebarControlledProps = { state: Responsive<SidebarMode>; onStateChange?: (state: SidebarMode, meta: SidebarStateChangeMeta) => void; defaultState?: never };
+type SidebarStateChangeMeta = { reason: PaneOpenChangeReason };
+type SidebarControlledProps = { state: SidebarMode; onStateChange?: (state: SidebarMode, meta: SidebarStateChangeMeta) => void; defaultState?: never };
 type SidebarUncontrolledProps = { defaultState?: SidebarMode | Partial<Record<Breakpoint, SidebarMode>>; onStateChange?: (state: SidebarMode, meta: SidebarStateChangeMeta) => void; state?: never };
 type SidebarPublicProps = PaneBaseProps & {
   size?: number | string;
@@ -37,6 +37,8 @@ type SidebarComponent = React.ForwardRefExoticComponent<SidebarPublicProps & Rea
 const toValue = (mode: SidebarMode): PaneValue => (mode === 'collapsed' ? 'closed' : 'open');
 const toMode = (value: PaneValue): SidebarMode => (value === 'closed' ? 'collapsed' : 'expanded');
 
+function modeToValue(state: SidebarMode | undefined): PaneValue | undefined;
+function modeToValue(state: Responsive<SidebarMode> | undefined): PaneValue | Partial<Record<Breakpoint, PaneValue>> | undefined;
 function modeToValue(state: Responsive<SidebarMode> | undefined): PaneValue | Partial<Record<Breakpoint, PaneValue>> | undefined {
   if (state === undefined) return undefined;
   if (typeof state === 'string') return toValue(state);
@@ -62,16 +64,9 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
     maxSize = 400,
     resizable = false,
     collapsible = true,
-    onExpand,
-    onCollapse,
     onResize,
     onResizeStart,
     onResizeEnd,
-    snapPoints,
-    snapTolerance,
-    collapseThreshold,
-    paneId,
-    persistence,
     children,
     style,
     state,
@@ -98,17 +93,10 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
     presentationTable: table,
     builtIn: navigationRest,
     onChange: (value, reason) => onStateChange?.(toMode(value), { reason }),
-    onExpand,
-    onCollapse,
     size: expandedSize,
   });
   useFrameRegistration('sidebar', flush);
 
-  React.useEffect(() => {
-    if (snapPoints !== undefined || collapseThreshold !== undefined || paneId !== undefined || persistence !== undefined) {
-      warnOnce('Shell.Sidebar: `snapPoints`, `collapseThreshold`, `paneId` and `persistence` are deprecated and are removed in 1.0. Keep the size in your own state with `size`/`onSizeChange`.');
-    }
-  }, [snapPoints, collapseThreshold, paneId, persistence]);
 
   const elementRef = React.useRef<HTMLElement | null>(null);
   const composedRef = useComposedRefs(ref, pane.setElement, elementRef);
@@ -134,14 +122,8 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
     onResize,
     onResizeStart,
     onResizeEnd,
-    snapPoints,
-    snapTolerance,
-    collapseThreshold,
-    paneId,
-    persistence,
     overlaying: pane.overlaying,
     overlayingNow: () => table[readBreakpoint()] === 'overlay',
-    requestCollapse: () => pane.setValue('closed', 'toggle'),
     requestToggle: () => pane.toggle('toggle'),
   });
 
@@ -151,13 +133,10 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
       <PaneResizeContext.Provider value={resize}>{handles.length > 0 ? handles : <PaneHandle />}</PaneResizeContext.Provider>
     ) : null;
 
-  // A peek previews the width the next toggle opens to.
-  const peekWidth = pane.peeking ? `var(--sidebar-size, ${expandedSize}px)` : undefined;
-
   const initialSize = useInitialPaneSize(size, defaultSize, minSize, maxSize);
   return (
     <div
-      {...withoutRemovedPaneProps(domProps)}
+      {...domProps}
       role={domProps.role ?? 'navigation'}
       id={pane.id}
       ref={composedRef}
@@ -172,7 +151,6 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarPublicProps>((pro
           ...(initialSize ? { '--sidebar-size': initialSize } : {}),
           '--sidebar-min-size': `${minSize}px`,
           '--sidebar-max-size': `${maxSize}px`,
-          ...(peekWidth ? { '--peek-sidebar-width': peekWidth } : {}),
         } as CSSPropertiesWithVars
       }
     >

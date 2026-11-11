@@ -2,6 +2,10 @@
 
 Decisions about Kookie UI v1 and why they were made. Newest first. The docs site is the source of truth for what the system says. This file records how it got there.
 
+## 2026-11-11: the Shell's deprecated options go now, not at 1.0
+
+0.8.0 kept 0.7's Shell options alive with warnings and a note that 1.0 would remove them: `Shell.Left`, `useShell`, `useResponsivePresentation`, peek, `onExpand` and `onCollapse`, snap points, `collapseThreshold`, `paneId` and persistence, a responsive controlled `open`. 0.37.0 removes them, with `submenuBehavior` on ContextMenu and `orientation` and `loop` on CheckboxGroup, which did nothing. They cost about 600 lines and a second path through every pane. Womp's app still uses `onExpand`, `onCollapse` and `submenuBehavior` in a few places; Kushagra chose not to wait for it and will adjust the app to the library ("just make breaking changes"). `MIGRATION.md` lists a replacement for each.
+
 ## 2026-10-29: fields sit in the panel, buttons lift off it
 
 Fields wore `--control-chrome`, a raised button's shadow, by design. In Womp's property panel, a column of fields next to sliders, the 14px blur under each field read as too heavy (Kushagra). Fields now wear `--field-chrome`: the same edge and 1px drop, without the blur. A button is something you press and lifts off the surface; a field is where a value sits. Buttons keep the full shadow.

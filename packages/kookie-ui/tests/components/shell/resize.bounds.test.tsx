@@ -140,29 +140,3 @@ describe('expandedSize is the size only until something else sets one', () => {
     expect(sizeOf('.kui-ShellPanel', '--panel-size')).toBe(250);
   });
 });
-
-describe('a drag that collapses the pane', () => {
-  it('still ends, at the size the pane had before it', () => {
-    const onResizeStart = vi.fn();
-    const onResizeEnd = vi.fn();
-    const onOpenChange = vi.fn();
-    renderWithProviders(
-      <Shell.Root>
-        <Shell.Rail presentation="fixed" />
-        <Shell.Panel defaultOpen resizable expandedSize={200} minSize={120} collapseThreshold={80} onResizeStart={onResizeStart} onResizeEnd={onResizeEnd} onOpenChange={onOpenChange}>
-          panel
-        </Shell.Panel>
-        <Shell.Content>content</Shell.Content>
-      </Shell.Root>,
-    );
-    const handle = screen.getByRole('separator');
-    fireEvent.pointerDown(handle, { pointerId: 1, clientX: 200 });
-    fireEvent.pointerMove(window, { clientX: 60 });
-    fireEvent.pointerUp(window);
-
-    expect(onOpenChange).toHaveBeenLastCalledWith(false, { reason: 'toggle' });
-    expect(onResizeStart).toHaveBeenCalledTimes(1);
-    expect(onResizeEnd).toHaveBeenCalledTimes(1);
-    expect(onResizeEnd).toHaveBeenLastCalledWith(200);
-  });
-});

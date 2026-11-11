@@ -3,14 +3,12 @@ import { describe, it, expect } from 'vitest';
 import { renderWithProviders, screen } from '../../test-utils';
 import userEvent from '@testing-library/user-event';
 import { Shell } from '../../../src/components/index';
-import { useShell } from '../../../src/components/shell.context';
 
 function ToggleLeft() {
-  const shell = useShell();
   return (
-    <button aria-label="toggle left" onClick={() => shell.togglePane('left')}>
+    <Shell.Trigger target="rail" aria-label="toggle left">
       toggle left
-    </button>
+    </Shell.Trigger>
   );
 }
 

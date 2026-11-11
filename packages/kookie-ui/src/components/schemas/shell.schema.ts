@@ -24,7 +24,7 @@ const PaneModeSchema = z.enum(['expanded', 'collapsed']).describe('Pane state mo
 const SidebarModeSchema = z.enum(['collapsed', 'expanded']).describe('Sidebar state');
 const PresentationValueSchema = z.enum(['fixed', 'overlay', 'stacked']).describe('Presentation mode');
 const _BreakpointSchema = z.enum(['initial', 'xs', 'sm', 'md', 'lg', 'xl']).describe('Responsive breakpoint');
-const PaneTargetSchema = z.enum(['left', 'rail', 'panel', 'sidebar', 'inspector', 'bottom']).describe('Pane target. `left` is deprecated: use `rail`.');
+const PaneTargetSchema = z.enum(['rail', 'panel', 'sidebar', 'inspector', 'bottom']).describe('Pane target');
 const TriggerActionSchema = z.enum(['toggle', 'expand', 'collapse']).describe('Trigger action');
 const OpenChangeReasonSchema = z.enum(['toggle', 'dismiss']).describe('Why the state changed: `toggle` for a trigger or the resize handle, `dismiss` for Escape or the scrim');
 const SizeChangeReasonSchema = z.enum(['init', 'resize', 'controlled']).describe('Why the size changed');
@@ -49,21 +49,13 @@ const ResponsiveSidebarModeSchema = responsive(SidebarModeSchema).describe('Resp
 const ResponsivePresentationSchema = responsive(PresentationValueSchema).describe('Responsive presentation configuration');
 const ResponsiveOpenSchema = responsive(z.boolean()).describe('Responsive open state');
 
-// Size persistence adapter (deprecated)
-const PaneSizePersistenceSchema = z
-  .object({
-    load: z.function({ output: z.union([z.number(), z.promise(z.number()), z.undefined()]) }).optional(),
-    save: z.function({ input: [z.number()], output: z.union([z.void(), z.promise(z.void())]) }).optional(),
-  })
-  .describe('Deprecated, removed in 1.0. Keep the size in your own state with `size`/`onSizeChange`.');
-
 const StyleSchema = z
   .record(z.string(), z.union([z.string(), z.number()]))
   .optional()
   .describe('Inline styles');
 
 const OpenPropsSchema = {
-  open: z.union([z.boolean(), ResponsiveOpenSchema]).optional().describe('The open state, when controlled. A responsive object is deprecated.'),
+  open: z.boolean().optional().describe('The open state, when controlled'),
   defaultOpen: z
     .union([z.boolean(), ResponsiveOpenSchema])
     .optional()
@@ -80,8 +72,6 @@ const PaneBaseShape = {
   presentation: ResponsivePresentationSchema.optional(),
   expandedSize: z.number().optional(),
   flush: z.boolean().optional().describe('Whether the pane joins the app frame. Defaults to true. `false` pulls it off the frame as a card.'),
-  onExpand: z.function({ output: z.void() }).optional().describe('Deprecated: use `onOpenChange`'),
-  onCollapse: z.function({ output: z.void() }).optional().describe('Deprecated: use `onOpenChange`'),
   className: z.string().optional().describe('Additional CSS class name'),
   style: StyleSchema,
   children: z.any().optional(),
@@ -107,11 +97,6 @@ const ResizeShape = {
     .describe('Called during a drag, at most once per animation frame'),
   onResizeStart: z.function({ input: [z.number()], output: z.void() }).optional(),
   onResizeEnd: z.function({ input: [z.number()], output: z.void() }).optional(),
-  snapPoints: z.array(z.number()).optional().describe('Deprecated, removed in 1.0'),
-  snapTolerance: z.number().optional().describe('Deprecated, removed in 1.0'),
-  collapseThreshold: z.number().optional().describe('Deprecated, removed in 1.0'),
-  paneId: z.string().optional().describe('Deprecated, removed in 1.0'),
-  persistence: PaneSizePersistenceSchema.optional(),
 };
 
 /**
@@ -183,7 +168,7 @@ export const ShellSidebarSchema = z
   .object({
     ...PaneBaseShape,
     ...ResizeShape,
-    state: z.union([SidebarModeSchema, ResponsiveSidebarModeSchema]).optional().describe('The state, when controlled. A responsive object is deprecated.'),
+    state: SidebarModeSchema.optional().describe('The state, when controlled'),
     defaultState: ResponsiveSidebarModeSchema.optional().describe('The starting state. With no value the sidebar is open where it is in the frame and closed where it is an overlay.'),
     onStateChange: z
       .function({ input: [SidebarModeSchema, z.object({ reason: OpenChangeReasonSchema })], output: z.void() })
@@ -251,7 +236,6 @@ export const ShellTriggerSchema = z
   .object({
     target: PaneTargetSchema.describe('Which pane to drive'),
     action: TriggerActionSchema.default('toggle').describe('Action to perform'),
-    peekOnHover: z.boolean().default(false).describe('Deprecated, removed in 1.0. Shows a preview of a closed pane on hover.'),
     type: z.enum(['button', 'submit', 'reset']).default('button').describe('The button type'),
     className: z.string().optional().describe('Additional CSS class name'),
     style: StyleSchema,
@@ -298,7 +282,6 @@ export type TriggerAction = z.infer<typeof TriggerActionSchema>;
 export type ResponsiveMode = z.infer<typeof _ResponsiveModeSchema>;
 export type ResponsiveSidebarMode = z.infer<typeof ResponsiveSidebarModeSchema>;
 export type ResponsivePresentation = z.infer<typeof ResponsivePresentationSchema>;
-export type PaneSizePersistence = z.infer<typeof PaneSizePersistenceSchema>;
 
 /**
  * Development-only helper to validate and normalize Shell props

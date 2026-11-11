@@ -38,7 +38,7 @@ import {
 } from './_internal/base-menu.utils.js';
 
 import type { ComponentPropsWithout, RemovedProps } from '../helpers/component-props.js';
-import type { GetPropDefTypes, Responsive } from '../props/prop-def.js';
+import type { GetPropDefTypes } from '../props/prop-def.js';
 
 interface ContextMenuRootProps
   extends React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Root> {}
@@ -95,10 +95,6 @@ interface ContextMenuContentProps
    * Use this when rendering virtualized lists inside the context menu.
    */
   virtualized?: boolean;
-  /**
-   * @deprecated Has no effect. ContextMenu submenus always cascade.
-   */
-  submenuBehavior?: Responsive<'cascade' | 'drill-down'>;
 }
 const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMenuContentProps>(
   (ownProps, forwardedRef) => {
@@ -113,7 +109,6 @@ const ContextMenuContent = React.forwardRef<ContextMenuContentElement, ContextMe
       color,
       container,
       forceMount,
-      submenuBehavior: _submenuBehavior,
       virtualized = false,
       ...contentProps
     } = extractProps(props, contextMenuContentPropDefs);

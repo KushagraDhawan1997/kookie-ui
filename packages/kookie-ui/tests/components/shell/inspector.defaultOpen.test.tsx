@@ -4,14 +4,12 @@ import { renderWithProviders, screen } from '../../test-utils';
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Shell } from '../../../src/components/index';
-import { useShell } from '../../../src/components/shell.context';
 
 function ToggleInspector() {
-  const shell = useShell();
   return (
-    <button aria-label="toggle inspector" onClick={() => shell.togglePane('inspector')}>
+    <Shell.Trigger target="inspector" aria-label="toggle inspector">
       toggle inspector
-    </button>
+    </Shell.Trigger>
   );
 }
 

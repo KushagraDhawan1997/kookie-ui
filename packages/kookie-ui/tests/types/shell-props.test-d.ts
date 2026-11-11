@@ -64,3 +64,15 @@ expectAssignable<RailProps>({} as Shell.RailProps);
 expectAssignable<PanelProps>({} as Shell.PanelProps);
 expectAssignable<SidebarProps>({} as Shell.SidebarProps);
 expectAssignable<InspectorProps>({} as Shell.InspectorProps);
+
+// 0.37.0 removed the options kept from 0.7: a pane takes none of them.
+expectNotAssignable<Shell.PanelProps>({ snapPoints: [200] });
+expectNotAssignable<Shell.PanelProps>({ collapseThreshold: 80 });
+expectNotAssignable<Shell.PanelProps>({ paneId: 'panel' });
+expectNotAssignable<Shell.InspectorProps>({ onExpand: () => {} });
+expectNotAssignable<Shell.SidebarProps>({ onCollapse: () => {} });
+expectNotAssignable<Shell.TriggerProps>({ target: 'left' });
+expectNotAssignable<Shell.TriggerProps>({ target: 'rail', peekOnHover: true });
+// A controlled value is one value; only the default takes a responsive object.
+expectNotAssignable<Shell.InspectorProps>({ open: { initial: false, lg: true } });
+expectAssignable<Shell.InspectorProps>({ defaultOpen: { initial: false, lg: true } });

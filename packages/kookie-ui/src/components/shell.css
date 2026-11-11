@@ -885,34 +885,6 @@
   }
 }
 
-/* ── Peek ──────────────────────────────────────────────────────────────────── */
-
-/*
- * A Trigger with `peekOnHover` previews a closed pane while the pointer is on
- * it. The pane shows, floating above the content at its edge. After every
- * breakpoint block, so it wins over a closed state at any width.
- */
-.kui-ShellPane[data-peek][data-state],
-.kui-ShellRail ~ .kui-ShellPanel[data-presentation-follows][data-peek][data-state] {
-  --kui-shell-position: absolute;
-  --kui-shell-z: 4;
-  --kui-shell-pin: fixed;
-  --kui-shell-pin-top: initial;
-  --kui-shell-row: 2 / 3;
-  --kui-shell-col: 1 / -1;
-  --kui-shell-surface: var(--color-surface);
-  --kui-shell-shadow: var(--surface-chrome);
-  --kui-shell-edge: 1px;
-  --kui-shell-offset: var(--shell-rail-offset, 0px);
-  --kui-shell-handle: none;
-
-  display: flex;
-}
-
-.kui-ShellSidebar[data-peek][data-state] {
-  inline-size: var(--peek-sidebar-width, var(--sidebar-size, var(--sidebar-expanded-size, 288px)));
-}
-
 /* ── Scrim ─────────────────────────────────────────────────────────────────── */
 
 /* Root-owned and always mounted; shown while an overlay is live. Under the overlay panes, over everything else. */
@@ -1207,7 +1179,7 @@
   }
 
   /*
-   * The panes. A pane over the page (overlay, stacked, peek) attaches to the screen: its posture
+   * The panes. A pane over the page (overlay, stacked) attaches to the screen: its posture
    * writes `--kui-shell-pin: fixed`. A pane in flow sticks beneath the header, a screen tall, and
    * the bottom pane sticks to the screen's bottom. An overlay covers the header
    * (`--kui-shell-pin-top: 0px`); the rest start beneath it.

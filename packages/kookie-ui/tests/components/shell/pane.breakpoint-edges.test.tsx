@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { renderToString } from 'react-dom/server';
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithProviders, screen } from '../../test-utils';
 import { fireEvent } from '@testing-library/react';
@@ -59,47 +58,6 @@ describe('focus when an open pane crosses a breakpoint', () => {
 
     expect(q('.kui-ShellInspector').getAttribute('data-state')).toBe('closed');
     expect(document.activeElement).toBe(screen.getByRole('button', { name: 'inspector' }));
-  });
-});
-
-/**
- * A responsive controlled `open` is deprecated. It is resolved the way a
- * responsive default is: the stylesheet answers it at each breakpoint, and
- * crossing one is not a change the app made.
- */
-describe('a responsive controlled open', () => {
-  it('fires no callback on a breakpoint crossing', () => {
-    const onExpand = vi.fn();
-    const onCollapse = vi.fn();
-    renderWithProviders(
-      <Shell.Root>
-        <Shell.Content>content</Shell.Content>
-        <Shell.Inspector presentation="fixed" open={{ initial: false, lg: true }} onExpand={onExpand} onCollapse={onCollapse}>
-          inspector
-        </Shell.Inspector>
-      </Shell.Root>,
-    );
-    const inspector = q('.kui-ShellInspector');
-
-    for (const width of [1400, 600, 1400, 0]) viewport.setWidth(width);
-    viewport.setWidth(1400);
-
-    expect(inspector.getAttribute('data-mode')).toBe('expanded');
-    expect(onExpand).not.toHaveBeenCalled();
-    expect(onCollapse).not.toHaveBeenCalled();
-  });
-
-  it('is in the server HTML at every breakpoint', () => {
-    const html = renderToString(
-      <Shell.Root>
-        <Shell.Content>content</Shell.Content>
-        <Shell.Inspector presentation="fixed" open={{ initial: false, lg: true }}>
-          inspector
-        </Shell.Inspector>
-      </Shell.Root>,
-    );
-    expect(html).toContain('data-auto-md="closed"');
-    expect(html).toContain('data-auto-lg="open"');
   });
 });
 

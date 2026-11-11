@@ -7,14 +7,14 @@ import { PaneResizeContext } from './shell-resize.js';
 import { BottomHandle, PaneHandle } from './shell-handles.js';
 import { usePane, paneAttributes, usePresentationTable } from './shell-pane.js';
 import { splitHandles, useInitialPaneSize, useResizablePane, type SizeChangeMeta } from './shell-resizable.js';
-import { useFrameRegistration, warnOnce } from './shell-store.js';
-import { bottomAnchoredGrowth, detailRest, toPaneValue, withoutRemovedPaneProps } from './shell-rest.js';
+import { useFrameRegistration } from './shell-store.js';
+import { bottomAnchoredGrowth, detailRest, toPaneValue } from './shell-rest.js';
 import { PageScope } from './page-scope.js';
 import { readBreakpoint } from '../../hooks/use-breakpoint.js';
-import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps } from '../shell.types.js';
+import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, PaneOpenChangeReason } from '../shell.types.js';
 
-type BottomOpenChangeMeta = { reason: 'init' | 'toggle' | 'responsive' | 'dismiss' };
-type BottomControlledProps = { open: boolean | Partial<Record<Breakpoint, boolean>>; onOpenChange?: (open: boolean, meta: BottomOpenChangeMeta) => void; defaultOpen?: never };
+type BottomOpenChangeMeta = { reason: PaneOpenChangeReason };
+type BottomControlledProps = { open: boolean; onOpenChange?: (open: boolean, meta: BottomOpenChangeMeta) => void; defaultOpen?: never };
 /** Since 0.8.0 `defaultOpen` takes a responsive object here too, as the docs already said it did. */
 type BottomUncontrolledProps = { defaultOpen?: boolean | Partial<Record<Breakpoint, boolean>>; onOpenChange?: (open: boolean, meta: BottomOpenChangeMeta) => void; open?: never };
 type BottomSizeControlledProps = { size: number | string; defaultSize?: never };
@@ -50,16 +50,9 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((props
     maxSize = 400,
     resizable = false,
     collapsible = true,
-    onExpand,
-    onCollapse,
     onResize,
     onResizeStart,
     onResizeEnd,
-    snapPoints,
-    snapTolerance,
-    collapseThreshold,
-    paneId,
-    persistence,
     children,
     style,
     size,
@@ -83,17 +76,10 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((props
     presentationTable: table,
     builtIn: detailRest,
     onChange: (value, reason) => onOpenChange?.(value !== 'closed', { reason }),
-    onExpand,
-    onCollapse,
     size: expandedSize,
   });
   useFrameRegistration('bottom', flush);
 
-  React.useEffect(() => {
-    if (snapPoints !== undefined || collapseThreshold !== undefined || paneId !== undefined || persistence !== undefined) {
-      warnOnce('Shell.Bottom: `snapPoints`, `collapseThreshold`, `paneId` and `persistence` are deprecated and are removed in 1.0. Keep the size in your own state with `size`/`onSizeChange`.');
-    }
-  }, [snapPoints, collapseThreshold, paneId, persistence]);
 
   const elementRef = React.useRef<HTMLElement | null>(null);
   const composedRef = useComposedRefs(ref, pane.setElement, elementRef);
@@ -119,14 +105,8 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((props
     onResize,
     onResizeStart,
     onResizeEnd,
-    snapPoints,
-    snapTolerance,
-    collapseThreshold,
-    paneId,
-    persistence,
     overlaying: pane.overlaying,
     overlayingNow: () => table[readBreakpoint()] === 'overlay',
-    requestCollapse: () => pane.setValue('closed', 'toggle'),
     requestToggle: () => pane.toggle('toggle'),
   });
 
@@ -137,7 +117,7 @@ export const Bottom = React.forwardRef<HTMLDivElement, BottomPublicProps>((props
 
   return (
     <div
-      {...withoutRemovedPaneProps(domProps)}
+      {...domProps}
       id={pane.id}
       ref={composedRef}
       className={classNames('kui-ShellPane', 'kui-ShellBottom', className)}

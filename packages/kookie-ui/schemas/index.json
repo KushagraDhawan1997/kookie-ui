@@ -1154,44 +1154,8 @@
             },
             "children": {},
             "open": {
-              "description": "The open state, when controlled. A responsive object is deprecated.",
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "anyOf": [
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "initial": {
-                          "type": "boolean"
-                        },
-                        "xs": {
-                          "type": "boolean"
-                        },
-                        "sm": {
-                          "type": "boolean"
-                        },
-                        "md": {
-                          "type": "boolean"
-                        },
-                        "lg": {
-                          "type": "boolean"
-                        },
-                        "xl": {
-                          "type": "boolean"
-                        }
-                      },
-                      "additionalProperties": false
-                    }
-                  ],
-                  "description": "Responsive open state"
-                }
-              ]
+              "description": "The open state, when controlled",
+              "type": "boolean"
             },
             "defaultOpen": {
               "description": "The starting state. A responsive object leaves the pane untouched, with that object as the answer at each breakpoint.",
@@ -1358,44 +1322,8 @@
             },
             "children": {},
             "open": {
-              "description": "The open state, when controlled. A responsive object is deprecated.",
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "anyOf": [
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "initial": {
-                          "type": "boolean"
-                        },
-                        "xs": {
-                          "type": "boolean"
-                        },
-                        "sm": {
-                          "type": "boolean"
-                        },
-                        "md": {
-                          "type": "boolean"
-                        },
-                        "lg": {
-                          "type": "boolean"
-                        },
-                        "xl": {
-                          "type": "boolean"
-                        }
-                      },
-                      "additionalProperties": false
-                    }
-                  ],
-                  "description": "Responsive open state"
-                }
-              ]
+              "description": "The open state, when controlled",
+              "type": "boolean"
             },
             "defaultOpen": {
               "description": "The starting state. A responsive object leaves the pane untouched, with that object as the answer at each breakpoint.",
@@ -1481,31 +1409,6 @@
             },
             "sizeUpdateMs": {
               "type": "number"
-            },
-            "snapPoints": {
-              "description": "Deprecated, removed in 1.0",
-              "type": "array",
-              "items": {
-                "type": "number"
-              }
-            },
-            "snapTolerance": {
-              "description": "Deprecated, removed in 1.0",
-              "type": "number"
-            },
-            "collapseThreshold": {
-              "description": "Deprecated, removed in 1.0",
-              "type": "number"
-            },
-            "paneId": {
-              "description": "Deprecated, removed in 1.0",
-              "type": "string"
-            },
-            "persistence": {
-              "type": "object",
-              "properties": {},
-              "description": "Deprecated, removed in 1.0. Keep the size in your own state with `size`/`onSizeChange`.",
-              "additionalProperties": false
             }
           },
           "additionalProperties": false
@@ -1677,109 +1580,12 @@
             "sizeUpdateMs": {
               "type": "number"
             },
-            "snapPoints": {
-              "description": "Deprecated, removed in 1.0",
-              "type": "array",
-              "items": {
-                "type": "number"
-              }
-            },
-            "snapTolerance": {
-              "description": "Deprecated, removed in 1.0",
-              "type": "number"
-            },
-            "collapseThreshold": {
-              "description": "Deprecated, removed in 1.0",
-              "type": "number"
-            },
-            "paneId": {
-              "description": "Deprecated, removed in 1.0",
-              "type": "string"
-            },
-            "persistence": {
-              "type": "object",
-              "properties": {},
-              "description": "Deprecated, removed in 1.0. Keep the size in your own state with `size`/`onSizeChange`.",
-              "additionalProperties": false
-            },
             "state": {
-              "description": "The state, when controlled. A responsive object is deprecated.",
-              "anyOf": [
-                {
-                  "type": "string",
-                  "enum": [
-                    "collapsed",
-                    "expanded"
-                  ],
-                  "description": "Sidebar state"
-                },
-                {
-                  "anyOf": [
-                    {
-                      "type": "string",
-                      "enum": [
-                        "collapsed",
-                        "expanded"
-                      ],
-                      "description": "Sidebar state"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "initial": {
-                          "type": "string",
-                          "enum": [
-                            "collapsed",
-                            "expanded"
-                          ],
-                          "description": "Sidebar state"
-                        },
-                        "xs": {
-                          "type": "string",
-                          "enum": [
-                            "collapsed",
-                            "expanded"
-                          ],
-                          "description": "Sidebar state"
-                        },
-                        "sm": {
-                          "type": "string",
-                          "enum": [
-                            "collapsed",
-                            "expanded"
-                          ],
-                          "description": "Sidebar state"
-                        },
-                        "md": {
-                          "type": "string",
-                          "enum": [
-                            "collapsed",
-                            "expanded"
-                          ],
-                          "description": "Sidebar state"
-                        },
-                        "lg": {
-                          "type": "string",
-                          "enum": [
-                            "collapsed",
-                            "expanded"
-                          ],
-                          "description": "Sidebar state"
-                        },
-                        "xl": {
-                          "type": "string",
-                          "enum": [
-                            "collapsed",
-                            "expanded"
-                          ],
-                          "description": "Sidebar state"
-                        }
-                      },
-                      "additionalProperties": false
-                    }
-                  ],
-                  "description": "Responsive sidebar state"
-                }
+              "description": "The state, when controlled",
+              "type": "string",
+              "enum": [
+                "collapsed",
+                "expanded"
               ]
             },
             "defaultState": {
@@ -2015,44 +1821,8 @@
             },
             "children": {},
             "open": {
-              "description": "The open state, when controlled. A responsive object is deprecated.",
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "anyOf": [
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "initial": {
-                          "type": "boolean"
-                        },
-                        "xs": {
-                          "type": "boolean"
-                        },
-                        "sm": {
-                          "type": "boolean"
-                        },
-                        "md": {
-                          "type": "boolean"
-                        },
-                        "lg": {
-                          "type": "boolean"
-                        },
-                        "xl": {
-                          "type": "boolean"
-                        }
-                      },
-                      "additionalProperties": false
-                    }
-                  ],
-                  "description": "Responsive open state"
-                }
-              ]
+              "description": "The open state, when controlled",
+              "type": "boolean"
             },
             "defaultOpen": {
               "description": "The starting state. A responsive object leaves the pane untouched, with that object as the answer at each breakpoint.",
@@ -2138,31 +1908,6 @@
             },
             "sizeUpdateMs": {
               "type": "number"
-            },
-            "snapPoints": {
-              "description": "Deprecated, removed in 1.0",
-              "type": "array",
-              "items": {
-                "type": "number"
-              }
-            },
-            "snapTolerance": {
-              "description": "Deprecated, removed in 1.0",
-              "type": "number"
-            },
-            "collapseThreshold": {
-              "description": "Deprecated, removed in 1.0",
-              "type": "number"
-            },
-            "paneId": {
-              "description": "Deprecated, removed in 1.0",
-              "type": "string"
-            },
-            "persistence": {
-              "type": "object",
-              "properties": {},
-              "description": "Deprecated, removed in 1.0. Keep the size in your own state with `size`/`onSizeChange`.",
-              "additionalProperties": false
             }
           },
           "additionalProperties": false
@@ -2287,44 +2032,8 @@
             },
             "children": {},
             "open": {
-              "description": "The open state, when controlled. A responsive object is deprecated.",
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "anyOf": [
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "initial": {
-                          "type": "boolean"
-                        },
-                        "xs": {
-                          "type": "boolean"
-                        },
-                        "sm": {
-                          "type": "boolean"
-                        },
-                        "md": {
-                          "type": "boolean"
-                        },
-                        "lg": {
-                          "type": "boolean"
-                        },
-                        "xl": {
-                          "type": "boolean"
-                        }
-                      },
-                      "additionalProperties": false
-                    }
-                  ],
-                  "description": "Responsive open state"
-                }
-              ]
+              "description": "The open state, when controlled",
+              "type": "boolean"
             },
             "defaultOpen": {
               "description": "The starting state. A responsive object leaves the pane untouched, with that object as the answer at each breakpoint.",
@@ -2410,31 +2119,6 @@
             },
             "sizeUpdateMs": {
               "type": "number"
-            },
-            "snapPoints": {
-              "description": "Deprecated, removed in 1.0",
-              "type": "array",
-              "items": {
-                "type": "number"
-              }
-            },
-            "snapTolerance": {
-              "description": "Deprecated, removed in 1.0",
-              "type": "number"
-            },
-            "collapseThreshold": {
-              "description": "Deprecated, removed in 1.0",
-              "type": "number"
-            },
-            "paneId": {
-              "description": "Deprecated, removed in 1.0",
-              "type": "string"
-            },
-            "persistence": {
-              "type": "object",
-              "properties": {},
-              "description": "Deprecated, removed in 1.0. Keep the size in your own state with `size`/`onSizeChange`.",
-              "additionalProperties": false
             }
           },
           "additionalProperties": false
@@ -2455,7 +2139,6 @@
             "target": {
               "type": "string",
               "enum": [
-                "left",
                 "rail",
                 "panel",
                 "sidebar",
@@ -2473,11 +2156,6 @@
                 "expand",
                 "collapse"
               ]
-            },
-            "peekOnHover": {
-              "default": false,
-              "description": "Deprecated, removed in 1.0. Shows a preview of a closed pane on hover.",
-              "type": "boolean"
             },
             "type": {
               "default": "button",

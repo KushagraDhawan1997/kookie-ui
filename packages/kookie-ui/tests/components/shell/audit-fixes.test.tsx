@@ -66,43 +66,6 @@ describe('Shell panes are landmarks', () => {
   });
 });
 
-describe('resize persistence', () => {
-  it('an inline persistence object loads once, not on every render', () => {
-    const load = vi.fn(() => 300);
-    const onResize = vi.fn();
-    function App({ tick }: { tick: number }) {
-      return (
-        <Shell.Root data-tick={tick}>
-          <Shell.Sidebar defaultState="expanded" presentation="fixed" resizable persistence={{ load }} onResize={onResize} />
-        </Shell.Root>
-      );
-    }
-    const view = renderWithProviders(<App tick={0} />);
-    const afterMount = load.mock.calls.length;
-    expect(afterMount).toBeGreaterThan(0);
-    for (let tick = 1; tick <= 5; tick++) view.rerender(<App tick={tick} />);
-    expect(load).toHaveBeenCalledTimes(afterMount);
-    expect(onResize).toHaveBeenCalledTimes(afterMount);
-  });
-
-  it('saves through the persistence object of the latest render', () => {
-    const first = vi.fn();
-    const second = vi.fn();
-    function App({ save }: { save: (size: number) => void }) {
-      return (
-        <Shell.Root>
-          <Shell.Sidebar defaultState="expanded" presentation="fixed" resizable persistence={{ save }} />
-        </Shell.Root>
-      );
-    }
-    const view = renderWithProviders(<App save={first} />);
-    view.rerender(<App save={second} />);
-    fireEvent.keyDown(screen.getByRole('separator'), { key: 'ArrowRight' });
-    expect(first).not.toHaveBeenCalled();
-    expect(second).toHaveBeenCalledTimes(1);
-  });
-});
-
 describe('the resize handle', () => {
   it('Enter collapses a collapsible pane, as a double-click does', () => {
     const onOpenChange = vi.fn();

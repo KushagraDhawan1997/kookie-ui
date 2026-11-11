@@ -117,12 +117,10 @@ export type ShellStore = {
    * it, would be a new identity on every read.
    */
   version: number;
-  /** The pane a hovered Trigger is previewing, if any. Layout only. */
-  peek: PaneName | null;
 };
 
 export function createShellStore(): ShellStore {
-  return { entries: new Map(), listeners: new Set(), version: 0, peek: null };
+  return { entries: new Map(), listeners: new Set(), version: 0 };
 }
 
 export function notifyShellStore(store: ShellStore) {
@@ -135,12 +133,6 @@ export function subscribeShellStore(store: ShellStore, listener: () => void) {
   return () => {
     store.listeners.delete(listener);
   };
-}
-
-export function setShellPeek(store: ShellStore, peek: PaneName | null) {
-  if (store.peek === peek) return;
-  store.peek = peek;
-  notifyShellStore(store);
 }
 
 export const ShellStoreContext = React.createContext<ShellStore | null>(null);
@@ -156,19 +148,6 @@ export function usePaneEntry(store: ShellStore, name: PaneName): PaneEntry | und
   const subscribe = React.useCallback((listener: () => void) => subscribeShellStore(store, listener), [store]);
   const getSnapshot = React.useCallback(() => store.entries.get(name), [store, name]);
   return React.useSyncExternalStore(subscribe, getSnapshot, () => undefined);
-}
-
-/**
- * Whether this pane is the one being previewed. A boolean per pane rather than
- * the peek target itself, so hovering one Trigger re-renders one pane, not all.
- */
-export function usePeeking(store: ShellStore, name: PaneName): boolean {
-  const subscribe = React.useCallback((listener: () => void) => subscribeShellStore(store, listener), [store]);
-  return React.useSyncExternalStore(
-    subscribe,
-    () => store.peek === name,
-    () => false,
-  );
 }
 
 /* ── Off the frame ─────────────────────────────────────────────────────────── */
@@ -190,16 +169,4 @@ export function useFrameRegistration(id: FramePaneId, flush: boolean) {
     registerOffFrame(id);
     return () => unregisterOffFrame(id);
   }, [id, flush, registerOffFrame, unregisterOffFrame]);
-}
-
-/* ── Development warnings ──────────────────────────────────────────────────── */
-
-const warned = new Set<string>();
-
-/** A deprecation warning, once per message per page load. Development only. */
-export function warnOnce(message: string) {
-  if (process.env.NODE_ENV === 'production') return;
-  if (warned.has(message)) return;
-  warned.add(message);
-  console.warn(`[kookie-ui] ${message}`);
 }

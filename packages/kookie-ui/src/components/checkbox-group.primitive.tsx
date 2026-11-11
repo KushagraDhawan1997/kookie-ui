@@ -37,16 +37,6 @@ interface CheckboxGroupProps extends PrimitiveDivProps {
   required?: React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>['required'];
   disabled?: React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>['disabled'];
   dir?: 'ltr' | 'rtl';
-  /**
-   * @deprecated Has no effect. Each checkbox is its own tab stop, as with native checkboxes,
-   * so there is no arrow-key navigation to orient.
-   */
-  orientation?: 'horizontal' | 'vertical';
-  /**
-   * @deprecated Has no effect. Each checkbox is its own tab stop, as with native checkboxes,
-   * so there is no arrow-key navigation to loop.
-   */
-  loop?: boolean;
   defaultValue?: string[];
   value?: CheckboxGroupContextValue['value'];
   onValueChange?: (value: string[]) => void;
@@ -61,9 +51,7 @@ const CheckboxGroup = React.forwardRef<CheckboxGroupElement, CheckboxGroupProps>
       value: valueProp,
       required = false,
       disabled = false,
-      orientation: _orientation,
       dir,
-      loop: _loop,
       onValueChange,
       ...groupProps
     } = props;

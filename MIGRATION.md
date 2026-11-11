@@ -499,3 +499,26 @@ Surfaces are rounder again and a surface inside a surface keeps a corner. `mediu
 | --- | --- | --- |
 | `Shell.PaneHeader`, `Shell.PaneFooter`, `Shell.Scroll` in a pane | Pad by `--panel-p-N` (12px at size 2), not `--surface-p-N` (24px) | Nothing, unless your own inset inside a pane was compensating for the old 24px |
 | `Button`, `IconButton`, `ToggleButton`, `ToggleIconButton` | The default variant is `solid` again, `emphasis="loud"` | Pass `emphasis="medium"` (or `variant="raised"`) where a button should stay raised |
+
+## 0.37.0: the old Shell options are gone
+
+Everything the Shell kept from 0.7 for compatibility is removed. Each had been marked deprecated since 0.8.0.
+
+| Removed | What to do |
+| --- | --- |
+| `Shell.Left` | Render `Shell.Rail` and `Shell.Panel` directly in `Shell.Root` |
+| `<Shell.Trigger target="left">` | `target="rail"` |
+| `peekOnHover` on `Shell.Trigger`, and the `data-peek` attribute | Open the pane. A preview on hover had no keyboard or touch equivalent |
+| `Shell.useShell()` | `Shell.Trigger` to drive a pane, `Shell.useSidebarMode()` for the Sidebar, and each pane's `open` and `onOpenChange` for its state |
+| `Shell.useResponsivePresentation()` | Nothing. The Shell resolves `presentation` in its stylesheet |
+| `onExpand`, `onCollapse` on every pane | `onOpenChange` (`onStateChange` on the Sidebar). It reports a user's toggle; it does not fire when a controlled prop changes |
+| A responsive object as a controlled `open` or `state` | Pass one value from your own state. `defaultOpen` and `defaultState` still take a responsive object |
+| `snapPoints`, `snapTolerance` | Snap in your own `onResizeEnd` and pass `size` |
+| `collapseThreshold` | Close the pane from your own `onResizeEnd` |
+| `paneId`, `persistence` | Keep the size in your own state with `size` and `onSizeChange`, and store it where you like |
+| The `data-open` attribute on a stacked pane | Read `data-state` or `data-mode` |
+| `height` and `resizer` passed to a pane | Remove them. No pane read them, and they now reach the DOM |
+| The reasons `init`, `responsive`, `panel` and `left` in the `onOpenChange` types | Nothing. They were never sent. The type is `'toggle' \| 'dismiss'` |
+| `submenuBehavior` on `ContextMenu.Content` | Remove it. It had no effect. `DropdownMenu.Content` keeps it |
+| `orientation`, `loop` on `CheckboxGroup.Root` | Remove them. They had no effect |
+

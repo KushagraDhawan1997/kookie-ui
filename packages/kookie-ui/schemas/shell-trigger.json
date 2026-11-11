@@ -7,7 +7,6 @@
         "target": {
           "type": "string",
           "enum": [
-            "left",
             "rail",
             "panel",
             "sidebar",
@@ -25,11 +24,6 @@
             "expand",
             "collapse"
           ]
-        },
-        "peekOnHover": {
-          "default": false,
-          "description": "Deprecated, removed in 1.0. Shows a preview of a closed pane on hover.",
-          "type": "boolean"
         },
         "type": {
           "default": "button",

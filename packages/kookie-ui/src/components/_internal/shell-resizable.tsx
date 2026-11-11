@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useLayoutEffect } from 'radix-ui/internal';
 import { normalizeToPx } from '../../helpers/normalize-to-px.js';
-import type { PaneName, PaneSizePersistence } from '../shell.types.js';
+import type { PaneName } from '../shell.types.js';
 import type { PaneResizeContextValue } from './shell-resize.js';
 
 export type SizeChangeMeta = { reason: 'init' | 'resize' | 'controlled' };
@@ -30,16 +30,10 @@ export type ResizableOptions = {
   onResize: ((size: number) => void) | undefined;
   onResizeStart: ((size: number) => void) | undefined;
   onResizeEnd: ((size: number) => void) | undefined;
-  snapPoints: number[] | undefined;
-  snapTolerance: number | undefined;
-  collapseThreshold: number | undefined;
-  paneId: string | undefined;
-  persistence: PaneSizePersistence | undefined;
-  /** Whether the pane is presented as an overlay right now. An overlay keeps its designed size and persists nothing. */
+  /** Whether the pane is presented as an overlay right now. An overlay keeps its designed size. */
   overlaying: boolean;
   /** The same question asked at effect time, for a pane whose presentation is learnt after its first render. */
   overlayingNow: () => boolean;
-  requestCollapse: () => void;
   requestToggle: () => void;
 };
 
@@ -63,9 +57,9 @@ export function useInitialPaneSize(size: number | string | undefined, defaultSiz
   return initial;
 }
 
-/** Everything a resizable pane shares: size props, persistence, and the handle's context. */
+/** Everything a resizable pane shares: size props and the handle's context. */
 export function useResizablePane(options: ResizableOptions): PaneResizeContextValue {
-  const { name, elementRef, cssVarName, orientation, minSize, maxSize, resizable, size, defaultSize, paneId, persistence } = options;
+  const { name, elementRef, cssVarName, orientation, minSize, maxSize, size, defaultSize } = options;
 
   // The latest callbacks, so the size emitter does not change identity when a
   // consumer passes an inline function. A controlled `size` is reported again
@@ -107,7 +101,7 @@ export function useResizablePane(options: ResizableOptions): PaneResizeContextVa
   /**
    * The one way a size reaches the pane: the size variable, and the value
    * every handle of this pane announces. Once anything but `expandedSize` has
-   * written a size (a default, a controlled value, a persisted value or a
+   * written a size (a default, a controlled value or a
    * resize), the pane owns that size and a new `expandedSize` leaves it alone.
    */
   const ownedRef = React.useRef(false);
@@ -154,65 +148,6 @@ export function useResizablePane(options: ResizableOptions): PaneResizeContextVa
     emitSizeChange(clamped, { reason: 'controlled' });
   }, [size, minSize, maxSize, options.overlaying, toPx, writeSize, emitSizeChange]);
 
-  // A persistence adapter from `paneId` when none is given. A given one is read through
-  // `latest`, so an inline object (the documented shape) does not reload the size every render.
-  const hasPersistence = persistence !== undefined;
-  const adapter = React.useMemo<PaneSizePersistence | undefined>(() => {
-    if (hasPersistence) {
-      return {
-        load: () => latest.current.persistence?.load?.(),
-        save: (value: number) => latest.current.persistence?.save?.(value),
-      };
-    }
-    if (!paneId) return undefined;
-    const key = `kookie-ui:shell:${name}:${paneId}`;
-    return {
-      load: () => {
-        if (typeof window === 'undefined') return undefined;
-        try {
-          const stored = window.localStorage.getItem(key);
-          return stored ? Number(stored) : undefined;
-        } catch (err) {
-          if (process.env.NODE_ENV !== 'production') console.warn(`Shell.${name}: failed to load persisted size`, err);
-          return undefined;
-        }
-      },
-      save: (value: number) => {
-        if (typeof window === 'undefined') return;
-        try {
-          window.localStorage.setItem(key, String(value));
-        } catch (err) {
-          if (process.env.NODE_ENV !== 'production') console.warn(`Shell.${name}: failed to save persisted size`, err);
-        }
-      },
-    };
-  }, [name, paneId, hasPersistence]);
-
-  // Persisted size, loaded in a layout effect and clamped, so a reload does
-  // not paint the default and then jump. Only where the pane is in the frame:
-  // an overlay keeps its designed size.
-  useLayoutEffect(() => {
-    if (!resizable || !adapter?.load || latest.current.overlayingNow()) return undefined;
-    let mounted = true;
-    const apply = (value: number | undefined) => {
-      if (!mounted || typeof value !== 'number' || !Number.isFinite(value)) return;
-      const clamped = clampTo(value, minSize, maxSize);
-      writeSize(clamped, true);
-      latest.current.onResize?.(clamped);
-    };
-    const loaded = adapter.load();
-    if (loaded instanceof Promise) {
-      loaded.then(apply).catch((err) => {
-        if (process.env.NODE_ENV !== 'production') console.warn(`Shell.${name}: failed to load persisted size`, err);
-      });
-    } else {
-      apply(loaded);
-    }
-    return () => {
-      mounted = false;
-    };
-  }, [resizable, adapter, options.overlaying, writeSize, minSize, maxSize, name]);
-
   // What the handle announces before any effect has run: the same starting size the pane's
   // first render uses, so the server HTML already states a value.
   const [startSize] = React.useState(() => {
@@ -230,11 +165,9 @@ export function useResizablePane(options: ResizableOptions): PaneResizeContextVa
     (value: number) => {
       latest.current.onResizeEnd?.(value);
       emitSizeChange(value, { reason: 'resize' });
-      adapter?.save?.(value);
     },
-    [emitSizeChange, adapter],
+    [emitSizeChange],
   );
-  const requestCollapse = React.useCallback(() => latest.current.requestCollapse(), []);
   const requestToggle = React.useCallback(() => latest.current.requestToggle(), []);
 
   return React.useMemo(
@@ -254,10 +187,6 @@ export function useResizablePane(options: ResizableOptions): PaneResizeContextVa
       onResizeEnd,
       target: name,
       collapsible: options.collapsible,
-      snapPoints: options.snapPoints,
-      snapTolerance: options.snapTolerance ?? 8,
-      collapseThreshold: options.collapseThreshold,
-      requestCollapse,
       requestToggle,
     }),
     [
@@ -276,10 +205,6 @@ export function useResizablePane(options: ResizableOptions): PaneResizeContextVa
       onResizeEnd,
       name,
       options.collapsible,
-      options.snapPoints,
-      options.snapTolerance,
-      options.collapseThreshold,
-      requestCollapse,
       requestToggle,
     ],
   );

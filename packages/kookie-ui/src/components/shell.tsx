@@ -39,17 +39,14 @@ import {
   ShellFrameContext,
   ShellStoreContext,
   createShellStore,
-  setShellPeek,
   subscribeShellStore,
   useFrameRegistration,
   usePaneEntry,
   useShellStore,
-  warnOnce,
   type FramePaneId,
 } from './_internal/shell-store.js';
-import { navigationRest, detailRest, toPaneValue, startAnchoredGrowth, withoutRemovedPaneProps } from './_internal/shell-rest.js';
-import { useShell, useSidebarMode } from './shell.context.js';
-import { useResponsivePresentation } from './shell.hooks.js';
+import { navigationRest, detailRest, toPaneValue, startAnchoredGrowth } from './_internal/shell-rest.js';
+import { useSidebarMode } from './shell.context.js';
 import { readBreakpoint } from '../hooks/use-breakpoint.js';
 import { useThemeSize } from '../hooks/theme-size.js';
 import { PageScope } from './_internal/page-scope.js';
@@ -57,7 +54,7 @@ import { PaneChromeScope, PaneFooter, PaneHeader, Scroll, ShellContentContext, S
 import { onPageScrollMediaChange, pageScrollMatches } from './_internal/shell-page-scroll.js';
 import type { PaneSize, PaneHeaderProps, PaneFooterProps, ScrollProps } from './_internal/pane-chrome.js';
 import { PaneBandSizeContext } from './_internal/pane-band-context.js';
-import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, PaneMode, PaneName, PaneTarget, ResponsivePresentation, SidebarMode } from './shell.types.js';
+import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, PaneMode, PaneName, PaneOpenChangeReason, PaneTarget, ResponsivePresentation, SidebarMode } from './shell.types.js';
 
 /* ── Root ──────────────────────────────────────────────────────────────────── */
 
@@ -536,46 +533,17 @@ const Header = React.forwardRef<HTMLElement, ShellHeaderProps>(({ className, hei
 });
 Header.displayName = 'Shell.Header';
 
-/* ── Left (deprecated) ─────────────────────────────────────────────────────── */
-
-interface LeftProps extends React.ComponentPropsWithoutRef<'div'> {
-  presentation?: ResponsivePresentation;
-  open?: boolean;
-  defaultOpen?: boolean;
-  onOpenChange?: (open: boolean, meta: { reason: 'init' | 'toggle' | 'panel' | 'responsive' | 'dismiss' }) => void;
-  collapsible?: boolean;
-  onExpand?: () => void;
-  onCollapse?: () => void;
-}
-
-/**
- * @deprecated The Root no longer wraps the Rail and Panel in a Left
- * container: each is its own pane. `Shell.Left` renders its children and
- * ignores its own props. Removed in 1.0.
- */
-const Left = React.forwardRef<HTMLDivElement, LeftProps>(({ children }, _ref) => {
-  React.useEffect(() => {
-    warnOnce('Shell.Left is deprecated and is removed in 1.0. Render Shell.Rail and Shell.Panel directly in Shell.Root.');
-  }, []);
-  return <>{children}</>;
-});
-Left.displayName = 'Shell.Left';
-
 /* ── Rail ──────────────────────────────────────────────────────────────────── */
 
-type RailOpenChangeMeta = { reason: 'init' | 'toggle' | 'responsive' | 'panel' | 'dismiss' };
+type RailOpenChangeMeta = { reason: PaneOpenChangeReason };
 
-type RailControlledProps = { open: boolean | Partial<Record<Breakpoint, boolean>>; onOpenChange?: (open: boolean, meta: RailOpenChangeMeta) => void; defaultOpen?: never };
+type RailControlledProps = { open: boolean; onOpenChange?: (open: boolean, meta: RailOpenChangeMeta) => void; defaultOpen?: never };
 type RailUncontrolledProps = { defaultOpen?: boolean | Partial<Record<Breakpoint, boolean>>; onOpenChange?: (open: boolean, meta: RailOpenChangeMeta) => void; open?: never };
 
 type RailProps = React.ComponentPropsWithoutRef<'div'> & {
   presentation?: ResponsivePresentation;
   expandedSize?: number;
   collapsible?: boolean;
-  /** @deprecated Use `onOpenChange`. */
-  onExpand?: () => void;
-  /** @deprecated Use `onOpenChange`. */
-  onCollapse?: () => void;
   /**
    * Sets whether this pane joins the app frame. The default is `true`: the pane sits against its
    * neighbours with one hairline between them. Set `flush={false}` to pull it off the frame as a
@@ -588,7 +556,7 @@ type RailProps = React.ComponentPropsWithoutRef<'div'> & {
 const RAIL_PROP_NAMES = { controlled: 'open', default: 'defaultOpen' };
 
 const Rail = React.forwardRef<HTMLDivElement, RailProps>((props, ref) => {
-  const { className, presentation, expandedSize = 64, collapsible: _collapsible, onExpand, onCollapse, children, style, open, defaultOpen, onOpenChange, flush = true, id, ...domProps } = props;
+  const { className, presentation, expandedSize = 64, collapsible: _collapsible, children, style, open, defaultOpen, onOpenChange, flush = true, id, ...domProps } = props;
   const { table, attributes } = usePresentationTable(presentation, 'fixed');
   const pane = usePane({
     name: 'rail',
@@ -600,8 +568,6 @@ const Rail = React.forwardRef<HTMLDivElement, RailProps>((props, ref) => {
     presentationTable: table,
     builtIn: navigationRest,
     onChange: (value, reason) => onOpenChange?.(value !== 'closed', { reason }),
-    onExpand,
-    onCollapse,
     size: expandedSize,
   });
   useFrameRegistration('rail', flush);
@@ -639,8 +605,8 @@ function RailContent({ children }: { children: React.ReactNode }) {
 
 type HandleComponent = React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'div'> & React.RefAttributes<HTMLDivElement>>;
 
-type PanelOpenChangeMeta = { reason: 'toggle' | 'left' | 'init' | 'responsive' | 'dismiss' };
-type PanelControlledProps = { open: boolean | Partial<Record<Breakpoint, boolean>>; onOpenChange?: (open: boolean, meta: PanelOpenChangeMeta) => void; defaultOpen?: never };
+type PanelOpenChangeMeta = { reason: PaneOpenChangeReason };
+type PanelControlledProps = { open: boolean; onOpenChange?: (open: boolean, meta: PanelOpenChangeMeta) => void; defaultOpen?: never };
 type PanelUncontrolledProps = { defaultOpen?: boolean | Partial<Record<Breakpoint, boolean>>; onOpenChange?: (open: boolean, meta: PanelOpenChangeMeta) => void; open?: never };
 
 type PanelSizeControlledProps = { size: number | string; defaultSize?: never };
@@ -687,16 +653,9 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
     maxSize = 800,
     resizable = false,
     collapsible = true,
-    onExpand,
-    onCollapse,
     onResize,
     onResizeStart,
     onResizeEnd,
-    snapPoints,
-    snapTolerance,
-    collapseThreshold,
-    paneId,
-    persistence,
     children,
     style,
     onSizeChange,
@@ -723,17 +682,10 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
     presentationTable,
     builtIn: detailRest,
     onChange: (value, reason) => onOpenChange?.(value !== 'closed', { reason }),
-    onExpand,
-    onCollapse,
     size: expandedSize,
   });
   useFrameRegistration('panel', flush);
 
-  React.useEffect(() => {
-    if (snapPoints !== undefined || collapseThreshold !== undefined || paneId !== undefined || persistence !== undefined) {
-      warnOnce('Shell.Panel: `snapPoints`, `collapseThreshold`, `paneId` and `persistence` are deprecated and are removed in 1.0. Keep the size in your own state with `size`/`onSizeChange`.');
-    }
-  }, [snapPoints, collapseThreshold, paneId, persistence]);
 
   const elementRef = React.useRef<HTMLElement | null>(null);
   const composedRef = useComposedRefs(ref, pane.setElement, elementRef);
@@ -759,11 +711,6 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
     onResize,
     onResizeStart,
     onResizeEnd,
-    snapPoints,
-    snapTolerance,
-    collapseThreshold,
-    paneId,
-    persistence,
     overlaying: pane.overlaying,
     // Asked when the effect runs: the Rail registers its table after this
     // Panel first renders, so the render's answer can be out of date.
@@ -771,7 +718,6 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
       const table = followsRail ? (store.entries.get('rail')?.presentationTable ?? FIXED_TABLE) : own.table;
       return table[readBreakpoint()] === 'overlay';
     },
-    requestCollapse: () => pane.setValue('closed', 'toggle'),
     requestToggle: () => pane.toggle('toggle'),
   });
 
@@ -782,7 +728,7 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
 
   return (
     <div
-      {...withoutRemovedPaneProps(domProps)}
+      {...domProps}
       role={domProps.role ?? 'navigation'}
       id={pane.id}
       ref={composedRef}
@@ -851,14 +797,6 @@ interface TriggerProps extends React.ComponentPropsWithoutRef<'button'> {
    * `Button` the trigger: `<Shell.Trigger asChild><Button iconOnly aria-label="Toggle sidebar">…</Button></Shell.Trigger>`.
    */
   asChild?: boolean;
-  /**
-   * Whether to show a preview of the target pane on hover while it is closed
-   * and not an overlay. Defaults to false.
-   *
-   * @deprecated Removed in 1.0. A preview reachable only by mouse hover has no
-   * keyboard or touch equivalent; open the pane instead.
-   */
-  peekOnHover?: boolean;
 }
 
 /**
@@ -868,38 +806,20 @@ interface TriggerProps extends React.ComponentPropsWithoutRef<'button'> {
  * consumer's `onClick` first: calling `preventDefault()` there cancels it. With `asChild` the
  * child is the button, and its own `type` stands.
  */
-const Trigger = React.forwardRef<HTMLButtonElement, TriggerProps>(({ target, action = 'toggle', peekOnHover, asChild = false, onClick, onMouseEnter, onMouseLeave, children, ...props }, ref) => {
+const Trigger = React.forwardRef<HTMLButtonElement, TriggerProps>(({ target, action = 'toggle', asChild = false, onClick, children, ...props }, ref) => {
   const store = useShellStore('Shell.Trigger');
-  React.useEffect(() => {
-    if (target === 'left') warnOnce('Shell.Trigger target="left" is deprecated and is removed in 1.0. Use target="rail".');
-    if (peekOnHover) warnOnce('Shell.Trigger: `peekOnHover` is deprecated and is removed in 1.0.');
-  }, [target, peekOnHover]);
-  const name: PaneName = target === 'left' ? 'rail' : target;
   // Subscribes to its own pane only.
-  const entry = usePaneEntry(store, name);
+  const entry = usePaneEntry(store, target);
   const shown = entry?.value === undefined ? undefined : entry.value !== 'closed';
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     onClick?.(event);
     if (event.defaultPrevented) return;
-    const current = store.entries.get(name);
+    const current = store.entries.get(target);
     if (!current) return;
-    if (store.peek === name) setShellPeek(store, null);
     if (action === 'toggle') current.toggle('toggle');
     else if (action === 'expand') current.setValue('open', 'toggle');
     else current.setValue('closed', 'toggle');
-  };
-
-  const handleMouseEnter = (event: React.MouseEvent<HTMLButtonElement>) => {
-    onMouseEnter?.(event);
-    if (!peekOnHover) return;
-    const current = store.entries.get(name);
-    if (current && current.value === 'closed' && current.presentation !== 'overlay') setShellPeek(store, name);
-  };
-
-  const handleMouseLeave = (event: React.MouseEvent<HTMLButtonElement>) => {
-    onMouseLeave?.(event);
-    if (peekOnHover && store.peek === name) setShellPeek(store, null);
   };
 
   const Comp = asChild ? Slot.Root : 'button';
@@ -914,8 +834,6 @@ const Trigger = React.forwardRef<HTMLButtonElement, TriggerProps>(({ target, act
       {...props}
       ref={ref}
       onClick={handleClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
       data-shell-trigger={target}
       data-shell-action={action}
     >
@@ -929,7 +847,6 @@ Trigger.displayName = 'Shell.Trigger';
 export {
   Root,
   Header,
-  Left,
   Rail,
   Panel,
   Sidebar,
@@ -940,9 +857,7 @@ export {
   PaneHeader,
   PaneFooter,
   Scroll,
-  useShell,
   useSidebarMode,
-  useResponsivePresentation,
   type PaneMode,
   type SidebarMode,
   type ResponsivePresentation,

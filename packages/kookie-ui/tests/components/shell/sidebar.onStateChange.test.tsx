@@ -3,14 +3,12 @@ import { describe, it, expect, vi } from 'vitest';
 import { renderWithProviders, screen } from '../../test-utils';
 import userEvent from '@testing-library/user-event';
 import { Shell } from '../../../src/components/index';
-import { useShell } from '../../../src/components/shell.context';
 
 function ToggleSidebar() {
-  const shell = useShell();
   return (
-    <button aria-label="toggle sidebar" onClick={() => shell.togglePane('sidebar')}>
+    <Shell.Trigger target="sidebar" aria-label="toggle sidebar">
       toggle sidebar
-    </button>
+    </Shell.Trigger>
   );
 }
 

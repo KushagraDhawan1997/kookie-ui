@@ -9,10 +9,8 @@ import {
   notifyShellStore,
   tableAttributes,
   tableOf,
-  usePeeking,
   useShellStore,
   useStableKey,
-  warnOnce,
   type OpenChangeReason,
   type PaneEntry,
   type PaneValue,
@@ -28,8 +26,8 @@ export type UsePaneOptions = {
   /** The prop names a warning should use: `open`/`defaultOpen`, or `state`/`defaultState`. */
   propNames: { controlled: string; default: string };
   id: string | undefined;
-  /** The controlled value. A responsive object is deprecated: it is resolved against the current breakpoint. */
-  controlled: ResponsiveValue | undefined;
+  /** The controlled value. */
+  controlled: PaneValue | undefined;
   /**
    * The uncontrolled default. A single value fixes where the pane starts. A
    * responsive object leaves the pane untouched (`auto`), with that object as
@@ -44,8 +42,6 @@ export type UsePaneOptions = {
   onChange: ((value: PaneValue, reason: OpenChangeReason) => void) | undefined;
   /** The value a toggle moves to. Defaults to open and closed in turn. */
   toggleNext?: (current: PaneValue, defaultHere: PaneValue | undefined) => PaneValue;
-  onExpand: (() => void) | undefined;
-  onCollapse: (() => void) | undefined;
   /** The pane's designed open width, published for the panes beside it. */
   size: number;
 };
@@ -53,15 +49,6 @@ export type UsePaneOptions = {
 export type PaneController = ReturnType<typeof usePane>;
 
 const isMap = (value: ResponsiveValue | undefined): value is Partial<Record<Breakpoint, PaneValue>> => typeof value === 'object' && value !== null;
-
-/** The first value a responsive object states, smallest breakpoint first. */
-function firstStated(map: Partial<Record<Breakpoint, PaneValue>>): PaneValue {
-  for (const bp of ['initial', 'xs', 'sm', 'md', 'lg', 'xl'] as const) {
-    const value = map[bp];
-    if (value !== undefined) return value;
-  }
-  return 'closed';
-}
 
 /** Everything the togglable panes share: their state, their registry entry and their callbacks. */
 export function usePane(options: UsePaneOptions) {
@@ -71,34 +58,21 @@ export function usePane(options: UsePaneOptions) {
   const id = options.id ?? `shell-${name}${generatedId}`;
 
   const controlled = options.controlled !== undefined;
-  const controlledIsMap = isMap(options.controlled);
-  if (controlledIsMap) {
-    warnOnce(
-      `Shell.${label}: a responsive \`${propNames.controlled}\` is deprecated and is removed in 1.0. ` +
-        `Pass a boolean and decide it from your own state, or use \`${propNames.default}\` with a responsive object.`,
-    );
-  }
-
-  // A responsive controlled value is resolved the way a responsive default
-  // is: it becomes the table an untouched pane follows, so the stylesheet
-  // answers it at each breakpoint (right in the server HTML, with no
-  // callback on a crossing) and the app's prop is still the only writer.
-  const controlledMap = controlledIsMap ? (options.controlled as Partial<Record<Breakpoint, PaneValue>>) : undefined;
-  const autoSource = controlledMap ?? (isMap(options.defaultValue) ? options.defaultValue : undefined);
+  const autoSource = isMap(options.defaultValue) ? options.defaultValue : undefined;
   const autoKey = useStableKey(autoSource);
   const [inner, setInner] = React.useState<'auto' | PaneValue>(() => (typeof options.defaultValue === 'string' ? options.defaultValue : 'auto'));
 
   // What an untouched pane shows at each breakpoint: a responsive default
   // where it states one, the pane's own default where it does not.
   const autoTable = React.useMemo(
-    () => (controlledMap ? tableOf<PaneValue>(controlledMap, () => firstStated(controlledMap)) : tableOf<PaneValue>(autoSource, (bp) => builtIn(presentationTable[bp]))),
+    () => tableOf<PaneValue>(autoSource, (bp) => builtIn(presentationTable[bp])),
     // `autoKey` stands for the responsive object, which is usually a new literal each render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [autoKey, controlledIsMap, presentationTable, builtIn],
+    [autoKey, presentationTable, builtIn],
   );
 
   let state: 'auto' | PaneValue = inner;
-  if (controlled) state = controlledMap ? 'auto' : (options.controlled as PaneValue);
+  if (options.controlled !== undefined) state = options.controlled;
 
   // Only a pane whose answer depends on the window subscribes to it, so a
   // pane with one presentation and one default never re-renders on a resize.
@@ -194,23 +168,6 @@ export function usePane(options: UsePaneOptions) {
     };
   }, [store, name, id, value, presentation, presentationTable, overlayLive, options.size, setValue, toggle]);
 
-  // onExpand/onCollapse fire when the pane's state changes and that changes
-  // whether it is shown: a user's toggle, or a controlled prop. Never on
-  // mount, and never because the window crossed a breakpoint.
-  const callbacks = React.useRef({ onExpand: options.onExpand, onCollapse: options.onCollapse });
-  useLayoutEffect(() => {
-    callbacks.current = { onExpand: options.onExpand, onCollapse: options.onCollapse };
-  });
-  const previous = React.useRef({ state, shown });
-  React.useEffect(() => {
-    const before = previous.current;
-    if (before.state !== state && before.shown !== undefined && shown !== undefined && before.shown !== shown) {
-      if (shown) callbacks.current.onExpand?.();
-      else callbacks.current.onCollapse?.();
-    }
-    previous.current = { state, shown };
-  }, [state, shown]);
-
   // Development guards. Once per mount, not once per render.
   useLayoutEffect(() => {
     if (process.env.NODE_ENV === 'production') return;
@@ -229,8 +186,6 @@ export function usePane(options: UsePaneOptions) {
     }
   }, [controlled, label, propNames.controlled]);
 
-  const peeking = usePeeking(store, name) && shown === false && !overlaying;
-
   return {
     store,
     id,
@@ -240,7 +195,6 @@ export function usePane(options: UsePaneOptions) {
     presentation,
     overlaying,
     overlayLive,
-    peeking,
     ready,
     breakpoint,
     autoTable,
@@ -253,16 +207,13 @@ export function usePane(options: UsePaneOptions) {
 
 /** The data attributes every togglable pane renders. */
 export function paneAttributes(pane: PaneController, presentationAttributes: Record<string, string>) {
-  const { state, value, presentation, shown } = pane;
+  const { state, value, presentation } = pane;
   return {
     ...presentationAttributes,
     'data-state': state,
     ...(state === 'auto' ? tableAttributes('auto', pane.autoTable) : {}),
     'data-presentation': presentation,
     'data-mode': value === undefined ? undefined : value === 'closed' ? 'collapsed' : 'expanded',
-    // Kept for stylesheets written against 0.7: set while a stacked pane is open.
-    'data-open': presentation === 'stacked' && shown ? '' : undefined,
-    'data-peek': pane.peeking ? '' : undefined,
   } as const;
 }
 

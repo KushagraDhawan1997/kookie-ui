@@ -7,14 +7,14 @@ import { PaneResizeContext } from './shell-resize.js';
 import { InspectorHandle, PaneHandle } from './shell-handles.js';
 import { usePane, paneAttributes, usePresentationTable } from './shell-pane.js';
 import { splitHandles, useInitialPaneSize, useResizablePane, type SizeChangeMeta } from './shell-resizable.js';
-import { useFrameRegistration, warnOnce } from './shell-store.js';
-import { detailRest, endAnchoredGrowth, toPaneValue, withoutRemovedPaneProps } from './shell-rest.js';
+import { useFrameRegistration } from './shell-store.js';
+import { detailRest, endAnchoredGrowth, toPaneValue } from './shell-rest.js';
 import { PageScope } from './page-scope.js';
 import { readBreakpoint } from '../../hooks/use-breakpoint.js';
-import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps } from '../shell.types.js';
+import type { Breakpoint, CSSPropertiesWithVars, PaneBaseProps, PaneOpenChangeReason } from '../shell.types.js';
 
-type InspectorOpenChangeMeta = { reason: 'init' | 'toggle' | 'responsive' | 'dismiss' };
-type InspectorControlledProps = { open: boolean | Partial<Record<Breakpoint, boolean>>; onOpenChange?: (open: boolean, meta: InspectorOpenChangeMeta) => void; defaultOpen?: never };
+type InspectorOpenChangeMeta = { reason: PaneOpenChangeReason };
+type InspectorControlledProps = { open: boolean; onOpenChange?: (open: boolean, meta: InspectorOpenChangeMeta) => void; defaultOpen?: never };
 type InspectorUncontrolledProps = { defaultOpen?: boolean | Partial<Record<Breakpoint, boolean>>; onOpenChange?: (open: boolean, meta: InspectorOpenChangeMeta) => void; open?: never };
 type InspectorSizeControlledProps = { size: number | string; defaultSize?: never };
 type InspectorSizeUncontrolledProps = { defaultSize?: number | string; size?: never };
@@ -52,16 +52,9 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
     maxSize = 500,
     resizable = false,
     collapsible = true,
-    onExpand,
-    onCollapse,
     onResize,
     onResizeStart,
     onResizeEnd,
-    snapPoints,
-    snapTolerance,
-    collapseThreshold,
-    paneId,
-    persistence,
     children,
     style,
     onSizeChange,
@@ -85,17 +78,10 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
     presentationTable: table,
     builtIn: detailRest,
     onChange: (value, reason) => onOpenChange?.(value !== 'closed', { reason }),
-    onExpand,
-    onCollapse,
     size: expandedSize,
   });
   useFrameRegistration('inspector', flush);
 
-  React.useEffect(() => {
-    if (snapPoints !== undefined || collapseThreshold !== undefined || paneId !== undefined || persistence !== undefined) {
-      warnOnce('Shell.Inspector: `snapPoints`, `collapseThreshold`, `paneId` and `persistence` are deprecated and are removed in 1.0. Keep the size in your own state with `size`/`onSizeChange`.');
-    }
-  }, [snapPoints, collapseThreshold, paneId, persistence]);
 
   const elementRef = React.useRef<HTMLElement | null>(null);
   const composedRef = useComposedRefs(ref, pane.setElement, elementRef);
@@ -121,14 +107,8 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
     onResize,
     onResizeStart,
     onResizeEnd,
-    snapPoints,
-    snapTolerance,
-    collapseThreshold,
-    paneId,
-    persistence,
     overlaying: pane.overlaying,
     overlayingNow: () => table[readBreakpoint()] === 'overlay',
-    requestCollapse: () => pane.setValue('closed', 'toggle'),
     requestToggle: () => pane.toggle('toggle'),
   });
 
@@ -138,7 +118,7 @@ export const Inspector = React.forwardRef<HTMLDivElement, InspectorPublicProps>(
   const initialSize = useInitialPaneSize(size, defaultSize, minSize, maxSize);
   return (
     <div
-      {...withoutRemovedPaneProps(domProps)}
+      {...domProps}
       role={domProps.role ?? 'complementary'}
       id={pane.id}
       ref={composedRef}

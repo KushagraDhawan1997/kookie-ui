@@ -46,7 +46,7 @@ describe('ContextMenu', () => {
     expect(screen.queryByRole('menu')).toBeNull();
   });
 
-  it('applies surface props and does not leak submenuBehavior or color to the DOM', async () => {
+  it('applies surface props and does not leak color to the DOM', async () => {
     const error = vi.spyOn(console, 'error').mockImplementation(() => {});
     renderContextMenu(<ContextMenu.Item>One</ContextMenu.Item>, {
       size: '1',
@@ -144,14 +144,6 @@ describe('ContextMenu', () => {
     expect(menu.querySelector('.kui-ScrollAreaRoot')).toBeNull();
     expect(menu.querySelector('.kui-virtualized')).not.toBeNull();
     expect(screen.getAllByRole('menu')).toHaveLength(1);
-    expect(propWarnings(error)).toEqual([]);
-  });
-
-  it('accepts the deprecated submenuBehavior prop without rendering it', async () => {
-    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
-    renderContextMenu(<ContextMenu.Item>One</ContextMenu.Item>, { submenuBehavior: 'drill-down' });
-    const menu = await openAt();
-    expect(menu).not.toHaveAttribute('submenubehavior');
     expect(propWarnings(error)).toEqual([]);
   });
 
