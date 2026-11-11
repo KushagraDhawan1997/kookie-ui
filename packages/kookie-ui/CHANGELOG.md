@@ -1,3 +1,9 @@
+## [0.35.3](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.35.2...v0.35.3) (2026-11-11)
+
+### Fixes
+
+* **sidebar:** rules that repeated are written once. The Rail's three per-size blocks are one block plus the icon size, the header and footer rows share a rule, and the search field's box is one rule for the pane and the popover. 152 fewer lines and 18 fewer `!important` flags. Every computed style of a Rail, Sidebar and Panel at sizes 1 to 3 was compared before and after, and none changed.
+
 ## [0.35.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.35.1...v0.35.2) (2026-11-11)
 
 ### Fixes
