@@ -54,7 +54,7 @@ is not a rule.
 7. **Space around a heading is asymmetric.** A heading sits closer to what follows it than to
    what comes before.
 8. **Space groups first; a border only when space can't.** Never both a container and a rule
-   around the same group. No card inside a card. (Lines and hover on one list: rule 20.)
+   around the same group. No card inside a card. (Lines and hover on one list: rule 21.)
 9. **Every gap is a step on the scale.** No invented lengths (`13px`, `1.35rem`).
 
 ## Alignment
@@ -66,41 +66,44 @@ is not a rule.
 11. **Nothing floats.** Every icon, arrow and badge belongs to a row or a control. An arrow next
    to a title with no job is a break.
 
-## Type
+## Type and size
 
 12. **Rank text by at least two steps.** Page 8, section 7, card title 6, body 3, label and meta
     2.
+13. **Same job, same size.** Controls doing one job on a surface are one size. Controls match
+    the surface they sit on: a size 3 dialog holds size 3 fields and buttons. A control with no
+    `size` takes the Theme's, so leave it unset unless the surface differs.
 
 ## Words
 
-13. **Every element has a one-word job** (label, value, action, meta). Cut anything without one.
-14. **Say less.** Helper text carries a consequence, a scope or a limit, never a definition of
+14. **Every element has a one-word job** (label, value, action, meta). Cut anything without one.
+15. **Say less.** Helper text carries a consequence, a scope or a limit, never a definition of
     the control. Option cards hold a name, a price or value, and one short line, no more. (Dots
-    between facts: rule 19.)
-15. **No eyebrows.** A title carries its own subject.
-16. **An action says what it does**, as a verb and its object, and keeps its name through the
+    between facts: rule 20.)
+16. **No eyebrows.** A title carries its own subject.
+17. **An action says what it does**, as a verb and its object, and keeps its name through the
     flow (Publish, then Published).
-17. **Real words.** No placeholder copy. A placeholder is not a label and holds no
+18. **Real words.** No placeholder copy. A placeholder is not a label and holds no
     instructions. Errors say how to fix it.
 
 ## Choices
 
-18. **Pick the smallest control that fits.** Two to five short options: `SegmentedControl`.
+19. **Pick the smallest control that fits.** Two to five short options: `SegmentedControl`.
     More: `Select`. On or off at once: `Switch`, which never waits for Save. A radio needs at
     least two siblings.
 
 ## Lists and controls
 
-19. **No dot between facts.** Never join two facts with `·` or `•` ("Friday · Flights at 9:40").
+20. **No dot between facts.** Never join two facts with `·` or `•` ("Friday · Flights at 9:40").
     Give each fact its own place, or cut one.
-20. **Lines or hover, never both.** A list divided by separators doesn't light its rows on
+21. **Lines or hover, never both.** A list divided by separators doesn't light its rows on
     hover, and a list that lights its rows draws no lines between them.
-21. **Every control has a name.** An icon-only button carries an `aria-label`, so a screen
+22. **Every control has a name.** An icon-only button carries an `aria-label`, so a screen
     reader says what it does.
 
 ## Figures and examples
 
-22. **Real screens from real products, built from real components.** No abstract glyphs. Any
+23. **Real screens from real products, built from real components.** No abstract glyphs. Any
     annotation lives in the caption, outside the composed surface. The figure itself passes
     every rule above. A window may bleed off a figure's band, but words are never cut off. The
     wrong half of a do/don't figure is the only half that may break a rule.
