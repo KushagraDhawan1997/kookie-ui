@@ -1,3 +1,18 @@
+## [0.35.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.34.2...v0.35.0) (2026-11-11)
+
+### Breaking
+
+* Four exports that nothing in the library used are removed: the hooks `useToggleState` and `useLiveAnnouncer`, the helper `mapResponsiveProp`, and the `shadow` prop definition (`shadowPropDefs`, `ShadowProps`), which wrote a class that had no rule. Delete any import of them.
+
+### Fixes
+
+* **notice:** a confirmation's buttons sit at the inline end in a right-to-left page.
+* **sidebar:** header and footer rows align to the start, and a sub-menu's chevron sits at the inline end, in a right-to-left page.
+
+### Housekeeping
+
+* 21 comments left from removed motion and removed features are gone from the stylesheets. No rule changed.
+
 ## [0.34.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.34.1...v0.34.2) (2026-11-10)
 
 ### Fixes
