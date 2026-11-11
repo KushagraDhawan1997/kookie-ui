@@ -9,7 +9,7 @@ import { PortalTheme } from './_internal/portal-theme.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../hooks/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
-import { useBodyPointerEventsCleanup } from '../hooks/use-body-pointer-events-cleanup.js';
+import { releaseBodyPointerEvents, useBodyPointerEventsCleanup } from '../hooks/use-body-pointer-events-cleanup.js';
 
 import type { AlertDialogContentOwnProps } from './alert-dialog.props.js';
 import type { ComponentPropsWithout, RemovedProps, ComponentPropsAs } from '../helpers/component-props.js';
@@ -61,7 +61,7 @@ const AlertDialogContent = React.forwardRef<AlertDialogContentElement, AlertDial
                   // Radix returns focus to the trigger unless the caller prevents it.
                   onCloseAutoFocus?.(event);
                   // Restore pointer-events to body (Radix UI fix for issue #1241)
-                  document.body.style.pointerEvents = '';
+                  releaseBodyPointerEvents();
                 }}
               />
             </div>

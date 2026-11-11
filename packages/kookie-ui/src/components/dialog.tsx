@@ -10,7 +10,7 @@ import { NavigatorHostContext, type NavigatorHost } from './_internal/navigator-
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../hooks/theme-size.js';
 import { requireReactElement } from '../helpers/require-react-element.js';
-import { useBodyPointerEventsCleanup } from '../hooks/use-body-pointer-events-cleanup.js';
+import { releaseBodyPointerEvents, useBodyPointerEventsCleanup } from '../hooks/use-body-pointer-events-cleanup.js';
 
 import type { DialogContentOwnProps } from './dialog.props.js';
 import type { ComponentPropsWithout, RemovedProps, ComponentPropsAs } from '../helpers/component-props.js';
@@ -69,7 +69,7 @@ const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>
                   // Radix returns focus to the trigger unless the caller prevents it.
                   onCloseAutoFocus?.(event);
                   // Restore pointer-events to body (Radix UI fix for issue #1241)
-                  document.body.style.pointerEvents = '';
+                  releaseBodyPointerEvents();
                 }}
               />
             </div>

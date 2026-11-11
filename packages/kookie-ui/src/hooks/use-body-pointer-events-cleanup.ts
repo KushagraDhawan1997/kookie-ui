@@ -115,6 +115,18 @@ function install(): () => void {
 }
 
 /**
+ * Clears a `pointer-events: none` that Radix left on `document.body`, for a dialog that has just
+ * closed. Leaves it alone while another modal is still open: that modal needs the page behind it
+ * to stay blocked, and it clears the value itself when it closes.
+ */
+export function releaseBodyPointerEvents() {
+  if (typeof document === 'undefined') return;
+  const stillOpen = document.querySelector('[role="dialog"][data-state="open"], [role="alertdialog"][data-state="open"]');
+  if (stillOpen) return;
+  document.body.style.pointerEvents = '';
+}
+
+/**
  * Hook to cleanup stuck pointer-events: none on document.body
  *
  * This addresses an issue where react-remove-scroll (used by Radix UI Dialog)
