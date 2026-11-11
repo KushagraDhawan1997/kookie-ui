@@ -1,3 +1,9 @@
+## [0.35.6](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.35.5...v0.35.6) (2026-11-11)
+
+### Fixes
+
+* **credits:** `CREDITS.md` ships in the package. It carries the Lucide (ISC) and Feather (MIT) notices for `CloseIcon`, `PaperclipIcon`, `FileIcon` and `FileTextIcon`, which no file credited, and names Radix Themes, the libraries the package depends on and the typefaces `fonts.css` loads.
+
 ## [0.35.5](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.35.4...v0.35.5) (2026-11-11)
 
 ### Fixes

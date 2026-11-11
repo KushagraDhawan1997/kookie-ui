@@ -2,6 +2,10 @@
 
 Each release groups its changes as Major, Minor or Quiet. Major is a new product or a change to what it is. Minor is a change you notice when you use it. Quiet is a small touch, a fix, a rename or a removal, or how the work is made. Breaking lists the changes that need an edit in your app.
 
+## 0.35.6 (November 11)
+
+1. `Quiet` **Credits.** A new `CREDITS.md` names the work Womp UI borrows and builds on: Radix Themes, Lucide and Feather for four icons, and the libraries and typefaces behind it. It ships in the package.
+
 ## 0.35.5 (November 11)
 
 1. `Minor` **Read-only fields no longer look disabled.** In the soft, ghost, outline and surface styles a read-only TextField or TextArea went grey like a disabled one. Now it drops its fill, keeps its edge and keeps its text readable, as the default style already did.
