@@ -1,3 +1,11 @@
+## [0.35.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.35.0...v0.35.1) (2026-11-11)
+
+### Fixes
+
+* **dialog, alert-dialog, command:** closing one no longer unlocks the page behind another dialog that is still open. Each cleared `pointer-events` on the body unconditionally; they now clear it only when no other dialog is open.
+* **command:** a group is named by its `CommandGroupLabel` for screen readers. The label was hidden from assistive technology and the group had no name.
+* **navigator:** a value in `path` is a string or a number. A screen is told apart by its value as text, and every object reads the same, so an object handed one screen's state to the next. The prop says so, and a development build logs an error when it is given an object.
+
 ## [0.35.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.34.2...v0.35.0) (2026-11-11)
 
 ### Breaking

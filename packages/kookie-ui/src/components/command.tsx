@@ -23,7 +23,7 @@ import { Command as CommandPrimitive } from 'cmdk';
 import { Dialog as DialogPrimitive } from 'radix-ui';
 
 import { PortalTheme } from './_internal/portal-theme.js';
-import { useBodyPointerEventsCleanup } from '../hooks/use-body-pointer-events-cleanup.js';
+import { releaseBodyPointerEvents, useBodyPointerEventsCleanup } from '../hooks/use-body-pointer-events-cleanup.js';
 import { useThemeSize } from '../hooks/theme-size.js';
 
 type Size = '1' | '2' | '3' | '4';
@@ -194,7 +194,7 @@ function CommandContent({ 'aria-label': label, filter = defaultFilter, itemToStr
             className={classNames('kui-CommandContent', `kui-r-size-${size}`, className)}
             style={style}
             onCloseAutoFocus={() => {
-              document.body.style.pointerEvents = '';
+              releaseBodyPointerEvents();
             }}
           >
             <DialogPrimitive.Title className="kui-sr-only">{label}</DialogPrimitive.Title>
@@ -304,8 +304,21 @@ interface CommandGroupLabelProps {
 
 /** The group's name, above its rows. */
 function CommandGroupLabel({ children, className }: CommandGroupLabelProps) {
+  const id = React.useId();
+  const ref = React.useRef<HTMLDivElement>(null);
+  // cmdk renders the group's `role="group"` element itself and gives no way to name it from a
+  // child, so the label names it here, as Combobox.Label does. The label stays out of the
+  // reading order: a screen reader hears it as the group's name, not as a row.
+  React.useLayoutEffect(() => {
+    const group = ref.current?.closest('[cmdk-group-items]');
+    if (!group || group.hasAttribute('aria-labelledby')) return;
+    group.setAttribute('aria-labelledby', id);
+    return () => {
+      if (group.getAttribute('aria-labelledby') === id) group.removeAttribute('aria-labelledby');
+    };
+  }, [id]);
   return (
-    <div className={classNames('kui-BaseMenuLabel', 'kui-CommandGroupLabel', className)} aria-hidden>
+    <div ref={ref} id={id} className={classNames('kui-BaseMenuLabel', 'kui-CommandGroupLabel', className)} aria-hidden>
       {children}
     </div>
   );
