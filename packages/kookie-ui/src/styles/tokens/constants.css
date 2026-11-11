@@ -28,11 +28,11 @@
   --trigger-icon-size-3: 11px;
   --trigger-icon-size-4: 12px;
 
-  /* Content icon size constants (for buttons, menu items) */
-  --content-icon-size-1: calc(var(--space-6) * 0.55);
-  --content-icon-size-2: calc(var(--space-7) * 0.525);
-  --content-icon-size-3: calc(var(--space-8) * 0.5125);
-  --content-icon-size-4: calc(var(--space-9) * 0.5);
+  /* Older names for the icon sizes, kept for apps that read them */
+  --content-icon-size-1: var(--icon-size-1);
+  --content-icon-size-2: var(--icon-size-2);
+  --content-icon-size-3: var(--icon-size-3);
+  --content-icon-size-4: var(--icon-size-4);
 
   /* Indicator icon size constants (for checkboxes, radio, sub-triggers) */
   --indicator-icon-size-1: calc(9px * var(--scale));

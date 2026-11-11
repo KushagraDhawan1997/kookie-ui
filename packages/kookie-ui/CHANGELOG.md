@@ -1,3 +1,9 @@
+## [0.35.4](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.35.3...v0.35.4) (2026-11-11)
+
+### Fixes
+
+* **notice, sidebar:** the Notice icon, the Rail's icons and the Sidebar search icon read `--icon-size-N` (16, 16, 20, 24px), as every control does and as v2 does. They read `--content-icon-size-N`, which worked out to 13.2, 16.8, 20.5 and 24px and could not sit on whole pixels. `--content-icon-size-1` to `-4` stay as aliases of `--icon-size-1` to `-4`.
+
 ## [0.35.3](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.35.2...v0.35.3) (2026-11-11)
 
 ### Fixes

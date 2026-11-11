@@ -39,3 +39,23 @@ describe('Notice geometry', () => {
     expect(measure('2', 'none').corner).toBe(0);
   });
 });
+
+// The icon takes the control icon ladder, so it sits on whole pixels.
+describe('Notice icon', () => {
+  const icon = { '1': 16, '2': 16, '3': 20, '4': 24 } as const;
+  for (const size of ['1', '2', '3', '4'] as const) {
+    it(`size ${size} is ${icon[size]}px`, () => {
+      const { container } = render(
+        <Theme>
+          <Notice size={size} icon={<svg viewBox="0 0 16 16" />}>
+            One line.
+          </Notice>
+        </Theme>,
+      );
+      const svg = container.querySelector('.kui-NoticeIcon svg')!;
+      const box = svg.getBoundingClientRect();
+      expect(box.width).toBe(icon[size]);
+      expect(box.height).toBe(icon[size]);
+    });
+  }
+});

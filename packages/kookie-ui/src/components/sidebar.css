@@ -79,14 +79,14 @@
 /* Icon size: the one line that differs by size */
 /* stylelint-disable-next-line selector-max-type */
 :where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-r-size-1) :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) :where(svg) {
-  width: var(--content-icon-size-3);
-  height: var(--content-icon-size-3);
+  width: var(--icon-size-3);
+  height: var(--icon-size-3);
 }
 
 /* stylelint-disable-next-line selector-max-type */
 :where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter):is(.kui-r-size-2, .kui-r-size-3)) :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) :where(svg) {
-  width: var(--content-icon-size-4);
-  height: var(--content-icon-size-4);
+  width: var(--icon-size-4);
+  height: var(--icon-size-4);
 }
 
 /* Ellipsis on root child content when using asChild (e.g., Next.js Link) */
@@ -619,14 +619,14 @@
 /* Matches the effective icon size of other menu buttons (expanded-mode rules win on specificity) */
 /* stylelint-disable-next-line selector-max-type, selector-max-specificity */
 .kui-ShellRailContent.kui-r-size-1 .kui-SidebarSearchTrigger svg {
-  width: var(--content-icon-size-2);
-  height: var(--content-icon-size-2);
+  width: var(--icon-size-2);
+  height: var(--icon-size-2);
 }
 
 /* stylelint-disable-next-line selector-max-type, selector-max-specificity */
 .kui-ShellRailContent:is(.kui-r-size-2, .kui-r-size-3) .kui-SidebarSearchTrigger svg {
-  width: var(--content-icon-size-3);
-  height: var(--content-icon-size-3);
+  width: var(--icon-size-3);
+  height: var(--icon-size-3);
 }
 
 /* Remove hover background from thin trigger button itself (styles live on icon wrapper) */
@@ -733,8 +733,8 @@
 .kui-SidebarSearchIcon {
   flex-shrink: 0;
   color: var(--neutral-a9);
-  width: var(--content-icon-size-2);
-  height: var(--content-icon-size-2);
+  width: var(--icon-size-2);
+  height: var(--icon-size-2);
 }
 
 /* Search input */
@@ -789,8 +789,8 @@
 
 /* stylelint-disable-next-line selector-max-specificity */
 .kui-SidebarSearch.kui-r-size-1 .kui-SidebarSearchIcon {
-  width: var(--content-icon-size-1);
-  height: var(--content-icon-size-1);
+  width: var(--icon-size-1);
+  height: var(--icon-size-1);
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
@@ -801,8 +801,8 @@
 
 /* stylelint-disable-next-line selector-max-specificity */
 .kui-SidebarSearch.kui-r-size-3 .kui-SidebarSearchIcon {
-  width: var(--content-icon-size-3);
-  height: var(--content-icon-size-3);
+  width: var(--icon-size-3);
+  height: var(--icon-size-3);
 }
 
 /* In a Rail the fill is the icon tile, not the row. Under more contrast the tile goes solid and its icon
