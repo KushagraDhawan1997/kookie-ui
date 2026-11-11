@@ -1,247 +1,83 @@
-# AGENTS.md — Kookie UI
-
-> Context file for AI agents working in this repository.
+# AGENTS.md: Womp UI (Kookie UI v1)
 
 Read `docs/LOG.md` first. It records the decisions behind v1 and why they were made. Where this file disagrees with it, the log wins.
 
-## Project Overview
+## What this is
 
-**Kookie UI** (`@kushagradhawan/kookie-ui`) is a modern React component library built as a fork of [Radix Themes](https://www.radix-ui.com/themes). It extends Radix with a layout engine, a material setting for surfaces, its own design tokens, and components that upstream Radix doesn't have. Its API has diverged from Radix Themes.
+`@kushagradhawan/kookie-ui` is the React component library behind Womp's app. Its public name is Womp UI. The docs are at https://womp-ui.kookie.design.
 
-- **Package name:** `@kushagradhawan/kookie-ui`
-- **Current version:** 0.x (check `packages/kookie-ui/package.json` for exact version)
-- **License:** MIT
-- **Status:** Alpha — breaking changes may occur
-- **Documentation:** https://womp-ui.kookie.design
+A second copy, `@womp/kookie-ui` in `wompxyz/kookie-ui`, is kept identical to `packages/kookie-ui` here apart from the package name. Every release is ported there.
 
-## Documentation
-
-The docs site is part of this monorepo at `apps/docs/` (Next.js App Router + MDX). Key sections:
-
-- **Component docs:** `/docs/<component-name>` (e.g., `/docs/button`, `/docs/shell`)
-- **Chapters:** `/start/<name>` and `/foundations/<name>` (e.g., `/start/theming`, `/foundations/color`), listed in `apps/docs/lib/chapters.ts`
-
-When you need to understand a component's API or usage patterns, **read the MDX content files** at `apps/docs/app/docs/<component>/content.mdx` and the chapters in `apps/docs/content/` rather than guessing.
-
-## Repository Structure
-
-This is a **pnpm monorepo** managed with **Turborepo**.
+## Layout
 
 ```
-kookie-ui/
-├── packages/
-│   └── kookie-ui/                     # The core library (published as @kushagradhawan/kookie-ui)
-│       ├── src/
-│       │   ├── components/            # All component source files
-│       │   │   ├── _internal/         # Shared base components (not exported)
-│       │   │   ├── *.tsx              # Component implementations
-│       │   │   ├── *.props.tsx        # Component prop definitions
-│       │   │   ├── *.css              # Component styles
-│       │   │   └── index.tsx          # Public component exports
-│       │   ├── helpers/               # Utility functions (prop extraction, responsive styles, etc.)
-│       │   ├── hooks/                 # Custom React hooks (useBreakpoint, useToggleState, etc.)
-│       │   ├── props/                 # Shared prop definitions (color, margin, layout, radius, etc.)
-│       │   ├── styles/
-│       │   │   ├── tokens/            # Design tokens (colors, typography, radius, shadow, blur, opacity)
-│       │   │   └── utilities/         # CSS utility classes (layout, typography)
-│       │   └── index.ts               # Package entry point
-│       ├── schemas/                   # Generated JSON schemas (Zod → JSON Schema)
-│       ├── scripts/                   # Build scripts (esbuild CJS/ESM, schema generation, release)
-│       ├── tests/                     # Vitest tests (component + CSS)
-│       ├── postcss.config.cjs         # PostCSS config with custom plugins
-│       ├── vitest.config.ts
-│       ├── tsconfig.json
-│       └── package.json
-├── apps/
-│   └── docs/                          # Next.js documentation site
-│       ├── app/docs/                  # MDX content pages
-│       ├── app/playground/            # Interactive component playgrounds
-│       ├── app/ui-test/               # UI test pages
-│       ├── components/                # Reusable doc components
-│       ├── lib/                       # Doc utilities (SEO, OG images, structured data)
-│       └── navigation-config.ts       # Sidebar navigation structure
-├── .github/
-│   └── workflows/
-│       └── publish.yml                # Auto-publish to npm on release or main push
-├── CLAUDE.md                          # Coding conventions and guidelines
-├── package.json                       # Root monorepo config
-├── pnpm-workspace.yaml
-└── turbo.json
+packages/kookie-ui/     the library
+  src/components/       one .tsx, one .css and often one .props.tsx per component
+  src/components/_internal/   shared parts, not exported
+  src/props/            shared prop definitions
+  src/helpers/, hooks/  server-safe helpers, client hooks
+  src/styles/tokens/    design tokens
+  src/styles/utilities/ layout utility classes
+  tests/                Vitest: jsdom, and real Chromium for *.browser.test.tsx
+  schemas/              generated JSON schemas (scripts/generate-json-schemas.cjs)
+apps/docs/              the docs site (Next.js, MDX), on port 2509
+apps/bench/             performance bench with a budget CI enforces
+apps/e2e/               Playwright tests against the docs site (not in CI)
+docs/LOG.md             decisions
 ```
 
-## Tech Stack
+## Rules
 
-| Concern                | Tool                                                       |
-| ---------------------- | ---------------------------------------------------------- |
-| Package manager        | pnpm 10 (see `package.json` `packageManager` field)        |
-| Node version           | 22 (see `.nvmrc`)                                          |
-| Monorepo orchestration | Turborepo                                                  |
-| Language               | TypeScript (strict)                                        |
-| Framework              | React 19 (peer deps support 16.8+, 17, 18, 19)            |
-| JS bundler             | esbuild (dual CJS + ESM output)                            |
-| CSS processing         | PostCSS (nesting, custom-media, breakpoints, autoprefixer) |
-| Linting                | ESLint 9 (flat config), Stylelint                          |
-| Formatting             | Prettier (single quotes, 200 print width)                  |
-| Testing                | Vitest + React Testing Library                             |
-| Docs site              | Next.js 15 (App Router) + MDX                              |
-| Deployment             | Vercel                                                     |
+- **Do not run build commands.** Watchers rebuild `dist` and `styles.css`.
+- **Class names start with `kui-`.** Size and variant are classes (`kui-r-size-2`, `kui-variant-soft`); state is a data attribute, removed when off.
+- **Components read role tokens** (`--control-height-2`, `--surface-p-2`, `--neutral-*`), not raw colour scales.
+- **No motion.** Only the spinner and the progress bar move. A test fails on a transition in the Shell.
+- **Every surface is solid.** There is no `material`, no translucency, no blur.
+- **Sizes are 1 to 4.** A component with no `size` takes the Theme's. Type sizes are 1 to 9.
+- **Spacing props take steps 0 to 12:** 2, 4, 8, 12, 16, 24, 32, 40, 48, 64, 96, 128px.
+- **The default Button is `solid`.** `emphasis` (`loud`, `medium`, `quiet`) or `variant`, never both. An icon-only button is `<Button iconOnly aria-label="…">`.
+- **Muted text uses `emphasis`,** not `color="gray"`.
+- **Icons in docs and examples are HugeIcons.** The library itself ships a few inline SVGs and no icon set.
+- **No Tailwind classes.** The docs load only its reset.
+- **A prop definitions object passed to `extractProps` lives at module scope.** One built inside a component is recompiled on every render.
 
-## Key Commands
+## Using the components (docs, examples, playgrounds)
 
-Run all commands from the **repository root** unless stated otherwise:
+- **Props over inline styles.** `<Flex p="4" mt="2">`, not `style={{ padding: 16 }}`. Use `style` only where no prop exists (`cursor`, `transform`, `objectFit`).
+- **Primitives over raw HTML.** `Flex`, `Box`, `Grid`, `Text`, `Heading` in place of `div`, `p` and `h3`.
+- **Let the component size its content.** No `size` on an icon inside a Button or a menu item, and no `Text` around a Button's label.
+- **Never hardcode a colour.** Use `color` and the tokens.
+- **`asChild` for a link that looks like a button:** `<Button asChild><Link href="/x">…</Link></Button>`. Never an interactive element inside another.
+- **Every button pairing has a clear first and second:** one `solid`, the other `soft` or `ghost` in gray.
 
-```bash
-# Install dependencies
-pnpm install
+## Docs pages
 
-# Start development (library watch + docs site)
-pnpm dev
+- Frontmatter: a title of one or two words, a description of about 50 characters, no `h1` in the body.
+- In MDX, keep simple text on the same line as its opening tag: `<Button>Text</Button>`. A line break turns the text into a paragraph.
+- Section order: Usage, Anatomy, Props, Variants, Sizes, States, Examples, Accessibility.
+- Examples show a real use, named for it ("Destructive confirmation", not "Red button"), and work when pasted into an app.
+- Short pages. Less is more.
 
-# Run only the docs site
-pnpm docs
+## Checks
 
-# Build the library
-pnpm build
+Run from `packages/kookie-ui`:
 
-# Build only the kookie-ui package
-pnpm build:pkg
+- `pnpm lint` (eslint, stylelint, `tsc --noEmit`)
+- `pnpm test` (about two minutes; needs Playwright's Chromium)
+- `pnpm --filter bench bench` from the root. Sizes and counts fail on any increase. Re-record on purpose, from CI's numbers.
 
-# Lint everything
-pnpm lint
+A fix that changes server markup gets a case in `tests/ssr/server-markup.test.tsx`.
 
-# Clean all build artifacts
-pnpm clean
-```
+## Releasing
 
-**Inside `packages/kookie-ui/`:**
+1. A pull request with one commit per change, the version bumped in `packages/kookie-ui/package.json`, an entry in `packages/kookie-ui/CHANGELOG.md`, and an entry in `WHATS_NEW.md` and its copy at `apps/docs/app/whats-new/content.mdx`.
+2. Merge, then push the tag `v<version>`. The publish workflow checks the tag, the version and the changelog, then publishes.
+3. Port the same change to `wompxyz/kookie-ui`, merge, and tag it there.
 
-```bash
-# Run tests
-pnpm test
+Nothing publishes on a push to main.
 
-# Run tests in watch mode
-pnpm test:watch
+## Writing
 
-# Generate JSON schemas from Zod definitions
-pnpm build:schemas
-
-# Release (patch/minor/major)
-pnpm release:patch
-pnpm release:minor
-pnpm release:major
-```
-
-## Component Architecture
-
-### File Convention
-
-Each component typically consists of three co-located files:
-
-- **`component-name.tsx`** — React component implementation
-- **`component-name.props.tsx`** — Prop type definitions and default values
-- **`component-name.css`** — Component styles using CSS custom properties and data attributes
-
-Internal/shared base components live in `src/components/_internal/` and are not publicly exported.
-
-### Styling Approach
-
-- Components use **CSS custom properties** (CSS variables) for theming
-- Design tokens are defined in `src/styles/tokens/` (colors, typography, radius, shadow, blur, opacity, space)
-- Responsive props use breakpoint-based classes generated via a custom PostCSS plugin (`postcss-breakpoints.cjs`)
-- Layout utility classes are generated from `src/styles/utilities/`
-- The `Theme` component wraps the app and provides theming context (appearance, accent color, gray color, radius, scaling, material)
-
-### Prop System
-
-- Components use a typed prop definition system in `src/props/prop-def.ts`
-- Most visual props support **responsive objects** (e.g., `size={{ initial: '1', md: '3' }}`)
-- Breakpoints: `initial`, `xs` (520px), `sm` (768px), `md` (1024px), `lg` (1280px), `xl` (1640px)
-- Common shared props: `color`, `radius`, `variant`, `size`, `weight`, `material`, `asChild`; `emphasis` (`loud` | `medium` | `quiet`) on Text, Heading, Blockquote, Code, DataList.Label
-- Margin props (`m`, `mx`, `my`, `mt`, `mr`, `mb`, `ml`) are extracted via `extractMarginProps()`
-- Layout props (`p`, `width`, `height`, `position`, etc.) are extracted via `extractProps()`
-
-## Build System
-
-The package produces:
-
-1. **CJS output** → `dist/cjs/` (via esbuild)
-2. **ESM output** → `dist/esm/` (via esbuild)
-3. **Type declarations** → `dist/cjs/` and `dist/esm/` (via tsc)
-4. **JSON schemas** → `schemas/` (via Zod → JSON Schema generation)
-5. **CSS output** → multiple CSS files at package root:
-   - `styles.css` — Full styles (tokens + components + utilities)
-   - `components.css` — Component styles only
-   - `utilities.css` — Utility classes only
-   - `tokens.css` — Design tokens only
-   - `tokens/base.css`, `tokens/colors/*.css` — Granular token files
-   - `layout.css`, `layout/*.css` — Layout-only subset
-
-## Features Beyond Radix Themes
-
-### Shell Layout Engine
-
-A 7-slot layout system: Header, Rail, Panel, Sidebar, Content, Inspector, Bottom. Supports responsive presentation modes (`fixed`, `overlay`, `stacked`), pane modes (`expanded`, `collapsed`), resize handles with localStorage persistence, and context API for layout state.
-
-### Material System
-
-Theme-level `material` prop for surfaces: `solid` or `translucent` (with backdrop blur). Replaces Radix's `panelBackground`. Backed by a 12-step blur token scale.
-
-### Extended Token Systems
-
-- **12-step blur scale** (`--blur-1` through `--blur-12`)
-- **9-step opacity scale** (extended from Radix)
-- **3D button effects** (shadow depth for button variants)
-
-### Specialized Components
-
-- **Navbar** — Semantic navigation with logo, nav, and action slots
-- **Chatbar** — Chat UI input pattern
-- **Sidebar** — Navigation rows for `Shell.Sidebar`, `Shell.Panel` and `Shell.Rail` (tiles in a Rail)
-- **Shell** — Full layout engine (not a simple component)
-
-### Built-in Tooltip Support
-
-Native `tooltip` prop on Button and IconButton eliminates the need for wrapper components.
-
-### JSON Schema Exports
-
-Component prop schemas are auto-generated from Zod definitions and published as JSON Schema files for tooling integration.
-
-## Development Workflow
-
-1. Run `pnpm dev` to start the library in watch mode and the docs site
-2. The docs site runs on `http://localhost:2509`
-3. **Do NOT run build commands manually** — watchers handle rebuilds automatically
-4. Test pages are at `/ui-test/*` and playgrounds at `/playground/*`
-
-## Coding Conventions
-
-- **Prettier** for formatting (single quotes, 200 char width)
-- **ESLint** with TypeScript, React Hooks, and jsx-a11y rules
-- **Stylelint** for CSS (enforces selector specificity, class naming patterns)
-- CSS class names follow the pattern `.rt-ComponentName` (e.g., `.rt-Button`, `.rt-DialogContent`)
-- CSS custom properties use `--` prefix namespacing
-- Component files use kebab-case naming (e.g., `alert-dialog.tsx`)
-- Props files export a `*PropDefs` object defining allowed values and defaults
-- Use `classnames` library for conditional class merging
-- **No Tailwind classes** anywhere. The docs site loads only Tailwind's preflight reset
-- **HugeIcons only** — never use other icon libraries in components
-
-See `CLAUDE.md` at the repository root for the full coding conventions and guidelines.
-
-## Release Process
-
-1. Releases are published to npm as `@kushagradhawan/kookie-ui`
-2. The `publish.yml` workflow auto-publishes on GitHub release creation or pushes to `main` that touch `packages/kookie-ui/**`
-3. On non-release pushes, the version is auto-incremented (patch) before publishing
-4. Authentication uses GitHub OIDC for npm registry access
-
-## Important Notes for Agents
-
-- **Do NOT run build commands** — development watchers are already running in the background
-- The **docs site** is part of this monorepo at `apps/docs/`, not a separate repository
-- Built CSS files at the package root (e.g., `styles.css`, `components.css`) are **gitignored** — they are build artifacts
-- The `dist/`, `tokens/`, and `layout/` directories are also gitignored build artifacts
-- When modifying a component, update all three files (`.tsx`, `.props.tsx`, `.css`) as needed
-- The `Theme` component (`theme.tsx`) is the root provider — all other components must be used within it
-- Read `CLAUDE.md` for detailed coding standards including prop usage, component composition, accessibility, and documentation formatting rules
+- The docs never name another design system to put it down.
+- Womp's product decisions do not appear in this repo. It is public and Womp's app is not.
+- A change to how docs pages render goes in `apps/docs/components/blocks/`, never in one page.

@@ -9,7 +9,6 @@ export * from './get-subtree.js';
 export * from './has-own-property.js';
 export * from './input-attributes.js';
 export * from './is-responsive-object.js';
-export * from './map-prop-values.js';
 export * from './merge-styles.js';
 export * from './normalize-to-px.js';
 export * from './require-react-element.js';

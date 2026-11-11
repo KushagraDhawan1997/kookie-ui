@@ -208,7 +208,6 @@
   --v-border-hover: var(--accent-7);
   --v-border-hover-a: var(--accent-a7);
   --v-placeholder-color: var(--neutral-a10);
-  /* Outline uses a different transition */
 }
 
 /* Surface variant palette */

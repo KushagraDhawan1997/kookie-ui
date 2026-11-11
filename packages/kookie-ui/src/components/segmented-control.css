@@ -101,7 +101,6 @@
  /* Staggered effect like tabs */
   :where(.kui-SegmentedControlItem[data-state='on']) & {
     opacity: 0;
- /* Immediate transition for state change */
   }
 }
 
@@ -114,7 +113,6 @@
  /* Immediate transition for active state like tabs */
   :where(.kui-SegmentedControlItem[data-state='on']) & {
     opacity: 1;
- /* Immediate transition for active state */
   }
 }
 
@@ -154,7 +152,6 @@
   :where(.kui-SegmentedControlItem:where([data-state='on'], :focus-visible)) + * & {
     opacity: 0;
   }
-  /* Don't transition when the separator is hidden because of the focus outline */
 }
 
 :where(.kui-theme) {

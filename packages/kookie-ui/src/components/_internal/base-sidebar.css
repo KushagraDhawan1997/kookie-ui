@@ -4,7 +4,6 @@
   - No visual variants here; only structure and slot-level primitives
 */
 
-/* Removed Sidebar Provider (unused) */
 
 /* Sidebar Root Container */
 /* Sidebar Container */
@@ -79,4 +78,3 @@
   margin: var(--space-3) 0;
 }
 
-/* Removed mobile hide rule; Shell handles overlay vs inline */
