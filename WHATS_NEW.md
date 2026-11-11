@@ -2,6 +2,10 @@
 
 Each release groups its changes as Major, Minor or Quiet. Major is a new product or a change to what it is. Minor is a change you notice when you use it. Quiet is a small touch, a fix, a rename or a removal, or how the work is made. Breaking lists the changes that need an edit in your app.
 
+## 0.37.1 (November 11)
+
+1. `Quiet` **The Accordion checks its colour and radius.** `color` and `radius` on `Accordion.Root` took any text. They now take the same values as every other component, so a typo is caught as you type.
+
 ## 0.37.0 (November 11)
 
 1. `Quiet` **The Shell's old options are removed (breaking).** Everything kept from 0.7 for compatibility is gone, about 600 lines: `Shell.Left`, `Shell.useShell`, `Shell.useResponsivePresentation`, `peekOnHover`, `onExpand`, `onCollapse`, the snap and persistence props, and a responsive object as a controlled `open`. `MIGRATION.md` says what to use in place of each.
