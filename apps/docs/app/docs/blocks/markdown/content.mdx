@@ -1,6 +1,6 @@
 ---
 title: Markdown
-description: Render markdown and MDX with Kookie UI components
+description: Render markdown and MDX with Womp UI components
 source: https://github.com/KushagraDhawan1997/kookie-ui/tree/main/apps/docs/components/blocks/markdown
 ---
 
@@ -10,7 +10,7 @@ import { MarkdownContent, createMarkdownComponents } from '@/components/blocks/m
 import { PreviewBlock } from '@/components/blocks/preview-block/preview-block';
 import { chatComponents, chatReply, chatSource } from './snippets';
 
-Markdown renders markdown and MDX with Kookie UI: headings become `Heading`, paragraphs `Text`, tables `Table`, fenced code a [Code Block](/docs/blocks/code-block). It has two parts:
+Markdown renders markdown and MDX with Womp UI: headings become `Heading`, paragraphs `Text`, tables `Table`, fenced code a [Code Block](/docs/blocks/code-block). It has two parts:
 
 - `MarkdownContent`, a wrapper that sets the text size and **every gap between blocks**. The elements inside carry no margins of their own, so a paragraph, a table or a component you drop into MDX all space the same way.
 - `createMarkdownComponents()`, the element renderers, for react-markdown's `components` prop or MDX's `useMDXComponents`.

@@ -21,10 +21,10 @@ export function generateDocStructuredData(metadata: DocMetadata): string {
       },
       {
         '@type': 'TechArticle',
-        headline: `${metadata.title} – Kookie UI`,
+        headline: `${metadata.title} – Womp UI`,
         description:
           metadata.description ||
-          `${metadata.title} component documentation for Kookie UI React library.`,
+          `${metadata.title} component documentation for Womp UI React library.`,
         url,
         author: {
           '@type': 'Person',

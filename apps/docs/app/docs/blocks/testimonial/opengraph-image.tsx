@@ -1,6 +1,6 @@
 import { generateOgImage, ogSize, ogContentType } from '@/lib/og-image';
 
-export const alt = 'Testimonial – Kookie UI';
+export const alt = 'Testimonial – Womp UI';
 export const size = ogSize;
 export const contentType = ogContentType;
 

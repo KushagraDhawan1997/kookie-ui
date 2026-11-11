@@ -63,7 +63,7 @@ import { Box, Portal, Theme } from '@kushagradhawan/kookie-ui';
 </Portal>
 ```
 
-Content portalled to `body` leaves the [Theme](/start/theming) it was written in, so wrap it in `<Theme asChild>` to keep the theme's colours and radius, as Kookie's own overlays do. Portal renders nothing on the server and mounts on the client.
+Content portalled to `body` leaves the [Theme](/start/theming) it was written in, so wrap it in `<Theme asChild>` to keep the theme's colours and radius, as Womp UI's own overlays do. Portal renders nothing on the server and mounts on the client.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -74,7 +74,7 @@ Portal also accepts every attribute of the HTML `div` element.
 
 ## Slot
 
-Slot merges its props onto its only child and renders that child. It is how `asChild` works across Kookie, and you can use it to give your own components an `asChild` prop.
+Slot merges its props onto its only child and renders that child. It is how `asChild` works across Womp UI, and you can use it to give your own components an `asChild` prop.
 
 ```tsx showLineNumbers
 import { Slot, Slottable } from '@kushagradhawan/kookie-ui';

@@ -1,8 +1,8 @@
-Kookie UI is an open-source React component library, forked from Radix Themes and designed for scalable, consistent UIs with a fresh look. Installation is simple: import the CSS, wrap your app with the Theme provider, and start building.
+Womp UI is an open-source React component library. It began as a fork of [Radix Themes](https://www.radix-ui.com/themes); [Credits](/credits) lists what it builds on. Installation is simple: import the CSS, wrap your app with the Theme provider, and start building.
 
 ## Install
 
-Add Kookie UI to your project using your preferred package manager:
+Add Womp UI to your project using your preferred package manager:
 
 ```bash
 npm install @kushagradhawan/kookie-ui
@@ -18,7 +18,7 @@ yarn add @kushagradhawan/kookie-ui
 
 ## Requirements
 
-Kookie UI needs React 19. TypeScript support is built-in. Node.js 22+ is required for development.
+Womp UI needs React 19. TypeScript support is built-in. Node.js 22+ is required for development.
 
 ```json
 {
@@ -39,10 +39,10 @@ import '@kushagradhawan/kookie-ui/styles.css';
 
 ## Fonts
 
-`styles.css` loads no webfonts — it defaults to system stacks, so installing Kookie costs zero font requests. Choose one of:
+`styles.css` loads no webfonts — it defaults to system stacks, so installing Womp UI costs zero font requests. Choose one of:
 
 ```tsx
-// Kookie's own typefaces: Inter, Inter Tight, JetBrains Mono, Playfair Display.
+// Womp UI's own typefaces: Inter, Inter Tight, JetBrains Mono, Playfair Display.
 // Four requests to Google Fonts.
 import '@kushagradhawan/kookie-ui/fonts.css';
 ```
@@ -187,7 +187,7 @@ export default function MyComponent() {
     <Card size="3" variant="soft">
       <Flex direction="column" gap="4" p="5">
         <Heading size="4">Welcome</Heading>
-        <Text size="3" emphasis="medium">Start building with Kookie UI components.</Text>
+        <Text size="3" emphasis="medium">Start building with Womp UI components.</Text>
         <Button size="3" variant="solid">Get Started</Button>
       </Flex>
     </Card>
@@ -197,7 +197,7 @@ export default function MyComponent() {
 
 ## Blocks
 
-For larger patterns, such as code blocks, documentation layouts and marketing sections, copy a [block](/docs/blocks) into your project. Blocks are source files built on Kookie UI, not a package, so there is nothing else to install beyond the few dependencies each one lists.
+For larger patterns, such as code blocks, documentation layouts and marketing sections, copy a [block](/docs/blocks) into your project. Blocks are source files built on Womp UI, not a package, so there is nothing else to install beyond the few dependencies each one lists.
 
 ## Troubleshooting
 
@@ -225,4 +225,4 @@ npm install --save-dev @types/react @types/react-dom
 
 ### Theme Provider
 
-Make sure the `Theme` component wraps your entire application at the root level. Check that you're using the correct import path and that the component is rendered before any Kookie UI components.
+Make sure the `Theme` component wraps your entire application at the root level. Check that you're using the correct import path and that the component is rendered before any Womp UI components.

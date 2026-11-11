@@ -1,7 +1,7 @@
 import { BY_SLUG, CHAPTERS, sectionTitle } from '@/lib/chapters';
 import { generateOgImage, ogSize, ogContentType } from '@/lib/og-image';
 
-export const alt = 'Kookie UI';
+export const alt = 'Womp UI';
 export const size = ogSize;
 export const contentType = ogContentType;
 
@@ -15,5 +15,5 @@ export function generateStaticParams() {
 export default async function Image({ params }: { params: Promise<{ section: string; chapter: string }> }) {
   const { section, chapter } = await params;
   const entry = BY_SLUG.get(`${section}/${chapter}`);
-  return generateOgImage(entry?.title ?? 'Kookie UI', entry ? sectionTitle(entry.section) : 'Docs');
+  return generateOgImage(entry?.title ?? 'Womp UI', entry ? sectionTitle(entry.section) : 'Docs');
 }
