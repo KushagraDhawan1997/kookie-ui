@@ -60,7 +60,7 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    outline: 2px solid var(--focus-8);
+    outline: var(--focus-ring-width) solid var(--focus-8);
     outline-offset: -2px;
   }
 }

@@ -33,7 +33,7 @@
   isolation: isolate;
 
   &:where(:focus-within) {
-    outline: 2px solid var(--v-focus-color, var(--focus-8));
+    outline: var(--focus-ring-width) solid var(--v-focus-color, var(--focus-8));
     outline-offset: -1px;
   }
 

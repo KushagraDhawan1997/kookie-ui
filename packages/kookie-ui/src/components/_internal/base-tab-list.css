@@ -228,7 +228,7 @@
   }
 
   .kui-BaseTabListTrigger:where(:focus-visible) :where(.kui-BaseTabListTriggerInner) {
-    outline: 2px solid Highlight;
+    outline: var(--focus-ring-width) solid Highlight;
     outline-offset: 2px;
   }
 }
