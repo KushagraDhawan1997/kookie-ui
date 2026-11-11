@@ -66,8 +66,9 @@ const PageHeaderBanner = React.forwardRef<HTMLDivElement, PageHeaderBannerProps>
       ref={ref}
       width="100%"
       height={height}
-      role="img"
-      aria-label={alt}
+      // With no alt the banner is decoration and stays out of the accessibility tree; an image
+      // role needs a name.
+      {...(alt ? { role: 'img', 'aria-label': alt } : { 'aria-hidden': true })}
       style={{
         backgroundImage: `url(${src})`,
         backgroundSize: 'cover',

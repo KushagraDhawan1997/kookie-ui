@@ -54,11 +54,11 @@ export function ComponentsIndex({ description }: { description: string }) {
                   <Heading asChild size="5" weight="medium">
                     <h2>{job}</h2>
                   </Heading>
-                  <Text size="2" emphasis="quiet">
+                  <Text size="2" emphasis="medium">
                     {members.length}
                   </Text>
                 </Flex>
-                <Text size="2" emphasis="quiet">
+                <Text size="2" emphasis="medium">
                   {question}
                 </Text>
               </Flex>
@@ -69,7 +69,7 @@ export function ComponentsIndex({ description }: { description: string }) {
                       <NextLink href={item.href}>{item.title}</NextLink>
                     </Link>
                     {PATTERNS.has(item.href.replace('/docs/', '')) ? (
-                      <Text size="2" emphasis="quiet">
+                      <Text size="2" emphasis="medium">
                         Pattern
                       </Text>
                     ) : null}
