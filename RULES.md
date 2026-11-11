@@ -4,8 +4,9 @@ Read this before you build or change any screen, example, figure or preview made
 components. These are settled rules. A screen that breaks one is not done, however good its
 parts are.
 
-Each rule says what to do and how to test it. Rule 1 also logs a warning in development. Every other rule is checked by eye: look at
-the screenshot, light and dark, against this file before you show anything.
+Each rule says what to do and how to test it. Rules 1 and 8 also log a warning in development.
+Every other rule is checked by eye: look at the screenshot, light and dark, against this file
+before you show anything.
 
 More rules will join this file as they are settled for v1. Until then, a rule that is not here
 is not a rule.
@@ -54,7 +55,8 @@ is not a rule.
 7. **Space around a heading is asymmetric.** A heading sits closer to what follows it than to
    what comes before.
 8. **Space groups first; a border only when space can't.** Never both a container and a rule
-   around the same group. No card inside a card. (Lines and hover on one list: rule 21.)
+   around the same group. No card inside a card; in development
+   one logs a warning. (Lines and hover on one list: rule 21.)
 9. **Every gap is a step on the scale.** No invented lengths (`13px`, `1.35rem`).
 
 ## Alignment
