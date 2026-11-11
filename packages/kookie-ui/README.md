@@ -39,8 +39,8 @@ export default function App() {
 ```
 
 Kookie ships no webfonts: `styles.css` defaults to system stacks so the install costs zero font
-requests. Add `import '@kushagradhawan/kookie-ui/fonts.css';` for Kookie's own typefaces (Inter, JetBrains
-Mono, Playfair Display), or point `--font-sans` / `--font-mono` / `--font-serif` at fonts you
+requests. Add `import '@kushagradhawan/kookie-ui/fonts.css';` for Kookie's own typefaces (Inter, Inter
+Tight, JetBrains Mono, Playfair Display), or point `--font-sans` / `--font-mono` / `--font-serif` at fonts you
 already load.
 
 ## What is Kookie UI?
@@ -53,7 +53,7 @@ Everything it borrows and builds on is named in [CREDITS.md](./CREDITS.md).
 
 ### Key Features
 
-- **Systematic Design Tokens** - 12-point progressions for spacing, radius, and shadows with predictable steps
+- **Systematic Design Tokens** - A twelve-step spacing scale, with corners and shadows set by role (control, surface, overlay)
 - **Solid surfaces** - Every surface is solid; there is no translucency or backdrop blur
 - **Shared Size Steps** - Controls share one set of size steps
 - **No motion** - State changes are instant; only busy indicators move
@@ -63,6 +63,8 @@ Everything it borrows and builds on is named in [CREDITS.md](./CREDITS.md).
 ## Framework Support
 
 ### Next.js (App Router)
+
+Next.js 15 or later, the first version that supports React 19. `Theme` is already a Client Component, so the layout can stay a Server Component.
 
 ```tsx
 // app/layout.tsx
@@ -118,27 +120,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 );
 ```
 
-### Create React App
-
-```tsx
-// src/index.tsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import '@kushagradhawan/kookie-ui/styles.css';
-import { Theme } from '@kushagradhawan/kookie-ui';
-import App from './App';
-
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-
-root.render(
-  <React.StrictMode>
-    <Theme accentColor="blue" grayColor="gray">
-      <App />
-    </Theme>
-  </React.StrictMode>,
-);
-```
-
 ### Remix
 
 ```tsx
@@ -170,13 +151,9 @@ export default function App() {
 
 ### Gatsby
 
-```js
-// gatsby-browser.js
-import '@kushagradhawan/kookie-ui/styles.css';
-```
-
 ```tsx
-// src/pages/_app.tsx
+// gatsby-browser.js and gatsby-ssr.js
+import '@kushagradhawan/kookie-ui/styles.css';
 import { Theme } from '@kushagradhawan/kookie-ui';
 
 export const wrapRootElement = ({ element }) => (
@@ -220,68 +197,73 @@ import '@kushagradhawan/kookie-ui/layout.css'; // Layout utilities
 
 ## Components
 
+Each has a page at [womp-ui.kookie.design/docs](https://womp-ui.kookie.design/docs).
+
+### App frame and navigation
+
+- `Shell` - The app frame: header, rail, panel, sidebar, content, inspector and bottom pane
+- `Sidebar` - The rows, groups and search inside a Shell pane
+- `Navbar` - A bar across the top of a site
+- `Page` - A screen's large title, which moves into the pane's band on scroll
+- `Navigator` - A stack of screens with a way back
+- `Tabs` - Switch between sibling views
+- `Link` - A link
+
+### Actions
+
+- `Button` - Starts an action; `iconOnly` for an icon
+- `Toggle` - Pressed or not
+- `Toolbar` - A row of actions with one tab stop
+- `DropdownMenu` - A menu from a button
+- `ContextMenu` - A menu from a right-click
+- `Command` - A command palette
+
+### Choosing and entering
+
+- `TextField`, `TextArea` - Text input
+- `Select` - Pick one from a list
+- `Combobox` - Pick one from a list you can search
+- `Checkbox`, `CheckboxGroup` - Pick any
+- `Radio`, `RadioGroup` - Pick one
+- `SegmentedControl` - Pick one of a few, all in view
+- `Switch` - On or off
+- `Slider` - A value in a range
+
+### Showing
+
+- `Card` - A surface that holds content
+- `Table` - Rows and columns
+- `VirtualMenu` - A long list that draws only the rows in view
+- `Accordion` - Sections that open and close
+- `Avatar` - A person or thing, as a picture or initials
+- `Image` - A picture
+- `Chip` - A short label
+- `Text`, `Heading`, `Code`, `Kbd`, `Blockquote` - Type
+
+### Status
+
+- `Notice`, `Confirmation` - A message about a condition, or a question that waits
+- `Progress` - How far along something is
+- `Spinner` - Something is happening
+- `Tooltip` - A label on hover or focus
+
+### Over the page
+
+- `Dialog` - A panel over a dimmed app
+- `AlertDialog` - A choice that must be made first
+- `Sheet` - A panel from an edge
+- `Popover` - A small panel anchored to a control
+
+### Chat
+
+- `Chatbar` - The composer: text, attachments and actions
+- `MessageScroller` - A transcript that follows the newest message
+
 ### Layout
 
-- `Shell` - Main application shell with header, sidebar, and content areas
-- `Sidebar` - Collapsible sidebar navigation
-- `Flex` - Flexible container with gap support
-- `Grid` - CSS Grid container
-
-### Navigation
-
-- `Tabs` - Tab navigation component
-- `SegmentedControl` - Segmented control for mutually exclusive options
-
-### Data Entry
-
-- `Button` - Primary action button
-- `Toggle` - Pressed or not; `iconOnly` for an icon
-- `TextField` - Text input field
-- `TextArea` - Multi-line text input
-- `Select` - Dropdown selection
-- `Checkbox` - Checkbox input
-- `CheckboxGroup` - Group of checkboxes
-- `Radio` - Radio button input
-- `RadioGroup` - Group of radio buttons
-- `Switch` - Toggle switch
-- `Slider` - Range slider input
-- `Progress` - Progress indicator
-
-### Data Display
-
-- `Card` - Content card container
-- `Avatar` - User avatar image
-- `Chip` - A short label
-- `Table` - Data table
-
-### Feedback
-
-- `AlertDialog` - Modal alert dialog
-- `Dialog` - Modal dialog
-- `Sheet` - Slide-out panel
-- `Popover` - Floating content panel
-- `Tooltip` - Contextual tooltip
-- `Notice` - A message about a condition that is true now
-- `Spinner` - Loading spinner
-
-### Overlays
-
-- `DropdownMenu` - Dropdown menu
-- `ContextMenu` - Right-click context menu
-- `Select` - Dropdown selection
-
-### Typography
-
-- `Text` - Text component with semantic styling
-- `Heading` - Heading component
-- `Code` - Inline code
-- `Kbd` - Keyboard key display
-- `Blockquote` - Block quote
-
-### Layout Utilities
-
-- `Separator` - Visual separator
-- `ScrollArea` - Custom scrollable area
+- `Box`, `Flex`, `Grid` - Layout primitives
+- `ScrollArea` - A scroller with styled scrollbars
+- `Separator` - A line between things
 
 ## Theming
 
@@ -290,9 +272,9 @@ Kookie UI uses a comprehensive theming system with:
 - **Accent Colors** - Primary brand colors (blue, green, orange, etc.)
 - **Gray Colors** - Neutral color scales (gray, mauve, slate, etc.)
 - **Size Scales** - Consistent sizing across components
-- **Spacing System** - 12-point spacing progression
+- **Spacing System** - A twelve-step spacing scale
 - **Typography** - Font scales and weights
-- **Dark Mode** - Automatic dark mode support
+- **Dark Mode** - Light and dark, with a script that follows the system setting before the first paint
 
 ## Status
 
