@@ -175,6 +175,11 @@ describe('groups', () => {
       </Theme>,
     );
     await waitFor(() => expect(document.querySelectorAll('.kui-CommandGroupLabel')).toHaveLength(2));
+    // Each group is named by its label, so a screen reader hears which group a row is in.
+    for (const label of document.querySelectorAll('.kui-CommandGroupLabel')) {
+      const group = label.closest('[role="group"]');
+      expect(group?.getAttribute('aria-labelledby')).toBe(label.id);
+    }
     await userEvent.keyboard('window');
     await waitFor(() => expect([...document.querySelectorAll('.kui-CommandGroupLabel')].map((l) => l.textContent)).toEqual(['Window']));
   });
