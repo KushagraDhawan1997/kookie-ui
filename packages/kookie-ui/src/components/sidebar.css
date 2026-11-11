@@ -49,12 +49,7 @@
 }
 
 /* Size-specific vertical padding for thin mode buttons */
-:where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-r-size-1) :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) {
-  padding-top: var(--space-2) !important;
-  padding-bottom: var(--space-2) !important;
-}
-
-:where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-r-size-2) :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) {
+:where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter):is(.kui-r-size-1, .kui-r-size-2)) :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) {
   padding-top: var(--space-2) !important;
   padding-bottom: var(--space-2) !important;
 }
@@ -64,112 +59,34 @@
   padding-bottom: var(--space-3) !important;
 }
 
-/* Consolidated thin mode size blocks */
-:where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-r-size-1) {
+/* Row padding and the label's clipping, the same at every size */
+:where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter):is(.kui-r-size-1, .kui-r-size-2, .kui-r-size-3)) {
   /* Horizontal padding tokens to free space for text */
   --base-menu-item-padding-left: var(--space-2) !important;
   --base-menu-item-padding-right: var(--space-2) !important;
   /* Unify vertical padding via tokens (used by BaseMenuItem) */
   --base-menu-item-padding-y: var(--space-3) !important;
 
-  /* Override BaseMenu left padding resets */
-  &:where(:not(:has(.kui-BaseMenuCheckboxItem, .kui-BaseMenuRadioItem))) {
-    --base-menu-item-padding-left: var(--space-2) !important;
-  }
-  &:where(:has(.kui-BaseMenuCheckboxItem, .kui-BaseMenuRadioItem)) {
-    --base-menu-item-padding-left: var(--space-2) !important;
-  }
-
-  /* Button and subtrigger layout */
   :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) {
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: var(--space-2);
-    text-align: center;
-    font-size: var(--font-size-1);
-    line-height: var(--line-height-1);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
     min-width: 0;
-  }
-
-  /* Icon sizing */
-  /* stylelint-disable-next-line selector-max-type */
-  :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) :where(svg) {
-    width: var(--content-icon-size-3);
-    height: var(--content-icon-size-3);
   }
 }
 
-:where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-r-size-2) {
-  --base-menu-item-padding-left: var(--space-2) !important;
-  --base-menu-item-padding-right: var(--space-2) !important;
-  --base-menu-item-padding-y: var(--space-3) !important;
-
-  &:where(:not(:has(.kui-BaseMenuCheckboxItem, .kui-BaseMenuRadioItem))) {
-    --base-menu-item-padding-left: var(--space-2) !important;
-  }
-  &:where(:has(.kui-BaseMenuCheckboxItem, .kui-BaseMenuRadioItem)) {
-    --base-menu-item-padding-left: var(--space-2) !important;
-  }
-
-  :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) {
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: var(--space-2);
-    text-align: center;
-    font-size: var(--font-size-1);
-    line-height: var(--line-height-1);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-    min-width: 0;
-  }
-
-  /* stylelint-disable-next-line selector-max-type */
-  :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) :where(svg) {
-    width: var(--content-icon-size-4);
-    height: var(--content-icon-size-4);
-  }
+/* Icon size: the one line that differs by size */
+/* stylelint-disable-next-line selector-max-type */
+:where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-r-size-1) :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) :where(svg) {
+  width: var(--content-icon-size-3);
+  height: var(--content-icon-size-3);
 }
 
-:where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-r-size-3) {
-  --base-menu-item-padding-left: var(--space-2) !important;
-  --base-menu-item-padding-right: var(--space-2) !important;
-  --base-menu-item-padding-y: var(--space-3) !important;
-
-  &:where(:not(:has(.kui-BaseMenuCheckboxItem, .kui-BaseMenuRadioItem))) {
-    --base-menu-item-padding-left: var(--space-2) !important;
-  }
-  &:where(:has(.kui-BaseMenuCheckboxItem, .kui-BaseMenuRadioItem)) {
-    --base-menu-item-padding-left: var(--space-2) !important;
-  }
-
-  :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) {
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: var(--space-2);
-    text-align: center;
-    font-size: var(--font-size-1);
-    line-height: var(--line-height-1);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-    min-width: 0;
-  }
-
-  /* stylelint-disable-next-line selector-max-type */
-  :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) :where(svg) {
-    width: var(--content-icon-size-4);
-    height: var(--content-icon-size-4);
-  }
+/* stylelint-disable-next-line selector-max-type */
+:where(.kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter):is(.kui-r-size-2, .kui-r-size-3)) :where(.kui-SidebarMenuButton, .kui-SidebarMenuSubTrigger) :where(svg) {
+  width: var(--content-icon-size-4);
+  height: var(--content-icon-size-4);
 }
 
 /* Ellipsis on root child content when using asChild (e.g., Next.js Link) */
@@ -292,21 +209,8 @@
   background-color: var(--accent-3);
 }
 
-/* Solid variant icon wrapper states in thin mode */
-:where(.kui-ShellRailContent .kui-SidebarMenuBadge),
-:where(.kui-ShellRailContent .kui-SidebarMenuShortcut),
-:where(.kui-ShellRailContent .kui-Chip),
-:where(.kui-ShellRailContent .kui-Kbd) {
-  display: none !important;
-}
-
-:where(.kui-ShellRailContent .kui-SidebarGroupLabel) {
-  display: none !important;
-}
-
-/* Hide submenu chevrons in rail */
-:where(.kui-ShellRailContent .kui-SidebarMenuSubTriggerIcon),
-:where(.kui-ShellRailContent .kui-BaseMenuSubTriggerIcon) {
+/* A Rail shows the icon and its label only: no badge, shortcut, group label or chevron */
+:where(.kui-ShellRailContent) :where(.kui-SidebarMenuBadge, .kui-SidebarMenuShortcut, .kui-Chip, .kui-Kbd, .kui-SidebarGroupLabel, .kui-SidebarMenuSubTriggerIcon, .kui-BaseMenuSubTriggerIcon) {
   display: none !important;
 }
 
@@ -325,31 +229,7 @@
 /* Base variables and panel background support (mirrors Card pattern) */
 /* Centralized borders: apply a consistent inset border; avoid context coupling */
 /* Container Variants (variables only) *//* Header/Footer Layout Utilities */
-.kui-SidebarHeader:where(.kui-SidebarHeader--container) {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--sidebar-base-padding);
-  min-height: var(--sidebar-item-height);
-
-  /* Make MenuButtons expand to full width */
-  & :where(.kui-SidebarMenuButton) {
-    flex: 1;
-  }
-
-  /* A Toolbar fills the header, so its leading and trailing groups sit at the two ends. */
-  & > :where(.kui-Toolbar) {
-    flex: 1;
-  }
-}
-
-/* A header or footer beside the pane's list shares one inset with it: the list already pads
-   by the same amount, so the row drops its padding on that side instead of doubling it. */
-.kui-SidebarHeader:where(.kui-SidebarHeader--container:not([data-float]):has(+ .kui-ShellScroll)) {
-  padding-bottom: 0;
-}
-
+.kui-SidebarHeader:where(.kui-SidebarHeader--container),
 .kui-SidebarFooter:where(.kui-SidebarFooter--container) {
   display: flex;
   flex-direction: row;
@@ -363,12 +243,17 @@
     flex: 1;
   }
 
-  /* A Toolbar fills the footer, so its leading and trailing groups sit at the two ends. */
+  /* A Toolbar fills the row, so its leading and trailing groups sit at the two ends. */
   & > :where(.kui-Toolbar) {
     flex: 1;
   }
 }
 
+/* A header or footer beside the pane's list shares one inset with it: the list already pads
+   by the same amount, so the row drops its padding on that side instead of doubling it. */
+.kui-SidebarHeader:where(.kui-SidebarHeader--container:not([data-float]):has(+ .kui-ShellScroll)) {
+  padding-bottom: 0;
+}
 /* Second half of the shared inset above; after the footer's own padding, at its specificity. */
 :where(.kui-ShellScroll) + .kui-SidebarFooter:where(.kui-SidebarFooter--container:not([data-float])) {
   padding-top: 0;
@@ -680,9 +565,9 @@
   padding: var(--space-3);
 }
 
-/* Expanded mode: inline input wrapper */
+/* The field's box, inline in a pane and inside the Rail's popover */
 /* stylelint-disable-next-line selector-max-specificity */
-.kui-SidebarSearch--expanded .kui-SidebarSearchInputWrapper {
+:is(.kui-SidebarSearch--expanded, .kui-SidebarSearchPopover) .kui-SidebarSearchInputWrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -693,7 +578,7 @@
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
-.kui-SidebarSearch--expanded .kui-SidebarSearchInputWrapper:focus-within {
+:is(.kui-SidebarSearch--expanded, .kui-SidebarSearchPopover) .kui-SidebarSearchInputWrapper:focus-within {
   box-shadow: inset 0 0 0 1px var(--accent-a7);
 }
 
@@ -720,12 +605,7 @@
 }
 
 /* Size-specific vertical padding for thin search trigger */
-:where(.kui-ShellRailContent.kui-r-size-1) :where(.kui-SidebarSearchTrigger) {
-  padding-top: var(--space-2) !important;
-  padding-bottom: var(--space-2) !important;
-}
-
-:where(.kui-ShellRailContent.kui-r-size-2) :where(.kui-SidebarSearchTrigger) {
+:where(.kui-ShellRailContent:is(.kui-r-size-1, .kui-r-size-2)) :where(.kui-SidebarSearchTrigger) {
   padding-top: var(--space-2) !important;
   padding-bottom: var(--space-2) !important;
 }
@@ -744,13 +624,7 @@
 }
 
 /* stylelint-disable-next-line selector-max-type, selector-max-specificity */
-.kui-ShellRailContent.kui-r-size-2 .kui-SidebarSearchTrigger svg {
-  width: var(--content-icon-size-3);
-  height: var(--content-icon-size-3);
-}
-
-/* stylelint-disable-next-line selector-max-type, selector-max-specificity */
-.kui-ShellRailContent.kui-r-size-3 .kui-SidebarSearchTrigger svg {
+.kui-ShellRailContent:is(.kui-r-size-2, .kui-r-size-3) .kui-SidebarSearchTrigger svg {
   width: var(--content-icon-size-3);
   height: var(--content-icon-size-3);
 }
@@ -812,23 +686,6 @@
   --base-menu-line-height: var(--line-height-2);
   --base-menu-letter-spacing: var(--letter-spacing-2);
 }
-
-/* stylelint-disable-next-line selector-max-specificity */
-.kui-SidebarSearchPopover .kui-SidebarSearchInputWrapper {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: var(--space-3);
-  background-color: var(--neutral-a3);
-  border-radius: var(--radius-2);
-  padding: var(--space-2) var(--space-3);
-}
-
-/* stylelint-disable-next-line selector-max-specificity */
-.kui-SidebarSearchPopover .kui-SidebarSearchInputWrapper:focus-within {
-  box-shadow: inset 0 0 0 1px var(--accent-a7);
-}
-
 /* Popover menu list reset */
 /* stylelint-disable-next-line selector-max-specificity */
 .kui-SidebarSearchPopover .kui-SidebarMenu {
@@ -870,15 +727,6 @@
   background-color: var(--accent-a3);
   color: var(--accent-a12);
   font-weight: var(--font-weight-medium);
-}
-
-/* Popover menu label truncation */
-/* stylelint-disable-next-line selector-max-specificity */
-.kui-SidebarSearchPopover .kui-SidebarMenuLabel {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 /* Search icon */
