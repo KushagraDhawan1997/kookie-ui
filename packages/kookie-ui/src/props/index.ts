@@ -13,7 +13,6 @@ export * from './leading-trim.prop.js';
 export * from './margin.props.js';
 export * from './padding.props.js';
 export * from './radius.prop.js';
-export * from './shadow.props.js';
 export * from './text-align.prop.js';
 export * from './text-wrap.prop.js';
 export * from './truncate.prop.js';
