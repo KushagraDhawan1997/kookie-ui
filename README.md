@@ -10,7 +10,7 @@ new version, and the app then moves to that version. Because of this, consistenc
 design system and not in the memory of each engineer. The documentation is at
 [womp-ui.kookie.design](https://womp-ui.kookie.design).
 
-It started as a fork of Radix Themes, and it now moves to Base UI one component at a time.
+It started as a fork of Radix Themes, and it now moves to Base UI one component at a time. Everything it borrows and builds on is named in [CREDITS.md](./CREDITS.md).
 
 ## What's Different from Radix Themes
 
