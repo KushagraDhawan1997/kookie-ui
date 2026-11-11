@@ -15,6 +15,7 @@ const REFERENCE = [
   { label: 'All components', href: '/docs' },
   { label: 'Blocks', href: '/docs/blocks' },
   { label: "What's new", href: '/whats-new' },
+  { label: 'Credits', href: '/credits' },
   { label: 'GitHub', href: 'https://github.com/KushagraDhawan1997/kookie-ui', external: true },
 ];
 

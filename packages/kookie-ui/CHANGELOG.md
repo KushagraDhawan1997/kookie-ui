@@ -1,3 +1,9 @@
+## [0.35.7](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.35.6...v0.35.7) (2026-11-11)
+
+### Fixes
+
+* **credits:** the opening line of `CREDITS.md` reads the same in the file and on the docs site's new Credits page. No code changes.
+
 ## [0.35.6](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.35.5...v0.35.6) (2026-11-11)
 
 ### Fixes

@@ -1,6 +1,6 @@
 # Credits
 
-Womp UI stands on other people's work. This file names it. The licence for Womp UI itself is in `LICENSE`.
+Womp UI stands on other people's work, named here. The licence for Womp UI itself is in `LICENSE`.
 
 ## Code in this package
 
