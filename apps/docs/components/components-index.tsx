@@ -13,14 +13,14 @@ const COMPONENTS = docsNavigation.groups.find((group) => group.label === 'Compon
  * sits under the job its v2 counterpart sits under.
  */
 const JOBS: { job: string; question: string; slugs: string[] }[] = [
-  { job: 'Act', question: 'Make something happen.', slugs: ['button', 'context-menu', 'dropdown-menu', 'toggle', 'toolbar'] },
+  { job: 'Act', question: 'Make something happen.', slugs: ['button', 'command', 'context-menu', 'dropdown-menu', 'toggle', 'toolbar'] },
   {
     job: 'Choose',
     question: 'Pick from options you can see or list.',
     slugs: ['checkbox', 'combobox', 'radio-group', 'segmented-control', 'select', 'slider', 'switch'],
   },
   { job: 'Enter', question: 'Supply a value by typing it.', slugs: ['text-area', 'text-field'] },
-  { job: 'Go', question: 'Move to another place in the app.', slugs: ['link', 'navbar', 'shell', 'sidebar', 'tabs'] },
+  { job: 'Go', question: 'Move to another place in the app.', slugs: ['link', 'navbar', 'navigator', 'shell', 'sidebar', 'tabs'] },
   { job: 'Browse', question: 'Scan a collection and find one item.', slugs: ['table', 'virtual-menu'] },
   {
     job: 'Read',
@@ -33,7 +33,7 @@ const JOBS: { job: string; question: string; slugs: string[] }[] = [
   {
     job: 'Arrange',
     question: "Place things on the page. This is your job, not the person's.",
-    slugs: ['box', 'flex', 'grid', 'scroll-area', 'separator', 'utilities'],
+    slugs: ['box', 'flex', 'grid', 'page', 'scroll-area', 'separator', 'utilities'],
   },
 ];
 

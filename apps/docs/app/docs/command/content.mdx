@@ -1,0 +1,219 @@
+---
+title: Command
+description: A command palette is one search field over everything an app can do.
+source: https://github.com/KushagraDhawan1997/kookie-ui/blob/main/packages/kookie-ui/src/components/command.tsx
+---
+
+A command palette is a search field over a list of rows, in a dialog. People open it with a shortcut, type a few letters, and press Enter. It covers the app and traps focus like a [Dialog](/docs/dialog), and running a row closes it. Your app decides which rows exist and what each one does. To pick a value for a form, use a [Combobox](/docs/combobox).
+
+## Playground
+
+import CommandPlayground from '../../playground/command-playground';
+
+<CommandPlayground />
+
+## Usage
+
+```tsx showLineNumbers
+import * as React from 'react';
+import { Command, CommandContent, CommandEmpty, CommandInput, CommandItem, CommandList } from '@kushagradhawan/kookie-ui';
+
+type Action = { label: string; run: () => void };
+
+export function CommandPalette({ actions }: { actions: Action[] }) {
+  const [open, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key.toLowerCase() === 'k' && (event.metaKey || event.ctrlKey)) {
+        event.preventDefault();
+        setOpen((value) => !value);
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, []);
+
+  return (
+    <Command items={actions} open={open} onOpenChange={setOpen}>
+      <CommandContent aria-label="Run a command">
+        <CommandInput aria-label="Search commands" placeholder="Search commands" />
+        <CommandList>
+          {(action: Action) => (
+            <CommandItem key={action.label} value={action.label} onSelect={action.run}>
+              {action.label}
+            </CommandItem>
+          )}
+        </CommandList>
+        <CommandEmpty>No command matches.</CommandEmpty>
+      </CommandContent>
+    </Command>
+  );
+}
+```
+
+## Anatomy
+
+```tsx
+<Command items={items}>
+  <CommandTrigger />
+  <CommandContent>
+    <CommandInput />
+    <CommandList>
+      {(group) => (
+        <CommandGroup items={group.items}>
+          <CommandGroupLabel />
+          <CommandCollection>{(item) => <CommandItem />}</CommandCollection>
+        </CommandGroup>
+      )}
+    </CommandList>
+    <CommandEmpty />
+  </CommandContent>
+</Command>
+```
+
+`CommandTrigger` and the group parts are optional. Most palettes open from a key handler and render no trigger.
+
+## Best practices
+
+**Open it with a shortcut.** A palette is for people who already know what they want. Bind `⌘K` and `Ctrl K`, and add a toolbar button for people who haven't learned the shortcut.
+
+**Name each row as an action.** "Invite a teammate" says what happens. "Team" doesn't.
+
+**Keep `items` in a stable order.** Typing narrows the list and never reorders it, so a row people use every day stays in the same place.
+
+**Rank the results yourself when the list is long.** Pass `filter={null}`, read the query from `onQueryChange`, and pass the ranked rows as `items`. The docs search on this site works this way.
+
+**Make a row a link when it goes to a page.** Wrap your router's link in a row with `asChild`. Enter, a press and a middle-click then all behave like a link.
+
+## Size
+
+`size` sets the palette's step, from 1 to 4. The rows are one step larger than a control at the same size, because the palette is the one thing on screen while it is open. When you leave `size` unset, the palette follows the nearest Theme size.
+
+## Examples
+
+### Groups
+
+An item with its own `items` array is a group. A group with no matching rows is left out, and its label names it for a screen reader.
+
+```tsx
+const groups = [
+  { label: 'Project', items: projectActions },
+  { label: 'App', items: appActions },
+];
+
+<Command items={groups} open={open} onOpenChange={setOpen}>
+  <CommandContent aria-label="Run a command">
+    <CommandInput aria-label="Search commands" placeholder="Search commands" />
+    <CommandList>
+      {(group: Group) => (
+        <CommandGroup key={group.label} items={group.items}>
+          <CommandGroupLabel>{group.label}</CommandGroupLabel>
+          <CommandCollection>
+            {(action: Action) => (
+              <CommandItem key={action.label} value={action.label} onSelect={action.run}>
+                {action.label}
+              </CommandItem>
+            )}
+          </CommandCollection>
+        </CommandGroup>
+      )}
+    </CommandList>
+  </CommandContent>
+</Command>
+```
+
+### A destructive command with a shortcut
+
+`leading` takes an icon, and `trailing` takes a shortcut. Set `tone="destructive"` on a row that deletes something.
+
+```tsx
+<CommandItem
+  value="Delete project"
+  leading={<HugeiconsIcon icon={Delete02Icon} strokeWidth={1.75} />}
+  trailing={<Kbd>⌘⌫</Kbd>}
+  tone="destructive"
+  onSelect={deleteProject}
+>
+  Delete project
+</CommandItem>
+```
+
+### Search results as links
+
+```tsx
+<Command items={results} open={open} onOpenChange={setOpen}>
+  <CommandContent aria-label="Search the documentation" filter={null} onQueryChange={setQuery}>
+    <CommandInput aria-label="Search query" placeholder="Type to search" />
+    <CommandList>
+      {(page: Page) => (
+        <CommandItem key={page.href} value={page.href} asChild>
+          <Link href={page.href}>{page.title}</Link>
+        </CommandItem>
+      )}
+    </CommandList>
+  </CommandContent>
+</Command>
+```
+
+## Props
+
+### Command
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `items` | `readonly unknown[]` | | Required. Every item the palette can show, before filtering. An item with its own `items` array is a group |
+| `open` | `boolean` | | Whether the palette is open, when your app controls it |
+| `defaultOpen` | `boolean` | `false` | Whether the palette starts open, when it controls itself |
+| `onOpenChange` | `(open, { reason }) => void` | | Called when the palette opens or closes. `reason` is `'item-press'` when a row ran, otherwise `'dismiss'` |
+| `size` | `'1' \| '2' \| '3' \| '4'` | Theme size | The palette's step |
+
+### CommandContent
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `aria-label` | `string` | | Required. The palette's accessible name |
+| `filter` | `(item, query, itemToString) => boolean \| null` | Contains the query | How an item matches the query. `null` turns filtering off |
+| `itemToString` | `(item) => string` | | The text the filter reads. By default a string, or an object's `label`, `title`, `value` or `name` |
+| `onQueryChange` | `(query: string) => void` | | Called on every keystroke, and with `''` when the palette closes |
+| `container` | `Element` | | A container of your own for the portal |
+
+### CommandInput
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `aria-label` | `string` | | Required. The field's accessible name |
+| `leading` | `ReactNode` | | An icon before the text |
+
+It also accepts the attributes of the HTML `input` element, such as `placeholder`.
+
+### CommandItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `unknown` | | The item the row shows. A string is also the row's identity for the highlight |
+| `onSelect` | `() => void` | | Runs when the row is pressed or Enter is pressed on it. The palette then closes |
+| `leading` | `ReactNode` | | An icon before the label |
+| `trailing` | `ReactNode` | | Something after the label, such as a shortcut |
+| `tone` | `'destructive'` | | Set when running the row destroys something |
+| `asChild` | `boolean` | `false` | Renders the child, such as your router's link, as the row |
+| `disabled` | `boolean` | `false` | Skips the row |
+
+### Other parts
+
+| Part | Props |
+| --- | --- |
+| `CommandTrigger` | Wraps one child, which opens the palette |
+| `CommandList` | `children`: a function from an item to a `CommandItem` or a `CommandGroup` |
+| `CommandGroup` | `items`: the group's own items |
+| `CommandGroupLabel` | `children`: the group's name |
+| `CommandCollection` | `children`: a function from one of the group's items to a `CommandItem` |
+| `CommandEmpty` | `children`: what the results pane says when nothing matches |
+
+## Accessibility
+
+- **Dialog:** The palette is a modal dialog named by `aria-label`. Focus is trapped inside it, the page behind is inert, and Escape closes it. Focus returns to where it was.
+- **Focus:** The palette opens with the caret in the field. Focus stays in the field while the arrow keys move the highlight.
+- **Keyboard:** Up and Down move the highlight and wrap at the ends. Enter runs the highlighted row. A row is highlighted from the first frame and after every keystroke.
+- **Groups:** A group is named by its `CommandGroupLabel`.
+- **Shortcuts:** A shortcut in `trailing` is read as part of the row. The palette doesn't bind it. Bind it in your app.
