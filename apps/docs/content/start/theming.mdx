@@ -1,6 +1,6 @@
-Control your app's visual appearance with seven configuration options. Kookie UI Theme is a fork of [Radix Themes](https://www.radix-ui.com/themes), offering the same foundation with custom enhancements for theming and accessibility.
+`Theme` sets how your app looks with seven options: light or dark, the accent colour, the gray colour, the corner radius, the control size, and the font families for text and headings.
 
-This is an enhanced version of the Theme component from [Radix Themes](https://www.radix-ui.com/themes). For the original API reference, see the [Radix Themes Theme documentation](https://www.radix-ui.com/themes/docs/theme/overview).
+It began as the Theme component from [Radix Themes](https://www.radix-ui.com/themes). Its options have changed since, so use the table on this page and not the Radix reference.
 
 ## Installation
 
@@ -26,34 +26,20 @@ export default function App() {
 
 ## Next.js App Router
 
-When using Next.js App Router, `Theme` must be wrapped in a Client Component since it uses React Context. Create a `providers.tsx` file:
-
-```tsx
-// components/providers.tsx
-'use client';
-
-import { Theme } from '@kushagradhawan/kookie-ui';
-
-export function Providers({ children }: { children: React.ReactNode }) {
-  return (
-    <Theme accentColor="blue" grayColor="slate">
-      {children}
-    </Theme>
-  );
-}
-```
-
-Then use it in your root layout:
+`Theme` is already a Client Component. Render it directly in your root layout, which can stay a Server Component:
 
 ```tsx
 // app/layout.tsx
-import { Providers } from '@/components/providers';
+import '@kushagradhawan/kookie-ui/styles.css';
+import { Theme } from '@kushagradhawan/kookie-ui';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <Providers>{children}</Providers>
+        <Theme accentColor="blue" grayColor="slate">
+          {children}
+        </Theme>
       </body>
     </html>
   );
@@ -64,7 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 | Prop | Type | Description |
 | ---- | ---- | ----------- |
-| `appearance` | `'light' \| 'dark' \| 'inherit'` | Color scheme; inherit follows system preference. Default: `'inherit'` |
+| `appearance` | `'light' \| 'dark' \| 'inherit'` | Color scheme. `inherit` takes it from a `light` or `dark` class on an element above, such as `<html>`. Default: `'inherit'` |
 | `accentColor` | `AccentColor` | Primary accent used for interactive components. Default: `'gray'` |
 | `grayColor` | `GrayColor` | Neutral gray scale for backgrounds and text. Default: `'gray'` |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Global corner radius scale. Default: `'full'` |
@@ -76,7 +62,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 ## Appearance
 
-Set `appearance` to control light, dark, or system preference mode.
+Set `appearance` to force light or dark, or leave it at `inherit` and let the page decide.
 
 ### Light
 
@@ -96,10 +82,48 @@ Force dark mode regardless of system preference.
 
 ### Inherit
 
-Follow system preference (default). Automatically switches between light and dark based on user's OS settings.
+The default. The Theme writes no mode of its own and takes light or dark from a `light` or `dark` class on an element above it, usually `<html>`. With no class it is light.
 
 ```tsx
 <Theme appearance="inherit"><YourApp /></Theme>
+```
+
+### Following the system setting
+
+To follow the visitor's system setting, and remember a choice they make, put `appearanceScript` in `<head>`. It runs before the first paint, reads the stored choice or the system setting, and writes the class on `<html>`:
+
+```tsx
+// app/layout.tsx
+import { Theme } from '@kushagradhawan/kookie-ui';
+import { appearanceScript } from '@kushagradhawan/kookie-ui/appearance-script';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: appearanceScript }} />
+      </head>
+      <body>
+        <Theme>{children}</Theme>
+      </body>
+    </html>
+  );
+}
+```
+
+`useAppearance` reads and changes the mode from a component. `choice` is what the person picked (`'system'` until they pick), and `appearance` is what is showing:
+
+```tsx
+import { Button, useAppearance } from '@kushagradhawan/kookie-ui';
+
+function ModeToggle() {
+  const { appearance, setAppearance } = useAppearance();
+  return (
+    <Button variant="soft" color="gray" onClick={() => setAppearance(appearance === 'dark' ? 'light' : 'dark')}>
+      Use {appearance === 'dark' ? 'light' : 'dark'} mode
+    </Button>
+  );
+}
 ```
 
 ## Accent Color
@@ -211,28 +235,3 @@ var(--space-5)             /* Standard spacing */
 var(--radius-3)            /* Component border radius */
 var(--font-size-3)         /* Base font size */
 ```
-
-## Enhancements
-
-Kookie UI extends Radix Themes with practical improvements:
-
-### Effects
-
-Specialized 3D button effects create realistic depth and elevation.
-
-### Typography
-
-Pre-configured Inter and JetBrains Mono fonts with proper fallbacks prevent browser font weight synthesis issues. Graceful degradation falls back to system fonts if custom fonts fail.
-
-## Changelog
-
-### Added
-
-- Enhanced 3D button effects
-- Improved font fallback system
-
-### Removed
-
-- `material` and `panelBackground` props. Every surface is solid.
-- `scaling` prop. The scale is fixed.
-- The `--blur-N` and `--opacity-N` token scales.
