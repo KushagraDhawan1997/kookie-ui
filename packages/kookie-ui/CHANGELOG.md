@@ -1,3 +1,9 @@
+## [0.37.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.37.0...v0.37.1) (2026-11-11)
+
+### Fixes
+
+* **accordion:** `color` and `radius` on `Accordion.Root` are typed from the shared prop definitions. They were written by hand as `string`, so `color="banana"` compiled. Types only; nothing changes at run time.
+
 ## [0.37.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.36.0...v0.37.0) (2026-11-11)
 
 ### Breaking

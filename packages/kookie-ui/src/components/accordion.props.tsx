@@ -2,7 +2,7 @@ import { asChildPropDef } from '../props/as-child.prop.js';
 import { colorPropDef } from '../props/color.prop.js';
 import { radiusPropDef } from '../props/radius.prop.js';
 
-import type { PropDef } from '../props/prop-def.js';
+import type { GetPropDefTypes, PropDef } from '../props/prop-def.js';
 
 const sizes = ['1', '2', '3', '4'] as const;
 const variants = ['raised', 'soft', 'surface', 'outline', 'ghost'] as const;
@@ -53,9 +53,7 @@ export {
 export type AccordionRootOwnProps = {
   size?: (typeof sizes)[number];
   variant?: (typeof variants)[number];
-  color?: string;
-  radius?: string;
-};
+} & GetPropDefTypes<typeof colorPropDef & typeof radiusPropDef>;
 
 export type AccordionItemOwnProps = {
   asChild?: boolean;
