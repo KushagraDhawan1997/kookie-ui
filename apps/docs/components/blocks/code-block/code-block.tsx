@@ -12,7 +12,7 @@ import './code-block.css';
  * -----------------------------------------------------------------------------------------------*/
 
 export interface ShikiConfig {
-  /** Light and dark themes. Defaults to `github-light` and `github-dark`. */
+  /** Light and dark themes. Defaults to `github-light-high-contrast` and `github-dark`. */
   themes?: { light?: string; dark?: string };
   /** Language aliases, e.g. `{ vue3: 'vue' }`. */
   langAlias?: Record<string, string>;
@@ -54,7 +54,7 @@ export interface CodeBlockProps {
  * -----------------------------------------------------------------------------------------------*/
 
 const DEFAULT_COLLAPSED_HEIGHT = 400;
-const DEFAULT_LIGHT_THEME = 'github-light';
+const DEFAULT_LIGHT_THEME = 'github-light-high-contrast';
 const DEFAULT_DARK_THEME = 'github-dark';
 const AUTO_LINE_NUMBERS_AFTER = 5;
 const COPY_FEEDBACK_MS = 2000;

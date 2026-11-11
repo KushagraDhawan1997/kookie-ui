@@ -4,7 +4,8 @@ import packageJson from '../../packages/kookie-ui/package.json' with { type: 'js
 /** @type {import('rehype-pretty-code').Options} */
 const rehypePrettyCodeOptions = {
   theme: {
-    light: 'github-light',
+    // High contrast: every github-light syntax colour that is not, falls under 4.5:1 on the code block's background.
+    light: 'github-light-high-contrast',
     dark: 'github-dark',
   },
   keepBackground: false, // We'll use our own backgrounds
