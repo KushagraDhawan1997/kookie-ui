@@ -1,9 +1,10 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { ScrollArea as ScrollAreaPrimitive } from 'radix-ui';
-import { useComposedRefs } from 'radix-ui/internal';
+import { useComposedRefs, useLayoutEffect } from 'radix-ui/internal';
 
 import { scrollAreaPropDefs } from './scroll-area.props.js';
+import { PanelBodyContext } from './_internal/panel-body-context.js';
 import { scrollableOverflow, useScrollEdges } from '../hooks/use-scroll-edges.js';
 import { useThumbSync } from '../hooks/use-thumb-sync.js';
 import { getSubtree } from '../helpers/get-subtree.js';
@@ -19,7 +20,8 @@ import type { HeightProps } from '../props/height.props.js';
 type ScrollAreaElement = React.ElementRef<typeof ScrollAreaPrimitive.Viewport>;
 type ScrollAreaOwnProps = GetPropDefTypes<typeof scrollAreaPropDefs>;
 interface ScrollAreaProps
-  extends ComponentPropsWithout<typeof ScrollAreaPrimitive.Root, RemovedProps>,
+  extends
+    ComponentPropsWithout<typeof ScrollAreaPrimitive.Root, RemovedProps>,
     ComponentPropsWithout<typeof ScrollAreaPrimitive.Viewport, RemovedProps | 'dir'>,
     ScrollAreaOwnProps,
     WidthProps,
@@ -58,6 +60,29 @@ function useFocusableWhileScrollable(element: HTMLDivElement | null, enabled: bo
   }, [element, enabled]);
 }
 
+/**
+ * A panel's top row floats over its ScrollArea body, so the body needs the row's height: its
+ * content starts under the row and fades out beneath it. The row is a Toolbar right before the
+ * ScrollArea, first in the panel. Its height is written on the ScrollArea's root as
+ * `--panel-top-row-height` when it changes, without a re-render.
+ */
+function usePanelTopRow(viewport: HTMLElement | null, enabled: boolean) {
+  // Before paint, so the body's content never shows under the row for a frame.
+  useLayoutEffect(() => {
+    const root = viewport?.parentElement;
+    const row = root?.previousElementSibling;
+    if (!enabled || !root || !(row instanceof HTMLElement) || !row.matches('.kui-Toolbar:first-child')) return;
+    const write = () => root.style.setProperty('--panel-top-row-height', `${row.offsetHeight}px`);
+    write();
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(write);
+    observer?.observe(row);
+    return () => {
+      observer?.disconnect();
+      root.style.removeProperty('--panel-top-row-height');
+    };
+  }, [viewport, enabled]);
+}
+
 const ScrollArea = React.forwardRef<ScrollAreaElement, ScrollAreaProps>((props, forwardedRef) => {
   const {
     asChild,
@@ -69,14 +94,18 @@ const ScrollArea = React.forwardRef<ScrollAreaElement, ScrollAreaProps>((props, 
     dir,
     radius = scrollAreaPropDefs.radius.default,
     scrollbars = scrollAreaPropDefs.scrollbars.default,
-    fade = scrollAreaPropDefs.fade.default,
+    fade: fadeProp,
     ...viewportProps
   } = extractProps(props, widthPropDefs, heightPropDefs);
+  // A panel's body fades by default; a `fade` prop always wins.
+  const inPanel = React.useContext(PanelBodyContext);
+  const fade = fadeProp ?? (inPanel || scrollAreaPropDefs.fade.default);
   const [viewport, setViewport] = React.useState<HTMLDivElement | null>(null);
   const setEdgesElement = useScrollEdges<HTMLDivElement>(fade);
   const setThumbViewport = useThumbSync<HTMLDivElement>();
   const viewportRef = useComposedRefs(forwardedRef, setEdgesElement, setThumbViewport, setViewport);
   useFocusableWhileScrollable(viewport, viewportProps.tabIndex === undefined);
+  usePanelTopRow(viewport, inPanel);
   // A named scroller is a region, so a screen reader can find it and say what it holds.
   const named = viewportProps['aria-label'] !== undefined || viewportProps['aria-labelledby'] !== undefined;
 
@@ -92,40 +121,25 @@ const ScrollArea = React.forwardRef<ScrollAreaElement, ScrollAreaProps>((props, 
     >
       {getSubtree({ asChild, children }, (children) => (
         <>
-          <ScrollAreaPrimitive.Viewport
-            role={named ? 'region' : undefined}
-            {...viewportProps}
-            ref={viewportRef}
-            className="kui-ScrollAreaViewport"
-          >
-            {children}
+          <ScrollAreaPrimitive.Viewport role={named ? 'region' : undefined} {...viewportProps} ref={viewportRef} className="kui-ScrollAreaViewport">
+            {inPanel ? <PanelBodyContext.Provider value={false}>{children}</PanelBodyContext.Provider> : children}
           </ScrollAreaPrimitive.Viewport>
 
           <div className="kui-ScrollAreaViewportFocusRing" />
 
           {scrollbars !== 'vertical' ? (
-            <ScrollAreaPrimitive.Scrollbar
-              data-radius={radius}
-              orientation="horizontal"
-              className="kui-ScrollAreaScrollbar"
-            >
+            <ScrollAreaPrimitive.Scrollbar data-radius={radius} orientation="horizontal" className="kui-ScrollAreaScrollbar">
               <ScrollAreaPrimitive.Thumb className="kui-ScrollAreaThumb" />
             </ScrollAreaPrimitive.Scrollbar>
           ) : null}
 
           {scrollbars !== 'horizontal' ? (
-            <ScrollAreaPrimitive.Scrollbar
-              data-radius={radius}
-              orientation="vertical"
-              className="kui-ScrollAreaScrollbar"
-            >
+            <ScrollAreaPrimitive.Scrollbar data-radius={radius} orientation="vertical" className="kui-ScrollAreaScrollbar">
               <ScrollAreaPrimitive.Thumb className="kui-ScrollAreaThumb" />
             </ScrollAreaPrimitive.Scrollbar>
           ) : null}
 
-          {scrollbars === 'both' ? (
-            <ScrollAreaPrimitive.Corner className="kui-ScrollAreaCorner" />
-          ) : null}
+          {scrollbars === 'both' ? <ScrollAreaPrimitive.Corner className="kui-ScrollAreaCorner" /> : null}
         </>
       ))}
     </ScrollAreaPrimitive.Root>

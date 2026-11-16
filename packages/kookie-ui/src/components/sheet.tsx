@@ -43,6 +43,7 @@ import { dialogContentPropDefs } from './dialog.props.js';
 import type { DialogContentOwnProps } from './dialog.props.js';
 import { PortalTheme } from './_internal/portal-theme.js';
 import { NavigatorHostContext, type NavigatorHost } from './_internal/navigator-host.js';
+import { PanelBodyContext } from './_internal/panel-body-context.js';
 import { useCloseWarning } from './_internal/use-close-warning.js';
 import { Heading } from './heading.js';
 import { Text } from './text.js';
@@ -104,9 +105,7 @@ const sheetNavigatorHost: NavigatorHost = {
 const SheetTitleCountContext = React.createContext<React.MutableRefObject<number> | null>(null);
 
 type SheetContentElement = React.ElementRef<typeof DialogPrimitive.Content>;
-interface SheetContentProps
-  extends ComponentPropsWithout<typeof DialogPrimitive.Content, RemovedProps>,
-    Omit<DialogContentOwnProps, 'align'> {
+interface SheetContentProps extends ComponentPropsWithout<typeof DialogPrimitive.Content, RemovedProps>, Omit<DialogContentOwnProps, 'align'> {
   /** Side where the Sheet should appear. `left`/`right` alias to `start`/`end`. */
   side?: SheetSide;
   /** Optional DOM container to portal into. Defaults to `document.body`. */
@@ -168,7 +167,11 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>((allPro
               className={classNames('kui-BaseDialogContent', 'kui-SheetContent', className, extractedClassName)}
               data-side={normalizedSide}
               aria-modal="true"
-              children={<NavigatorHostContext.Provider value={sheetNavigatorHost}>{contentProps.children}</NavigatorHostContext.Provider>}
+              children={
+                <NavigatorHostContext.Provider value={sheetNavigatorHost}>
+                  <PanelBodyContext.Provider value={true}>{contentProps.children}</PanelBodyContext.Provider>
+                </NavigatorHostContext.Provider>
+              }
             />
           </DialogPrimitive.Overlay>
         </PortalTheme>

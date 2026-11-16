@@ -3,3 +3,9 @@
 .kui-DialogContent {
   max-width: var(--overlay-w);
 }
+
+/* With a ScrollArea body, the dialog fits the window inside the overlay's own padding, so its top
+   row stays in view. A maxHeight prop still wins: the utility comes later in the cascade. */
+.kui-DialogContent:where(:has(> .kui-ScrollAreaRoot)) {
+  max-height: calc(100dvh - var(--space-7) - max(var(--space-7), 6vh));
+}

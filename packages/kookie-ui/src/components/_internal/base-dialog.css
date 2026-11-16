@@ -128,3 +128,72 @@
   margin-inline-end: auto;
   min-inline-size: 0;
 }
+
+/*
+ * A ScrollArea directly in the panel is its body. The panel turns into a column: what sits above
+ * the ScrollArea (the top row) stays put, and the ScrollArea takes the rest of the height and
+ * scrolls on its own. It reaches the panel's inline and bottom edges, so its scrollbar sits at the
+ * edge, and pads its content back to the panel's inset. Without a ScrollArea the panel scrolls as
+ * a whole, as before.
+ */
+
+/* stylelint-disable selector-max-specificity */
+
+.kui-BaseDialogContent:where(:has(> .kui-ScrollAreaRoot)) {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+
+  & > :where(:not(.kui-ScrollAreaRoot)) {
+    flex-shrink: 0;
+  }
+}
+
+.kui-BaseDialogContent > .kui-ScrollAreaRoot {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: auto;
+  height: auto;
+  margin-inline: calc(-1 * var(--dialog-content-padding));
+  margin-block-end: calc(-1 * var(--dialog-content-padding));
+
+  & > .kui-ScrollAreaViewport {
+    box-sizing: border-box;
+    padding-inline: var(--dialog-content-padding);
+    padding-block-end: var(--dialog-content-padding);
+  }
+}
+
+
+/*
+ * The top row floats. With a Toolbar first and the ScrollArea right after it, the body runs under
+ * the row to the panel's top edge, so the row stands over the content, not above a cut. The body
+ * starts its content where it started before, under the row. As it scrolls, content is hidden
+ * under the row and fades in over the gap below it. The row's height comes from the ScrollArea, which measures it.
+ */
+.kui-BaseDialogContent:where(:has(> .kui-Toolbar:first-child + .kui-ScrollAreaRoot)) {
+  position: relative;
+
+  & > .kui-Toolbar:first-child {
+    position: absolute;
+    z-index: 1;
+    inset-block-start: calc(var(--dialog-content-padding) - var(--layout-space-2));
+    inset-inline: calc(var(--dialog-content-padding) - var(--layout-space-2));
+    margin: 0;
+  }
+
+  & > .kui-ScrollAreaRoot {
+    --panel-top-row-reach: calc(var(--dialog-content-padding) - var(--layout-space-2) + var(--panel-top-row-height, var(--control-height-2)));
+    margin-block-start: calc(-1 * var(--dialog-content-padding));
+  }
+
+  /* Content is hidden under the row and fades in over the gap below it. */
+  & > .kui-ScrollAreaRoot > .kui-ScrollAreaViewport {
+    --scroll-fade-start-hold: var(--panel-top-row-reach);
+    --scroll-fade-start: calc(var(--panel-top-row-reach) + var(--layout-space-6));
+    padding-block-start: calc(var(--panel-top-row-reach) + var(--layout-space-6));
+  }
+}
+
+/* stylelint-enable selector-max-specificity */

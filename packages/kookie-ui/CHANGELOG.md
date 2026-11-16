@@ -1,3 +1,12 @@
+## [0.38.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.38.0...v0.38.1) (2026-11-16)
+
+### Features
+
+* **dialog, sheet:** a `ScrollArea` placed directly in `Dialog.Content` or `Sheet.Content` is the panel's body. The panel becomes a column: what sits above the ScrollArea, such as the top-row Toolbar with the title and Close, stays put, and the ScrollArea takes the rest of the height and scrolls on its own. It reaches the panel's inline and bottom edges, so its scrollbar sits at the edge, and pads its content back to the panel's inset. A Dialog with one fits the window; a `maxHeight` still caps it. Without a ScrollArea the panel scrolls as a whole, as before.
+* **dialog, sheet:** with a top-row Toolbar first and the ScrollArea right after it, the row floats: the body runs under it to the panel's top edge, its content starts where it did before, and as it scrolls the content is hidden under the row and fades in over the gap below it. The ScrollArea measures the row's height.
+* **scroll-area:** `--scroll-fade-start-hold` keeps content fully hidden for a length before the start fade begins, for a band that content must not show through.
+* **scroll-area:** inside a Dialog or Sheet, a `ScrollArea` fades its edges by default, so rows ease out under the pinned top row. `fade={false}` turns it off. A ScrollArea nested in another, and one outside a panel, keep `fade` off by default.
+
 ## [0.38.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.37.1...v0.38.0) (2026-11-11)
 
 ### Features

@@ -8,6 +8,7 @@ import { Heading } from './heading.js';
 import { Text } from './text.js';
 import { PortalTheme } from './_internal/portal-theme.js';
 import { NavigatorHostContext, type NavigatorHost } from './_internal/navigator-host.js';
+import { PanelBodyContext } from './_internal/panel-body-context.js';
 import { useCloseWarning } from './_internal/use-close-warning.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../hooks/theme-size.js';
@@ -68,7 +69,11 @@ const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>
                 {...contentProps}
                 ref={ref}
                 className={classNames('kui-BaseDialogContent', 'kui-DialogContent', className)}
-                children={<NavigatorHostContext.Provider value={dialogNavigatorHost}>{contentProps.children}</NavigatorHostContext.Provider>}
+                children={
+                  <NavigatorHostContext.Provider value={dialogNavigatorHost}>
+                    <PanelBodyContext.Provider value={true}>{contentProps.children}</PanelBodyContext.Provider>
+                  </NavigatorHostContext.Provider>
+                }
                 aria-modal="true"
                 onCloseAutoFocus={(event) => {
                   // Radix returns focus to the trigger unless the caller prevents it.
