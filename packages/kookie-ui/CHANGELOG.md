@@ -1,3 +1,9 @@
+## [0.38.3](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.38.2...v0.38.3) (2026-11-16)
+
+### Look
+
+* **toolbar:** in a Dialog or Sheet, `Toolbar.Title` reads one text step larger than in a pane header, since it names the whole panel: 20px in a size-2 dialog, 24px in a size-3. Pane headers are unchanged.
+
 ## [0.38.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.38.1...v0.38.2) (2026-11-16)
 
 ### Fixes

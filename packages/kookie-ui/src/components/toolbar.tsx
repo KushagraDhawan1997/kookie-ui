@@ -14,6 +14,7 @@ import { useThemeSize } from '../hooks/theme-size.js';
 import { layoutPropDefs } from '../props/layout.props.js';
 import { usePaneBandSize } from './_internal/pane-chrome.js';
 import { usePageMirror, usePageScope, usePageTitle } from './_internal/page-scope.js';
+import { PanelBodyContext } from './_internal/panel-body-context.js';
 
 import type { ButtonProps } from './button.js';
 import type { LayoutProps } from '../props/layout.props.js';
@@ -670,6 +671,8 @@ ToolbarSeparator.displayName = 'Toolbar.Separator';
 
 /** The title's text step: one step above the label of a button at the same size. */
 const TITLE_SIZE = { '1': '2', '2': '3', '3': '4', '4': '5' } as const satisfies Record<ToolbarSize, TextProps['size']>;
+/** In a Dialog or Sheet the title names the whole panel, so it reads one step larger again. */
+const PANEL_TITLE_SIZE = { '1': '3', '2': '4', '3': '5', '4': '6' } as const satisfies Record<ToolbarSize, TextProps['size']>;
 
 interface ToolbarTitleProps {
   /**
@@ -694,6 +697,7 @@ const ToolbarTitle = React.forwardRef<HTMLSpanElement, ToolbarTitleProps>(
     const toolbar = React.useContext(ToolbarContext);
     const themeSize = useThemeSize<ToolbarSize>(undefined, toolbarRootPropDefs.size);
     const size = toolbar?.size ?? themeSize;
+    const inPanel = React.useContext(PanelBodyContext);
     const store = usePageScope();
     const pageTitle = usePageTitle(store);
     const mirrorRef = usePageMirror(store);
@@ -705,7 +709,7 @@ const ToolbarTitle = React.forwardRef<HTMLSpanElement, ToolbarTitleProps>(
       <Text
         ref={ref}
         as="span"
-        size={TITLE_SIZE[size]}
+        size={(inPanel ? PANEL_TITLE_SIZE : TITLE_SIZE)[size]}
         weight="medium"
         truncate
         id={id}

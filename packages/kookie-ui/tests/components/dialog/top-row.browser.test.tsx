@@ -89,6 +89,9 @@ describe.each(panels)('$what top row size', ({ Part }) => {
       const title = document.querySelector('.kui-ToolbarTitle')!;
       const heading = title.querySelector('.kui-Heading')!;
       expect(getComputedStyle(heading).fontSize).toBe(getComputedStyle(title).fontSize);
+      // The panel's title reads one text step above a pane header's at the same row size.
+      const titleStep = { '1': '3', '2': '4', '3': '5', '4': '6' } as const;
+      expect(title.classList).toContain(`kui-r-size-${titleStep[steps[size]]}`);
     });
   }
 
