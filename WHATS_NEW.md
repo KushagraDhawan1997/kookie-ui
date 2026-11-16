@@ -2,6 +2,12 @@
 
 Each release groups its changes as Major, Minor or Quiet. Major is a new product or a change to what it is. Minor is a change you notice when you use it. Quiet is a small touch, a fix, a rename or a removal, or how the work is made. Breaking lists the changes that need an edit in your app.
 
+## 0.38.4 (November 16)
+
+1. `Minor` **The rail sits one step larger.** `Shell.Rail`'s rows rest one step above the Shell, as a pane's header does. A new `size` prop sets it. `Shell.RailScope` gives the same look to rows portalled into the rail from elsewhere.
+2. `Quiet` **Round rail tiles at radius full.** At radius `full`, a rail item's tile is a circle. It was a rounded square.
+3. `Quiet` **Breakpoint widths you can import.** `breakpoints` gives the stylesheet's widths in pixels, for your own media queries.
+
 ## 0.38.3 (November 16)
 
 1. `Minor` **Larger panel titles.** In a Dialog or Sheet, the title reads one text step larger than a pane header's, since it names the whole panel: 20px in a size-2 Dialog, 24px in a size-3.

@@ -1,3 +1,15 @@
+## [0.38.4](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.38.3...v0.38.4) (2026-11-16)
+
+### Fixes
+
+* **shell:** at radius `full`, a rail item's tile is a circle at every size. It took the control corner, which on the square tile made a rounded square.
+
+### Features
+
+* **breakpoints:** `breakpoints` is exported from the package root: `{ xs: 520, sm: 768, md: 1024, lg: 1280, xl: 1640 }` in px, `as const`, the stylesheet's widths (a test keeps them in step), for an app's own media queries. Shell's queries read it. The `./props` entry's `breakpoints` names array is unchanged.
+* **shell:** `Shell.Rail`'s rows rest one step above the Shell by default (1 to 2, 2 to 3, 3 stays 3), as a pane's band does. A new `size` prop sets it.
+* **shell:** `Shell.RailScope` gives rail rows rendered elsewhere in the React tree and portalled into `Shell.Rail` the rail's scope: thin rows with icon tiles, at the rail's size. Wrap the portalled `Shell.Scroll` in it.
+
 ## [0.38.3](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.38.2...v0.38.3) (2026-11-16)
 
 ### Look

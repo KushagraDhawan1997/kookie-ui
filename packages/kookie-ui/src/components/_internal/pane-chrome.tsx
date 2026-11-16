@@ -53,8 +53,9 @@ const ShellWindowContext = React.createContext(false);
  * Gives a Shell pane's children the Shell's index, so Sidebar parts size themselves. In a Rail
  * the rows are `thin`: icon tiles with a small label, sub-menus as dropdowns.
  */
-function PaneChromeScope({ children, presentation }: { children: React.ReactNode; presentation?: 'thin' }) {
-  const size = React.useContext(ShellSizeContext);
+function PaneChromeScope({ children, presentation, size: sizeProp }: { children: React.ReactNode; presentation?: 'thin'; size?: PaneSize }) {
+  const shellSize = React.useContext(ShellSizeContext);
+  const size = sizeProp ?? shellSize;
   const value = React.useMemo<SidebarVisualContextValue>(() => ({ size, menuVariant: 'soft', presentation }), [size, presentation]);
   return <SidebarVisualContext.Provider value={value}>{children}</SidebarVisualContext.Provider>;
 }
