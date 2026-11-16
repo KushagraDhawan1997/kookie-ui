@@ -61,7 +61,7 @@ From 768px up the sidebar sits in the frame, open. Below that it's an overlay, c
 
 - **Root:** The grid. It renders its children in the order you write them.
 - **Header:** The top row.
-- **Rail:** A narrow column of icons. Sidebar rows in it draw as tiles.
+- **Rail:** A narrow column of icons. Sidebar rows in it draw as tiles, one step larger than the Shell. At radius `full` the tiles are circles.
 - **Panel:** The wider navigation a Rail opens.
 - **Sidebar:** One navigation column, in place of a Rail and Panel.
 - **Content:** The work area. The only part every Shell needs.
@@ -88,7 +88,7 @@ From 768px up the sidebar sits in the frame, open. Below that it's an overlay, c
 
 In a contained Shell an overlay covers only the Shell. Otherwise it covers the window.
 
-The breakpoints are `xs` 520px, `sm` 768px, `md` 1024px, `lg` 1280px and `xl` 1640px.
+The breakpoints are `xs` 520px, `sm` 768px, `md` 1024px, `lg` 1280px and `xl` 1640px. Import `breakpoints` from the package for the same widths in your own media queries.
 
 ## Scrolling
 
@@ -204,6 +204,9 @@ Sidebar also takes the resize props, with `minSize` 200 and `maxSize` 400.
 | `presentation` | `'fixed' \| 'overlay' \| 'stacked'`, responsive | See below | How it sits in the frame |
 | `expandedSize` | `number` | See below | The open width, or height for Bottom, in pixels |
 | `flush` | `boolean` | `true` | Joins the frame, with a hairline to its neighbour. `false` makes it a card |
+| `size` | `'1' \| '2' \| '3'` | One step above the Shell, up to 3 | Rail only. The size of its rows |
+
+Rows rendered elsewhere and portalled into the Rail need `Shell.RailScope` around their `Shell.Scroll` to draw as rail tiles at the rail's size. It takes `size` too.
 
 | Pane | `presentation` | `expandedSize` | `minSize` / `maxSize` | Untouched |
 | --- | --- | --- | --- | --- |
