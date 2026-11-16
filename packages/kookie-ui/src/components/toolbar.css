@@ -158,6 +158,15 @@
   flex-shrink: 1;
 }
 
+/* A heading in the title, such as a Dialog.Title or Sheet.Title, takes the title's text step, so
+   the title follows the row's size like the controls beside it. */
+/* stylelint-disable-next-line selector-max-specificity */
+.kui-ToolbarTitle > .kui-Heading {
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
 /* A mirroring title is the page's own, said again in the band: silent while the page's large
    title is on screen, shown at once when it is not. Paint only, so the clusters beside it never
    move when someone scrolls. */

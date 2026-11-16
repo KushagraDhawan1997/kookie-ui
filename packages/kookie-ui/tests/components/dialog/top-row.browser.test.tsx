@@ -62,3 +62,48 @@ describe.each(panels)('$what top row', ({ Part }) => {
     });
   }
 });
+
+// A toolbar with no size of its own rests one step above its panel, as in a Shell pane.
+describe.each(panels)('$what top row size', ({ Part }) => {
+  const steps = { '1': '2', '2': '3', '3': '4', '4': '4' } as const;
+  for (const size of ['1', '2', '3', '4'] as const) {
+    it(`size ${size} panel: the row and its buttons are size ${steps[size]}`, () => {
+      render(
+        <Theme>
+          <Part.Root open>
+            <Part.Content size={size} aria-describedby={undefined}>
+              <Toolbar data-testid="row">
+                <Toolbar.Title>
+                  <Part.Title>Spark credits</Part.Title>
+                </Toolbar.Title>
+                <Toolbar.Button iconOnly aria-label="Close">
+                  ×
+                </Toolbar.Button>
+              </Toolbar>
+            </Part.Content>
+          </Part.Root>
+        </Theme>,
+      );
+      expect(document.querySelector('[data-testid="row"]')!.classList).toContain(`kui-r-size-${steps[size]}`);
+      // The panel's title takes the row's title step, not its own heading size.
+      const title = document.querySelector('.kui-ToolbarTitle')!;
+      const heading = title.querySelector('.kui-Heading')!;
+      expect(getComputedStyle(heading).fontSize).toBe(getComputedStyle(title).fontSize);
+    });
+  }
+
+  it('a size on the toolbar wins', () => {
+    render(
+      <Theme>
+        <Part.Root open>
+          <Part.Content size="3" aria-describedby={undefined}>
+            <Toolbar data-testid="row" size="1">
+              <Part.Title>T</Part.Title>
+            </Toolbar>
+          </Part.Content>
+        </Part.Root>
+      </Theme>,
+    );
+    expect(document.querySelector('[data-testid="row"]')!.classList).toContain('kui-r-size-1');
+  });
+});

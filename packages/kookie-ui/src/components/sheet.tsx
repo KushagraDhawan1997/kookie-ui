@@ -44,6 +44,7 @@ import type { DialogContentOwnProps } from './dialog.props.js';
 import { PortalTheme } from './_internal/portal-theme.js';
 import { NavigatorHostContext, type NavigatorHost } from './_internal/navigator-host.js';
 import { PanelBodyContext } from './_internal/panel-body-context.js';
+import { PaneBandSizeContext, panelBandSize } from './_internal/pane-band-context.js';
 import { useCloseWarning } from './_internal/use-close-warning.js';
 import { Heading } from './heading.js';
 import { Text } from './text.js';
@@ -131,6 +132,8 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>((allPro
   const normalizedSide = normalizedSideMap[side];
   // Size/width/height class names come from the dialog defs — see `sheetPropDefs`.
   const { className: extractedClassName, ...contentProps } = extractProps(restProps, sheetPropDefs);
+  // A toolbar in the panel with no size of its own rests one step above the panel.
+  const bandSize = panelBandSize(restProps.size);
 
   // Dev-only a11y guard: the panel needs a name. A Sheet.Title anywhere inside counts it
   // in a layout effect, which runs before this ref is attached, so nesting doesn't matter.
@@ -169,7 +172,9 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>((allPro
               aria-modal="true"
               children={
                 <NavigatorHostContext.Provider value={sheetNavigatorHost}>
-                  <PanelBodyContext.Provider value={true}>{contentProps.children}</PanelBodyContext.Provider>
+                  <PaneBandSizeContext.Provider value={bandSize}>
+                    <PanelBodyContext.Provider value={true}>{contentProps.children}</PanelBodyContext.Provider>
+                  </PaneBandSizeContext.Provider>
                 </NavigatorHostContext.Provider>
               }
             />

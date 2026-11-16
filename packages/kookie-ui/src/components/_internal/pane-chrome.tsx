@@ -13,7 +13,7 @@ import classNames from 'classnames';
 
 import { ScrollArea } from '../scroll-area.js';
 import { ShellStoreContext } from './shell-store.js';
-import { PaneBandSizeContext, type BandSize } from './pane-band-context.js';
+import { BAND_STEP, PaneBandSizeContext, type BandSize } from './pane-band-context.js';
 import { usePageScrollMedia } from './shell-page-scroll.js';
 
 type PaneSize = '1' | '2' | '3';
@@ -68,12 +68,6 @@ function useChromeClasses() {
   return ['kui-ShellPaneChrome', `kui-r-size-${size}`, `kui-menu-variant-${menuVariant}`];
 }
 
-/**
- * The index a Toolbar in a pane's header or footer rests at when it states none: one step above
- * the Shell's, so the band reads as chrome over the rows (v2 BAND_STEP). 4 has no step above.
- */
-const BAND_STEP = { '1': '2', '2': '3', '3': '4', '4': '4' } as const satisfies Record<BandSize, BandSize>;
-
 function useBandSize(): BandSize {
   const visual = useSidebarVisual();
   const shellSize = React.useContext(ShellSizeContext);
@@ -111,12 +105,7 @@ const PaneHeader = React.forwardRef<HTMLDivElement, PaneHeaderProps>(({ classNam
   const chrome = useChromeClasses();
   const band = useBandSize();
   return (
-    <div
-      {...props}
-      ref={forwardedRef}
-      data-float={float || undefined}
-      className={classNames('kui-ShellPaneHeader', 'kui-SidebarHeader', 'kui-SidebarHeader--container', ...chrome, className)}
-    >
+    <div {...props} ref={forwardedRef} data-float={float || undefined} className={classNames('kui-ShellPaneHeader', 'kui-SidebarHeader', 'kui-SidebarHeader--container', ...chrome, className)}>
       <PaneBandSizeContext.Provider value={band}>{children}</PaneBandSizeContext.Provider>
     </div>
   );
@@ -133,12 +122,7 @@ const PaneFooter = React.forwardRef<HTMLDivElement, PaneFooterProps>(({ classNam
   const chrome = useChromeClasses();
   const band = useBandSize();
   return (
-    <div
-      {...props}
-      ref={forwardedRef}
-      data-float={float || undefined}
-      className={classNames('kui-ShellPaneFooter', 'kui-SidebarFooter', 'kui-SidebarFooter--container', ...chrome, className)}
-    >
+    <div {...props} ref={forwardedRef} data-float={float || undefined} className={classNames('kui-ShellPaneFooter', 'kui-SidebarFooter', 'kui-SidebarFooter--container', ...chrome, className)}>
       <PaneBandSizeContext.Provider value={band}>{children}</PaneBandSizeContext.Provider>
     </div>
   );

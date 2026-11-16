@@ -13,13 +13,15 @@ const panels = [
   { what: 'Sheet', Part: Sheet },
 ] as const;
 
-const rows = Array.from({ length: 80 }, (_, i) => (
-  <p key={i} style={{ margin: 0, lineHeight: '24px' }}>
-    Shortcut {i + 1}
-  </p>
-));
+const makeRows = (count: number) =>
+  Array.from({ length: count }, (_, i) => (
+    <p key={i} style={{ margin: 0, lineHeight: '24px' }}>
+      Shortcut {i + 1}
+    </p>
+  ));
 
-function Panel({ Part, scroll = true, maxHeight }: { Part: typeof Dialog | typeof Sheet; scroll?: boolean; maxHeight?: string }) {
+function Panel({ Part, scroll = true, maxHeight, count = 80 }: { Part: typeof Dialog | typeof Sheet; scroll?: boolean; maxHeight?: string; count?: number }) {
+  const rows = makeRows(count);
   const body = scroll ? <ScrollArea data-testid="body">{rows}</ScrollArea> : <div data-testid="body">{rows}</div>;
   return (
     <Theme>
@@ -122,6 +124,33 @@ describe('a panel body fades', () => {
     for (const id of ['page', 'off', 'nested']) {
       expect(document.querySelector(`[data-testid="${id}"]`)!.closest('.kui-ScrollAreaRoot')!.hasAttribute('data-fade')).toBe(false);
     }
+  });
+});
+
+describe('the floating row hides content under it', () => {
+  // The mask's hold, resolved to px by a probe that is as wide as it.
+  function held() {
+    const probe = document.createElement('div');
+    probe.style.width = 'var(--scroll-fade-start-held)';
+    viewport().append(probe);
+    const width = probe.getBoundingClientRect().width;
+    probe.remove();
+    return width;
+  }
+
+  // 10 rows are 240px of content; at 300px the body overflows by about 40px.
+  it.each([
+    ['a little', 10],
+    ['a lot', 80],
+  ])('from the first pixel scrolled, when the body overflows %s', async (_, count) => {
+    render(<Panel Part={Dialog} maxHeight="300px" count={count} />);
+    expect(viewport().scrollHeight - viewport().clientHeight).toBeGreaterThan(count === 10 ? 0 : 500);
+    const reach = box(document.querySelector('[data-testid="row"]')!).bottom - box(panel()).top;
+    expect(held()).toBe(0);
+    viewport().scrollTop = viewport().scrollHeight;
+    viewport().dispatchEvent(new Event('scroll'));
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    expect(held()).toBeCloseTo(reach, 0);
   });
 });
 

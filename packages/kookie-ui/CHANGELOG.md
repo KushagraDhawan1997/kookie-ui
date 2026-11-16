@@ -1,3 +1,11 @@
+## [0.38.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.38.1...v0.38.2) (2026-11-16)
+
+### Fixes
+
+* **dialog, sheet:** a Toolbar in a Dialog or Sheet with no size of its own rests one step above the panel (1→2, 2→3, 3→4, 4→4), as in a Shell pane. Portalled outside the Shell, it fell back to the theme's size, so a size-3 dialog had a size-2 top row. A responsive panel size leaves the theme's size.
+* **toolbar:** a heading in `Toolbar.Title`, such as `Dialog.Title` or `Sheet.Title`, takes the title's text step, so the title follows the row's size.
+* **dialog, sheet:** content scrolled under a floating top row is hidden from the first pixel, however little the body overflows. The hold ramped in with the scroll, so a body that overflowed by less than the row's height showed its content sharp through the row.
+
 ## [0.38.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.38.0...v0.38.1) (2026-11-16)
 
 ### Features
