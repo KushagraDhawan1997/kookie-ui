@@ -133,7 +133,9 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>((allPro
   // Size/width/height class names come from the dialog defs — see `sheetPropDefs`.
   const { className: extractedClassName, ...contentProps } = extractProps(restProps, sheetPropDefs);
   // A toolbar in the panel with no size of its own rests one step above the panel.
-  const bandSize = panelBandSize(restProps.size);
+  // An unset size is the prop def's default: useThemeSizeProps leaves it unset when the Theme's
+  // size is the default too.
+  const bandSize = panelBandSize(restProps.size ?? sheetPropDefs.size.default);
 
   // Dev-only a11y guard: the panel needs a name. A Sheet.Title anywhere inside counts it
   // in a layout effect, which runs before this ref is attached, so nesting doesn't matter.

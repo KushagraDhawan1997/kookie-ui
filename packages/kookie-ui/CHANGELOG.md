@@ -1,3 +1,10 @@
+## [0.38.5](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.38.4...v0.38.5) (2026-11-16)
+
+### Fixes
+
+* **dialog, sheet:** a Dialog or Sheet with no `size` of its own steps its top-row Toolbar up too. It took no step when the Theme's size was the default, because the size was never filled in.
+* **dialog, sheet:** a title leading the top row starts on the body's inset, so it lines up with the text under it. The row still sits one step out, so Close keeps the corner. Same as a Navigator band's title.
+
 ## [0.38.4](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.38.3...v0.38.4) (2026-11-16)
 
 ### Fixes

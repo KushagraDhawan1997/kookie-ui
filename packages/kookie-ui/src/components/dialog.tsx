@@ -54,7 +54,9 @@ const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>
 
   const { className, forceMount, container, onCloseAutoFocus, ...contentProps } = extractProps(props, contentPropDefs);
   // A toolbar in the panel with no size of its own rests one step above the panel.
-  const bandSize = panelBandSize(props.size);
+  // An unset size is the prop def's default: useThemeSizeProps leaves it unset when the Theme's
+  // size is the default too.
+  const bandSize = panelBandSize(props.size ?? contentPropDefs.size.default);
 
   const closeWarningRef = useCloseWarning('Dialog');
   const ref = useComposedRefs(forwardedRef, closeWarningRef);

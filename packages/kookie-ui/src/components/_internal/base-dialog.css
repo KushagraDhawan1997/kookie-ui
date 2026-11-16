@@ -129,6 +129,12 @@
   min-inline-size: 0;
 }
 
+/* The row sits one step out so its Close hugs the corner; a title leading the row steps back in,
+   so it starts on the body's inset like the text under it. Same as a Navigator band's title. */
+.kui-ToolbarTitle:where(.kui-BaseDialogContent > .kui-Toolbar:first-child > :first-child) {
+  padding-inline-start: var(--layout-space-2);
+}
+
 /*
  * A ScrollArea directly in the panel is its body. The panel turns into a column: what sits above
  * the ScrollArea (the top row) stays put, and the ScrollArea takes the rest of the height and

@@ -95,6 +95,49 @@ describe.each(panels)('$what top row size', ({ Part }) => {
     });
   }
 
+  it('with no size, rests one step above the default panel size', () => {
+    render(
+      <Theme>
+        <Part.Root open>
+          <Part.Content aria-describedby={undefined}>
+            <Toolbar data-testid="row">
+              <Part.Title>T</Part.Title>
+            </Toolbar>
+          </Part.Content>
+        </Part.Root>
+      </Theme>,
+    );
+    expect(document.querySelector('[data-testid="row"]')!.classList).toContain('kui-r-size-3');
+  });
+
+  it('the title starts on the body inset, while Close stays at the corner', () => {
+    render(
+      <Theme>
+        <Part.Root open>
+          <Part.Content size="2" aria-describedby={undefined}>
+            <Toolbar data-testid="row">
+              <Toolbar.Title>
+                <Part.Title>Spark credits</Part.Title>
+              </Toolbar.Title>
+              <Toolbar.Button iconOnly aria-label="Close" data-testid="close">
+                ×
+              </Toolbar.Button>
+            </Toolbar>
+            <p data-testid="body" style={{ margin: 0 }}>
+              Body
+            </p>
+          </Part.Content>
+        </Part.Root>
+      </Theme>,
+    );
+    const left = (id: string) => document.querySelector(`[data-testid="${id}"]`)!.getBoundingClientRect();
+    // Where the title's text starts: its box plus the inset it takes.
+    const titleEl = document.querySelector('.kui-ToolbarTitle')!;
+    const textStart = titleEl.getBoundingClientRect().left + parseFloat(getComputedStyle(titleEl).paddingLeft);
+    expect(textStart).toBeCloseTo(left('body').left, 0);
+    expect(left('close').right).toBeGreaterThan(left('body').right);
+  });
+
   it('a size on the toolbar wins', () => {
     render(
       <Theme>
