@@ -1,3 +1,45 @@
+## [0.38.5](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.38.4...v0.38.5) (2026-11-16)
+
+### Fixes
+
+* **dialog, sheet:** a Dialog or Sheet with no `size` of its own steps its top-row Toolbar up too. It took no step when the Theme's size was the default, because the size was never filled in.
+* **dialog, sheet:** a title leading the top row starts on the body's inset, so it lines up with the text under it. The row still sits one step out, so Close keeps the corner. Same as a Navigator band's title.
+
+## [0.38.4](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.38.3...v0.38.4) (2026-11-16)
+
+### Fixes
+
+* **shell:** at radius `full`, a rail item's tile is a circle at every size. It took the control corner, which on the square tile made a rounded square.
+
+### Features
+
+* **breakpoints:** `breakpoints` is exported from the package root: `{ xs: 520, sm: 768, md: 1024, lg: 1280, xl: 1640 }` in px, `as const`, the stylesheet's widths (a test keeps them in step), for an app's own media queries. Shell's queries read it. The `./props` entry's `breakpoints` names array is unchanged.
+* **shell:** `Shell.Rail`'s rows rest one step above the Shell by default (1 to 2, 2 to 3, 3 stays 3), as a pane's band does. A new `size` prop sets it.
+* **shell:** `Shell.RailScope` gives rail rows rendered elsewhere in the React tree and portalled into `Shell.Rail` the rail's scope: thin rows with icon tiles, at the rail's size. Wrap the portalled `Shell.Scroll` in it.
+
+## [0.38.3](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.38.2...v0.38.3) (2026-11-16)
+
+### Look
+
+* **toolbar:** in a Dialog or Sheet, `Toolbar.Title` reads one text step larger than in a pane header, since it names the whole panel: 20px in a size-2 dialog, 24px in a size-3. Pane headers are unchanged.
+
+## [0.38.2](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.38.1...v0.38.2) (2026-11-16)
+
+### Fixes
+
+* **dialog, sheet:** a Toolbar in a Dialog or Sheet with no size of its own rests one step above the panel (1→2, 2→3, 3→4, 4→4), as in a Shell pane. Portalled outside the Shell, it fell back to the theme's size, so a size-3 dialog had a size-2 top row. A responsive panel size leaves the theme's size.
+* **toolbar:** a heading in `Toolbar.Title`, such as `Dialog.Title` or `Sheet.Title`, takes the title's text step, so the title follows the row's size.
+* **dialog, sheet:** content scrolled under a floating top row is hidden from the first pixel, however little the body overflows. The hold ramped in with the scroll, so a body that overflowed by less than the row's height showed its content sharp through the row.
+
+## [0.38.1](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.38.0...v0.38.1) (2026-11-16)
+
+### Features
+
+* **dialog, sheet:** a `ScrollArea` placed directly in `Dialog.Content` or `Sheet.Content` is the panel's body. The panel becomes a column: what sits above the ScrollArea, such as the top-row Toolbar with the title and Close, stays put, and the ScrollArea takes the rest of the height and scrolls on its own. It reaches the panel's inline and bottom edges, so its scrollbar sits at the edge, and pads its content back to the panel's inset. A Dialog with one fits the window; a `maxHeight` still caps it. Without a ScrollArea the panel scrolls as a whole, as before.
+* **dialog, sheet:** with a top-row Toolbar first and the ScrollArea right after it, the row floats: the body runs under it to the panel's top edge, its content starts where it did before, and as it scrolls the content is hidden under the row and fades in over the gap below it. The ScrollArea measures the row's height.
+* **scroll-area:** `--scroll-fade-start-hold` keeps content fully hidden for a length before the start fade begins, for a band that content must not show through.
+* **scroll-area:** inside a Dialog or Sheet, a `ScrollArea` fades its edges by default, so rows ease out under the pinned top row. `fade={false}` turns it off. A ScrollArea nested in another, and one outside a panel, keep `fade` off by default.
+
 ## [0.38.0](https://github.com/KushagraDhawan1997/kookie-ui/compare/v0.37.1...v0.38.0) (2026-11-11)
 
 ### Features

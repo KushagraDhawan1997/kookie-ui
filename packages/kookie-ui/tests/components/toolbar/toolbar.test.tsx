@@ -50,7 +50,7 @@ describe('Toolbar size in a Shell', () => {
 });
 
 describe('Toolbar size in a portalled surface', () => {
-  it('a Toolbar in a Popover or Dialog opened from the Shell takes the Theme size, not the Shell step', () => {
+  it('a Toolbar in a Popover opened from the Shell takes the Theme size; in a Dialog it rests one step above the panel', () => {
     renderWithProviders(
       <Shell.Root size="2">
         <Shell.Content>
@@ -78,10 +78,10 @@ describe('Toolbar size in a portalled surface', () => {
     );
     expect(document.querySelector('[aria-label="Row"]')).toHaveClass('kui-r-size-3');
     expect(document.querySelector('[aria-label="In popover"]')).toHaveClass('kui-r-size-2');
-    expect(document.querySelector('[aria-label="In dialog"]')).toHaveClass('kui-r-size-2');
+    expect(document.querySelector('[aria-label="In dialog"]')).toHaveClass('kui-r-size-3');
   });
 
-  it('a Toolbar in a menu or a Sheet opened from the Shell takes the Theme size too', () => {
+  it('a Toolbar in a menu opened from the Shell takes the Theme size; in a Sheet it rests one step above the panel', () => {
     renderWithProviders(
       <Shell.Root size="2">
         <Shell.Content>
@@ -107,7 +107,7 @@ describe('Toolbar size in a portalled surface', () => {
       </Shell.Root>,
     );
     expect(document.querySelector('[aria-label="In menu"]')).toHaveClass('kui-r-size-2');
-    expect(document.querySelector('[aria-label="In sheet"]')).toHaveClass('kui-r-size-2');
+    expect(document.querySelector('[aria-label="In sheet"]')).toHaveClass('kui-r-size-3');
   });
 
   // A Theme an app nests in a pane, to darken a toolbar, is not a portal: the band holds.

@@ -8,6 +8,8 @@ import { Heading } from './heading.js';
 import { Text } from './text.js';
 import { PortalTheme } from './_internal/portal-theme.js';
 import { NavigatorHostContext, type NavigatorHost } from './_internal/navigator-host.js';
+import { PanelBodyContext } from './_internal/panel-body-context.js';
+import { PaneBandSizeContext, panelBandSize } from './_internal/pane-band-context.js';
 import { useCloseWarning } from './_internal/use-close-warning.js';
 import { extractProps } from '../helpers/extract-props.js';
 import { useThemeSizeProps } from '../hooks/theme-size.js';
@@ -51,6 +53,10 @@ const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>
   const { className: alignClassName } = extractProps({ align }, alignPropDefs);
 
   const { className, forceMount, container, onCloseAutoFocus, ...contentProps } = extractProps(props, contentPropDefs);
+  // A toolbar in the panel with no size of its own rests one step above the panel.
+  // An unset size is the prop def's default: useThemeSizeProps leaves it unset when the Theme's
+  // size is the default too.
+  const bandSize = panelBandSize(props.size ?? contentPropDefs.size.default);
 
   const closeWarningRef = useCloseWarning('Dialog');
   const ref = useComposedRefs(forwardedRef, closeWarningRef);
@@ -68,7 +74,13 @@ const DialogContent = React.forwardRef<DialogContentElement, DialogContentProps>
                 {...contentProps}
                 ref={ref}
                 className={classNames('kui-BaseDialogContent', 'kui-DialogContent', className)}
-                children={<NavigatorHostContext.Provider value={dialogNavigatorHost}>{contentProps.children}</NavigatorHostContext.Provider>}
+                children={
+                  <NavigatorHostContext.Provider value={dialogNavigatorHost}>
+                    <PaneBandSizeContext.Provider value={bandSize}>
+                      <PanelBodyContext.Provider value={true}>{contentProps.children}</PanelBodyContext.Provider>
+                    </PaneBandSizeContext.Provider>
+                  </NavigatorHostContext.Provider>
+                }
                 aria-modal="true"
                 onCloseAutoFocus={(event) => {
                   // Radix returns focus to the trigger unless the caller prevents it.

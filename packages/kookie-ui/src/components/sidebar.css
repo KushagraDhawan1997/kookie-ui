@@ -137,19 +137,22 @@
 /* stylelint-disable-next-line selector-max-specificity */
 .kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-r-size-1 .kui-SidebarMenuIconWrapper {
   padding: var(--space-3) var(--space-3);
-  border-radius: var(--radius-control-1);
+  /* A square tile: at radius full it is a circle, as the controls are pills. */
+  border-radius: max(var(--radius-control-1), var(--radius-full, 0px));
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
 .kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-r-size-2 .kui-SidebarMenuIconWrapper {
   padding: var(--space-3);
-  border-radius: var(--radius-control-2);
+  /* A square tile: at radius full it is a circle, as the controls are pills. */
+  border-radius: max(var(--radius-control-2), var(--radius-full, 0px));
 }
 
 /* stylelint-disable-next-line selector-max-specificity */
 .kui-ShellRailContent :is(.kui-SidebarContent, .kui-ShellPaneHeader, .kui-ShellPaneFooter).kui-r-size-3 .kui-SidebarMenuIconWrapper {
   padding: var(--space-4);
-  border-radius: var(--radius-control-3);
+  /* A square tile: at radius full it is a circle, as the controls are pills. */
+  border-radius: max(var(--radius-control-3), var(--radius-full, 0px));
 }
 
 /* Label styling in thin mode - outside the background area */

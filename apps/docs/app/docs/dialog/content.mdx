@@ -75,8 +75,9 @@ export function RenameProject({ name }: { name: string }) {
 - **Root:** Holds the open state. A dialog is always modal.
 - **Trigger:** The element that opens the dialog. It takes one child element, usually a Button.
 - **Content:** The panel, rendered in a portal with a dimmed overlay behind it.
-- **Toolbar:** The top row, first in Content. It holds the title and the Close X, and sits one step closer to the panel's edge than the content.
-- **Title:** The dialog's name. It renders a Heading at size 5.
+- **Toolbar:** The top row, first in Content. It holds the title and the Close X, and sits one step closer to the panel's edge than the content. Its size rests one step above the panel's, and the title reads one step larger than a pane header's.
+- **Title:** The dialog's name. In the top row it takes the row's title size. Elsewhere it renders a Heading at size 5.
+- **ScrollArea:** Optional. Placed right after the top row, it is the panel's body: it takes the rest of the height and scrolls under the row, which stays put.
 - **Description:** A sentence that explains the task. It renders a `p` Text at size 3.
 - **Close:** Closes the dialog when its child is pressed. It takes one child element.
 
@@ -136,7 +137,16 @@ The panel publishes its padding, so a child with `m="bleed"` reaches the panel's
 
 ### Long content
 
-When the panel is taller than the window, the overlay scrolls and the panel moves with it. Keep the title and the actions in the content so they scroll into view together.
+Put the body in a [ScrollArea](/docs/scroll-area) right after the top row. The panel then fits the window, the row with the title and Close stays put, and the body scrolls under it and fades out beneath it. A `maxHeight` still caps the panel.
+
+```tsx
+<Dialog.Content>
+  <Toolbar>{/* title and Close */}</Toolbar>
+  <ScrollArea>{/* long body */}</ScrollArea>
+</Dialog.Content>
+```
+
+Without a ScrollArea, the overlay scrolls and the whole panel moves with it.
 
 ## Props
 

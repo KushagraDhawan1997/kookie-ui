@@ -1,3 +1,4 @@
+import { breakpoints } from '../helpers/breakpoints.js';
 import type * as React from 'react';
 
 export type PresentationValue = 'fixed' | 'overlay' | 'stacked';
@@ -32,11 +33,11 @@ export interface PaneBaseProps extends React.ComponentPropsWithoutRef<'div'> {
 }
 
 export const _BREAKPOINTS = {
-  xs: '(min-width: 520px)',
-  sm: '(min-width: 768px)',
-  md: '(min-width: 1024px)',
-  lg: '(min-width: 1280px)',
-  xl: '(min-width: 1640px)',
+  xs: `(min-width: ${breakpoints.xs}px)`,
+  sm: `(min-width: ${breakpoints.sm}px)`,
+  md: `(min-width: ${breakpoints.md}px)`,
+  lg: `(min-width: ${breakpoints.lg}px)`,
+  xl: `(min-width: ${breakpoints.xl}px)`,
 } as const;
 
 export type Breakpoint = 'initial' | keyof typeof _BREAKPOINTS;

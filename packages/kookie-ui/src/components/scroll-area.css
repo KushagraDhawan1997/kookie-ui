@@ -158,6 +158,10 @@
  * Kookie's scroll-edges hook. `min()` against the fade length is the whole behaviour: an edge
  * with nothing past it fades over 0px, and the fade ramps in over the first pixels of scrolling.
  * A floating band over an edge sets `--scroll-fade-start` or `--scroll-fade-end` to its height.
+ * `--scroll-fade-start-hold` keeps content fully hidden for that length first, as under a panel's
+ * floating top row, so text never shows through the row; the fade then runs to the fade start.
+ * The hold is all or nothing: from the first pixel scrolled, the whole length is hidden, however
+ * little the content overflows. Only the fade below it ramps in with the scroll.
  *
  * Shared by ScrollArea (on its viewport, both axes) and MessageScroller (on its viewport, block axis only). Scrollbars are
  * siblings of the viewport, outside the mask, so the thumb stays crisp.
@@ -165,8 +169,8 @@
 .kui-MessageScrollerViewport:where([data-fade]) {
   mask-image: linear-gradient(
     to bottom,
-    transparent 0%,
-    black min(var(--scroll-overflow-start, 0px), var(--scroll-fade-start, var(--scroll-fade-size))),
+    transparent var(--scroll-fade-start-held),
+    black calc(var(--scroll-fade-start-held) + min(var(--scroll-overflow-start, 0px), calc(var(--scroll-fade-start, var(--scroll-fade-size)) - var(--scroll-fade-start-hold, 0px)))),
     black calc(100% - min(var(--scroll-overflow-end, 0px), var(--scroll-fade-end, var(--scroll-fade-size)))),
     transparent 100%
   );
@@ -187,8 +191,8 @@
     ),
     linear-gradient(
       to bottom,
-      transparent 0%,
-      black min(var(--scroll-overflow-start, 0px), var(--scroll-fade-start, var(--scroll-fade-size))),
+      transparent var(--scroll-fade-start-held),
+      black calc(var(--scroll-fade-start-held) + min(var(--scroll-overflow-start, 0px), calc(var(--scroll-fade-start, var(--scroll-fade-size)) - var(--scroll-fade-start-hold, 0px)))),
       black calc(100% - min(var(--scroll-overflow-end, 0px), var(--scroll-fade-end, var(--scroll-fade-size)))),
       transparent 100%
     );
@@ -204,11 +208,19 @@
   --scroll-fade-size: var(--space-7);
 }
 
+/* The hold in force: the whole hold once anything is scrolled past the start edge, else 0. The
+   overflow is a whole number of px once scrolled, so times 10000 is past any hold. */
+.kui-ScrollAreaViewport,
+.kui-MessageScrollerViewport {
+  --scroll-fade-start-held: min(var(--scroll-fade-start-hold, 0px), calc(var(--scroll-overflow-start, 0px) * 10000));
+}
+
 /*
  * A band is above the scroller it floats over and above nothing else. The reach hooks inherit,
  * so a scroller nested inside another takes the designed length, not its ancestor's band.
  */
 :where(.kui-ScrollAreaViewport, .kui-MessageScrollerViewport) :where(.kui-ScrollAreaRoot, .kui-MessageScrollerViewport) {
   --scroll-fade-start: initial;
+  --scroll-fade-start-hold: initial;
   --scroll-fade-end: initial;
 }

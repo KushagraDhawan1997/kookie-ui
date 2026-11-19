@@ -69,8 +69,9 @@ export function OrderDetails({ order }: { order: { id: string; status: string; t
 - **Root:** Holds the open state. A sheet is always modal.
 - **Trigger:** The element that opens the sheet. It takes one child element, usually a Button.
 - **Content:** The panel, rendered in a portal against one edge, with a dimmed overlay behind it.
-- **Toolbar:** The top row, first in Content. It holds the title and the Close X, and sits one step closer to the panel's edge than the content.
-- **Title:** The sheet's name. It renders a Heading at size 4, medium weight.
+- **Toolbar:** The top row, first in Content. It holds the title and the Close X, and sits one step closer to the panel's edge than the content. Its size rests one step above the panel's, and the title reads one step larger than a pane header's.
+- **Title:** The sheet's name. In the top row it takes the row's title size. Elsewhere it renders a Heading at size 4, medium weight.
+- **ScrollArea:** Optional. Placed right after the top row, it is the panel's body: it takes the rest of the height and scrolls under the row, which stays put. Without one, the whole panel scrolls.
 - **Description:** A line under the title. It renders Text at size 2 with `emphasis="medium"`.
 - **Close:** Closes the sheet when its child is pressed. It takes one child element.
 

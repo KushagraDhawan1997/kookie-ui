@@ -63,6 +63,10 @@ export function ActivityPanel({ events }: { events: { id: string; text: string }
 
 `fade` fades the content toward each edge when there is more to scroll past it, on both axes. An edge with nothing beyond it doesn't fade. The fade is a mask on the content, so it works on any background. In a right-to-left layout the side fades follow the reading direction.
 
+Inside a [Dialog](/docs/dialog) or [Sheet](/docs/sheet), `fade` is on by default, so rows ease out under the panel's top row. Set `fade={false}` to turn it off.
+
+`--scroll-fade-start-hold` keeps the content fully hidden for a length before the start fade begins, for a band the content must not show through.
+
 ## Examples
 
 ### Horizontal row
@@ -96,7 +100,7 @@ While the content overflows, the viewport is in the tab order, so keyboard users
 | `scrollbars` | `'vertical' \| 'horizontal' \| 'both'` | `'both'` | Which scrollbars render |
 | `type` | `'hover' \| 'scroll' \| 'auto' \| 'always'` | `'hover'` | When the scrollbars show |
 | `scrollHideDelay` | `number` | `0`, or `600` with `type="scroll"` | Milliseconds before the scrollbars hide |
-| `fade` | `boolean` | `false` | Fades each edge when there is more to scroll past it |
+| `fade` | `boolean` | `false`, `true` in a Dialog or Sheet | Fades each edge when there is more to scroll past it |
 | `radius` | `'none' \| 'small' \| 'medium' \| 'large' \| 'full'` | Theme radius | The corner of the scrollbars |
 | `width`, `minWidth`, `maxWidth` | `string`, responsive | `'100%'` for `width` | The width of the area |
 | `height`, `minHeight`, `maxHeight` | `string`, responsive | `'100%'` for `height` | The height of the area |

@@ -43,6 +43,8 @@ import { dialogContentPropDefs } from './dialog.props.js';
 import type { DialogContentOwnProps } from './dialog.props.js';
 import { PortalTheme } from './_internal/portal-theme.js';
 import { NavigatorHostContext, type NavigatorHost } from './_internal/navigator-host.js';
+import { PanelBodyContext } from './_internal/panel-body-context.js';
+import { PaneBandSizeContext, panelBandSize } from './_internal/pane-band-context.js';
 import { useCloseWarning } from './_internal/use-close-warning.js';
 import { Heading } from './heading.js';
 import { Text } from './text.js';
@@ -104,9 +106,7 @@ const sheetNavigatorHost: NavigatorHost = {
 const SheetTitleCountContext = React.createContext<React.MutableRefObject<number> | null>(null);
 
 type SheetContentElement = React.ElementRef<typeof DialogPrimitive.Content>;
-interface SheetContentProps
-  extends ComponentPropsWithout<typeof DialogPrimitive.Content, RemovedProps>,
-    Omit<DialogContentOwnProps, 'align'> {
+interface SheetContentProps extends ComponentPropsWithout<typeof DialogPrimitive.Content, RemovedProps>, Omit<DialogContentOwnProps, 'align'> {
   /** Side where the Sheet should appear. `left`/`right` alias to `start`/`end`. */
   side?: SheetSide;
   /** Optional DOM container to portal into. Defaults to `document.body`. */
@@ -132,6 +132,10 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>((allPro
   const normalizedSide = normalizedSideMap[side];
   // Size/width/height class names come from the dialog defs — see `sheetPropDefs`.
   const { className: extractedClassName, ...contentProps } = extractProps(restProps, sheetPropDefs);
+  // A toolbar in the panel with no size of its own rests one step above the panel.
+  // An unset size is the prop def's default: useThemeSizeProps leaves it unset when the Theme's
+  // size is the default too.
+  const bandSize = panelBandSize(restProps.size ?? sheetPropDefs.size.default);
 
   // Dev-only a11y guard: the panel needs a name. A Sheet.Title anywhere inside counts it
   // in a layout effect, which runs before this ref is attached, so nesting doesn't matter.
@@ -168,7 +172,13 @@ const Content = React.forwardRef<SheetContentElement, SheetContentProps>((allPro
               className={classNames('kui-BaseDialogContent', 'kui-SheetContent', className, extractedClassName)}
               data-side={normalizedSide}
               aria-modal="true"
-              children={<NavigatorHostContext.Provider value={sheetNavigatorHost}>{contentProps.children}</NavigatorHostContext.Provider>}
+              children={
+                <NavigatorHostContext.Provider value={sheetNavigatorHost}>
+                  <PaneBandSizeContext.Provider value={bandSize}>
+                    <PanelBodyContext.Provider value={true}>{contentProps.children}</PanelBodyContext.Provider>
+                  </PaneBandSizeContext.Provider>
+                </NavigatorHostContext.Provider>
+              }
             />
           </DialogPrimitive.Overlay>
         </PortalTheme>

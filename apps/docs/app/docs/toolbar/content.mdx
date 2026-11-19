@@ -82,7 +82,7 @@ export function EditorToolbar({ bold, italic, onBold, onItalic, onUndo, onShare 
 
 ## Size
 
-`size` picks the row's height and hands it to every button inside that doesn't set its own: 28, 32, 40 or 48 pixels for 1 to 4. Size 2 is the default, or the Theme's size when one is set. Inside a Shell, a Toolbar with no `size` sits one step above the Shell's size: in a `Shell.PaneHeader` or `Shell.PaneFooter`, in `Shell.Content`, and anywhere else in the Shell except a pane's `Shell.Scroll` list. A Popover, Dialog, Sheet or menu opened from the Shell is not part of it, so a Toolbar there takes the Theme's size. The title's text grows with the size too.
+`size` picks the row's height and hands it to every button inside that doesn't set its own: 28, 32, 40 or 48 pixels for 1 to 4. Size 2 is the default, or the Theme's size when one is set. Inside a Shell, a Toolbar with no `size` sits one step above the Shell's size: in a `Shell.PaneHeader` or `Shell.PaneFooter`, in `Shell.Content`, and anywhere else in the Shell except a pane's `Shell.Scroll` list. A Popover or menu opened from the Shell is not part of it, so a Toolbar there takes the Theme's size. In a Dialog or Sheet, a Toolbar with no `size` sits one step above the panel's size. The title's text grows with the size too, and in a Dialog or Sheet it reads one step larger again, since it names the whole panel.
 
 ## Button looks
 

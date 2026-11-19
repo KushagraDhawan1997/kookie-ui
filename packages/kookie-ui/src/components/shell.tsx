@@ -453,43 +453,43 @@ const Root = React.forwardRef<HTMLDivElement, ShellRootProps>(({ className, chil
   return (
     <ShellStoreContext.Provider value={store}>
       <ShellSizeContext.Provider value={size}>
-      <ShellContentContext.Provider value={false}>
-      <ShellWindowContext.Provider value={windowShell}>
-      <ShellHeaderHeightContext.Provider value={setHeaderHeight}>
-      <ShellFrameContext.Provider value={frameContext}>
-      {/* A Shell inside a portalled surface's Theme starts with no band, like any other. */}
-      <PaneBandSizeContext.Provider value={undefined}>
-        {/* The Root is not a widget: it hears Escape bubbling up from the panes,
+        <ShellContentContext.Provider value={false}>
+          <ShellWindowContext.Provider value={windowShell}>
+            <ShellHeaderHeightContext.Provider value={setHeaderHeight}>
+              <ShellFrameContext.Provider value={frameContext}>
+                {/* A Shell inside a portalled surface's Theme starts with no band, like any other. */}
+                <PaneBandSizeContext.Provider value={undefined}>
+                  {/* The Root is not a widget: it hears Escape bubbling up from the panes,
             after their own handlers, to close the overlays. */}
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-        <div
-          {...props}
-          ref={composedRef}
-          className={classNames('kui-ShellRoot', className)}
-          data-height={height === 'auto' && !contained ? 'auto' : undefined}
-          data-contained={contained || undefined}
-          data-window={windowShell || undefined}
-          data-overlay-live={liveCount > 0 || undefined}
-          onKeyDown={handleKeyDown}
-          onFocus={handleFocus}
-          style={{
-            ...heightStyle,
-            ...(railOffset ? ({ '--shell-rail-offset': railOffset } as CSSPropertiesWithVars) : {}),
-            ...(headerHeight !== undefined ? ({ '--kui-shell-header-h': `${headerHeight}px` } as CSSPropertiesWithVars) : {}),
-            ...style,
-          }}
-        >
-          {children}
-          {/* Root-owned and always mounted. The stylesheet shows it while an
+                  {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+                  <div
+                    {...props}
+                    ref={composedRef}
+                    className={classNames('kui-ShellRoot', className)}
+                    data-height={height === 'auto' && !contained ? 'auto' : undefined}
+                    data-contained={contained || undefined}
+                    data-window={windowShell || undefined}
+                    data-overlay-live={liveCount > 0 || undefined}
+                    onKeyDown={handleKeyDown}
+                    onFocus={handleFocus}
+                    style={{
+                      ...heightStyle,
+                      ...(railOffset ? ({ '--shell-rail-offset': railOffset } as CSSPropertiesWithVars) : {}),
+                      ...(headerHeight !== undefined ? ({ '--kui-shell-header-h': `${headerHeight}px` } as CSSPropertiesWithVars) : {}),
+                      ...style,
+                    }}
+                  >
+                    {children}
+                    {/* Root-owned and always mounted. The stylesheet shows it while an
               overlay is live; containment takes the rest of the frame out of
               the accessibility tree, so the scrim itself is hidden from it. */}
-          <div className="kui-ShellScrim" aria-hidden onClick={closeOverlays} />
-        </div>
-      </PaneBandSizeContext.Provider>
-      </ShellFrameContext.Provider>
-      </ShellHeaderHeightContext.Provider>
-      </ShellWindowContext.Provider>
-      </ShellContentContext.Provider>
+                    <div className="kui-ShellScrim" aria-hidden onClick={closeOverlays} />
+                  </div>
+                </PaneBandSizeContext.Provider>
+              </ShellFrameContext.Provider>
+            </ShellHeaderHeightContext.Provider>
+          </ShellWindowContext.Provider>
+        </ShellContentContext.Provider>
       </ShellSizeContext.Provider>
     </ShellStoreContext.Provider>
   );
@@ -542,6 +542,11 @@ type RailUncontrolledProps = { defaultOpen?: boolean | Partial<Record<Breakpoint
 
 type RailProps = React.ComponentPropsWithoutRef<'div'> & {
   presentation?: ResponsivePresentation;
+  /**
+   * The rail's rows' size. By default one step above the Shell's (1 to 2, 2 to 3, 3 stays 3), so
+   * the rail reads as chrome beside the content, as a pane's band does.
+   */
+  size?: PaneSize;
   expandedSize?: number;
   collapsible?: boolean;
   /**
@@ -556,7 +561,7 @@ type RailProps = React.ComponentPropsWithoutRef<'div'> & {
 const RAIL_PROP_NAMES = { controlled: 'open', default: 'defaultOpen' };
 
 const Rail = React.forwardRef<HTMLDivElement, RailProps>((props, ref) => {
-  const { className, presentation, expandedSize = 64, collapsible: _collapsible, children, style, open, defaultOpen, onOpenChange, flush = true, id, ...domProps } = props;
+  const { className, presentation, size, expandedSize = 64, collapsible: _collapsible, children, style, open, defaultOpen, onOpenChange, flush = true, id, ...domProps } = props;
   const { table, attributes } = usePresentationTable(presentation, 'fixed');
   const pane = usePane({
     name: 'rail',
@@ -585,21 +590,56 @@ const Rail = React.forwardRef<HTMLDivElement, RailProps>((props, ref) => {
       tabIndex={pane.overlaying ? -1 : domProps.tabIndex}
       style={{ ...style, '--rail-size': `${expandedSize}px` } as CSSPropertiesWithVars}
     >
-      <RailContent>{children}</RailContent>
+      <RailContent size={size}>{children}</RailContent>
     </div>
   );
 });
 Rail.displayName = 'Shell.Rail';
 
+/** A rail's rows rest one step above the Shell, capped at the largest pane size. */
+const RAIL_STEP = { '1': '2', '2': '3', '3': '3' } as const satisfies Record<PaneSize, PaneSize>;
+
+function useRailSize(size?: PaneSize): PaneSize {
+  const shellSize = React.useContext(ShellSizeContext);
+  return size ?? RAIL_STEP[shellSize];
+}
+
+/** The size a `Shell.Rail` gave its rows, so a `Shell.RailScope` under it matches. */
+const RailSizeContext = React.createContext<PaneSize | null>(null);
+
 /** The Rail's content carries the index, so the thin row styles can size themselves by it. */
-function RailContent({ children }: { children: React.ReactNode }) {
-  const size = React.useContext(ShellSizeContext);
+function RailContent({ children, size: sizeProp }: { children: React.ReactNode; size?: PaneSize }) {
+  const size = useRailSize(sizeProp);
   return (
     <div className={classNames('kui-ShellRailContent', `kui-r-size-${size}`)}>
-      <PaneChromeScope presentation="thin">{children}</PaneChromeScope>
+      <PaneChromeScope presentation="thin" size={size}>
+        <RailSizeContext.Provider value={size}>{children}</RailSizeContext.Provider>
+      </PaneChromeScope>
     </div>
   );
 }
+
+type RailScopeProps = {
+  children: React.ReactNode;
+  /** The rail's size. By default the enclosing `Shell.Rail`'s, or one step above the Shell's. */
+  size?: PaneSize;
+};
+
+/**
+ * Gives rail rows rendered from elsewhere in the React tree, and portalled into `Shell.Rail`, the
+ * rail's scope: thin rows (icon tiles with a small label, sub-menus as dropdowns) at the rail's
+ * size. Inside `Shell.Rail` it is not needed.
+ */
+function RailScope({ children, size: sizeProp }: RailScopeProps) {
+  const railSize = React.useContext(RailSizeContext);
+  const size = useRailSize(sizeProp ?? railSize ?? undefined);
+  return (
+    <PaneChromeScope presentation="thin" size={size}>
+      <RailSizeContext.Provider value={size}>{children}</RailSizeContext.Provider>
+    </PaneChromeScope>
+  );
+}
+RailScope.displayName = 'Shell.RailScope';
 
 /* ── Panel ─────────────────────────────────────────────────────────────────── */
 
@@ -685,7 +725,6 @@ const Panel = React.forwardRef<HTMLDivElement, PanelPublicProps>((props, ref) =>
     size: expandedSize,
   });
   useFrameRegistration('panel', flush);
-
 
   const elementRef = React.useRef<HTMLElement | null>(null);
   const composedRef = useComposedRefs(ref, pane.setElement, elementRef);
@@ -848,6 +887,7 @@ export {
   Root,
   Header,
   Rail,
+  RailScope,
   Panel,
   Sidebar,
   Content,
@@ -866,6 +906,7 @@ export {
   type ShellRootProps as RootProps,
   type ShellHeaderProps as HeaderProps,
   type RailProps,
+  type RailScopeProps,
   type PanelPublicProps as PanelProps,
   type SidebarPublicProps as SidebarProps,
   type ShellContentProps as ContentProps,

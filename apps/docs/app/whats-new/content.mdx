@@ -4,6 +4,29 @@ title: What's new in Womp UI
 
 Each release groups its changes as Major, Minor or Quiet. Major is a new product or a change to what it is. Minor is a change you notice when you use it. Quiet is a small touch, a fix, a rename or a removal, or how the work is made. Breaking lists the changes that need an edit in your app.
 
+## 0.38.5 (November 16)
+
+1. `Quiet` **Panel titles line up with the body.** A title in a Dialog's or Sheet's top row starts where the text below it starts. A panel with no size of its own now steps its top row up too.
+
+## 0.38.4 (November 16)
+
+1. `Minor` **The rail sits one step larger.** `Shell.Rail`'s rows rest one step above the Shell, as a pane's header does. A new `size` prop sets it. `Shell.RailScope` gives the same look to rows portalled into the rail from elsewhere.
+2. `Quiet` **Round rail tiles at radius full.** At radius `full`, a rail item's tile is a circle. It was a rounded square.
+3. `Quiet` **Breakpoint widths you can import.** `breakpoints` gives the stylesheet's widths in pixels, for your own media queries.
+
+## 0.38.3 (November 16)
+
+1. `Minor` **Larger panel titles.** In a Dialog or Sheet, the title reads one text step larger than a pane header's, since it names the whole panel: 20px in a size-2 Dialog, 24px in a size-3.
+
+## 0.38.2 (November 16)
+
+1. `Quiet` **A panel's top row matches the panel's size.** A size-3 Dialog had a size-2 top row, because the panel is drawn outside the Shell. The row now rests one step above the panel, as in a Shell pane, and the title follows the row's size.
+2. `Quiet` **Nothing shows through the top row.** A body that overflowed by only a little showed its content sharp under the row as it scrolled. It is now hidden from the first pixel.
+
+## 0.38.1 (November 16)
+
+1. `Minor` **A Dialog or Sheet can scroll under a fixed top row.** Put a ScrollArea right inside the panel and it becomes the body. The top row with the title and Close stays put, the body scrolls on its own, and its content fades out under the row. Without a ScrollArea the panel scrolls as a whole, as before.
+
 ## 0.38.0 (November 11)
 
 1. `Minor` **No card inside a card.** While you develop, a Card inside another Card logs a warning in the console. Group things inside one card with space, and put several cards side by side on the page.
